@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -116,70 +116,71 @@ public class MetadataSampleApi {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
-        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
-        Element params = new Element("params");
-        params.addContent(new Element("file_type").setText("mef"));
-        params.addContent(new Element("uuidAction").setText("overwrite"));
-        for (String schemaName : schema) {
-            Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
-                + schemaName);
-            Path schemaDir = schemaManager.getSchemaSampleDataDir(schemaName);
-            if (schemaDir == null) {
-                report.addInfos(String.format(
-                    "No samples available for schema '%s'.", schemaName
-                ));
-                continue;
-            }
-
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
-            }
-
-            List<Path> sampleDataFilesList;
-            try (DirectoryStream<Path> newDirectoryStream =
-                     Files.newDirectoryStream(schemaDir, "*.mef")) {
-                sampleDataFilesList = Lists.newArrayList(newDirectoryStream);
-            }
-
-            int schemaCount = 0;
-            for (final Path file : sampleDataFilesList) {
-                try {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER,
-                            String.format("Loading %s sample file %s ...", schemaName, file));
-                    }
-                    List<String> importedMdIds = MEFLib.doImport(params, context, file, null);
-
-                    if (importedMdIds != null && importedMdIds.size() > 0) {
-                        schemaCount += importedMdIds.size();
-                        for (String mdId : importedMdIds) {
-                            AbstractMetadata metadata = ApiUtils.getRecord(mdId);
-                            new RecordImportedEvent(Integer.parseInt(mdId), userSession.getUserIdAsInt(),
-                                ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
-                                metadata.getData()).publish(applicationContext);
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER,
-                        String.format("Error loading %s sample file %s. Error is %s.",
-                            schemaName, file, e.getMessage()),
-                        e);
-                    report.addError(new Exception(String.format(
-                        "Error loading '%s' sample file '%s'. Error is %s.",
-                        schemaName, file, e.getMessage())));
+            Element params = new Element("params");
+            params.addContent(new Element("file_type").setText("mef"));
+            params.addContent(new Element("uuidAction").setText("overwrite"));
+            for (String schemaName : schema) {
+                Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
+                    + schemaName);
+                Path schemaDir = schemaManager.getSchemaSampleDataDir(schemaName);
+                if (schemaDir == null) {
+                    report.addInfos(String.format(
+                        "No samples available for schema '%s'.", schemaName
+                    ));
+                    continue;
                 }
-                dataManager.flush();
+
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                    Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
+                }
+
+                List<Path> sampleDataFilesList;
+                try (DirectoryStream<Path> newDirectoryStream =
+                         Files.newDirectoryStream(schemaDir, "*.mef")) {
+                    sampleDataFilesList = Lists.newArrayList(newDirectoryStream);
+                }
+
+                int schemaCount = 0;
+                for (final Path file : sampleDataFilesList) {
+                    try {
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER,
+                                String.format("Loading %s sample file %s ...", schemaName, file));
+                        }
+                        List<String> importedMdIds = MEFLib.doImport(params, context, file, null);
+
+                        if (importedMdIds != null && importedMdIds.size() > 0) {
+                            schemaCount += importedMdIds.size();
+                            for (String mdId : importedMdIds) {
+                                AbstractMetadata metadata = ApiUtils.getRecord(mdId);
+                                new RecordImportedEvent(Integer.parseInt(mdId), userSession.getUserIdAsInt(),
+                                    ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
+                                    metadata.getData()).publish(applicationContext);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER,
+                            String.format("Error loading %s sample file %s. Error is %s.",
+                                schemaName, file, e.getMessage()),
+                            e);
+                        report.addError(new Exception(String.format(
+                            "Error loading '%s' sample file '%s'. Error is %s.",
+                            schemaName, file, e.getMessage())));
+                    }
+                    dataManager.flush();
+                }
+                report.addInfos(String.format(
+                    "%d record(s) added for schema '%s'.",
+                    schemaCount, schemaName));
             }
-            report.addInfos(String.format(
-                "%d record(s) added for schema '%s'.",
-                schemaCount, schemaName));
+            report.close();
+            return report;
         }
-        report.close();
-        return report;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -209,110 +210,110 @@ public class MetadataSampleApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+            String siteId = settingManager.getSiteId();
+            int owner = ApiUtils.getUserSession(session).getUserIdAsInt();
 
-        String siteId = settingManager.getSiteId();
-        int owner = ApiUtils.getUserSession(session).getUserIdAsInt();
+            Log.info(Geonet.DATA_MANAGER, String.format(
+                "Loading templates for schemas '%s'.", schema));
 
-        Log.info(Geonet.DATA_MANAGER, String.format(
-            "Loading templates for schemas '%s'.", schema));
+            for (String schemaName : schema) {
+                Path templatesDir = schemaManager.getSchemaTemplatesDir(schemaName);
+                if (templatesDir == null) {
+                    report.addInfos(String.format(
+                        "No templates available for schema '%s'.", schemaName
+                    ));
+                    continue;
+                }
+                final String subTemplatePrefix = "sub-";
+                final String templateOfSubTemplatePrefix = "sub-tpl-";
+                final int prefixLength = subTemplatePrefix.length();
+                int schemaCount = 0;
+                try (DirectoryStream<Path> newDirectoryStream =
+                         Files.newDirectoryStream(templatesDir, "*.xml")) {
+                    for (Path temp : newDirectoryStream) {
+                        String status = "failed";
+                        String templateName = temp.getFileName().toString();
 
-        for (String schemaName : schema) {
-            Path templatesDir = schemaManager.getSchemaTemplatesDir(schemaName);
-            if (templatesDir == null) {
-                report.addInfos(String.format(
-                    "No templates available for schema '%s'.", schemaName
-                ));
-                continue;
-            }
-            final String subTemplatePrefix = "sub-";
-            final String templateOfSubTemplatePrefix = "sub-tpl-";
-            final int prefixLength = subTemplatePrefix.length();
-            int schemaCount = 0;
-            try (DirectoryStream<Path> newDirectoryStream =
-                     Files.newDirectoryStream(templatesDir, "*.xml")) {
-                for (Path temp : newDirectoryStream) {
-                    String status = "failed";
-                    String templateName = temp.getFileName().toString();
+                        Element template = new Element("template");
+                        template.setAttribute("name", templateName);
 
-                    Element template = new Element("template");
-                    template.setAttribute("name", templateName);
-
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER,
-                            String.format(" - Adding %s template file %s ...",
-                                schemaName, templateName));
-                    }
-
-                    try {
-                        Element xml = Xml.loadFile(temp);
-                        String uuid = UUID.randomUUID().toString();
-                        String isTemplate = "y";
-                        String title = null;
-
-                        if (templateName.startsWith(subTemplatePrefix)) {
-                            isTemplate = templateName.startsWith(templateOfSubTemplatePrefix) ?
-                                "t" : "s";
+                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER,
+                                String.format(" - Adding %s template file %s ...",
+                                    schemaName, templateName));
                         }
 
-                        if (isTemplate.equals("s")) {
-                            // subtemplates loaded here can have a specific uuid
-                            // attribute
-                            String tryUuid = xml.getAttributeValue("uuid");
-                            if (!StringUtils.isEmpty(tryUuid)) uuid = tryUuid;
-                        }
-                        if (dataManager.existsMetadataUuid(uuid)) {
-                            String upid = dataManager.getMetadataId(uuid);
-                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
-                            report.addMetadataInfos(metadata,
-                            String.format(
-                            "Template for schema '%s' with UUID '%s' updated.",
-                            schemaName, uuid));
-                        } else {
-                            //
-                            // insert metadata
-                            //
-                            Metadata metadata = new Metadata();
-                            metadata.setUuid(uuid);
-                            metadata.getDataInfo().
-                                setSchemaId(schemaName).
-                                setRoot(xml.getQualifiedName()).
-                                setType(MetadataType.lookup(isTemplate));
-                            metadata.getSourceInfo().
-                                setSourceId(siteId).
-                                setOwner(owner).
-                                setGroupOwner(1);
-                            // Set the UUID explicitly, insertMetadata doesn't update the xml with the generated UUID for templates
-                            if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
-                                xml = dataManager.setUUID(schemaName, uuid, xml);
+                        try {
+                            Element xml = Xml.loadFile(temp);
+                            String uuid = UUID.randomUUID().toString();
+                            String isTemplate = "y";
+                            String title = null;
+
+                            if (templateName.startsWith(subTemplatePrefix)) {
+                                isTemplate = templateName.startsWith(templateOfSubTemplatePrefix) ?
+                                    "t" : "s";
                             }
-                            dataManager.insertMetadata(context, metadata, xml, true, true, UpdateDatestamp.NO, false, true);
-                            report.addMetadataInfos(metadata,
-                            String.format(
-                            "Template for schema '%s' with UUID '%s' added.",
-                            schemaName, metadata.getUuid()));
-                        }
 
-                        schemaCount++;
-                    } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER,
-                            String.format("Error loading %s template file %s. Error is %s.",
-                                schemaName, temp, e.getMessage()),
-                            e);
-                        report.addError(new Exception(String.format(
-                            "Error loading '%s' template file '%s'. Error is %s.",
-                            schemaName, temp, e.getMessage())));
+                            if (isTemplate.equals("s")) {
+                                // subtemplates loaded here can have a specific uuid
+                                // attribute
+                                String tryUuid = xml.getAttributeValue("uuid");
+                                if (!StringUtils.isEmpty(tryUuid)) uuid = tryUuid;
+                            }
+                            if (dataManager.existsMetadataUuid(uuid)) {
+                                String upid = dataManager.getMetadataId(uuid);
+                                AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
+                                report.addMetadataInfos(metadata,
+                                    String.format(
+                                        "Template for schema '%s' with UUID '%s' updated.",
+                                        schemaName, uuid));
+                            } else {
+                                //
+                                // insert metadata
+                                //
+                                Metadata metadata = new Metadata();
+                                metadata.setUuid(uuid);
+                                metadata.getDataInfo().
+                                    setSchemaId(schemaName).
+                                    setRoot(xml.getQualifiedName()).
+                                    setType(MetadataType.lookup(isTemplate));
+                                metadata.getSourceInfo().
+                                    setSourceId(siteId).
+                                    setOwner(owner).
+                                    setGroupOwner(1);
+                                // Set the UUID explicitly, insertMetadata doesn't update the xml with the generated UUID for templates
+                                if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
+                                    xml = dataManager.setUUID(schemaName, uuid, xml);
+                                }
+                                dataManager.insertMetadata(context, metadata, xml, true, true, UpdateDatestamp.NO, false, true);
+                                report.addMetadataInfos(metadata,
+                                    String.format(
+                                        "Template for schema '%s' with UUID '%s' added.",
+                                        schemaName, metadata.getUuid()));
+                            }
+
+                            schemaCount++;
+                        } catch (Exception e) {
+                            Log.error(Geonet.DATA_MANAGER,
+                                String.format("Error loading %s template file %s. Error is %s.",
+                                    schemaName, temp, e.getMessage()),
+                                e);
+                            report.addError(new Exception(String.format(
+                                "Error loading '%s' template file '%s'. Error is %s.",
+                                schemaName, temp, e.getMessage())));
+                        }
                     }
                 }
-            }
 
-            report.addInfos(String.format(
-                "%d record(s) added for schema '%s'.",
-                schemaCount, schemaName));
+                report.addInfos(String.format(
+                    "%d record(s) added for schema '%s'.",
+                    schemaCount, schemaName));
+            }
+            report.close();
+            return report;
         }
-        report.close();
-        return report;
     }
 }

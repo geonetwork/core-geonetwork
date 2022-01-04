@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -201,15 +201,16 @@ public class HarvestersApi {
         @RequestParam
             String exist,
         HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        final Element list = harvestManager.get(null, context, "site[1]/name[1]");
-        if (list.getChildren().stream()
-            .filter(h -> h instanceof Element)
-            .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
-            .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            final Element list = harvestManager.get(null, context, "site[1]/name[1]");
+            if (list.getChildren().stream()
+                .filter(h -> h instanceof Element)
+                .map(h -> ((Element) h).getChild("site").getChild(property).getTextTrim())
+                .anyMatch(name -> ((String) name).equalsIgnoreCase(exist))) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

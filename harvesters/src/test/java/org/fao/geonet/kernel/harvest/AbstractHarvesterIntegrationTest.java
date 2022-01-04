@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -77,7 +77,8 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         customizeParams(params);
         final String harvesterUuid = _harvestManager.addHarvesterReturnUUID(params);
         AbstractHarvester _harvester = _harvestManager.getHarvester(harvesterUuid);
-        _harvester.init(params, context);
+        _harvester.initContext( context );
+        _harvester.init(params);
 
         _harvester.invoke();
         final Element result = _harvester.getResult();

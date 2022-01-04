@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -112,41 +112,42 @@ public class MetadataSocialApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
-        String ip = context.getIpAddress();
-        if (ip == null) {
-            ip = "???.???.???.???";
-        }
-
-        if (rating < 0 || rating > 5) {
-            throw new BadParameterEx(String.format(
-                "Parameter rating MUST be between 1 and 5. Value %s is invalid."), rating);
-        }
-
-        String harvUuid = metadata.getHarvestInfo().getUuid();
-
-        // look up value of localrating/enable
-        DataManager dataManager = appContext.getBean(DataManager.class);
-        HarvestManager hm = appContext.getBean(HarvestManager.class);
-        SettingManager settingManager = appContext.getBean(SettingManager.class);
-        String localRating = settingManager.getValue(SYSTEM_LOCALRATING_ENABLE);
-
-        if (localRating.equals(RatingsSetting.BASIC) || harvUuid == null) {
-            //--- metadata is local, just rate it
-            rating = dataManager.rateMetadata(metadata.getId(), ip, rating);
-        } else {
-            //--- the metadata is harvested, is type=geonetwork?
-            AbstractHarvester ah = hm.getHarvester(harvUuid);
-            if (ah.getType().equals(GeonetHarvester.TYPE)) {
-                rating = setRemoteRating(context, (GeonetParams) ah.getParams(), metadataUuid, rating);
-            } else {
-                rating = -1;
+            String ip = context.getIpAddress();
+            if (ip == null) {
+                ip = "???.???.???.???";
             }
+
+            if (rating < 0 || rating > 5) {
+                throw new BadParameterEx(String.format(
+                    "Parameter rating MUST be between 1 and 5. Value %s is invalid."), rating);
+            }
+
+            String harvUuid = metadata.getHarvestInfo().getUuid();
+
+            // look up value of localrating/enable
+            DataManager dataManager = appContext.getBean(DataManager.class);
+            HarvestManager hm = appContext.getBean(HarvestManager.class);
+            SettingManager settingManager = appContext.getBean(SettingManager.class);
+            String localRating = settingManager.getValue(SYSTEM_LOCALRATING_ENABLE);
+
+            if (localRating.equals(RatingsSetting.BASIC) || harvUuid == null) {
+                //--- metadata is local, just rate it
+                rating = dataManager.rateMetadata(metadata.getId(), ip, rating);
+            } else {
+                //--- the metadata is harvested, is type=geonetwork?
+                AbstractHarvester ah = hm.getHarvester(harvUuid);
+                if (ah.getType().equals(GeonetHarvester.TYPE)) {
+                    rating = setRemoteRating(context, (GeonetParams) ah.getParams(), metadataUuid, rating);
+                } else {
+                    rating = -1;
+                }
+            }
+            return rating;
         }
-        return rating;
     }
 
     /**

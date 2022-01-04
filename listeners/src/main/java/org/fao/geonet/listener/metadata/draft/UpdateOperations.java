@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,6 +25,7 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.Arrays;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -70,12 +71,15 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
     @Autowired
     private MetadataDraftRepository metadataDraftRepository;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @Override
     public void onApplicationEvent(MetadataShare event) {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void doAfterCommit(MetadataShare event) {
+    public void doBeforeCommit(MetadataShare event) {
 
         try {
 
@@ -95,39 +99,39 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
                 MetadataDraft draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
                 if (draft != null) {
-                    // Copy privileges from original metadata
-                    OperationAllowed op = event.getOp();
-                    ServiceContext context = ServiceContext.get();
+                    try (ServiceContext context = serviceManager.createServiceContext("update_operations", -1)) {
+                        // Copy privileges from original metadata
+                        OperationAllowed op = event.getOp();
 
-                    // Only interested in editing and reviewing privileges
-                    // No one else should be able to see it
-                    if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
-                        Log.trace(Geonet.DATA_MANAGER, "Updating privileges on draft " + draft.getId());
+                        // Only interested in editing and reviewing privileges
+                        // No one else should be able to see it
+                        if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+                            Log.trace(Geonet.DATA_MANAGER, "Updating privileges on draft " + draft.getId());
 
-                        // except for reserved groups
-                        Group g = groupRepository.findById(op.getId().getGroupId()).get();
-                        if (!g.isReserved()) {
-                            try {
-                                if (event.getType() == Type.REMOVE) {
-                                    Log.trace(Geonet.DATA_MANAGER, "Removing editing on group "
-                                        + op.getId().getGroupId() + " for draft " + draft.getId());
+                            // except for reserved groups
+                            Group g = groupRepository.findById(op.getId().getGroupId()).get();
+                            if (!g.isReserved()) {
+                                try {
+                                    if (event.getType() == Type.REMOVE) {
+                                        Log.trace(Geonet.DATA_MANAGER, "Removing editing on group "
+                                            + op.getId().getGroupId() + " for draft " + draft.getId());
 
-                                    metadataOperations.forceUnsetOperation(context, draft.getId(),
-                                        op.getId().getGroupId(), op.getId().getOperationId());
-                                } else {
-                                    Log.trace(Geonet.DATA_MANAGER, "Adding editing on group " + op.getId().getGroupId()
-                                        + " for draft " + draft.getId());
+                                        metadataOperations.forceUnsetOperation(context, draft.getId(),
+                                            op.getId().getGroupId(), op.getId().getOperationId());
+                                    } else {
+                                        Log.trace(Geonet.DATA_MANAGER, "Adding editing on group " + op.getId().getGroupId()
+                                            + " for draft " + draft.getId());
 
-                                    metadataOperations.forceSetOperation(context, draft.getId(),
-                                        op.getId().getGroupId(), op.getId().getOperationId());
+                                        metadataOperations.forceSetOperation(context, draft.getId(),
+                                            op.getId().getGroupId(), op.getId().getOperationId());
+                                    }
+                                    metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
+                                } catch (Exception e) {
+                                    Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
                                 }
-                                metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
-                            } catch (Exception e) {
-                                Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
                             }
                         }
                     }
-
                 }
             }
         } catch (Throwable e) {

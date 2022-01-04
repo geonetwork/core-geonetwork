@@ -77,6 +77,7 @@ public class FragmentHarvester extends BaseAligner {
 
     private static final String REPLACEMENT_GROUP = "replacementGroup";
     private Logger log;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -113,50 +113,51 @@ public class MetadataEditingApi {
 
         boolean showValidationErrors = false;
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        // Start editing session
-        IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
-        Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            // Start editing session
+            IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
+            Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
 
-        // Maybe we are redirected to another metadata?
-        if (id2 != metadata.getId()) {
+            // Maybe we are redirected to another metadata?
+            if (id2 != metadata.getId()) {
 
-            StringBuilder sb = new StringBuilder("?");
+                StringBuilder sb = new StringBuilder("?");
 
-            Enumeration<String> parameters = request.getParameterNames();
+                Enumeration<String> parameters = request.getParameterNames();
 
-            // As this editor will redirect, make sure there is something to go
-            // back that makes sense and prevent a loop:
-            boolean hasPreviousURL = false;
+                // As this editor will redirect, make sure there is something to go
+                // back that makes sense and prevent a loop:
+                boolean hasPreviousURL = false;
 
-            while (parameters.hasMoreElements()) {
-                String key = parameters.nextElement();
-                sb.append(key + "=" + request.getParameter(key) + "%26");
-                if (key.equalsIgnoreCase("redirectUrl")) {
-                    hasPreviousURL = true;
+                while (parameters.hasMoreElements()) {
+                    String key = parameters.nextElement();
+                    sb.append(key + "=" + request.getParameter(key) + "%26");
+                    if (key.equalsIgnoreCase("redirectUrl")) {
+                        hasPreviousURL = true;
+                    }
                 }
+
+                if (!hasPreviousURL) {
+                    sb.append("redirectUrl=catalog.edit");
+                }
+
+                context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, true);
+
+                Element el = new Element("script");
+                el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
+                String elStr = Xml.getString(el);
+                response.getWriter().print(elStr);
+                return;
             }
+            // End of start editing session
 
-            if (!hasPreviousURL) {
-                sb.append("redirectUrl=catalog.edit");
-            }
-
-            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, true);
-
-            Element el = new Element("script");
-            el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
-            String elStr = Xml.getString(el);
-            response.getWriter().print(elStr);
-            return;
+            Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, String.valueOf(metadata.getId()), true,
+                showValidationErrors);
+            buildEditorForm(currTab, session, allRequestParams, request, elMd, metadata.getDataInfo().getSchemaId(),
+                context, applicationContext, false, false, response);
         }
-        // End of start editing session
-
-        Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, String.valueOf(metadata.getId()), true,
-            showValidationErrors);
-        buildEditorForm(currTab, session, allRequestParams, request, elMd, metadata.getDataInfo().getSchemaId(),
-            context, applicationContext, false, false, response);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Save edits", description = "Save the HTML form content.")
@@ -228,207 +229,210 @@ public class MetadataEditingApi {
     ) throws Exception {
 
         Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
-        // ajaxEditUtils.preprocessUpdate(allRequestParams, context);
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
-        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
-        String id = String.valueOf(metadata.getId());
-        Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
-        String isTemplate = allRequestParams.get(Params.TEMPLATE);
-        SettingManager sm = context.getBean(SettingManager.class);
-        // boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
-        // boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
-        // boolean commit = config.getValue(Params.START_EDITING_SESSION,
-        // "no").equals("yes");
-        boolean isEditor = session.getProfile().equals(Profile.Editor);
-        boolean isReviewer = session.getProfile().equals(Profile.Reviewer);
-        boolean isAdmin = session.getProfile().equals(Profile.Administrator);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        // Checks when workflow enabled if the user is allowed
-        boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
-        if (isEnabledWorkflow && isEditor && !statusRepository.canEditorEdit(metadata.getId())) {
-            throw new NotAllowedException("Editing is allowed only in Draft state for the current profile.");
-        }
+            AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
+            // ajaxEditUtils.preprocessUpdate(allRequestParams, context);
 
-        // TODO: Use map only to avoid this conversion
-        Log.trace(Geonet.DATA_MANAGER, " > Getting parameters from request");
-        Element params = new Element("request");
-        Map<String, String> forwardedParams = new HashMap<>();
-        for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
-            params.addContent(new Element(e.getKey()).setText(e.getValue()));
-            if (!e.getKey().startsWith("_")) {
-                forwardedParams.put(e.getKey(), e.getValue());
-            }
-        }
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            DataManager dataMan = applicationContext.getBean(DataManager.class);
+            UserSession session = ApiUtils.getUserSession(httpSession);
+            IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
+            BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
+            String id = String.valueOf(metadata.getId());
+            Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
+            String isTemplate = allRequestParams.get(Params.TEMPLATE);
+            SettingManager sm = context.getBean(SettingManager.class);
+            // boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
+            // boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
+            // boolean commit = config.getValue(Params.START_EDITING_SESSION,
+            // "no").equals("yes");
+            boolean isEditor = session.getProfile().equals(Profile.Editor);
+            boolean isReviewer = session.getProfile().equals(Profile.Reviewer);
+            boolean isAdmin = session.getProfile().equals(Profile.Administrator);
 
-
-        if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-            Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " + MetadataType.lookup(isTemplate));
-        }
-        int iLocalId = Integer.parseInt(id);
-        Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
-        dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
-
-
-        // --- use StatusActionsFactory and StatusActions class to possibly
-        // --- change status as a result of this edit (use onEdit method)
-        Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
-        StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
-        StatusActions sa = saf.createStatusActions(context);
-        sa.onEdit(iLocalId, minor);
-        Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
-
-        if (StringUtils.isNotEmpty(data)) {
-            Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
-            Element md = Xml.loadString(data, false);
-            String changeDate = null;
-            boolean updateDateStamp = !minor;
-            boolean ufo = true;
-            boolean index = true;
-            dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, index, context.getLanguage(), changeDate,
-                updateDateStamp);
-
-            if (terminate) {
-                XMLOutputter outp = new XMLOutputter();
-                String xmlBefore = outp.outputString(beforeMetadata);
-                String xmlAfter = outp.outputString(md);
-                new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
-                    .publish(applicationContext);
-            }
-        } else {
-            Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
-            ajaxEditUtils.updateContent(params, false, true);
-
-            Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
-
-            if (terminate) {
-                XMLOutputter outp = new XMLOutputter();
-                String xmlBefore = outp.outputString(beforeMetadata);
-                String xmlAfter = outp.outputString(afterMetadata);
-                new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
-                    .publish(applicationContext);
-            }
-        }
-
-        // -----------------------------------------------------------------------
-        // --- update element and return status
-        // Element elResp = new Element(Jeeves.Elem.RESPONSE);
-        // elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-        // elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
-        // .setText(String.valueOf(withValidationErrors)));
-        //// boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) !=
-        // null;
-        //// if (justCreated) {
-        //// elResp.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
-        //// }
-        // elResp.addContent(new
-        // Element(Params.MINOREDIT).setText(String.valueOf(minor)));
-
-        // --- if finished then remove the XML from the session
-        if ((commit) && (!terminate)) {
-            return;
-        }
-        if (terminate) {
-            Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
-
-            boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
-
-            boolean reindex = false;
-
-            // Save validation if the forceValidationOnMdSave is enabled
-            if (forceValidationOnMdSave) {
-                validator.doValidate(metadata, context.getLanguage());
-                reindex = true;
+            // Checks when workflow enabled if the user is allowed
+            boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+            if (isEnabledWorkflow && isEditor && !statusRepository.canEditorEdit(metadata.getId())) {
+                throw new NotAllowedException("Editing is allowed only in Draft state for the current profile.");
             }
 
-            // Automatically change the workflow state after save
-            if (isEnabledWorkflow) {
-                if (status.equals(StatusValue.Status.SUBMITTED)) {
-                    // Only editors can submit a record
-                    if (isEditor || isAdmin) {
-                        Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
-                    } else {
-                        throw new SecurityException(String.format("Only users with editor profile can submit."));
-                    }
-                }
-                if (status.equals(StatusValue.Status.APPROVED)) {
-                    // Only reviewers can approve
-                    if (isReviewer || isAdmin) {
-                        Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
-                    } else {
-                        throw new SecurityException(String.format("Only users with review profile can approve."));
-                    }
+            // TODO: Use map only to avoid this conversion
+            Log.trace(Geonet.DATA_MANAGER, " > Getting parameters from request");
+            Element params = new Element("request");
+            Map<String, String> forwardedParams = new HashMap<>();
+            for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
+                params.addContent(new Element(e.getKey()).setText(e.getValue()));
+                if (!e.getKey().startsWith("_")) {
+                    forwardedParams.put(e.getKey(), e.getValue());
                 }
             }
 
-            boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
-            boolean isUnpublished = false;
 
-            // Unpublish the metadata automatically if the setting
-            // automaticUnpublishInvalidMd is enabled and
-            // the metadata becomes invalid
-            if (automaticUnpublishInvalidMd) {
-                final OperationAllowedRepository operationAllowedRepo = context
-                    .getBean(OperationAllowedRepository.class);
+            if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+                Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " + MetadataType.lookup(isTemplate));
+            }
+            int iLocalId = Integer.parseInt(id);
+            Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
+            dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
-                boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id))
-                    .and(hasOperation(ReservedOperation.view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
 
-                if (isPublic) {
-                    final MetadataValidationRepository metadataValidationRepository = context
-                        .getBean(MetadataValidationRepository.class);
+            // --- use StatusActionsFactory and StatusActions class to possibly
+            // --- change status as a result of this edit (use onEdit method)
+            Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
+            StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
+            StatusActions statusActions = saf.createStatusActions(context);
+            statusActions.onEdit(iLocalId, minor);
+            Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
-                    boolean isInvalid = (metadataValidationRepository
-                        .count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+            if (StringUtils.isNotEmpty(data)) {
+                Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
+                Element md = Xml.loadString(data, false);
+                String changeDate = null;
+                boolean updateDateStamp = !minor;
+                boolean ufo = true;
+                boolean index = true;
+                dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, index, context.getLanguage(), changeDate,
+                    updateDateStamp);
 
-                    if (isInvalid) {
-                        isUnpublished = true;
-                        operationAllowedRepo
-                            .deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
-                    }
+                if (terminate) {
+                    XMLOutputter outp = new XMLOutputter();
+                    String xmlBefore = outp.outputString(beforeMetadata);
+                    String xmlAfter = outp.outputString(md);
+                    new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
+                        .publish(applicationContext);
+                }
+            } else {
+                Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
+                ajaxEditUtils.updateContent(params, false, true);
 
+                Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
+
+                if (terminate) {
+                    XMLOutputter outp = new XMLOutputter();
+                    String xmlBefore = outp.outputString(beforeMetadata);
+                    String xmlAfter = outp.outputString(afterMetadata);
+                    new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter)
+                        .publish(applicationContext);
+                }
+            }
+
+            // -----------------------------------------------------------------------
+            // --- update element and return status
+            // Element elResp = new Element(Jeeves.Elem.RESPONSE);
+            // elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+            // elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS)
+            // .setText(String.valueOf(withValidationErrors)));
+            //// boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) !=
+            // null;
+            //// if (justCreated) {
+            //// elResp.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+            //// }
+            // elResp.addContent(new
+            // Element(Params.MINOREDIT).setText(String.valueOf(minor)));
+
+            // --- if finished then remove the XML from the session
+            if ((commit) && (!terminate)) {
+                return;
+            }
+            if (terminate) {
+                Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
+
+                boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
+
+                boolean reindex = false;
+
+                // Save validation if the forceValidationOnMdSave is enabled
+                if (forceValidationOnMdSave) {
+                    validator.doValidate(metadata, context.getLanguage());
                     reindex = true;
                 }
 
+                // Automatically change the workflow state after save
+                if (isEnabledWorkflow) {
+                    if (status.equals(StatusValue.Status.SUBMITTED)) {
+                        // Only editors can submit a record
+                        if (isEditor || isAdmin) {
+                            Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
+                            statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
+                                changeToStatus);
+                        } else {
+                            throw new SecurityException(String.format("Only users with editor profile can submit."));
+                        }
+                    }
+                    if (status.equals(StatusValue.Status.APPROVED)) {
+                        // Only reviewers can approve
+                        if (isReviewer || isAdmin) {
+                            Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
+                            statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
+                                changeToStatus);
+                        } else {
+                            throw new SecurityException(String.format("Only users with review profile can approve."));
+                        }
+                    }
+                }
+
+                boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+                boolean isUnpublished = false;
+
+                // Unpublish the metadata automatically if the setting
+                // automaticUnpublishInvalidMd is enabled and
+                // the metadata becomes invalid
+                if (automaticUnpublishInvalidMd) {
+                    final OperationAllowedRepository operationAllowedRepo = context
+                        .getBean(OperationAllowedRepository.class);
+
+                    boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id))
+                        .and(hasOperation(ReservedOperation.view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
+
+                    if (isPublic) {
+                        final MetadataValidationRepository metadataValidationRepository = context
+                            .getBean(MetadataValidationRepository.class);
+
+                        boolean isInvalid = (metadataValidationRepository
+                            .count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+
+                        if (isInvalid) {
+                            isUnpublished = true;
+                            operationAllowedRepo
+                                .deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
+                        }
+
+                        reindex = true;
+                    }
+
+                }
+
+                if (reindex) {
+                    Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
+                    dataMan.indexMetadata(id, true);
+                }
+
+                ajaxEditUtils.removeMetadataEmbedded(session, id);
+                dataMan.endEditingSession(id, session);
+                if (isUnpublished) {
+                    throw new IllegalStateException(String.format("Record saved but as it was invalid at the end of "
+                        + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));
+                } else {
+                    return;
+                }
             }
 
-            if (reindex) {
-                Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
-                dataMan.indexMetadata(id, true);
+            // if (!finished && !forget && commit) {
+            // dataMan.startEditingSession(context, id);
+            // }
+            Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true,
+                withValidationErrors);
+
+            buildEditorForm(tab, httpSession, forwardedParams, request, elMd, metadata.getDataInfo().getSchemaId(), context,
+                applicationContext, false, false, response);
+
+            if (isEnabledWorkflow) {
+                // After saving the form remove the information to remove the draft copy if the user cancels the editor
+                context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
             }
-
-            ajaxEditUtils.removeMetadataEmbedded(session, id);
-            dataMan.endEditingSession(id, session);
-            if (isUnpublished) {
-                throw new IllegalStateException(String.format("Record saved but as it was invalid at the end of "
-                    + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));
-            } else {
-                return;
-            }
-        }
-
-        // if (!finished && !forget && commit) {
-        // dataMan.startEditingSession(context, id);
-        // }
-        Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true,
-            withValidationErrors);
-
-        buildEditorForm(tab, httpSession, forwardedParams, request, elMd, metadata.getDataInfo().getSchemaId(), context,
-            applicationContext, false, false, response);
-
-        if (isEnabledWorkflow) {
-            // After saving the form remove the information to remove the draft copy if the user cancels the editor
-            context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
         }
     }
 
@@ -443,12 +447,14 @@ public class MetadataEditingApi {
     public void cancelEdits(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
                             @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
                             HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+
+            dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Add element", description = "")
@@ -466,32 +472,33 @@ public class MetadataEditingApi {
                            @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
                            HttpServletRequest request, HttpServletResponse response,
                            @Parameter(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        // -- build the element to be added
-        // -- Here we do mark the element that is added
-        // -- then we traverse up the tree to the root
-        // -- clone from the root and return the clone
-        // -- this is done so that the style sheets have
-        // -- access to important information like the
-        // -- document language and other locales
-        // -- this is important for multilingual editing
-        // --
-        // -- Note that the metadata-embedded.xsl stylesheet
-        // -- only applies the templating to the added element, not to
-        // -- the entire metadata so performance should not be a big issue
-        Element elResp = new AjaxEditUtils(context).addElementEmbedded(ApiUtils.getUserSession(httpSession),
-            String.valueOf(metadata.getId()), ref, name, child);
-        EditLib.tagForDisplay(elResp);
-        Element md = (Element) findRoot(elResp).clone();
-        EditLib.removeDisplayTag(elResp);
+            // -- build the element to be added
+            // -- Here we do mark the element that is added
+            // -- then we traverse up the tree to the root
+            // -- clone from the root and return the clone
+            // -- this is done so that the style sheets have
+            // -- access to important information like the
+            // -- document language and other locales
+            // -- this is important for multilingual editing
+            // --
+            // -- Note that the metadata-embedded.xsl stylesheet
+            // -- only applies the templating to the added element, not to
+            // -- the entire metadata so performance should not be a big issue
+            Element elResp = new AjaxEditUtils(context).addElementEmbedded(ApiUtils.getUserSession(httpSession),
+                String.valueOf(metadata.getId()), ref, name, child);
+            EditLib.tagForDisplay(elResp);
+            Element md = (Element) findRoot(elResp).clone();
+            EditLib.removeDisplayTag(elResp);
 
-        buildEditorForm(allRequestParams.get("currTab"), httpSession, allRequestParams, request, md,
-            metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
-    }
+            buildEditorForm(allRequestParams.get("currTab"), httpSession, allRequestParams, request, md,
+                metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
+        }
+     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Reorder element", description = "")
     @RequestMapping(value = "/{metadataUuid}/editor/elements/{direction}", method = RequestMethod.PUT, consumes = {
@@ -507,11 +514,12 @@ public class MetadataEditingApi {
                            @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
                            @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,
                            HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        new AjaxEditUtils(context).swapElementEmbedded(ApiUtils.getUserSession(httpSession),
-            String.valueOf(metadata.getId()), ref, direction == Direction.down);
+            new AjaxEditUtils(context).swapElementEmbedded(ApiUtils.getUserSession(httpSession),
+                String.valueOf(metadata.getId()), ref, direction == Direction.down);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete element", description = "")
@@ -528,13 +536,13 @@ public class MetadataEditingApi {
         @Parameter(description = "Name of the parent.", required = true) @RequestParam String parent,
         @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
         HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            String id = String.valueOf(metadata.getId());
 
-        String id = String.valueOf(metadata.getId());
-
-        for (int i = 0; i < ref.length; i++) {
-            new AjaxEditUtils(context).deleteElementEmbedded(ApiUtils.getUserSession(httpSession), id, ref[i], parent);
+            for (int i = 0; i < ref.length; i++) {
+                new AjaxEditUtils(context).deleteElementEmbedded(ApiUtils.getUserSession(httpSession), id, ref[i], parent);
+            }
         }
     }
 
@@ -551,11 +559,12 @@ public class MetadataEditingApi {
         @Parameter(description = "Reference of the attribute to remove.", required = true) @RequestParam String ref,
         @Parameter(description = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
         HttpServletRequest request, @Parameter(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        new AjaxEditUtils(context).deleteAttributeEmbedded(ApiUtils.getUserSession(httpSession),
-            String.valueOf(metadata.getId()), ref);
+            new AjaxEditUtils(context).deleteAttributeEmbedded(ApiUtils.getUserSession(httpSession),
+                String.valueOf(metadata.getId()), ref);
+        }
     }
 
     private Element findRoot(Element element) {

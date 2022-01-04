@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -514,57 +514,56 @@ public class MapServersApi {
                                    String metadataAbstract,
                                    HttpServletRequest request,
                                    MapServersUtils.ACTION action) throws Exception {
-        // purge \\n from metadataTitle - geoserver prefers layer titles on a single line
-        metadataTitle = metadataTitle.replace("\\n", "");
-        metadataAbstract = metadataAbstract.replace("\\n", "");
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            // purge \\n from metadataTitle - geoserver prefers layer titles on a single line
+            metadataTitle = metadataTitle.replace("\\n", "");
+            metadataAbstract = metadataAbstract.replace("\\n", "");
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServer m = mapServerRepository.findOneById(Integer.valueOf(mapserverId));
-        GeoServerNode g = new GeoServerNode(m);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            MapServer m = mapServerRepository.findOneById(Integer.valueOf(mapserverId));
+            GeoServerNode g = new GeoServerNode(m);
 
-
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        String baseUrl = settingManager.getSiteURL(context);
-        GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
-            g.getUsername(), g.getUserpassword(),
-            g.getNamespacePrefix(), baseUrl, settingManager.getNodeURL(),
-            m.pushStyleInWorkspace());
+            String baseUrl = settingManager.getSiteURL(context);
+            GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
+                g.getUsername(), g.getUserpassword(),
+                g.getNamespacePrefix(), baseUrl, settingManager.getNodeURL(),
+                m.pushStyleInWorkspace());
 
 //        String access = Util.getParam(params, "access");
 
-        //jdbc:postgresql://host:port/user:password@database#table
-        if (resource.startsWith("jdbc:postgresql")) {
-            String[] values = resource.split("/");
+            //jdbc:postgresql://host:port/user:password@database#table
+            if (resource.startsWith("jdbc:postgresql")) {
+                String[] values = resource.split("/");
 
-            String[] serverInfo = values[2].split(":");
-            String host = serverInfo[0];
-            String port = serverInfo[1];
+                String[] serverInfo = values[2].split(":");
+                String host = serverInfo[0];
+                String port = serverInfo[1];
 
-            String[] dbUserInfo = values[3].split("@");
+                String[] dbUserInfo = values[3].split("@");
 
-            String[] userInfo = dbUserInfo[0].split(":");
-            String user = userInfo[0];
-            String password = userInfo[1];
+                String[] userInfo = dbUserInfo[0].split(":");
+                String user = userInfo[0];
+                String password = userInfo[1];
 
-            String[] dbInfo = dbUserInfo[1].split("#");
-            String db = dbInfo[0];
-            String table = dbInfo[1];
+                String[] dbInfo = dbUserInfo[1].split("#");
+                String db = dbInfo[0];
+                String table = dbInfo[1];
 
-            return publishDbTable(action, gs,
-                "postgis", host, port, user, password, db, table, "postgis",
-                g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
-        } else {
-            if (resource.startsWith("file://") || resource.startsWith("http://")) {
-                return addExternalFile(action, gs,
-                    resource,
-                    metadataUuid, metadataTitle, metadataAbstract);
+                return publishDbTable(action, gs,
+                    "postgis", host, port, user, password, db, table, "postgis",
+                    g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
             } else {
-                // Get ZIP file from data directory
-                try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resource)) {
-                    return addZipFile(action, gs,
-                        f.getPath(), resource,
+                if (resource.startsWith("file://") || resource.startsWith("http://")) {
+                    return addExternalFile(action, gs,
+                        resource,
                         metadataUuid, metadataTitle, metadataAbstract);
+                } else {
+                    // Get ZIP file from data directory
+                    try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resource)) {
+                        return addZipFile(action, gs,
+                            f.getPath(), resource,
+                            metadataUuid, metadataTitle, metadataAbstract);
+                    }
                 }
             }
         }

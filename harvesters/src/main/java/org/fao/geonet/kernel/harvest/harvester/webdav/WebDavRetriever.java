@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class WebDavRetriever implements RemoteRetriever {
 
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private WebDavParams params;
 

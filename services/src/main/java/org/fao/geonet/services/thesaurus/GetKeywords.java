@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -104,82 +104,84 @@ public class GetKeywords {
         NativeWebRequest webRequest)
         throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
-            webRequest.getNativeRequest(HttpServletRequest.class));
-        Element responseXml = new Element(Jeeves.Elem.RESPONSE);
-        UserSession session = context.getUserSession();
+        try (ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
+            webRequest.getNativeRequest(HttpServletRequest.class))) {
+
+            Element responseXml = new Element(Jeeves.Elem.RESPONSE);
+            UserSession session = context.getUserSession();
 
 
-        KeywordsSearcher searcher;
-        if (newSearch) {
-            // perform the search and save search result into session
-            ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
+            KeywordsSearcher searcher;
+            if (newSearch) {
+                // perform the search and save search result into session
+                ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
 
-            if (Log.isDebugEnabled("KeywordsManager")) {
-                Log.debug("KeywordsManager", "Creating new keywords searcher");
-            }
-            searcher = new KeywordsSearcher(context, thesaurusMan);
+                if (Log.isDebugEnabled("KeywordsManager")) {
+                    Log.debug("KeywordsManager", "Creating new keywords searcher");
+                }
+                searcher = new KeywordsSearcher(context, thesaurusMan);
 
-            IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
-            KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
-                targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
+                IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
+                KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
+                    targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
 
-            if (checkModified(webRequest, thesaurusMan, builder)) {
-                return null;
-            }
+                if (checkModified(webRequest, thesaurusMan, builder)) {
+                    return null;
+                }
 
-            if (searchTerm == null || searchTerm.trim().isEmpty()) {
-                builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
+                if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                    builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
+                } else {
+                    builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.parse(sort)));
+                }
+
+                searcher.search(builder.build());
+                session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
+                    searcher);
             } else {
-                builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.parse(sort)));
+                searcher = (KeywordsSearcher) session
+                    .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
             }
 
-            searcher.search(builder.build());
-            session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-                searcher);
-        } else {
-            searcher = (KeywordsSearcher) session
-                .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        }
+            // get the results
+            responseXml.addContent(searcher.getXmlResults());
 
-        // get the results
-        responseXml.addContent(searcher.getXmlResults());
+            // If editing
+            if (mode != null) {
+                if (mode.equals("edit") || mode.equals("consult")) {
+                    responseXml.addContent(new Element("thesaurus")
+                        .addContent(thesauri));
 
-        // If editing
-        if (mode != null) {
-            if (mode.equals("edit") || mode.equals("consult")) {
-                responseXml.addContent(new Element("thesaurus")
-                    .addContent(thesauri));
-
-                responseXml.addContent((new Element("mode")).addContent(mode));
+                    responseXml.addContent((new Element("mode")).addContent(mode));
+                }
             }
+            String[] acceptHeader = webRequest.getHeaderValues("Accept");
+            final Set<String> acceptContentType = Sets.newHashSet(
+                acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
+
+            byte[] response;
+            String contentType;
+            if (acceptsType(acceptContentType, "json") ||
+                "json".equals(webRequest.getParameter("_content_type"))) {
+                response = Xml.getJSON(responseXml).getBytes(Constants.CHARSET);
+                contentType = "application/json";
+            } else if (acceptContentType.isEmpty() ||
+                acceptsType(acceptContentType, "xml") ||
+                acceptContentType.contains("*/*") ||
+                acceptContentType.contains("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2") ||
+                acceptContentType.contains("text/plain")) {
+                response = Xml.getString(responseXml).getBytes(Constants.CHARSET);
+                contentType = "application/xml";
+            } else {
+                throw new IllegalArgumentException(acceptContentType + " is not supported");
+            }
+
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("Content-Type", contentType);
+            headers.add("Cache-Control", "no-cache");
+
+            return new HttpEntity<>(response, headers);
         }
-        String[] acceptHeader = webRequest.getHeaderValues("Accept");
-        final Set<String> acceptContentType = Sets.newHashSet(
-            acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
-
-        byte[] response;
-        String contentType;
-        if (acceptsType(acceptContentType, "json") ||
-            "json".equals(webRequest.getParameter("_content_type"))) {
-            response = Xml.getJSON(responseXml).getBytes(Constants.CHARSET);
-            contentType = "application/json";
-        } else if (acceptContentType.isEmpty() ||
-            acceptsType(acceptContentType, "xml") ||
-            acceptContentType.contains("*/*") ||
-            acceptContentType.contains("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2") ||
-            acceptContentType.contains("text/plain")) {
-            response = Xml.getString(responseXml).getBytes(Constants.CHARSET);
-            contentType = "application/xml";
-        } else {
-            throw new IllegalArgumentException(acceptContentType + " is not supported");
-        }
-
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", contentType);
-        headers.add("Cache-Control", "no-cache");
-
-        return new HttpEntity<>(response, headers);
     }
 
     private boolean checkModified(NativeWebRequest webRequest, ThesaurusManager thesaurusMan, KeywordSearchParamsBuilder builder) {

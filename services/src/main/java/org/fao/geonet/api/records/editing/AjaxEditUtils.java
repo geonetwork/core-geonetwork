@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -47,7 +47,10 @@ import org.jdom.filter.Filter;
 import java.util.*;
 
 /**
- * Embedded Metadata Update API for AJAX Editor support
+ * Embedded Metadata Update API for AJAX Editor support.
+ *
+ * Facade provides additional utility methods to assist with AJAX editing, making use of beans
+ * obtained from the provided service context.
  */
 public class AjaxEditUtils extends EditUtils {
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -59,9 +59,9 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
         super.init();
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
+    public void init(ServiceContext context) throws Exception {
         metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
-        super.init(context, force);
+        super.init(context);
     }
 
 

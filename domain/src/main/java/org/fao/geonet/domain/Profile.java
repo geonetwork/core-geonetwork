@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,7 +31,15 @@ import java.util.Set;
 
 /**
  * The enumeration of profiles available in geonetwork.
- *
+ * <ul>
+ *     <li>Administrator</li>
+ *     <li>Administrator - UserAdmin</li>
+ *     <li>Administrator - UserAdmin - Reviewer</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor - RegisteredUser</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor - RegisteredUser - Guest</li>
+ *     <li>Administrator - Monitor</li>
+ * </ul>
  * @author Jesse
  */
 public enum Profile {

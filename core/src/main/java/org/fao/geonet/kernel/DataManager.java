@@ -3,7 +3,7 @@
 //=== DataManager
 //===
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -122,24 +122,33 @@ public class DataManager {
     }
 
     /**
-     * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
+     * Init data manager components.
      *
-     * @param force Force reindexing all from scratch
+     * @param context Service context used for setup
      **/
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataIndexer.init(context, force);
-        this.metadataManager.init(context, force);
-        this.metadataUtils.init(context, force);
+    public void init(ServiceContext context) throws Exception {
+        this.metadataIndexer.init(context);
+        this.metadataManager.init(context);
+        this.metadataUtils.init(context);
 
         // FIXME this shouldn't login automatically ever!
-        if (context.getUserSession() == null) {
-            LOGGER_DATA_MANAGER.debug("Automatically login in as Administrator. Who is this? Who is calling this?");
-            UserSession session = new UserSession();
-            context.setUserSession(session);
-            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-            LOGGER_DATA_MANAGER.debug("Hopefully this is cron job or routinely background task. Who called us?",
-                new Exception("Dummy Exception to know the stacktrace"));
-        }
+//        if (context.getUserSession() == null) {
+//            LOGGER_DATA_MANAGER.debug("Automatically login in as Administrator. Who is this? Who is calling this?");
+//            UserSession session = new UserSession();
+//            context.setUserSession(session);
+//            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
+//            LOGGER_DATA_MANAGER.debug("Hopefully this is cron job or routinely background task. Who called us?",
+//                new Exception("Dummy Exception to know the stacktrace"));
+//        }
+    }
+
+    /**
+     * Clean up data manager during application shutdown.
+     */
+    public void destroy() throws Exception {
+        this.metadataIndexer.destroy();
+        this.metadataManager.destroy();
+        this.metadataUtils.destroy();
     }
 
     @Deprecated
@@ -153,8 +162,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
-        metadataIndexer.batchIndexInThreadPool(context, metadataIds);
+    public void batchIndexInThreadPool(List<?> metadataIds) {
+        metadataIndexer.batchIndexInThreadPool(metadataIds);
     }
 
     @Deprecated

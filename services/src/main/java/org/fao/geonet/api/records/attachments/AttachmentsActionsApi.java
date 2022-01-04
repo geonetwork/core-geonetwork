@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -120,15 +120,15 @@ public class AttachmentsActionsApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            String metadataId = dataMan.getMetadataId(metadataUuid);
+            Lib.resource.checkEditPrivilege(context, metadataId);
 
-        String metadataId = dataMan.getMetadataId(metadataUuid);
-        Lib.resource.checkEditPrivilege(context, metadataId);
+            Path thumbnailFile = thumbnailMaker.generateThumbnail(
+                jsonConfig,
+                rotationAngle);
 
-        Path thumbnailFile = thumbnailMaker.generateThumbnail(
-            jsonConfig,
-            rotationAngle);
-
-        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+            return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+        }
     }
 }

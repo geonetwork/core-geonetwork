@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -116,7 +116,9 @@ public abstract class AbstractParams implements Cloneable {
     }
 
     /**
-     * @param node
+     * Setup parameters with the provided configuration.
+     *
+     * @param node harvester configuration
      * @throws BadInputEx
      */
     public void create(Element node) throws BadInputEx {

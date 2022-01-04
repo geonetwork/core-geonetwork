@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -185,18 +185,20 @@ public class XslProcessApi {
                     }
                     mergedDocuments.addContent(dataMan.getMetadata(id));
                 } else {
-                    // Save processed metadata
-                    if (isText) {
-                        output.append(XslProcessUtils.processAsText(ApiUtils.createServiceContext(request),
-                            id, process, false,
-                            xslProcessingReport, siteURL, request.getParameterMap())
-                        );
-                    } else {
-                        Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
-                            id, process, false, false,
-                            false, xslProcessingReport, siteURL, request.getParameterMap());
-                        if (record != null) {
-                            preview.addContent(record.detach());
+                    try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                        // Save processed metadata
+                        if (isText) {
+                            output.append(XslProcessUtils.processAsText(context,
+                                id, process, false,
+                                xslProcessingReport, siteURL, request.getParameterMap())
+                            );
+                        } else {
+                            Element record = XslProcessUtils.process(context,
+                                id, process, false, false,
+                                false, xslProcessingReport, siteURL, request.getParameterMap());
+                            if (record != null) {
+                                preview.addContent(record.detach());
+                            }
                         }
                     }
                 }
@@ -290,7 +292,7 @@ public class XslProcessApi {
         XsltMetadataProcessingReport xslProcessingReport =
             new XsltMetadataProcessingReport(process);
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)){
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 
@@ -299,7 +301,7 @@ public class XslProcessApi {
             xslProcessingReport.setTotalRecords(records.size());
 
             BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
-                ApiUtils.createServiceContext(request),
+                context,
                 dataMan, records, process, httpSession, siteURL,
                 xslProcessingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
             m.process();

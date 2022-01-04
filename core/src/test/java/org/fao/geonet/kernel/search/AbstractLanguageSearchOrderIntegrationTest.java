@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -50,6 +50,7 @@ import java.util.List;
 public abstract class AbstractLanguageSearchOrderIntegrationTest extends AbstractCoreIntegrationTest {
     public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
     protected MetaSearcher _luceneSearcher;
+    /** Test service context */
     protected ServiceContext _serviceContext;
     protected String _abstractSearchTerm;
     @Autowired

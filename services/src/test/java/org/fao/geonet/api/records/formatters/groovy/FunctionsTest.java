@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.utils.IO;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -130,6 +131,14 @@ public class FunctionsTest {
                 return Mockito.mock(ConfigFile.class);
             }
         };
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        if( fparams != null ){
+            fparams.context.clearAsThreadLocal();
+            fparams.context.clear();
+        }
     }
 
     @Test

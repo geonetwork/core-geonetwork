@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
@@ -183,41 +184,43 @@ public class UserFeedbackAPI {
         @Parameter(hidden = true) final HttpServletResponse response,
         @Parameter(hidden = true) final HttpSession httpSession) {
 
-        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return null;
-        }
-
-        try {
-            Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
-
-            // Check permission for metadata
-            final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-            if (metadata == null) {
-                printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
                 return null;
             }
 
-            final UserSession session = ApiUtils.getUserSession(httpSession);
+            try {
+                Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
 
-            boolean published = true; // Takes only published comments
+                // Check permission for metadata
+                final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
+                if (metadata == null) {
+                    printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+                    return null;
+                }
 
-            // showing not published comments only to logged users (maybe better
-            // restrict to Reviewers)
-            if (session != null && session.isAuthenticated()) {
-                published = false;
+                final UserSession session = ApiUtils.getUserSession(httpSession);
+
+                boolean published = true; // Takes only published comments
+
+                // showing not published comments only to logged users (maybe better
+                // restrict to Reviewers)
+                if (session != null && session.isAuthenticated()) {
+                    published = false;
+                }
+
+                final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+                final UserFeedbackUtils utils = new UserFeedbackUtils();
+
+                return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
+            } catch (final Exception e) {
+                Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - getMetadataRating: " + e.getMessage(), e);
+                return null;
             }
-
-            final IUserFeedbackService userFeedbackService = getUserFeedbackService();
-
-            final UserFeedbackUtils utils = new UserFeedbackUtils();
-
-            return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
-        } catch (final Exception e) {
-            Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - getMetadataRating: " + e.getMessage(), e);
-            return null;
         }
     }
 
@@ -246,44 +249,46 @@ public class UserFeedbackAPI {
         @Parameter(hidden = true) final HttpSession httpSession)
         throws Exception {
 
-        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return null;
+            if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                return null;
+            }
+
+            Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
+
+            final IUserFeedbackService userFeedbackService = (IUserFeedbackService) ApplicationContextHolder.get()
+                .getBean("userFeedbackService");
+
+            final UserSession session = ApiUtils.getUserSession(httpSession);
+
+            boolean published = true; // Takes only published comments
+
+            // showing not published comments only to logged users (maybe better
+            // restrict to Reviewers)
+            if (session != null && session.isAuthenticated()) {
+                published = false;
+            }
+
+            final UserFeedback userfeedback = userFeedbackService.retrieveUserFeedback(uuid, published);
+
+            UserFeedbackDTO dto = null;
+
+            if (userfeedback != null) {
+                dto = UserFeedbackUtils.convertToDto(userfeedback);
+            }
+
+            // Check permission for metadata
+            final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), context);
+            if (metadata == null) {
+                printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+                return null;
+            }
+
+            return dto;
         }
-
-        Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
-
-        final IUserFeedbackService userFeedbackService = (IUserFeedbackService) ApplicationContextHolder.get()
-            .getBean("userFeedbackService");
-
-        final UserSession session = ApiUtils.getUserSession(httpSession);
-
-        boolean published = true; // Takes only published comments
-
-        // showing not published comments only to logged users (maybe better
-        // restrict to Reviewers)
-        if (session != null && session.isAuthenticated()) {
-            published = false;
-        }
-
-        final UserFeedback userfeedback = userFeedbackService.retrieveUserFeedback(uuid, published);
-
-        UserFeedbackDTO dto = null;
-
-        if (userfeedback != null) {
-            dto = UserFeedbackUtils.convertToDto(userfeedback);
-        }
-
-        // Check permission for metadata
-        final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
-        if (metadata == null) {
-            printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-            return null;
-        }
-
-        return dto;
     }
 
     /**

@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -103,71 +103,72 @@ public class PasswordApi {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
-        User user = userRepository.findOneByUsername(username);
-        if (user == null) {
-            Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
-                username));
+            User user = userRepository.findOneByUsername(username);
+            if (user == null) {
+                Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
+                    username));
 
-            // Return response not providing details about the issue, that should be logged.
+                // Return response not providing details about the issue, that should be logged.
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_notchanged"),
+                    XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.PRECONDITION_FAILED);
+            }
+            if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
+                Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
+                    username));
+
+                // Return response not providing details about the issue, that should be logged.
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_notchanged"),
+                    XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            // construct expected change key - only valid today
+            String scrambledPassword = user.getPassword();
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            String todaysDate = sdf.format(cal.getTime());
+            boolean passwordMatches = PasswordUtil.encoder(ApplicationContextHolder.get()).matches(scrambledPassword + todaysDate, passwordAndChangeKey.getChangeKey());
+
+            //check change key
+            if (!passwordMatches) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_invalid_changekey"),
+                    passwordAndChangeKey.getChangeKey(), XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            user.getSecurity().setPassword(PasswordUtil.encode(context, passwordAndChangeKey.getPassword()));
+            userRepository.save(user);
+
+            String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+            String subject = String.format(
+                messages.getString("password_change_subject"),
+                sm.getSiteName());
+            String content = String.format(
+                messages.getString("password_change_message"),
+                sm.getSiteName(),
+                adminEmail,
+                sm.getSiteName());
+
+            // send change link via email with admin in CC
+            if (!MailUtil.sendMail(user.getEmail(),
+                subject,
+                content,
+                null, sm,
+                adminEmail, "")) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+            }
             return new ResponseEntity<>(String.format(
-                messages.getString("user_password_notchanged"),
+                messages.getString("user_password_changed"),
                 XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            ), HttpStatus.CREATED);
         }
-        if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
-            Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
-                username));
-
-            // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_notchanged"),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        // construct expected change key - only valid today
-        String scrambledPassword = user.getPassword();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        String todaysDate = sdf.format(cal.getTime());
-        boolean passwordMatches = PasswordUtil.encoder(ApplicationContextHolder.get()).matches(scrambledPassword + todaysDate, passwordAndChangeKey.getChangeKey());
-
-        //check change key
-        if (!passwordMatches) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_invalid_changekey"),
-                passwordAndChangeKey.getChangeKey(), XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        user.getSecurity().setPassword(PasswordUtil.encode(context, passwordAndChangeKey.getPassword()));
-        userRepository.save(user);
-
-        String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(
-            messages.getString("password_change_subject"),
-            sm.getSiteName());
-        String content = String.format(
-            messages.getString("password_change_message"),
-            sm.getSiteName(),
-            adminEmail,
-            sm.getSiteName());
-
-        // send change link via email with admin in CC
-        if (!MailUtil.sendMail(user.getEmail(),
-            subject,
-            content,
-            null, sm,
-            adminEmail, "")) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
-        }
-        return new ResponseEntity<>(String.format(
-            messages.getString("user_password_changed"),
-            XslUtil.encodeForJavaScript(username)
-        ), HttpStatus.CREATED);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Send user password reminder by email",
@@ -196,78 +197,81 @@ public class PasswordApi {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
         }
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            final User user = userRepository.findOneByUsername(username);
+            if (user == null) {
+                Log.warning(LOGGER, String.format("User reset password. Can't find user '%s'",
+                    username));
 
-        final User user = userRepository.findOneByUsername(username);
-        if (user == null) {
-            Log.warning(LOGGER, String.format("User reset password. Can't find user '%s'",
-                username));
+                // Return response not providing details about the issue, that should be logged.
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_sent"),
+                    XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.CREATED);
+            }
 
-            // Return response not providing details about the issue, that should be logged.
+            if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
+                Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
+                    username));
+
+                // Return response not providing details about the issue, that should be logged.
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_sent"),
+                    XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.CREATED);
+            }
+
+            String email = user.getEmail();
+            if (StringUtils.isEmpty(email)) {
+                Log.warning(LOGGER, String.format("User reset password. User '%s' has no email",
+                    username));
+
+                // Return response not providing details about the issue, that should be logged.
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_password_sent"),
+                    XslUtil.encodeForJavaScript(username)
+                ), HttpStatus.CREATED);
+            }
+
+            // get mail settings
+            String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+
+            // construct change key - only valid today
+            String scrambledPassword = user.getPassword();
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            String todaysDate = sdf.format(cal.getTime());
+            String changeKey = PasswordUtil.encode(serviceContext,
+                scrambledPassword + todaysDate);
+
+            String subject = String.format(
+                messages.getString("password_forgotten_subject"),
+                sm.getSiteName(),
+                username);
+            String content = String.format(
+                messages.getString("password_forgotten_message"),
+                sm.getSiteName(),
+                sm.getSiteURL(language),
+                username,
+                changeKey,
+                sm.getSiteName());
+
+            // send change link via email with admin in CC
+            if (!MailUtil.sendMail(email,
+                subject,
+                content,
+                null, sm,
+                adminEmail, "")) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+            }
             return new ResponseEntity<>(String.format(
                 messages.getString("user_password_sent"),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.CREATED);
         }
 
-        if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
-            Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
-                username));
 
-            // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.CREATED);
-        }
 
-        String email = user.getEmail();
-        if (StringUtils.isEmpty(email)) {
-            Log.warning(LOGGER, String.format("User reset password. User '%s' has no email",
-                username));
-
-            // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_sent"),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.CREATED);
-        }
-
-        // get mail settings
-        String adminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-
-        // construct change key - only valid today
-        String scrambledPassword = user.getPassword();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        String todaysDate = sdf.format(cal.getTime());
-        String changeKey = PasswordUtil.encode(serviceContext,
-            scrambledPassword + todaysDate);
-
-        String subject = String.format(
-            messages.getString("password_forgotten_subject"),
-            sm.getSiteName(),
-            username);
-        String content = String.format(
-            messages.getString("password_forgotten_message"),
-            sm.getSiteName(),
-            sm.getSiteURL(language),
-            username,
-            changeKey,
-            sm.getSiteName());
-
-        // send change link via email with admin in CC
-        if (!MailUtil.sendMail(email,
-            subject,
-            content,
-            null, sm,
-            adminEmail, "")) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
-        }
-        return new ResponseEntity<>(String.format(
-            messages.getString("user_password_sent"),
-            XslUtil.encodeForJavaScript(username)
-        ), HttpStatus.CREATED);
     }
 }

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -132,6 +132,7 @@ class Harvester implements IHarvester<HarvestResult> {
     //--- API methods
     //---
     //---------------------------------------------------------------------------
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private WfsFeaturesParams params;
     private IMetadataManager metadataManager;
@@ -152,12 +153,14 @@ class Harvester implements IHarvester<HarvestResult> {
      * Contains a list of accumulated errors during the executing of this harvest.
      */
     private List<HarvestError> errors = new LinkedList<HarvestError>();
+
     /**
      * Constructor
      *
+     * @param cancelMonitor Sentinel used to cancel
+     * @param log Logger to track progress
      * @param context Jeeves context
-     * @param params  harvesting configuration for the node
-     * @return null
+     * @param params  WFS harvesting configuration for the node
      */
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, WfsFeaturesParams params) {
         this.cancelMonitor = cancelMonitor;

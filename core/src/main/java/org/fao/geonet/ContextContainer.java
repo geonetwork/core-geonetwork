@@ -37,8 +37,10 @@ import org.springframework.context.ApplicationContextAware;
 
 public class ContextContainer implements ApplicationContextAware {
 
-    //private GeonetContext geoctx;
+    /** Shared service context for GeoNetwork application */
     private ServiceContext srvctx;
+
+    /** Shared application context provided during initialization */
     private ApplicationContext ctx;
 
     public ContextContainer() {
@@ -46,30 +48,44 @@ public class ContextContainer implements ApplicationContextAware {
 
     }
 
-       /*
-       public GeonetContext getGeoctx() {
-               return geoctx;
-       }
-
-       public void setGeoctx(GeonetContext geoctx) {
-
-               this.geoctx = geoctx;
-       }
-       */
-
+    /**
+     * Service context shared for GeoNetwork application.
+     *
+     * This is an application wide service context with limited functionality, no user session for example.
+     *
+     * Use of {@link ServiceContext#get()} is recommended in most situations for access
+     * to current user session.
+     *
+     * @return Shared service context for GeoNetwork application
+     */
     public ServiceContext getSrvctx() {
         return srvctx;
     }
 
+    /**
+     * Service context shared for GeoNetwork application.
+     *
+     * @param srvctx Shared app handler service context for GeoNetwork application
+     */
     public void setSrvctx(ServiceContext srvctx) {
         this.srvctx = srvctx;
     }
 
+    /**
+     * GeoNetwork application context provided during initialization.
+     *
+     * @return geonetwork application context
+     */
     public ApplicationContext getApplicationContext() {
         if (ctx == null) throw new RuntimeException("applicationcontext not yet initialized");
         return ctx;
     }
 
+    /**
+     * GeoNetwork application context provided during initialization.
+     * @param arg0
+     * @throws BeansException
+     */
     public void setApplicationContext(ApplicationContext arg0)
         throws BeansException {
 

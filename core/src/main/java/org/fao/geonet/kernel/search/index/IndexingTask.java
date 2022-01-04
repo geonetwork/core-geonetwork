@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2014 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -83,14 +83,15 @@ public class IndexingTask extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext);
-        serviceContext.setLanguage("eng");
-        serviceContext.setAsThreadLocal();
+        try (ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext)) {
+            serviceContext.setLanguage("eng");
+            serviceContext.setAsThreadLocal();
 
-        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
-                + new Date() + ". Checking if any records need to be indexed ...");
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / Start at: "
+                    + new Date() + ". Checking if any records need to be indexed ...");
+            }
+            indexRecords();
         }
-        indexRecords();
     }
 }

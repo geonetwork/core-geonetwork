@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -93,22 +93,25 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("backuparchive", context);
-        serviceContext.setLanguage("eng");
-        serviceContext.setAsThreadLocal();
+        try (ServiceContext serviceContext = serviceManager.createServiceContext("backuparchive", context)) {
+            serviceContext.setLanguage("eng");
+            serviceContext.setAsThreadLocal();
 
-        ApplicationContextHolder.set(this.context);
+            // note: perhaps already done by setAsThreadLocal() above
+            ApplicationContextHolder.set(this.context);
 
-        if(!settingManager.getValueAsBool(Settings.METADATA_BACKUPARCHIVE_ENABLE)) {
-            Log.info(BACKUP_LOG, "Backup archive not enabled");
-            return;
+            if(!settingManager.getValueAsBool(Settings.METADATA_BACKUPARCHIVE_ENABLE)) {
+                Log.info(BACKUP_LOG, "Backup archive not enabled");
+                return;
+            }
+
+            try {
+                createBackup(serviceContext);
+            } catch (Exception e) {
+                Log.error(Geonet.GEONETWORK, "Error running " + ArchiveAllMetadataJob.class.getSimpleName(), e);
+            }
         }
 
-        try {
-            createBackup(serviceContext);
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Error running " + ArchiveAllMetadataJob.class.getSimpleName(), e);
-        }
     }
 
     public void createBackup(ServiceContext serviceContext) throws Exception {

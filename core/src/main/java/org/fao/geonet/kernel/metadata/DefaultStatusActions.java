@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -72,6 +72,8 @@ import com.google.common.base.Joiner;
 public class DefaultStatusActions implements StatusActions {
 
     public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
+
+    /** Externally managed service context */
     protected ServiceContext context;
     protected String language;
     protected DataManager dm;
@@ -152,8 +154,8 @@ public class DefaultStatusActions implements StatusActions {
     /**
      * Called when a record status is added.
      *
-     * @param listOfStatus
-     * @return
+     * @param listOfStatus List of status to update
+     * @return Ids of unchanged metadata records
      * @throws Exception
      */
     public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
@@ -195,18 +197,39 @@ public class DefaultStatusActions implements StatusActions {
                     status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
 
-            //Throw events
-            Log.trace(Geonet.DATA_MANAGER, "Throw workflow events.");
+            // Issue events
+            Log.trace(Geonet.DATA_MANAGER, "Issue workflow events.");
+
+            List<String> unsuccessful = new ArrayList<>();
+            Throwable statusChangeFailure = null;
             for (Integer mid : listOfId) {
                 if (!unchanged.contains(mid)) {
-                    Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
-                    context.getApplicationContext().publishEvent(new MetadataStatusChanged(
-                        metadataUtils.findOne(Integer.valueOf(mid)),
-                        status.getStatusValue(), status.getChangeMessage(),
-                        status.getUserId()));
+                    try {
+                        Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
+                        context.getApplicationContext().publishEvent(new MetadataStatusChanged(
+                            metadataUtils.findOne(Integer.valueOf(mid)),
+                            status.getStatusValue(), status.getChangeMessage(),
+                            status.getUserId()));
+                    } catch (Exception error) {
+                        Log.error(Geonet.DATA_MANAGER,
+                            String.format("Failed to update metadata %s to status %s. Error is: %s",
+                                mid, status.getStatusValue(), error.getMessage()),
+                            error
+                        );
+                        unsuccessful.add(String.valueOf(mid));
+                        if( statusChangeFailure == null ){
+                            statusChangeFailure = error;
+                        }
+                    }
                 }
             }
-
+            if (!unsuccessful.isEmpty()){
+                throw new Exception(
+                    "Unable to change status for metadata records: "+
+                        String.join(",", unsuccessful),
+                    statusChangeFailure
+                );
+            }
         }
 
         return unchanged;

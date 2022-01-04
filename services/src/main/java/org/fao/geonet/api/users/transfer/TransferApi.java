@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -180,78 +180,78 @@ public class TransferApi {
         HttpServletRequest request
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            //--- transfer privileges (if case)
 
-        //--- transfer privileges (if case)
+            Set<String> sourcePriv = retrievePrivileges(
+                context, transfer.getSourceUser(), transfer.getSourceGroup());
+            Set<String> targetPriv = retrievePrivileges(
+                context, null, transfer.getTargetGroup());
 
-        Set<String> sourcePriv = retrievePrivileges(
-            context, transfer.getSourceUser(), transfer.getSourceGroup());
-        Set<String> targetPriv = retrievePrivileges(
-            context, null, transfer.getTargetGroup());
+            //--- a commit just to release some resources
+            dataManager.flush();
 
-        //--- a commit just to release some resources
-        dataManager.flush();
+            int privCount = 0;
 
-        int privCount = 0;
+            Set<Integer> metadata = new HashSet<Integer>();
 
-        Set<Integer> metadata = new HashSet<Integer>();
+            if (sourcePriv.size() > 0) {
+                for (String priv : sourcePriv) {
+                    StringTokenizer st = new StringTokenizer(priv, "|");
 
-        if (sourcePriv.size() > 0) {
-            for (String priv : sourcePriv) {
-                StringTokenizer st = new StringTokenizer(priv, "|");
+                    int opId = Integer.parseInt(st.nextToken());
+                    int mdId = Integer.parseInt(st.nextToken());
 
-                int opId = Integer.parseInt(st.nextToken());
-                int mdId = Integer.parseInt(st.nextToken());
+                    // 2 cases could happen, 1) only the owner change
+                    // in that case sourceGrp = targetGrp and operations
+                    // allowed does not need to be modified.
+                    if (transfer.getSourceGroup() != transfer.getTargetGroup()) {
+                        // 2) the sourceGrp != targetGrp and in that
+                        // case, all operations need to be transfered to
+                        // the new group if not already defined.
+                        dataManager.unsetOperation(context, mdId, transfer.getSourceGroup(), opId);
 
-                // 2 cases could happen, 1) only the owner change
-                // in that case sourceGrp = targetGrp and operations
-                // allowed does not need to be modified.
-                if (transfer.getSourceGroup() != transfer.getTargetGroup()) {
-                    // 2) the sourceGrp != targetGrp and in that
-                    // case, all operations need to be transfered to
-                    // the new group if not already defined.
-                    dataManager.unsetOperation(context, mdId, transfer.getSourceGroup(), opId);
-
-                    if (!targetPriv.contains(priv)) {
-                        OperationAllowedId id = new OperationAllowedId()
-                            .setGroupId(transfer.getTargetGroup())
-                            .setMetadataId(mdId)
-                            .setOperationId(opId);
-                        OperationAllowed operationAllowed = new OperationAllowed(id);
-                        operationAllowedRepository.save(operationAllowed);
+                        if (!targetPriv.contains(priv)) {
+                            OperationAllowedId id = new OperationAllowedId()
+                                .setGroupId(transfer.getTargetGroup())
+                                .setMetadataId(mdId)
+                                .setOperationId(opId);
+                            OperationAllowed operationAllowed = new OperationAllowed(id);
+                            operationAllowedRepository.save(operationAllowed);
+                        }
                     }
+
+                    // Collect all metadata ids
+                    metadata.add(mdId);
+                    privCount++;
                 }
-
-                // Collect all metadata ids
-                metadata.add(mdId);
-                privCount++;
             }
-        }
-        // If no privileges defined for the target group
-        // assign the new owner and ownerGroup for the source
-        // user records.
-        final List<Integer> sourceUserRecords =
-            metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(transfer.getSourceUser()));
-        metadata.addAll(sourceUserRecords);
+            // If no privileges defined for the target group
+            // assign the new owner and ownerGroup for the source
+            // user records.
+            final List<Integer> sourceUserRecords =
+                metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(transfer.getSourceUser()));
+            metadata.addAll(sourceUserRecords);
 
-        // Set owner for all records to be modified.
-        for (Integer i : metadata) {
-            final AbstractMetadata metadata1 = metadataRepository.findOne(i);
-            metadata1.getSourceInfo()
-                .setGroupOwner(transfer.getTargetGroup())
-                .setOwner(transfer.getTargetUser());
-            metadataManager.save(metadata1);
-        }
+            // Set owner for all records to be modified.
+            for (Integer i : metadata) {
+                final AbstractMetadata metadata1 = metadataRepository.findOne(i);
+                metadata1.getSourceInfo()
+                    .setGroupOwner(transfer.getTargetGroup())
+                    .setOwner(transfer.getTargetUser());
+                metadataManager.save(metadata1);
+            }
 
-        dataManager.flush();
+            dataManager.flush();
 
-        //--- reindex metadata
-        List<String> list = new ArrayList<String>();
-        for (int mdId : metadata) {
-            list.add(Integer.toString(mdId));
+            //--- reindex metadata
+            List<String> list = new ArrayList<String>();
+            for (int mdId : metadata) {
+                list.add(Integer.toString(mdId));
+            }
+            dataManager.indexMetadata(list);
+            return new ResponseEntity(HttpStatus.CREATED);
         }
-        dataManager.indexMetadata(list);
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {

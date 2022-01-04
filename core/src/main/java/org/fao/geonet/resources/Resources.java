@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -283,18 +283,20 @@ public abstract class Resources {
         try {
             Path srcPath = locateResource(locateResourcesDir(context), servletContext, appDir, icon);
             String extension = Files.getFileExtension(srcPath.getFileName().toString());
-            try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), srcPath.getParent());
-                ResourceHolder des = getWritableImage(context, destName + "." + extension,
-                                                      logosDir)) {
-                if (src != null) {
-                    java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
-                } else {
-                    des.abort();
+            try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), srcPath.getParent())){
+                if( src == null) {
+                    throw new IOException("Resource not found: "+srcPath.toString());
+                }
+                try (ResourceHolder des = getWritableImage(context, destName + "." + extension, logosDir)) {
+                    if (src != null) {
+                        java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
+                    } else {
+                        des.abort();
+                    }
                 }
             }
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
-
             context.warning("Cannot copy icon -> " + e.getMessage());
             context.warning(" (C) Source : " + icon);
             context.warning(" (C) Destin : " + logosDir);

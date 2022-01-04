@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -105,16 +105,17 @@ public class LogosApi {
     public Set<String> getLogos(
         HttpServletRequest request
     ) {
-        ApplicationContext context = ApplicationContextHolder.get();
-        Set<Path> icons = context.getBean(Resources.class).listFiles(
-            ApiUtils.createServiceContext(request),
-            "harvesting",
-            iconFilter);
-        Set<String> iconsList = new HashSet<>(icons.size());
-        for (Path i : icons) {
-            iconsList.add(i.getFileName().toString());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Set<Path> icons = context.getBean(Resources.class).listFiles(
+                ApiUtils.createServiceContext(request),
+                "harvesting",
+                iconFilter);
+            Set<String> iconsList = new HashSet<>(icons.size());
+            for (Path i : icons) {
+                iconsList.add(i.getFileName().toString());
+            }
+            return iconsList;
         }
-        return iconsList;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -149,25 +150,26 @@ public class LogosApi {
             boolean overwrite,
         HttpServletRequest request
     ) throws Exception {
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final Resources resources = appContext.getBean(Resources.class);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            final ApplicationContext appContext = ApplicationContextHolder.get();
+            final Resources resources = appContext.getBean(Resources.class);
+            final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
 
-        for (MultipartFile f : file) {
-            String fileName = f.getOriginalFilename();
+            for (MultipartFile f : file) {
+                String fileName = f.getOriginalFilename();
 
-            checkFileName(fileName);
+                checkFileName(fileName);
 
-            try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
-                if (Files.exists(holder.getPath()) && !overwrite) {
-                    holder.abort();
-                    throw new ResourceAlreadyExistException(fileName);
+                try (Resources.ResourceHolder holder = resources.getWritableImage(serviceContext, fileName, directoryPath)) {
+                    if (Files.exists(holder.getPath()) && !overwrite) {
+                        holder.abort();
+                        throw new ResourceAlreadyExistException(fileName);
+                    }
+                    Files.copy(f.getInputStream(), holder.getPath());
                 }
-                Files.copy(f.getInputStream(), holder.getPath());
             }
+            return new ResponseEntity(HttpStatus.CREATED);
         }
-        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     private void checkFileName(String fileName) throws Exception {
@@ -206,26 +208,27 @@ public class LogosApi {
         checkFileName(file);
         FilePathChecker.verify(file);
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final Resources resources = appContext.getBean(Resources.class);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            final ApplicationContext appContext = ApplicationContextHolder.get();
+            final Resources resources = appContext.getBean(Resources.class);
+            final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
 
-        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)) {
-            if (image != null) {
-                final List<Group> groups = groupRepository.findByLogo(file);
-                if (groups != null && groups.size() > 0) {
-                    final List<String> groupIds =
-                        groups.stream().map(Group::getName).collect(Collectors.toList());
-                    throw new IllegalArgumentException(String.format(
-                        "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
-                        file, groups.size(), groupIds.toString()));
+            try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)) {
+                if (image != null) {
+                    final List<Group> groups = groupRepository.findByLogo(file);
+                    if (groups != null && groups.size() > 0) {
+                        final List<String> groupIds =
+                            groups.stream().map(Group::getName).collect(Collectors.toList());
+                        throw new IllegalArgumentException(String.format(
+                            "Logo '%s' is used by %d group(s). Assign another logo to the following groups: %s.",
+                            file, groups.size(), groupIds.toString()));
+                    }
+
+                    resources.deleteImageIfExists(file, nodeLogoDirectory);
+                } else {
+                    throw new ResourceNotFoundException(String.format(
+                        "No logo found with filename '%s'.", file));
                 }
-
-                resources.deleteImageIfExists(file, nodeLogoDirectory);
-            } else {
-                throw new ResourceNotFoundException(String.format(
-                    "No logo found with filename '%s'.", file));
             }
         }
     }

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -50,10 +50,14 @@ import java.util.Map;
 
 
 /**
- * Utilities.
+ * Utilities methods to assist with editing.
+ *
+ * This facade wraps around GeoNetwork beans obtained from serviceContext
+ * to perform common editing operations involving several components.
  */
 class EditUtils {
 
+    /** Transitory use of service context */
     protected ServiceContext context;
     protected DataManager dataManager;
     protected XmlSerializer xmlSerializer;

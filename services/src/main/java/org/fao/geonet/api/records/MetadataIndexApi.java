@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -98,38 +98,39 @@ public class MetadataIndexApi {
     )
         throws Exception {
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        UserSession session = ApiUtils.getUserSession(httpSession);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            UserSession session = ApiUtils.getUserSession(httpSession);
 
-        SelectionManager selectionManager =
-            SelectionManager.getManager(serviceContext.getUserSession());
+            SelectionManager selectionManager =
+                SelectionManager.getManager(serviceContext.getUserSession());
 
-        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-        Set<Integer> ids = Sets.newHashSet();
-        int index = 0;
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
+            Set<Integer> ids = Sets.newHashSet();
+            int index = 0;
 
-        for (String uuid : records) {
-            try {
-                final String metadataId = dataManager.getMetadataId(uuid);
-                if (metadataId != null) {
-                    ids.add(Integer.valueOf(metadataId));
-                }
-            } catch (Exception e) {
+            for (String uuid : records) {
                 try {
-                    ids.add(Integer.valueOf(uuid));
-                } catch (NumberFormatException nfe) {
-                    // skip
+                    final String metadataId = dataManager.getMetadataId(uuid);
+                    if (metadataId != null) {
+                        ids.add(Integer.valueOf(metadataId));
+                    }
+                } catch (Exception e) {
+                    try {
+                        ids.add(Integer.valueOf(uuid));
+                    } catch (NumberFormatException nfe) {
+                        // skip
+                    }
                 }
             }
+            index = ids.size();
+            new BatchOpsMetadataReindexer(dataManager, ids).process(false);
+
+            JSONObject res = new JSONObject();
+            res.put("success", true);
+            res.put("count", index);
+
+            return res;
         }
-        index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids).process(false);
-
-        JSONObject res = new JSONObject();
-        res.put("success", true);
-        res.put("count", index);
-
-        return res;
     }
 
 }

@@ -3,7 +3,7 @@
 //===   JeevesEngine
 //===
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -92,6 +92,8 @@ public class JeevesEngine {
     private Path _appPath;
     private int _maxUploadSize;
 
+    /** AppHandler service context used during init, tasks and background activities */
+    private ServiceContext appHandlerContext;
 
     public static void handleStartupError(Throwable e) {
         Log.fatal(Log.ENGINE, "Raised exception during init");
@@ -391,6 +393,13 @@ public class JeevesEngine {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Setup application hanlder using the provided handler definition.
+     *
+     * @param handler handler definition
+     * @param servlet jeeves servlet responsible for http distpatch
+     * @throws Exception
+     */
     private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception {
         if (handler == null) {
             info("Handler not found");
@@ -413,20 +422,20 @@ public class JeevesEngine {
 
             ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-            ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", appContext);
-            srvContext.setLanguage(_defaultLang);
-            srvContext.setLogger(_appHandLogger);
-            srvContext.setServlet(servlet);
-            srvContext.setAsThreadLocal();
+            appHandlerContext = serviceMan.createAppHandlerServiceContext(appContext);
+            appHandlerContext.setLanguage(_defaultLang);
+            appHandlerContext.setLogger(_appHandLogger);
+            appHandlerContext.setServlet(servlet);
+            appHandlerContext.setAsThreadLocal();
 
             try {
                 info("--- Starting handler --------------------------------------");
 
-                Object context = h.start(handler, srvContext);
+                Object context = h.start(handler, appHandlerContext);
 
                 _appHandlers.add(h);
                 serviceMan.registerContext(h.getContextName(), context);
-                monitorManager.initMonitorsForApp(srvContext);
+                monitorManager.initMonitorsForApp(appHandlerContext);
 
                 info("--- Handler started ---------------------------------------");
             } catch (Exception e) {
@@ -449,6 +458,9 @@ public class JeevesEngine {
                 if (!serviceMan.isStartupError()) {
                     serviceMan.setStartupErrors(errors);
                 }
+            }
+            finally {
+                appHandlerContext.clearAsThreadLocal();
             }
         }
     }
@@ -508,7 +520,11 @@ public class JeevesEngine {
             info("Stopping handlers...");
             stopHandlers();
 
+            info("Clearing application handler context...");
+            appHandlerContext.clear();
+
             info("=== System stopped ========================================");
+
         } catch (Exception e) {
             error("Raised exception during destroy");
             error("  Exception : " + e);
@@ -525,7 +541,12 @@ public class JeevesEngine {
 
     private void stopHandlers() throws Exception {
         for (ApplicationHandler h : _appHandlers) {
-            h.stop();
+            try {
+                h.stop();
+            } catch (Throwable unexpected){
+                _appHandLogger.error("Difficulty while stopping "+h.getContextName());
+                _appHandLogger.error(unexpected);
+            }
         }
     }
 

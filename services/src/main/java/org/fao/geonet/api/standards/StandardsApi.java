@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -204,20 +204,21 @@ public class StandardsApi implements ApplicationContextAware {
         HttpServletRequest request
     ) throws Exception {
         Map<String, String> response = new LinkedHashMap<String, String>();
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        context.setLanguage(language.getISO3Language());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+            context.setLanguage(language.getISO3Language());
 
-        for (String c : codelist) {
-            Element e = StandardsUtils.getCodelist(c, schemaManager,
-                schema, null, null, null, context, null);
+            for (String c : codelist) {
+                Element e = StandardsUtils.getCodelist(c, schemaManager,
+                    schema, null, null, null, context, null);
 
-            List<Element> listOfEntry = e.getChildren("entry");
-            for (Element entry : listOfEntry) {
-                response.put(entry.getChildText("code"), entry.getChildText("label"));
+                List<Element> listOfEntry = e.getChildren("entry");
+                for (Element entry : listOfEntry) {
+                    response.put(entry.getChildText("code"), entry.getChildText("label"));
+                }
             }
+            return response;
         }
-        return response;
     }
 
 
@@ -243,19 +244,20 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
-        Map<String, String> response = new LinkedHashMap<String, String>();
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        context.setLanguage(language.getISO3Language());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Map<String, String> response = new LinkedHashMap<String, String>();
+            Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+            context.setLanguage(language.getISO3Language());
 
-        Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context, displayIf);
+            Element e = StandardsUtils.getCodelist(codelist, schemaManager,
+                schema, parent, xpath, isoType, context, displayIf);
 
-        List<Element> listOfEntry = e.getChildren("entry");
-        for (Element entry : listOfEntry) {
-            response.put(entry.getChildText("code"), entry.getChildText("label"));
+            List<Element> listOfEntry = e.getChildren("entry");
+            for (Element entry : listOfEntry) {
+                response.put(entry.getChildText("code"), entry.getChildText("label"));
+            }
+            return response;
         }
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get codelist details")
@@ -293,14 +295,15 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        context.setLanguage(language.getISO3Language());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+            context.setLanguage(language.getISO3Language());
 
-        Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context, displayIf);
+            Element e = StandardsUtils.getCodelist(codelist, schemaManager,
+                schema, parent, xpath, isoType, context, displayIf);
 
-        return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
+            return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get descriptor details")
@@ -327,14 +330,15 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        context.setLanguage(language.getISO3Language());
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+            context.setLanguage(language.getISO3Language());
 
-        Element e = StandardsUtils.getLabel(element, schemaManager,
-            schema, parent, xpath, isoType, displayIf, context);
+            Element e = StandardsUtils.getLabel(element, schemaManager,
+                schema, parent, xpath, isoType, displayIf, context);
 
-        return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
+            return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
+        }
     }
 
 

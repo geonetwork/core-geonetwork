@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -188,51 +188,52 @@ public class GroupsApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ApplicationContext context = ApplicationContextHolder.get();
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country());
-        if (context == null) {
-            throw new RuntimeException("ServiceContext not available");
-        }
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
+            if (context == null) {
+                throw new RuntimeException("ServiceContext not available");
+            }
 
-        Optional<Group> group = groupRepository.findById(groupId);
-        if (!group.isPresent()) {
-            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
-                Object[]{groupId}, locale));
-        }
-        try {
-            final Resources resources = context.getBean(Resources.class);
-            final String logoUUID = group.get().getLogo();
-            if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group.get())) {
-                    if (image != null) {
-                        FileTime lastModifiedTime = image.getLastModifiedTime();
-                        response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-                        if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                            // webRequest.checkNotModified sets the right HTTP headers
+            Optional<Group> group = groupRepository.findById(groupId);
+            if (!group.isPresent()) {
+                throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                    Object[]{groupId}, locale));
+            }
+            try {
+                final Resources resources = context.getBean(Resources.class);
+                final String logoUUID = group.get().getLogo();
+                if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
+                    try (Resources.ResourceHolder image = getImage(resources, serviceContext, group.get())) {
+                        if (image != null) {
+                            FileTime lastModifiedTime = image.getLastModifiedTime();
+                            response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
+                            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                                // webRequest.checkNotModified sets the right HTTP headers
+                                return;
+                            }
+                            response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                            response.setContentLength((int) Files.size(image.getPath()));
+                            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                            FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
-                        response.setContentLength((int) Files.size(image.getPath()));
-                        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                        FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
-                        return;
                     }
                 }
-            }
 
-            // no logo image found. Return a transparent 1x1 png
-            FileTime lastModifiedTime = FileTime.fromMillis(0);
-            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                return;
-            }
-            response.setContentType("image/png");
-            response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-            response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+                // no logo image found. Return a transparent 1x1 png
+                FileTime lastModifiedTime = FileTime.fromMillis(0);
+                if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                    return;
+                }
+                response.setContentType("image/png");
+                response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
+                response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
 
-        } catch (IOException e) {
-            Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
-                groupId));
-            throw new RuntimeException(e);
+            } catch (IOException e) {
+                Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
+                    groupId));
+                throw new RuntimeException(e);
+            }
         }
     }
 

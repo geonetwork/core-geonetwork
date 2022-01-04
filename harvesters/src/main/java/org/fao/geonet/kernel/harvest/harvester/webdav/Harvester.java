@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -84,6 +84,7 @@ interface RemoteFile {
 class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestResult> {
 
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;

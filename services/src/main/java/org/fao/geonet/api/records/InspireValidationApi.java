@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -212,7 +212,6 @@ public class InspireValidationApi {
         String id = String.valueOf(metadata.getId());
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
         String getRecordByIdUrl = null;
         String testId = null;
 
@@ -226,7 +225,7 @@ public class InspireValidationApi {
         if (StringUtils.isEmpty(mode)) {
             // Use formatter to convert the record
             if (!schema.equals("iso19139")) {
-                try {
+                try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                     Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
                     final FormatterApi.FormatMetadata formatMetadata =
@@ -246,24 +245,36 @@ public class InspireValidationApi {
 
 
             md.detach();
-            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+
+            // The following is unusual, we are creating a service context so it is our responsibility
+            // to ensure it is cleaned up.
+            //
+            // This is going to be accomplished by the scheduled InspireValidationRunnable
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            try {
+                Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 "iso19139", context);
 
-            if (schemaLocAtt != null) {
-                if (md.getAttribute(
-                    schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
-                    md.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                if (schemaLocAtt != null) {
+                    if (md.getAttribute(
+                        schemaLocAtt.getName(),
+                        schemaLocAtt.getNamespace()) == null) {
+                        md.setAttribute(schemaLocAtt);
+                        // make sure namespace declaration for schemalocation is present -
+                        // remove it first (does nothing if not there) then add it
+                        md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                        md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    }
                 }
+
+                InputStream metadataToTest = convertElement2InputStream(md);
+                testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
+
+                threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+            } finally {
+                context.clearAsThreadLocal();
+                // context clear is handled scheduled InspireValidationRunnable above
             }
-
-
-            InputStream metadataToTest = convertElement2InputStream(md);
-            testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
         } else {
             String portal = NodeInfo.DEFAULT_NODE;
             if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
@@ -283,10 +294,20 @@ public class InspireValidationApi {
                 portal,
                 ISO19139Namespaces.GMD.getURI(),
                 metadataUuid);
-            testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
-        }
 
-        threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+            // The following is unusual, we are creating a service context so it is our responsibility
+            // to ensure it is cleaned up.
+            //
+            // This is going to be accomplished by the scheduled InspireValidationRunnable
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            try {
+                testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
+                threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+            } finally {
+                context.clearAsThreadLocal();
+                // context clear is handled scheduled InspireValidationRunnable above
+            }
+        }
 
         return testId;
     }
@@ -337,9 +358,8 @@ public class InspireValidationApi {
     ) throws Exception {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             if (inspireValidatorUtils.isReady(context, URL, testId)) {
                 Map<String, String> values = new HashMap<>();
 

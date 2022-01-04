@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -50,21 +50,28 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 /**
- * Utility interface for records
+ * Utility interface for working with records.
+ *
+ * Operates as a facade with utility methods orchestrating common operations using a constellation
+ * beans drawn from across the application.
  *
  * @author delawen
- *
  */
 public interface IMetadataUtils {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
      *
-     * @param context
-     * @param force
+     * @param appHandlerContext   this is the app handler context from jeeves initialization
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    public void init(ServiceContext appHandlerContext) throws Exception;
+
+    /**
+     * Clean up during application shutdown.
+     * @throws Exception
+     */
+    public void destroy() throws Exception;
 
     /**
      * Return the uuid of the record with the defined id

@@ -125,23 +125,25 @@ public class RegionsApi {
         final HttpServletRequest nativeRequest =
             webRequest.getNativeRequest(HttpServletRequest.class);
 
-        ServiceContext context = ApiUtils.createServiceContext(nativeRequest);
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        Collection<RegionsDAO> daos =
-            applicationContext.getBeansOfType(RegionsDAO.class).values();
+        try (ServiceContext context = ApiUtils.createServiceContext(nativeRequest)) {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            Collection<RegionsDAO> daos =
+                applicationContext.getBeansOfType(RegionsDAO.class).values();
 
-        Collection<Region> regions = Lists.newArrayList();
-        for (RegionsDAO dao : daos) {
-            if (dao.includeInListing()) {
-                Request request = createRequest(label, categoryId, maxRecords, context, dao);
-                regions.addAll(request.execute());
+            Collection<Region> regions = Lists.newArrayList();
+            for (RegionsDAO dao : daos) {
+                if (dao.includeInListing()) {
+                    Request request = createRequest(label, categoryId, maxRecords, context, dao);
+                    regions.addAll(request.execute());
+                }
             }
+
+            final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
+
+            nativeResponse.setHeader("Cache-Control", "no-cache");
+            return new ListRegionsResponse(regions);
         }
 
-        final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
-
-        nativeResponse.setHeader("Cache-Control", "no-cache");
-        return new ListRegionsResponse(regions);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -160,45 +162,45 @@ public class RegionsApi {
     @ResponseBody
     public List<Category> getRegionTypes(
         HttpServletRequest request) throws Exception {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            String language = languageUtils.getIso3langCode(request.getLocales());
+            Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
+            List<Category> response = new ArrayList<>();
+            for (RegionsDAO dao : daos) {
+                if (dao instanceof ThesaurusBasedRegionsDAO) {
+                    java.util.List<KeywordBean> keywords =
+                        ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
+                    if (keywords != null) {
+                        for (KeywordBean k : keywords) {
+                            String label = "";
+                            try {
+                                label = k.getPreferredLabel(language);
+                            } catch (LabelNotFoundException ex) {
+                                label = k.getDefaultValue();
+                            }
 
-        String language = languageUtils.getIso3langCode(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
-        List<Category> response = new ArrayList<>();
-        for (RegionsDAO dao : daos) {
-            if (dao instanceof ThesaurusBasedRegionsDAO) {
-                java.util.List<KeywordBean> keywords =
-                    ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
-                if (keywords != null) {
-                    for (KeywordBean k : keywords) {
-                        String label = "";
-                        try {
-                            label = k.getPreferredLabel(language);
-                        } catch (LabelNotFoundException ex) {
-                            label = k.getDefaultValue();
+                            Category c = new Category(
+                                k.getUriCode(),
+                                label
+                            );
+                            response.add(c);
                         }
-
-                        Category c = new Category(
-                            k.getUriCode(),
-                            label
-                        );
-                        response.add(c);
                     }
-                }
-            } else {
-                Collection<String> ids = dao.getRegionCategoryIds(context);
-                if (ids != null) {
-                    for (String id : ids) {
-                        Category c = new Category(
-                            id,
-                            null
-                        );
-                        response.add(c);
+                } else {
+                    Collection<String> ids = dao.getRegionCategoryIds(context);
+                    if (ids != null) {
+                        for (String id : ids) {
+                            Category c = new Category(
+                                id,
+                                null
+                            );
+                            response.add(c);
+                        }
                     }
                 }
             }
+            return response;
         }
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -230,8 +232,8 @@ public class RegionsApi {
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         String srs = mapSrs;
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         if (StringUtils.isBlank(srs)) {
             // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
             // to EPSG:4326
@@ -280,5 +282,6 @@ public class RegionsApi {
             headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
         }
+      }
     }
 }

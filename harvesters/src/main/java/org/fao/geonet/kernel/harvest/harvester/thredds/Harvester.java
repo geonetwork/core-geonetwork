@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -159,17 +159,15 @@ import javax.net.ssl.SSLHandshakeException;
  */
 class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<HarvestResult> {
 
-
-		// Namespaces needed here....
-
+    // Namespaces needed here....
     static private final Namespace invCatalog = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
     static private final Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
     static private final Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
     static private final Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
     static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
-		static private final Namespace xsi = Namespace.getNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
-		static private final Namespace gco = Namespace.getNamespace("gco","http://www.isotc211.org/2005/gco");
+    static private final Namespace xsi = Namespace.getNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
+    static private final Namespace gco = Namespace.getNamespace("gco","http://www.isotc211.org/2005/gco");
     static private final Namespace gmi = Namespace.getNamespace("gmi","http://www.isotc211.org/2005/gmi");
     static private final Namespace gmx = Namespace.getNamespace("gmx","http://www.isotc211.org/2005/gmx");
     static private final Namespace gsr = Namespace.getNamespace("gsr","http://www.isotc211.org/2005/gsr");
@@ -179,6 +177,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
     static private final Namespace xs = Namespace.getNamespace("xs","http://www.w3.org/2001/XMLSchema");
 
     private Logger log;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private SchemaManager schemaMan;
     private CategoryMapper localCateg;

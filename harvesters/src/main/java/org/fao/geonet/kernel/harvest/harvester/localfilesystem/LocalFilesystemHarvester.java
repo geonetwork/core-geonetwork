@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2009 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -131,7 +131,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         log.debug(String.format(
             "Starting indexing in batch thread pool of %d updated records ...",
             listOfRecordsToIndex.size()));
-        dataMan.batchIndexInThreadPool(context, listOfRecordsToIndex);
+        dataMan.batchIndexInThreadPool(listOfRecordsToIndex);
 
         log.debug("End of alignment for : " + params.getName());
         return result;

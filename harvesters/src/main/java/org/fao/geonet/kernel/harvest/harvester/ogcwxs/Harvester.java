@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -159,6 +159,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
     private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;
@@ -253,7 +254,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
         });
 
-        dataMan.batchIndexInThreadPool(context, ids);
+        dataMan.batchIndexInThreadPool(ids);
 
         result.totalMetadata = result.addedMetadata + result.updatedMetadata;
         Store store = context.getBean("resourceStore", Store.class);
