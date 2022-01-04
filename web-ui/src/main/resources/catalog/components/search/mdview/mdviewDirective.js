@@ -152,6 +152,56 @@
       };
     }]);
 
+  module.directive('gnDataPreview', [
+    'gnMapsManager', 'gnMap', 'gnSearchSettings',
+    function(gnMapsManager, gnMap, gnSearchSettings) {
+      return {
+        scope: {
+          md: '=gnDataPreview'
+        },
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+            'datapreview.html',
+        controller: ['$scope', '$timeout',
+          function ($scope, $timeout) {
+          $scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          $scope.hasExtent = false;
+          $scope.extentLayer = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            map: $scope.map,
+            style: gnSearchSettings.olStyles.mdExtent
+          });
+
+          this.addRecordsExtent = function(records) {
+            $scope.extentLayer.getSource().clear();
+
+            for (var i = 0; i < records.length; i++) {
+              var feat = gnMap.getBboxFeatureFromMd(records[i],
+                $scope.map.getView().getProjection());
+              $scope.extentLayer.getSource().addFeature(feat);
+              $scope.hasExtent = !!feat.getGeometry();
+            }
+
+            if ($scope.hasExtent) {
+              $timeout(function() {
+                $scope.map.getView().fit(
+                  $scope.extentLayer.getSource().getExtent(),
+                  $scope.map.getSize());
+              }, 100);
+            }
+          }
+        }],
+        link: function(scope, element, attrs, ctrl) {
+          if (scope.md) {
+            scope.map.get('creationPromise').then(function() {
+              ctrl.addRecordsExtent([scope.md]);
+                scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
+                  gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+                });
+            })
+          }
+        }
+      };
+    }]);
 
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
