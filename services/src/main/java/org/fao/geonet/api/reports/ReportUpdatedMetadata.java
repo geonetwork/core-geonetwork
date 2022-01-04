@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -114,7 +114,7 @@ public class ReportUpdatedMetadata implements IReport {
                     metadata.getSourceInfo().getOwner();
                 if (mdUserOwner != null) {
                     Optional<User> userOwnerFilter = users.stream().filter(
-                        u -> u.getId() == mdUserOwner)
+                            u -> u.getId() == mdUserOwner)
                         .findFirst();
 
                     if (userOwnerFilter.isPresent()) {
@@ -135,7 +135,7 @@ public class ReportUpdatedMetadata implements IReport {
                     metadata.getSourceInfo().getGroupOwner();
                 if (mdGroupOwner != null) {
                     Optional<Group> groupOwnerFilter = groups.stream().filter(
-                        g -> g.getId() == mdGroupOwner)
+                            g -> g.getId() == mdGroupOwner)
                         .findFirst();
                     if (groupOwnerFilter.isPresent()) {
                         Group groupOwner = groupOwnerFilter.get();

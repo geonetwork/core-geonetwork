@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -100,7 +100,7 @@ public class MetadataReportsQueries {
      * Optionally filters metadata in groups.
      */
     public List<? extends AbstractMetadata> getInternalMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups,
-                                              @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
+                                                                @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Metadata> cbQuery = cb.createQuery(Metadata.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
