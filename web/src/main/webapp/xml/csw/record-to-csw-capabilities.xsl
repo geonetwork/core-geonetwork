@@ -391,6 +391,37 @@
               </inspire_com:Conformity>
             </xsl:for-each>
 
+            <xsl:for-each select="//mdb:dataQualityInfo/*/mdq:report/*/mdq:result/*[contains(
+                                    string-join(mdq:specification/*/cit:title/*/text(), ''), '976/2009')]|
+                                    //gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*[contains(
+                                    string-join(gmd:specification/*/gmd:title/*/text(), ''), '976/2009')]">
+              <inspire_com:Conformity>
+                <inspire_com:Specification
+                  xsi:type="inspire_com:citationInspireInteroperabilityRegulation_{$mainLanguage}">
+                  <inspire_com:Title>
+                    <xsl:apply-templates mode="localised"
+                                         select="mdq:specification/*/cit:title|gmd:specification/*/gmd:title"/>
+                  </inspire_com:Title>
+                  <inspire_com:DateOfPublication>2009-10-20</inspire_com:DateOfPublication>
+                  <inspire_com:URI>CONSLEG:2009R0976:20101228:<xsl:value-of select="upper-case($iso2lang)"/>:PDF</inspire_com:URI>
+                  <inspire_com:ResourceLocator>
+                    <inspire_com:URL>
+                      https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:2009R0976:20101228:<xsl:value-of select="upper-case($iso2lang)"/>:PDF
+                    </inspire_com:URL>
+                    <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
+                  </inspire_com:ResourceLocator>
+                </inspire_com:Specification>
+
+                <inspire_com:Degree>
+                  <xsl:choose>
+                    <xsl:when test="mdq:pass/gco:Boolean = 'true' or gmd:pass/gco139:Boolean = 'true'">conformant</xsl:when>
+                    <xsl:when test="mdq:pass/gco:Boolean = 'false' or gmd:pass/gco139:Boolean = 'false'">notConformant</xsl:when>
+                    <xsl:otherwise>notEvaluated</xsl:otherwise>
+                  </xsl:choose>
+                </inspire_com:Degree>
+              </inspire_com:Conformity>
+            </xsl:for-each>
+
 
             <xsl:for-each select="//mdb:contact[1]/*|//gmd:contact[1]/*">
               <inspire_com:MetadataPointOfContact>
