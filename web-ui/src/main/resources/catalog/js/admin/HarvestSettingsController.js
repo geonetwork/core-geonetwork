@@ -344,7 +344,7 @@
 
           // Retrieve records in that harvester
           angular.extend($scope.searchObj.params, {
-            siteId: $scope.harvesterSelected.site.uuid
+            _harvesterUuid: $scope.harvesterSelected.site.uuid
           });
           $scope.$broadcast('resetSearch', $scope.searchObj.params);
         });

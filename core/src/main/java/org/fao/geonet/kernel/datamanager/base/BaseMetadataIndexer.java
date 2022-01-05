@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -483,6 +483,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
+
+            if (fullMd.getHarvestInfo().isHarvested()) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HARVESTUUID, fullMd.getHarvestInfo().getUuid(), true, true));
+            }
+
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
