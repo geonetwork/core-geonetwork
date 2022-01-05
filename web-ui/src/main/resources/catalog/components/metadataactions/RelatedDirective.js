@@ -281,6 +281,8 @@
                   return r.protocol.replace('WWW:DOWNLOAD:', '');
                 } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
                   return mainType.replace('SERVICE', '');
+                } else if (mainType.indexOf('KML') >= 0) {
+                  return mainType;
                 } else {
                   return '';
                 }

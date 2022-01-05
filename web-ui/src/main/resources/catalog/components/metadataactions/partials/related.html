@@ -7,20 +7,25 @@
        data-ng-if="type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
                        badge = getBadgeLabel(mainType, r);
-                       icon = config.getClassIcon(mainType);"
+                       icon = config.getClassIcon(mainType);
+                       protocolIcon = config.getProtocolClassIcon(r.protocol);"
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
          data-ng-repeat="r in items track by $index">
       <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
         <strong>
           <div class="clearfix">
             <i class="fa"
-               data-ng-class="icon"/>
+               data-ng-class="mainType.indexOf('DEFAULT') === 0 ? 'fa-question-circle gn-icon-' + protocolIcon : icon"/>
           </div>
           <span data-ng-if="badge != ''"
                 class="label label-default"
                 data-ng-class="{
                   'label-primary': icon === 'fa-download' || icon === 'fa-file-pdf-o',
                   'label-success': icon === 'fa-globe'}">{{badge}}</span>
+          <span data-ng-if="mainType.indexOf('DEFAULT') === 0"
+                class="label label-default">
+            {{r.protocol}}
+          </span>
         </strong>
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
@@ -73,12 +78,6 @@
                     data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                 wfsLinkDetails</span>
             </p>
-            <div data-ng-if="isLayerProtocol(r)"
-                 data-gn-no-map-wfs-download=""
-                 data-typename="{{r.title | gnLocalized: lang}}"
-                 data-url="{{r.url | gnLocalized: lang}}">
-            </div>
-
             <p class="text-muted"
                data-ng-if="!isLayerProtocol(r)">
               <span data-translate=""
@@ -158,6 +157,10 @@
             </div>
           </div>
 
+          <div data-ng-switch-when="LINKDOWNLOAD-ZIP">
+            <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+          </div>
+
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id
@@ -198,6 +201,12 @@
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
         </button>
+
+        <div data-ng-if="mainType === 'WFS'"
+             data-gn-no-map-wfs-download=""
+             data-typename="{{r.title | gnLocalized: lang}}"
+             data-url="{{r.url | gnLocalized: lang}}">
+        </div>
 
 
         <button type="button"

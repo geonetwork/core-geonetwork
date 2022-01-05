@@ -345,6 +345,10 @@
                 this.map['DEFAULT'].iconClass;
           };
 
+          this.getProtocolClassIcon = function (type) {
+            return type.replace(':','-').replace(' ','-').toLowerCase();
+          };
+
           this.getLabel = function(mainType, type) {
             // Old key before the move to API
             var oldKey = {
