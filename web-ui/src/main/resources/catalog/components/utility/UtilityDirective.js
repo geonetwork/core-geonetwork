@@ -561,7 +561,8 @@
   ]);
 
   module.service('gnClipboard', ['$q', function ($q) {
-      return {copy: function (toCopy) {
+    return {
+      copy: function (toCopy) {
         var deferred = $q.defer();
         navigator.permissions.query({name: "clipboard-write"})
           .then(function(result) {
@@ -576,8 +577,25 @@
           deferred.reject();
         });
         return deferred.promise;
-      }}
-    }])
+      },
+      paste: function () {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-read"})
+          .then(function(result) {
+            if (result.state == "granted" || result.state == "prompt") {
+              navigator.clipboard.readText().then(function(text) {
+                deferred.resolve(text);
+              }, function() {
+                deferred.reject();
+              });
+            }
+          }, function() {
+            deferred.reject();
+          });
+        return deferred.promise;
+      }
+    }
+  }])
 
   /*
    * @description
@@ -589,13 +607,14 @@
         restrict: 'A',
         template: '<a class="btn btn-default btn-xs" ' +
           '           ng-click="copy()" ' +
-          '           title="{{\'copyToClipboard\' | translate}}">' +
+          '           title="{{title | translate}}">' +
           '<i class="fa fa-fw" ' +
           '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
           '</a>',
         scope: {},
         link: function linkFn(scope, element, attr) {
           scope.copied = false;
+          scope.title = attr['title'] || 'copyToClipboard';
           scope.copy = function() {
             gnClipboard.copy(
               attr['text']
