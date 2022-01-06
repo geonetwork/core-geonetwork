@@ -559,5 +559,7 @@
     "unselectChoiceNotAllowedTitle": "Unselect choices",
     "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
     "searchOptions": "Search options",
-    "options": "Options"
+    "options": "Options",
+    "copyToClipboard": "Copy the text to the clipboard",
+    "textCopied": "Text has been copied to the clipboard."
 }

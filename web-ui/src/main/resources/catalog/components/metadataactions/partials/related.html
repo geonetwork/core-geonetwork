@@ -174,6 +174,7 @@
                 {{ (r.description | gnLocalized: lang | striptags)}}</a>
               </span>
               <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+              <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="false"></span>
             </p>
           </div>
         </div>
