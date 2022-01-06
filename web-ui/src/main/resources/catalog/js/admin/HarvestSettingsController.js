@@ -854,6 +854,7 @@
       $scope.getHarvesterTypes = function() {
         var array = [];
         angular.forEach($scope.harvesterTypes, function(h) {
+          h.label = $translate.instant(h.label);
           array.push(h);
         });
         return array;
