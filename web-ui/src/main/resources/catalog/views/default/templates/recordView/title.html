@@ -1,0 +1,23 @@
+<div class="gn-card gn-card-{{mdView.current.record.resourceType[0]}}">
+
+  <div data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
+                    && mdView.current.record.relatedRecords"
+       data-gn-record-mosaic=""
+       records="mdView.current.record.relatedRecords.all" size="9"/>
+
+  <h1>
+    <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
+
+    {{mdView.current.record.resourceTitle}}
+
+    <span class="text-muted badge"
+          data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+          data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+  </h1>
+
+  <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
+</div>
+
+<div class="gn-collection"
+     data-gn-keyword-badges="mdView.current.record.allKeywords"/>
+

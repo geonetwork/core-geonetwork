@@ -1,35 +1,38 @@
 <div class="col-md-8 gn-record">
-  <div class="gn-card gn-card-service">
-    <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
-    <!-- abstract -->
-    <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
-  </div>
+  <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
 
-  <!-- Display the first metadata status (apply to ISO19139 record) -->
-<!--  <div class="row">-->
-<!--    <div data-ng-if="mdView.current.record.cl_status.length > 0"-->
-<!--         data-ng-repeat="c in mdView.current.record.cl_status track by $index">-->
-<!--      <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1-->
-<!--                               && showStatusTopBarFor.indexOf(c.key) === -1"-->
-<!--           title="{{c.key | translate}}"-->
-<!--           class="gn-status gn-status-mdview gn-status-{{c.key}}">-->
-<!--        {{c.key | translate}}-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
+
+  <div data-gn-data-preview="mdView.current.record"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/common.html'"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
+
+  <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+
 
   <div data-ng-if="showCitation"
        data-gn-metadata-citation="mdView.current.record"/>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView-tabbed.html'"/>
-
   <div data-gn-more-like-this="mdView.current.record"/>
+
 </div>
 
 <div class="col-md-4 gn-md-side">
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-layout="card"
+       data-types="parent">
+  </div>
 
-  <!-- summary -->
-  <div ng-include="'../../catalog/views/default/templates/recordView-summary.html'"/>
+  <div ng-include="'../../catalog/views/default/templates/recordView/summary.html'"/>
 
   <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
     <h2 data-translate="">overview</h2>
@@ -67,7 +70,7 @@
   </div>
   <div data-gn-md-feedback="mdView.current.record"></div>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView-social.html'"/>
+  <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
 
   <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
        data-gn-record-history="mdView.current.record"></div>
@@ -82,7 +85,7 @@
     </h2>
     <div class="alert alert-danger">
       <ul>
-        <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg">
+        <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg track by $index">
           <code>
             {{e}}
           </code>
