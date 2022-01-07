@@ -1665,7 +1665,7 @@
                     var searchParams = {};
                     if (scope.mode === 'fcats') {
                       searchParams = {
-                        schema: 'iso19110',
+                        documentStandard: 'iso19110',
                         isTemplate: 'n'
                       };
                       scope.btn = {
