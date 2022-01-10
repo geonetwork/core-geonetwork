@@ -506,21 +506,6 @@
           scope.userGroupDefined = false;
           scope.userGroups = null;
 
-          scope.selectUser = function(user) {
-            scope.selectedUser = user;
-            scope.editorSelectedId = user.id;
-            $http.get('../api/users/' + id + '/groups')
-                .success(function(data) {
-                  var uniqueGroup = {};
-                  angular.forEach(data, function(g) {
-                    if (!uniqueGroup[g.group.id]) {
-                      uniqueGroup[g.group.id] = g.group;
-                    }
-                  });
-                  $scope.editorGroups = uniqueGroup;
-                });
-          };
-
           scope.selectGroup = function(group) {
             scope.selectedGroup = group;
           };
@@ -536,7 +521,20 @@
                         $translate.instant('group-' + g.groupId);
                   }
                 });
-                scope.userGroups = uniqueUserGroups;
+
+                // Sort by group name and user name
+                var sortedKeys = Object.keys(uniqueUserGroups).sort(function (a, b) {
+                  var ka = uniqueUserGroups[a].groupNameTranslated + '|' + uniqueUserGroups[a].userName;
+                  var kb = uniqueUserGroups[b].groupNameTranslated + '|' + uniqueUserGroups[b].userName;
+
+                  return ka.localeCompare(kb);
+                })
+
+                scope.userGroups = {};
+                angular.forEach(sortedKeys, function(g) {
+                  scope.userGroups[g] = uniqueUserGroups[g];
+                });
+
                 if (scope.userGroups && Object.keys(scope.userGroups).length > 0) {
                   scope.userGroupDefined = true;
                 } else {
