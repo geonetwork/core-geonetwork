@@ -836,6 +836,14 @@ goog.require('gn_alert');
             }
           }, config).mods.header.languages;
 
+          this.gnCfg.mods.search.sortbyValues = angular.extend({
+            mods: {
+              search: {
+                sortbyValues: {}
+              }
+            }
+          }, config).mods.search.sortbyValues;
+
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
           this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
