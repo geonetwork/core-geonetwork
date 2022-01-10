@@ -160,6 +160,7 @@
   var facetKeyToTranslationGroupMap = new Map([
     ['isTemplate', 'recordType'],
     ['groupOwner', 'group'],
+    ['groupPublishedId', 'group'],
     ['sourceCatalogue', 'source']
   ]);
 

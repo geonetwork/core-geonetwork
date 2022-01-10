@@ -604,6 +604,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showMapInFacet': false,
           'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,
@@ -772,9 +773,9 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'groupPublished': {
+            'groupPublishedId': {
               'terms': {
-                'field': 'groupPublished',
+                'field': 'groupPublishedId',
                 'size': 10
               }
             },

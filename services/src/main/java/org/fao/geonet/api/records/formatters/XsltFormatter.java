@@ -150,9 +150,6 @@ public class XsltFormatter implements FormatterImpl {
                 schemas.addContent(e);
             }
         }
-        if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
-            return Xml.getString(root);
-        }
 
         // Create a map of request parameters to be passed to the XSL transformation
         // For a formatter to retrieve a request parameter

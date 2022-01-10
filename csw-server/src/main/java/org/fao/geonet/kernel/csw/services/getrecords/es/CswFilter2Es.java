@@ -205,16 +205,18 @@ public class CswFilter2Es extends AbstractFilterVisitor {
     protected static String convertLikePattern(PropertyIsLike filter) {
         String result = filter.getLiteral();
         if (!filter.getWildCard().equals("*")) {
-            final String wildcardRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getWildCard());
+            final String wildcardRe =
+                StringUtils.isNotEmpty(filter.getEscape())
+                    ? Pattern.quote(filter.getEscape() + filter.getWildCard())
+                    : filter.getWildCard();
             result = result.replaceAll(wildcardRe, "*");
         }
         if (!filter.getSingleChar().equals("?")) {
-            final String singleCharRe = "(?<!" + Pattern.quote(filter.getEscape()) + ")" + Pattern.quote(filter.getSingleChar());
+            final String singleCharRe =
+                StringUtils.isNotEmpty(filter.getEscape())
+                    ? Pattern.quote(filter.getEscape() + filter.getSingleChar())
+                    : filter.getSingleChar();
             result = result.replaceAll(singleCharRe, "?");
-        }
-        if (!filter.getEscape().equals("\\")) {
-            final String escapeRe = Pattern.quote(filter.getEscape()) + "(.)";
-            result = result.replaceAll(escapeRe, "\\\\$1");
         }
         return result;
     }
@@ -467,7 +469,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
     /**
      * Fills out the templateSpatial.
-     * 
+     *
      * @param shapeType For example "bbox" or "polygon".
      * @param coords    The coordinates in the form needed by shapeType.
      * @param relation  Spatial operation, like "intersects".

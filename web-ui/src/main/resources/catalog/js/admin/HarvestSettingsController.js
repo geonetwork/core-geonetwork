@@ -31,7 +31,7 @@
   goog.require('gn_importxsl');
 
   var module = angular.module('gn_harvest_settings_controller',
-      ['gn_category',
+      ['ui.bootstrap.typeahead', 'gn_category',
        'gn_importxsl']);
 
   /**

@@ -1783,6 +1783,9 @@
       "groupPublished": {
         "type": "keyword"
       },
+      "groupPublishedId": {
+        "type": "keyword"
+      },
       "isPublishedToAll": {
         "type": "keyword"
       },
