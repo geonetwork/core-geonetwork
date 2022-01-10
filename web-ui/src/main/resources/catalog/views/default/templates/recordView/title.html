@@ -1,4 +1,4 @@
-<div class="gn-card gn-card-{{mdView.current.record.resourceType[0]}}">
+<div class="gn-card gn-card-view-header gn-card-{{mdView.current.record.resourceType[0]}}">
 
   <div data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
                     && mdView.current.record.relatedRecords"
@@ -16,8 +16,8 @@
   </h1>
 
   <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
+
+  <div class="gn-collection"
+       data-gn-keyword-badges="mdView.current.record.allKeywords"
+       data-thesaurus="viewConfig.mainThesaurus"/>
 </div>
-
-<div class="gn-collection"
-     data-gn-keyword-badges="mdView.current.record.allKeywords"/>
-

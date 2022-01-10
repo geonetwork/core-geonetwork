@@ -1,5 +1,6 @@
 <div data-ng-repeat="(key, t) in allKeywords"
-     data-ng-if="mainThesaurus && mainThesaurus.indexOf(key) !== -1">
+     data-ng-if="thesaurus && thesaurus.indexOf(key) !== -1"
+     title="{{t.title}}">
   <a data-ng-repeat="k in t.keywords track by $index"
      href=""
      class="btn btn-default btn-xs"

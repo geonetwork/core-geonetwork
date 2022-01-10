@@ -451,7 +451,7 @@
           'keywordBadges.html',
         link: function(scope, element, attrs) {
           scope.allKeywords = scope.$eval(attrs['gnKeywordBadges'])
-          scope.mainThesaurus = gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus;
+          scope.thesaurus = scope.$eval(attrs['thesaurus'])
         }
       }}]);
 })();

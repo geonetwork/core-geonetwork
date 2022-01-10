@@ -44,6 +44,21 @@
     }
   }
 
+  .gn-card-view-header {
+    padding: 15px;
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    color: #fff;
+  }
+  .gn-card-badge {
+    padding: 15px;
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    color: #fff;
+    position: absolute;
+    left: -10px;
+    bottom: 5px;
+  }
   .gn-card {
     h1 {
       margin-top: 15px;
@@ -63,12 +78,6 @@
       height: auto;
     }
   }
-  .gn-card-series, .gn-card-dataset, .gn-card-service {
-    padding: 15px;
-    margin-top: 30px !important;
-    margin-bottom: 30px !important;
-    color: #fff;
-  }
   .gn-card-series {
     background-color: @brand-primary;
     &:hover {
@@ -81,7 +90,13 @@
       background-color: @brand-info;
     }
   }
-  .gn-card-service {
+  .gn-card-nonGeographicDataset {
+    background-color: @brand-warning;
+    &:hover {
+      background-color: @brand-warning;
+    }
+  }
+  .gn-card-service, .gn-card-application {
     background-color: @brand-success;
     &:hover {
       background-color: @brand-success;

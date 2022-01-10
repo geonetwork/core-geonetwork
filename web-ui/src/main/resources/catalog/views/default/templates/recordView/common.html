@@ -72,8 +72,12 @@
         </button>
       </td>
     </tr>
+
     <tr data-ng-repeat="(key, t) in mdView.current.record.allKeywords"
-        data-ng-if="!mainThesaurus || (mainThesaurus && mainThesaurus.indexOf(key) === -1)">
+        data-ng-if="(user.canEditRecord(mdView.current.record)
+                     && viewConfig.internalThesaurus
+                     && viewConfig.internalThesaurus.indexOf(key) !== -1)
+                    || highlightedThesaurus.indexOf(key) === -1">
       <th>{{(t.title || key) | translate}}</th>
       <td>
         <div ng-if="key === 'th_regions'">

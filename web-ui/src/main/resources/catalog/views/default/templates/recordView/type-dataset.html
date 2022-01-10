@@ -1,8 +1,11 @@
 <div class="col-md-8 gn-record">
   <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
 
-
   <div data-gn-data-preview="mdView.current.record"/>
+
+  <div class="gn-collection"
+       data-gn-keyword-badges="mdView.current.record.allKeywords"
+       data-thesaurus="viewConfig.locationThesaurus"/>
 
   <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
 

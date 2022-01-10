@@ -214,13 +214,13 @@
     <gn-metadata-card data-ng-repeat="md in items"
                       md="md.record"
                       formatter-url="formatter.defaultUrl">
-      <span class="label label-default"
+      <span class="label label-default gn-card-badge"
             data-ng-class="{
             'gn-card-series': type === 'parent',
-            'gn-card-service': type === 'services',
-            'gn-card-dataset': type !== 'parent' && type !== 'services'
-            }"
-            style="position: absolute; left: 5px; bottom: 5px;">
+            'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
+            'gn-card-service': type === 'services' || type === 'application',
+            'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
+            }">
         <i class="fa {{icon}}"/>
         {{(config.getLabel(mainType, type)) | translate}}
       </span>

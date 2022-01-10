@@ -697,6 +697,8 @@ goog.require('gn_alert');
           },
           'sortKeywordsAlphabetically': true,
           'mainThesaurus': ['th_gemet'],
+          'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
+          'internalThesaurus': [],
           'relatedFacetConfig':  {
             'creationYearForResource': {
               'terms': {
