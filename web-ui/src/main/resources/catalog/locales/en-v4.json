@@ -121,6 +121,7 @@
   "facet-groupOwner": "Record groups",
   "facet-recordOwner": "Record authors",
   "facet-groupPublished": "Published in that group",
+  "facet-groupPublishedId": "Published in that group",
   "facet-documentStandard": "Standards",
   "facet-isHarvested": "Harvested",
   "facet-isTemplate": "Record types",
