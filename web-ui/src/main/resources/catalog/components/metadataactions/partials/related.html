@@ -23,7 +23,7 @@
                   'label-success': icon === 'fa-globe'}">{{badge}}</span>
         </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-10 col-sm-7'">
         <!-- Always display title if available -->
         <h3 data-ng-if="::(r.title | gnLocalized: lang).length">{{::(r.title | gnLocalized: lang)}}</h3>
         <!-- Display description if available -->
@@ -173,8 +173,10 @@
               <span class="gn-related-description" data-ng-if="r.description">
                 {{ (r.description | gnLocalized: lang | striptags)}}</a>
               </span>
-              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
-              <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="false"></span>
+              <span class="col-md-10 col-sm-9 col-xs-9 gn-nopadding-left gn-nopadding-right" ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+              <span class="col-md-2 col-sm-3 col-xs-3 gn-nopadding-right">
+                <span class="pull-right" gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="true"></span>
+              </span>
             </p>
           </div>
         </div>
