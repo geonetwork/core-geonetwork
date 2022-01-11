@@ -348,7 +348,7 @@
               },
               {
                 source: substringMatcher(scope.cswCriteriaTranslated),
-                limit: Infinity,
+                limit: Infinity
               });
 
               field.bind('typeahead:selected', function() {
