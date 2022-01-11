@@ -64,26 +64,4 @@
   <div data-gn-md-feedback="mdView.current.record"></div>
 
   <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
-
-  <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
-       data-gn-record-history="mdView.current.record"></div>
-
-
-  <section class="gn-md-side-errors"
-           data-ng-if="mdView.current.record.indexingErrorMsg
-                                && user.canEditRecord(mdView.current.record)">
-    <h2>
-      <i class="fa fa-fw fa-cog"></i>
-      <span data-translate="">indexingErrorMessages</span>
-    </h2>
-    <div class="alert alert-danger">
-      <ul>
-        <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg">
-          <code>
-            {{e}}
-          </code>
-        </li>
-      </ul>
-    </div>
-  </section>
 </div>
