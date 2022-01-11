@@ -213,7 +213,7 @@
             var l = map.getLayers().item(i);
             var source = l.getSource();
             if (source instanceof ol.source.WMTS &&
-                l.get('url') == url) {
+                l.get('url').toLowerCase() == url.toLowerCase()) {
               if (l.get('name') == name) {
                 return l;
               }
@@ -222,18 +222,18 @@
                 source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
                   source.getParams().STYLES == style &&
-                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                  l.get('url').split('?')[0].toLowerCase() == url.split('?')[0].toLowerCase()) {
                 return l;
               }
             }
             else if (source instanceof ol.source.ImageArcGISRest) {
               if (!!name) {
-                if ((url.indexOf(source.getUrl()) == 0) &&
+                if ((url.toLowerCase().indexOf(source.getUrl().toLowerCase()) == 0) &&
                   source.getParams().LAYERS == "show:" + name) {
                   return l;
                 }
               } else {
-                if (source.getUrl() == url) {
+                if (source.getUrl().toLowerCase() == url.toLowerCase()) {
                   return l;
                 }
               }
