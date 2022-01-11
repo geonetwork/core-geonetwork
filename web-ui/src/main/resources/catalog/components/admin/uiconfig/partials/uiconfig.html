@@ -92,47 +92,20 @@
                   {{('ui-' + key + '-help') | translate}} </p>
               </div>
 
-              <div data-ng-switch-when="languageWhitelist">
+              <div data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
+                   data-ng-switch-when-separator="|">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
                 <table class="table table-striped table-bordered">
                   <tr data-ng-repeat="v in mCfg[key] track by $index">
                     <td>
                       <input type="text"
+                             data-ng-if="key === 'languageWhitelist'"
                              data-gn-language-picker=""
                              class="form-control"
                              id="{{key}}-{{$index}}"
                              data-ng-model="mCfg[key][$index]"/>
-                    </td>
-                    <td>
-                      <a class="btn btn-link text-danger"
-                         title="{{'remove' | translate}}"
-                         data-ng-click="removeItem(mCfg[key], $index)">
-                        <i class="fa fa-times text-danger"/>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <a class="btn btn-default"
-                         title="{{'add' | translate}}"
-                         data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)">
-                        <i class="fa fa-fw fa-plus"/>
-                        <span translate="">add</span>
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="mainThesaurus">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <table class="table table-striped table-bordered">
-                  <tr data-ng-repeat="v in mCfg[key] track by $index">
-                    <td>
                       <input type="text"
+                             data-ng-if="key !== 'languageWhitelist'"
                              class="form-control"
                              id="{{key}}-{{$index}}"
                              data-ng-model="mCfg[key][$index]"/>
@@ -159,15 +132,6 @@
                 <p class="help-block"
                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
                   {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="scoreConfig">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-scoreConfig-help</p>
               </div>
 
               <div data-ng-switch-when="addWMSLayersToMap">
@@ -187,43 +151,14 @@
                   ui-addWMSLayersToMap-urlLayerParam-help</p>
               </div>
 
-              <div data-ng-switch-when="autocompleteConfig">
+              <div data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig"
+                   data-ng-switch-when-separator="|">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
                 <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
                 <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-autocompleteConfig-help</p>
+                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+                  {{('ui-' + key + '-help') | translate}}</p>
               </div>
-
-              <div data-ng-switch-when="moreLikeThisConfig">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-moreLikeThisConfig-help</p>
-              </div>
-
-              <div data-ng-switch-when="facetConfig">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-facetConfig-help</p>
-              </div>
-
-
-              <div data-ng-switch-when="relatedFacetConfig">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-relatedFacetConfig-help</p>
-              </div>
-
 
               <div data-ng-switch-when="languages">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
@@ -308,17 +243,6 @@
                 <p class="help-block"
                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
                   {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-
-
-              <div data-ng-switch-when="filters">
-                <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                   translate>
-                  ui-filters-help</p>
               </div>
 
 
@@ -659,7 +583,8 @@
 
 
               <!-- boolean -->
-              <div data-ng-switch-when="is3DModeAllowed">
+              <div data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically"
+                   data-ng-switch-when-separator="|">
                 <input type="checkbox"
                        id="{{key}}-checkbox"
                        data-ng-model="mCfg[key]"/>&nbsp;
@@ -671,65 +596,9 @@
                   {{('ui-' + key + '-help') | translate}} </p>
               </div>
 
-              <div data-ng-switch-when="isVegaEnabled">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
 
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
 
-              <div data-ng-switch-when="isSaveMapInCatalogAllowed">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
 
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isExportMapAsImageEnabled">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="useOSM">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isUserRecordsOnly">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
 
               <div data-ng-switch-when="showCitation">
                 <h3>{{('ui-' + key) | translate}}</h3>
@@ -743,29 +612,6 @@
                   <label class="control-label">{{('ui-' + key + '-condition') | translate}}</label>
                   <gn-json-edit height="300" model="mCfg[key].if"></gn-json-edit>
                 </div>
-              </div>
-
-              <div data-ng-switch-when="isFilterTagsDisplayed">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-              <div data-ng-switch-when="isFilterTagsDisplayedInSearch">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
               </div>
 
               <div data-ng-switch-when="searchOptions">
@@ -785,17 +631,6 @@
                 </div>
               </div>
 
-              <div data-ng-switch-when="showMapInFacet">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
 
               <div data-ng-switch-when="disabledTools">
                 <h3>{{('ui-' + key) | translate}}</h3>
@@ -848,18 +683,6 @@
                   {{('ui-' + key + '-help') | translate}} </p>
               </div>
 
-              <div data-ng-switch-when="autoFitOnLayer">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
               <div data-ng-switch-when="grid">
                 <h3>{{('ui-' + key) | translate}}</h3>
                 <label class="control-label" translate>gridConfigRelatedTypes</label>
@@ -884,66 +707,6 @@
                   </tr>
                 </table>
                 <p class="help-block">{{ 'gridConfigRelatedTypes-help' | translate }}</p>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="showSocialBarInFooter">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isSocialbarEnabled">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isLogoInHeader">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isHeaderFixed">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="isMenubarAccessible">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
                 <p class="help-block"
                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
                   {{('ui-' + key + '-help') | translate}} </p>
@@ -1130,74 +893,6 @@
               </div>
 
 
-              <div data-ng-switch-when="fluidLayout">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-              <div data-ng-switch-when="fluidHeaderLayout">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-              <div data-ng-switch-when="fluidEditorLayout">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-              <div data-ng-switch-when="showGNName">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-              <div data-ng-switch-when="humanizeDates">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
-
-	      <div data-ng-switch-when="sortKeywordsAlphabetically">
-                <input type="checkbox"
-                       id="{{key}}-checkbox"
-                       data-ng-model="mCfg[key]"/>&nbsp;
-                <label class="control-label"
-                       for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
-              </div>
 
               <div data-ng-switch-default>
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
