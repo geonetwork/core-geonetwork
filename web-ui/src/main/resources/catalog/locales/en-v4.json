@@ -251,7 +251,7 @@
   "cite.format.bibtex.help": "A BibTeX database file is formed by a list of entries, with each entry corresponding to a bibliographical item.",
   "origin": "Origin",
   "forMoreInformationContact": "For more information contact ",
-  "indexingErrorMessages": "Indexing warnings and errors",
+  "indexingErrorMessages": "{{count}} indexing warnings and/or errors",
   "searchAndReplace": "Search and replace",
   "xpathEdits": "XPath editing",
   "batchEdits": "Form editing",
