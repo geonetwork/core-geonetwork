@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -115,7 +115,7 @@
             var l = map.getLayers().item(i);
             var source = l.getSource();
             if (source instanceof ol.source.WMTS &&
-                l.get('url') == url) {
+                l.get('url').toLowerCase() == url.toLowerCase()) {
               if (l.get('name') == name) {
                 return l;
               }
@@ -124,7 +124,7 @@
                 source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
                   source.getParams().STYLES == style &&
-                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                  l.get('url').split('?')[0].toLowerCase() == url.split('?')[0].toLowerCase()) {
                 return l;
               }
             }
@@ -962,7 +962,7 @@
               }
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
-                label: getCapLayer.Title,
+                label: getCapLayer.Title || getCapLayer.Name,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
                 projection: projCode,
@@ -1913,7 +1913,7 @@
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: title ||  'OpenStreetMap'
+                  title: title ||  'OpenStreetMap'
                 });
               //ALEJO: tms support
               case 'tms':
@@ -1921,7 +1921,7 @@
                   source: new ol.source.XYZ({
                         url: opt.url
                   }),
-                  title: title ||  'TMS Layer'
+                  title: title ||  'TMS Layer'
                 });
               case 'bing_aerial':
                 return new ol.layer.Tile({
@@ -1930,7 +1930,7 @@
                     key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
-                  title: title ||  'Bing Aerial'
+                  title: title ||  'Bing Aerial'
                 });
               case 'stamen':
                 //We make watercolor the default layer
@@ -1941,7 +1941,7 @@
                 source.set('type', type);
                 return new ol.layer.Tile({
                   source: source,
-                  title: title ||  'Stamen'
+                  title: title ||  'Stamen'
                 });
 
               case 'wmts':
