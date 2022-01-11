@@ -211,7 +211,7 @@
       data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >
-    <gn-metadata-card data-ng-repeat="md in items"
+    <gn-metadata-card data-ng-repeat="md in items | orderBy:'record.resourceTitle'"
                       md="md.record"
                       formatter-url="formatter.defaultUrl">
       <span class="label label-default gn-card-badge"
