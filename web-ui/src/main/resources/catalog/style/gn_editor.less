@@ -600,6 +600,12 @@ form.gn-tab-inspire {
     to be higher than view port
     as the modal does not have overflow. */
     max-height: 50vh;
+    @media (max-height: 786px) {
+      max-height: 35vh;
+    }
+    @media (max-height: 550px) {
+      max-height: 23vh;
+    }
   }
 
   .gn-record {
