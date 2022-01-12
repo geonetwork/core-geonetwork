@@ -791,20 +791,32 @@
   ]);
 
 
-  module.directive('gnCircleLetterIcon', [
-    function() {
+  module.directive('gnCircleLetterIcon', ['$http',
+    function($http) {
       return {
         restrict: 'A',
         template: '<svg xmlns="http://www.w3.org/2000/svg" ' +
           '             style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
           '             viewBox="0 0 500 500">' +
-          '    <circle style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <defs>' +
+          '      <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + org + \'.png\'}}"></image>' +
+          '      </pattern>' +
+          '    </defs>' +
+          '    <circle fill="url(#image)" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
           '          text-anchor="middle" alignment-baseline="central"' +
-          '          font-size="300">{{letter}}</text>\n' +
+          '          font-size="300">{{hasIcon ? \'\' : org.substr(0, 1).toUpperCase()}}</text>' +
           '</svg>',
         scope: {
-          letter: '=gnCircleLetterIcon'
+          org: '=gnCircleLetterIcon'
+        },
+        link: function(scope, element, attrs) {
+          scope.hasIcon = false;
+          $http.get('../api/logos/' + scope.org + '.png', {cache: true})
+            .then(function(r) {
+            scope.hasIcon = r.status === 200;
+          });
         }
       };
     }
