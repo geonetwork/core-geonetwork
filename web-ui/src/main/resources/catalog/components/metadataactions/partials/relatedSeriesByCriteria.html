@@ -6,7 +6,7 @@
 
   <h2>{{title}}</h2>
   <div class="row">
-    <div data-ng-repeat="filter in filters"
+    <div data-ng-repeat="filter in filtersToProcess"
          class="pull-left">
       <h3>{{filter | translate}}</h3>
       <div class="gn-collection"
@@ -23,7 +23,10 @@
     </div>
 
     <!-- toggle buttons -->
-    <div id="info-toggle-buttons" class="btn-group pull-right" data-toggle="buttons">
+    <div id="info-toggle-buttons"
+         class="btn-group pull-right"
+         data-toggle="buttons"
+         data-ng-if="showTypes">
       <button id="btn-toggle-blocks" type="button" class="btn btn-default"
               data-ng-click="toggleListType('blocks')"
               data-ng-model="type"

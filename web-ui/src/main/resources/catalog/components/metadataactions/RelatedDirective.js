@@ -332,17 +332,38 @@
             agg: '=',
             filters: '=',
             sortBy: '@',
+            type: '@',
             title: '@'
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
-            scope.type = 'blocks';
+            // Show display type toggle if no type selected only
+            scope.showTypes = !angular.isDefined(scope.type);
+            scope.type = scope.type || 'blocks';
             scope.criteria = {p: {}};
+
+            function removeEmptyFilters(filters, agg) {
+              var cleanFilterPos = [];
+
+              Object.keys(agg).forEach(function(key) {
+                if (agg[key].buckets.length == 0) {
+                  cleanFilterPos.push(key);
+                }
+              });
+
+              _.remove(filters, function (filter) {
+                return cleanFilterPos.indexOf(filter) > -1;
+              });
+            }
 
             function reset() {
               scope.displayedRecords = scope.children;
               scope.current = undefined;
             }
+
+            // Remove the filters without values
+            scope.filtersToProcess = scope.filters;
+            removeEmptyFilters(scope.filtersToProcess, scope.agg);
 
             reset();
 
