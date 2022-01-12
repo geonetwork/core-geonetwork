@@ -421,5 +421,6 @@
     "badGmlProjectionCode": "Den geometriprojektion <b>{{srsName}} som</b> definierats i XML är inte giltig. Redigera xml för att rätta srs-namnet eller ange en ny geometri.",
     "draft": "Arbetskopia",
     "link": "Länk",
-    "link-text": "Länktext"
+    "link-text": "Länktext",
+	  "confirmCancelEdit": "Vill du annullera alla ändringar och stänga redigeraren?"
 }

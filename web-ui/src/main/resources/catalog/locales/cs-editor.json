@@ -421,5 +421,6 @@
     "badGmlProjectionCode": "Projekce geometrie <b>{{srsName}}</b> definovaná v XML není platná. Upravte xml, abyste opravili název srs nebo zadejte novou geometrii.",
     "draft": "Pracovní kopie",
     "link": "Odkaz",
-    "link-text": "Text odkazu"
+    "link-text": "Text odkazu",
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
 }

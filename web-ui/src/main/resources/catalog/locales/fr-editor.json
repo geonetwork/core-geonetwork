@@ -421,5 +421,6 @@
     "badGmlProjectionCode": "La projection de la géométrie <b>{{srsName}}</b> définie dans le XML n'est pas valide. Corriger la projection dans le XML ou modifier la géométrie.",
     "draft": "Brouillon",
     "link": "Lien",
-    "link-text": "Libellé du lien"
+    "link-text": "Libellé du lien",
+	  "confirmCancelEdit": "Voulez-vous annuler tous les changements et fermer l'éditeur ?"
 }
