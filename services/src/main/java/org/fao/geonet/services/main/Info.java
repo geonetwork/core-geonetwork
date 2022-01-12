@@ -23,17 +23,7 @@
 
 package org.fao.geonet.services.main;
 
-import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
-
 import com.google.common.collect.Maps;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import jeeves.component.ProfileManager;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -42,15 +32,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.Source_;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -58,17 +40,7 @@ import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.IsoLanguageRepository;
-import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -78,6 +50,14 @@ import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
+
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_EDITING;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT;
 
 @Deprecated
 public class Info implements Service {
@@ -195,7 +175,9 @@ public class Info implements Service {
                     }));
             } else if (type.equals(HARVESTER)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                    new String[]{"system/harvester/enableEditing"}));
+                    new String[]{
+                        SYSTEM_HARVESTER_ENABLE_EDITING,
+                        SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT}));
 
             } else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(

@@ -128,3 +128,6 @@ SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, c
 FROM metadatastatus_backup s;
 
 -- DROP TABLE metadatastatus_backup;
+
+-- https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/385
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enablePrivilegesManagement', 'false', 2, 9010, 'n');

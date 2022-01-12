@@ -1344,11 +1344,22 @@ goog.require('gn_alert');
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
-            if (JSON.parse(md.isHarvested) == true) {
+            if (md.isHarvested
+                && JSON.parse(md.isHarvested) == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
                 md.edit;
             }
             return md.edit;
+          },
+          // Privileges management may be allowed for harvested records.
+          canManagePrivileges: function(md) {
+            if (md.isHarvested
+                && JSON.parse(md.isHarvested) == true
+                && gnConfig['system.harvester.enablePrivilegesManagement'] === true
+                && md.edit) {
+              return true;
+            }
+            return this.canEditRecord(md);
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions

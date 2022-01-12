@@ -101,6 +101,7 @@ public class Settings {
     public static final String SYSTEM_OAI_TOKENTIMEOUT = "system/oai/tokentimeout";
     public static final String SYSTEM_OAI_CACHESIZE = "system/oai/cachesize";
     public static final String SYSTEM_HARVESTER_ENABLE_EDITING = "system/harvester/enableEditing";
+    public static final String SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT = "system/harvester/enablePrivilegesManagement";
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
