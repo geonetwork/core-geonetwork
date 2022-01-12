@@ -175,11 +175,11 @@
                       l.record = recordMap[l.id];
                     })
                   });
-                  
+
                   gnMdViewObj.current.record.relatedRecords = relatedRecords;
                   gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
 
-                  Object.keys(relatedRecordKeysWithValues).forEach(function(key, index) {
+                  relatedRecordKeysWithValues.forEach(function(key, index) {
                     gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
                   });
                 });
