@@ -126,37 +126,62 @@
                   }
                 });
 
-                var query =
-                  {
-                    "query": {
-                      "bool": {
-                        "must": [
-                          { "terms": { "uuid": Object.keys(uuids) } },
-                          { "terms": { "isTemplate": ["n"] } }
-                        ]
-                      }
-                    },
-                    "aggs": relatedFacetConfig,
-                    "from": 0,
-                    "size": 100,
-                    "_source": gnESFacet.configs.simplelist.source.includes
-                  };
+                // Build multiquery to get aggregations for each relation
+                var body = '';
+                var relatedRecordKeysWithValues = []; // keep track of the relations with values
 
-                gnESClient.search(query).then(function(data) {
+                Object.keys(relatedRecords).forEach(function(k) {
+                  var uuids = {};
+                  if (relatedRecords[k]) {
+                    //relatedRecordsWithValues[k] = relatedRecords[k];
+                    relatedRecordKeysWithValues.push(k);
+
+                    relatedRecords[k].forEach(function (r) {
+                      uuids[r.id] = [];
+                    });
+
+                    body += '{"index": "records"}\n';
+
+                    body +=
+                      '{' +
+                      '  "query": {' +
+                      '    "bool": {' +
+                      '      "must": [' +
+                      '        { "terms": { "uuid": ["' + Object.keys(uuids).join('","') + '"]} },' +
+                      '        { "terms": { "isTemplate": ["n"] } }' +
+                      '      ]' +
+                      '    }' +
+                      '  },' +
+                      '  "aggs":' + JSON.stringify(relatedFacetConfig)  + ',' +
+                      '  "from": 0,' +
+                      '  "size": 100,' +
+                      '  "_source": ["' + gnESFacet.configs.simplelist.source.includes.join('","') + '"]' +
+                      '}\n';
+                  }
+                });
+
+                $http.post('../api/search/records/_msearch', body).then(function (data) {
                   gnMdViewObj.current.record.relatedRecords = [];
 
                   var recordMap = {};
-                  angular.forEach(data.hits.hits, function(record) {
-                    recordMap[record._id] = new Metadata(record);
+                  angular.forEach(data.data.responses, function(response) {
+                    angular.forEach(response.hits.hits, function(record) {
+                      recordMap[record._id] = new Metadata(record);
+                    });
                   });
+
                   Object.keys(relatedRecords).map(function(k) {
                     relatedRecords[k] && relatedRecords[k].map(function(l) {
                       l.record = recordMap[l.id];
                     })
                   });
+                  
                   gnMdViewObj.current.record.relatedRecords = relatedRecords;
                   gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
-                  gnMdViewObj.current.record.relatedRecords['aggregations'] = data.aggregations;
+
+                  Object.keys(relatedRecordKeysWithValues).forEach(function(key, index) {
+                    gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
+                  });
                 });
               }
             });

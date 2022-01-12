@@ -5,7 +5,9 @@
        data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children.length > 0
         ? mdView.current.record.relatedRecords.children
         : mdView.current.record.relatedRecords.siblings"
-       data-agg="mdView.current.record.relatedRecords.aggregations"
+       data-agg="mdView.current.record.relatedRecords.children.length > 0
+        ? mdView.current.record.relatedRecords.aggregations_children
+        :mdView.current.record.relatedRecords.aggregations_siblings"
        data-filters="['spatialRepresentationType', 'creationYearForResource']"
        data-type="'blocks'"
        data-sort-by="resourceTitle"
