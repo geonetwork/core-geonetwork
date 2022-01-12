@@ -322,7 +322,10 @@
         restrict: 'A',
         scope: {
           mdContacts: '=gnMetadataContacts',
-          mode: '@gnMode'
+          // Group by 'default', 'role', 'org-role'
+          mode: '@gnMode',
+          // 'icon' or 'list' (default)
+          layout: '@layout'
         },
         link: function(scope, element, attrs, controller) {
           if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {

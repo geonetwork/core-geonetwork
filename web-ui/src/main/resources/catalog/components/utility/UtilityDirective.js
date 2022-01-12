@@ -790,6 +790,27 @@
     }
   ]);
 
+
+  module.directive('gnCircleLetterIcon', [
+    function() {
+      return {
+        restrict: 'A',
+        template: '<svg xmlns="http://www.w3.org/2000/svg" ' +
+          '             style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
+          '             viewBox="0 0 500 500">' +
+          '    <circle style="stroke-miterlimit:10;" cx="250" cy="250" r="245"/>' +
+          '    <text x="50%" y="50%"' +
+          '          text-anchor="middle" alignment-baseline="central"' +
+          '          font-size="300">{{letter}}</text>\n' +
+          '</svg>',
+        scope: {
+          letter: '=gnCircleLetterIcon'
+        }
+      };
+    }
+  ]);
+
+
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnDirectoryEntryPicker

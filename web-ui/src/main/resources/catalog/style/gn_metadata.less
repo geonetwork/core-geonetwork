@@ -563,6 +563,26 @@ ul.container-list {
       line-height: 1.7em;
     }
   }
+  li.gn-contact-card {
+    list-style-type: none;
+    width: calc(100%/4);
+    text-align: center;
+    float: left;
+    padding: 5px;
+  }
+}
+
+[data-gn-circle-letter-icon], [gn-circle-letter-icon] {
+  svg {
+    circle {
+      stroke-width: 14;
+      stroke: @brand-primary;
+      fill: #FFFFFF;
+    }
+    text {
+      fill: #333333;
+    }
+  }
 }
 
 @media only screen and (min-width: 550px) {

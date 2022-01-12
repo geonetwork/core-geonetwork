@@ -1,5 +1,17 @@
-<div>
-  <div class="gn-contact" data-ng-if="mode == 'default'"
+<div data-ng-if="::layout === 'icon'">
+  <ul>
+    <li class="gn-contact-card"
+        data-ng-repeat="c in mdContacts track by $index">
+      <div data-gn-circle-letter-icon="c.organisation.substr(0, 1).toUpperCase()"/>
+      <strong>{{c.organisation}}</strong>
+      <br/>
+      <i>{{c.role | translate}}</i>
+    </li>
+  </ul>
+</div>
+<div data-ng-if="::layout !== 'icon'">
+  <div class="gn-contact"
+       data-ng-if="mode == 'default'"
        data-ng-repeat="c in mdContacts track by $index">
     <h3>
       <i class="fa fa-envelope"></i>
@@ -34,7 +46,8 @@
 
 
   <!-- Group by role -->
-  <div class="gn-contact" data-ng-if="mode == 'role'"
+  <div class="gn-contact"
+       data-ng-if="mode == 'role'"
        data-ng-repeat="(roles, contactByRole) in mdContactsByRole">
     <h3>
       <i class="fa fa-envelope"></i>
@@ -42,7 +55,7 @@
       {{translateRoles(roles)}}
       </span>
     </h3>
-    <div class="row" data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'">
+    <div class="row" data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'">
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
@@ -78,7 +91,8 @@
 
 
   <!-- Group by organisation/role -->
-  <div class="gn-contact flex-row" data-ng-if="mode == 'org-role'"
+  <div class="gn-contact flex-row"
+       data-ng-if="mode == 'org-role'"
        data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole">
     <address>
       <strong data-ng-if="::orgWebsite[org]">
@@ -106,5 +120,4 @@
       </div>
     </address>
   </div>
-
 </div>
