@@ -421,5 +421,6 @@
     "badGmlProjectionCode": "De geometrische projectie <b>{{srsName}}</b> zoals gedefinieerd in het record is niet geldig. Pas alstublieft de projectie in de xml aan of voeg een nieuwe geometrie toe.",
     "draft": "Werk kopie",
     "link": "Link",
-    "link-text": "Tekst in de link"
+    "link-text": "Tekst in de link",
+	  "confirmCancelEdit": "Wilt u alle wijzigingen annuleren en de editor sluiten?"
 }
