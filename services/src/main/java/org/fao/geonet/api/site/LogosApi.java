@@ -30,7 +30,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
@@ -51,6 +50,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -175,6 +175,47 @@ public class LogosApi {
 
         if (StringUtils.isEmpty(fileName)) {
             throw new Exception("File name is not defined.");
+        }
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a logo",
+        description = ""
+    )
+    @RequestMapping(
+        path = "/{file:.+}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Logo returned."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    @ResponseBody
+    public void getLogo(
+        @Parameter(description = "The logo filename")
+        @PathVariable
+            String file,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        checkFileName(file);
+        FilePathChecker.verify(file);
+
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final Resources resources = appContext.getBean(Resources.class);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
+
+        try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, logoDirectory)) {
+            if (image != null) {
+                response.sendRedirect(String.format("../../../images/harvesting/%s", file));
+            } else {
+                throw new ResourceNotFoundException(String.format(
+                    "No logo found with filename '%s'.", file));
+            }
         }
     }
 
