@@ -799,11 +799,11 @@
           '             style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
           '             viewBox="0 0 500 500">' +
           '    <defs>' +
-          '      <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
+          '      <pattern id="image{{org}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
           '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + org + \'.png\'}}"></image>' +
           '      </pattern>' +
           '    </defs>' +
-          '    <circle fill="url(#image)" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <circle fill="url(\'#image{{org}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
           '          text-anchor="middle" alignment-baseline="central"' +
           '          font-size="300">{{hasIcon ? \'\' : org.substr(0, 1).toUpperCase()}}</text>' +
