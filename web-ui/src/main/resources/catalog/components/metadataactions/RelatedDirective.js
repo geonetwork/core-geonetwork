@@ -155,6 +155,96 @@
     };
   }]);
 
+  /**
+   * Displays a panel with different types of relations available in the metadata object 'md'.
+   *  - mode: mode to display the relations.
+   *      - tabset: displays the relations in a tabset panel.
+   *      - (other value): displays the relations in different div blocks.
+   *
+   *  - layout: Layout for the relation items.
+   *      - card: display the relation items as a card.
+   *      - (other value): display the relation items as a list.
+   *
+   *  - relatedConfig: array with the configuration of the relations to display. For each relation:
+   *      - types: a list of relation types separated by '|'.
+   *      - filter: Filter a type based on an attribute.
+   *                Can't be used when multiple types are requested
+   *                eg. data-filter="associationType:upstreamData"
+   *                    data-filter="protocol:OGC:.*|ESRI:.*"
+   *                    data-filter="-protocol:OGC:.*"
+   *      - title: title translation key for the relations section.
+   *
+   * Example configuration:
+   *
+   * <div data-gn-related-container="md"
+   *      data-mode="tabset"
+   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *
+   * </div>
+   */
+  module
+    .directive('gnRelatedContainer', ['gnRelatedResources',
+      function (gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/relatedContainer.html';
+          },
+          scope: {
+            md: '=gnRelatedContainer',
+            mode: '@',
+            relatedConfig: '=',
+            layout: '@'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            scope.relations = {};
+            scope.relatedConfigUI = [];
+            scope.config = gnRelatedResources;
+
+            scope.relatedConfig.forEach(function(config) {
+              var t = config.types.split('|');
+
+              config.relations = {};
+
+              t.forEach(function (type) {
+                config.relations[type] = scope.md.relatedRecords[type] || {};
+                config.relationFound = config.relations[type].length > 0;
+
+                var value = config.relations[type];
+
+                if (config.filter && angular.isArray(value)) {
+                  var separator = ':',
+                    tokens = config.filter.split(separator),
+                    field = tokens.shift(),
+                    not = field && field.startsWith('-'),
+                    filter = tokens.join(separator);
+
+                  config.relations[type] = [];
+                  for (var i = 0; i < value.length; i++) {
+                    var prop = value[i][not ? field.substr(1) : field];
+                    if (prop
+                      && ((!not && prop.match(new RegExp(filter)) != null)
+                        || (not && prop.match(new RegExp(filter)) == null))) {
+                      config.relations[type].push(value[i]);
+                    }
+                  }
+                  config.relationFound = config.relations[type].length > 0;
+                } else {
+                  config.relations[type] = value;
+                }
+
+                scope.relatedConfigUI.push(config);
+              })
+            });
+          }
+        }
+      }
+    ]);
+
   module
       .directive('gnRelated', [
         'gnRelatedService',

@@ -1,0 +1,23 @@
+<div>
+  <tabset class="info-tabset" data-ng-if="mode == 'tabset'">
+    <tab data-ng-repeat="item in relatedConfigUI track by $index"
+         data-ng-if="item.relationFound"
+         heading="{{item.title | translate}}">
+
+      <div ng-include="'../../catalog/components/metadataactions/partials/relatedContainerInfo.html'"/>
+
+    </tab>
+  </tabset>
+
+  <div  data-ng-if="mode != 'tabset'">
+    <div class="gn-related-resources gn-info-list-blocks"
+       data-ng-repeat="item in relatedConfigUI track by $index"
+       data-ng-if="item.relationFound">
+
+      <h2>{{item.title | translate}}</h2>
+
+      <div ng-include="'../../catalog/components/metadataactions/partials/relatedContainerInfo.html'"/>
+
+    </div>
+  </div>
+</div>

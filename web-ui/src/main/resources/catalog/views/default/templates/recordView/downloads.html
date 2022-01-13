@@ -1,23 +1,7 @@
-<div data-gn-related-observer>
-  <!-- TODO: Create a directive to render link in current record directly ?  or in a list of records ? -->
-  <div data-gn-related="mdView.current.record"
-       data-user="user"
-       data-types="onlines"
-       data-filter="protocol:OGC:.*|ESRI:.*|atom.*"
-       data-title="{{'API' | translate}}">
-  </div>
+<div data-gn-related-container="md"
+     data-mode="tabset"
+     data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+                     {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+                     {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
 
-  <div data-gn-related="mdView.current.record"
-       data-user="user"
-       data-types="onlines"
-       data-filter="protocol:.*DOWNLOAD.*|DB:.*|FILE:.*"
-       data-title="{{'download' | translate}}">
-  </div>
-
-  <div data-gn-related="mdView.current.record"
-       data-user="user"
-       data-types="onlines"
-       data-filter="-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*"
-       data-title="{{'links' | translate}}">
-  </div>
 </div>
