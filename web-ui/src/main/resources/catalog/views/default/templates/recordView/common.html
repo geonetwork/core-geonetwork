@@ -1,5 +1,5 @@
 <div>
-  <h2 data-translate="">aboutThisResource</h2>
+
   <table class="table table-striped">
     <tbody>
     <tr data-ng-if="mdView.current.record.inspireTheme_syn.length > 0 ||
@@ -185,16 +185,14 @@
       </td>
     </tr>
 
-<!--    <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">-->
-<!--      <th data-translate="">resourceConstraints</th>-->
-<!--      <td>-->
-<!--        <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">-->
-<!--          <span data-ng-bind-html="i | linky | newlines"/>-->
-<!--        </p>-->
-<!--      </td>-->
-<!--    </tr>-->
-
-
+    <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
+      <th data-translate="">resourceConstraints</th>
+      <td>
+        <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
+          <span data-ng-bind-html="i | linky | newlines"/>
+        </p>
+      </td>
+    </tr>
 
     <tr data-ng-if="mdView.current.record.resourceCredit">
       <th data-translate="">credit</th>

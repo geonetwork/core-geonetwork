@@ -18,8 +18,10 @@
        labels="title,cl_status,format,Esri,view,download,file,atom"
        columns="resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed"/>
 
-
+  <h2 data-translate="">aboutThisResource</h2>
   <div ng-include="'../../catalog/views/default/templates/recordView/common.html'"/>
+
+  <div data-gn-more-like-this="mdView.current.record"/>
 
   <div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
 </div>

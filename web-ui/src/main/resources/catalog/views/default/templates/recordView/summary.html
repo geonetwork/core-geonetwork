@@ -26,11 +26,13 @@ Contents:
 </section>
 
 <section data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
-  <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
-      <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
-        <i class="fa fa-fw fa-lock"></i>
-      </span>
-    <span data-ng-bind-html="i | linky | newlines"/>
+  <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation" class="flex-row">
+    <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
+      <i class="fa fa-fw fa-lock"></i>
+    </span>
+    <div>
+      <span data-ng-bind-html="i | linky | newlines"/>
+    </div>
   </p>
 </section>
 

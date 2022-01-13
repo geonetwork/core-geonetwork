@@ -115,6 +115,7 @@
     border-radius: 50%;
     color: #0e0e0e;
     background-color: #efefef !important;
+    flex: none;
   }
   .gn-related-item {
     margin-top: -1px;
@@ -148,6 +149,25 @@
   }
   .gn-md-side {
     padding-top: 15px;
+    .flex-row {
+      gap: 5px;
+    }
+    ul {
+      padding-left: 1em;
+      margin-top: 5px;
+    }
+    .gn-label-list {
+      list-style: none;
+      padding-left: 0;
+      .clearfix();
+      li {
+        border: 1px solid @btn-default-border;
+        border-radius: @btn-border-radius-base;
+        float: left;
+        padding: 4px 10px;
+        margin: 0 5px 5px 0;
+      }
+    }
     .gn-providedby-logo {
       display: inline-block;
       img {
