@@ -7,14 +7,17 @@
       <div gn-popover-anchor>
         <div data-gn-circle-letter-icon="c.organisation"/>
 
-        <strong data-ng-if="::c.website">
-          <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
-        </strong>
-        <strong data-ng-if="::!c.website">
-          {{c.organisation}}
-        </strong>
-        <br/>
-        <i>{{c.role | translate}}</i>
+        <div class="gn-contact-card-org">
+          <span data-ng-if="::c.website">
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
+          </span>
+          <span data-ng-if="::!c.website">
+            {{c.organisation}}
+          </span>
+        </div>
+        <div class="gn-contact-card-role">
+          {{c.role | translate}}
+        </div>
       </div>
 
       <div gn-popover-content>

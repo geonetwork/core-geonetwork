@@ -565,13 +565,20 @@ ul.container-list {
   ul {
     display: flex;
     flex-wrap: wrap;
-
+    padding: 0;
     li.gn-contact-card {
       list-style-type: none;
       width: calc(100%/4);
       text-align: center;
       float: left;
       padding: 5px;
+      .gn-contact-card-org {
+        padding: 5px;
+        margin-bottom: 10px;
+      }
+      .gn-contact-card-role {
+        font-style: italic;
+      }
     }
   }
 }
