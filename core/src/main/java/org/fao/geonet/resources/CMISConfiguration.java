@@ -52,7 +52,7 @@ public class CMISConfiguration {
     private Session client = null;
 
     private final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
-    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR ="->";
+    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
@@ -111,7 +111,7 @@ public class CMISConfiguration {
 
     private String atompubUrl;
 
-    private boolean secondaryPropertyExists=false;
+    private boolean secondaryPropertyExists = false;
 
     @Nonnull
     public String getServicesBaseUrl() {
@@ -214,7 +214,7 @@ public class CMISConfiguration {
     }
 
     public void setExternalResourceManagementModalEnabled(String externalResourceManagementModalEnabled) {
-        this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);;
+        this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);
     }
 
     public Boolean isExternalResourceManagementFolderEnabled() {
@@ -244,7 +244,7 @@ public class CMISConfiguration {
             }
         }
 
-        this.externalResourceManagementFolderRoot=folderRoot;
+        this.externalResourceManagementFolderRoot = folderRoot;
     }
 
     @Nonnull
@@ -264,7 +264,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningState(String versioningState) {
-        setVersioningState(StringUtils.isEmpty(versioningState)?null:VersioningState.valueOf(versioningState.toUpperCase()));
+        setVersioningState(StringUtils.isEmpty(versioningState) ? null : VersioningState.valueOf(versioningState.toUpperCase()));
     }
 
     @Nonnull
@@ -281,7 +281,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningMajorOnUpdate(String versioningMajorOnUpdate) {
-        this.versioningMajorOnUpdate = BooleanUtils.toBooleanObject(versioningMajorOnUpdate);;
+        this.versioningMajorOnUpdate = BooleanUtils.toBooleanObject(versioningMajorOnUpdate);
     }
 
     @Nonnull
@@ -299,7 +299,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningEnabled(String versioningEnabled) {
-        this.versioningEnabled = BooleanUtils.toBooleanObject(versioningEnabled);;
+        this.versioningEnabled = BooleanUtils.toBooleanObject(versioningEnabled);
     }
 
     @Nonnull
@@ -420,7 +420,7 @@ public class CMISConfiguration {
     }
 
     public String getCmisMetadataUUIDPropertyName() {
-            return cmisMetadataUUIDPropertyName;
+        return cmisMetadataUUIDPropertyName;
     }
 
     public void setCmisMetadataUUIDPropertyName(String cmisMetadataUUIDPropertyName) {
@@ -430,10 +430,10 @@ public class CMISConfiguration {
                 Log.error(Geonet.RESOURCES,
                     String.format("Invalid format for property name %s property will not be used", cmisMetadataUUIDPropertyName));
                 this.cmisMetadataUUIDPropertyName = null;
-                this.secondaryPropertyExists=false;
+                this.secondaryPropertyExists = false;
                 return;
             } else {
-                this.secondaryPropertyExists=true;
+                this.secondaryPropertyExists = true;
             }
         }
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
@@ -516,7 +516,7 @@ public class CMISConfiguration {
                     }
                 } catch (CmisRuntimeException | CmisConnectionException e) {
                     Log.error(Geonet.RESOURCES, "CMIS Repository ID not found for repositoryName=\"" + repositoryName +
-                        "\". " + (e.getErrorContent() == null?"":"  Got following results from cmis api call:" + e.getErrorContent()), e);
+                        "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
                 }
             }
         } else {
@@ -530,7 +530,7 @@ public class CMISConfiguration {
                 }
             } catch (CmisRuntimeException | CmisConnectionException e) {
                 Log.error(Geonet.RESOURCES, "CMIS Repository name not found repositoryName=\"" + repositoryName +
-                    "\". " + (e.getErrorContent() == null?"":"  Got following results from cmis api call:" + e.getErrorContent()), e);
+                    "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
             }
         }
 
@@ -579,7 +579,7 @@ public class CMISConfiguration {
                 client = null;
                 Log.error(Geonet.RESOURCES,
                     "CMIS error creating session using base url \"" + repositoryUrl + "\" with repositoryName=\"" + repositoryName +
-                        "\". " + (e.getErrorContent() == null?"":"  Got following results from cmis api call:" + e.getErrorContent()), e);
+                        "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
             }
         }
     }
@@ -619,7 +619,7 @@ public class CMISConfiguration {
         // If no service url was not supplied then lets default to the base url plus the default path info
         if (StringUtils.isEmpty(serviceUrl)) {
             return baseUrl + defaultServicePathInfo;
-        // If the service url supplied starts with / then default to base url plus supplied service url
+            // If the service url supplied starts with / then default to base url plus supplied service url
         } else if (serviceUrl.startsWith("/")) {
             return baseUrl + serviceUrl;
             // Otherwise assume that a full url was supplied and just return it.
@@ -627,5 +627,4 @@ public class CMISConfiguration {
             return serviceUrl;
         }
     }
-
 }
