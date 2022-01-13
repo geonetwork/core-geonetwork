@@ -118,9 +118,9 @@
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.selected;
 
-          scope.failedLayers = gnWmsQueue.errors;
+          scope.failedLayers = gnWmsQueue.errors[scope.map.get('type')];
           scope.removeFailed = function(layer) {
-            gnWmsQueue.removeFromError(layer);
+            gnWmsQueue.removeFromError(layer, scope.map);
           };
         }
       };

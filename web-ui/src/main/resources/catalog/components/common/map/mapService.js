@@ -186,7 +186,7 @@
           return getLayerInMap(map, name, url, style) !== null;
         };
         var getLayerInMap = function(map, name, url, style) {
-          if (gnWmsQueue.isPending(url, name, style)) {
+          if (gnWmsQueue.isPending(url, name, style, map)) {
             return null;
           }
 
@@ -957,7 +957,7 @@
                     url: url,
                     name: layer,
                     msg: msg
-                  });
+                  }, map);
                 });
             return olLayer;
           },
@@ -1477,11 +1477,12 @@
            * @param {!Object} md object
            */
           addWmsFromScratch: function(map, url, name, createOnly, md, version, style) {
-            var defer = $q.defer();
-            var $this = this;
+            var defer = $q.defer(),
+              $this = this;
+
 
             if (!isLayerInMap(map, name, url, style || '')) { // if style is not specified, use empty string
-              gnWmsQueue.add(url, name, style ? style.Name : '');
+              gnWmsQueue.add(url, name, style ? style.Name : '', map);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
                     name, capObj, md && md.uuid),
@@ -1521,7 +1522,7 @@
 
                   olL.get('errors').push(errors);
 
-                  gnWmsQueue.error(o);
+                  gnWmsQueue.error(o, map);
                   o.layer = olL;
                   defer.reject(o);
                 } else {
@@ -1545,7 +1546,7 @@
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
-                          gnWmsQueue.removeFromQueue(url, name, style ? style.Name : '');
+                          gnWmsQueue.removeFromQueue(url, name, style ? style.Name : '', map);
                           defer.resolve(olL);
                         });
                   };
@@ -1569,7 +1570,7 @@
                   msg: $translate.instant('getCapFailure') +
                     (error  ? ', ' + error : '')
                 };
-                gnWmsQueue.error(o);
+                gnWmsQueue.error(o, map);
                 defer.reject(o);
               });
             } else {
@@ -1623,7 +1624,7 @@
               return $q.resolve(olLayer);
             }
 
-            gnWmsQueue.add(url, name);
+            gnWmsQueue.add(url, name, '', map);
 
             var params = {};
             if (!!layer) {
@@ -1716,7 +1717,7 @@
                 if (!createOnly) {
                   map.addLayer(olLayer);
                 }
-                gnWmsQueue.removeFromQueue(url, name);
+                gnWmsQueue.removeFromQueue(url, name, map);
                 return olLayer;
               });
           },
@@ -1782,7 +1783,7 @@
             var $this = this;
 
             if (!isLayerInMap(map, name, url)) {
-              gnWmsQueue.add(url, name, map);
+              gnWmsQueue.add(url, name, '', map);
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
@@ -1831,7 +1832,7 @@
                   name: name,
                   msg: $translate.instant('getCapFailure')
                 };
-                gnWmsQueue.error(o);
+                gnWmsQueue.error(o, map);
                 defer.reject(o);
               });
             }
@@ -1869,7 +1870,7 @@
             var defer = $q.defer();
             var $this = this;
 
-            gnWmsQueue.add(url, name, map);
+            gnWmsQueue.add(url, name, '', map);
             gnWfsService.getCapabilities(url).then(function(capObj) {
               var capL = gnOwsCapabilities.
                   getLayerInfoFromWfsCap(name, capObj, md.uuid),
@@ -1912,7 +1913,7 @@
                 name: name,
                 msg: $translate.instant('getCapFailure')
               };
-              gnWmsQueue.error(o);
+              gnWmsQueue.error(o, map);
               defer.reject(o);
             });
             return defer.promise;
