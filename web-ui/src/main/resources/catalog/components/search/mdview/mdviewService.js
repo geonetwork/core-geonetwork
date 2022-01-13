@@ -95,7 +95,7 @@
           // Retrieve all related records UUIDs
           // To be used by RelatedDirective
           // TODO: Maybe we can remove onlines and simply use the links in the doc.
-          var types = 'onlines|parent|children|sources|hassources|brothersAndSisters|services|datasets|siblings|associated',
+          var types = 'onlines|parent|children|sources|hassources|brothersAndSisters|services|datasets|siblings|associated|fcats|related',
               url = '../api/records/' + md.uuid + '/related?type='
                 + types.split('|').join('&type=');
           $http.get(url, {

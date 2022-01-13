@@ -4,7 +4,8 @@
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
-       data-ng-if="layout !== 'card' && type && type !== 'thumbnails'">
+       data-ng-if="layout !== 'card' && layout !== 'title'
+                   && type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
                        badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
@@ -204,6 +205,22 @@
 
     </div>
   </div>
+
+  <ul class=""
+      data-ng-repeat="(type, items) in relations track by $index"
+      data-ng-if="layout === 'title' && type && type !== 'thumbnails' && type !== 'onlines'"
+      data-ng-init="mainType = config.getType(md, type);
+                    badge = config.getBadgeLabel(mainType, md);
+                    icon = config.getClassIcon(mainType);" >
+    <li data-ng-repeat="md in items | orderBy:'record.resourceTitle'">
+      <a href=""
+         title="{{md.record.resourceTitle}}"
+         gn-metadata-open="md.record"
+         gn-formatter="formatter.defaultUrl">
+        {{md.record.resourceTitle}}
+      </a>
+    </li>
+  </ul>
 
   <ul class="row list-group gn-info-list"
       data-ng-repeat="(type, items) in relations track by $index"

@@ -11,13 +11,24 @@
     {{mdView.current.record.resourceTitle}}
 
     <span class="text-muted badge"
-          data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-          data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+          data-ng-class="{
+              'text-success': md.mdStatus == 2,
+              'text-warning': md.mdStatus == 4
+              }"
+          data-ng-if="user.isEditorOrMore()
+                      && md.mdStatus < 50
+                      && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
   </h1>
 
-  <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-title="{{'parentMd' | translate}}"
+       data-layout="title"
+       data-types="parent">
+  </div>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
+  <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
 
   <div class="gn-collection"
        data-gn-keyword-badges="mdView.current.record.allKeywords"
