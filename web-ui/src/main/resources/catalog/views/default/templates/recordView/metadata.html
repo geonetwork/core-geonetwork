@@ -1,36 +1,36 @@
 <h2 data-translate="">metadataInformation</h2>
-<div data-ng-if="mdView.current.record.contact"
-     class="flex-row">
-  <span class="badge badge-rounded">
-    <i class="fa fa-fw fa-user"></i>
-  </span>
-  <div>
-    <strong data-translate="">contact</strong>
-    <div data-gn-metadata-contacts="mdView.current.record.contact"
-         data-gn-mode="org-role" />
-  </div>
-</div>
-<div data-ng-if="mdView.current.record.mainLanguage" class="flex-row">
-  <span class="badge badge-rounded" title="{{'metadataLanguage' | translate}}">
-    <i class="fa fa-fw fa-language"></i>
-  </span>
-  <div>
-    <strong data-translate="">metadataLanguage</strong>
-    <ul class="gn-label-list">
-      <li>{{mdView.current.record.mainLanguage | translate}}</li>
-      <li data-ng-repeat="l in mdView.current.record.otherLanguage">
-        {{l | translate}}
-      </li>
-    </ul>
-  </div>
-</div>
-<div data-ng-if="mdView.current.record.uuid" class="flex-row">
-  <span class="badge badge-rounded" title="{{uuid | translate}}">
-    <i class="fa fa-fw fa-info"></i>
-  </span>
-  <div>
-    <strong data-translate="">uuid</strong>
-    <span>{{mdView.current.record.uuid}}</span>
-  </div>
-</div>
+
+<a class="btn btn-default gn-margin-bottom"
+   data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">
+  <i class="fa fa-fw fa-file-code-o"/>
+  <span data-translate="">metadataInXML</span>
+</a>
+
+<table class="table table-striped">
+  <tbody>
+  <tr data-ng-if="mdView.current.record.contact">
+    <th data-translate="">contact</th>
+    <td>
+      <div data-gn-metadata-contacts="mdView.current.record.contact"
+           data-gn-mode="org-role" />
+    </td>
+  </tr>
+  <tr data-ng-if="mdView.current.record.mainLanguage">
+    <th data-translate="">metadataLanguage</th>
+    <td>
+      <ul>
+        <li>{{mdView.current.record.mainLanguage | translate}}</li>
+        <li data-ng-repeat="l in mdView.current.record.otherLanguage">
+          {{l | translate}}
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <th data-translate="">uuid</th>
+    <td>{{mdView.current.record.uuid}}</td>
+  </tr>
+  </tbody>
+</table>
+
 

@@ -1,10 +1,6 @@
 <div data-ng-if="similarDocuments.length > 2"
-     class="gn-info-list-blocks">
-  <h4>
-    <i class="fa fa-fw fa-copy"></i>
-    <span data-translate="">moreLikeThis</span>
-  </h4>
-
+     class="gn-info-list-blocks gn-margin-bottom">
+  <h2 data-translate="">moreLikeThis</h2>
 
   <ul class="row list-group gn-info-list">
     <gn-metadata-card data-ng-repeat="md in similarDocuments"
@@ -14,8 +10,10 @@
 
   <button data-ng-if="size < maxSize
                    && similarDocuments.length == size"
-          class="btn btn-link btn-xs"
+          class="btn btn-default"
           data-ng-click="moreRecords()">
-    <i class="fa fa-fw fa-ellipsis-h"/>
+
+    <span data-translate="">viewMore</span>
+    <i class="fa fa-fw fa-long-arrow-right"/>
   </button>
 </div>

@@ -27,19 +27,7 @@
   <!-- summary -->
   <div ng-include="'../../catalog/views/default/templates/recordView/summary.html'"/>
 
-  <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
-    <h2 data-translate="">overview</h2>
-    <div data-ng-repeat="img in mdView.current.record.overview">
-      <img data-gn-img-modal="img"
-           class="gn-img-thumbnail img-thumbnail"
-           alt="{{img.name}}"
-           data-ng-src="{{img.url}}"/>
-
-      <div class="gn-img-thumbnail-caption"
-           data-ng-show="img.name">{{img.name}}
-      </div>
-    </div>
-  </section>
+  <div ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
 
   <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
     <h2 data-translate="">extent</h2>
