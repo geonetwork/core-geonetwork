@@ -17,6 +17,8 @@
 
   <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
 
+  <div ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
+
   <div class="gn-collection"
        data-gn-keyword-badges="mdView.current.record.allKeywords"
        data-thesaurus="viewConfig.mainThesaurus"/>

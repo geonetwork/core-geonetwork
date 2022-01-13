@@ -1733,8 +1733,8 @@
                 '<div class="modal fade in"' +
                 '     id="gn-img-modal-' + (img.id || img.lUrl || img.url) + '">' +
                 '<div class="modal-dialog gn-img-modal in">' +
-                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
-                '<i class="fa fa-times text-danger"/></button>' +
+                '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
+                '<i class="fa fa-times"/></button>' +
                 '  <img src="' + (img.lUrl || img.url || img.id) + '"/>' +
                 (label != '' ? labelDiv : '') +
                 '</div>' +
