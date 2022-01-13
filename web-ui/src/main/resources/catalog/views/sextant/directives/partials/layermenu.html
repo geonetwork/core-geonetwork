@@ -30,7 +30,7 @@
     </button>
   </div>
 
-  <div class="sxt-layer-menu-body height-100 flex-col flex-align-stretch" ng-if="ctrl.panelOpened()">
+  <div class="sxt-layer-menu-body flex-grow flex-col flex-align-stretch" ng-if="ctrl.panelOpened()">
     <div class="flex-row flex-align-start">
       <div>
         <span style="word-break: break-word">{{layer.name || layer.get('label')}}</span>
@@ -103,9 +103,26 @@
 
       <tab ng-if="processes.length >= 1" select="wpsOpened = true" deselect="wpsOpened = false">
         <tab-heading translate>wpsProcess</tab-heading>
-        <select  ng-if="processes.length > 1" class="form-control input-sm" ng-model="selectedProcessIndex" ng-change="ctrl.selectProcess()">
-          <option ng-repeat="p in processes" value="{{$index}}">{{p.description}}</option>
-        </select>
+        <div class="btn-group wps-list"
+             role="group"
+             sxt-popover-dropdown
+             placement="bottom"
+             className="sxt-popover-grid wps-list-dropdown"
+             ng-if="processes.length > 1">
+          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-cogs"></span>
+            <span role="tooltip" class="left" data-translate>wpsAvailableProcesses</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right text-left">
+            <li data-ng-repeat="p in processes">
+              <a ng-click="ctrl.selectProcess(p)">
+                <span class="fa fa-cog"></span>
+                {{p.description}}
+              </a>
+            </li>
+          </ul>
+        </div>
         <div class="flex-spacer"></div>
         <div ng-if="wpsOpened">
           <gn-wps-process-form map="map"

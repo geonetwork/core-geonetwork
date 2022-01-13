@@ -60,8 +60,8 @@
             }
           });
 
-          this.selectProcess = function() {
-            $scope.selectedProcess = $scope.processes[parseInt($scope.selectedProcessIndex)];
+          this.selectProcess = function(process) {
+            $scope.selectedProcess = process;
           }
 
           /**
@@ -100,7 +100,6 @@
             scope.hasIndexedFeatures = false;
             scope.processes = null;
             scope.selectedProcess = null;
-            scope.selectedProcessIndex = '0'; // this is because angularjs only supports string in select options
 
             // layer has no metadata but a direct download url
             if (!newLayer.get('md') && newLayer.get('directDownloadURL')) {

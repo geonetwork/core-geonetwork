@@ -63,6 +63,23 @@
         top: -10px;
       }
     }
+    // tooltip on the left
+    button:focus [role=tooltip].left,
+    button:hover [role=tooltip].left {
+      left: auto;
+      right: ~"calc(100% + 10px)";
+      top: 50%;
+      margin: 0;
+      transform: translate(0, -50%);
+      width: max-content;
+      &:after {
+        border-bottom-color: transparent;
+        border-left-color: rgba(0, 0, 0, 0.6);
+        left: auto;
+        top: ~"calc(50% - 5px)";
+        right: -10px;
+      }
+    }
     &.activeTool {
       height: ~"calc(100% - 4.35em)";
       padding-bottom: 1em;
@@ -1181,9 +1198,11 @@ sxt-annotations-editor {
           text-transform: uppercase;
         }
       }
-
       .tab-content {
         overflow: auto;
+      }
+      .tab-pane {
+        position: relative;
       }
     }
   }
@@ -1209,6 +1228,19 @@ sxt-annotations-editor {
       }
     }
   }
+  .wps-list.btn-group {
+    position: absolute;
+    top: 0.1em;
+    right: 0.5em;
+    .dropdown-toggle {
+      padding: 0.3em 0.6em;
+    }
+  }
+}
+
+.popover.wps-list-dropdown {
+  width: max-content !important;
+  transform: translate(-50%, 0);
 }
 
 // make wps button 6.7.x like
