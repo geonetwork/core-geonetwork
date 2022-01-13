@@ -1426,33 +1426,6 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
-           * @name gnMap#addWmsToMap
-           *
-           * @description
-           * Create a new WMS layer from basic info object containing
-           * the name of the layer and the url of the service.
-           *
-           * @param {ol.map} map to add the layer
-           * @param {Object} layerInfo object
-           * @return {ol.Layer} the created layer
-           */
-          addWmsToMap: function(map, layerInfo) {
-            if (layerInfo) {
-              var layer = this.createOlWMS(map, {
-                LAYERS: layerInfo.name
-              }, {
-                url: layerInfo.url,
-                label: layerInfo.name
-              }
-              );
-              map.addLayer(layer);
-              return layer;
-            }
-          },
-
-          /**
-           * @ngdoc method
-           * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmsFromScratch
            *
            * @description
@@ -1489,11 +1462,6 @@
                     olL;
 
                 if (!capL) {
-                  // If layer not found in the GetCapabilities
-                  // Try to add the layer from the metadata
-                  // information only. A tile error loading
-                  // may be reported after the layer is added
-                  // to the map and will give more details.
                   var errormsg = $translate.instant(
                       'layerNotfoundInCapability', {
                         layer: name,
@@ -1504,26 +1472,10 @@
                     url: url,
                     name: name,
                     msg: errormsg
-                  }, errors = [];
-                  if (version) {
-                    o.version = version;
-                  }
-                  olL = $this.addWmsToMap(map, o);
+                  };
 
-                  if(olL && md) {
-                    olL.set('md', md);
-                  }
-
-                  if (!angular.isArray(olL.get('errors'))) {
-                    olL.set('errors', []);
-                  }
-                  errors.push(errormsg);
                   console.warn(errormsg);
-
-                  olL.get('errors').push(errors);
-
                   gnWmsQueue.error(o, map);
-                  o.layer = olL;
                   defer.reject(o);
                 } else {
 
