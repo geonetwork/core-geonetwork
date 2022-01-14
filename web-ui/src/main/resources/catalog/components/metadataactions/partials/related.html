@@ -1,6 +1,8 @@
 <div class="gn-related-resources gn-info-list-blocks"
       data-ng-if="relationFound">
-  <h2>{{::title}}</h2>
+  <h2 data-ng-if="title.indexOf('<') === -1">{{::title}}</h2>
+  <div data-ng-if="title.indexOf('<') === 0"
+       data-ng-bind-html="title"></div>
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
