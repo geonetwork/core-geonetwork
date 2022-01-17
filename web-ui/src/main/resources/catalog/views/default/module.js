@@ -166,6 +166,7 @@
       $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
       $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.showMaps = gnGlobalSettings.gnCfg.mods.home.showMaps;
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;

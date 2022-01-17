@@ -65,7 +65,8 @@
 <div data-ng-if="showMosaic"
      data-gn-record-mosaic="-cl_status.key:obsolete" size="9"/>
 
-<form class="form-horizontal"
+<form data-ng-if="showMaps"
+      class="form-horizontal"
       role="form"
       data-ng-controller="gnsSearchTopEntriesController"
       data-ng-search-form=""
