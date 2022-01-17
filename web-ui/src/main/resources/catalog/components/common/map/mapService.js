@@ -1609,7 +1609,8 @@
               return $q.reject(error);
             }
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
-            var layer = angular.isNumber(name)
+            // ESRI layer are CSV of integer
+            var layer = name && name.match(/^\d+(?:,\d+)*$/)
               ? name
               : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
