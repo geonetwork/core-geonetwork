@@ -2,9 +2,9 @@
   <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
 
   <div data-ng-if="mdView.current.record.relatedRecords"
-       data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children.length > 0
-        ? mdView.current.record.relatedRecords.children
-        : mdView.current.record.relatedRecords.siblings"
+       data-gn-related-with-stats="mdView.current.record.relatedRecords.children.length > 0
+                                          ? mdView.current.record.relatedRecords.children
+                                          : mdView.current.record.relatedRecords.siblings"
        data-agg="mdView.current.record.relatedRecords.children.length > 0
         ? mdView.current.record.relatedRecords.aggregations_children
         :mdView.current.record.relatedRecords.aggregations_siblings"
@@ -14,14 +14,30 @@
        data-title="{{'seriesComposedOf' | translate}}">
   </div>
 
-  <div data-gn-records-table="mdView.current.record.relatedRecords.all"
+  <div data-gn-records-table="mdView.current.record.relatedRecords.children.length > 0
+                              ? mdView.current.record.relatedRecords.children
+                              : mdView.current.record.relatedRecords.siblings"
        labels="title,cl_status,format,Esri,view,download,file,atom"
        columns="resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed"/>
-
-  <h2 data-translate="">aboutThisResource</h2>
-  <div ng-include="'../../catalog/views/default/templates/recordView/common.html'"/>
-
-  <div data-gn-more-like-this="mdView.current.record"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
 </div>
+
+
+<div class="row">
+  <div class="col-md-8 gn-record">
+<div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
+  </div>
+  <div class="col-md-4">
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-types="services"
+         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw fa-cloud\'></i></span><strong>' + ('openRecordservices' | translate) + '</strong>'}}">
+    </div>
+  </div>
+</div>
+
+
+<div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+
+<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>

@@ -409,16 +409,16 @@
 
 
   module
-    .directive('gnRelatedSeriesByCriteria', [
+    .directive('gnRelatedWithStats', [
       function() {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
             return attrs.template ||
-              '../../catalog/components/metadataactions/partials/relatedSeriesByCriteria.html';
+              '../../catalog/components/metadataactions/partials/relatedWithStats.html';
           },
           scope: {
-            children: '=gnRelatedSeriesByCriteria',
+            children: '=gnRelatedWithStats',
             agg: '=',
             filters: '=',
             sortBy: '@',
@@ -453,7 +453,7 @@
 
             // Remove the filters without values
             scope.filtersToProcess = scope.filters;
-            removeEmptyFilters(scope.filtersToProcess, scope.agg);
+            scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
 
             reset();
 
@@ -633,7 +633,7 @@
             function loadData() {
               scope.data = [];
               scope.records.map(function(r) {
-                r = new Metadata(r);
+                r = new Metadata(r.record);
                 var recordData = {};
                 scope.columnsConfig.map(function(c) {
                   recordData[c] = c.startsWith('link/')

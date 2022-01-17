@@ -1,4 +1,15 @@
-
+<div class="row">
+  <div class="col-md-4">
+    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
+  </div>
+  <div class="col-md-8">
+    <div data-gn-userfeedback='mdView.current.record'
+         data-gn-user={{user.username}}
+         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+    </div>
+    <div data-gn-md-feedback="mdView.current.record"></div>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-12">
     <h2>
@@ -10,15 +21,8 @@
       </a>
     </h2>
   </div>
-  <div class="col-md-8 gn-record">
-    <div data-gn-metadata-contacts="mdView.current.record.contact"
-         data-gn-mode="org-role"
-         data-layout="icon"/>
-
-    <div data-ng-if="showCitation"
-         data-gn-metadata-citation="mdView.current.record"/>
-  </div>
-  <!-- /.col-md-8 gn-record -->
+</div>
+<div class="row">
   <div class="col-md-4 gn-md-side gn-nopadding-top">
     <div class="gn-md-side-calendar gn-margin-bottom">
         <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
@@ -68,5 +72,15 @@
         </ul>
       </div>
     </div>
+  </div>
+
+
+  <div class="col-md-8 gn-record">
+    <div data-gn-metadata-contacts="mdView.current.record.contact"
+         data-gn-mode="org-role"
+         data-layout="icon"/>
+
+    <div data-ng-if="showCitation"
+         data-gn-metadata-citation="mdView.current.record"/>
   </div>
 </div>

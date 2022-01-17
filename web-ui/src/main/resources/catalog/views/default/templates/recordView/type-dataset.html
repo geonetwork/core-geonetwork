@@ -3,7 +3,6 @@
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
   </div>
-  <!-- /.col-md-8 gn-record -->
   <div class="col-md-4 gn-md-side">
 
     <div ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
@@ -440,36 +439,10 @@
       </h2>
       <div data-gn-metadata-rate="mdView.current.record"/>
     </div>
-
-    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
-
-    <div data-gn-userfeedback='mdView.current.record'
-         data-gn-user={{user.username}}
-         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-    </div>
-    <div data-gn-md-feedback="mdView.current.record"></div>
   </div>
-  <!-- /.col-md-4 gn-md-side -->
 </div>
 
 
 <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
 
-<div class="row">
-  <div class="col-md-12 gn-record">
-    <div data-gn-more-like-this="mdView.current.record"/>
-  </div>
-</div>
-
-
-<!-- authenticated users -->
-<div class="row">
-  <div class="col-md-8 gn-record">
-    <div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
-  </div>
-  <div class="col-md-4 gn-md-side">
-
-  </div>
-</div>
-
-
+<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
