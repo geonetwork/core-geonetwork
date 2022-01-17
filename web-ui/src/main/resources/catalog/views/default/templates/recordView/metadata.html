@@ -1,34 +1,45 @@
 <div class="row">
-  <div class="col-md-4">
-    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
-  </div>
-  <div class="col-md-8">
-    <div data-gn-userfeedback='mdView.current.record'
-         data-gn-user={{user.username}}
-         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-    </div>
-    <div data-gn-md-feedback="mdView.current.record"></div>
-  </div>
-</div>
-<div class="row">
   <div class="col-md-12">
     <h2>
       <span data-translate="">metadataInformation</span>
-      <a class="btn btn-link"
-         title="{{'metadataInXML' | translate}}"
-         data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">
-        <i class="fa fa-fw fa-file-code-o" />
-      </a>
+<!--      <a class="btn btn-link"-->
+<!--         title="{{'metadataInXML' | translate}}"-->
+<!--         data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">-->
+<!--        <i class="fa fa-fw fa-file-code-o" />-->
+<!--      </a>-->
     </h2>
   </div>
 </div>
 <div class="row">
+  <div class="col-md-8">
+
+    <div data-ng-if="mdView.current.record.contact">
+      <h3 data-translate="">contact</h3>
+      <div data-gn-metadata-contacts="mdView.current.record.contact"
+             data-gn-mode="org-role"
+             data-layout="icon"/>
+    </div>
+    <div data-ng-if="showCitation"
+         data-gn-metadata-citation="mdView.current.record"/>
+
+  </div>
   <div class="col-md-4 gn-md-side gn-nopadding-top">
+
+    <div class="gn-margin-bottom">
+      <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
+        <i class="fa fa-fw fa-file-code-o"></i>
+      </span>
+      <a class="btn btn-default"
+         data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">
+        <span data-translate="">metadataInXML</span>
+      </a>
+    </div>
+
     <div class="gn-md-side-calendar gn-margin-bottom">
         <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
           <i class="fa fa-fw fa-calendar"></i>
         </span>
-      <strong data-translate="">updatedOn</strong>
+      <h3 data-translate="">updatedOn</h3>
       <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
             data-from-now=""></span>
     </div>
@@ -40,7 +51,7 @@
         <i class="fa fa-fw fa-language"></i>
       </span>
       <div>
-        <strong data-translate="">metadataLanguage</strong>
+        <h3 data-translate="">metadataLanguage</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="l in mdLanguages">
             {{l | translate}}
@@ -49,7 +60,7 @@
       </div>
     </div>
 
-    <div class="gn-md-side-providedby gn-margin-bottom">
+    <div class="gn-margin-bottom">
       <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
         <i class="fa fa-fw fa-cloud"></i>
       </span>
@@ -63,24 +74,13 @@
         <i class="fa fa-fw fa-info"></i>
       </span>
       <div>
-        <strong data-translate="">uuid</strong>
-        <ul class="gn-label-list">
-          <li>
-            {{mdView.current.record.uuid}}
-            <div gn-copy-to-clipboard-button="mdView.current.record.uuid" timeout="1000"/>
-          </li>
-        </ul>
+        <h3 data-translate="">uuid</h3>
+        <div class="input-group">
+          <input type="text" class="form-control" value="{{mdView.current.record.uuid}}">
+          <span class="input-group-btn" gn-copy-to-clipboard-button="mdView.current.record.uuid" timeout="1000">
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-
-
-  <div class="col-md-8 gn-record">
-    <div data-gn-metadata-contacts="mdView.current.record.contact"
-         data-gn-mode="org-role"
-         data-layout="icon"/>
-
-    <div data-ng-if="showCitation"
-         data-gn-metadata-citation="mdView.current.record"/>
   </div>
 </div>

@@ -7,45 +7,50 @@
       <i class="fa fa-fw fa-tags"></i>
     </span>
     <div>
-      <strong data-translate="">listOfCategories</strong><br/>
-      <button data-ng-repeat="cat in mdView.current.record.cat"
-              data-ng-click="filterBy('cat', cat)"
-              data-ng-if="!sortKeywordsAlphabetically"
-              class="btn btn-xs btn-default"
-              title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
-        <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
-        {{('cat-' + cat) | translate}}
-      </button>
 
-      <button data-ng-repeat="cat in mdView.current.record.cat  | orderBy:sortByCategory"
-              data-ng-click="filterBy('cat', cat)"
-              data-ng-if="sortKeywordsAlphabetically"
-              class="btn btn-xs btn-default"
-              title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
-        <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
-        {{('cat-' + cat) | translate}}
-      </button>
+      <h3 data-translate="">listOfCategories</h3>
 
+      <div class="gn-label-list">
+        <button data-ng-repeat="cat in mdView.current.record.cat"
+                data-ng-click="filterBy('cat', cat)"
+                data-ng-if="!sortKeywordsAlphabetically"
+                class="btn btn-xs btn-default"
+                title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+          <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+          {{('cat-' + cat) | translate}}
+        </button>
+
+        <button data-ng-repeat="cat in mdView.current.record.cat  | orderBy:sortByCategory"
+                data-ng-click="filterBy('cat', cat)"
+                data-ng-if="sortKeywordsAlphabetically"
+                class="btn btn-xs btn-default"
+                title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+          <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+          {{('cat-' + cat) | translate}}
+        </button>
+      </div>
       <hr data-ng-if="mdView.current.record.cat.length > 0 &&
                         mdView.current.record.cl_topic.length > 0" />
 
-      <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
-              data-ng-click="filterBy('cl_topic.key', cat.key)"
-              data-ng-if="(cat != '') && !sortKeywordsAlphabetically"
-              class="btn btn-xs btn-default"
-              title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
-        <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
-        {{cat.key | translate}}
-      </button>
+      <div class="gn-label-list">
+        <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
+                data-ng-click="filterBy('cl_topic.key', cat.key)"
+                data-ng-if="(cat != '') && !sortKeywordsAlphabetically"
+                class="btn btn-xs btn-default"
+                title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+          <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+          {{cat.key | translate}}
+        </button>
 
-      <button data-ng-repeat="cat in mdView.current.record.cl_topic  | orderBy: 'key | translate'"
-              data-ng-click="filterBy('cl_topic.key', cat.key)"
-              data-ng-if="(cat != '') && sortKeywordsAlphabetically"
-              class="btn btn-xs btn-default"
-              title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
-        <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
-        {{cat.key | translate}}
-      </button>
+        <button data-ng-repeat="cat in mdView.current.record.cl_topic  | orderBy: 'key | translate'"
+                data-ng-click="filterBy('cl_topic.key', cat.key)"
+                data-ng-if="(cat != '') && sortKeywordsAlphabetically"
+                class="btn btn-xs btn-default"
+                title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+          <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+          {{cat.key | translate}}
+        </button>
+      </div>
     </div>
   </div>
   <div data-ng-repeat="(key, t) in mdView.current.record.allKeywords"
@@ -54,14 +59,14 @@
                      && viewConfig.internalThesaurus.indexOf(key) !== -1)
                     || highlightedThesaurus.indexOf(key) === -1"
        class="gn-margin-bottom flex-row">
-    <span class="badge invisible">
-      <i class="fa fa-fw"></i>
+    <span class="badge badge-rounded">
+      <i class="fa fa-fw fa-tags"></i>
     </span>
     <div>
-      <strong data-translate="">{{(t.title || key) | translate}}</strong>
+      <h3 data-translate="">{{(t.title || key) | translate}}</h3>
 
       <div ng-if="key === 'th_regions'">
-        <div
+        <div class="gn-label-list"
           data-ng-init="keywordWithGroup = mdView.current.record.getKeywordsGroupedByUriBase('th_regions', '(.*\/C19|.*#[A-Za-z]*).*')">
 
           <button data-ng-repeat="k in (list = (keywordWithGroup | orderBy: ['-group','default']))"
@@ -74,7 +79,8 @@
         </div>
       </div>
       <div ng-if="key !== 'th_regions'">
-        <div data-ng-if="!sortKeywordsAlphabetically">
+        <div data-ng-if="!sortKeywordsAlphabetically"
+             class="gn-label-list">
           <button data-ng-repeat="k in t.keywords track by $index"
                   class="btn btn-default btn-xs"
                   title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
@@ -83,7 +89,8 @@
             {{::k.default | capitalize}}
           </button>
         </div>
-        <div data-ng-if="sortKeywordsAlphabetically">
+        <div data-ng-if="sortKeywordsAlphabetically"
+             class="gn-label-list">
           <button data-ng-repeat="k in t.keywords | orderBy: 'default'"
                   class="btn btn-default btn-xs"
                   title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"

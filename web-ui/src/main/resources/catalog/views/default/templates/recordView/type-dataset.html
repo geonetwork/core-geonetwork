@@ -5,7 +5,7 @@
   </div>
   <div class="col-md-4 gn-md-side">
 
-    <div ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
+    <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
 
     <h2 data-translate="">summary</h2>
 
@@ -19,7 +19,7 @@
           <i class="fa fa-fw fa-check"></i>
         </span>
         <div>
-          <strong data-translate>{{'status' | translate}}</strong>
+          <h3 data-translate>{{'status' | translate}}</h3>
           {{c.key | translate}}
         </div>
       </div>
@@ -37,7 +37,7 @@
                  data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
             </div>
             <span>
-            <strong data-translate>{{date.type | translate}}</strong>
+            <h3 data-translate>{{date.type | translate}}</h3>
             <span data-gn-humanize-time="{{date.date}}"/>
           </span>
           </li>
@@ -68,7 +68,7 @@
         <i class="fa fa-fw fa-language"></i>
       </span>
       <div>
-        <strong data-translate="">updateFrequency</strong>
+        <h3 data-translate="">updateFrequency</h3>
         <p data-ng-repeat="c in mdView.current.record.cl_maintenanceAndUpdateFrequency">
           {{c.default}}
         </p>
@@ -82,7 +82,7 @@
         <i class="fa fa-fw fa-calendar"></i>
       </span>
       <div>
-        <strong data-translate="">tempExtent</strong><br/>
+        <h3 data-translate="">tempExtent</h3><br/>
         <p data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
           <span data-ng-show="range.start">
               <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
@@ -108,7 +108,7 @@
         <i class="fa fa-fw fa-clock-o"></i>
       </span>
       <div>
-        <strong data-translate="">resourceVerticalRange</strong>
+        <h3 data-translate="">resourceVerticalRange</h3>
         <div class="flex flex-row flex-align-center gn-vertical-range"
              data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
           <div class="width-25">
@@ -131,7 +131,7 @@
       <span class="badge badge-rounded">
         <i class="fa fa-fw fa-globe"></i>
       </span>
-      <strong data-translate="">spatialRepresentationType</strong>
+      <h3 data-translate="">spatialRepresentationType</h3>
       <span data-ng-repeat="c in mdView.current.record.cl_spatialRepresentationType">
         {{c.default}}
       </span>
@@ -143,8 +143,8 @@
         <i class="fa fa-fw fa-globe"></i>
       </span>
       <div>
-        <strong data-translate="">scale</strong>
-         <ul class="gn-label-list">
+        <h3 data-translate="">scale</h3>
+        <ul class="gn-label-list">
           <li data-ng-repeat="d in mdView.current.record.resolutionScaleDenominator"
               class="gn-scale">{{d}}
           </li>
@@ -158,7 +158,7 @@
         <i class="fa fa-fw fa-globe"></i>
       </span>
       <div>
-        <strong data-translate="">resolution</strong>
+        <h3 data-translate="">resolution</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="r in mdView.current.record.resolutionDistance">{{r}}</li>
         </ul>
@@ -171,7 +171,7 @@
         <i class="fa fa-fw fa-compass"></i>
       </span>
       <div>
-        <strong data-translate="">crs</strong>
+        <h3 data-translate="">crs</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="r in mdView.current.record.crsDetails">
             <a ng-show="r.url" href="{{r.url}}">{{r.name || r.code}}</a>
@@ -197,7 +197,7 @@
         <i class="fa fa-fw fa-globe"></i>
       </span>
       <div>
-        <strong data-translate="">format</strong>
+        <h3 data-translate="">format</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="f in mdView.current.record.format track by $index">
             {{f}}
@@ -206,7 +206,6 @@
 
       </div>
     </div>
-
 
     <div data-ng-if="mdView.current.record.relatedRecords"
          data-gn-related="mdView.current.record"
@@ -275,7 +274,7 @@
   <!-- /.col-md-4 gn-md-side -->
 </div>
 
-
+<!-- lineage -->
 <div class="row"
      data-ng-if="mdView.current.record.lineage
                  || mdView.current.record.supplementalInformation">
@@ -324,14 +323,13 @@
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
 
-
     <div data-ng-if="mdView.current.record.resourceCredit"
          class="flex-row gn-margin-bottom">
       <span class="badge badge-rounded" title="{{'credit' | translate}}">
         <i class="fa fa-fw fa-bookmark"></i>
       </span>
       <div>
-        <strong data-translate="">credit</strong>
+        <h3 data-translate="">credit</h3>
         <div data-ng-repeat="c in mdView.current.record.resourceCredit"
              data-ng-bind-html="c | linky | newlines"/>
       </div>
@@ -354,13 +352,15 @@
         <i class="fa fa-fw fa-gavel"></i>
       </span>
       <div>
-        <strong data-translate="">legalConstraints</strong>
-        <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
-          <span data-ng-bind-html="i | linky | newlines"/>
-        </p>
-        <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
+        <h3 data-translate="">legalConstraints</h3>
+        <ul>
+          <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
             <span data-ng-bind-html="i | linky | newlines"/>
-        </p>
+          </li>
+          <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
+              <span data-ng-bind-html="i | linky | newlines"/>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -370,13 +370,14 @@
         <i class="fa fa-fw fa-lock"></i>
       </span>
       <div>
-        <strong data-translate="">securityConstraints</strong>
-        <p data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
-            <span data-ng-bind-html="i | linky | newlines"/>
-        </p>
+        <h3 data-translate="">securityConstraints</h3>
+        <ul>
+          <li data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
+              <span data-ng-bind-html="i | linky | newlines"/>
+          </li>
+        </ul>
       </div>
     </div>
-
 
   </div>
   <!-- /.col-md-8 gn-record -->
@@ -389,7 +390,7 @@
         <i class="fa fa-fw fa-info"></i>
       </span>
       <div>
-        <strong data-translate="">identifier</strong>
+        <h3 data-translate="">identifier</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
             <span data-ng-bind-html="i.code | linky"/>
@@ -405,7 +406,7 @@
         <i class="fa fa-fw fa-language"></i>
       </span>
       <div>
-        <strong data-translate="">language</strong>
+        <h3 data-translate="">language</h3>
         <ul class="gn-label-list">
           <li data-ng-repeat="l in mdView.current.record.resourceLanguage">
             {{l | translate}}
@@ -424,7 +425,7 @@
         <i class="fa fa-fw fa-tags"></i>
       </span>
       <div>
-        <strong data-translate="">classification</strong>
+        <h3 data-translate="">classification</h3>
         <ul>
           <li data-ng-repeat="c in mdView.current.record.cl_classification">{{c.default}}</li>
         </ul>
@@ -442,6 +443,18 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-8">
+    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
+  </div>
+  <div class="col-md-4">
+    <div data-gn-userfeedback='mdView.current.record'
+         data-gn-user={{user.username}}
+         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+    </div>
+    <div data-gn-md-feedback="mdView.current.record"></div>
+  </div>
+</div>
 
 <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
 

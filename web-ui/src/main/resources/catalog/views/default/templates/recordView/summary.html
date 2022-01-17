@@ -40,7 +40,7 @@ Contents:
     <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
       <i class="fa fa-fw fa-cog"></i>
     </span>
-  <span data-translate="">sourceCatalog</span>:
+  <h3 data-translate="">sourceCatalog</h3>:
   <span data-gn-record-origin-logo="mdView.current.record"/>
 </section>
 
@@ -57,7 +57,7 @@ Contents:
       <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
         <i class="fa fa-fw fa-calendar"></i>
       </span>
-    <span data-translate="">updatedOn</span>
+    <h3 data-translate="">updatedOn</h3>
     <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
           data-from-now=""></span>
   </p>
@@ -77,7 +77,7 @@ Contents:
              data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
         </div>
         <span>
-            <strong data-translate>{{date.type | translate}}</strong>
+            <h3 data-translate>{{date.type | translate}}</h3>
             <span data-gn-humanize-time="{{date.date}}"/>
           </span>
       </li>
