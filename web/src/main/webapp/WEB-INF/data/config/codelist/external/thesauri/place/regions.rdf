@@ -15,6 +15,7 @@
     <dcterms:modified>2015-07-17 12:00:00</dcterms:modified>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent"/>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+    <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:hasTopConcept rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/Dependency"/>
     <skos:hasTopConcept rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer"/>
   </skos:ConceptScheme>
@@ -31,15 +32,17 @@
     <skos:prefLabel xml:lang="de">Länder</skos:prefLabel>
     <skos:inScheme rdf:resource="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
   </skos:Concept>
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#CountryGroup">
+    <skos:prefLabel xml:lang="en">Country groups</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Groupements de pays</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
+  </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Dependency">
     <skos:prefLabel xml:lang="en">Dependency</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Dépendances</skos:prefLabel>
     <skos:prefLabel xml:lang="de">Kolonien</skos:prefLabel>
     <skos:inScheme rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer"/>
   </skos:Concept>
-
-
-
 
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/North America">
     <skos:prefLabel xml:lang="en">North America</skos:prefLabel>
@@ -364,9 +367,6 @@
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/Dependency/WSB"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/YEM"/>
   </skos:Concept>
-
-
-
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/ABW">
     <skos:prefLabel xml:lang="en">Aruba</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Aruba</skos:prefLabel>
@@ -433,6 +433,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/ALD">
     <skos:prefLabel xml:lang="en">Aland Islands</skos:prefLabel>
@@ -593,12 +594,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/AZE">
     <skos:prefLabel xml:lang="en">Azerbaijan</skos:prefLabel>
@@ -638,13 +642,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/BEN">
     <skos:prefLabel xml:lang="en">Benin</skos:prefLabel>
@@ -702,7 +710,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/BHR">
     <skos:prefLabel xml:lang="en">Bahrain</skos:prefLabel>
@@ -743,6 +753,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Indeterminate/BJN">
     <skos:prefLabel xml:lang="en">Bajo Nuevo Bank (Petrel Islands)</skos:prefLabel>
@@ -930,7 +941,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EFTA4"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/CHL">
     <skos:prefLabel xml:lang="en">Chile</skos:prefLabel>
@@ -1183,12 +1196,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Asia"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/CZE">
     <skos:prefLabel xml:lang="en">Czechia</skos:prefLabel>
@@ -1203,12 +1219,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/DEU">
     <skos:prefLabel xml:lang="en">Germany</skos:prefLabel>
@@ -1222,13 +1241,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/DJI">
     <skos:prefLabel xml:lang="en">Djibouti</skos:prefLabel>
@@ -1268,13 +1291,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/DOM">
     <skos:prefLabel xml:lang="en">Dominican Republic</skos:prefLabel>
@@ -1367,13 +1394,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/EST">
     <skos:prefLabel xml:lang="en">Estonia</skos:prefLabel>
@@ -1388,12 +1419,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/ETH">
     <skos:prefLabel xml:lang="en">Ethiopia</skos:prefLabel>
@@ -1421,12 +1455,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/FJI">
     <skos:prefLabel xml:lang="en">Fiji</skos:prefLabel>
@@ -1467,13 +1504,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Dependency/FRO">
     <skos:prefLabel xml:lang="en">Faeroe Islands</skos:prefLabel>
@@ -1527,7 +1568,9 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
@@ -1651,13 +1694,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/GRD">
     <skos:prefLabel xml:lang="en">Grenada</skos:prefLabel>
@@ -1780,7 +1827,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/HTI">
     <skos:prefLabel xml:lang="en">Haiti</skos:prefLabel>
@@ -1808,12 +1857,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/IDN">
     <skos:prefLabel xml:lang="en">Indonesia</skos:prefLabel>
@@ -1894,14 +1946,76 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/ENG">
+      <skos:prefLabel xml:lang="en">England</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">England</skos:prefLabel>
+      <skos:altLabel>ENG</skos:altLabel>
+      <gml:BoundedBy>
+        <gml:Enveloppe gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+          <gml:lowerCorner>-6.349 49.91</gml:lowerCorner>
+          <gml:upperCorner>1.771 55.805</gml:upperCorner>
+        </gml:Enveloppe>
+      </gml:BoundedBy>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/NIR">
+      <skos:prefLabel xml:lang="en">Northern Ireland</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Northern Ireland</skos:prefLabel>
+      <skos:altLabel>NIR</skos:altLabel>
+      <gml:BoundedBy>
+        <gml:Enveloppe gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+          <gml:lowerCorner>-8.174 54.035</gml:lowerCorner>
+          <gml:upperCorner>-5.431 55.311</gml:upperCorner>
+        </gml:Enveloppe>
+      </gml:BoundedBy>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/SCT">
+      <skos:prefLabel xml:lang="en">Scotland</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Scotland</skos:prefLabel>
+      <skos:altLabel>SCT</skos:altLabel>
+      <gml:BoundedBy>
+        <gml:Enveloppe gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+          <gml:lowerCorner>-13.691 54.633</gml:lowerCorner>
+          <gml:upperCorner>-0.755 60.848</gml:upperCorner>
+        </gml:Enveloppe>
+      </gml:BoundedBy>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    </skos:Concept>
+    <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/WLS">
+      <skos:prefLabel xml:lang="en">Wales</skos:prefLabel>
+      <skos:prefLabel xml:lang="fr">Wales</skos:prefLabel>
+      <skos:altLabel>WLS</skos:altLabel>
+      <gml:BoundedBy>
+        <gml:Enveloppe gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+          <gml:lowerCorner>-5.311 51.384</gml:lowerCorner>
+          <gml:upperCorner>-2.647 53.427</gml:upperCorner>
+        </gml:Enveloppe>
+      </gml:BoundedBy>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+      <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    </skos:Concept>
+
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/IRN">
     <skos:prefLabel xml:lang="en">Iran</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Iran</skos:prefLabel>
@@ -1943,7 +2057,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EFTA4"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/ISR">
     <skos:prefLabel xml:lang="en">Israel</skos:prefLabel>
@@ -1970,13 +2086,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/JAM">
     <skos:prefLabel xml:lang="en">Jamaica</skos:prefLabel>
@@ -2148,8 +2268,8 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Asia"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/KOS">
-    <skos:prefLabel xml:lang="en">Kosovo</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Kosovo</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Kosovo (UNSCR 1244/99)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Kosovo (UNSCR 1244/99)</skos:prefLabel>
     <skos:altLabel>KOS</skos:altLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -2160,6 +2280,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/KWT">
     <skos:prefLabel xml:lang="en">Kuwait</skos:prefLabel>
@@ -2254,7 +2375,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EFTA4"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/LKA">
     <skos:prefLabel xml:lang="en">Sri Lanka</skos:prefLabel>
@@ -2295,12 +2418,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/LUX">
     <skos:prefLabel xml:lang="en">Luxembourg</skos:prefLabel>
@@ -2314,13 +2440,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/LVA">
     <skos:prefLabel xml:lang="en">Latvia</skos:prefLabel>
@@ -2335,12 +2465,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/MAC">
     <skos:prefLabel xml:lang="en">Macao</skos:prefLabel>
@@ -2473,6 +2606,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/MLI">
     <skos:prefLabel xml:lang="en">Mali</skos:prefLabel>
@@ -2500,12 +2634,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/MMR">
     <skos:prefLabel xml:lang="en">Myanmar</skos:prefLabel>
@@ -2533,6 +2670,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/MNG">
     <skos:prefLabel xml:lang="en">Mongolia</skos:prefLabel>
@@ -2746,13 +2884,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/NOR">
     <skos:prefLabel xml:lang="en">Norway</skos:prefLabel>
@@ -2769,7 +2911,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EFTA4"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/NPL">
     <skos:prefLabel xml:lang="en">Nepal</skos:prefLabel>
@@ -2941,12 +3085,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Dependency/PRI">
     <skos:prefLabel xml:lang="en">Puerto Rico</skos:prefLabel>
@@ -2987,13 +3134,17 @@
     </gml:BoundedBy>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU12"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/PRY">
     <skos:prefLabel xml:lang="en">Paraguay</skos:prefLabel>
@@ -3065,7 +3216,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/RUS">
     <skos:prefLabel xml:lang="en">Russian Federation</skos:prefLabel>
@@ -3330,6 +3483,7 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/STP">
     <skos:prefLabel xml:lang="en">São Tomé and Principe</skos:prefLabel>
@@ -3370,12 +3524,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/SVN">
     <skos:prefLabel xml:lang="en">Slovenia</skos:prefLabel>
@@ -3390,12 +3547,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU10"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/SWE">
     <skos:prefLabel xml:lang="en">Sweden</skos:prefLabel>
@@ -3410,12 +3570,15 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU15"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU25"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2007"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU27_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EU28"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/SWZ">
     <skos:prefLabel xml:lang="en">Swaziland</skos:prefLabel>
@@ -3614,7 +3777,9 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Asia"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA33"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/TUV">
     <skos:prefLabel xml:lang="en">Tuvalu</skos:prefLabel>
@@ -3933,11 +4098,74 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Africa"/>
   </skos:Concept>
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EU12">
+    <skos:prefLabel xml:lang="en">EU12</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EU12</skos:prefLabel>
+    <skos:altLabel/>
+    <gml:BoundedBy>
+      <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+        <gml:lowerCorner>-63.1536 -21.3899</gml:lowerCorner>
+        <gml:upperCorner>55.8366 60.8459</gml:upperCorner>
+      </gml:Envelope>
+    </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DEU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DNK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ESP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FRA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GRC"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/IRL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ITA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LUX"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NLD"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/PRT"/>
+  </skos:Concept>
 
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EU25">
+    <skos:prefLabel xml:lang="en">EU25</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EU25</skos:prefLabel>
+    <skos:altLabel/>
+    <gml:BoundedBy>
+      <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+        <gml:lowerCorner>-63.1536 -21.3899 </gml:lowerCorner>
+        <gml:upperCorner>55.8366 70.0923</gml:upperCorner>
+      </gml:Envelope>
+    </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CYP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CZE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DEU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DNK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ESP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/EST"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FIN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FRA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GBR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GRC"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/HUN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/IRL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ITA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LTU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LUX"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LVA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/MLT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NLD"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/POL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/PRT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SWE"/>
+  </skos:Concept>
 
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EEA32">
-    <skos:prefLabel xml:lang="en">EEA32</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">EEA32</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">EEA32 (2006-2013)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EEA32 (2006-2013)</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -3945,6 +4173,7 @@
         <gml:upperCorner>44.807 71.165</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
@@ -3981,8 +4210,8 @@
   </skos:Concept>
 
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EEA33">
-    <skos:prefLabel xml:lang="en">EEA33</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">EEA33</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">EEA33 (2013-2020)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EEA33 (2013-2020)</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -3990,6 +4219,7 @@
         <gml:upperCorner>44.807 71.165</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
@@ -4025,6 +4255,54 @@
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SWE"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/TUR"/>
   </skos:Concept>
+
+
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EEA32_2020">
+    <skos:prefLabel xml:lang="en">EEA32 (from 2020)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EEA32 (from 2020)</skos:prefLabel>
+    <skos:altLabel/>
+    <gml:BoundedBy>
+      <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+        <gml:lowerCorner>-31.285 27.642</gml:lowerCorner>
+        <gml:upperCorner>44.807 71.165</gml:upperCorner>
+      </gml:Envelope>
+    </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BGR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CHE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CYP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CZE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DEU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DNK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ESP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/EST"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FIN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FRA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GRC"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/HRV"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/HUN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/IRL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ISL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ITA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LIE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LTU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LUX"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LVA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/MLT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NLD"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NOR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/POL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/PRT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ROU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SWE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/TUR"/>
+  </skos:Concept>
+
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EEA39">
     <skos:prefLabel xml:lang="en">EEA39</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">EEA39</skos:prefLabel>
@@ -4035,6 +4313,7 @@
         <gml:upperCorner>44.807 71.165</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ALB"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
@@ -4076,6 +4355,59 @@
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SWE"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/TUR"/>
   </skos:Concept>
+
+
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EEA38_2020">
+    <skos:prefLabel xml:lang="en">EEA38 (from 2020)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">EEA38 (from 2020)</skos:prefLabel>
+    <skos:altLabel/>
+    <gml:BoundedBy>
+      <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+        <gml:lowerCorner>-31.285 27.642</gml:lowerCorner>
+        <gml:upperCorner>44.807 71.165</gml:upperCorner>
+      </gml:Envelope>
+    </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ALB"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BGR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BIH"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CHE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CYP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CZE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DEU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/DNK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ESP"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/EST"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FIN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/FRA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/GRC"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/HRV"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/HUN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/IRL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ISL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ITA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/KOS"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LIE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LTU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LUX"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/LVA"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/MKD"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/MLT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/MNE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NLD"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/NOR"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/POL"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/PRT"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ROU"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SRB"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVK"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SVN"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/SWE"/>
+    <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/TUR"/>
+  </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/EFTA4">
     <skos:prefLabel xml:lang="en">EFTA4</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">EFTA4</skos:prefLabel>
@@ -4086,6 +4418,7 @@
         <gml:upperCorner>31.077 71.165</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CHE"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/ISL"/>
@@ -4102,6 +4435,7 @@
         <gml:upperCorner>34.099 59.671</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CYP"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/CZE"/>
@@ -4124,6 +4458,7 @@
         <gml:upperCorner>31.570 70.075</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
@@ -4151,6 +4486,7 @@
         <gml:upperCorner>34.099 70.075</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
@@ -4191,6 +4527,7 @@
         <gml:upperCorner>34.099 70.075</gml:upperCorner>
       </gml:Envelope>
     </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/AUT"/>
     <skos:narrower rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/BEL"/>
@@ -4264,6 +4601,20 @@
   </skos:Concept>
 
 
+  <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#EU/RUEU">
+    <skos:prefLabel xml:lang="en">Russian Federation (European part)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Russian Federation (European part)</skos:prefLabel>
+    <skos:altLabel/>
+    <gml:BoundedBy>
+      <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+        <gml:lowerCorner>19.639031 41.189044</gml:lowerCorner>
+        <gml:upperCorner>69.030279 81.851932</gml:upperCorner>
+      </gml:Envelope>
+    </gml:BoundedBy>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Europe"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#CountryGroup"/>
+    <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Country/RUS"/>
+  </skos:Concept>
 
 
 
