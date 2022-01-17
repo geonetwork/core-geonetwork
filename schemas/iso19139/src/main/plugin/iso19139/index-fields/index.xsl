@@ -44,7 +44,7 @@
   <xsl:import href="fn.xsl"/>
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
-
+  <xsl:include href="../convert/functions.xsl"/>
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:output name="default-serialize-mode"
@@ -114,9 +114,10 @@
                   select="gmd:language[1]/gmd:LanguageCode/
                         @codeListValue[normalize-space(.) != '']"/>
 
-    <xsl:variable name="mainLanguage" as="xs:string?"
-                  select="if ($mainLanguageCode) then $mainLanguageCode else
-                    gmd:language[1]/gco:CharacterString[normalize-space(.) != '']"/>
+
+    <xsl:variable name="mainLanguage" as="xs:string?">
+      <xsl:call-template name="langId19139" />
+    </xsl:variable>
 
     <xsl:variable name="otherLanguages" as="attribute()*"
                   select="gmd:locale/gmd:PT_Locale/
