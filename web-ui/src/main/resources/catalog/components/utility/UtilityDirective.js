@@ -790,6 +790,23 @@
     }
   ]);
 
+  module.directive('gnSearchFilterLink', [
+    function() {
+      return {
+        restrict: 'A',
+        template: '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
+                  '  <i class="fa fa-fw fa-filter"/>' +
+                  '  <span>{{(label || \'focusOn\') | translate}} {{filter}}</span>' +
+                  '</a>',
+        scope: {
+          field: '@gnSearchFilterLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
+
 
   module.directive('gnCircleLetterIcon', ['$http',
     function($http) {

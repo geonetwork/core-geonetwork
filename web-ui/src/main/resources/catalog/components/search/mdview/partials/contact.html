@@ -25,6 +25,8 @@
       </div>
 
       <div gn-popover-content>
+        <div data-gn-metadata-individual="c"/>
+
         <address data-ng-if="c.address != '' || c.phone != ''">
           <div data-ng-if="c.address != ''">{{c.address}}</div>
           <a href="tel:{{c.phone}}"
@@ -33,12 +35,9 @@
           </a>
         </address>
 
-        <div data-gn-metadata-individual="c"/>
-        <br/>
-        <a href='#/search?query_string=%7B"OrgForResource":%7B"{{::c.organisation | encodeURIComponent}}":true%7D%7D'>
-          <i class="fa fa-fw fa-search"/>
-          <span>{{'otherRecordsFromThisOrg' | translate}}</span>
-        </a>
+        <div data-gn-search-filter-link="OrgForResource"
+             data-filter="c.organisation"
+             data-label="focusOnFrom"></div>
       </div>
     </li>
   </ul>

@@ -274,6 +274,7 @@
   "createCollectionFromSelectionAs": "Create collection from selection as",
   "supplementalInformation": "Supplemental Information",
   "siblingsReverseLinks": "Other resources (other record links)",
-  "otherRecordsFromThisOrg": "Other records from this organisation",
+  "focusOnFrom": "Focus on resources from ",
+  "focusOn": "Focus on ",
   "memberOf": "Member of:"
 }
