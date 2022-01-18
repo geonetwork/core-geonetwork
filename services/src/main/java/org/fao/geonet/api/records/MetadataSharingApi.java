@@ -55,18 +55,7 @@ import org.fao.geonet.api.records.model.GroupPrivilege;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordOwnerChangeEvent;
@@ -1127,10 +1116,48 @@ public class MetadataSharingApi {
                     }
 
                     List<GroupOperations> privileges = sharing.getPrivileges();
-                    setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
-                        ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
-                    report.incrementProcessedRecords();
-                    listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                    List<GroupOperations> allGroupPrivileges = new ArrayList<>();
+
+                    if (metadata instanceof MetadataDraft) {
+                        // If the metadata is a working copy, publish privileges (ALL and INTRANET groups)
+                        // should be applied to the approved version.
+                        Metadata md = this.metadataRepository.findOneByUuid(metadata.getUuid());
+
+                        if (md != null) {
+                            Iterator<GroupOperations> it = privileges.iterator();
+
+                            while (it.hasNext()) {
+                                GroupOperations g = it.next();
+
+                                if (g.getGroup() == ReservedGroup.all.getId() ||
+                                    g.getGroup() == ReservedGroup.intranet.getId()) {
+                                    allGroupPrivileges.add(g);
+                                    it.remove();
+                                }
+                            }
+
+                            if (!allGroupPrivileges.isEmpty()) {
+                                setOperations(sharing, dataMan, context, appContext, md, operationMap, allGroupPrivileges,
+                                    ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+                            }
+                        }
+
+                        if (!privileges.isEmpty()) {
+                            setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
+                                ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+                        }
+
+                        report.incrementProcessedRecords();
+                        listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                        listOfUpdatedRecords.add(String.valueOf(md.getId()));
+
+                    } else {
+                        setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
+                            ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+
+                        report.incrementProcessedRecords();
+                        listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                    }
                 }
             }
             dataMan.flush();
