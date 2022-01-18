@@ -1623,17 +1623,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         // If the requested portal define a filter
         // Add it to the request.
         NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
-        try {
-            // This method can be called from the Atom Harvester that doesn't have a
-            // WebApplicationContext. In that case accessing to any property of the
-            // NodeInfo class throws an exception. We ignore the portalFilter query part
-            // in that case
-            node.getId();
-        } catch (BeanCreationException ex) {
-            LOGGER.debug("appendPortalFilter called from a non http request thread. Ignoring the node in the search");
-            return q;
-
-        }
         SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             final Source portal = sourceRepository.findOne(node.getId());
