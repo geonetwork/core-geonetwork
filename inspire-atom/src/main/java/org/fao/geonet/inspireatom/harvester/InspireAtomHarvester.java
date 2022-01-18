@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -223,7 +223,7 @@ public class InspireAtomHarvester {
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid: " + metadataUuid);
 
                 String atomUrl = entry.getValue();
                 logger.debug("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
