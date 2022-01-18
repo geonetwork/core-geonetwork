@@ -4,19 +4,23 @@
         data-ng-repeat="c in mdContacts track by $index"
         gn-popover
         gn-popover-dismiss=".content">
-      <div gn-popover-anchor>
-        <div data-gn-circle-letter-icon="c.organisation"/>
+      <div gn-popover-anchor
+           class="row">
+        <div class="col-md-4"
+             data-gn-circle-letter-icon="c.organisation"/>
 
-        <div class="gn-contact-card-org">
+        <div class="col-md-8">
+          <div class="gn-contact-card-role">
+            {{c.role | translate}}
+          </div>
+          <div class="gn-contact-card-org">
           <span data-ng-if="::c.website">
             <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
           </span>
-          <span data-ng-if="::!c.website">
+            <span data-ng-if="::!c.website">
             {{c.organisation}}
           </span>
-        </div>
-        <div class="gn-contact-card-role">
-          {{c.role | translate}}
+          </div>
         </div>
       </div>
 

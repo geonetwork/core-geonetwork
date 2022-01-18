@@ -276,7 +276,9 @@
               container: '@',
               user: '=',
               hasResults: '=?',
-              layout: '@'
+              layout: '@',
+              // Only apply to card layout
+              size: '@'
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
@@ -295,6 +297,12 @@
                 controller.registerGnRelated(elem);
               }
 
+              scope.sizeConfig = {};
+              scope.showAllItems = function(type) {
+                scope.sizeConfig[type] = scope.sizeConfig[type] === scope.size
+                  ? scope.relations[type].length
+                  : scope.size;
+              }
               scope.loadRelations = function(relation) {
                 angular.forEach(relation, function(value, idx) {
                   if (!value) { return; }
@@ -306,6 +314,7 @@
 
                   if (!scope.relations[idx]) {
                     scope.relations[idx] = [];
+                    scope.sizeConfig[idx] = scope.size;
                   }
                   if (scope.filter && angular.isArray(value)) {
                     var separator = ':',

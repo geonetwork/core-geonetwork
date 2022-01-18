@@ -231,6 +231,7 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >
     <gn-metadata-card data-ng-repeat="md in items | orderBy:'record.resourceTitle'"
+                      data-ng-if="!size || $index < sizeConfig[type]"
                       md="md.record"
                       formatter-url="formatter.defaultUrl">
       <span class="label label-default gn-card-badge"
@@ -244,5 +245,13 @@
         {{(config.getLabel(mainType, type)) | translate}}
       </span>
     </gn-metadata-card>
+    <button class="btn btn-link"
+            data-ng-if="size && items.length > sizeConfig[type]"
+            data-ng-click="showAllItems(type)">
+      <span data-ng-if="items.length !== sizeConfig[type]">
+        {{items.length - sizeConfig[type]}} more</span>
+      <span data-ng-if="items.length === sizeConfig[type]"
+            data-translate="">showLess</span>
+    </button>
   </ul>
 </div>

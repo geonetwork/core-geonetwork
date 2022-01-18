@@ -569,16 +569,21 @@ ul.container-list {
     li.gn-contact-card {
       cursor: pointer;
       list-style-type: none;
-      width: calc(100%/4);
-      text-align: center;
+      width: calc(100%/2);
+      text-align: left;
       float: left;
       padding: 5px;
+      .col-md-6, .col-md-4 {
+        padding-left: 0px;
+        padding-right: 0px;
+      }
       .gn-contact-card-org {
         padding: 5px;
         margin-bottom: 10px;
       }
       .gn-contact-card-role {
         font-style: italic;
+        font-weight: bolder;
       }
     }
   }
