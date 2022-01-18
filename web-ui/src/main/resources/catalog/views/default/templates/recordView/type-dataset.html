@@ -190,7 +190,8 @@
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
-  <div class="col-md-4 gn-md-side">
+  <div class="gn-md-side"
+       data-ng-class="[].concat(mdView.current.record.relatedRecords.datasets, mdView.current.record.relatedRecords.services).length > 3 ? 'col-md-12' : 'col-md-4'">
     <div data-ng-if="mdView.current.record.format"
          class="gn-margin-bottom flex-row">
       <span class="badge badge-rounded">
@@ -212,7 +213,14 @@
          data-user="user"
          data-layout="card"
          data-types="services"
-         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw fa-cloud\'></i></span><strong>' + ('openRecordservices' | translate) + '</strong>'}}">
+         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw gn-icon-service\'></i></span><strong>' + ('openRecordservices' | translate) + '</strong>'}}">
+    </div>
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-types="datasets"
+         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw gn-icon-dataset\'></i></span><strong>' + ('openRecorddatasets' | translate) + '</strong>'}}">
     </div>
   </div>
   <!-- /.col-md-4 gn-md-side -->
@@ -290,7 +298,8 @@
     </div>
   </div>
   <!-- /.col-md-8 gn-record -->
-  <div class="col-md-4 gn-md-side">
+  <div class="gn-md-side"
+       data-ng-class="[].concat(mdView.current.record.relatedRecords.sources, mdView.current.record.relatedRecords.hassources).length > 3 ? 'col-md-12' : 'col-md-4'">
     <div data-gn-related="mdView.current.record"
          data-user="user"
          data-types="sources"
