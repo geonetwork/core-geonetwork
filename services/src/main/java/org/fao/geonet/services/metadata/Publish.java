@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,6 +28,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -226,7 +227,7 @@ public class Publish {
                     }
                 });
             } else {
-                return Iterators.emptyIterator();
+                return Collections.emptyIterator();
             }
         } else {
             return new Iterator<String>() {
