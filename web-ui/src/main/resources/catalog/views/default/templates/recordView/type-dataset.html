@@ -1,5 +1,6 @@
 <!-- title & summary -->
-<div class="row">
+<div class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-top gn-margin-bottom gn-padding-bottom">
+
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
   </div>
@@ -51,7 +52,7 @@
 </div>
 
 <!-- map & extent -->
-<div class="row">
+<div class="row gn-padding-top">
   <div class="col-md-8 gn-record">
     <div data-gn-data-preview="mdView.current.record"/>
 

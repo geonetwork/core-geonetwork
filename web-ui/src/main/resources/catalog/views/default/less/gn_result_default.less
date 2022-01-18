@@ -69,6 +69,14 @@
       }
     }
   }
+  .badge-rounded {
+    padding: 10px 8px;
+    border-radius: 50%;
+    color: #0e0e0e;
+    background-color: #efefef !important;
+    flex: none;
+    display: none;
+  }
   .gn-card-view-header {
     padding: 15px;
     margin-top: 30px !important;
@@ -85,6 +93,7 @@
     bottom: 5px;
   }
   .gn-card {
+    //color: #fff;
     h1 {
       margin-top: 15px;
       font-size: 32px;
@@ -96,6 +105,10 @@
       a {
         line-break: anywhere;
       }
+    }
+    .badge-rounded {
+      color: #fff;
+      background-color: #333 !important;
     }
     .gallery {
       width: 100%;
@@ -115,6 +128,7 @@
   }
   .gn-card-series {
     background-color: @brand-primary;
+    color: #fff;
     &:hover {
       background-color: @brand-primary;
     }
@@ -146,14 +160,7 @@
     }
 
   }
-  .badge-rounded {
-    padding: 10px 8px;
-    border-radius: 50%;
-    color: #0e0e0e;
-    background-color: #efefef !important;
-    flex: none;
-    display: none;
-  }
+
   .gn-related-item {
     margin-top: -1px;
     border-radius: 0;
@@ -180,6 +187,7 @@
     }
   }
   .gn-collection {
+    margin-bottom: 15px;
     .btn {
       margin: 0 5px 5px 0;
       font-size: 14px;
