@@ -790,13 +790,33 @@
     }
   ]);
 
+  module.directive('gnSearchFilterPopupLink', [
+    function() {
+      return {
+        restrict: 'A',
+        transclude: true,
+        template: '<div gn-popover> ' +
+          '<span gn-popover-anchor><ng-transclude/></span> ' +
+          '<div gn-popover-content> ' +
+          '<a data-gn-search-filter-link="{{field}}" data-filter="filter" data-label="{{label}}"><ng-transclude/></a> ' +
+          '</div>',
+        scope: {
+          field: '@gnSearchFilterPopupLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
   module.directive('gnSearchFilterLink', [
     function() {
       return {
         restrict: 'A',
+        replace: true,
+        transclude: true,
         template: '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
                   '  <i class="fa fa-fw fa-filter"/>' +
-                  '  <span>{{(label || \'focusOn\') | translate}} {{filter}}</span>' +
+                  '  <span>{{(label || \'focusOn\') | translate}} <ng-transclude/></span>' +
                   '</a>',
         scope: {
           field: '@gnSearchFilterLink',

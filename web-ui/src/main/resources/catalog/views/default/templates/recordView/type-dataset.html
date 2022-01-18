@@ -127,14 +127,18 @@
     </div>
 
     <div data-ng-if="mdView.current.record.cl_spatialRepresentationType.length > 0"
-         class="gn-margin-bottom">
+         class="gn-margin-bottom flex-row">
       <span class="badge badge-rounded">
         <i class="fa fa-fw fa-globe"></i>
       </span>
-      <h3 data-translate="">spatialRepresentationType</h3>
-      <span data-ng-repeat="c in mdView.current.record.cl_spatialRepresentationType">
-        {{c.default}}
-      </span>
+      <div>
+        <h3 data-translate="">spatialRepresentationType</h3>
+        <ul class="gn-label-list"
+            data-ng-repeat="c in mdView.current.record.cl_spatialRepresentationType">
+          <li data-gn-search-filter-popup-link="cl_spatialRepresentationType.key"
+             data-filter="c.key">{{c.default}}</li>
+        </ul>
+      </div>
     </div>
 
     <div data-ng-if="mdView.current.record.resolutionScaleDenominator"
@@ -200,8 +204,9 @@
       <div>
         <h3 data-translate="">format</h3>
         <ul class="gn-label-list">
-          <li data-ng-repeat="f in mdView.current.record.format track by $index">
-            {{f}}
+          <li data-ng-repeat="f in mdView.current.record.format track by $index"
+            <a data-gn-search-filter-popup-link="format"
+               data-filter="f">{{f}}</a>
           </li>
         </ul>
 
