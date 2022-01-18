@@ -590,4 +590,10 @@
       return $sanitize(input);
     }
   }]);
+
+  module.filter('toJson', [function() {
+    return function(input) {
+      return JSON.stringify(input);
+    }
+  }]);
 })();
