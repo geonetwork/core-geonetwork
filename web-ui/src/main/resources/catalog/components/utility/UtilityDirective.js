@@ -827,6 +827,23 @@
     }
   ]);
 
+  module.directive('gnStatusBadge', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<div data-ng-if="::md.cl_status.length > 0"' +
+                  ' title="{{::md.cl_status[0].key | translate}}"' +
+                  ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
+                  '</div>',
+        scope: {
+          md: '=gnStatusBadge'
+        }
+      };
+    }
+  ]);
+
 
   module.directive('gnCircleLetterIcon', ['$http',
     function($http) {

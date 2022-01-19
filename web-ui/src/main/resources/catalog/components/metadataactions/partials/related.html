@@ -1,5 +1,6 @@
 <div class="gn-related-resources gn-info-list-blocks"
-      data-ng-if="relationFound">
+      data-ng-if="relationFound"
+      title="{{::altTitle}}">
   <h2 data-ng-if="title.indexOf('<') === -1">{{::title}}</h2>
   <div data-ng-if="title.indexOf('<') === 0"
        data-ng-bind-html="title"></div>
@@ -208,7 +209,7 @@
     </div>
   </div>
 
-  <ul class=""
+  <ul class="gn-related-list"
       data-ng-repeat="(type, items) in relations track by $index"
       data-ng-if="layout === 'title' && type && type !== 'thumbnails' && type !== 'onlines'"
       data-ng-init="mainType = config.getType(md, type);
@@ -219,6 +220,7 @@
          title="{{md.record.resourceTitle}}"
          gn-metadata-open="md.record"
          gn-formatter="formatter.defaultUrl">
+        <i class="fa {{icon}}"/>
         {{md.record.resourceTitle}}
       </a>
     </li>

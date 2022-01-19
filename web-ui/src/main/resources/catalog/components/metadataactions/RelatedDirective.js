@@ -266,6 +266,7 @@
               template: '@',
               types: '@',
               title: '@',
+              altTitle: '@',
               list: '@',
               // Filter a type based on an attribute.
               // Can't be used when multiple types are requested
