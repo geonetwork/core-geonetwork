@@ -1,8 +1,5 @@
 <div data-ng-if="md.relatedRecords"
      data-gn-related-container="md"
-     data-mode=""
-     data-related-config="[
-                     {'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
-                     {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
-                     {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+     data-mode="::viewConfig.distributionConfig.layout || ''"
+     data-related-config="::viewConfig.distributionConfig.sections">
 </div>

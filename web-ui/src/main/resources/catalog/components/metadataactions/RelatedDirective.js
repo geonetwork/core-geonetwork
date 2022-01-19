@@ -195,9 +195,8 @@
           },
           scope: {
             md: '=gnRelatedContainer',
-            mode: '@',
-            relatedConfig: '=',
-            layout: '@'
+            mode: '=',
+            relatedConfig: '='
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
@@ -216,7 +215,10 @@
 
                 var value = config.relations[type];
 
-                if (config.filter && angular.isArray(value)) {
+                // Check if tabs needs to be displayed
+                if (scope.mode === 'tabset'
+                  && config.filter
+                  && angular.isArray(value)) {
                   var separator = ':',
                     tokens = config.filter.split(separator),
                     field = tokens.shift(),

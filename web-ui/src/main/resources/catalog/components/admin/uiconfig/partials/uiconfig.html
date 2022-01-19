@@ -143,7 +143,7 @@
                   ui-addWMSLayersToMap-urlLayerParam-help</p>
               </div>
 
-              <div data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|collectionTableConfig"
+              <div data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|collectionTableConfig|distributionConfig"
                    data-ng-switch-when-separator="|">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
                 <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
