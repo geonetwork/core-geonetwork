@@ -51,6 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -185,7 +186,6 @@ public class LogosApi {
     )
     @RequestMapping(
         path = "/{file:.+}",
-        produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
@@ -211,7 +211,9 @@ public class LogosApi {
 
         try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, logoDirectory)) {
             if (image != null) {
-                response.sendRedirect(String.format("../../../images/harvesting/%s", file));
+                response.sendRedirect(String.format(
+                    "../../../images/harvesting/%s",
+                    URLEncoder.encode(file, "UTF-8")));
             } else {
                 throw new ResourceNotFoundException(String.format(
                     "No logo found with filename '%s'.", file));
