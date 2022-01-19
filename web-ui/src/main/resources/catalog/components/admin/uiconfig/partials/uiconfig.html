@@ -45,17 +45,9 @@
                  data-ng-if="mCfg.enabled === undefined || mCfg.enabled === true"
                  data-ng-repeat="(key, value) in mCfg"
                  data-ng-switch="key">
-
-
               <!-- DEPRECATED SETTINGS (hidden) -->
-              <div data-ng-switch-when="enabled"></div>
-              <div data-ng-switch-when="context"></div>
-              <div data-ng-switch-when="layer"></div>
-              <div data-ng-switch-when="searchMapLayers"></div>
-              <div data-ng-switch-when="viewerMapLayers"></div>
-              <div data-ng-switch-when="mapExtent"></div>
-              <div data-ng-switch-when="mapBackgroundLayer"></div>
-
+              <div data-ng-switch-when="enabled|context|layer|searchMapLayers|viewerMapLayers|mapExtent|mapBackgroundLayer"
+                   data-ng-switch-when-separator="|"></div>
 
               <!-- arrays -->
               <div data-ng-switch-when="hitsperpageValues">
@@ -151,7 +143,7 @@
                   ui-addWMSLayersToMap-urlLayerParam-help</p>
               </div>
 
-              <div data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig"
+              <div data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|collectionTableConfig"
                    data-ng-switch-when-separator="|">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
                 <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>

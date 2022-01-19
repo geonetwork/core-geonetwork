@@ -700,6 +700,10 @@ goog.require('gn_alert');
           'mainThesaurus': ['th_gemet'],
           'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
           'internalThesaurus': [],
+          'collectionTableConfig': {
+            'labels:': 'title,cl_status,format,Esri,view,download,file,atom',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed'
+          },
           'relatedFacetConfig':  {
             'creationYearForResource': {
               'terms': {
@@ -912,7 +916,10 @@ goog.require('gn_alert');
         'autocompleteConfig',
         'moreLikeThisConfig',
         'relatedFacetConfig',
-        'mainThesaurus'
+        'mainThesaurus',
+        'internalThesaurus',
+        'locationThesaurus',
+        'collectionTableConfig'
       ],
       current: null,
       isDisableLoginForm: false,
