@@ -235,7 +235,7 @@
 
 <!-- data model / feature catalog -->
 <div class="row">
-  <div class="col-md-8 gn-record">
+  <div class="col-md-12 gn-record">
     <div data-ng-if="mdView.current.record.featureTypes"
          data-ng-repeat="featureType in mdView.current.record.featureTypes">
 
@@ -276,9 +276,6 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <!-- /.col-md-8 gn-record -->
-  <div class="col-md-4 gn-md-side">
     <div data-ng-if="mdView.current.record.relatedRecords"
          data-gn-related="mdView.current.record"
          data-user="user"
