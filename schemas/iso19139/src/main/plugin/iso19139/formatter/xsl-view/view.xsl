@@ -654,7 +654,7 @@
         <div class="gn-contact">
           <strong>
             <xsl:comment select="'email'"/>
-            <xsl:apply-templates mode="render-value-no-breaklines"
+            <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
           </strong>
           <address>
