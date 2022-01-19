@@ -63,6 +63,7 @@ import java.util.Map;
  * @author Francois Prunayre
  */
 public class DoiManager {
+    private static final String DOI_PROXY_URL = "https://doi.org/";
     private static final String DOI_ADD_XSL_PROCESS = "process/doi-add.xsl";
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
@@ -229,7 +230,7 @@ public class DoiManager {
             String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
-                if (!currentDoi.equals(client.createUrl("doi") + "/" + doi)) {
+                if (!currentDoi.equals(DOI_PROXY_URL + doi)) {
                     throw new DoiClientException(String.format(
                         "Record '%s' already contains a DOI <a href='%s'>%s</a> which is not equal " +
                             "to the DOI about to be created (ie. '%s'). " +
@@ -371,13 +372,11 @@ public class DoiManager {
         String landingPage = landingPageTemplate.replace(
                         "{{uuid}}", metadata.getUuid());
         doiInfo.put("doiLandingPage", landingPage);
-        doiInfo.put("doiUrl",
-            client.createUrl("doi") + "/" + doiInfo.get("doi"));
         client.createDoi(doiInfo.get("doi"), landingPage);
 
 
         // Add the DOI in the record
-        Element recordWithDoi = setDOIValue(doiInfo.get("doiUrl"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
+        Element recordWithDoi = setDOIValue(doiInfo.get("doi"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
         // Update the published copy
         //--- needed to detach md from the document
 //        md.detach();
@@ -443,6 +442,7 @@ public class DoiManager {
 
         Map<String, Object> params = new HashMap<>(1);
         params.put("doi", doi);
+        params.put("doiProxy", DOI_PROXY_URL);
         return Xml.transform(md, styleSheet, params);
     }
 
