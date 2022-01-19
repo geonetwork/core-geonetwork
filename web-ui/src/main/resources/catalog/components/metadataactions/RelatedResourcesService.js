@@ -363,7 +363,7 @@
               action: openLink
             },
             'DEFAULT' : {
-              iconClass: 'fa-question-circle',
+              iconClass: 'fa-link',
               label: 'openPage',
               action: openLink
             }

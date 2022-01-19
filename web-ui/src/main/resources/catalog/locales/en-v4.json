@@ -277,5 +277,9 @@
   "focusOnFrom": "Focus on resources from ",
   "focusOn": "Focus on ",
   "memberOf": "Member of:",
-  "keywordAnchorLink": "Keyword details"
+  "keywordAnchorLink": "Keyword details",
+  "facet-linkUrl": "Url",
+  "facet-linkProtocol": "Protocol",
+  "copyToClipboard": "Copy to clipboard.",
+  "copyUrlToClipboard": "Copy URL to clipboard."
 }

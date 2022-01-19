@@ -2,11 +2,6 @@
   <div class="col-md-12">
     <h2>
       <span data-translate="">metadataInformation</span>
-<!--      <a class="btn btn-link"-->
-<!--         title="{{'metadataInXML' | translate}}"-->
-<!--         data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">-->
-<!--        <i class="fa fa-fw fa-file-code-o" />-->
-<!--      </a>-->
     </h2>
   </div>
 </div>
@@ -76,8 +71,11 @@
       <div>
         <h3 data-translate="">uuid</h3>
         <div class="input-group">
-          <input type="text" class="form-control" value="{{mdView.current.record.uuid}}">
-          <span class="input-group-btn" gn-copy-to-clipboard-button="mdView.current.record.uuid" timeout="1000">
+          <input type="text" class="form-control"
+                 value="{{::mdView.current.record.uuid}}">
+          <span gn-copy-to-clipboard-button=""
+                data-btn-class="input-group-addon"
+                data-text="{{::mdView.current.record.uuid}}">
           </span>
         </div>
       </div>

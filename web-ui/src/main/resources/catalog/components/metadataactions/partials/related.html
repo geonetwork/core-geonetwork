@@ -7,13 +7,15 @@
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
-       data-ng-if="layout !== 'card' && layout !== 'title'
+       data-ng-if="layout !== 'card'
+                   && layout !== 'title'
                    && type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
                        badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
-         data-ng-repeat="r in items track by $index">
+         data-ng-repeat="r in items track by $index"
+         gn-popover="">
       <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
         <strong>
           <div class="clearfix">
@@ -27,114 +29,50 @@
                   'label-success': icon === 'fa-globe'}">{{badge}}</span>
         </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'"
+           gn-popover-anchor="">
+        <div gn-popover-content="">
+          <p class="text-muted">
+              <span data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
+                    data-translate-values="{
+                      url:{{r.locUrl | json}},
+                      layer:{{r.locTitle | json}}
+                      }"></span>
+          </p>
+
+          <div data-ng-if="r.locUrl"
+               data-gn-search-filter-link="linkUrl"
+               data-filter="r.locUrl"
+               data-label="focusOnFrom">{{r.locUrl}}</div><br/>
+          <div data-ng-if="r.protocol"
+               data-gn-search-filter-link="linkProtocol"
+               data-filter="r.protocol">{{r.protocol}}</div>
+        </div>
         <!-- Always display title if available -->
-        <h3 data-ng-if="::(r.title | gnLocalized: lang).length">
-          <a data-ng-href="{{r.url | gnLocalized: lang}}">
-            {{::(r.title | gnLocalized: lang)}}
+        <h3>
+          <a data-ng-href="{{::r.locUrl}}">
+            {{::r.locTitle || r.locUrl}}
           </a>
         </h3>
         <!-- Display description if available -->
-        <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
-                       mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
-                       mainType === 'WCS' ||
-                       mainType.indexOf('LINK') === 0 ||
-                       mainType.indexOf('DEFAULT') === 0 ||
-                       r.protocol === 'OGC:WFS') &&
-                       r.locDescription.length > 0  &&
-                      mainType !== 'LINK'">
+        <p data-ng-if="::r.locDescription.length > 0
+                       && r.locDescription !== r.locTitle">
           {{::r.locDescription | striptags | characters:150}}
         </p>
         <div data-ng-switch on="mainType">
-          <div data-ng-switch-when="WMS">
-            <p class="text-muted">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
-                wmsLinkDetails</span>
-            </p>
-          </div>
-          <div data-ng-switch-when="WMTS">
-            <p class="text-muted">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
-                wmtsLinkDetails</span>
-            </p>
-          </div>
-          <div data-ng-switch-when="WMSSERVICE">
-            <p class="text-muted">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
-                wmsServiceLinkDetails</span>
-            </p>
-          </div>
-          <div data-ng-switch-when="WMTSSERVICE">
-            <p class="text-muted">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
-                wmtsServiceLinkDetails</span>
-            </p>
-          </div>
           <div data-ng-switch-when="WFS">
-            <p class="text-muted"
-               data-ng-if="isLayerProtocol(r)">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                wfsLinkDetails</span>
-            </p>
             <div data-ng-if="isLayerProtocol(r)"
                  data-gn-no-map-wfs-download=""
-                 data-typename="{{r.title | gnLocalized: lang}}"
-                 data-url="{{r.url | gnLocalized: lang}}">
+                 data-typename="{{isLayerProtocol(r) ? r.locTitle : ''}}"
+                 data-url="{{r.locUrl}}">
             </div>
-
-            <p class="text-muted"
-               data-ng-if="!isLayerProtocol(r)">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
-                wfsServiceLinkDetails</span>
-            </p>
-            <div data-ng-if="!isLayerProtocol(r)"
-                 data-gn-no-map-wfs-download=""
-                 data-typename=""
-                 data-url="{{r.url | gnLocalized: lang}}">
-            </div>
-          </div>
-
-          <div data-ng-switch-when="TMS">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-              tmsLinkDetails</span>
-          </div>
-
-          <div data-ng-switch-when="SOS">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-              sosLinkDetails</span>
-          </div>
-
-          <div data-ng-switch-when="ESRI:REST">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-              esriRestLinkDetails</span>
-          </div>
-
-          <div data-ng-switch-when="WCS">
-            <p class="text-muted">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-              wcsLinkDetails</span>
-            </p>
           </div>
 
           <div data-ng-switch-when="ATOM">
-            <p class="text-muted" data-translate=""
-               data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-              atomLinkDetails
-            </p>
             <div
               data-gn-atom-download="r.title"
               data-layer-name="{{r.title | gnLocalized: lang}}"
-              data-url="{{r.url | gnLocalized: lang}}"
+              data-url="{{r.locUrl}}"
               data-md="md">
             </div>
           </div>
@@ -142,7 +80,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{(r.locUrl).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
               databaseLayerDetails</span>
             </p>
           </div>
@@ -150,12 +88,12 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{(r.locUrl).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
                 fileLayerDetails</span>
               <input class="form-control"
                      type="text"
                      onClick="this.setSelectionRange(0, this.value.length)"
-                     value="{{::r.url | gnLocalized: lang}}"/>
+                     value="{{::r.locUrl}}"/>
             </p>
           </div>
 
@@ -165,37 +103,22 @@
             <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
             </div>
           </div>
-
-          <div data-ng-switch-default>
-            <p class="text-muted"
-               data-ng-if="mainType.indexOf('MD') == 0 && r.id"
-               data-ng-init="hasDescription = r.description && (r.description | gnLocalized: lang).length > 0;">
-              <span class="gn-related-description"
-                    data-ng-show="hasDescription">
-                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
-                translate}}...</a>
-              </span>
-              <span data-ng-show="!hasDescription"
-                    ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
-            </p>
-
-            <p class="text-muted"
-               data-ng-if="mainType.indexOf('MD') == -1">
-              <span class="gn-related-description" data-ng-if="r.description">
-                {{ (r.description | gnLocalized: lang | striptags)}}</a>
-              </span>
-<!--              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>-->
-            </p>
-          </div>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-3">
-        <div data-gn-record-links-button="[r]"
-             data-type="type"
-             data-icon-mode="none"
-             data-btn-class="btn-sm btn-block"
-             data-record="md">
+
+        <div >
+          <div data-gn-record-links-button="[r]"
+               data-type="type"
+               data-icon-mode="none"
+               data-btn-class="btn-block"
+               data-record="md">
+          </div>
+          <div class="pull-right"
+               gn-copy-to-clipboard-button=""
+               data-text="{{::r.locUrl}}"
+               data-tooltip="copyUrlToClipboard"></div>
         </div>
 
         <button type="button"
@@ -211,7 +134,8 @@
 
   <ul class="gn-related-list"
       data-ng-repeat="(type, items) in relations track by $index"
-      data-ng-if="layout === 'title' && type && type !== 'thumbnails' && type !== 'onlines'"
+      data-ng-if="layout === 'title'
+                  && type && type !== 'thumbnails' && type !== 'onlines'"
       data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >
@@ -228,7 +152,8 @@
 
   <ul class="row list-group gn-info-list"
       data-ng-repeat="(type, items) in relations track by $index"
-      data-ng-if="layout === 'card' && type && type !== 'thumbnails' && type !== 'onlines'"
+      data-ng-if="layout === 'card'
+                  && type && type !== 'thumbnails' && type !== 'onlines'"
       data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >

@@ -662,22 +662,26 @@
     function(gnClipboard, $timeout) {
       return {
         restrict: 'A',
-        template: '<a class="btn btn-default btn-xs" ' +
+        replace: true,
+        template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
           '           ng-click="copy()" ' +
-          '           title="{{\'copyToClipboard\' | translate}}">' +
+          '           title="{{::title | translate}}">' +
           '<i class="fa fa-fw" ' +
           '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
           '</a>',
-        scope: {},
+        scope: {
+          btnClass: '@'
+        },
         link: function linkFn(scope, element, attr) {
           scope.copied = false;
+          scope.title = attr['tooltip'] || 'copyToClipboard';
           scope.copy = function() {
             gnClipboard.copy(
               attr['text']
                 ? attr['text']
                 : element.parent().text().trim()).then(function() {
               scope.copied = true;
-              $timeout(function() {scope.copied = false}, attr['timeout'] || 5000);
+              $timeout(function() {scope.copied = false}, attr['timeout'] || 2000);
             })
           }
         }
