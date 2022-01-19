@@ -70,7 +70,6 @@
         gnGlobalSettings.gnCfg.mods.recordview.locationThesaurus);
       $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
       $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
-      $scope.sortKeywordsAlphabetically = gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically;
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];

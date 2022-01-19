@@ -276,5 +276,6 @@
   "siblingsReverseLinks": "Other resources (other record links)",
   "focusOnFrom": "Focus on resources from ",
   "focusOn": "Focus on ",
-  "memberOf": "Member of:"
+  "memberOf": "Member of:",
+  "keywordAnchorLink": "Keyword details"
 }

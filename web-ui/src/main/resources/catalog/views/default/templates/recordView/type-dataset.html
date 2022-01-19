@@ -57,8 +57,7 @@
     <div data-gn-data-preview="mdView.current.record"/>
 
     <br/>
-    <div class="gn-collection"
-         data-gn-keyword-badges="mdView.current.record.allKeywords"
+    <div data-gn-keyword-badges="mdView.current.record"
          data-thesaurus="viewConfig.locationThesaurus"/>
   </div>
   <!-- /.col-md-8 gn-record -->
@@ -322,17 +321,9 @@
   <!-- /.col-md-4 gn-md-side -->
 </div>
 
-<div class="row">
-  <div class="col-md-12 gn-record">
-    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
-  </div>
-</div>
 
 <!-- contacts -->
 <div class="row">
-  <div class="col-md-12">
-    <h2 data-translate="">resourceContact</h2>
-  </div>
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
 
@@ -453,6 +444,12 @@
       </h2>
       <div data-gn-metadata-rate="mdView.current.record"/>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
   </div>
 </div>
 

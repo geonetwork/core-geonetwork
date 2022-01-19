@@ -453,8 +453,15 @@
         templateUrl: '../../catalog/components/search/mdview/partials/' +
           'keywordBadges.html',
         link: function(scope, element, attrs) {
-          scope.allKeywords = scope.$eval(attrs['gnKeywordBadges'])
-          scope.thesaurus = scope.$eval(attrs['thesaurus'])
+          scope.record = scope.$eval(attrs['gnKeywordBadges']);
+          scope.allKeywords = scope.record.allKeywords;
+          scope.thesaurus = scope.$eval(attrs['thesaurus']);
+          scope.getOrderByConfig = function(thesaurus) {
+            return thesaurus === 'th_regions'
+              ? ['-group','default']
+              : (gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically
+                ? 'default' : '')
+          };
         }
       }}]);
 })();

@@ -5,12 +5,13 @@
 </div>
 
 <div class="row gn-padding-top">
-  <div data-ng-show="isRecordHistoryEnabled
-               && user.isEditorOrMore()
-               && mdView.current.record.draft != 'y'"
-       data-gn-record-history="mdView.current.record"
-       data-collapsed="true"
-       class="col-md-12"></div>
+  <div class="col-md-12">
+    <div data-ng-show="isRecordHistoryEnabled
+                 && user.isEditorOrMore()
+                 && mdView.current.record.draft != 'y'"
+         data-gn-record-history="mdView.current.record"
+         data-collapsed="true"></div>
+  </div>
 </div>
 
 <div class="row gn-margin-top">

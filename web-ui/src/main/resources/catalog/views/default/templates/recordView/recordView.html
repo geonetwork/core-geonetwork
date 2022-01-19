@@ -71,31 +71,6 @@
           </button>
         </div>
 
-        <!-- next/previous -->
-        <div class="btn-group" role="group">
-          <a class="btn btn-default"
-             title="{{mdView.records[mdView.current.index - 1].resourceTitle}}"
-             gn-metadata-open="mdView.records[mdView.current.index - 1]"
-             gn-records="mdView.records"
-             gn-formatter="formatter.defaultUrl"
-             data-ng-class="{'disabled': mdView.records[mdView.current.index - 1] === undefined}"
-             data-ng-show="mdView.records.length > 1">
-            <span class="fa fa-fw fa-angle-left"></span>
-            <span data-translate="" class="hidden-sm hidden-sm">previous</span>
-          </a>
-          <a class="btn btn-default"
-             data-ng-disabled="mdView.records[mdView.current.index + 1] === undefined"
-             title="{{mdView.records[mdView.current.index + 1].resourceTitle}}"
-             gn-metadata-open="mdView.records[mdView.current.index + 1]"
-             gn-records="mdView.records"
-             gn-formatter="formatter.defaultUrl"
-             data-ng-class="{'disabled': mdView.records[mdView.current.index + 1] === undefined}"
-             data-ng-show="mdView.records.length > 1">
-            <span data-translate="" class="hidden-sm hidden-sm">next</span>
-            <span class="fa fa-fw fa-angle-right"></span>
-          </a>
-        </div>
-
         <div class="pull-right">
           <!-- edit -->
           <div class="btn-group pull-left" role="group">
