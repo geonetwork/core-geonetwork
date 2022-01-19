@@ -712,7 +712,7 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" }
               }
             },
-            'spatialRepresentationType': {
+            'cl_spatialRepresentationType': {
               'terms': {
                 'field': 'cl_spatialRepresentationType.default',
                 "order" : { "_key" : "asc" }

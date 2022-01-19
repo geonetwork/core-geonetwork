@@ -8,7 +8,7 @@
   <div class="row">
     <div data-ng-repeat="filter in filtersToProcess"
          class="pull-left">
-      <h3>{{filter | translate}}</h3>
+      <h3>{{('facet-' + filter) | facetKeyTranslator}}</h3>
       <div class="gn-collection"
            role="group"
            aria-label="filter">
