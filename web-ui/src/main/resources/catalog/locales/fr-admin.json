@@ -753,6 +753,8 @@
     "system/publication": "Publication",
     "system/publication/doi/doienabled": "Permettre la création d'un Digital Object Identifier (DOI)",
     "system/publication/doi/doienabled-help": "Un Digital Object Identifier (DOI) est une chaîne alphanumérique affectée à l'identification unique d'un objet. Il est lié à une description des métadonnées de l'objet ainsi qu'à un emplacement numérique, tel qu'une URL, où tous les détails concernant l'objet sont accessibles. Plus d'informations disponibles sur <a href='https://www.datacite.org/dois.html'>le site de DataCite</a>.",
+    "system/publication/doi/doipublicurl": "The final DOI URL prefix",
+    "system/publication/doi/doipublicurl-help": "Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.",
     "system/publication/doi/doiurl": "URL de l'API de DataCite",
     "system/publication/doi/doiurl-help": "Habituellement https://mds.datacite.org ou https://mds.test.datacite.org pour tester.",
     "system/publication/doi/doiusername": "Votre nom d'utilisateur DataCite",
