@@ -343,6 +343,14 @@ goog.require('gn_alert');
               }
             }
           }, config).mods.header.languages;
+
+          this.gnCfg.mods.search.sortbyValues = angular.extend({
+            mods: {
+              search: {
+                sortbyValues: {}
+              }
+            }
+          }, config).mods.search.sortbyValues;
         }
 
         this.gnUrl = gnUrl || '../';
@@ -365,6 +373,8 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.search.sortbyValues = [];
+        copy.mods.search.hitsperpageValues = [];
         copy.mods.map["map-editor"].layers = [];
         return copy;
       },
