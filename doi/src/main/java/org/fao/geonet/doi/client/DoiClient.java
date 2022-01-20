@@ -36,7 +36,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.httpclient.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.InputStreamReader;
@@ -57,7 +56,8 @@ public class DoiClient {
     public static final String ALL_DOI_ENTITY = "All DOI";
     public static final String DOI_METADATA_ENTITY = "DOI metadata";
 
-    private String serverUrl;
+    private String apiUrl;
+    private String doiPublicUrl;
     private String username;
     private String password;
 
@@ -65,12 +65,13 @@ public class DoiClient {
 
     protected GeonetHttpRequestFactory requestFactory;
 
-    public DoiClient(String serverUrl, String username, String password) {
-        this(serverUrl, username, password, true);
+    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl) {
+        this(apiUrl, username, password, doiPublicUrl, true);
     }
 
-    public DoiClient(String serverUrl, String username, String password, boolean testMode) {
-        this.serverUrl = serverUrl.endsWith("/") ? serverUrl : serverUrl + "/";
+    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl, boolean testMode) {
+        this.apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
+        this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
         this.testMode = testMode;
@@ -177,7 +178,7 @@ public class DoiClient {
         HttpDelete deleteMethod = null;
 
         try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + this.serverUrl + "/metadata");
+            Log.debug(LOGGER_NAME, "   -- URL: " + this.apiUrl + "/metadata");
 
             deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
 
@@ -217,7 +218,7 @@ public class DoiClient {
         HttpDelete deleteMethod = null;
 
         try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + this.serverUrl + "/metadata");
+            Log.debug(LOGGER_NAME, "   -- URL: " + this.apiUrl + "/metadata");
 
             deleteMethod = new HttpDelete(createUrl("doi/" + doi));
 
@@ -351,14 +352,21 @@ public class DoiClient {
     }
 
     /**
-     * Builds service url with server url.
+     * Builds API endpoint url based on server URL configured in settings.
      *
-     * @param service
-     * @return
+     * eg. https://mds.datacite.org/doi/10.12770/38e00808-ffca-4266-943f-b691d3ca0bec
      */
     public String createUrl(String service) {
-        return this.serverUrl +
-            (this.serverUrl.endsWith("/") ? "" : "/") +
-            service;
+        return this.apiUrl + service;
+    }
+
+    /**
+     * Builds final DOI url based on public URL configured in settings.
+     * Default is https://doi.org.
+     *
+     * eg. https://doi.org/10.17882/80771
+     */
+    public String createPublicUrl(String doi) {
+        return this.doiPublicUrl + doi;
     }
 }
