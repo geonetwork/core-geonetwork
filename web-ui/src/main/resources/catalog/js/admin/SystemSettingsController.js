@@ -88,9 +88,62 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService', '$timeout', 'gnGlobalSettings',
+    'gnUtilityService', '$timeout', 'gnGlobalSettings', 'gnESClient', 'Metadata',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings) {
+        gnUtilityService, $timeout, gnGlobalSettings, gnESClient, Metadata) {
+
+      $scope.selectTemplate = function (setting, md) {
+        setting.value = md.uuid;
+        $scope.defaultMetadataTemplate = md;
+      };
+
+      // Metadata template to select by default when
+      // creating new metadata
+      $scope.defaultMetadataTemplate = null;
+
+      $scope.metadataTemplateSearchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          isTemplate: 'y',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+
+      function loadDefaultMetadataTemplate() {
+        var setting = _.find($scope.settings, function(s) {
+          return s.name == 'system/metadatacreate/preferredTemplate';
+        });
+
+        //var id = $scope.settings['system/metadatacreate/preferredTemplate'];
+        if (angular.isDefined(setting) && setting.value != -1){
+          var query =
+            {"query": {
+                "term": {
+                  "uuid": {
+                    "value": setting.value
+                  }
+                }
+              }, "from": 0, "size": 1};
+
+          gnESClient.search(query).then(function(data) {
+            angular.forEach(data.hits.hits, function(record) {
+              var md = new Metadata(record);
+              $scope.defaultMetadataTemplate = md;
+            });
+          });
+        }
+      }
+
+      $scope.$watchCollection('settings', function(n, o){
+        if (n != o) {
+          loadDefaultMetadataTemplate();
+        }
+      });
 
       $scope.settings = [];
       $scope.initalSettings = [];

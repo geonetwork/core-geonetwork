@@ -112,6 +112,27 @@
                   <!-- According to entry -->
                   <div class="col-sm-8" data-ng-switch="s['name']">
 
+                    <div data-ng-switch-when="system/metadatacreate/preferredGroup">
+                      <input type="hidden"
+                             id="{{s.name}}"
+                             name="{{s.name}}"
+                             value="{{s.value}}" />
+
+                      <div data-groups-combo=""
+                           data-optional="true"
+                           data-owner-group="s.value"
+                           lang="lang"
+                           data-groups="groups"
+                           data-exclude-special-groups="true"/>
+                    </div>
+
+                    <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                      <div data-gn-metadata-selector="s.value"
+                           data-search-obj="metadataTemplateSearchObj"
+                           data-md="defaultMetadataTemplate"
+                           data-element-name="{{s.name}}" />
+                    </div>
+
                     <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>

@@ -50,6 +50,7 @@
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
       $scope.mdList = null;
+      $scope.ownerGroup = null;
 
       // Used for the metadata identifier fields
       $scope.mdIdentifierTemplateTokens = {};
@@ -57,8 +58,24 @@
 
       gnConfigService.load().then(function(c) {
         $scope.generateUuid = gnConfig['system.metadatacreate.generateUuid'];
+        $scope.ownerGroup = gnConfig['system.metadatacreate.preferredGroup'];
+        $scope.preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
       });
 
+      // Check if the ownerGroup is a valid user group for editing
+      $scope.$watchCollection('groups', function(n, o){
+        if ((n != o) && ($scope.ownerGroup)) {
+            var groupFound = _.find(n, function(v) {
+              if (v.id == $scope.ownerGroup) {
+                return true;
+              }
+            });
+
+            if (!angular.isDefined(groupFound)) {
+              $scope.ownerGroup = null;
+            }
+        }
+      });
 
       // A map of icon to use for each types
       var icons = {
@@ -75,6 +92,8 @@
       var defaultType = 'dataset';
       var unknownType = 'unknownType';
       var fullPrivileges = true;
+
+      // $scope.mdList, md.resourceType
 
       $scope.getTypeIcon = function(type) {
         return icons[type] || 'fa-square-o';
@@ -132,10 +151,35 @@
                 types.sort();
                 $scope.mdTypes = types;
 
+                // Get default template and calculate the template type
+                var mdDefaultTemplate = _.find($scope.mdList, function(n) {
+                  if (n._id == $scope.preferredTemplate) {
+                    return true;
+                  }
+                });
+
+                var templateToSelect = null;
+
+                if (mdDefaultTemplate){
+                  var type = mdDefaultTemplate.resourceType || unknownType;
+                  if (type instanceof Array) {
+                    for (var j = 0; j < type.length; j++) {
+                      if ($.inArray(type[j], dataTypesToExclude) === -1) {
+                        defaultType = type[j];
+                        templateToSelect = mdDefaultTemplate;
+                        break;
+                      }
+                    }
+                  } else if ($.inArray(type, dataTypesToExclude) === -1) {
+                    defaultType = type;
+                    templateToSelect = mdDefaultTemplate;
+                  }
+                }
+
                 // Select the default one or the first one
                 if (defaultType &&
                   $.inArray(defaultType, $scope.mdTypes) > -1) {
-                  $scope.getTemplateNamesByType(defaultType);
+                  $scope.getTemplateNamesByType(defaultType, templateToSelect);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
                 } else {
@@ -153,7 +197,7 @@
        * Get all the templates for a given type.
        * Will put this list into $scope.tpls variable.
        */
-      $scope.getTemplateNamesByType = function(type) {
+      $scope.getTemplateNamesByType = function(type, templateToSelect) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.length; i++) {
           var md = $scope.mdList[i];
@@ -178,8 +222,17 @@
         tpls.sort(compare);
 
         $scope.tpls = tpls;
+
+        var selectedTpl = $scope.tpls[0];
+        if (templateToSelect) {
+          selectedTpl = _.find($scope.tpls, function(tpl) {
+            if (tpl._id == templateToSelect._id) {
+              return true;
+            }
+          })
+        }
         $scope.activeType = type;
-        $scope.setActiveTpl($scope.tpls[0]);
+        $scope.setActiveTpl(selectedTpl);
         return false;
       };
 
