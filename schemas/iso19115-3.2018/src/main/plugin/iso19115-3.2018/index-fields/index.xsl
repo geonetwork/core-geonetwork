@@ -416,7 +416,21 @@
                 <xsl:value-of select="concat('Parameters(s): ', string-join($parameters, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
               </xsl:if>
               <xsl:if test="count($temporalResolution) > 0">
-                <xsl:value-of select="concat('Temporal resolution: ', string-join($temporalResolution, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+                <xsl:variable name="formattedDuration">
+                  <!-- P0Y0M0DT0H30M0S -->
+                  <xsl:for-each select="$temporalResolution">
+                    <xsl:variable name="d" select="xs:duration(.)"/>
+                    <value>
+                      <xsl:value-of select="if (years-from-duration($d) != 0) then (years-from-duration($d), ' years ') else ''"/>
+                      <xsl:value-of select="if (months-from-duration($d) != 0) then (months-from-duration($d), ' months ') else ''"/>
+                      <xsl:value-of select="if (days-from-duration($d) != 0) then (days-from-duration($d), ' days ') else ''"/>
+                      <xsl:value-of select="if (hours-from-duration($d) != 0) then (hours-from-duration($d), ' hours ') else ''"/>
+                      <xsl:value-of select="if (minutes-from-duration($d) != 0) then (minutes-from-duration($d), ' min ') else ''"/>
+                      <xsl:value-of select="if (seconds-from-duration($d) != 0) then (seconds-from-duration($d), ' sec') else ''"/>
+                    </value>
+                  </xsl:for-each>
+                </xsl:variable>
+                <xsl:value-of select="concat('Temporal resolution: ', string-join($formattedDuration/value, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
               </xsl:if>
               <xsl:if test="count($spatialResolution) > 0">
                 <xsl:variable name="res" as="node()*">
@@ -1340,7 +1354,7 @@
     <xsl:variable name="phone"
                   select="(./cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
     <xsl:variable name="individualName"
-                  select="(.//cit:individualName/gco:CharacterString/text())[1]"/>
+                  select="(.//cit:CI_Individual/cit:name/gco:CharacterString/text())[1]"/>
     <xsl:variable name="positionName"
                   select="(.//cit:positionName/gco:CharacterString/text())[1]"/>
     <xsl:variable name="address" select="string-join(.//cit:contactInfo/*/cit:address/*/(

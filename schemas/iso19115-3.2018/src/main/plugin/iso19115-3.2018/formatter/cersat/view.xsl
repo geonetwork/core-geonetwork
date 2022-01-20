@@ -196,13 +196,30 @@
                   <xsl:value-of select="$schemaStrings/eo-cersat-author"/>
                 </strong>
                 <xsl:for-each select="$authors">
-                  <xsl:value-of select=".//cit:party/*/cit:name"/>
+                  <xsl:variable name="org"
+                                select=".//cit:party/cit:CI_Organisation/cit:name/gco:CharacterString"/>
+
+                  <xsl:variable name="individuals"
+                                select=".//cit:CI_Individual/cit:name/gco:CharacterString"/>
+
+                  <xsl:choose>
+                    <xsl:when  test="$individuals">
+                      <xsl:value-of select="string-join($individuals, ', ')"/>
+                      <xsl:if test="$org != ''">
+                        <xsl:value-of select="concat('(', $org, ')')"/>
+                      </xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="$org"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+
                   <xsl:for-each select=".//cit:electronicMailAddress">
                     <a href="mailto:{.}">
                       <i class="fa fa-envelope"></i>
                     </a>
                   </xsl:for-each>
-                  <xsl:if test="position() != last()">,</xsl:if>
+                  <xsl:if test="position() != last()">, </xsl:if>
                 </xsl:for-each>
               </div>
             </xsl:if>
@@ -548,10 +565,15 @@
                     <xsl:with-param name="key" select="'eo-bbox'"/>
                   </xsl:call-template>
                 </strong>
-                Latitude <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
-                <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/>,
-                Longitude <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
-                <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/>
+                <xsl:if test="gex:southBoundLatitude castable as xs:decimal
+                              and gex:northBoundLatitude castable as xs:decimal
+                              and gex:westBoundLongitude castable as xs:decimal
+                              and gex:eastBoundLongitude castable as xs:decimal">
+                  Latitude <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
+                  <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/>,
+                  Longitude <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
+                  <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/>
+                </xsl:if>
               </div>
             </xsl:for-each>
 
