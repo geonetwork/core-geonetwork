@@ -54,7 +54,7 @@
 
       <div class="sx-md-footer">
         <div class="btn-group pull-left md-admin"
-             ng-if="::user.canEditRecord(md)"
+             ng-if="::user.canManagePrivileges(md)"
              sxt-popover-dropdown
              placement="bottom"
              container=".gn-grid-item"

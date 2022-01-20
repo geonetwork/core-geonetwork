@@ -6,7 +6,7 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li>
+    <li ng-if="user.canEditRecord(md)">
       <!-- Force CERSAT record to use UI in english. -->
       <a ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md.id}}" target="_blank">
         <i class="fa fa-pencil"></i>
@@ -18,19 +18,21 @@
       </a>
     </li>
 
-    <li data-ng-if="::(user.profile != 'Editor')">
+    <li data-ng-if="user.isReviewerOrMore()">
       <a data-gn-click-and-spin="mdService.deleteMd(md)"
          data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}">
         <i class="fa fa-trash-o"></i>
         <span translate>delete</span>
       </a>
     </li>
-    <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a href="">
+    <li data-ng-if="!user.isReviewerOrMore()"
+        class="disabled"><a href="">
       <i class="fa fa-trash-o"></i><span
       translate>delete</span></a>
     </li>
 
-    <li><a ng-href="" data-ng-click="mdService.duplicate(md)">
+    <li>
+      <a ng-href="" data-ng-click="mdService.duplicate(md)">
       <i class="fa fa-copy"></i><span
       translate>duplicate</span></a>
     </li>
@@ -38,7 +40,7 @@
       <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
     </li>
 
-    <li data-ng-if="::(user.profile != 'Editor')">
+    <li data-ng-if="user.canManagePrivileges(md)">
       <a ng-href=""
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
         class="fa fa-key"></i><span translate>privileges</span></a></li>
@@ -59,17 +61,17 @@
         3. Retire metadata (id = 3)
     -->
     <li role="menuitem" class="divider"
-        data-ng-show="isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)">
+        data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)">
     </li>
     <li role="menuitem"
         class="dropdown-header"
-        data-ng-show="isMdWorkflowEnable && md.mdStatus">
+        data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && md.mdStatus">
       <span data-translate="">workflow</span>
       ({{('mdStatus-' + md.mdStatus) | translate}})
     </li>
     <li role="menuitem"
         class="dropdown-header"
-        data-ng-show="isMdWorkflowEnable && !md.mdStatus">
+        data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && !md.mdStatus">
       <span data-translate="">workflow</span>
     </li>
     <!-- user = editor, status = 1, statusToSelect = 4 -->

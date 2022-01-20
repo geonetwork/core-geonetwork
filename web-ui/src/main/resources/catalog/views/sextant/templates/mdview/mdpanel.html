@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-md-4 gn-links pull-right text-right">
-          <div ng-if="user.canEditRecord(md)"
+          <div ng-if="::user.canManagePrivileges(md)"
                sxt-md-manage-actions-menu="md"></div>
 
           <div sxt-md-actions-menu="md"></div>
