@@ -1,30 +1,17 @@
-<div data-ng-if="similarDocuments.hits.length > 2">
-  <h4>
-    <i class="fa fa-fw fa-copy"></i>
-    <span data-translate="">moreLikeThis</span>
-  </h4>
-  <div class="list-group">
-    <a data-ng-repeat="record in similarDocuments.hits"
-       href="#/metadata/{{record._source.uuid}}"
-       class="list-group-item flex-row flex-align-center"
-       data-ng-hide="md.uuid === record._source.uuid">
-      <span>
-        {{record._source.resourceTitleObject.default}}<br/>
-        <div data-ng-if="record._source.cl_status.length > 0"
-             title="{{record._source.cl_status[0].key | translate}}"
-             class="gn-status gn-status-{{record._source.cl_status[0].key}}">{{record._source.cl_status[0].key | translate}}
-        </div>
-      </span>
-      <div class="flex-spacer flex-grow"></div>
-      <img data-ng-if="record._source.overview && record._source.overview[0]"
-           style="max-width: 95px;"
-           data-ng-src="{{record._source.overview[0].data || (record._source.overview[0].url | thumbnailUrlSize)}}">
-    </a>
-    <a class="list-group-item flex-row flex-align-center"
-       data-ng-if="size < maxSize
-                   && similarDocuments.hits.length == size"
-       data-ng-click="moreRecords()">
-      <i class="fa fa-fw fa-ellipsis-h"/>
-    </a>
-  </div>
+<div data-ng-if="similarDocuments.length > 2"
+     class="gn-info-list-blocks gn-margin-bottom">
+  <h2 data-translate="">moreLikeThis</h2>
+
+  <ul class="row list-group gn-info-list">
+    <gn-metadata-card data-ng-repeat="md in similarDocuments"
+                      md="md"
+                      formatter-url="formatter.defaultUrl"/>
+  </ul>
+
+  <button data-ng-if="size < maxSize
+                   && similarDocuments.length == size"
+          class="btn btn-link"
+          data-ng-click="moreRecords()">
+    <span data-translate="">viewMore</span>
+  </button>
 </div>

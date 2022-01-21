@@ -61,6 +61,81 @@
     }
   ]);
 
+
+  module.directive('gnRecordMosaic', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          query: '@gnRecordMosaic',
+          records: '=',
+          sort: '@',
+          size: '@',
+          imageSize: '@'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/mosaic.html',
+        link: function(scope, element, attrs) {
+          scope.images = [];
+          scope.imageSize = parseInt(attrs.imagesize) || 300;
+
+          function loadImages(hits) {
+            hits && hits.map && hits.map(function(h) {
+              var overview = h.overview
+                || (h._source && h._source.overview);
+              if (overview) {
+                scope.images = scope.images.concat(overview);
+              }
+            });
+            if (scope.size) {
+              scope.images = scope.images.slice(0, scope.size);
+            }
+          }
+
+          if (scope.records) {
+            loadImages(scope.records);
+          }
+
+          if (scope.query) {
+            var query = {
+              "_source": {"includes": ["overview"]},
+              "from": 0,
+              "size": scope.size || 10,
+              "query": {
+                "bool" : {
+                  "must": [
+                    {"exists": {"field": "overview"}},
+                    {"query_string": {"query": scope.query}}
+                  ]
+                }
+              }};
+
+            if (scope.sort) {
+              var descOrder = scope.sort.startsWith('-'),
+              sort = {};
+              sort[descOrder ? scope.sort.substr(1) : scope.sort] = {
+                order: descOrder ? 'desc' : 'asc'
+              }
+              query.sort = [sort]
+            } else {
+              query.query = {
+                "function_score": {
+                  "random_score": {seed: Math.floor(Math.random() * 10000)},
+                  query: query.query
+                }
+              }
+            }
+
+            $http.post('../api/search/records/_search', query).then(function(r) {
+              loadImages(r.data.hits.hits);
+            });
+          }
+        }
+      };
+    }
+  ]);
+
   module.directive('gnConfirmClick', [
     function() {
       return {
@@ -605,23 +680,26 @@
     function(gnClipboard, $timeout) {
       return {
         restrict: 'A',
-        template: '<a class="btn btn-default btn-xs" ' +
+        replace: true,
+        template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
           '           ng-click="copy()" ' +
-          '           title="{{title | translate}}">' +
-          '<i class="fa fa-fw" ' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-fw" ' +
           '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
           '</a>',
-        scope: {},
+        scope: {
+          btnClass: '@'
+        },
         link: function linkFn(scope, element, attr) {
           scope.copied = false;
-          scope.title = attr['title'] || 'copyToClipboard';
+          scope.title = attr['tooltip'] || 'copyToClipboard';
           scope.copy = function() {
             gnClipboard.copy(
               attr['text']
                 ? attr['text']
                 : element.parent().text().trim()).then(function() {
               scope.copied = true;
-              $timeout(function() {scope.copied = false}, attr['timeout'] || 5000);
+              $timeout(function() {scope.copied = false}, attr['timeout'] || 2000);
             })
           }
         }
@@ -733,6 +811,94 @@
       };
     }
   ]);
+
+  module.directive('gnSearchFilterPopupLink', [
+    function() {
+      return {
+        restrict: 'A',
+        transclude: true,
+        template: '<div gn-popover> ' +
+          '<span gn-popover-anchor><ng-transclude/></span> ' +
+          '<div gn-popover-content> ' +
+          '<a data-gn-search-filter-link="{{field}}" data-filter="filter" data-label="{{label}}"><ng-transclude/></a> ' +
+          '</div>',
+        scope: {
+          field: '@gnSearchFilterPopupLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
+  module.directive('gnSearchFilterLink', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
+                  '  <i class="fa fa-fw fa-filter"/>' +
+                  '  <span>{{(label || \'focusOn\') | translate}} <ng-transclude/></span>' +
+                  '</a>',
+        scope: {
+          field: '@gnSearchFilterLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
+
+  module.directive('gnStatusBadge', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<div data-ng-if="::md.cl_status.length > 0"' +
+                  ' title="{{::md.cl_status[0].key | translate}}"' +
+                  ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
+                  '</div>',
+        scope: {
+          md: '=gnStatusBadge'
+        }
+      };
+    }
+  ]);
+
+
+  module.directive('gnCircleLetterIcon', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        template: '<svg xmlns="http://www.w3.org/2000/svg" ' +
+          '             style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
+          '             viewBox="0 0 500 500">' +
+          '    <defs>' +
+          '      <pattern id="image{{imageId}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + org + \'.png\'}}"></image>' +
+          '      </pattern>' +
+          '    </defs>' +
+          '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <text x="50%" y="50%"' +
+          '          text-anchor="middle" alignment-baseline="central"' +
+          '          font-size="300">{{hasIcon ? \'\' : org.substr(0, 1).toUpperCase()}}</text>' +
+          '</svg>',
+        scope: {
+          org: '=gnCircleLetterIcon'
+        },
+        link: function(scope, element, attrs) {
+          scope.hasIcon = false;
+          scope.imageId = Math.random().toString(36).substr(2, 9)
+          $http.get('../api/logos/' + scope.org + '.png', {cache: true})
+            .then(function(r) {
+            scope.hasIcon = r.status === 200;
+          });
+        }
+      };
+    }
+  ]);
+
 
   /**
    * @ngdoc directive
@@ -1644,8 +1810,8 @@
                 '<div class="modal fade in"' +
                 '     id="gn-img-modal-' + (img.id || img.lUrl || img.url) + '">' +
                 '<div class="modal-dialog gn-img-modal in">' +
-                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
-                '<i class="fa fa-times text-danger"/></button>' +
+                '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
+                '<i class="fa fa-times"/></button>' +
                 '  <img src="' + (img.lUrl || img.url || img.id) + '"/>' +
                 (label != '' ? labelDiv : '') +
                 '</div>' +

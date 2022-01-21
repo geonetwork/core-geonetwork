@@ -1,0 +1,10 @@
+<ul class="gn-thumbnails"
+    data-ng-if="mdView.current.record.overview.length > 0">
+  <li data-ng-repeat="img in mdView.current.record.overview">
+    <img data-gn-img-modal="img"
+         class="img-thumbnail"
+         alt="{{img.name}}"
+         data-ng-src="{{img.url}}" />
+    </div>
+  </li>
+</ul>

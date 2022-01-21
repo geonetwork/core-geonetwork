@@ -36,11 +36,13 @@
   goog.require('gn_catalog_service');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
+  goog.require('gn_collection_manager_service');
   goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_selection_directive',
+    'gn_collection_manager_service',
     'gn_search_form_results_directive',
     'search_filter_tags_directive'
   ]);

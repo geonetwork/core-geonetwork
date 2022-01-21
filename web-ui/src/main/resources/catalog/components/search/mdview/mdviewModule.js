@@ -63,9 +63,13 @@
       $scope.isRatingEnabled = false;
       $scope.showCitation = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.viewConfig = gnGlobalSettings.gnCfg.mods.recordview;
+      $scope.highlightedThesaurus = [].concat(
+        gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus,
+        gnGlobalSettings.gnCfg.mods.recordview.internalThesaurus,
+        gnGlobalSettings.gnCfg.mods.recordview.locationThesaurus);
       $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
       $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
-      $scope.sortKeywordsAlphabetically = gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically;
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
@@ -278,5 +282,6 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
+
     }]);
 })();

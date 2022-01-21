@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Aucune fiche trouvée avec une ou plusieurs couches WMS.",
     "noRecordFoundWithResourceRegisteredmap": "Aucune fiche de métadonnée de carte trouvée.",
     "tmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (TMS) disponible à l'adresse {{url}} avec l'identifiant {{layer}}.",
-    "esriRestLinkDetails": "Service REST ESRI <a href='{{url}}' target='_blank'>{{url}}</a>",
+    "esri:restLinkDetails": "Service REST ESRI <a href='{{url}}' target='_blank'>{{url}}</a>",
     "wmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse<a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmtsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMTS) disponible à l'adresse <a href='{{url}}' target='_blank'>{{url}}</a> couche <strong>{{layer}}</strong>.",

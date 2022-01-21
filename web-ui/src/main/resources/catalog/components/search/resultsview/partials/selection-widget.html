@@ -160,9 +160,22 @@
         <a href="" data-ng-click="a.fn()">
           <i class="fa" data-ng-class="a.icon"></i>&nbsp;<span>{{a.label | translate}}</span>
         </a>
-
       </li>
 
+
+      <li data-ng-if="collectionTemplates && collectionTemplates.length > 0"
+          class="divider"></li>
+      <li data-ng-if="collectionTemplates && collectionTemplates.length > 0"
+          class="dropdown-header">
+        <i class="fa fa-fw gn-icon-series"></i>&nbsp;
+        <span translate>createCollectionFromSelectionAs</span>
+      </li>
+      <li data-ng-if="collectionTemplates"
+          data-ng-repeat="c in collectionTemplates">
+        <a href="" data-ng-click="createCollection(c)">
+          <span translate>{{c.resourceTitle}}</span>
+        </a>
+      </li>
     </ul>
   </div>
 

@@ -69,7 +69,7 @@ goog.require('gn_alert');
       'mods': {
         'global': {
           'humanizeDates': true,
-          'dateFormat': 'DD-MM-YYYY HH:mm',
+          'dateFormat': 'DD-MM-YYYY',
           'timezone': 'Browser' // Default to browser timezone
         },
         'footer':{
@@ -112,7 +112,8 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'showSocialBarInFooter': true,
-          'fluidLayout': true,
+          'showMosaic': true,
+          'showMaps': true,
           'facetConfig': {
             'th_httpinspireeceuropaeutheme-theme_tree.key': {
               'terms': {
@@ -127,9 +128,9 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key',
+                'field': 'resourceType',
                 'size': 10
               }
             }
@@ -280,15 +281,14 @@ goog.require('gn_alert');
               "max_query_terms" : 12
             }
           },
-          // TODOES
           'facetTabField': '',
           // Enable vega only if using vega facet type
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
           'isVegaEnabled': true,
           'facetConfig': {
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'aggs': {
                 'format': {
@@ -601,7 +601,7 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC', 'ESRI:REST'],
+            'layers': ['OGC:WMS', 'OGC:WFS','OGC:WMTS', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
@@ -696,7 +696,44 @@ goog.require('gn_alert');
             'enabled': false,
             'if': null // {'documentStandard': ['iso19115-3.2018']}
           },
-          'sortKeywordsAlphabetically': true
+          'sortKeywordsAlphabetically': true,
+          'mainThesaurus': ['th_gemet'],
+          'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
+          'internalThesaurus': [],
+          'collectionTableConfig': {
+            'labels': 'title,cl_status,format,Esri,view,download,file,atom',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed'
+          },
+          'distributionConfig': {
+            // 'layout': 'tabset',
+            'layout': '',
+            'sections': [
+              // {'types': 'services', 'title': 'Services', 'layout': 'card'},
+              {'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+              {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]
+          },
+          'relatedFacetConfig':  {
+            'creationYearForResource': {
+              'terms': {
+                'field': 'creationYearForResource',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'cl_spatialRepresentationType': {
+              'terms': {
+                'field': 'cl_spatialRepresentationType.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'format': {
+              'terms': {
+                'field': 'format',
+                "order" : { "_key" : "asc" }
+              }
+            }
+          }
         },
         'editor': {
           'enabled': true,
@@ -886,7 +923,13 @@ goog.require('gn_alert');
         'filters',
         'scoreConfig',
         'autocompleteConfig',
-        'moreLikeThisConfig'
+        'moreLikeThisConfig',
+        'relatedFacetConfig',
+        'mainThesaurus',
+        'internalThesaurus',
+        'locationThesaurus',
+        'distributionConfig',
+        'collectionTableConfig'
       ],
       current: null,
       isDisableLoginForm: false,

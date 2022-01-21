@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
     "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
     "tmsLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 <strong>{{layer}}</strong> 레이어 이름으로 뷰 서비스 (TMS)에 발행됩니다.",
-    "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+    "esri:restLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmsLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 <strong>{{layer}}</strong> 레이어 이름으로 뷰 서비스 (WMS)에  발행됩니다.",
     "wmsServiceLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 뷰 서비스 (WMS)에 발행됩니다.",
     "wmtsLinkDetails": "이 데이터셋은 <a href='{{url}}' target='_blank'>{{url}}</a>에서 <strong>{{layer}}</strong> 레이어 이름으로 뷰 서비스 (WMTS)에 발행됩니다.",

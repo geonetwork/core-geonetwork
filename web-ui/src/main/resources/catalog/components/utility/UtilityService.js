@@ -626,7 +626,7 @@
       }
       return deferred.promise;
     };
-      
+
     function buildTree(list, fieldId, tree, meta) {
       var translateOnLoad = meta && meta.translateOnLoad;
       list.forEach(function(e) {
@@ -789,7 +789,7 @@
       } else {
         node.key = e.key;
         node.count = e.doc_count;
-      }
+      }g
     };
 
     this.getTree = function(list) {
@@ -808,12 +808,6 @@
   module.filter('sanitizeHtmlFilter', ['$filter', '$sanitize', function($filter, $sanitize) {
     return function(input) {
       return $sanitize(input);
-    }
-  }]);
-
-  module.filter('toJson', [function() {
-    return function(input) {
-      return JSON.stringify(input);
     }
   }]);
 })();

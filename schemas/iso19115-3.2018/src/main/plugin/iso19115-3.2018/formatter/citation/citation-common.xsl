@@ -71,23 +71,23 @@
     <!-- https://en.wikipedia.org/wiki/RIS_(file_format) -->
     <textResponse>
       <!-- TODO: add support for MAP, DBASE, CTLG, AGGR? -->
-      <xsl:text>TY  - </xsl:text><xsl:value-of select="'DATA'"/><xsl:text>&#10;</xsl:text>
+      <xsl:text>TY  - </xsl:text><xsl:value-of select="'DATA'"/><xsl:text>&#13;&#10;</xsl:text>
       <xsl:for-each select="authorsNameAndOrgList/*[. != '']">
-        <xsl:text>AU  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
+        <xsl:text>AU  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
-      <xsl:text>TI  - </xsl:text><xsl:value-of select="translatedTitle"/><xsl:text>&#10;</xsl:text>
+      <xsl:text>TI  - </xsl:text><xsl:value-of select="translatedTitle"/><xsl:text>&#13;&#10;</xsl:text>
       <!-- TODO: LA, ET -->
       <xsl:for-each select="publishersNameAndOrgList/*[. != '']">
-        <xsl:text>PB  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
+        <xsl:text>PB  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
       <xsl:for-each select="keyword[. != '']">
-        <xsl:text>KW  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
+        <xsl:text>KW  - </xsl:text><xsl:value-of select="."/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:for-each>
-      <xsl:text>UR  - </xsl:text><xsl:value-of select="if (doiUrl != '') then doiUrl else landingPageUrl"/><xsl:text>&#10;</xsl:text>
+      <xsl:text>UR  - </xsl:text><xsl:value-of select="if (doiUrl != '') then doiUrl else landingPageUrl"/><xsl:text>&#13;&#10;</xsl:text>
       <xsl:if test="doi != ''">
-        <xsl:text>DO  - </xsl:text><xsl:value-of select="doi"/><xsl:text>&#10;</xsl:text>
+        <xsl:text>DO  - </xsl:text><xsl:value-of select="doi"/><xsl:text>&#13;&#10;</xsl:text>
       </xsl:if>
-      <xsl:text>ID  - </xsl:text><xsl:value-of select="uuid"/><xsl:text>&#10;</xsl:text>
+      <xsl:text>ID  - </xsl:text><xsl:value-of select="uuid"/><xsl:text>&#13;&#10;</xsl:text>
       <xsl:text>ER  -</xsl:text>
     </textResponse>
   </xsl:template>

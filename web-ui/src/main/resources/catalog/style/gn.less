@@ -23,7 +23,7 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
-[gn-copy-to-clipboard-button] {
+.gn-copy-to-clipboard-button-floatright {
   position: relative;
   right: 4px;
   top: 4px;
@@ -219,9 +219,11 @@ a {
   }
 }
 .gn-btn-modal-img {
+  border-radius: 50% !important;
   position: absolute;
   top: -1.2em;
   right: -1.2em;
+  padding: 7px 12px !important;
 }
 
 /**
@@ -782,6 +784,7 @@ i.fa-times.delete:hover {
     font-size: 4rem;
     font-family: "Open sans", Helvetica, Arial, sans-serif;
     padding: 0.5rem;
+    z-index: 1;
     .gn-status {
       border-radius: 15px;
       text-transform: uppercase;
@@ -857,6 +860,16 @@ button, .btn, .btn:active, a {
   .form-group {
     margin-bottom: 10px;
   }
+}
+
+[gn-popover-anchor], [data-gn-popover-anchor] {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+[gn-popover-content] {
+  word-break: break-word;
 }
 
 .popover {
