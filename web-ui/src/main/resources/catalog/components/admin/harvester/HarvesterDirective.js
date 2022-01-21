@@ -292,8 +292,8 @@
    * CSW Harvester filter
    */
   module.directive('gnCswHarvesterFilter',
-    ['$http', '$translate', '$rootScope',
-      function($http, $translate, $rootScope) {
+    ['$http', '$translate', '$rootScope', '$timeout',
+      function($http, $translate, $rootScope, $timeout) {
 
         return {
           restrict: 'A',
@@ -306,6 +306,76 @@
           },
           link: function(scope, element, attrs) {
             scope.enableAddFilter = false;
+            scope.cswCriteriaTranslated = [];
+
+            var substringMatcher = function(strs) {
+              return function findMatches(q, cb) {
+                var matches, substringRegex;
+
+                // an array that will be populated with substring matches
+                matches = [];
+
+                // regex used to determine if a string contains the substring `q`
+                substrRegex = new RegExp(q, 'i');
+
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function(i, str) {
+                  if (substrRegex.test(str)) {
+                    matches.push(str);
+                  }
+                });
+
+                cb(matches);
+              };
+            };
+
+            /**
+             * Adds typeahead to a csw filter field.
+             *
+             * @param fieldId
+             */
+            var configureTypeaheadField = function(fieldId) {
+              var field = $(fieldId);
+
+              // Required, otherwise when change the harvester url keeps the old values
+              field.typeahead('destroy');
+
+              field.typeahead({
+                minLength: 0,
+                hint: true,
+                highlight: true
+              },
+              {
+                source: substringMatcher(scope.cswCriteriaTranslated),
+                limit: Infinity
+              });
+
+              field.bind('typeahead:selected', function() {
+                field.trigger('change');
+              });
+
+              // To select the suggested value, otherwise is lost
+              field.bind('typeahead:change', function() {
+                field.trigger('change');
+              });
+            }
+
+            /**
+             * Configure the csw filter fields to use typeahead.
+             *
+             * @param fieldId
+             */
+            var configureHarvesterFilters = function() {
+              if (angular.isDefined(scope.harvester.filters)) {
+                $timeout(function() {
+                  for(var i = 0; i < scope.harvester.filters.length; i++) {
+                    var fieldId = '#tagsinput_' + i;
+                    configureTypeaheadField(fieldId);
+                  }
+                }, 0);
+              }
+            }
 
             scope.addFilter = function() {
               var condition = 'AND';
@@ -317,11 +387,16 @@
               }
 
               scope.harvester.filters.push({
-                field: scope.cswCriteria[0].replace('__', ':'),
+                field: scope.cswCriteriaTranslated[0],
                 operator: 'LIKE',
                 value: '',
                 condition: condition
               });
+
+              $timeout(function() {
+                var fieldId = '#tagsinput_' + (scope.harvester.filters.length - 1);
+                configureTypeaheadField(fieldId);
+              }, 0);
             }
 
             scope.removeFilter = function(index) {
@@ -334,12 +409,23 @@
             }
 
             scope.$watch('harvester.filters', function(newCol, oldCol, scope) {
-              scope.filterString = JSON.stringify(scope.harvester.filters);
-            }, true);
+              // Checks for the filter collection reference changes.
+              // Required to add typeahead to the filters after saving the harvester.
+              configureHarvesterFilters();
+            }, false);
 
             scope.$watch('cswCriteria', function(newCol, oldCol, scope) {
               if  ((scope.cswCriteria) && (scope.cswCriteria.length > 0)) {
                 scope.enableAddFilter = true;
+                scope.cswCriteriaTranslated = [];
+
+                for(var i = 0; i < scope.cswCriteria.length; i++) {
+                  scope.cswCriteriaTranslated.push($translate.instant(scope.cswCriteria[i].replace('__', ':')));
+                }
+
+                configureHarvesterFilters();
+              } else {
+                scope.enableAddFilter = false;
               }
             }, true);
           }

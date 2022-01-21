@@ -853,7 +853,7 @@ goog.require('gn_alert');
           blur: 0
         }
       },
-      stopKeyList: [        
+      stopKeyList: [
         'langDetector',
         'nodeDetector',
         'serviceDetector',

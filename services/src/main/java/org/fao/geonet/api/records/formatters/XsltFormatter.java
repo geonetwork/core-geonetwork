@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -149,9 +149,6 @@ public class XsltFormatter implements FormatterImpl {
             for (Element e : elementList) {
                 schemas.addContent(e);
             }
-        }
-        if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
-            return Xml.getString(root);
         }
 
         // Create a map of request parameters to be passed to the XSL transformation
