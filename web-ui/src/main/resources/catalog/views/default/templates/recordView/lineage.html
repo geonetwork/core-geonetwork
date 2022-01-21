@@ -15,14 +15,16 @@
   <!-- /.col-md-8 gn-record -->
   <div class="gn-md-side"
        data-ng-class="[].concat(mdView.current.record.relatedRecords.sources, mdView.current.record.relatedRecords.hassources).length > 3 ? 'col-md-12' : 'col-md-4'">
-    <div data-gn-related="mdView.current.record"
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
          data-user="user"
          data-types="sources"
          data-layout="card"
          data-has-results="hasRelations.sources"
          data-title="{{'sourceDatasets' | translate}}">
     </div>
-    <div data-gn-related="mdView.current.record"
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
          data-user="user"
          data-types="hassources"
          data-layout="card"

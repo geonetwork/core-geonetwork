@@ -454,7 +454,7 @@
           'keywordBadges.html',
         link: function(scope, element, attrs) {
           scope.record = scope.$eval(attrs['gnKeywordBadges']);
-          scope.allKeywords = scope.record.allKeywords;
+          scope.allKeywords = scope.record && scope.record.allKeywords;
           scope.thesaurus = scope.$eval(attrs['thesaurus']);
           scope.getOrderByConfig = function(thesaurus) {
             return thesaurus === 'th_regions'
