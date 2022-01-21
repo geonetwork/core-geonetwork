@@ -626,7 +626,7 @@
       }
       return deferred.promise;
     };
-      
+
     function buildTree(list, fieldId, tree, meta) {
       var translateOnLoad = meta && meta.translateOnLoad;
       list.forEach(function(e) {

@@ -80,7 +80,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{(r.locUrl).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}">
               databaseLayerDetails</span>
             </p>
           </div>
@@ -88,7 +88,7 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{(r.locUrl).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}">
                 fileLayerDetails</span>
               <input class="form-control"
                      type="text"
