@@ -1,0 +1,38 @@
+================================================================================
+===
+=== GeoNetwork 3.12.3: List of changes
+===
+================================================================================
+- [BP] Update libs reported by github security. See 6aecf968 (#6120)
+- [BP] DOI - add identifier / online resource url using the DOI proxy url (#6124)
+- [BP] Fix removal of sort by and hits per page elements in the UI configuration (#6091)
+- Avoid NullPointerException if the thesaurus doesn't exist in GetTopConcept service (#6100)
+- [BP] Fix to display the role translation instead of the role code in the iso19139 full view formatter (#6123)
+- [BP] Formatter - remove debug mode (#6127)
+- Harvester results - filter by harvester uuid instead of site id. Fixes #5530 (#6102)
+- Metadata workflow - publish an approved record with a draft copy, publishes the draft copy. Fixes #5556 (#5557)
+- [BP] Error message JSON path fixes in Editor Angular Controllers (#6029)
+- Related / escape quotes for file links too (#6121)
+- [BP] Formatter / Multilingual support / Can't define the language anymore
+- Ignore the portal filter when executed from a scheduled AtomHarvester (#6119)
+- Merge pull request #6095 from jahow/related-escape-quotes-name
+- [BP] Show label on add resource button when the dialog is opened
+- Update translations (#6111)
+- [BP] Bump log4j2 from 2.17.0 to 2.17.1 (#6110)
+- [BP] Fix for the height of a Modal popup in the Editor (#6098)
+- [BP] Fix check for layer already in map - case insensitive check of the url (#6090)
+- [BP] Sort groups and users in transfer ownership (#6093)
+- [BP] Metadata update and internal reports updates (#6082)
+- [BP] Service record for CSW capabilities - INSPIRE improvements: (#6081)
+- Merge branch '3.12.x' of https://github.com/geonetwork/core-geonetwork into 3.12.x
+- [BP] Update UI configuration selected by default: select the current node if defined in the configuration, otherwise the first one (#6094)
+- [BP] Don't allow to delete a group if owns metadata (#6072)
+- [BP] Confirmation dialog to delete an UI configuration (#6092)
+- Related / transform link title to JSON to avoid angularjs error
+- Merge pull request #6088 from tkohr/show-map-in-facet-3.12
+- [BP]  Enable to display map in left column of search UI (#6080)
+- [BP] Update log4j2 from 2.16.0 to 2.17.0 to address CVE-2021-45105 (#6083)
+- [BP] Add the doi-get query for ISO19115-3.2018 standard (#6065)
+- [BP] Bump log4j-core and log4j-api from 2.15.0 to 2.16.0 (#6079)
+- [BP] Change the `forgot password` message.
+- [BP] INSPIRE Atom feed - update retrieve dataset uuid to handle multiple atom feed entries for the same dataset (#6078)
