@@ -1,4 +1,10 @@
 {
+  "year(s)": "year(s)",
+  "month(s)": "month(s)",
+  "day(s)": "day(s)",
+  "hour(s)": "hour(s)",
+  "minute(s)": "minute(s)",
+  "second(s)": "second(s)",
   "otherKeywords-place": "Place",
   "otherKeywords-discipline": "Discipline",
   "otherKeywords-stratum": "Stratum",
