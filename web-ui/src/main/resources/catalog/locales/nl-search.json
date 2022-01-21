@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Geen record gevonden waarin WMS layers geregistreerd zijn.",
     "noRecordFoundWithResourceRegisteredmap": "Geen record gevonden waarin kaarten geregistreerd zijn.",
     "tmsLinkDetails": "Deze dataset is gepubliceerd in de view service (WMTS) <a href='{{url}}' target='_blank'>{{url}}</a> met identificatie <strong>{{layer}}</strong>.",
-    "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+    "esri:restLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmsLinkDetails": "De laag '<strong>{{layer}}</strong>' is/zijn gepubliceerd in de Web Map Service <a href='{{url}}' target='_blank'>{{url}}</a>. Lees meer over het <a href='http://pdok-ngr.readthedocs.io/services.html#web-map-service-wms' target='_blank'>WMS protocol</a>.\",\n ",
     "wmsServiceLinkDetails": "Web Map Service <a href='{{url}}' target='_blank'>{{url}}</a>. Lees meer over het <a href='http://pdok-ngr.readthedocs.io/services.html#web-map-service-wms' target='_blank'>WMS protocol</a>.\",\n ",
     "wmtsLinkDetails": "Deze dataset is gepubliceerd in de view service (WMTS) <a href='{{url}}' target='_blank'>{{url}}</a> met identificatie <strong>{{layer}}</strong>.",

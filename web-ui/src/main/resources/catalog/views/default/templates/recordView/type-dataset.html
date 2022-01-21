@@ -1,54 +1,13 @@
 <!-- title & summary -->
 <div class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-top gn-margin-bottom gn-padding-bottom">
-
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
   </div>
   <div class="col-md-4 gn-md-side">
-
     <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
 
-    <h2 data-translate="">summary</h2>
-
-    <!-- Display the first metadata status (apply to ISO19139 record) -->
-    <section data-ng-if="mdView.current.record.cl_status.length > 0"
-             data-ng-repeat="c in mdView.current.record.cl_status track by $index">
-      <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1"
-           class="gn-margin-bottom flex-row">
-        <span class="badge badge-rounded gn-status-{{c.key}}"
-              title="{{c.key | translate}}">
-          <i class="fa fa-fw fa-check"></i>
-        </span>
-        <div>
-          <h3 data-translate>{{'status' | translate}}</h3>
-          {{c.key | translate}}
-        </div>
-      </div>
-    </section>
-
-    <section class="gn-md-side-dates"
-             data-ng-if="mdView.current.record.resourceDate.length > 0">
-      <div>
-        <h2 data-translate="">resourceEvents</h2>
-        <ul>
-          <li data-ng-repeat="date in mdView.current.record.resourceDate">
-            <div class="badge badge-rounded"
-                 data-ng-class="{'danger': date.type === 'deprecated'}">
-              <i class="fa fa-fw"
-                 data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
-            </div>
-            <span>
-            <h3 data-translate>{{date.type | translate}}</h3>
-            <span data-gn-humanize-time="{{date.date}}"/>
-          </span>
-          </li>
-        </ul>
-      </div>
-
-    </section>
-
+    <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/summary.html'"/>
   </div>
-  <!-- /.col-md-4 gn-md-side -->
 </div>
 
 <!-- map & extent -->
@@ -209,7 +168,6 @@
                data-filter="f">{{f}}</a>
           </li>
         </ul>
-
       </div>
     </div>
 
@@ -232,161 +190,17 @@
   <!-- /.col-md-4 gn-md-side -->
 </div>
 
-<!-- data model / feature catalog -->
-<div class="row">
-  <div class="col-md-12 gn-record">
-    <div data-ng-if="mdView.current.record.featureTypes"
-         data-ng-repeat="featureType in mdView.current.record.featureTypes">
-
-      <h3 data-translate="">featureAttributeTable</h3>
-
-      <table class="table table-striped">
-        <tbody>
-        <tr data-ng-if="featureType.typeName">
-          <th></th>
-          <td>{{featureType.typeName}}</td>
-        </tr>
-        <tr data-ng-if="featureType.definition">
-          <th data-translate="">featureDefinition</th>
-          <td>{{featureType.definition}}</td>
-        </tr>
-        <tr data-ng-if="featureType.code">
-          <th data-translate="">featureCode</th>
-          <td>{{featureType.code}}</td>
-        </tr>
-        <tr data-ng-if="featureType.isAbstract">
-          <th data-translate="">featureIsAbstract</th>
-          <td>{{featureType.isAbstract}}</td>
-        </tr>
-        <tr data-ng-if="featureType.aliases">
-          <th data-translate="">featureAliases</th>
-          <td>{{featureType.aliases}}</td>
-        </tr>
-        <tr data-ng-if="featureType.attributeTable">
-          <td colspan="2" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
-        </tr>
-        <tr data-ng-if="featureType.attributeTable">
-          <td colspan="2" class="gn-noborder-top gn-table-attribute">
-            <div data-ng-if="featureType.attributeTable"
-                 data-gn-attribute-table-renderer="featureType.attributeTable">
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div data-ng-if="mdView.current.record.relatedRecords"
-         data-gn-related="mdView.current.record"
-         data-user="user"
-         data-types="fcats|related"
-         data-title="{{'featureCatalog' | translate}}">
-    </div>
-  </div>
-  <!-- /.col-md-4 gn-md-side -->
-</div>
-
-<!-- lineage -->
-<div class="row"
-     data-ng-if="mdView.current.record.lineage
-                 || mdView.current.record.supplementalInformation">
-  <div class="col-md-8 gn-record">
-    <div data-ng-if="mdView.current.record.lineage">
-      <h2 data-translate="">lineage</h2>
-      <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
-    </div>
-
-    <div data-ng-if="mdView.current.record.supplementalInformation">
-      <h2 data-translate="">supplementalInformation</h2>
-      <p data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"/>
-    </div>
-  </div>
-  <!-- /.col-md-8 gn-record -->
-  <div class="gn-md-side"
-       data-ng-class="[].concat(mdView.current.record.relatedRecords.sources, mdView.current.record.relatedRecords.hassources).length > 3 ? 'col-md-12' : 'col-md-4'">
-    <div data-gn-related="mdView.current.record"
-         data-user="user"
-         data-types="sources"
-         data-layout="card"
-         data-has-results="hasRelations.sources"
-         data-title="{{'sourceDatasets' | translate}}">
-    </div>
-    <div data-gn-related="mdView.current.record"
-         data-user="user"
-         data-types="hassources"
-         data-layout="card"
-         data-has-results="hasRelations.hassources"
-         data-title="{{'isSourceOfDatasets' | translate}}">
-    </div>
-  </div>
-  <!-- /.col-md-4 gn-md-side -->
-</div>
+<div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
 
 
-<!-- contacts -->
+<div ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"/>
+
+
 <div class="row">
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
 
-    <div data-ng-if="mdView.current.record.resourceCredit"
-         class="flex-row gn-margin-bottom">
-      <span class="badge badge-rounded" title="{{'credit' | translate}}">
-        <i class="fa fa-fw fa-bookmark"></i>
-      </span>
-      <div>
-        <h3 data-translate="">credit</h3>
-        <div data-ng-repeat="c in mdView.current.record.resourceCredit"
-             data-ng-bind-html="c | linky | newlines"/>
-      </div>
-    </div>
-
-    <div data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
-                     || mdView.current.record.MD_LegalConstraintsOtherConstraints"
-         class="gn-margin-bottom flex-row">
-      <span class="badge badge-rounded" title="{{'legalConstraints' | translate}}">
-        <i class="fa fa-fw fa-gavel"></i>
-      </span>
-      <div>
-        <h3 data-translate="">legalConstraints</h3>
-        <ul>
-          <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
-            <span data-ng-bind-html="i | linky | newlines"/>
-          </li>
-          <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
-              <span data-ng-bind-html="i | linky | newlines"/>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation"
-         class="gn-margin-bottom flex-row">
-      <span class="badge badge-rounded" title="{{'securityConstraints' | translate}}">
-        <i class="fa fa-fw fa-lock"></i>
-      </span>
-      <div>
-        <h3 data-translate="">securityConstraints</h3>
-        <ul>
-          <li data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
-              <span data-ng-bind-html="i | linky | newlines"/>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation"
-         class="flex-row gn-margin-bottom">
-      <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
-        <i class="fa fa-fw fa-lock"></i>
-      </span>
-      <div>
-        <h3 data-translate="">resourceConstraints</h3>
-        <ul>
-          <li data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
-            <span data-ng-bind-html="i | linky | newlines"/>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
   <div class="col-md-4 gn-md-side">
@@ -457,18 +271,7 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-8">
-    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
-  </div>
-  <div class="col-md-4">
-    <div data-gn-userfeedback='mdView.current.record'
-         data-gn-user={{user.username}}
-         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-    </div>
-    <div data-gn-md-feedback="mdView.current.record"></div>
-  </div>
-</div>
+<div ng-include="'../../catalog/views/default/templates/recordView/share.html'"/>
 
 <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
 

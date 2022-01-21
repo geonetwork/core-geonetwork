@@ -789,7 +789,7 @@
       } else {
         node.key = e.key;
         node.count = e.doc_count;
-      }
+      }g
     };
 
     this.getTree = function(list) {

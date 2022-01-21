@@ -1,73 +1,24 @@
-<!--
-Summary template
-
-Contents:
-- status
-- constraints
-- provided by
-- rating
-- resource events
-- temporal extent
-- resource vertical
-
--->
-
 <h2 data-translate="">summary</h2>
 
 <!-- Display the first metadata status (apply to ISO19139 record) -->
 <section data-ng-if="mdView.current.record.cl_status.length > 0"
          data-ng-repeat="c in mdView.current.record.cl_status track by $index">
-  <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1">
-      <span class="badge badge-rounded gn-status-{{c.key}}" title="{{c.key | translate}}">
-        <i class="fa fa-fw fa-info"></i>
-      </span>
-    {{c.key | translate}}
+  <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1"
+       class="gn-margin-bottom flex-row">
+        <span class="badge badge-rounded gn-status-{{c.key}}"
+              title="{{c.key | translate}}">
+          <i class="fa fa-fw fa-check"></i>
+        </span>
+    <div>
+      <h3 data-translate="">cl_status</h3>
+      {{c.key | translate}}
+    </div>
   </div>
 </section>
 
-<section data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
-  <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation" class="flex-row">
-    <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
-      <i class="fa fa-fw fa-lock"></i>
-    </span>
-    <div>
-      <span data-ng-bind-html="i | linky | newlines"/>
-    </div>
-  </p>
-</section>
-
-<section class="gn-md-side-providedby">
-    <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
-      <i class="fa fa-fw fa-cog"></i>
-    </span>
-  <h3 data-translate="">sourceCatalog</h3>:
-  <span data-gn-record-origin-logo="mdView.current.record"/>
-</section>
-
-<section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
-  <h2>
-    <i class="fa fa-fw"></i>
-    <span data-translate="">rate</span>
-  </h2>
-  <div data-gn-metadata-rate="mdView.current.record"/>
-</section>
-
-<section class="gn-md-side-calendar">
-  <p>
-      <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
-        <i class="fa fa-fw fa-calendar"></i>
-      </span>
-    <h3 data-translate="">updatedOn</h3>
-    <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
-          data-from-now=""></span>
-  </p>
-</section>
-
 <section class="gn-md-side-dates"
-         data-ng-if="mdView.current.record.resourceDate.length > 0 ||
-                              mdView.current.record.resourceTemporalExtentDateRange ||
-                              mdView.current.record.resourceVerticalRange">
-  <div data-ng-show="mdView.current.record.resourceDate.length > 0">
+         data-ng-if="mdView.current.record.resourceDate.length > 0">
+  <div>
     <h2 data-translate="">resourceEvents</h2>
     <ul>
       <li data-ng-repeat="date in mdView.current.record.resourceDate">
@@ -82,50 +33,5 @@ Contents:
           </span>
       </li>
     </ul>
-  </div>
-
-  <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails">
-    <h2 data-translate="">tempExtent</h2>
-
-    <span class="badge badge-rounded">
-        <i class="fa fa-fw fa-calendar"></i>
-      </span>
-    <span data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
-        <span data-ng-show="range.start">
-            <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
-            <span data-gn-humanize-time="{{range.start.date}}"/>
-            <span data-ng-show="range.start.calendarEraName">{{range.start.calendarEraName | translate}}</span>
-        </span>
-        <span class="spacer">
-          <i class="fa fa-long-arrow-right"></i>
-        </span>
-        <span data-ng-show="range.end">
-          <span data-ng-show="range.end.indeterminatePosition">{{range.end.indeterminatePosition | translate}}&nbsp;</span>
-          <span data-gn-humanize-time="{{range.end.date}}"/>
-          <span data-ng-show="range.end.calendarEraName">{{range.end.calendarEraName | translate}}</span>
-        </span>
-      </span>
-  </div>
-
-  <div data-ng-show="mdView.current.record.resourceVerticalRange">
-    <h2>
-      <i class="fa fa-fw fa-clock-o"></i>
-      <span data-translate="">resourceVerticalRange</span>
-    </h2>
-
-    <div class="flex flex-row flex-align-center gn-vertical-range"
-         data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
-      <div class="width-25">
-        <i class="fa fa-fw fa-chevron-up"/>
-      </div>
-      <div class="width-75">
-        <div data-ng-show="range.lte">
-          <dt>{{range.lte}}</dt>
-        </div>
-        <div data-ng-show="range.gte">
-          <dt>{{range.gte}}</dt>
-        </div>
-      </div>
-    </div>
   </div>
 </section>

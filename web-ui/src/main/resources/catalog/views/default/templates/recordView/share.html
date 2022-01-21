@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-md-8">
+    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
+  </div>
+  <div class="col-md-4">
+    <div data-gn-userfeedback='mdView.current.record'
+         data-gn-user={{user.username}}
+         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+    </div>
+    <div data-gn-md-feedback="mdView.current.record"></div>
+  </div>
+</div>

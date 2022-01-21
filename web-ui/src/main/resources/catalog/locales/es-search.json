@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "No se encontró ningún registro con una o más capas WMS registradas.",
     "noRecordFoundWithResourceRegisteredmap": "No se encontró ningún registro con uno o más mapas registrados.",
     "tmsLinkDetails": "El conjunto de datos se ha publicado en el servicio de visualización (TMS) disponible en <a href='{{url}}' target='_blank'>{{url}}</a> con el identificador <strong>{{layer}}</strong>.",
-    "esriRestLinkDetails": "Servicio ESRI REST <a href='{{url}}' target='_blank'>{{url}}</a> .",
+    "esri:restLinkDetails": "Servicio ESRI REST <a href='{{url}}' target='_blank'>{{url}}</a> .",
     "wmsLinkDetails": "Este conjunto de datos se ha publicado en el servicio de visualización (WMS) disponible en <a href='{{url}}' target='_blank'>{{url}}</a> con el nombre de capa <strong>{{layer}}</strong>",
     "wmsServiceLinkDetails": "Este conjunto de datos está pubicado en el servidor (WMS) disponible en <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmtsLinkDetails": "Este conjunto de datos se publica en el servicio de visualización (WMTS) disponible en <a href='{{url}}' target='_blank'>{{url}}</a> con el identificador <strong>{{layer}}</strong> .",
