@@ -428,7 +428,6 @@
         };
       }]);
 
-
   module.directive(
     'gnUserfeedbacklasthome', ['$http',
       function($http) {
@@ -440,23 +439,26 @@
           },
           templateUrl: '../../catalog/components/userfeedback/partials/userfeedbacklasthome.html',
           link: function(scope) {
-
+            var defaultSize = 6, increment = 6;
             scope.lastCommentsList = [];
-
-            scope.loadLastComments = function() {
+            scope.allCommentsLoaded = false;
+            scope.loadLastComments = function(size) {
               $http({
                 method: 'GET',
-                url: '../api/userfeedback?size=' + (scope.nbOfComments || 6),
+                url: '../api/userfeedback?size=' + size,
                 isArray: true
               }).then(function mySuccess(response) {
-                scope.lastCommentsList = [];
-                scope.lastCommentsList = scope.lastCommentsList.concat(response.data);
+                scope.allCommentsLoaded =
+                  response.data.length < size;
+                scope.lastCommentsList = response.data;
               }, function myError(response) {
                 console.log(response.statusText);
               });
-
             };
-            scope.loadLastComments();
+            scope.loadMore = function() {
+              scope.loadLastComments(scope.lastCommentsList.length + increment)
+            };
+            scope.loadLastComments(scope.nbOfComments || defaultSize);
           }
         };
       }]);

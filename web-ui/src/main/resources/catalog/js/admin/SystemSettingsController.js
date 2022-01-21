@@ -139,6 +139,11 @@
               $scope.systemInfo = data;
             });
 
+        $http.get('../api/site/info/notificationLevels')
+            .success(function(data) {
+              $scope.notificationLevels = data;
+            });
+
         // load log files
         $http.get('../api/site/logging')
             .success(function(data) {

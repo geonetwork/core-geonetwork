@@ -38,9 +38,13 @@ import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.StatusValueNotificationLevel;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.metadata.DefaultStatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
@@ -68,8 +72,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
+import static org.fao.geonet.kernel.setting.Settings.*;
 
 
 /**
@@ -92,6 +95,9 @@ public class UserFeedbackAPI {
 
     @Autowired
     MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     /**
      * Gets rating criteria
@@ -475,6 +481,40 @@ public class UserFeedbackAPI {
             userFeedbackService
                 .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
                     request.getRemoteAddr());
+
+
+            String notificationSetting = settingManager.getValue(SYSTEM_LOCALRATING_NOTIFICATIONLEVEL);
+            if (StringUtils.isNotEmpty(notificationSetting)) {
+                StatusValueNotificationLevel notificationLevel =
+                    StatusValueNotificationLevel.valueOf(notificationSetting);
+                if (notificationLevel != null) {
+                    List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
+                        Collections.singleton(
+                            Integer.parseInt(
+                                metadataUtils.getMetadataId(userFeedbackDto.getMetadataUUID()))
+                        ),
+                        null);
+
+                    String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
+                    String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitle", "");
+
+                    List<String> toAddress = userToNotify.stream()
+                        .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
+                        .map(User::getEmail)
+                        .collect(Collectors.toList());
+
+                    if (toAddress.size() > 0) {
+                        MailUtil.sendMail(toAddress,
+                            String.format(
+                                messages.getString("new_user_rating"),
+                                catalogueName, title),
+                            String.format(
+                                messages.getString("new_user_rating_text"),
+                                settingManager.getNodeURL(), userFeedbackDto.getMetadataUUID()),
+                            settingManager);
+                    }
+                }
+            }
 
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {

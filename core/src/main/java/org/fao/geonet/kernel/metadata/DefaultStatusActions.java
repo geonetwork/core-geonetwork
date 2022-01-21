@@ -23,27 +23,16 @@
 
 package org.fao.geonet.kernel.metadata;
 
+import com.google.common.base.Joiner;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.StatusValueNotificationLevel;
-import org.fao.geonet.domain.StatusValueType;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -64,8 +53,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
-
-import com.google.common.base.Joiner;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -307,31 +294,34 @@ public class DefaultStatusActions implements StatusActions {
      */
     protected List<User> getUserToNotify(MetadataStatus status) {
         StatusValueNotificationLevel notificationLevel = status.getStatusValue().getNotificationLevel();
-        UserRepository userRepository = context.getBean(UserRepository.class);
-        List<User> users = new ArrayList<>();
-
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
         // if records are not in the same groups. To be improved.
         Set<Integer> listOfId = new HashSet<>(1);
         listOfId.add(status.getMetadataId());
+        return getUserToNotify(notificationLevel, listOfId, status.getOwner());
+    }
+
+    static public List<User> getUserToNotify(StatusValueNotificationLevel notificationLevel, Set<Integer> recordIds, Integer ownerId) {
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+        List<User> users = new ArrayList<>();
 
         if (notificationLevel != null) {
             if (notificationLevel == StatusValueNotificationLevel.statusUserOwner) {
-                Optional<User> owner = userRepository.findById(status.getOwner());
+                Optional<User> owner = userRepository.findById(ownerId);
 
                 if (owner.isPresent()) {
                     users.add(owner.get());
                 }
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
-                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
-                        Profile.Reviewer, SortUtils.createSort(User_.name));
+                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(recordIds, Profile.Reviewer, SortUtils.createSort(User_.name));
+                Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
                 }
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
-                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAllById(listOfId);
+                Iterable<Metadata> records = ApplicationContextHolder.get().getBean(MetadataRepository.class).findAllById(recordIds);
                 for (Metadata r : records) {
                     Optional<User> owner = userRepository.findById(r.getSourceInfo().getOwner());
 
