@@ -383,7 +383,7 @@ public class DoiManager {
 
 
         // Add the DOI in the record
-        Element recordWithDoi = setDOIValue(doiInfo.get("doiUrl"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
+        Element recordWithDoi = setDOIValue(doiInfo.get("doi"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
         // Update the published copy
         //--- needed to detach md from the document
 //        md.detach();
@@ -447,8 +447,11 @@ public class DoiManager {
                 schema, DOI_ADD_XSL_PROCESS));
         }
 
+        String doiPublicUrl = client.createPublicUrl("");
+
         Map<String, Object> params = new HashMap<>(1);
         params.put("doi", doi);
+        params.put("doiProxy", doiPublicUrl);
         return Xml.transform(md, styleSheet, params);
     }
 

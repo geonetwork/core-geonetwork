@@ -15,7 +15,7 @@
             <th data-translate="">sourceGroup</th>
             <th data-translate="">targetGroup</th>
           </tr>
-          <tr data-ng-repeat="(key, g) in editorGroups"
+          <tr data-ng-repeat="g in editorGroups"
               data-ng-init="transfertList[g.id] = {sourceGroup: g.id};">
             <td>{{g.label[lang]|empty:g.name}}</td>
             <!--TODO: Only list group with records. -->
