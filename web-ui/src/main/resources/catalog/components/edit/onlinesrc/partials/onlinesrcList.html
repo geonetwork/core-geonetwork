@@ -198,7 +198,7 @@
               {{resource.description | gnLocalized: lang}}
 
               <div data-ng-if="resource.lUrl !== null
-                               && resource.lUrl.match('/doi/') !== null"
+                               && resource.lUrl.match('doi.org') !== null"
                    data-gn-doi-wizard="gnCurrentEdit.uuid"
                    data-gn-doi-url="resource.lUrl"
                    data-xs-mode="true"></div>
