@@ -421,10 +421,10 @@
                   <xsl:for-each select="$temporalResolution">
                     <xsl:variable name="d" select="xs:duration(.)"/>
                     <value>
-                      <xsl:value-of select="if (years-from-duration($d) != 0) then (years-from-duration($d), ' years ') else ''"/>
-                      <xsl:value-of select="if (months-from-duration($d) != 0) then (months-from-duration($d), ' months ') else ''"/>
-                      <xsl:value-of select="if (days-from-duration($d) != 0) then (days-from-duration($d), ' days ') else ''"/>
-                      <xsl:value-of select="if (hours-from-duration($d) != 0) then (hours-from-duration($d), ' hours ') else ''"/>
+                      <xsl:value-of select="if (years-from-duration($d) != 0) then (years-from-duration($d), ' year(s) ') else ''"/>
+                      <xsl:value-of select="if (months-from-duration($d) != 0) then (months-from-duration($d), ' month(s) ') else ''"/>
+                      <xsl:value-of select="if (days-from-duration($d) != 0) then (days-from-duration($d), ' day(s) ') else ''"/>
+                      <xsl:value-of select="if (hours-from-duration($d) != 0) then (hours-from-duration($d), ' hour(s) ') else ''"/>
                       <xsl:value-of select="if (minutes-from-duration($d) != 0) then (minutes-from-duration($d), ' min ') else ''"/>
                       <xsl:value-of select="if (seconds-from-duration($d) != 0) then (seconds-from-duration($d), ' sec') else ''"/>
                     </value>

@@ -206,7 +206,7 @@
                     <xsl:when  test="$individuals">
                       <xsl:value-of select="string-join($individuals, ', ')"/>
                       <xsl:if test="$org != ''">
-                        <xsl:value-of select="concat('(', $org, ')')"/>
+                        <xsl:value-of select="concat(' (', $org, ')')"/>
                       </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
@@ -539,7 +539,7 @@
                     <xsl:with-param name="key" select="'eo-resolution'"/>
                   </xsl:call-template>
                 </strong>
-                <xsl:value-of select="*/text()"/>
+                <xsl:value-of select="concat(*/text(), ' ', */@uom)"/>
               </div>
             </xsl:for-each>
 
