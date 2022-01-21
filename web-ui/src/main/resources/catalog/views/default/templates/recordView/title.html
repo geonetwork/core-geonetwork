@@ -1,10 +1,4 @@
 <div>
-
-  <div data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
-                    && mdView.current.record.relatedRecords"
-       data-gn-record-mosaic=""
-       records="mdView.current.record.relatedRecords.all" size="8"/>
-
   <h1>
     <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
 
@@ -19,6 +13,11 @@
                       && md.mdStatus < 50
                       && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
   </h1>
+
+  <div data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
+                    && mdView.current.record.relatedRecords"
+       data-gn-record-mosaic=""
+       records="mdView.current.record.relatedRecords.all" size="8"/>
 
   <div data-ng-if="mdView.current.record.relatedRecords"
        data-gn-related="mdView.current.record"
