@@ -78,6 +78,11 @@
             label: 'versioning',
             icon: 'fa-rss',
             href: '#/dashboard/versioning'
+          }, {
+            type: 'feedbacks',
+            label: 'userFeedbackList',
+            icon: 'fa-comments',
+            href: '#/dashboard/feedbacks'
           }]};
 
       var dashboards = [{

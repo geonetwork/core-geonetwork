@@ -955,6 +955,7 @@
     "system/userSelfRegistration/recaptcha/enable-help": "Enabling re-captcha will protect you and your users from spam and abuse. This is highly recommended when you enable feedback or self-registration. Create your re-captcha key on <a href='https://www.google.com/recaptcha/'>https://www.google.com/recaptcha/</a>",
     "system/userSelfRegistration/recaptcha/publickey": "Re-captcha public key",
     "system/userSelfRegistration/recaptcha/secretkey": "Re-captcha secret key",
+    "userFeedbackList": "Last user feedbacks",
     "system/userFeedback": "User feedback",
     "system/userFeedback/enable": "Enable feedback",
     "system/userFeedback/enable-help": "When enabled, make sure a mail server is also configured.",
