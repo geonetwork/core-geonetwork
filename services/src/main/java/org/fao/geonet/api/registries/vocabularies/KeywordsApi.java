@@ -1393,4 +1393,46 @@ public class KeywordsApi {
 
         return parsedParams;
     }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create a hierarchy from / separated labels (Sextant only)",
+        description = ""
+    )
+    @RequestMapping(
+        value = "/{thesaurus:.+}/buildHierarchy",
+        method = RequestMethod.POST)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Thesaurus updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+    })
+    @PreAuthorize("hasAuthority('UserAdmin')")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void buildHierarchyFromLabel(
+        @Parameter(
+            description = "Thesaurus to update.",
+            required = true)
+        @PathVariable(value = "thesaurus")
+            String thesaurus,
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        Thesaurus thesaurusToUpdate = thesaurusMan.getThesauriMap().get(thesaurus);
+        Path thesaurusFile = thesaurusToUpdate.getFile();
+
+        Path skosTransform = dataDirectory.getWebappDir().resolve(
+            "xslt/services/thesaurus/build-hierarchy-from-label-with-separator.xsl");
+        Element transform = Xml.transform(Xml.loadFile(thesaurusFile), skosTransform);
+
+        XMLOutputter xmlOutput = new XMLOutputter();
+        xmlOutput.setFormat(Format.getCompactFormat());
+        xmlOutput.output(transform,
+            new OutputStreamWriter(new FileOutputStream(thesaurusFile.toFile().getCanonicalPath()),
+                StandardCharsets.UTF_8));
+
+        thesaurusManager.addOrReloadThesaurus(thesaurusToUpdate);
+    }
 }

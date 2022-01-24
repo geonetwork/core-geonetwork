@@ -289,9 +289,21 @@ public class ThesaurusManager implements ThesaurusFinder {
         thesauriMap.put(thesaurusName, gst);
 
         if (writeTitle) {
-            gst.addTitleElement(gst.getTitle());
+            gst.addTitleElement(gst.getTitle(), gst.getDefaultNamespace());
+        }
+    }
+
+    public void addOrReloadThesaurus(Thesaurus gst) throws Exception {
+        if (thesauriMap.replace(gst.getKey(), gst) != null) {
+            service.removeRepository(gst.getKey());
         }
 
+        createThesaurusRepository(gst);
+        thesauriMap.put(gst.getKey(), gst);
+
+        if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
+            Log.debug(Geonet.THESAURUS_MAN, "Thesaurus " + gst.getKey() + " loaded.");
+        }
     }
 
     /**
@@ -403,17 +415,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String theKey = gst.getKey();
         gst.retrieveThesaurusTitle();
 
-        if (thesauriMap.replace(theKey, gst) == null) {
-            createThesaurusRepository(gst);
-            thesauriMap.put(theKey, gst);
-            if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                Log.debug(Geonet.THESAURUS_MAN, "Created thesaurus " + theKey + " from register " + uuid);
-        } else {
-            service.removeRepository(theKey);
-            createThesaurusRepository(gst);
-            if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus " + theKey + " from register " + uuid);
-        }
+        addOrReloadThesaurus(gst);
 
         return theKey;
     }
