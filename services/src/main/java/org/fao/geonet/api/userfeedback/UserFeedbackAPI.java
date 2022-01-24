@@ -508,7 +508,7 @@ public class UserFeedbackAPI {
                                 catalogueName, title),
                             String.format(
                                 messages.getString("new_user_rating_text"),
-                                settingManager.getNodeURL(), userFeedbackDto.getMetadataUUID()),
+                                userFeedbackDto.getMetadataUUID()),
                             settingManager);
                     }
                 }
@@ -631,7 +631,7 @@ public class UserFeedbackAPI {
             String.format(
                 messages.getString("user_feedback_text"),
                 name, org, function, email, phone, title, type, category, comments,
-                settingManager.getNodeURL(), metadataUuid),
+                metadataUuid),
             settingManager);
 
         return new ResponseEntity(HttpStatus.CREATED);
