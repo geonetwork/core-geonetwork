@@ -78,6 +78,7 @@
   </bean>
   <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" >
       <constructor-arg ref="userSessionManagement" />
+      <constructor-arg ref="csrfFilter" />
   </bean>
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
