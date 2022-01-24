@@ -494,7 +494,7 @@ public class UserFeedbackAPI {
                         null);
 
                     String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
-                    String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitle", "");
+                    String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", locale.getISO3Language());
 
                     List<String> toAddress = userToNotify.stream()
                         .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
@@ -622,7 +622,7 @@ public class UserFeedbackAPI {
             }
         }
 
-        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitle", "");
+        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitleObject", "");
 
         MailUtil.sendMail(toAddress,
             String.format(
