@@ -56,10 +56,6 @@
   Valid with regards to index date supported types:
   date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis
   -->
-  <!-- A date, dateTime, Year or Year and Month
-  Valid with regards to index date supported types:
-  date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis
-  -->
   <xsl:function name="gn-fn-index:is-isoDate" as="xs:boolean">
     <xsl:param name="value" as="xs:string?"/>
     <xsl:value-of select="if ($value castable as xs:date
@@ -396,6 +392,40 @@
     </xsl:variable>
 
     <xsl:copy-of select="$paths"/>
+  </xsl:template>
+
+
+  <xsl:template name="build-range-details">
+    <xsl:param name="start" as="node()?"/>
+    <xsl:param name="end" as="node()?"/>
+
+    <xsl:variable name="rangeStartDetails">
+      <xsl:if test="$start != ''">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
+      </xsl:if>
+      <xsl:for-each select="$start/@*[. != '']">
+        <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="rangeEndDetails">
+      <xsl:if test="$end != ''">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
+      </xsl:if>
+      <xsl:for-each select="$end/@*[. != '']">
+        <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:if test="count($rangeStartDetails/value) > 0 or count($rangeEndDetails/value) > 0">
+      <resourceTemporalExtentDetails type="object">{
+        "start": {
+        <xsl:value-of select="string-join($rangeStartDetails/value, ',')"/>
+        },
+        "end": {
+        <xsl:value-of select="string-join($rangeEndDetails/value, ',')"/>
+        }
+        }</resourceTemporalExtentDetails>
+    </xsl:if>
   </xsl:template>
 
 

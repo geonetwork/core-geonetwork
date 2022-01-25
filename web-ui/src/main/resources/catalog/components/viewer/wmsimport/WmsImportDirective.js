@@ -37,6 +37,7 @@
    */
   module.directive('gnWmsImport', [
     'gnOwsCapabilities',
+    'gnEsriUtils',
     'gnAlertService',
     'gnMap',
     '$translate',
@@ -46,7 +47,7 @@
     'gnViewerSettings',
     'gnGlobalSettings',
     'gnSearchSettings',
-    function(gnOwsCapabilities, gnAlertService, gnMap, $translate, $timeout,
+    function(gnOwsCapabilities, gnEsriUtils, gnAlertService, gnMap, $translate, $timeout,
              gnESClient, Metadata, gnViewerSettings,
              gnGlobalSettings, gnSearchSettings) {
       return {
@@ -101,10 +102,14 @@
               console.log($scope.format+ ' not supported');
             }
           };
+
+          this.addEsriRestLayer = function(getCapLayer) {
+            return gnMap.addEsriRestLayer($scope.map, $scope.url + '/' + getCapLayer.id , null, null, null);
+          };
         }],
         link: function(scope, element, attrs) {
           scope.loading = false;
-          scope.error = {wms: null, wmts: null, wfs: null};
+          scope.error = {wms: null, wmts: null, wfs: null, esrirest: null};
           scope.format = attrs['gnWmsImport'] != '' ?
               attrs['gnWmsImport'] : 'all';
           scope.serviceDesc = null;
@@ -177,14 +182,25 @@
               scope.loading = true;
               scope.error[type] = null;
               scope.capability = null;
-              gnOwsCapabilities['get' + type.toUpperCase() +
-                  'Capabilities'](scope.url).then(function(capability) {
-                scope.loading = false;
-                scope.capability = capability;
-              }, function(error) {
-                scope.loading = false;
-                scope.error[type] = error;
-              });
+              scope.capabilityEsriRest = null;
+              if (type.toLowerCase() === 'esrirest') {
+                gnEsriUtils.getCapabilities(scope.url).then(function(capability) {
+                  scope.loading = false;
+                  scope.capabilityEsriRest = capability;
+                }, function(error) {
+                  scope.loading = false;
+                  scope.error[type] = error;
+                });
+              } else {
+                gnOwsCapabilities['get' + type.toUpperCase() +
+                'Capabilities'](scope.url).then(function(capability) {
+                  scope.loading = false;
+                  scope.capability = capability;
+                }, function(error) {
+                  scope.loading = false;
+                  scope.error[type] = error;
+                });
+              }
             }
           };
 
@@ -192,6 +208,7 @@
           scope.reset = function() {
             scope.loading = false;
             scope.capability = null;
+            scope.capabilityEsriRest = null;
             scope.serviceDesc = null;
             scope.url = '';
           };
@@ -493,6 +510,74 @@
         }
       };
     }]);
+
+
+  /**
+   * @ngdoc directive
+   * @name gn_wmsimport.directive:gnEsriRestCapTreeCol
+   *
+   * @description
+   * Directive to manage a collection of nested layers from
+   * the ESRI REST capabilities document. This directive works with
+   * gnEsriCapTreeElt directive.
+   */
+  module.directive('gnEsriRestCapTreeCol', [
+    function() {
+      return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+          collection: '=',
+          filterLabel: '@'
+        },
+        template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
+          "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" +
+          "<input class='form-control' aria-label='{{ ::filterLabel }}' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
+          "</li>" +
+          '<gn-esri-rest-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'name\'" member="member">' +
+          '</gn-esri-rest-cap-tree-elt></ul>'
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_wmsimport.directive:gnEsriCapTreeElt
+   *
+   * @description
+   * Directive to manage layers from an ESRI REST capabilities
+   * document. Will call its own template to display the layer.
+   */
+  module.directive('gnEsriRestCapTreeElt', [
+    '$compile',
+    '$translate',
+    'gnAlertService',
+    function($compile, $translate, gnAlertService) {
+      return {
+        restrict: 'E',
+        require: '^gnWmsImport',
+        replace: true,
+        scope: {
+          member: '='
+        },
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+          'partials/esrilayer.html',
+        link: function(scope, element, attrs, controller) {
+          var el = element;
+
+          scope.toggleNode = function(evt) {
+            el.find('.fa').first().toggleClass('fa-folder-open-o')
+              .toggleClass('fa-folder-o');
+            el.children('ul').toggle();
+            evt.stopPropagation();
+          };
+
+          scope.addLayer = function() {
+            controller.addEsriRestLayer(scope.member);
+          };
+        }
+      };
+    }]);
+
   module.directive('gnLayerStyles', [
     function() {
       return {

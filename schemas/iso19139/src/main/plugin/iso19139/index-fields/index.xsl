@@ -854,6 +854,11 @@
                           and $start &gt; $end">
               <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
             </xsl:if>
+
+            <xsl:call-template name="build-range-details">
+              <xsl:with-param name="start" select="$start"/>
+              <xsl:with-param name="end" select="$end"/>
+            </xsl:call-template>
           </xsl:for-each>
 
           <xsl:for-each select=".//gmd:verticalElement/*">

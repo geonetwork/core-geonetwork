@@ -23,11 +23,19 @@
 
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.UserGroup_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
-
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.List;
 
@@ -86,6 +94,24 @@ public final class UserGroupSpecs {
             }
         };
     }
+
+    /**
+     * Specification for retrieving all the userGroups of a given user with a given profile.
+     *
+     * @param userId  the user id.
+     * @param profile the user profile. The exact profile, it doesn't run a hierarchical search.
+     * @return the query.
+     */
+    public static Specification<UserGroup> hasUserIdAndProfile(final int userId, final Profile profile) {
+        return (root, query, cb) -> {
+            Path<Profile> profileIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.profile);
+            Path<Integer> userIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.userId);
+            Predicate profileIdEqualPredicate = cb.equal(profileIdAttributePath, cb.literal(profile));
+            Predicate userIdEqualsPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
+            return cb.and(profileIdEqualPredicate, userIdEqualsPredicate);
+        };
+    }
+
 
     /**
      * Specification for testing if the UserGroup is (or is not) a reserved group.

@@ -103,10 +103,18 @@
       };
 
       /**
-       * Remove the logo and refresh the list when done.
+       * Ask for confirmation to delete a logo
        */
       $scope.removeLogo = function(logoName) {
-        $http.delete('../api/logos/' + logoName)
+        $scope.remLogoName = logoName;
+        $('#gn-confirm-remove-logo').modal('show');
+      }
+
+      /**
+       * Remove the logo and refresh the list when done.
+       */
+      $scope.confirmRemoveLogo = function(logoName) {
+        $http.delete('../api/logos/' + $scope.remLogoName)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('logoRemoved'),

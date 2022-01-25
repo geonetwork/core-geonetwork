@@ -608,6 +608,12 @@ form.gn-tab-inspire {
     to be higher than view port
     as the modal does not have overflow. */
     max-height: 50vh;
+    @media (max-height: 786px) {
+      max-height: 35vh;
+    }
+    @media (max-height: 550px) {
+      max-height: 23vh;
+    }
   }
 
   .gn-record {
@@ -964,7 +970,7 @@ gn-draft-validation-widget {
     right: 0;
     overflow: auto;
     max-height: 100%;
-    padding-bottom: 110px;
+    padding-bottom: 150px;
   }
 }
 

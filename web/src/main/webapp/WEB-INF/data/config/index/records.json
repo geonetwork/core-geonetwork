@@ -3,7 +3,7 @@
     "index": {
       "max_result_window": 15000,
       "query.default_field": "any",
-      "mapping.total_fields.limit": 4000,
+      "mapping.total_fields.limit": 15000,
       "analysis": {
         "analyzer": {
           "trigram": {
@@ -1211,6 +1211,14 @@
             "fielddata": true,
             "analyzer": "keepInspireServiceTypes",
             "search_analyzer": "keyword"
+          }
+        }
+      },
+      {
+        "indicator": {
+          "match": "indicator_*",
+          "mapping": {
+            "type": "keyword"
           }
         }
       }

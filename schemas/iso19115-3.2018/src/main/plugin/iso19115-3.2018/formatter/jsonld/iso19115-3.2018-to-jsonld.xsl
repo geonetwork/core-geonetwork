@@ -184,25 +184,27 @@
                                  select="mdb:identificationInfo/*/mri:citation/*/cit:title"/>,
 
     <!-- An alias for the item. -->
+    "alternateName": [
     <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle">
-      "alternateName": <xsl:apply-templates mode="toJsonLDLocalized"
-                                                  select="."/>,
-    </xsl:for-each>
-
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='creation']/*/cit:date/*/text()">
-      "dateCreated": "<xsl:value-of select="."/>",
-    </xsl:for-each>
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='revision']/*/cit:date/*/text()">
-    "dateModified": "<xsl:value-of select="."/>",
-    </xsl:for-each>
-
+       <xsl:apply-templates mode="toJsonLDLocalized" select="."/><xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "dateCreated": [
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='creation']/*/cit:date/*/text()">
+       "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "dateModified": [
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='revision']/*/cit:date/*/text()">
+    "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "datePublished": [
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='publication']/*/cit:date/*/text()">
+      "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
     "thumbnailUrl": [
     <xsl:for-each select="mdb:identificationInfo/*/mri:graphicOverview/*/mcc:fileName/*[. != '']">
     "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
-    </xsl:for-each>
-    ],
-    "description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                        select="mdb:identificationInfo/*/mri:abstract"/>,
+    </xsl:for-each>],
+    "description": <xsl:apply-templates mode="toJsonLDLocalized" select="mdb:identificationInfo/*/mri:abstract"/>,
 
     <!-- TODO: Add citation as defined in DOI landing pages -->
     <!-- TODO: Add identifier, DOI if available or URL or text -->
@@ -289,11 +291,6 @@
       </xsl:for-each>
     ]
 
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='publication']/*/cit:date/*/text()">
-      ,"datePublished": "<xsl:value-of select="."/>"
-    </xsl:for-each>
-
-
     <!--
     The overall rating, based on a collection of reviews or ratings, of the item.
     "aggregateRating": TODO
@@ -310,10 +307,10 @@
         <xsl:variable name="p" select="normalize-space(cit:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="cit:linkage/*/text()"/>",
-        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else cit:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="cit:name/*/text()"/>",
-        "description":"<xsl:value-of select="cit:description/*/text()"/>"
+        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />",
+        "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>",
+        "name": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:name"/>,
+        "description": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:description"/>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -332,47 +329,60 @@
     </xsl:if>
 
 
-
+    ,"spatialCoverage": [
     <xsl:for-each select="mdb:identificationInfo/*/mri:extent/*[gex:geographicElement]">
-    ,"spatialCoverage": {
-      "@type":"Place"
-      <xsl:for-each select="gex:description[count(.//text() != '') > 0]">
-      ,"description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                           select="."/>
-      </xsl:for-each>
+      {"@type":"Place",
+        "description": [
+        <xsl:for-each select="gex:description[count(.//text() != '') > 0]">
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each>
+          ],
+        "geo": [
+          <xsl:for-each select="gex:geographicElement/gex:EX_GeographicBoundingBox">
+              {"@type":"GeoShape",
+              "box": "<xsl:value-of select="string-join((
+                                              gex:southBoundLatitude/gco:Decimal,
+                                              gex:westBoundLongitude/gco:Decimal,
+                                              gex:northBoundLatitude/gco:Decimal,
+                                              gex:eastBoundLongitude/gco:Decimal
+                                              ), ' ')"/>"
+              }<xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+        ]
+      }<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>]
 
-
-      <xsl:for-each select="gex:geographicElement/gex:EX_GeographicBoundingBox">
-        ,"geo": {
-          "@type":"GeoShape",
-          "box": "<xsl:value-of select="string-join((
-                                          gex:southBoundLatitude/gco:Decimal|
-                                          gex:westBoundLongitude/gco:Decimal|
-                                          gex:northBoundLatitude/gco:Decimal|
-                                          gex:eastBoundLongitude/gco:Decimal
-                                          ), ' ')"/>"
-        }
-      </xsl:for-each>
-    }
-    </xsl:for-each>
-
-
+    ,"temporalCoverage": [
     <xsl:for-each select="mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent">
-      ,"temporalCoverage": "<xsl:value-of select="concat(
+       "<xsl:value-of select="concat(
                                                   gml:TimePeriod/gml:beginPosition,
                                                   '/',
                                                   gml:TimePeriod/gml:endPosition
       )"/>"
+      <xsl:if test="position() != last()">,</xsl:if>
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
       -->
-    </xsl:for-each>
+    </xsl:for-each>]
 
 
-    <xsl:if test="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">    
-      ,"license": [<xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints"> 
-          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+    <xsl:if test="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
+      ,"license": [<xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
+          <xsl:choose>
+            <xsl:when test="starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'http') or starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'//')">
+              "<xsl:value-of select="normalize-space(string-join(gco:CharacterString/text(),''))"/>"
+            </xsl:when>
+            <xsl:when test="starts-with(string-join(gcx:Anchor/@xlink:href,''),'http') or starts-with(./@xlink:href,'//')">
+              "<xsl:value-of select="string-join(gcx:Anchor/@xlink:href,'')"/>"
+            </xsl:when>
+            <xsl:otherwise>
+              {
+                "@type": "CreativeWork",
+                "name": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+              }
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
     </xsl:if>

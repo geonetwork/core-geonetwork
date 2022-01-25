@@ -25,8 +25,9 @@
   goog.provide('gn_cors_interceptor');
 
   goog.require('gn_urlutils_service');
+  goog.require('gn_map_service');
 
-  var module = angular.module('gn_cors_interceptor', ['gn_urlutils_service']);
+  var module = angular.module('gn_cors_interceptor', ['gn_urlutils_service', 'gn_map_service']);
 
   /**
    * CORS Interceptor
@@ -44,8 +45,9 @@
         'gnGlobalSettings',
         'gnLangs',
         'gnUrlUtils',
+        'gnMapServicesCache',
         '$templateCache',
-        function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils, $templateCache) {
+        function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils, gnMapServicesCache, $templateCache) {
           return {
             request: function(config) {
               // Do not manipulate url which are available in the template
@@ -57,6 +59,28 @@
                   config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
                   (config.url.indexOf('http') !== 0 &&
                   config.url.indexOf('//') !== 0);
+
+              // If this is an authorized mapservice then we need to adjust the url or add auth headers
+              // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+              if (config.url !== null && config.url.startsWith("http") && !config.url.startsWith(gnGlobalSettings.proxyUrl)) {
+                 var mapservice = gnMapServicesCache.getMapservice(config.url);
+                 if (mapservice !== null) {
+                    if (mapservice.useProxy) {
+                       // If we need to use the proxy then add it to requireProxy list.
+                       if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
+                         var url = config.url.split('/');
+                         url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+                         gnGlobalSettings.requireProxy.push(url);
+                       }
+                    } else {
+                       // If we are not using a proxy then add the headers.
+                       // Note that is may still end up using the proxy if there is a cors issue.
+                       if (gnMapServicesCache.getAuthorizationHeaderValue(mapservice)) {
+                          config.headers['Authorization'] = gnMapServicesCache.getAuthorizationHeaderValue(mapservice);
+                       }
+                    }
+                 }
+              }
 
               //Add language headers manually or some servers fail
               if (isGnUrl && gnLangs.current &&

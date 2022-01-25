@@ -1,4 +1,5 @@
-<div class="row" data-ng-controller="GnUserGroupController">
+<div class="row" data-ng-controller="GnUserGroupController"
+     id="gn-user-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -6,11 +7,16 @@
         <i data-ng-show="isLoadingUsers" class="fa fa-spinner fa-spin"></i>
       </div>
       <div class="panel-body">
-        <input class="form-control" data-ng-model="userSearch.$"
-               data-ng-show="users.length > 1"
-               autofocus=""
-               placeholder="{{'filter' | translate}}"/>
+        <div class="pos-relative width-100">
+          <input class="form-control" data-ng-model="userSearch.$"
+                 data-ng-show="users.length > 1"
+                 autofocus=""
+                 placeholder="{{'filter' | translate}}" />
+          <span class="fa fa-times gn-input-clear"
+                ng-click="userSearch.$ = ''" ng-show="userSearch.$"></span>
+        </div>
         <input type="hidden" data-ng-model="userSelected.id"/>
+        <div class="flex-spacer"></div>
         <div class="list-group">
           <a href="" class="list-group-item"
              data-ng-repeat="u in pageItems()"
@@ -65,8 +71,7 @@
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"
                   data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
-                  data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
-                  data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
+                  data-ng-click="removeUser()" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
           >deleteUser</span></button>
         </div>
@@ -250,7 +255,7 @@
             </fieldset>
 
 
-            <fieldset data-ng-if="!user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
+            <fieldset data-ng-if="!user.isUserAdminOrMore()">
               <legend data-translate="profile"></legend>
 
               <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
@@ -275,7 +280,7 @@
               </div>
             </fieldset>
 
-            <fieldset data-ng-if="user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
+            <fieldset data-ng-if="user.isUserAdminOrMore()">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                      value="{{userSelected.profile}}"/>
@@ -283,7 +288,8 @@
                 <input type="checkbox"
                        data-ng-checked="userSelected.profile == 'Administrator'"
                        data-ng-click="setUserProfile(true)"
-                       data-ng-show="user.isAdministratorOrMore()"/>
+                       data-ng-show="user.isAdministratorOrMore()"
+                       data-ng-disabled="!isUserGroupUpdateEnabled"/>
                 <span data-translate=""
                       data-ng-show="user.isAdministratorOrMore()">isAdministrator</span>
               </label>
@@ -292,17 +298,20 @@
                 data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
 
-                <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['RegisteredUser']"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Editor</h3>
-                <div data-gn-multiselect="groupsByProfile['Editor']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['Editor']"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Reviewer</h3>
-                <div data-gn-multiselect="groupsByProfile['Reviewer']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['Reviewer']"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -310,7 +319,8 @@
 
 
                 <h3 data-translate="">UserAdmin</h3>
-                <div data-gn-multiselect="groupsByProfile['UserAdmin']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['UserAdmin']"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -431,4 +441,9 @@
     </div>
   </div>
 
+  <div gn-modal class="gn-confirm-delete"
+       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveUser}"
+       id="gn-confirm-remove-user">
+    <p translate>userDeleteConfirm</p>
+  </div>
 </div>

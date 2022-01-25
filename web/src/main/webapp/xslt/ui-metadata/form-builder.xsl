@@ -211,7 +211,7 @@
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>
-              <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
+              <xsl:attribute name="data-main-language" select="java-xsl-util:iso639_2T_to_iso639_2B($metadataLanguage)"/>
               <xsl:attribute name="data-expanded" select="$toggleLang"/>
             </xsl:if>
 
@@ -1591,6 +1591,7 @@
 
   <!-- Render batch process directive action -->
   <xsl:template name="render-batch-process-button">
+    <xsl:param name="process-label-key"/>
     <xsl:param name="process-name"/>
     <xsl:param name="process-params"/>
     <xsl:param name="btnClass" required="no"/>
@@ -1600,7 +1601,7 @@
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
               data-icon="{$btnClass}"
-              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-name="{normalize-space($strings/*[name() = $process-label-key])}"
               data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
       </div>
     </div>

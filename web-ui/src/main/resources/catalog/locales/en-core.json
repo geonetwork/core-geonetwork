@@ -531,8 +531,8 @@
     "mdStatusTitle-12": "Directly approve metadata",
     "mdStatusTitle-33": "Retire metadata",
     "mdStatusTitle-14": "Submit for review",
-    "mdStatusTitle-411": "Reject metadata",
-    "mdStatusButton-1": "Change to draft",
+    "mdStatusTitle-411": "Reject approval submission",
+    "mdStatusButton-1": "Submit",
     "mdStatusButton-2": "Approve",
     "mdStatusButton-3": "Retire",
     "mdStatusButton-4": "Submit",
@@ -556,6 +556,8 @@
     "drawRectangle": "Draw extent",
     "clickToClearMapBox": "Click to clear the map box.",
     "clearRectangle": "Clear extent",
+    "unselectChoiceNotAllowedTitle": "Unselect choices",
+    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
     "searchOptions": "Search options",
     "options": "Options"
 }

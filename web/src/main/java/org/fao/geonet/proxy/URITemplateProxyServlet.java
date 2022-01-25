@@ -1,6 +1,30 @@
+/*
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.proxy;
 
 import jeeves.server.UserSession;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -8,10 +32,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.mapservices.MapService;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -20,6 +48,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This is a class extending the real proxy to make sure we can tweak specifics like removing the CSRF token on requests
@@ -117,6 +148,41 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             proxyRequest.setHeader("X-Forwarded-Prefix", servletRequest.getContextPath() + this.doForwardHostPrefixPath);
         }
 
+        // Only attempt this logic is the Authorization is currently not used.
+        if (StringUtils.isEmpty(servletRequest.getHeader("Authorization"))) {
+
+            // List of authentication url to apply the logic.
+            List<MapService> mapServiceList = ApplicationContextHolder.get().getBean("securedMapServices", List.class);
+
+            // Only continue if the current request matches one of our list of authentication url patterns
+            Optional<MapService> result = mapServiceList.stream().filter(u ->
+                (MapService.UrlType.valueOf(u.getUrlType()).equals(MapService.UrlType.TEXT) && proxyRequest.getRequestLine().getUri().contains(u.getUrl())) ||
+                    (MapService.UrlType.valueOf(u.getUrlType()).equals(MapService.UrlType.REGEXP) && proxyRequest.getRequestLine().getUri().matches(u.getUrl()))
+            ).findFirst();
+            if (result.isPresent()) {
+                if (MapService.AuthType.valueOf(result.get().getAuthType()).equals(MapService.AuthType.BASIC)) {
+                    proxyRequest.setHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString((result.get().getUsername() + ":" + result.get().getPassword()).getBytes()));
+                } else {
+                    if (MapService.AuthType.valueOf(result.get().getAuthType()).equals(MapService.AuthType.BEARER)) {
+                        // In order to get a bearer token the user needs to be authenticated. - If not authenticated then we skip and the request will be made as anonymous.
+                        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+                            SecurityProviderUtil securityProviderUtil = SecurityProviderConfiguration.getSecurityProviderUtil();
+
+                            if (securityProviderUtil != null) {
+                                String authenticationHeaderValue = securityProviderUtil.getSSOAuthenticationHeaderValue();
+                                if (!StringUtils.isEmpty(authenticationHeaderValue)) {
+                                    proxyRequest.setHeader("Authorization", authenticationHeaderValue);
+                                }
+                            } else {
+                                throw new IllegalArgumentException("Invalid or Unsupported authentication type " + result.get().getAuthType() + " for current security provider");
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Unknown authentication type " + result.get().getAuthType());
+                    }
+                }
+            }
+        }
     }
 
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
