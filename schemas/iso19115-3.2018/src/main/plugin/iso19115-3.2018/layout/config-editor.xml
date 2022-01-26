@@ -892,7 +892,6 @@
                           mco:MD_LegalConstraints/mco:otherConstraints[1]"
                  name="eo-usage-policy"/>
 
-          <!-- TODO: Display label even if not the first one -->
           <field xpath="/*/mdb:identificationInfo/*/mri:resourceConstraints/
                           mco:MD_LegalConstraints/mco:otherConstraints[2]"
                  name="eo-required-citation"/>
