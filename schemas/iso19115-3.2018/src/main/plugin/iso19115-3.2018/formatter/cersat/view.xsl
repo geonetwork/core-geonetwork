@@ -301,7 +301,7 @@
                                               else cit:protocol/*/text()"/>
                       </strong>
                       <xsl:choose>
-                        <xsl:when test="cit:protocol/*/text() = 'Local'">
+                        <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')">
                           <xsl:value-of select="cit:linkage/*/text()"/>
                         </xsl:when>
                         <xsl:otherwise>
