@@ -1464,7 +1464,7 @@
                   };
 
                   var feedMdPromise =
-                    typeof md === 'object' ?
+                    md && typeof md === 'object' ?
                     $q.resolve(md).then(function(md) {
                       olL.set('md', md);
                     }) : (
