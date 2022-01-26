@@ -376,12 +376,14 @@
                 name = name.substring(1);
                 direction = 'desc';
               }
-              // adhoc field name replacements for API retro-compatibility
+              // adhoc field name & direction replacements for API retro-compatibility
               if (name === 'title') {
                 name = 'resourceTitleObject.default.keyword'; // TODO: Multilingual
                 direction = ''; // clear direction for title as it was apparently not working anyway...
               } else if (name === 'changeDate') {
                 name = 'dateStamp';
+              } else if (name === 'popularity' && criteria.substring(0, 1) !== '+') {
+                direction = 'desc'; // sort popularity in descending order by default
               }
               return {
                 sortBy: name,
