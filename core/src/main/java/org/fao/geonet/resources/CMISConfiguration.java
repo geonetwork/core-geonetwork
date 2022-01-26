@@ -31,6 +31,8 @@ import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
@@ -50,7 +52,7 @@ public class CMISConfiguration {
     private Session client = null;
 
     private final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
-    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR ="->";
+    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
@@ -109,7 +111,7 @@ public class CMISConfiguration {
 
     private String atompubUrl;
 
-    private boolean secondaryPropertyExists=false;
+    private boolean secondaryPropertyExists = false;
 
     @Nonnull
     public String getServicesBaseUrl() {
@@ -212,7 +214,7 @@ public class CMISConfiguration {
     }
 
     public void setExternalResourceManagementModalEnabled(String externalResourceManagementModalEnabled) {
-        this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);;
+        this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);
     }
 
     public Boolean isExternalResourceManagementFolderEnabled() {
@@ -242,7 +244,7 @@ public class CMISConfiguration {
             }
         }
 
-        this.externalResourceManagementFolderRoot=folderRoot;
+        this.externalResourceManagementFolderRoot = folderRoot;
     }
 
     @Nonnull
@@ -262,7 +264,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningState(String versioningState) {
-        setVersioningState(StringUtils.isEmpty(versioningState)?null:VersioningState.valueOf(versioningState.toUpperCase()));
+        setVersioningState(StringUtils.isEmpty(versioningState) ? null : VersioningState.valueOf(versioningState.toUpperCase()));
     }
 
     @Nonnull
@@ -279,7 +281,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningMajorOnUpdate(String versioningMajorOnUpdate) {
-        this.versioningMajorOnUpdate = BooleanUtils.toBooleanObject(versioningMajorOnUpdate);;
+        this.versioningMajorOnUpdate = BooleanUtils.toBooleanObject(versioningMajorOnUpdate);
     }
 
     @Nonnull
@@ -297,7 +299,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningEnabled(String versioningEnabled) {
-        this.versioningEnabled = BooleanUtils.toBooleanObject(versioningEnabled);;
+        this.versioningEnabled = BooleanUtils.toBooleanObject(versioningEnabled);
     }
 
     @Nonnull
@@ -418,7 +420,7 @@ public class CMISConfiguration {
     }
 
     public String getCmisMetadataUUIDPropertyName() {
-            return cmisMetadataUUIDPropertyName;
+        return cmisMetadataUUIDPropertyName;
     }
 
     public void setCmisMetadataUUIDPropertyName(String cmisMetadataUUIDPropertyName) {
@@ -428,10 +430,10 @@ public class CMISConfiguration {
                 Log.error(Geonet.RESOURCES,
                     String.format("Invalid format for property name %s property will not be used", cmisMetadataUUIDPropertyName));
                 this.cmisMetadataUUIDPropertyName = null;
-                this.secondaryPropertyExists=false;
+                this.secondaryPropertyExists = false;
                 return;
             } else {
-                this.secondaryPropertyExists=true;
+                this.secondaryPropertyExists = true;
             }
         }
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
@@ -466,9 +468,6 @@ public class CMISConfiguration {
             // user credentials
             parameters.put(SessionParameter.USER, username);
             parameters.put(SessionParameter.PASSWORD, password);
-
-            username = null;
-            password = null;
         }
 
         // connection settings
@@ -488,15 +487,15 @@ public class CMISConfiguration {
                 parameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE, getWebservicesRelationshipService());
                 parameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, getWebservicesRepositoryService());
                 parameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE, getWebservicesVersioningService());
-                repositoryUrl=getWebservicesBaseUrl();
+                repositoryUrl = getWebservicesBaseUrl();
                 break;
             case BROWSER:
                 parameters.put(SessionParameter.BROWSER_URL, getBrowserUrl());
-                repositoryUrl=getBrowserUrl();
+                repositoryUrl = getBrowserUrl();
                 break;
             case ATOMPUB:
                 parameters.put(SessionParameter.ATOMPUB_URL, getAtompubUrl());
-                repositoryUrl=getAtompubUrl();
+                repositoryUrl = getAtompubUrl();
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported CMIS Binding type '" + getBindingTypeObject().value() + "'.");
@@ -508,69 +507,91 @@ public class CMISConfiguration {
         if (repositoryId == null) {
             if (repositoryName != null) {
                 // Try to find the repository by name.
-                for (Repository repository:factory.getRepositories(parameters)) {
-                    if (repository.getName().equalsIgnoreCase(repositoryName)) {
-                        this.repositoryId = repository.getId();
-                        break;
+                try {
+                    for (Repository repository : factory.getRepositories(parameters)) {
+                        if (repository.getName().equalsIgnoreCase(repositoryName)) {
+                            this.repositoryId = repository.getId();
+                            break;
+                        }
                     }
+                } catch (CmisRuntimeException | CmisConnectionException e) {
+                    Log.error(Geonet.RESOURCES, "CMIS Repository ID not found for repositoryName=\"" + repositoryName +
+                        "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
                 }
             }
         } else {
             // Try to find the repository name for the id that we have specified..
-            for (Repository repository : factory.getRepositories(parameters)) {
-                if (repository.getId().equalsIgnoreCase(this.repositoryId)) {
-                    this.repositoryName = repository.getName();
-                    break;
+            try {
+                for (Repository repository : factory.getRepositories(parameters)) {
+                    if (repository.getId().equalsIgnoreCase(this.repositoryId)) {
+                        this.repositoryName = repository.getName();
+                        break;
+                    }
                 }
+            } catch (CmisRuntimeException | CmisConnectionException e) {
+                Log.error(Geonet.RESOURCES, "CMIS Repository name not found repositoryName=\"" + repositoryName +
+                    "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
             }
         }
 
-        if (repositoryId == null) {
-            throw new IllegalArgumentException("CMIS Repository ID not found for repositoryId=\"" + repositoryId + "\" and repositoryName=\"" + repositoryName + "\"");
-        }
+        if (repositoryId != null) {
 
-        parameters.put(SessionParameter.REPOSITORY_ID, repositoryId);
+            parameters.put(SessionParameter.REPOSITORY_ID, repositoryId);
 
-        client = factory.createSession(parameters);
-        Log.info(Geonet.RESOURCES, "Connected to CMIS using binding '" + client.getBinding().getBindingType().value() + "' with base url '" +
-                repositoryUrl + "' using product '" + client.getRepositoryInfo().getProductName() + "' version '" +
-                client.getRepositoryInfo().getProductVersion() + "'.");
+            try {
+                client = factory.createSession(parameters);
+                Log.info(Geonet.RESOURCES, "Connected to CMIS using binding '" + client.getBinding().getBindingType().value() + "' with base url '" +
+                    repositoryUrl + "' using product '" + client.getRepositoryInfo().getProductName() + "' version '" +
+                    client.getRepositoryInfo().getProductVersion() + "'.");
 
-        // Setup default options
-        // Ensure caching is on.
-        if (!client.getDefaultContext().isCacheEnabled()) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context cache to enabled.");
-            client.getDefaultContext().setCacheEnabled(true);
-        }
-        // Don't get allowable actions by default
-        if (client.getDefaultContext().isIncludeAllowableActions()) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include allowable actions.");
-            client.getDefaultContext().setIncludeAllowableActions(false);
-        }
-        // Don't get ACLS by default
-        if (client.getDefaultContext().isIncludeAcls()) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include acls.");
-            client.getDefaultContext().setIncludeAcls(false);
-        }
-        // Don't include path segments by default
-        if (client.getDefaultContext().isIncludePathSegments()) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include path segments.");
-            client.getDefaultContext().setIncludePathSegments(false);
-        }
-        // Don't include policies by default
-        if (client.getDefaultContext().isIncludePolicies()) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include policies.");
-            client.getDefaultContext().setIncludePolicies(false);
-        }
-        // IncludeRelationships should be NONE
-        if (client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
-            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
-            client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
+                // Setup default options
+                // Ensure caching is on.
+                if (!client.getDefaultContext().isCacheEnabled()) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context cache to enabled.");
+                    client.getDefaultContext().setCacheEnabled(true);
+                }
+                // Don't get allowable actions by default
+                if (client.getDefaultContext().isIncludeAllowableActions()) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include allowable actions.");
+                    client.getDefaultContext().setIncludeAllowableActions(false);
+                }
+                // Don't get ACLS by default
+                if (client.getDefaultContext().isIncludeAcls()) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include acls.");
+                    client.getDefaultContext().setIncludeAcls(false);
+                }
+                // Don't include path segments by default
+                if (client.getDefaultContext().isIncludePathSegments()) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include path segments.");
+                    client.getDefaultContext().setIncludePathSegments(false);
+                }
+                // Don't include policies by default
+                if (client.getDefaultContext().isIncludePolicies()) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include policies.");
+                    client.getDefaultContext().setIncludePolicies(false);
+                }
+                // IncludeRelationships should be NONE
+                if (client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
+                    client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
+                }
+            } catch (CmisRuntimeException | CmisConnectionException e) {
+                client = null;
+                Log.error(Geonet.RESOURCES,
+                    "CMIS error creating session using base url \"" + repositoryUrl + "\" with repositoryName=\"" + repositoryName +
+                        "\". " + (e.getErrorContent() == null ? "" : "  Got following results from cmis api call:" + e.getErrorContent()), e);
+            }
         }
     }
 
     @Nonnull
     public Session getClient() {
+        if (client == null) {
+            init();
+        }
+        if (client == null) {
+            throw new RuntimeException("Failed to create CMIS session.");
+        }
         return client;
     }
 
@@ -598,7 +619,7 @@ public class CMISConfiguration {
         // If no service url was not supplied then lets default to the base url plus the default path info
         if (StringUtils.isEmpty(serviceUrl)) {
             return baseUrl + defaultServicePathInfo;
-        // If the service url supplied starts with / then default to base url plus supplied service url
+            // If the service url supplied starts with / then default to base url plus supplied service url
         } else if (serviceUrl.startsWith("/")) {
             return baseUrl + serviceUrl;
             // Otherwise assume that a full url was supplied and just return it.
@@ -606,5 +627,4 @@ public class CMISConfiguration {
             return serviceUrl;
         }
     }
-
 }
