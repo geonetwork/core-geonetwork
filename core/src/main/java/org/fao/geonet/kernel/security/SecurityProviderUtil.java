@@ -23,16 +23,27 @@
 
 package org.fao.geonet.kernel.security;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+
 /**
- * Some basic configuration utils to be used by all security
+ * Some basic configuration utils to be used by security providers
  *
  */
 public interface SecurityProviderUtil {
     /**
      * Retrieve authentication header value
-     * return the authentication header value. In most cases it should be a bearer token header value. i.e. "Bearer ....."
+     * @return the authentication header value. In most cases it should be a bearer token header value. i.e. "Bearer ....."
      */
     String getSSOAuthenticationHeaderValue();
+
+    /**
+     * Retrieve user details for the security provider
+     * return the user details information
+     * @param auth authentication object to get the user details from
+     * @return the user details information
+     */
+    UserDetails getUserDetails(Authentication auth);
 }
 
 
