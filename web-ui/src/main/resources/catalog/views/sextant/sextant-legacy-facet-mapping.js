@@ -762,6 +762,105 @@
           }
         }
       }
+    },
+    'fem_data_types': {
+      'th_fem_data_types.default':
+        {
+          'terms': {
+            'field': 'th_fem_data_types.default',
+            'size': 300
+          }
+        }
+    },
+    'fem_facades': {
+      'th_fem_facades.default':
+        {
+          'terms': {
+            'field': 'th_fem_facades.default',
+            'size': 300
+          }
+        }
+    },
+    'fem_projects': {
+      'th_fem_projects.default':
+        {
+          'terms': {
+            'field': 'th_fem_projects.default',
+            'size': 300
+          }
+        }
+    },
+    'fem_technologies': {
+      'th_fem_technologies.default':
+        {
+          'terms': {
+            'field': 'th_fem_technologies.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-resources': {
+      'th_mission-atlantic-resources.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-resources.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-case-studies': {
+      'th_mission-atlantic-case-studies.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-case-studies.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-odemm': {
+      'th_mission-atlantic-odemm.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-odemm.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-bodc-parameters': {
+      'th_mission-atlantic-bodc-parameters.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-bodc-parameters.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-data-type': {
+      'th_mission-atlantic-data-type.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-data-type.default',
+            'size': 300
+          }
+        }
+    },
+    'mission-atlantic-work-package': {
+      'th_mission-atlantic-work-package.default':
+        {
+          'terms': {
+            'field': 'th_mission-atlantic-work-package.default',
+            'size': 300
+          }
+        }
+    },
+    'credit': {
+      'resourceCreditObject.default.keyword':
+        {
+          'terms': {
+            'field': 'resourceCreditObject.default.keyword',
+            'size': 300
+          }
+        }
     }
   })
 
