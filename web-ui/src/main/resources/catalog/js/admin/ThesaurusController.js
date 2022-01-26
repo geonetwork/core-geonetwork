@@ -167,23 +167,28 @@
 
         $('#keywordFilter').focus();
         searchThesaurusKeyword();
+        hasKeywordWithSlash();
       };
 
 
+      // list of ui languages; we want the keyword info in all these
+      // put the current lang first to be used for sorting
+      function getLangList() {
+        var langsList = [$scope.currentLangShown];
+        Object.keys($scope.availableLangs).forEach(function(lang3) {
+          if (langsList.indexOf(lang3) === -1) {
+            langsList.push(lang3);
+          }
+        });
+        return langsList;
+      }
       /**
        * Search thesaurus keyword based on filter and max number
        */
       searchThesaurusKeyword = function() {
         $scope.searching = true;
         if ($scope.thesaurusSelected) {
-          // list of ui languages; we want the keyword info in all these
-          // put the current lang first to be used for sorting
-          var langsList = [$scope.currentLangShown];
-          Object.keys($scope.availableLangs).forEach(function(lang3) {
-            if (langsList.indexOf(lang3) === -1) {
-              langsList.push(lang3);
-            }
-          });
+          var langsList = getLangList();
 
           $scope.recordsRelatedToThesaurus = 0;
           $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
@@ -384,6 +389,30 @@
                 uploadThesaurusError(null, r);
               });
         }
+      };
+
+
+      $scope.hasKeywordWithSlash = false;
+      function hasKeywordWithSlash() {
+        if ($scope.thesaurusSelected) {
+          $scope.hasKeywordWithSlash = false;
+          $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
+            '&thesaurus=' + $scope.thesaurusSelected.key +
+            '&rows=1' +
+            '&q=' + (encodeURI('/') || '*') +
+            '&pLang=' + getLangList().join(',')
+          ).success(function (data) {
+            $scope.hasKeywordWithSlash = data.length > 0
+          });
+        }
+      }
+
+      $scope.buildHierarchy = function(formId) {
+        return $http.post('../api/registries/vocabularies/' +
+          $scope.thesaurusSelected.key + '/buildHierarchy')
+            .then(function(r) {
+              searchThesaurusKeyword();
+            });
       };
 
       /**
