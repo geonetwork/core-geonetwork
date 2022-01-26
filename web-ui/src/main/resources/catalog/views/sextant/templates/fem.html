@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr-FR" xml:lang="fr-FR" xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <title>
+  </title>
+  <meta content="" name="description"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ </head>
+ <body style="margin:0">
+  <div class="gn" ng-app="gn_search_sextant" ng-controller="GnCatController" ng-include="'../../catalog/views/sextant/templates/index.html'" sxt-size="auto ">
+  </div>
+  <script type="text/javascript">
+   var sxtSettings = {  
+        langDetector: {
+          fromHtmlTag: true,
+          regexp: '^\/([a-z]+)\/',
+          lang: 'fre'
+        },
+        allowLogin: true,
+  configWhat: 'FRANCE_ENERGIES_MARINES',
+  displayChildrenBtn: true,
+  excludeChildrenFromSearch: false,
+  tabOverflow: {
+    search: true,
+    map: true,
+    panier: true,
+  },
+  defaultContext:
+    'https://sextant.ifremer.fr/documentation/sextant/contexte/defaultContext.xml',
+  layerFilter: true,
+  sortBy: ['-title', 'changeDate', 'relevance'],
+  servicesUrl: {
+    wms: [
+      {
+        name: 'RESCORE - ABIOP',
+        url: 'https://rescore.france-energies-marines.org/geoserver/ABIOP/wms?',
+      },
+      {
+        name: 'RESCORE - DUNE',
+        url: 'https://rescore.france-energies-marines.org/geoserver/DUNES/wms?',
+      },
+      {
+        name: 'Ifremer - OcÃÂ©anographie physique',
+        url: 'https://www.ifremer.fr/services/wms/oceanographie_physique?',
+      },
+      {
+        name: 'Ifremer - Biologie',
+        url: 'https://www.ifremer.fr/services/wms/biologie?',
+      },
+      {
+        name: 'Ifremer - GÃÂ©ologie',
+        url: 'https://www.ifremer.fr/services/wms/geologie?',
+      },
+      {
+        name: 'Ifremer - BathymÃÂ©trie',
+        url: 'https://www.ifremer.fr/services/wms/bathymetrie?',
+      },
+      {
+        name: 'Ifremer - Imagerie acoustique',
+        url: 'https://www.ifremer.fr/services/wms/imagerie_acoustique?',
+      },
+      {
+        name: 'Ifremer - SISMER - DonnÃÂ©es des navires',
+        url: 'https://www.ifremer.fr/services/wms/sismer?',
+      },
+      {
+        name: 'Ifremer - Granulats marins',
+        url: 'https://www.ifremer.fr/services/wms/granulats_marins?',
+      },
+      {
+        name: 'Ifremer - Surveillance littorale',
+        url: 'https://www.ifremer.fr/services/wms/surveillance_littorale?',
+      },
+      {
+        name: 'Ifremer - Photos anciennes',
+        url: 'https://www.ifremer.fr/services/photos_anciennes?',
+      },
+      {
+        name: 'Ifremer - Scan littoral',
+        url: 'https://www.ifremer.fr/ifremerWS/WS/wms/scan-littoral?',
+      },
+      {
+        name: 'Agence des aires marines protÃÂ©gÃÂ©es',
+        url: 'https://cartographie.aires-marines.fr/wms',
+      },
+      {
+        name: 'BRGM GÃÂ©ologie',
+        url: 'https://geoservices.brgm.fr/geologie',
+      },
+      {
+        name: 'BRGM Risques naturels et industriels',
+        url: 'https://geoservices.brgm.fr/risques',
+      },
+      {
+        name: 'BRGM Observatoire des matÃÂ©riaux',
+        url: 'https://geoservices.brgm.fr/odmgm?',
+      },
+      {
+        name: 'Cartorisque',
+        url: 'https://cartorisque.prim.net/wms/france?',
+      },
+      {
+        name: 'Geolittoral',
+        url: 'https://geolittoral.din.developpement-durable.gouv.fr/wxs?',
+      },
+      {
+        name: 'Geosignal',
+        url: 'https://www.geosignal.org/cgi-bin/wmsmap?',
+      },
+      {
+        name: 'MNHN-INPN',
+        url: 'https://ws.carmencarto.fr/WMS/119/fxx_inpn?',
+      },
+      {
+        name: 'Marine Regions',
+        url: 'https://geo.vliz.be/geoserver/MarineRegions/wms?Request=getCapabilities',
+      },
+      {
+        name: 'SHOM',
+        url: 'https://services.data.shom.fr/INSPIRE/wms/r?version=1.3.0',
+      },
+    ],
+    wmts: [
+      {
+        name: 'Ifremer Photos anciennes et Hyperspectrales',
+        url: 'https://sextant.ifremer.fr/geowebcache/service/wmts?',
+      },
+      {
+        name: 'Emodnet bathymetry',
+        url: 'https://ows.emodnet-bathymetry.eu/gwc/service/wmts?',
+      },
+      {
+        name: 'maps.ngdc.noaa.gov',
+        url: 'https://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml',
+      },
+    ],
+  },
+  localisations: [
+    {
+      name: 'United States',
+      extent: [-13884991, 2870341, -7455066, 6338219],
+    },
+    {
+      name: 'France',
+      extent: [-817059, 4675034, 1719426, 7050085],
+    },
+    {
+      name: 'Brest',
+      extent: [-510281, 6164880, -490464, 6183435],
+    },
+  ],
+  panier: {
+    projs: [
+      {
+        value: '4326',
+        label: 'Geographique - Datum WGS84',
+      },
+      {
+        value: '2154',
+        label: 'Lambert - 93',
+      },
+      {
+        value: '27571',
+        label: 'Lambert Zone I - Datum NTF',
+      },
+      {
+        value: '27572',
+        label: 'Lambert Zone II - Datum NTF',
+      },
+      {
+        value: '27573',
+        label: 'Lambert Zone III - Datum NTF',
+      },
+      {
+        value: '27574',
+        label: 'Lambert Zone IV - Datum NTF',
+      },
+      {
+        value: '27561',
+        label: 'Lambert Nord France - Datum NTF',
+      },
+      {
+        value: '27562',
+        label: 'Lambert Centre France - Datum NTF',
+      },
+      {
+        value: '27563',
+        label: 'Lambert Sud France - Datum NTF',
+      },
+      {
+        value: '27564',
+        label: 'Lambert Corse - Datum NTF',
+      },
+      {
+        value: '2984',
+        label: 'Lambert Nouvelle-CalÃÂ©donie - RGNC 91',
+      },
+      {
+        value: '3163',
+        label: 'Lambert Nouvelle-CalÃÂ©donie - RGNC 91-93',
+      },
+      {
+        value: '32600',
+        label: 'UTM - Datum WGS84',
+      },
+      {
+        value: '2975',
+        label: 'La RÃÂ©union : RGR92 / UTM 40S (mÃÂ©trique)',
+      },
+      {
+        value: '32740',
+        label: 'La RÃÂ©union : WGS84 / UTM 40S (mÃÂ©trique)',
+      },
+      {
+        value: '4471',
+        label: 'Mayotte : RGM04 / UTM 38S (mÃÂ©trique)',
+      },
+      {
+        value: '32738',
+        label: 'Mayotte : WGS84 / UTM 38S (mÃÂ©trique)',
+      },
+      {
+        value: '32620',
+        label: 'Antilles : WGS84 / UTM 20N (mÃÂ©trique)',
+      },
+      {
+        value: '2973',
+        label: 'Martinique Fort Desaix',
+      },
+      {
+        value: '2970',
+        label: 'Guadeloupe Saint-Anne',
+      },
+      {
+        value: '4230',
+        label: 'Geographique - Datum ED50',
+      },
+      {
+        value: '4258',
+        label: 'European Terrestrial Reference System 1989 (ETRS89)',
+      },
+      {
+        value: '3395',
+        label: 'Mercator - Datum WGS84 (mÃÂ©trique)',
+      },
+      {
+        value: '3857',
+        label: 'Pseudo Mercator - Datum WGS84 (Google, degrÃÂ©s)',
+      },
+    ],
+    formats: {
+      vector: [
+        {
+          value: 'ESRI Shapefile',
+          label: 'Shapefile',
+        },
+        {
+          value: 'MapInfo File',
+          label: 'MapInfo',
+        },
+        {
+          value: 'GML',
+          label: 'GML',
+        },
+        {
+          value: 'KML',
+          label: 'KML',
+        },
+        {
+          value: 'GeoJSON',
+          label: 'GeoJSON',
+        },
+      ],
+      raster: [
+        {
+          value: 'GTiff',
+          label: 'GeoTiff',
+        },
+        {
+          value: 'ECW',
+          label: 'ECW',
+        },
+        {
+          value: 'Jpeg2000',
+          label: 'Jpeg2000',
+        },
+      ],
+    },
+  },
+  theme: 'fem',
+  facetConfig: [
+    {
+      key: 'fem_data_types',
+      tree: true,
+      opened: true,
+      labels: {
+        eng: 'Resource types',
+        fre: 'Types de ressource',
+      },
+    },
+    {
+      key: 'fem_facades',
+      tree: true,
+      opened: true,
+      labels: {
+        eng: 'Maritime faÃÂ§ades',
+        fre: 'FaÃÂ§ades maritimes',
+      },
+    },
+    {
+      key: 'fem_projects',
+      tree: true,
+      opened: true,
+	  filter: true,
+      labels: {
+        eng: 'Projects',
+        fre: 'Projets',
+      },
+    },
+    {
+      key: 'fem_technologies',
+      opened: true,
+      labels: {
+        eng: 'MRE technologies',
+        fre: 'Technologies EMR',
+      },
+    },{
+      key: 'credit',
+      opened: false,
+	  filter: true,
+      labels: {
+        eng: 'Sources',
+        fre: 'Sources',
+      },
+    },{
+      key: 'mdActions',
+      opened: false,
+      labels: {
+        eng: 'Associated services',
+        fre: 'Services associÃ©s',
+      },
+    },
+  ],
+        
+        
+};
+  </script>
+  <script type="text/javascript">
+   if ( location.hash == "" && window.parent.location.hash != "" ) {
+	location.hash = window.parent.location.hash;
+}
+  </script>
+  <script src="http://localhost:8080/geonetwork/static/lib.js">
+  </script>
+  <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js">
+  </script>
+ </body>
+</html>

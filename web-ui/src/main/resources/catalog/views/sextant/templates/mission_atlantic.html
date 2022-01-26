@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-EN" xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <title>
+  </title>
+  <meta content="" name="description"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ </head>
+ <body style="margin:0">
+  <div class="gn" ng-app="gn_search_sextant" ng-controller="GnCatController" ng-include="'../../catalog/views/sextant/templates/index.html'" sxt-size="auto ">
+  </div>
+  <script type="text/javascript">
+   var sxtSettings = {  
+        langDetector: {
+          fromHtmlTag: true,
+          regexp: '^\/([a-z]+)\/',
+          lang: 'eng'
+        },
+        allowLogin : true,
+		configWhat: 'MISSION_ATLANTIC',
+		displayChildrenBtn: true,
+        excludeChildrenFromSearch: false,
+		tabOverflow : {
+		  search: true,
+		  map: true,
+		  panier: false
+		},
+   defaultContext: 'https://www.ifremer.fr/sextant_doc/mission_atlantic/contexte/mission_atlantic.xml',         
+		layerFilter: true,
+        sortBy: ['-title', 'changeDate', 'relevance'],
+		localisations: [{
+		  name: 'Norwegian Sea',
+		  extent: [-14, 62, 18, 81]
+		}, {
+		  name: 'Celtic Seas',
+		  extent: [-11.5, 46.5, -4, 55.5]
+		},{
+		  name: 'Canary Current',
+		  extent: [-29.5, 9, -5, 36.5]
+		},{
+		  name: 'North Mid-Atlantic Ridge',
+		  extent: [-41.5, 28, -16.5, 49]
+		},{
+		  name: 'South Mid-Atlantic Ridge',
+		  extent: [-33.5, -18, -1.5, 3.5]
+		},{
+		  name: 'South Brazilian Shelf',
+		  extent: [-53.5, -35, -41.5, -22.5]
+		},{
+		  name: 'Southern Benguela',
+		  extent: [14, -37.5, 28, -28.5]
+		}],
+       facetConfig : [{
+			key: 'mission-atlantic-resources',
+			labels: {
+				eng: 'Category'
+			}
+			}, {
+			key: 'mission-atlantic-case-studies',
+			labels: {
+				eng: 'Case study'
+			}
+			}, {
+			key: 'mission-atlantic-work-package',
+			labels: {
+				eng: 'Work package'
+			}
+			}, {
+			key: 'mission-atlantic-bodc-parameters',
+         tree: true,
+			labels: {
+				eng: 'Search vocabularies'
+			}
+			}, {
+			key: 'mission-atlantic-data-type',
+			labels: {
+				eng: 'Data type'
+			}
+			}, {
+			key: 'credit',
+			labels: {
+				eng: 'Source',
+			}
+			}, {
+			key: 'mdActions',
+			labels: {
+				eng: 'Associated services'
+			}
+			}
+		],
+		metadataType: 'application or dataset or document or initiative or map or model or nonGeographicDataset or product or repository or series or service or software'
+   };
+  </script>
+  <script type="text/javascript">
+   if ( location.hash == "" && window.parent.location.hash != "" ) {
+	location.hash = window.parent.location.hash;
+}
+  </script>
+  <script src="http://localhost:8080/geonetwork/static/lib.js">
+  </script>
+  <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js">
+  </script>
+ </body>
+</html>
