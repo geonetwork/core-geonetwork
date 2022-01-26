@@ -314,7 +314,9 @@
           'exclude': '1'
         },
         'meta': {
-          'field': 'groupPublishedId'
+          'field': 'groupPublishedId',
+          'orderByTranslation': true,
+          'filterByTranslation': true
         }
       }
     },
