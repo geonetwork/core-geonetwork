@@ -90,11 +90,14 @@
                data-ng-show="user.canEditRecord(mdView.current.record)
                             && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
                data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-               data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
+               data-ng-init="translateValues = {resourceTitle: (mdView.current.record.resourceTitle | json)}"
+               data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:translateValues}}"
               title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
               <span class="fa fa-fw fa-times"></span>
-              <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
-              <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
+              <span data-translate="" class="hidden-sm hidden-xs"
+                    data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
+              <span data-translate="" class="hidden-sm hidden-xs"
+                    data-ng-if="mdView.current.record.draft != 'y'">delete</span>
             </a>
           </div>
 

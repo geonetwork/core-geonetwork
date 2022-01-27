@@ -68,7 +68,8 @@
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
                              && md.draft != 'e'"
                data-gn-click-and-spin="deleteRecord(md)"
-               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
+               data-ng-init="translateValues = {resourceTitle: (md.resourceTitle | json)}"
+               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:translateValues}}"
                title="{{'delete' | translate}}">
               <i class="fa fa-times text-danger"></i>
             </a>
