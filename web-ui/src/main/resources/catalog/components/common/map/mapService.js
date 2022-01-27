@@ -930,6 +930,8 @@
             olDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
+            // Do not notify for tile load errors in small maps.
+            var isNotifyingTileLoadErrors = map.get("type") !== 'search';
             var unregisterEventKey = olLayer.getSource().on(
                 (gnViewerSettings.singleTileWMS) ?
                 'imageloaderror' : 'tileloaderror',
@@ -940,16 +942,18 @@
                   var layer = tileEvent.currentTarget &&
                       tileEvent.currentTarget.getParams ?
                       tileEvent.currentTarget.getParams().LAYERS :
-                      layerParams.LAYERS;
-
-                  var msg = $translate.instant('layerTileLoadError', {
+                      layerParams.LAYERS,
+                    msg = $translate.instant('layerTileLoadError', {
                     url: url,
                     layer: layer
                   });
-                  $rootScope.$broadcast('StatusUpdated', {
-                    msg: msg,
-                    timeout: 0,
-                    type: 'danger'});
+
+                  if (isNotifyingTileLoadErrors) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      msg: msg,
+                      timeout: 0,
+                      type: 'danger'});
+                  }
                   olLayer.get('errors').push(msg);
                   ol.Observable.unByKey(unregisterEventKey);
 
