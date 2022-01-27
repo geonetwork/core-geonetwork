@@ -377,7 +377,7 @@
       </div>
       <div class="col-md-4">
         <div class="panel panel-default">
-          <div class="panel-heading">ID: <xsl:value-of select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/></div>
+          <div class="panel-heading">ID: <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle/*/text()"/></div>
           <div class="panel-body">
 
             <xsl:variable name="projects"
