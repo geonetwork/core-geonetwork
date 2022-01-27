@@ -764,28 +764,28 @@
       }
     },
     'fem_data_types': {
-      'th_fem_data_types.default':
+      'th_fem_data_types_tree.key':
         {
           'terms': {
-            'field': 'th_fem_data_types.default',
+            'field': 'th_fem_data_types_tree.key',
             'size': 300
           }
         }
     },
     'fem_facades': {
-      'th_fem_facades.default':
+      'th_fem_facades_tree.key':
         {
           'terms': {
-            'field': 'th_fem_facades.default',
+            'field': 'th_fem_facades_tree.key',
             'size': 300
           }
         }
     },
     'fem_projects': {
-      'th_fem_projects.default':
+      'th_fem_projects_tree.key':
         {
           'terms': {
-            'field': 'th_fem_projects.default',
+            'field': 'th_fem_projects_tree.key',
             'size': 300
           }
         }
@@ -818,19 +818,19 @@
         }
     },
     'mission-atlantic-odemm': {
-      'th_mission-atlantic-odemm.default':
+      'th_mission-atlantic-odemm_tree.key':
         {
           'terms': {
-            'field': 'th_mission-atlantic-odemm.default',
+            'field': 'th_mission-atlantic-odemm_tree.key',
             'size': 300
           }
         }
     },
     'mission-atlantic-bodc-parameters': {
-      'th_mission-atlantic-bodc-parameters.default':
+      'th_mission-atlantic-bodc-parameters_tree.key':
         {
           'terms': {
-            'field': 'th_mission-atlantic-bodc-parameters.default',
+            'field': 'th_mission-atlantic-bodc-parameters_tree.key',
             'size': 300
           }
         }
