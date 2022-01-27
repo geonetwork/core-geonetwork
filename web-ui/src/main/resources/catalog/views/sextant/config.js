@@ -382,6 +382,9 @@
                 direction = ''; // clear direction for title as it was apparently not working anyway...
               } else if (name === 'changeDate') {
                 name = 'dateStamp';
+                if (criteria.substring(0, 1) !== '+') {
+                  direction = 'desc'; // sort change date in descending order by default
+                }
               } else if (name === 'popularity' && criteria.substring(0, 1) !== '+') {
                 direction = 'desc'; // sort popularity in descending order by default
               }
