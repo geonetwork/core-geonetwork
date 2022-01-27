@@ -458,13 +458,22 @@
               });
             }
 
+            function sort() {
+              if (scope.sortBy) {
+                scope.displayedRecords.sort(function(a, b) {
+                  return a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
+                });
+              }
+            }
+
             function reset() {
               scope.displayedRecords = scope.children;
               scope.current = undefined;
+              sort();
             }
 
             // Remove the filters without values
-            scope.filtersToProcess = scope.filters;
+            scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
             scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
 
             reset();
@@ -488,12 +497,7 @@
                     scope.displayedRecords =
                       scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
                   });
-
-                  if (scope.sortBy) {
-                    scope.displayedRecords.sort(function(a, b) {
-                      return a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
-                    });
-                  }
+                  sort();
                 }
               });
             };

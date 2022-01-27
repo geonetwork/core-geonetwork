@@ -194,9 +194,9 @@
           if (scope.md) {
             scope.map.get('creationPromise').then(function() {
               ctrl.addRecordsExtent([scope.md]);
-                scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
-                  gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
-                });
+              scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
+                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+              });
             })
           }
         }

@@ -20,6 +20,7 @@
                aria-label="filter">
             <button data-ng-repeat="(key, b) in agg[filter].buckets"
                     data-ng-click="filterRecordsBy(filter, b.key)"
+                    data-ng-disabled="b.doc_count === children.length"
                     type="button"
                     class="btn btn-default"
                     data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"

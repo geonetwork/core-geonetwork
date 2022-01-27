@@ -727,6 +727,12 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" }
               }
             },
+            'cl_status': {
+              'terms': {
+                'field': 'cl_status.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
             'format': {
               'terms': {
                 'field': 'format',
