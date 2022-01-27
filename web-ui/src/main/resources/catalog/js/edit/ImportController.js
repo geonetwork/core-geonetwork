@@ -46,8 +46,11 @@
     '$scope',
     '$rootScope',
     'gnMetadataManager',
+    'gnConfigService',
+    'gnConfig',
     '$window',
-    function($scope,  $rootScope, gnMetadataManager, $window) {
+    function($scope,  $rootScope, gnMetadataManager,
+             gnConfigService, gnConfig, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -67,6 +70,10 @@
         category: null
       };
       $scope.importing = false;
+
+      gnConfigService.load().then(function(c) {
+        $scope.params.group = gnConfig['system.metadatacreate.preferredGroup'];
+      });
 
       /** Upload management */
       $scope.action = '../api/records';

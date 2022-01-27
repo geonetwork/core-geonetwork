@@ -55,7 +55,7 @@
 
       $scope.selectSource = function(source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
-        source.groupOwner = source.groupOwner != null ? source.groupOwner + '' : null;
+        source.groupOwner = source.groupOwner || null;
         $scope.source = source;
       };
 

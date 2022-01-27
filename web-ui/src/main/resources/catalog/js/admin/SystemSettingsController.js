@@ -88,9 +88,11 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService', '$timeout', 'gnGlobalSettings', 'gnESClient', 'Metadata',
+    'gnUtilityService', '$timeout', 'gnGlobalSettings',
+    'gnConfig', 'gnESClient', 'Metadata',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings, gnESClient, Metadata) {
+             gnUtilityService, $timeout, gnGlobalSettings,
+             gnConfig, gnESClient, Metadata) {
 
       $scope.selectTemplate = function (setting, md) {
         setting.value = md.uuid;
@@ -115,17 +117,14 @@
       };
 
       function loadDefaultMetadataTemplate() {
-        var setting = _.find($scope.settings, function(s) {
-          return s.name == 'system/metadatacreate/preferredTemplate';
-        });
+        var preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
 
-        //var id = $scope.settings['system/metadatacreate/preferredTemplate'];
-        if (angular.isDefined(setting) && setting.value != -1){
+        if (preferredTemplate){
           var query =
             {"query": {
                 "term": {
                   "uuid": {
-                    "value": setting.value
+                    "value": preferredTemplate
                   }
                 }
               }, "from": 0, "size": 1};

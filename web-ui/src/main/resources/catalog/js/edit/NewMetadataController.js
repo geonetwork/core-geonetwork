@@ -62,21 +62,6 @@
         $scope.preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
       });
 
-      // Check if the ownerGroup is a valid user group for editing
-      $scope.$watchCollection('groups', function(n, o){
-        if ((n != o) && ($scope.ownerGroup)) {
-            var groupFound = _.find(n, function(v) {
-              if (v.id == $scope.ownerGroup) {
-                return true;
-              }
-            });
-
-            if (!angular.isDefined(groupFound)) {
-              $scope.ownerGroup = null;
-            }
-        }
-      });
-
       // A map of icon to use for each types
       var icons = {
         featureCatalog: 'fa-table',
@@ -135,17 +120,12 @@
                 // TODO: A faster option, could be to rely on facet type
                 // But it may not be available
                 for (var i = 0; i < $scope.mdList.length; i++) {
-                  var type = $scope.mdList[i].resourceType || unknownType;
-                  if (type instanceof Array) {
-                    for (var j = 0; j < type.length; j++) {
-                      if ($.inArray(type[j], dataTypesToExclude) === -1 &&
-                        $.inArray(type[j], types) === -1) {
-                        types.push(type[j]);
-                      }
+                  var type = $scope.mdList[i].resourceType || [unknownType];
+                  for (var j = 0; j < type.length; j++) {
+                    if ($.inArray(type[j], dataTypesToExclude) === -1 &&
+                      $.inArray(type[j], types) === -1) {
+                      types.push(type[j]);
                     }
-                  } else if ($.inArray(type, dataTypesToExclude) === -1 &&
-                    $.inArray(type, types) === -1) {
-                    types.push(type);
                   }
                 }
                 types.sort();
@@ -159,21 +139,12 @@
                 });
 
                 var templateToSelect = null;
-
-                if (mdDefaultTemplate){
-                  var type = mdDefaultTemplate.resourceType || unknownType;
-                  if (type instanceof Array) {
-                    for (var j = 0; j < type.length; j++) {
-                      if ($.inArray(type[j], dataTypesToExclude) === -1) {
-                        defaultType = type[j];
-                        templateToSelect = mdDefaultTemplate;
-                        break;
-                      }
-                    }
-                  } else if ($.inArray(type, dataTypesToExclude) === -1) {
-                    defaultType = type;
-                    templateToSelect = mdDefaultTemplate;
-                  }
+                if (mdDefaultTemplate) {
+                  defaultType = mdDefaultTemplate.resourceType
+                    .filter(function(i) {
+                      return dataTypesToExclude.indexOf(i) === -1}
+                    )[0] || unknownType;
+                  templateToSelect = mdDefaultTemplate;
                 }
 
                 // Select the default one or the first one
