@@ -63,6 +63,16 @@
   <ul class="row list-group gn-info-list">
     <gn-metadata-card data-ng-repeat="md in displayedRecords"
                       md="md.record"
-                      formatter-url="formatter.defaultUrl"/>
+                      formatter-url="formatter.defaultUrl">
+      <span class="label label-default gn-card-badge"
+            data-ng-class="{
+            'gn-card-series': md.record.resourceType[0] === 'series',
+            'gn-card-nonGeographicDataset': md.record.resourceType[0] === 'nonGeographicDataset',
+            'gn-card-service': md.record.resourceType[0] === 'services' || md.record.resourceType[0] === 'application',
+            'gn-card-dataset': md.record.resourceType[0] !== 'series' && md.record.resourceType[0] !== 'services' && md.record.resourceType[0] !== 'application' && md.record.resourceType[0] !== 'nonGeographicDataset'
+            }">
+         <i class="fa gn-icon-{{md.record.resourceType[0]}}"/>
+      </span>
+    </gn-metadata-card>
   </ul>
 </div>

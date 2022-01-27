@@ -417,7 +417,7 @@
                   return 'WMSSERVICE';
                 }
               } else if (protocolOrType.match(/download/i)) {
-                var url = $filter('gnLocalized')(resource.url) || resource.url;
+                var url = $filter('gnLocalized')(resource.url) || resource.url || '';
                 if (url.match(/zip/i)) {
                   return 'LINKDOWNLOAD-ZIP';
                 } else if (url.match(/pdf/i)) {

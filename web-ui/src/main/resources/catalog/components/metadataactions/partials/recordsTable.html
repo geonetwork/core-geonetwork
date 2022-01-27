@@ -16,9 +16,16 @@
           <span data-ng-if="$index > 0 && !isArray(r[c])">{{r[c]}}</span>
 
           <span data-ng-if="isArray(r[c])">
-            <div data-ng-if="!c.startsWith('link') && !c.startsWith('format')"
+            <div data-ng-if="!c.startsWith('link')
+                              && !c.startsWith('cl')
+                              && !c.startsWith('format')"
                 data-ng-repeat="l in r[c]">
               {{l}}
+            </div>
+
+            <div data-ng-if="c.startsWith('cl')"
+                 data-ng-repeat="l in r[c]">
+              {{l | translate}}
             </div>
 
             <div data-ng-if="c.startsWith('format') "
