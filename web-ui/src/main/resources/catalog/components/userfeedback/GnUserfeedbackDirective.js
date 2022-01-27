@@ -277,7 +277,7 @@
           },
           templateUrl: '../../catalog/components/' +
           'userfeedback/partials/userfeedbacknew.html',
-          link: function(scope) {
+          link: function(scope, element) {
             scope.recaptchaEnabled =
               gnConfig['system.userSelfRegistration.recaptcha.enable'];
             scope.recaptchaKey =
@@ -332,6 +332,12 @@
             });
 
             scope.initPopup = function() {
+
+              var modal = element.find('.modal');
+              $('.g').append(element.find('.modal'));
+              modal.on('shown.bs.modal', function() {
+                $('.g').append(modal.data('bs.modal').$backdrop);
+              });
 
               if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
                 console.log('Metadata UUID is null');
