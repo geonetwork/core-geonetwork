@@ -176,48 +176,17 @@
                     data-ng-model="source.uiConfig"></select>
             <p class="help-block" data-translate="">sourceUiConfig-help</p>
 
-            <div data-ng-search-form=""
-                 data-ng-controller="GnCSWSearchServiceRecordController">
+            <div>
               <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
 
-              <div class="input-group dropdown"
-                   id="serviceList">
-                <input class="form-control"
-                       data-ng-model="source.serviceRecord"
-                       name="source.serviceRecord"/>
-                <span class="input-group-addon">
-                  {{cswServiceRecord.resourceTitleObject.default}}
-                </span>
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-default dropdown-toggle"
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                          data-ng-click="updateParams();triggerSearch();" type="text">
-                    <i class="fa fa-search"/>
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                      <input class="form-control"
-                             onClick="window.event.stopPropagation()"
-                             data-ng-change="updateParams();triggerSearch();" type="text"
-                             data-toggle="dropdown"
-                             data-ng-model="searchObj.any"
-                             data-ng-model-options="{debounce: 200}"
-                             placeholder="{{'search' | translate}}"/>
-                    </li>
-                    <li data-ng-repeat="md in searchResults.records">
-                      <a href=""
-                         data-ng-click="source.serviceRecord = md.uuid">
-                        {{md.resourceTitleObject.default}}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <div data-gn-metadata-selector="source.serviceRecord"
+                   data-search-obj="serviceRecordSearchObj"
+                   data-md="cswServiceRecord"
+                   data-element-name="source.serviceRecord"
+                   id="serviceList" />
 
               <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
             </div>
-
 
             <div data-ng-show="groups.length">
               <label class="control-label" data-translate="">subPortalGroupOwner</label>

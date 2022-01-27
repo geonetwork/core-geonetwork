@@ -298,40 +298,47 @@
             var optional = scope.optional != 'false' ? true : false;
             var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
             scope.disabled = scope.disabled ? true : false;
+            scope.selectedGroup = null;
+            scope.$watch('selectedGroup', function(n, o) {
+              if (n && (n.hasOwnProperty('id') || n.hasOwnProperty('@id'))) {
+                scope.ownerGroup = scope.selectedGroup['@id'] || scope.selectedGroup.id;
+              }
+            });
 
             $http.get(url, {cache: true}).
-                success(function(data) {
-                  //data-ng-if is not correctly updating groups.
-                  //So we do the filter here
-                  if (scope.excludeSpecialGroups) {
-                    scope.groups = [];
-                    angular.forEach(data, function(g) {
-                      if (g.id > 1) {
-                        scope.groups.push(g);
-                      }
-                    });
-                  } else {
-                    scope.groups = data;
-                  }
+              success(function(data) {
+                //data-ng-if is not correctly updating groups.
+                //So we do the filter here
+                if (scope.excludeSpecialGroups) {
+                  scope.groups = [];
+                  angular.forEach(data, function(g) {
+                    if (g.id > 1) {
+                      scope.groups.push(g);
+                    }
+                  });
+                } else {
+                  scope.groups = data;
+                }
 
-                  if (optional) {
-                    scope.groups.unshift({
-                      id: 'undefined',
-                      name: ''
-                    });
-                  }
+                if (optional) {
+                  scope.groups.unshift({
+                    id: undefined,
+                    name: ''
+                  });
+                }
 
-                  // Select by default the first group.
-                  if (setDefaultValue && (
-                    angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '' ||
-                    scope.ownerGroup === 'undefined' ||
-                    scope.ownerGroup === null) && data) {
-                    // Requires to be converted to string, otherwise
-                    // angularjs adds empty non valid option
-                    scope.ownerGroup = scope.groups[0].id + "";
+                if (angular.isNumber(scope.ownerGroup)) {
+                  scope.selectedGroup = scope.groups.find(function(v) {
+                    return v.id === scope.ownerGroup || v['@id'] === scope.ownerGroup
+                  });
+
+                  if (scope.selectedGroup === undefined) {
+                    scope.selectedGroup = scope.groups[0];
                   }
-                });
+                } else if (setDefaultValue) {
+                  scope.selectedGroup = scope.groups[0];
+                }
+              });
           }
         };
       }])

@@ -1992,4 +1992,41 @@
       }
     };
   });
+
+  /**
+   * Directive to display a metadata selector, that accepts a search object
+   * to filter the metadata to display in the selector.
+   */
+  module.directive('gnMetadataSelector', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          uuid: '=gnMetadataSelector',  // Model property with the metadata uuid selected
+          searchObj: '=',               // ElasticSearch search object
+          md: '=',                      // Metadata object selected
+          elementName: '@'              // Input element name for the uuid control
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/metadataselector.html',
+        link: function(scope, element, attrs) {
+          scope.selectedMetadata = null;
+
+          scope.searchObj.params = angular.extend({},
+            scope.searchObj.defaultParams);
+
+          scope.updateParams = function() {
+            scope.searchObj.params.any = scope.searchObj.any;
+          };
+
+          scope.selectMetadata = function(md) {
+            scope.selectedMetadata = md;
+            scope.uuid = md.uuid;
+          }
+
+        }
+      };
+    }
+  ]);
 })();

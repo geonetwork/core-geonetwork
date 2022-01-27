@@ -62,6 +62,7 @@
     'gnMetadataActions',
     'gnGlobalSettings',
     'gnConfig',
+    'gnConfigService',
     function($scope, $routeParams, $http,
         $rootScope, $translate, $compile,
         gnSearchManagerService,
@@ -72,7 +73,8 @@
         gnMetadataManager,
         gnMetadataActions,
         gnGlobalSettings,
-        gnConfig) {
+        gnConfig,
+        gnConfigService) {
 
       // option to allow only administrators
       // to validate a subtemplate
@@ -93,7 +95,6 @@
       $scope.mdList = null;
       $scope.activeType = null;
       $scope.activeEntry = null;
-      $scope.ownerGroup = null;
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
         configId: 'directory',
@@ -154,6 +155,8 @@
       var unknownType = 'unknownType';
       var fullPrivileges = 'true';
 
+      gnConfigService.load();
+
       $scope.selectType = function(type) {
         $scope.activeType = type;
         $scope.getEntries(type);
@@ -166,12 +169,6 @@
         $http.get('../api/groups?profile=Editor', {cache: true}).
             success(function(data) {
               $scope.groups = data;
-              // Select first user group with editor privileges.
-              // TODO: User should be able to select the group to put
-              // the entry in.
-              if ($scope.ownerGroup === null && data) {
-                $scope.ownerGroup = data[0]['id'];
-              }
             });
 
         refreshEntriesInfo();
@@ -445,7 +442,7 @@
 
       $scope.copyEntry = function(e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
-        gnMetadataManager.copy(e.id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.importData.group,
             fullPrivileges,
             e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
         ).then(refreshEntriesInfo);
@@ -464,7 +461,7 @@
 
         // conversion to template is done by duplicating into template type
         // the original entry is kept
-        gnMetadataManager.copy(e.id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.importData.group,
             fullPrivileges,
             'TEMPLATE_OF_SUB_TEMPLATE').then(refreshEntriesInfo);
       };
@@ -480,7 +477,7 @@
         }
 
         // a copy of the template is created & opened
-        gnMetadataManager.copy(e.uuid, $scope.ownerGroup,
+        gnMetadataManager.copy(e.uuid, $scope.importData.group,
             fullPrivileges,
             'SUB_TEMPLATE')
             .then(function(response) {
@@ -523,6 +520,11 @@
             });
       };
 
+      $scope.importData = {
+        metadataType: 'SUB_TEMPLATE',
+        group: null
+      };
+
       // begin creation of a new entry
       $scope.startImporting = function(asTemplate) {
         $scope.activeEntry = null;
@@ -530,11 +532,10 @@
             (asTemplate ? 'newTemplate' : 'newEntry');
 
         // import data depends on type (template or entry)
-        $scope.importData = {
-          metadataType: asTemplate ? 'TEMPLATE_OF_SUB_TEMPLATE' :
-              'SUB_TEMPLATE',
-          group: $scope.groups[0].id
-        };
+        $scope.importData.metadataType =
+          asTemplate ? 'TEMPLATE_OF_SUB_TEMPLATE' :
+              'SUB_TEMPLATE';
+        $scope.importData.group = gnConfig['system.metadatacreate.preferredGroup'];
       };
 
       // begin edition of an entry

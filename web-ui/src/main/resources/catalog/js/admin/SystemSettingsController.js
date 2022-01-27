@@ -89,8 +89,60 @@
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
     'gnUtilityService', '$timeout', 'gnGlobalSettings',
+    'gnConfig', 'gnESClient', 'Metadata',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings) {
+             gnUtilityService, $timeout, gnGlobalSettings,
+             gnConfig, gnESClient, Metadata) {
+
+      $scope.selectTemplate = function (setting, md) {
+        setting.value = md.uuid;
+        $scope.defaultMetadataTemplate = md;
+      };
+
+      // Metadata template to select by default when
+      // creating new metadata
+      $scope.defaultMetadataTemplate = null;
+
+      $scope.metadataTemplateSearchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          isTemplate: 'y',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+
+      function loadDefaultMetadataTemplate() {
+        var preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
+
+        if (preferredTemplate){
+          var query =
+            {"query": {
+                "term": {
+                  "uuid": {
+                    "value": preferredTemplate
+                  }
+                }
+              }, "from": 0, "size": 1};
+
+          gnESClient.search(query).then(function(data) {
+            angular.forEach(data.hits.hits, function(record) {
+              var md = new Metadata(record);
+              $scope.defaultMetadataTemplate = md;
+            });
+          });
+        }
+      }
+
+      $scope.$watchCollection('settings', function(n, o){
+        if (n != o) {
+          loadDefaultMetadataTemplate();
+        }
+      });
 
       $scope.settings = [];
       $scope.initalSettings = [];
