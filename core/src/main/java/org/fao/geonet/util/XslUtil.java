@@ -994,8 +994,6 @@ public final class XslUtil {
 
 
     public static Node getGroupDetailsInConfigFile(String groupIdentifier) {
-        int id = Integer.parseInt(groupIdentifier);
-
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path groupLandingPageDir = dataDirectory.getWebappDir()
             .resolve("catalog").resolve("views")
