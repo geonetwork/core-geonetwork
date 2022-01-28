@@ -4,5 +4,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 DELETE FROM Settings WHERE name = 'system/server/securePort';
 
+UPDATE Settings SET value = '0 0 0 * * ?' WHERE name = 'system/inspire/atomSchedule' and value = '0 0 0/24 ? * *';
+
 UPDATE Settings SET value='4.0.6' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
