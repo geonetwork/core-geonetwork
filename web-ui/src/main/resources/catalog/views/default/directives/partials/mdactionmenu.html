@@ -15,7 +15,7 @@
     <ul class="dropdown-menu" role="menu">
       <li role="menuitem">
         <a href=""
-           data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+           data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
           <span class="fa fa-fw fa-key"></span>&nbsp;
           <span data-translate="">privileges</span>
@@ -30,7 +30,7 @@
         </a></li>
       <!-- Retired metadata can't be published -->
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
+          data-ng-if="user.canManagePrivileges(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&

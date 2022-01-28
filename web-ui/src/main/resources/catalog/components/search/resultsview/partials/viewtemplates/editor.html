@@ -49,7 +49,7 @@
           <div class="btn-group">
             <a class="btn btn-default"
                data-ng-href=""
-               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+               data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
                data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
                title="{{'privileges' | translate}}">
               <i class="fa text-muted"
