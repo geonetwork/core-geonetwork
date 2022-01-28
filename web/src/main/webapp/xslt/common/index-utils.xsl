@@ -575,6 +575,14 @@
     <xsl:param name="thesaurusId" as="xs:string?"/>
     <xsl:param name="thesaurusName" as="xs:string?"/>
 
+    <xsl:variable name="oldFieldNameMapping" as="node()*">
+      <!-- INSPIRE themes are loaded from INSPIRE registry. The thesaurus key changed. -->
+      <thesaurus old="th_inspire-theme"
+                 new="th_httpinspireeceuropaeutheme-theme"/>
+      <thesaurus old="th_SpatialScope"
+                 new="th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
+    </xsl:variable>
+
     <xsl:variable name="key">
       <xsl:choose>
         <xsl:when test="starts-with($thesaurusId, 'geonetwork.thesaurus')">
@@ -594,7 +602,12 @@
     <xsl:variable name="keyWithoutDot"
                   select="replace($key, '\.', '-')"/>
 
-    <xsl:value-of select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+    <xsl:variable name="fieldName"
+                  select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+
+    <xsl:value-of select="if($oldFieldNameMapping[@old = $fieldName])
+                          then $oldFieldNameMapping[@old = $fieldName]/@new
+                          else $fieldName"/>
   </xsl:function>
 
 
