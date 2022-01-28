@@ -62,7 +62,7 @@
           <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
           <i ng-if="p.described" class="fa fa-fw sxt-layer-visibility text-primary"
             ng-class="p.included ? 'fa-check-square-o' : 'fa-square-o'"/>
-          <span class="wps-label">{{ p.desc || p.name }}</span>
+          <span class="wps-label">{{ p.description || p.name }}</span>
         </label>
         <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="openWpsModal($event)">
           <i class="fa fa-cogs"></i>&nbsp;
