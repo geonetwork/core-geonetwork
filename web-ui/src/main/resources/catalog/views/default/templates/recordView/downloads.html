@@ -3,3 +3,8 @@
      data-mode="::viewConfig.distributionConfig.layout || ''"
      data-related-config="::viewConfig.distributionConfig.sections">
 </div>
+
+<div data-ng-if="mdView.current.record.orderingInstructions">
+  <h2 data-translate="">orderingInstructions</h2>
+  <p data-ng-bind-html="mdView.current.record.orderingInstructions | linky | newlines"/>
+</div>

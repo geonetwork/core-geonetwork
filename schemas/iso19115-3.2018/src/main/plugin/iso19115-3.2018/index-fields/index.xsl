@@ -1043,6 +1043,11 @@
             <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
           </xsl:apply-templates>
         </xsl:for-each>
+        
+        <xsl:for-each select="mrd:distributor/mrd:MD_Distributor
+                                  /mrd:distributionOrderProcess/*/mrd:orderingInstructions">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
+        </xsl:for-each>
 
         <xsl:for-each select="mrd:transferOptions/*/
                                 mrd:onLine/*[cit:linkage/gco:CharacterString != '']">

@@ -281,6 +281,7 @@
   "regexpFlags-c": "disables case insensitive matching",
   "createCollectionFromSelectionAs": "Create collection from selection as",
   "supplementalInformation": "Supplemental Information",
+  "orderingInstructions": "Ordering instructions",
   "siblingsReverseLinks": "Other resources (other record links)",
   "focusOnFrom": "Focus on resources from ",
   "focusOn": "Focus on ",
