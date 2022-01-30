@@ -246,7 +246,7 @@
               // type=wms,name=lll
               type = layer.name && layer.name.match(reT) ?
                 reT.exec(layer.name)[1] : null;
-              if (type && type != 'wmts' && type != 'wms' && type != 'arcgis') {
+              if (type && type != 'wmts' && type != 'wms') {
                 var opt;
                 if (layer.name && layer.name.match(reL)) {
                   var lyr = reL.exec(layer.name)[1];

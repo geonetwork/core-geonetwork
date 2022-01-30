@@ -35,6 +35,11 @@
     'gn_esri_service'
   ]);
 
+  var ARCGIS_SERVICES_MAP = {
+    imagery: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    hillshade: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+    ocean: 'https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
+  }
 
   /**
    * @ngdoc service
@@ -2103,21 +2108,13 @@
                     });
                 break;
               case 'arcgis':
-                if (!opt.url) {
-                  $log.warn('A required parameter (url) ' +
-                      'is missing in the specified ArcGIS layer:',
-                      opt);
-                  break;
-                }
-                this.addEsriRestFromScratch(map, opt.url, opt.name)
-                    .then(function(layer) {
-                      if (title) {
-                        layer.set('title', title);
-                        layer.set('label', title);
-                      }
-                      return layer;
-                    });
-                break;
+                return new ol.layer.Tile({
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.XYZ({
+                    url: ARCGIS_SERVICES_MAP[opt.name]
+                  }),
+                  title: title ||  'ArcGIS ' + opt.name
+                });
             }
           },
 
