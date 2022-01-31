@@ -74,7 +74,9 @@
             <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
                                  select="cit:title"/>
           </title>
-          <type>legend</type>
+          <protocol>WWW:LINK</protocol>
+          <function>legend</function>
+          <type>onlinesrc</type>
         </item>
       </xsl:for-each>
 
@@ -93,7 +95,9 @@
              <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
                                   select="cit:title"/>
           </title>
-          <type>dq-report</type>
+          <protocol>WWW:LINK</protocol>
+          <function>dataQualityReport</function>
+          <type>onlinesrc</type>
          </item>
       </xsl:for-each>
 
@@ -134,7 +138,9 @@
             <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
                                select="cit:title"/>
           </title>
-          <type>fcats</type>
+          <protocol>WWW:LINK</protocol>
+          <function>featureCatalogue</function>
+          <type>onlinesrc</type>
         </item>
       </xsl:for-each>
     </onlines>

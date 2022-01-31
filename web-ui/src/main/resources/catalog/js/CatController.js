@@ -711,9 +711,18 @@ goog.require('gn_alert');
               // {'types': 'services', 'title': 'Services', 'layout': 'card'},
               {'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
               {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
-              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]
+              {'types': 'onlines', 'filter': 'function:legend', 'title': 'mapLegend'},
+              {'types': 'onlines', 'filter': 'function:featureCatalogue', 'title': 'featureCatalog'},
+              {'types': 'onlines', 'filter': 'function:dataQualityReport', 'title': 'quality'},
+              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', 'title': 'links'}]
           },
           'relatedFacetConfig':  {
+            'cl_status': {
+              'terms': {
+                'field': 'cl_status.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
             'creationYearForResource': {
               'terms': {
                 'field': 'creationYearForResource',
@@ -724,12 +733,6 @@ goog.require('gn_alert');
             'cl_spatialRepresentationType': {
               'terms': {
                 'field': 'cl_spatialRepresentationType.default',
-                "order" : { "_key" : "asc" }
-              }
-            },
-            'cl_status': {
-              'terms': {
-                'field': 'cl_status.default',
                 "order" : { "_key" : "asc" }
               }
             },

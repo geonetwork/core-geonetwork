@@ -362,6 +362,21 @@
               label: 'openPage',
               action: openLink
             },
+            'LEGEND' : {
+              iconClass: 'fa-tint',
+              label: 'openPage',
+              action: openLink
+            },
+            'FEATURECATALOGUE' : {
+              iconClass: 'fa-table',
+              label: 'openPage',
+              action: openLink
+            },
+            'QUALITY' : {
+              iconClass: 'fa-check',
+              label: 'openPage',
+              action: openLink
+            },
             'DEFAULT' : {
               iconClass: 'fa-link',
               label: 'openPage',
@@ -408,8 +423,15 @@
             resource.locDescription = $filter('gnLocalized')(resource.description);
             resource.locUrl = $filter('gnLocalized')(resource.url);
             var protocolOrType = resource.protocol + (resource.serviceType || '');
-            // Cas for links
+            // Case for links
             if (angular.isString(protocolOrType)) {
+              if (resource && resource.function === 'legend') {
+                return 'LEGEND';
+              } else if (resource && resource.function === 'featureCatalogue') {
+                return 'FEATURECATALOGUE';
+              } else if (resource && resource.function === 'dataQualityReport') {
+                return 'QUALITY';
+              }
               if (protocolOrType.match(/wms/i)) {
                 if (this.isLayerProtocol(resource)) {
                   return 'WMS';
