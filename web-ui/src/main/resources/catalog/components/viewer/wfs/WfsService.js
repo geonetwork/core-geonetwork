@@ -127,9 +127,15 @@
             request: 'GetFeature',
             service: 'WFS',
             version: version || defaultVersion,
-            typeName: typename,
             outputFormat: format
           };
+
+          if (params.version < "2.0.0") {
+            params.typeName = typename;
+          } else {
+            params.typeNames = typename;
+          }
+
           if (extent) {
             params.bbox = extent;
           }
