@@ -1300,15 +1300,24 @@
 
                   var parts = url.split('?');
 
+                  var parametersMap = {
+                    service: 'WFS',
+                    request: 'GetFeature',
+                    version: getCapLayer.version,
+                    srsName: map.getView().getProjection().getCode(),
+                    bbox: extent.join(',')
+                  };
+
+                  if (parametersMap.version < "2.0.0") {
+                    parametersMap.typeName = getCapLayer.name.prefix + ':' +
+                      getCapLayer.name.localPart;
+                  } else {
+                    parametersMap.typeNames = getCapLayer.name.prefix + ':' +
+                      getCapLayer.name.localPart;
+                  }
+
                   var urlGetFeature = gnUrlUtils.append(parts[0],
-                      gnUrlUtils.toKeyValue({
-                        service: 'WFS',
-                        request: 'GetFeature',
-                        version: getCapLayer.version,
-                        srsName: map.getView().getProjection().getCode(),
-                        bbox: extent.join(','),
-                        typename: getCapLayer.name.prefix + ':' +
-                                   getCapLayer.name.localPart}));
+                      gnUrlUtils.toKeyValue(parametersMap));
 
                   //Fix, ArcGIS fails if there is a bbox:
                   if(getCapLayer.version == '1.1.0') {
@@ -1318,7 +1327,7 @@
                           request: 'GetFeature',
                           version: getCapLayer.version,
                           srsName: map.getView().getProjection().getCode(),
-                          typename: getCapLayer.name.prefix + ':' +
+                          typeName: getCapLayer.name.prefix + ':' +
                                      getCapLayer.name.localPart}));
                   }
 
