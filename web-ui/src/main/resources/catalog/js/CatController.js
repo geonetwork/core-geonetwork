@@ -220,8 +220,8 @@ goog.require('gn_alert');
                     "query": "",
                     "type": "bool_prefix",
                     "fields": [
-                      "resourceTitleObject.*",
-                      "resourceAbstractObject.*",
+                      "resourceTitleObject.${searchLang}",
+                      "resourceAbstractObject.${searchLang}",
                       "tag",
                       "resourceIdentifier"
                       // "anytext",

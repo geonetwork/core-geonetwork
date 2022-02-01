@@ -49,6 +49,12 @@
         return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
       }
 
+      function injectLanguage(query, forcedLang, escape) {
+        var escapeChar = escape ? '\\' : '';
+        var searchLang = forcedLang ? 'lang' + gnGlobalSettings.iso3lang : escapeChar + '*';
+        return query.replace(/\$\{searchLang\}/g, searchLang)
+      };
+
       function filterPermalinkFlags(p, searchState) {
         if (p.titleOnly) {
           searchState.titleOnly = true;
@@ -71,8 +77,7 @@
        * @param queryHook
        * @param p
        * @param luceneQueryString
-       * @param {boolean} exactMatch search for exact value
-       * @param {boolean} titleOnly search in title only
+       * @param {object} state search state
        */
       this.buildQueryClauses = function(queryHook, p, luceneQueryString, state) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
@@ -99,8 +104,7 @@
               var searchString = escapeSpecialCharacters(p.any);
               var forcedLang = state.forcedLang;
               var exactMatch = state.exactMatch;
-              var searchLang = forcedLang ? 'lang' + gnGlobalSettings.iso3lang : '\\*';
-              var q = queryBase.replace(/\$\{searchLang\}/g, searchLang)
+              var q = injectLanguage(queryBase, forcedLang, true)
                 .replace(/\$\{any\}/g,
                   exactMatch === true ? '\"' + searchString + '\"' : searchString);
               queryStringParams.push(q);
@@ -313,40 +317,47 @@
        * each document).
        *
        * @param field document field
-       * @param query Completion query
+       * @param any Completion query
        * @returns es request params
        */
-      this.getSuggestParams = function(field, query, searchObj) {
+      this.getSuggestParams = function(field, any, searchObj) {
 
-        var params = {}, defaultScore = {
+        var currentSearch = angular.copy(searchObj);
+        var params = {};
+        var defaultScore = {
           "script_score" : {
             "script" : {
               "source": "_score"
             }
           }
-        }, autocompleteQuery = {};
+        }
+        var autocompleteQuery = {};
         angular.copy(gnGlobalSettings.gnCfg.mods.search.autocompleteConfig.query, autocompleteQuery);
         angular.copy({"query": {
           "function_score": gnGlobalSettings.gnCfg.mods.search.scoreConfig ?
             gnGlobalSettings.gnCfg.mods.search.scoreConfig : defaultScore
         }}, params);
+
+        var queryFields = autocompleteQuery.bool.must[0].multi_match.fields;
+        angular.forEach(queryFields, function(k, i) {
+          queryFields[i] = injectLanguage(k, currentSearch.state.forcedLang);
+        });
         params.query.function_score['query'] = autocompleteQuery;
-
-
-        var currentSearch = {};
-        angular.copy(searchObj, currentSearch);
 
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
         try {
-          params.query.function_score.query.bool.must[0].multi_match.query = query;
+          params.query.function_score.query.bool.must[0].multi_match.query = any;
+          filterPermalinkFlags(currentSearch.params, currentSearch.state);
 
           // Inject current search to contextualize suggestions
           var queryHook = params.query.function_score.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
 
-          this.buildQueryClauses(queryHook, currentSearch.params, luceneQueryString);
+          this.buildQueryClauses(
+            queryHook, currentSearch.params,
+            luceneQueryString, currentSearch.state);
 
           return params;
         } catch (e) {
