@@ -936,7 +936,7 @@
           </specificationConformance>
         </xsl:if>
 
-        <xsl:element name="conformTo_{replace(normalize-space($title), '[^a-zA-Z0-9]', '')}">
+        <xsl:element name="conformTo_{gn-fn-index:build-field-name($title)}">
           <xsl:value-of select="$pass"/>
         </xsl:element>
       </xsl:for-each-group>
@@ -1037,21 +1037,38 @@
 
 
       <xsl:for-each select="mdb:dataQualityInfo/*">
-        <!-- Indexing measure value -->
         <xsl:for-each select="mdq:report/*[
-                normalize-space(mdq:nameOfMeasure/gco:CharacterString) != '']">
-          <xsl:variable name="measureName"
-                        select="replace(normalize-space(mdq:nameOfMeasure/gco:CharacterString), '[^a-zA-Z0-9]', '')"/>
-          <xsl:for-each select="mdq:result/mdq:DQ_QuantitativeResult/mdq:value">
-            <xsl:if test=". != ''">
-              <xsl:element name="measure_{$measureName}">
-                <xsl:value-of select="."/>
-              </xsl:element>
+                normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != '']">
+
+          <xsl:variable name="name"
+                        select="(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString)[1]"/>
+          <xsl:variable name="value"
+                        select="(mdq:result/mdq:DQ_QuantitativeResult/mdq:value)[1]"/>
+          <xsl:variable name="unit"
+                        select="(mdq:result/mdq:DQ_QuantitativeResult/mdq:valueUnit//gml:identifier)[1]"/>
+          <xsl:variable name="description"
+                        select="(mdq:measure/*/mdq:measureDescription/gco:CharacterString)[1]"/>
+          <measure type="object">{
+            "name": "<xsl:value-of select="gn-fn-index:json-escape($name)"/>",
+            <xsl:if test="$description != ''">
+              "description": "<xsl:value-of select="gn-fn-index:json-escape($description)"/>",
             </xsl:if>
+            <!-- First value only. -->
+            "value": "<xsl:value-of select="gn-fn-index:json-escape($value/gco:Record[1])"/>",
+            <xsl:if test="$unit != ''">
+              "unit": "<xsl:value-of select="gn-fn-index:json-escape($unit)"/>",
+            </xsl:if>
+            "type": "<xsl:value-of select="name(.)"/>"
+            }
+          </measure>
+
+          <xsl:for-each select="mdq:result/mdq:DQ_QuantitativeResult/mdq:value/gco:Record[. != '']">
+            <xsl:element name="measure_{gn-fn-index:build-field-name($name)}">
+              <xsl:value-of select="."/>
+            </xsl:element>
           </xsl:for-each>
         </xsl:for-each>
       </xsl:for-each>
-
 
       <xsl:for-each select="mdb:distributionInfo/*">
         <xsl:for-each select="mrd:distributionFormat/*/
