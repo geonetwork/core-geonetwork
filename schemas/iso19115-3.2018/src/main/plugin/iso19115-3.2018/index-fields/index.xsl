@@ -1169,7 +1169,8 @@
                         select="mri:associationType/*/@codeListValue"/>
           <xsl:if test="$associationType = $parentAssociatedResourceType">
             <parentUuid><xsl:value-of select="$code"/></parentUuid>
-            <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, @xlink:title, 'parent')"/>
+            <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink, mri:metadataReference/@xlink:title, 'parent')"/>
           </xsl:if>
 
           <xsl:variable name="initiativeType"
@@ -1180,7 +1181,9 @@
               <p name="initiativeType" value="{$initiativeType}"/>
             </properties>
           </xsl:variable>
-          <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, @xlink:title, 'siblings', $properties)"/>
+          <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink, mri:metadataReference/@xlink:title,
+                                'siblings', $properties)"/>
           <agg_associated><xsl:value-of select="$code"/></agg_associated>
         </xsl:if>
       </xsl:for-each>

@@ -53,6 +53,10 @@
           <a data-ng-href="{{::r.locUrl}}">
             {{::r.locTitle || r.locUrl}}
           </a>
+          <div class="pull-right"
+               gn-copy-to-clipboard-button=""
+               data-text="{{::r.locUrl}}"
+               data-tooltip="copyUrlToClipboard"></div>
         </h3>
         <!-- Display description if available -->
         <p data-ng-if="::r.locDescription.length > 0
@@ -114,10 +118,6 @@
                data-btn-class="btn-block"
                data-record="md">
           </div>
-          <div class="pull-right"
-               gn-copy-to-clipboard-button=""
-               data-text="{{::r.locUrl}}"
-               data-tooltip="copyUrlToClipboard"></div>
         </div>
 
         <button type="button"
@@ -139,12 +139,23 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >
     <li data-ng-repeat="md in items | orderBy:getOrderBy">
-      <a href=""
+      <a data-ng-hide="md.record.remoteUrl"
+         href=""
          title="{{md.record.resourceTitle}}"
          gn-metadata-open="md.record"
          gn-formatter="formatter.defaultUrl">
         <i class="fa {{icon}}"/>
         {{md.record.resourceTitle}}
+      </a>
+      <a data-ng-show="md.record.remoteUrl"
+         data-ng-href="{{md.record.remoteUrl}}"
+         target="_blank"
+         title="{{md.record.resourceTitle}}">
+        <i class="fa {{icon}}"/>
+        {{md.record.resourceTitle}}
+        <i data-ng-if="md.origin === 'remote'"
+           class="fa fa-external-link"
+           title="{{'remoteRecord' | translate}}"></i>
       </a>
     </li>
   </ul>
@@ -169,6 +180,9 @@
             }">
         <i class="fa {{icon}}"/>
         {{(config.getLabel(mainType, type)) | translate}}
+        <i data-ng-if="md.origin === 'remote'"
+           class="fa fa-external-link"
+           title="{{'remoteRecord' | translate}}"></i>
       </span>
     </gn-metadata-card>
     <button class="btn btn-link"

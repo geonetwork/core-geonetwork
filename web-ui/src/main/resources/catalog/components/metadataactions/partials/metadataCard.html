@@ -6,11 +6,19 @@
 
   <div class="panel-heading gn-card-heading">
     <div class="gn-md-title">
-      <a href=""
+      <a data-ng-hide="md.remoteUrl"
+         href=""
          title="{{md.resourceTitle}}"
          gn-metadata-open="md"
-         gn-records="searchResults.records"
          gn-formatter="formatter.defaultUrl">
+        <h1>
+          <span class="clamp-2">{{md.resourceTitle}}</span>
+        </h1>
+      </a>
+      <a data-ng-show="md.remoteUrl"
+         data-ng-href="{{md.remoteUrl}}"
+         target="_blank"
+         title="{{md.resourceTitle}}">
         <h1>
           <span class="clamp-2">{{md.resourceTitle}}</span>
         </h1>

@@ -20,6 +20,10 @@
     {{::(link.initiativeType && link.initiativeType != ''
          ? ' / ' + (link.initiativeType | translate) : '')}})
   </span>
+
+  <i data-ng-if="link.origin === 'remote'"
+     class="fa fa-external-link"
+     title="{{'remoteRecord' | translate}}"></i>
 </a>
 <a data-ng-show="!hasAction"
    data-ng-class="{'btn btn-default': !isDropDown || iconMode === 'only'}"

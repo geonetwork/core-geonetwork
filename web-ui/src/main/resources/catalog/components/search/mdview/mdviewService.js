@@ -50,10 +50,11 @@
     'gnESFacet',
     'gnGlobalSettings',
     '$http',
+    '$filter',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils, gnUtilityService, gnESService, gnESClient,
-             gnESFacet, gnGlobalSettings, $http) {
+             gnESFacet, gnGlobalSettings, $http, $filter) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -159,7 +160,11 @@
 
               Object.keys(relatedRecords).map(function (k) {
                 relatedRecords[k] && relatedRecords[k].map(function (l) {
-                  l.record = recordMap[l.id];
+                  var isRemote = recordMap[l.id] === undefined && l.origin === 'remote';
+                  l.record = isRemote ? new Metadata({
+                    resourceTitle: $filter('gnLocalized')(l.title),
+                    remoteUrl: $filter('gnLocalized')(l.url)
+                  }) : recordMap[l.id];
                 })
               });
 
