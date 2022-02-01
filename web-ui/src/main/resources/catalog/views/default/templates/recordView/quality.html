@@ -8,7 +8,11 @@
             data-ng-repeat="c in mdView.current.record.specificationConformance"
             title="{{c.explanation}}">
           <i class="fa fa-fw"
-             data-ng-class="::c.pass == 'true' ? 'fa-check text-success' : 'fa-times text-danger'"></i>
+             data-ng-class="{
+               'fa-check text-success': c.pass == 'true',
+               '': c.pass == '',
+               'fa-times text-danger': c.pass == 'false'
+               }"></i>
           <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
           <span data-ng-if="::!c.link">{{c.title}}</span>
         </li>
