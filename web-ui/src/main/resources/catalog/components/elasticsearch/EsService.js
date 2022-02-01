@@ -49,6 +49,20 @@
         return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
       }
 
+      function filterPermalinkFlags(p, searchState) {
+        if (p.titleOnly) {
+          searchState.titleOnly = true;
+          delete p.titleOnly;
+        }
+        if (p.exactMatch) {
+          searchState.exactMatch = true;
+          delete p.exactMatch;
+        }
+        if (p.forcedLang) {
+          searchState.forcedLang = true;
+          delete p.forcedLang;
+        }
+      }
 
       /**
        * Build all clauses to be added to the Elasticsearch
@@ -60,7 +74,7 @@
        * @param {boolean} exactMatch search for exact value
        * @param {boolean} titleOnly search in title only
        */
-      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch, titleOnly) {
+      this.buildQueryClauses = function(queryHook, p, luceneQueryString, state) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -82,38 +96,27 @@
                   'Using default value \'${any}\'.');
                 queryBase = defaultQuery;
               }
-              var searchString = escapeSpecialCharacters(p.any),
-                q = queryBase.replace(
-                  /\$\{any\}/g,
+              var searchString = escapeSpecialCharacters(p.any);
+              var forcedLang = state.forcedLang;
+              var exactMatch = state.exactMatch;
+              var searchLang = forcedLang ? 'lang' + gnGlobalSettings.iso3lang : '\\*';
+              var q = queryBase.replace(/\$\{searchLang\}/g, searchLang)
+                .replace(/\$\{any\}/g,
                   exactMatch === true ? '\"' + searchString + '\"' : searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
             }
-
           }
           if (luceneQueryString) {
             queryStringParams.push(luceneQueryString);
           }
 
-          if (titleOnly) {
-            var query = gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
-              /\$\{any\}/g, escapeSpecialCharacters(p.any));
-
-            queryHook.must.push({
-              query_string: {
-                fields: ["resourceTitleObject.*"],
-                query: exactMatch === true ? '\"' + query + '\"' : query
-              }
-            });
-          } else {
-
-            queryHook.must.push({
-              query_string: {
-                query: queryStringParams.join(' AND ').trim()
-              }
-            });
-          }
+          queryHook.must.push({
+            query_string: {
+              query: queryStringParams.join(' AND ').trim()
+            }
+          });
         }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
@@ -264,17 +267,10 @@
           query.function_score['query'].bool.filter = filters;
         }
 
-        if (p.titleOnly) {
-          searchState.titleOnly = true;
-          delete p.titleOnly;
-        }
-        if (p.exactMatch) {
-          searchState.exactMatch = true;
-          delete p.exactMatch;
-        }
+        filterPermalinkFlags(p, searchState);
 
         var queryHook = query.function_score.query.bool;
-        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch, searchState.titleOnly);
+        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
 
         if(p.from) {
           params.from = p.from - 1;

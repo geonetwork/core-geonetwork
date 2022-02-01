@@ -145,9 +145,9 @@ goog.require('gn_alert');
           },
           // Full text on all fields
           // 'queryBase': '${any}',
-          // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
-          'queryTitle': '${any}',
+          // Full text in languages with boost on title match
+          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
+          'queryTitle': 'resourceTitleObject.${searchLang}:(${any})',
           'searchOptions': true,
           // Score query may depend on where we are in the app?
           'scoreConfig': {
