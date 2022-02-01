@@ -413,7 +413,8 @@ public class MetadataSharingApi {
 
                 if (isGroupWithEnabledWorkflow) {
                     MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
-                    if (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED)) {
+                    if ((mdStatus != null) &&
+                        (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED))) {
                         List<GroupOperations> allGroupOps =
                             privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).collect(Collectors.toList());
 
