@@ -56,6 +56,7 @@
   <xsl:import href="../../iso19139/index-fields/fn.xsl"/>
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
+  <xsl:import href="link-utility.xsl"/>
 
 
   <xsl:output method="xml" indent="yes"/>
@@ -998,6 +999,30 @@
       </xsl:for-each>
 
 
+      <xsl:variable name="additionalDocuments" as="node()*">
+        <xsl:call-template name="collect-documents"/>
+      </xsl:variable>
+
+      <xsl:for-each select="$additionalDocuments">
+        <link type="object">{
+          "protocol": "<xsl:value-of select="gn-fn-index:json-escape(
+                                        protocol/text())"/>",
+          "function": "<xsl:value-of select="gn-fn-index:json-escape(
+                                        function/text())"/>",
+          "applicationProfile": "<xsl:value-of select="gn-fn-index:json-escape(
+                                        applicationProfile/text())"/>",
+          <!-- TODO: Multilingual support -->
+          "url":"<xsl:value-of select="gn-fn-index:json-escape(
+                                        (url/value/text())[1])"/>",
+          "name":"<xsl:value-of select="gn-fn-index:json-escape(
+                                        (title/value/text())[1])"/>",
+          "description":"<xsl:value-of select="gn-fn-index:json-escape(
+                                        (description/value/text())[1])"/>"
+          }
+        </link>
+      </xsl:for-each>
+
+
       <xsl:for-each select="mdb:resourceLineage/*">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage',
                                 mrl:statement, $allLanguages)"/>
@@ -1043,7 +1068,7 @@
             <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
           </xsl:apply-templates>
         </xsl:for-each>
-        
+
         <xsl:for-each select="mrd:distributor/mrd:MD_Distributor
                                   /mrd:distributionOrderProcess/*/mrd:orderingInstructions">
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>

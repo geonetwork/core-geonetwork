@@ -36,7 +36,7 @@
 
   <ul data-ng-if="isDropDown"
       class="dropdown-menu" role="menu">
-    <li data-ng-repeat="l in ::links"
+    <li data-ng-repeat="l in ::links | orderBy:['function', 'name']"
         data-gn-record-link-button="l"
         data-btn="::btn"
         data-type="::type"
