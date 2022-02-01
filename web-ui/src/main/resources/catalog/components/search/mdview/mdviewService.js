@@ -91,100 +91,86 @@
 
         // TODO: Should be used a promise?
         // How affects gnMdViewObj.recordsLoaded?
-        if (md.resourceType) {
-          // Retrieve all related records UUIDs
-          // To be used by RelatedDirective
-          // TODO: Maybe we can remove onlines and simply use the links in the doc.
-          var types = 'onlines|parent|children|sources|hassources|brothersAndSisters|services|datasets|siblings|associated|fcats|related',
-              url = '../api/records/' + md.uuid + '/related?type='
-                + types.split('|').join('&type=');
-          $http.get(url, {
-            headers: {
-              'Accept': 'application/json'
-            }
-          })
-            .success(function(relatedRecords) {
-              var uuids = {};
-              // And collect details using search service
-              if (relatedRecords) {
-                Object.keys(relatedRecords).map(function(k) {
-                  relatedRecords[k] && relatedRecords[k].map(function(l) {
-                    uuids[l.id] = [];
-                  })
-                });
+        if (md.resourceType && md.related) {
+          var relatedRecords = md.related;
+          var uuids = {};
+          // And collect details using search service
+          if (relatedRecords) {
+            Object.keys(relatedRecords).map(function (k) {
+              relatedRecords[k] && relatedRecords[k].map(function (l) {
+                uuids[l.id] = [];
+              })
+            });
 
-                var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
 
-                // Configuration to retrieve the results for the aggregations
-                Object.keys(relatedFacetConfig).map(function(k) {
-                  relatedFacetConfig[k].aggs = {
-                    'docs': {
-                      'top_hits': {
-                        'size': 100
-                      }
-                    }
+            // Configuration to retrieve the results for the aggregations
+            Object.keys(relatedFacetConfig).map(function (k) {
+              relatedFacetConfig[k].aggs = {
+                'docs': {
+                  'top_hits': {
+                    'size': 100
                   }
-                });
-
-                // Build multiquery to get aggregations for each relation
-                var body = '';
-                var relatedRecordKeysWithValues = []; // keep track of the relations with values
-
-                Object.keys(relatedRecords).forEach(function(k) {
-                  var uuids = {};
-                  if (relatedRecords[k]) {
-                    //relatedRecordsWithValues[k] = relatedRecords[k];
-                    relatedRecordKeysWithValues.push(k);
-
-                    relatedRecords[k].forEach(function (r) {
-                      uuids[r.id] = [];
-                    });
-
-                    body += '{"index": "records"}\n';
-
-                    body +=
-                      '{' +
-                      '  "query": {' +
-                      '    "bool": {' +
-                      '      "must": [' +
-                      '        { "terms": { "uuid": ["' + Object.keys(uuids).join('","') + '"]} },' +
-                      '        { "terms": { "isTemplate": ["n"] } }' +
-                      '      ]' +
-                      '    }' +
-                      '  },' +
-                      '  "aggs":' + JSON.stringify(relatedFacetConfig)  + ',' +
-                      '  "from": 0,' +
-                      '  "size": 100,' +
-                      '  "_source": ["' + gnESFacet.configs.simplelist.source.includes.join('","') + '"]' +
-                      '}\n';
-                  }
-                });
-
-                $http.post('../api/search/records/_msearch', body).then(function (data) {
-                  gnMdViewObj.current.record.relatedRecords = [];
-
-                  var recordMap = {};
-                  angular.forEach(data.data.responses, function(response) {
-                    angular.forEach(response.hits.hits, function(record) {
-                      recordMap[record._id] = new Metadata(record);
-                    });
-                  });
-
-                  Object.keys(relatedRecords).map(function(k) {
-                    relatedRecords[k] && relatedRecords[k].map(function(l) {
-                      l.record = recordMap[l.id];
-                    })
-                  });
-
-                  gnMdViewObj.current.record.relatedRecords = relatedRecords;
-                  gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
-
-                  relatedRecordKeysWithValues.forEach(function(key, index) {
-                    gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
-                  });
-                });
+                }
               }
             });
+
+            // Build multiquery to get aggregations for each relation
+            var body = '';
+            var relatedRecordKeysWithValues = []; // keep track of the relations with values
+
+            Object.keys(relatedRecords).forEach(function (k) {
+              var uuids = {};
+              if (relatedRecords[k]) {
+                relatedRecordKeysWithValues.push(k);
+
+                relatedRecords[k].forEach(function (r) {
+                  uuids[r.id] = [];
+                });
+
+                body += '{"index": "records"}\n';
+                body +=
+                  '{' +
+                  '  "query": {' +
+                  '    "bool": {' +
+                  '      "must": [' +
+                  '        { "terms": { "uuid": ["' + Object.keys(uuids).join('","') + '"]} },' +
+                  '        { "terms": { "isTemplate": ["n"] } }' +
+                  '      ]' +
+                  '    }' +
+                  '  },' +
+                  '  "aggs":' + JSON.stringify(relatedFacetConfig) + ',' +
+                  '  "from": 0,' +
+                  '  "size": 100,' +
+                  '  "_source": ["' + gnESFacet.configs.simplelist.source.includes.join('","') + '"]' +
+                  '}';
+              }
+            });
+
+            $http.post('../api/search/records/_msearch', body).then(function (data) {
+              gnMdViewObj.current.record.relatedRecords = [];
+
+              var recordMap = {};
+              angular.forEach(data.data.responses, function (response) {
+                angular.forEach(response.hits.hits, function (record) {
+                  recordMap[record._id] = new Metadata(record);
+                });
+              });
+
+              Object.keys(relatedRecords).map(function (k) {
+                relatedRecords[k] && relatedRecords[k].map(function (l) {
+                  l.record = recordMap[l.id];
+                })
+              });
+
+              gnMdViewObj.current.record.relatedRecords = relatedRecords;
+              gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
+
+              relatedRecordKeysWithValues.forEach(function (key, index) {
+                gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
+              });
+            });
+          }
         }
 
         // TODO: do not add duplicates
@@ -231,6 +217,13 @@
         }
       };
 
+      this.buildRelatedTypesQueryParameter = function(types) {
+        types = types || ('onlines|parent|children|sources|hassources|' +
+            'brothersAndSisters|services|datasets|' +
+            'siblings|associated|fcats|related');
+        return 'relatedType=' + types.split('|').join('&relatedType=');
+      };
+
       /**
        * Init the mdview behavior linked on $location.
        * At start and $location change, the uuid is extracted
@@ -270,7 +263,8 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                  $http.post('../api/search/records/_search', {"query": {
+                  $http.post('../api/search/records/_search?' + that.buildRelatedTypesQueryParameter(),
+                    {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {

@@ -43,12 +43,16 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.MetadataApi;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +151,25 @@ public class EsHTTPProxy {
         doc.put(Edit.Info.Elem.SELECTED, selections.contains(uuid));
     }
 
+    private static void addRelatedTypes(ObjectNode doc,
+                                        RelatedItemType[] relatedTypes,
+                                        ServiceContext context) {
+        RelatedResponse related = null;
+        try {
+            related = MetadataApi.getAssociatedResources(
+                context.getLanguage(), context,
+                context.getBean(IMetadataUtils.class)
+                    .findOne(getSourceString(doc, Geonet.IndexFieldNames.ID)),
+                relatedTypes, 0, 100);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load related types for {}. Error is: {}",
+                getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                e.getMessage()
+                );
+        }
+        doc.putPOJO("related", related);
+    }
+
     private static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
@@ -243,6 +266,11 @@ public class EsHTTPProxy {
     public void search(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
             String bucket,
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
+            required = false
+        )
+        @RequestParam(name = "relatedType", defaultValue = "")
+            RelatedItemType[] relatedTypes,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -254,7 +282,7 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, "_search", httpEntity.getBody(), bucket);
+        call(context, httpSession, request, response, "_search", httpEntity.getBody(), bucket, relatedTypes);
     }
 
 
@@ -270,6 +298,11 @@ public class EsHTTPProxy {
     public void msearch(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
             String bucket,
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
+            required = false
+        )
+        @RequestParam(name = "relatedType", defaultValue = "")
+            RelatedItemType[] relatedTypes,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -281,7 +314,7 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, "_msearch", httpEntity.getBody(), bucket);
+        call(context, httpSession, request, response, "_msearch", httpEntity.getBody(), bucket, relatedTypes);
     }
 
 
@@ -315,12 +348,14 @@ public class EsHTTPProxy {
             HttpEntity<String> httpEntity) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket);
+        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket, null);
     }
 
     public void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                      HttpServletResponse response,
-                     String endPoint, String body, String selectionBucket) throws Exception {
+                     String endPoint, String body,
+                     String selectionBucket,
+                     RelatedItemType[] relatedTypes) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
@@ -358,10 +393,10 @@ public class EsHTTPProxy {
                 requestBody.append(node.toString()).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url,
-                requestBody.toString(), true, selectionBucket);
+                requestBody.toString(), true, selectionBucket, relatedTypes);
         } else {
             handleRequest(context, httpSession, request, response, url,
-                body, true, selectionBucket);
+                body, true, selectionBucket, relatedTypes);
         }
     }
 
@@ -491,7 +526,8 @@ public class EsHTTPProxy {
                                String sUrl,
                                String requestBody,
                                boolean addPermissions,
-                               String selectionBucket) throws Exception {
+                               String selectionBucket,
+                               RelatedItemType[] relatedTypes) throws Exception {
         try {
             URL url = new URL(sUrl);
 
@@ -590,7 +626,7 @@ public class EsHTTPProxy {
                 }
 
                 try {
-                    processResponse(context, httpSession, streamFromServer, streamToClient, selectionBucket, addPermissions);
+                    processResponse(context, httpSession, streamFromServer, streamToClient, selectionBucket, addPermissions, relatedTypes);
                     streamToClient.flush();
                 } finally {
                     IOUtils.closeQuietly(streamFromServer);
@@ -614,7 +650,9 @@ public class EsHTTPProxy {
 
     private void processResponse(ServiceContext context, HttpSession httpSession,
                                  InputStream streamFromServer, OutputStream streamToClient,
-                                 String bucket, boolean addPermissions) throws Exception {
+                                 String bucket,
+                                 boolean addPermissions,
+                                 RelatedItemType[] relatedTypes) throws Exception {
         JsonParser parser = JsonStreamUtils.jsonFactory.createParser(streamFromServer);
         JsonGenerator generator = JsonStreamUtils.jsonFactory.createGenerator(streamToClient);
         parser.nextToken();  //Go to the first token
@@ -626,6 +664,10 @@ public class EsHTTPProxy {
             if (addPermissions) {
                 addUserInfo(doc, context);
                 addSelectionInfo(doc, selections);
+            }
+
+            if (relatedTypes.length > 0) {
+                addRelatedTypes(doc, relatedTypes, context);
             }
 
             // Remove fields with privileges info

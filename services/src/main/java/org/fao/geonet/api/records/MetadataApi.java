@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -532,10 +533,16 @@ public class MetadataApi {
         }
 
         String language = languageUtils.getIso3langCode(request.getLocales());
+        final ServiceContext context = ApiUtils.createServiceContext(request);
 
+        return getAssociatedResources(language, context, md, type, start, rows);
+    }
+
+    public static RelatedResponse getAssociatedResources(
+        String language, ServiceContext context,
+        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language),
@@ -543,7 +550,9 @@ public class MetadataApi {
             )),
             MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+        Path relatedXsl = ApplicationContextHolder.get()
+            .getBean(GeonetworkDataDirectory.class).getWebappDir()
+            .resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
