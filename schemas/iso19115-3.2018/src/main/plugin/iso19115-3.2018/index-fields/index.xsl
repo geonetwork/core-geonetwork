@@ -1058,7 +1058,7 @@
             <xsl:if test="$unit != ''">
               "unit": "<xsl:value-of select="gn-fn-index:json-escape($unit)"/>",
             </xsl:if>
-            "type": "<xsl:value-of select="name(.)"/>"
+            "type": "<xsl:value-of select="local-name(.)"/>"
             }
           </measure>
 
