@@ -26,7 +26,7 @@
 
   var module = angular.module('gn_searchoptions_directive', []);
 
-  module.directive('gnSearchOptions', ['$rootScope', 'gnGlobalSettings', function($rootScope, gnGlobalSettings) {
+  module.directive('gnSearchOptions', ['$rootScope', 'gnGlobalSettings', '$translate', function($rootScope, gnGlobalSettings, $translate) {
 
       return {
         restrict: 'E',
@@ -39,9 +39,9 @@
           scope.user = $rootScope.user;
           scope.initOnlyMyRecord = function() {
             scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
-
           };
           scope.initOnlyMyRecord();
+          scope.langLabel = $translate.instant(gnGlobalSettings.iso3lang);
           // this enables to keep the dropdown active when we click on the label
           element.find('label > span').each(function(i, e) {
             $(e).on('click', function () {
@@ -74,6 +74,16 @@
               controller.setOnlyMyRecord(value);
             }
           });
+
+          Object.defineProperty(scope, 'forcedLang', {
+            get: function() {
+              return controller.getForcedLang();
+            },
+            set: function(value) {
+              controller.setForcedLang(value);
+            }
+          });
+
         }
       };
     }]);

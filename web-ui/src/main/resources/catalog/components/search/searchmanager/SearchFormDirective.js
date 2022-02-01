@@ -354,7 +354,8 @@
       $scope.searchObj.state = {
         filters: {},
         exactMatch: false,
-        titleOnly: false
+        titleOnly: false,
+        forcedLang: false
       };
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
@@ -582,6 +583,21 @@
       }
       return $scope.value;
     };
+
+    /**
+     * @param {string} value
+     */
+    this.setForcedLang = function (value) {
+      this.updateSearchParams({'forcedLang': value})
+      $scope.searchObj.state.forcedLang = value
+    }
+
+    /**
+     * @return {string}
+     */
+    this.getForcedLang = function () {
+      return $scope.searchObj.state.forcedLang
+    }
 
   };
 

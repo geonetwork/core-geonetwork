@@ -119,6 +119,8 @@
   "exactMatch-help": "Correspondance exacte signifie que des \\\"' sont ajoutés autour des termes recherchés.",
   "titleOnly": "Recherche sur le titre",
   "titleOnly-help": "Recherche sur le titre uniquement.",
+  "searchForcedLang": "Uniquement dans les fiches en {{forcedLang}}",
+  "searchForcedLang-help": "Cherche uniquement dans les métadonnées qui sont traduites dans la langue de l'interface",
   "wfsIndexingEndDate": "Dernière exécution",
   "wfsIndexingScheduled": "Planifié ?",
   "wfsIndexingNewSchedule": "Ajouter un moissoneur",
