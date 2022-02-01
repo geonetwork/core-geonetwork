@@ -301,6 +301,22 @@
     </xsl:for-each>
   </xsl:function>
 
+
+  <!-- Convert to ASCII,
+       Replace . by -,
+       Keep only letters, numbers and _ and -. -->
+  <xsl:function name="gn-fn-index:build-field-name">
+    <xsl:param name="value"/>
+
+    <xsl:value-of select="replace(
+                            replace(
+                              replace(
+                                normalize-unicode($value, 'NFKD'),
+                                '\P{IsBasicLatin}', '')
+                              , '\.', '-'),
+                            '[^a-zA-Z0-9_-]', '')"/>
+  </xsl:function>
+
   <xsl:template name="build-all-keyword-fields" as="node()*">
     <xsl:param name="allKeywords" as="node()?"/>
 
