@@ -56,6 +56,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -404,19 +405,27 @@ public class MetadataSharingApi {
 
             boolean isMdWorkflowEnable = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
+            Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
+
             // Check not trying to publish a retired metadata
-            if (isMdWorkflowEnable) {
-                MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
-                if (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED)) {
-                    List<GroupOperations> allGroupOps =
-                        privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).collect(Collectors.toList());
+            if (isMdWorkflowEnable && (groupOwnerId != null)) {
+                java.util.Optional<Group> groupOwner = groupRepository.findById(groupOwnerId);
+                boolean isGroupWithEnabledWorkflow = WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.get().getName());
 
-                    for (GroupOperations p : allGroupOps) {
-                        if (p.getOperations().containsValue(true)) {
-                            throw new Exception(String.format("Retired metadata %s can't be published.",
-                                metadata.getUuid()));
+                if (isGroupWithEnabledWorkflow) {
+                    MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
+                    if ((mdStatus != null) &&
+                        (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED))) {
+                        List<GroupOperations> allGroupOps =
+                            privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).collect(Collectors.toList());
+
+                        for (GroupOperations p : allGroupOps) {
+                            if (p.getOperations().containsValue(true)) {
+                                throw new Exception(String.format("Retired metadata %s can't be published.",
+                                    metadata.getUuid()));
+                            }
+
                         }
-
                     }
                 }
             }
