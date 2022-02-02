@@ -189,7 +189,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE">
             <th class="width-75">
               {{'facet-indicator_INDICATOR_CAPABILITIES_TYPE' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_TYPE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_CAPABILITIES_TYPE-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               {{mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE}}
@@ -217,7 +224,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_LAYER_MATCHES">
             <th>
               {{'facet-indicator_INDICATOR_LAYER_MATCHES' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_LAYER_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_LAYER_MATCHES-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_LAYER_MATCHES}}">{{mdView.current.record.indicator_INDICATOR_LAYER_MATCHES}}</span>
@@ -226,7 +240,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE">
             <th>
               {{'facet-indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE}}">{{mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE}}</span>
@@ -235,7 +256,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES">
             <th>
               {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES}}">{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES}}</span>
@@ -244,7 +272,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE">
             <th>
               {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE}}">{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE}}</span>
@@ -253,7 +288,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE">
             <th>
               {{'facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE}}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE}}</span>
@@ -262,7 +304,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES">
             <th>
               {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES}}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES}}</span>
@@ -271,7 +320,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES">
             <th>
               {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES}}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES}}</span>
@@ -280,7 +336,14 @@
           <tr data-ng-if="mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES">
             <th>
               {{'facet-indicator_INDICATOR_RESOLVES_TO_CAPABILITIES' | translate }}
-              <span title="{{'facet-indicator_INDICATOR_RESOLVES_TO_CAPABILITIES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+              <span gn-popover gn-popover-placement="top">
+                <button gn-popover-anchor type="button" class="btn btn-default btn-xs" title="{{'moreInfo' | translate }}">
+                  <i class="fa fa-fw fa-info-circle text-info"></i>
+                </button>
+                <div gn-popover-content>
+                  {{'facet-indicator_INDICATOR_RESOLVES_TO_CAPABILITIES-help' | translate}}
+                </div>
+              </span>
             </th>
             <td>
               <span class="indicator-{{mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES}}">{{mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES}}</span>
@@ -318,7 +381,7 @@
           </div>
 
           <h2 data-translate="">aboutThisResource</h2>
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <tbody>
               <tr data-ng-if="mdView.current.record.inspireTheme_syn.length > 0 ||
                             mdView.current.record.inspireTheme_syn.length > 0">
@@ -472,7 +535,7 @@
 
             <h3><span data-translate="">featureType</span>&nbsp;'{{featureType.typeName}}'</h3>
 
-            <table class="table table-striped" >
+            <table class="table table-striped table-bordered">
               <tbody>
               <tr data-ng-if="featureType.typeName">
                 <th data-translate="">featureTypeName</th>
@@ -512,7 +575,7 @@
             </table>
           </div>
 
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <tbody>
             <tr data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency.length > 0">
               <th data-translate="">updateFrequency</th>
@@ -598,7 +661,7 @@
             <span data-translate="">metadataInXML</span>
           </a>
 
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <tbody>
             <tr data-ng-if="mdView.current.record.contact">
              <th data-translate="">contact</th>
@@ -663,6 +726,16 @@
                   data-ng-src="../api/records/{{mdView.current.record.uuid}}/extents.png"/>
             </p>
 
+          </section>
+
+          <section class="gn-md-side-dates">
+            <h2>
+              <i class="fa fa-fw fa-clock-o"></i>
+              <span data-translate="">harvestDates</span>
+            </h2>
+            <ul>
+              <li><strong>Harvest Date</strong>: {{mdView.current.record.indexingDate | date: 'yyyy-MM-dd, HH:mm:ss'}}</li>
+            </ul>
           </section>
 
           <section class="gn-md-side-dates"

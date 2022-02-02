@@ -559,5 +559,6 @@
     "unselectChoiceNotAllowedTitle": "Unselect choices",
     "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
     "searchOptions": "Search options",
-    "options": "Options"
+    "options": "Options",
+    "moreInfo": "Click for more information"
 }

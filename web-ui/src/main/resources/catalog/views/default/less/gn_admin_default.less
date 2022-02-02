@@ -377,13 +377,16 @@ ul.gn-resultview li.list-group-item {
         #gn-harvest-history-panel, #gn-harvest-settings-panel {
           .panel-heading {
             height: auto;
-            line-height: 3em;
+            line-height: 3em !important;
             .btn-toolbar {
               margin: 5px 0;
             }
           }
           legend {
             padding-top: 15px;
+          }
+          legend[data-gn-slide-toggle] {
+            border-bottom: 1px solid #e5e5e5;
           }
           fieldset[id^="gn-harvest-settings-"] {
             .col-lg-8 {
