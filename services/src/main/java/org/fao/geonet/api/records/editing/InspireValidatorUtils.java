@@ -575,14 +575,14 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
+    public String submitFile(ServiceContext context, String serviceEndpoint, String serviceQueryEndpoint, InputStream record, String testsuite, String testTitle)
         throws IOException, JSONException {
 
-        if (checkServiceStatus(context, serviceEndpoint)) {
+        if (checkServiceStatus(context, serviceQueryEndpoint)) {
             // Get the tests to execute
-            List<String> tests = getTests(context, serviceEndpoint, testsuite);
+            List<String> tests = getTests(context, serviceQueryEndpoint, testsuite);
             // Upload file to test
-            String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
+            String testFileId = uploadMetadataFile(context, serviceQueryEndpoint, record);
 
             if (testFileId == null) {
                 Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
@@ -613,11 +613,11 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitUrl(ServiceContext context, String serviceEndpoint, String getRecordById, String testsuite, String testTitle)
+    public String submitUrl(ServiceContext context, String serviceEndpoint, String serviceEndpointQuery, String getRecordById, String testsuite, String testTitle)
         throws IOException, JSONException {
 
         try {
-            if (checkServiceStatus(context, serviceEndpoint)) {
+            if (checkServiceStatus(context, serviceEndpointQuery)) {
                 // Get the tests to execute
                 List<String> tests = getTests(context, serviceEndpoint, testsuite);
                 if (tests == null || tests.size() == 0) {
