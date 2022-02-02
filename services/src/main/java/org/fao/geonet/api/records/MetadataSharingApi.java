@@ -75,6 +75,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -778,8 +779,8 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
-                    report, dataManager, accessManager, metadataRepository,
-                    serviceContext, listOfUpdatedRecords, uuid, session, approved);
+                    report, dataManager, accessManager,
+                    serviceContext, listOfUpdatedRecords, uuid, session);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -852,8 +853,8 @@ public class MetadataSharingApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
-                report, dataManager, accessManager, metadataRepository,
-                serviceContext, listOfUpdatedRecords, metadataUuid, session, approved);
+                report, dataManager, accessManager,
+                serviceContext, listOfUpdatedRecords, metadataUuid, session);
             dataManager.flush();
             dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
@@ -872,10 +873,9 @@ public class MetadataSharingApi {
                                  MetadataProcessingReport report,
                                  DataManager dataManager,
                                  AccessManager accessMan,
-                                 MetadataRepository metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid,
-                                 HttpSession session, Boolean approved) throws Exception {
+                                 HttpSession session) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -883,63 +883,79 @@ public class MetadataSharingApi {
             serviceContext, String.valueOf(metadata.getId()))) {
             report.addNotEditableMetadataId(metadata.getId());
         } else {
-            //-- Get existing owner and privileges for that owner - note that
-            //-- owners don't actually have explicit permissions - only their
-            //-- group does which is why we have an ownerGroup (parameter groupid)
-            Integer sourceUsr = metadata.getSourceInfo().getOwner();
-            Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
-            Vector<OperationAllowedId> sourcePriv =
-                retrievePrivileges(serviceContext, String.valueOf(metadata.getId()), sourceUsr, sourceGrp);
+            // Retrieve the identifiers associated with the metadata uuid.
+            // When the workflow is enabled, the metadata can have an approved and a working copy version.
+            List<Integer> idList = metadataUtils.findAllIdsBy(MetadataSpecs.hasMetadataUuid(uuid));
 
-            // -- Set new privileges for new owner from privileges of the old
-            // -- owner, if none then set defaults
-            if (sourcePriv.size() == 0) {
-                dataManager.copyDefaultPrivForGroup(
-                    serviceContext,
-                    String.valueOf(metadata.getId()),
-                    String.valueOf(groupIdentifier),
-                    false);
-                report.addMetadataInfos(metadata, String.format(
-                    "No privileges for user '%s' on metadata '%s', so setting default privileges",
-                    sourceUsr, metadata.getUuid()
-                ));
-            } else {
-                for (OperationAllowedId priv : sourcePriv) {
-                    if (sourceGrp != null) {
-                        dataManager.unsetOperation(serviceContext,
+            // Increase the total records counter when processing a metadata with approved and working copies
+            // as the initial counter doesn't take in account this case
+            if (idList.size() > 1) {
+                report.setTotalRecords(report.getNumberOfRecords() + 1);
+            }
+
+            for(Integer mdId : idList) {
+                if (mdId != metadata.getId()) {
+                    metadata = metadataUtils.findOne(mdId);
+                }
+
+                //-- Get existing owner and privileges for that owner - note that
+                //-- owners don't actually have explicit permissions - only their
+                //-- group does which is why we have an ownerGroup (parameter groupid)
+                Integer sourceUsr = metadata.getSourceInfo().getOwner();
+                Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
+                Vector<OperationAllowedId> sourcePriv =
+                    retrievePrivileges(serviceContext, String.valueOf(metadata.getId()), sourceUsr, sourceGrp);
+
+                // -- Set new privileges for new owner from privileges of the old
+                // -- owner, if none then set defaults
+                if (sourcePriv.size() == 0) {
+                    dataManager.copyDefaultPrivForGroup(
+                        serviceContext,
+                        String.valueOf(metadata.getId()),
+                        String.valueOf(groupIdentifier),
+                        false);
+                    report.addMetadataInfos(metadata, String.format(
+                        "No privileges for user '%s' on metadata '%s', so setting default privileges",
+                        sourceUsr, metadata.getUuid()
+                    ));
+                } else {
+                    for (OperationAllowedId priv : sourcePriv) {
+                        if (sourceGrp != null) {
+                            dataManager.unsetOperation(serviceContext,
+                                metadata.getId(),
+                                sourceGrp,
+                                priv.getOperationId());
+                        }
+                        dataManager.setOperation(serviceContext,
                             metadata.getId(),
-                            sourceGrp,
+                            groupIdentifier,
                             priv.getOperationId());
                     }
-                    dataManager.setOperation(serviceContext,
-                        metadata.getId(),
-                        groupIdentifier,
-                        priv.getOperationId());
                 }
-            }
 
-            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid, approved));
-            ApplicationContext context = ApplicationContextHolder.get();
-            if(!Objects.equals(groupIdentifier, sourceGrp)) {
-              Group newGroup = groupRepository.findOne(groupIdentifier);
-              Group oldGroup = sourceGrp == null ? null : groupRepository.findOne(sourceGrp);
-              new RecordGroupOwnerChangeEvent(metadataId,
-                  ApiUtils.getUserSession(session).getUserIdAsInt(),
-                  sourceGrp == null ? null : ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
-                  ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
+                Long metadataId = Long.valueOf(metadata.getId());
+                ApplicationContext context = ApplicationContextHolder.get();
+                if (!Objects.equals(groupIdentifier, sourceGrp)) {
+                    Group newGroup = groupRepository.findOne(groupIdentifier);
+                    Group oldGroup = sourceGrp == null ? null : groupRepository.findOne(sourceGrp);
+                    new RecordGroupOwnerChangeEvent(metadataId,
+                        ApiUtils.getUserSession(session).getUserIdAsInt(),
+                        sourceGrp == null ? null : ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
+                        ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
+                }
+                if (!Objects.equals(userIdentifier, sourceUsr)) {
+                    User newOwner = userRepository.findOne(userIdentifier);
+                    User oldOwner = userRepository.findOne(sourceUsr);
+                    new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
+                }
+                // -- set the new owner into the metadata record
+                dataManager.updateMetadataOwner(metadata.getId(),
+                    String.valueOf(userIdentifier),
+                    String.valueOf(groupIdentifier));
+                report.addMetadataId(metadata.getId());
+                report.incrementProcessedRecords();
+                listOfUpdatedRecords.add(metadata.getId() + "");
             }
-            if(!Objects.equals(userIdentifier, sourceUsr)) {
-              User newOwner = userRepository.findOne(userIdentifier);
-              User oldOwner = userRepository.findOne(sourceUsr);
-              new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
-            }
-            // -- set the new owner into the metadata record
-            dataManager.updateMetadataOwner(metadata.getId(),
-                String.valueOf(userIdentifier),
-                String.valueOf(groupIdentifier));
-            report.addMetadataId(metadata.getId());
-            report.incrementProcessedRecords();
-            listOfUpdatedRecords.add(metadata.getId() + "");
         }
     }
 
@@ -1177,7 +1193,7 @@ public class MetadataSharingApi {
      * Creates a ref {@link SharingParameter} object with privileges to publih/un-publish
      * metadata in {@link ReservedGroup#all} group.
      *
-     * @param publish   Flag to add/remove sharing privileges.
+     * @param publish Flag to add/remove sharing privileges.
      * @return
      */
     private SharingParameter buildSharingForPublicationConfig(boolean publish) {
@@ -1187,19 +1203,19 @@ public class MetadataSharingApi {
         List<GroupOperations> privilegesList = new ArrayList<>();
 
         final Iterator iterator = publicationConfig.entrySet().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Map.Entry<String, Object[]> e = (Map.Entry<String, Object[]>) iterator.next();
             GroupOperations privAllGroup = new GroupOperations();
             privAllGroup.setGroup(Integer.parseInt(e.getKey()));
 
             Map<String, Boolean> operations = new HashMap<>();
             for (Object operation : e.getValue()) {
-                operations.put((String)operation, publish);
+                operations.put((String) operation, publish);
             }
 
             privAllGroup.setOperations(operations);
             privilegesList.add(privAllGroup);
-        };
+        }
 
         sharing.setPrivileges(privilegesList);
         return sharing;
