@@ -10,8 +10,7 @@
   <a href
      class="flex-row flex-align-center flex-shrink width-100"
      ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
-     <!-- remove title for sextant -->
-     ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
+     ng-click="ctrl.filter(ctrl.facet, ctrl.item)"> <!-- remove title for sextant -->
     <span class="fa fa-fw"
           ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
     </span>
