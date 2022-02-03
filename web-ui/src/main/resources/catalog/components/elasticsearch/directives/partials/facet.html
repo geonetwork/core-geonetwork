@@ -15,7 +15,7 @@
     <span class="fa fa-fw"
           ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
     </span>
-    <span class="gn-facet-label flex-shrink text-ellipsis">
+    <span class="gn-facet-label flex-shrink"> <!-- remove text-ellipsis for sextant -->
       {{::ctrl.item.label || (ctrl.item.value | facetTranslator: ctrl.facet.key) | capitalize}}
     </span>
 
