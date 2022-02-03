@@ -41,7 +41,10 @@
             scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
           };
           scope.initOnlyMyRecord();
-          scope.langLabel = $translate.instant(gnGlobalSettings.iso3lang);
+          $translate(gnGlobalSettings.iso3lang).then(function(translation) {
+            scope.langLabel = translation;
+          });
+
           // this enables to keep the dropdown active when we click on the label
           element.find('label > span').each(function(i, e) {
             $(e).on('click', function () {
