@@ -37,6 +37,7 @@
             "filter": [
               "english_possessive_stemmer",
               "lowercase",
+              "asciifolding",
               "english_synonym",
               "english_stop",
               "english_keywords",
