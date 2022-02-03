@@ -143,9 +143,19 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 30
           },
-          // Full text on all fields
-          // 'queryBase': '${any}',
-          // Full text in languages with boost on title match
+          /*
+           * queryBase: pattern used to build the full text search query
+           *    - ${searchLang} will be substitude by the search lang if any, otherwise
+           *             by \\* to search in all languages.
+           *    - ${any} will be replaced by the full text search input
+           *
+           * Exemples:
+           *    - Full text on all fields: 'queryBase': '${any}'
+           *    - Full text in languages with boost on title match :
+           *         'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2'
+           *    - Search in French fields (with french analysis) :
+           *         'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2'
+           */
           'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
           'queryTitle': 'resourceTitleObject.${searchLang}:(${any})',
           'searchOptions': true,
