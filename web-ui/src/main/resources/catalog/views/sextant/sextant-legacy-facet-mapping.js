@@ -35,9 +35,7 @@
           'order': {'_key': 'asc'}
         },
         'meta': {
-          'collapsed': true,
-          'translateOnLoad': true,
-          'treeKeySeparator': '/'
+          'collapsed': true
         }
       }
     },
@@ -769,10 +767,6 @@
           'terms': {
             'field': 'th_fem_data_types_tree.key',
             'size': 300
-          },
-          'meta': {
-            'translateOnLoad': true,
-            'treeKeySeparator': '/'
           }
         }
     },
@@ -782,10 +776,6 @@
           'terms': {
             'field': 'th_fem_facades_tree.key',
             'size': 300
-          },
-          'meta': {
-            'translateOnLoad': true,
-            'treeKeySeparator': '/'
           }
         }
     },
@@ -795,10 +785,6 @@
           'terms': {
             'field': 'th_fem_projects_tree.key',
             'size': 300
-          },
-          'meta': {
-            'translateOnLoad': true,
-            'treeKeySeparator': '/'
           }
         }
     },
@@ -835,10 +821,6 @@
           'terms': {
             'field': 'th_mission-atlantic-odemm_tree.key',
             'size': 300
-          },
-          'meta': {
-            'translateOnLoad': true,
-            'treeKeySeparator': '/'
           }
         }
     },
@@ -848,10 +830,6 @@
           'terms': {
             'field': 'th_mission-atlantic-bodc-parameters_tree.key',
             'size': 300
-          },
-          'meta': {
-            'translateOnLoad': true,
-            'treeKeySeparator': '/'
           }
         }
     },
