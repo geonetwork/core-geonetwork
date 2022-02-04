@@ -290,7 +290,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
-        if (true || hasNonStandardParameters(request)) {
+        if (hasNonStandardParameters(request)) {
             // the http headers can cause a formatter to output custom output due to the parameters.
             // because it is not known how the parameters may affect the output then we have two choices
             // 1. make a unique cache for each configuration of parameters
