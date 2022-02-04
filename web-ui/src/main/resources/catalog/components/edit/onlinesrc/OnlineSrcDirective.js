@@ -665,6 +665,23 @@
                   scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
                 };
 
+                var DEFAULT_CONFIG = {
+                  "process": "onlinesrc-add",
+                  "fields": {
+                    "url": {
+                      "isMultilingual": false
+                    },
+                    "protocol": {
+                      "isMultilingual": false
+                    },
+                    "name": {},
+                    "desc": {},
+                    "function": {
+                      "isMultilingual": false
+                    }
+                  }
+                };
+
                 // Check which config to load based on the link
                 // to edit properties. A match is returned based
                 // on link type and config process prefix. If none found
@@ -673,23 +690,39 @@
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
                     var p = c.fields &&
-                            c.fields.protocol &&
-                            c.fields.protocol.value || '',
+                          c.fields.protocol &&
+                          c.fields.protocol.value || '',
                         f = c.fields &&
-                        c.fields.function &&
-                        c.fields.function.value || '',
+                          c.fields.function &&
+                          c.fields.function.value || '',
                         ap = c.fields &&
-                        c.fields.applicationProfile &&
-                        c.fields.applicationProfile.value || '';
-                    if (c.process.indexOf(link.type) === 0 &&
-                        p === (link.protocol || '') &&
-                        f === (link.function || '') &&
-                        ap === (link.applicationProfile || '')
+                          c.fields.applicationProfile &&
+                          c.fields.applicationProfile.value || '',
+                        nameFieldValue = c.fields &&
+                          c.fields.name &&
+                          c.fields.name.value || '',
+                        // Hardcoded name value in configuration
+                        // "fields": {...
+                        //   "name": {
+                        //     "value": "Other document",
+                        //     "hidden": true
+                        //   },
+                        isNameFieldHidden = c.fields &&
+                          c.fields.name && c.fields.name.hidden || false,
+                        hasSameProtocolFunctionAndAppProfile =
+                          c.process.indexOf(link.type) === 0 &&
+                          p === (link.protocol || '') &&
+                          f === (link.function || '') &&
+                          ap === (link.applicationProfile || '');
+                    if ((hasSameProtocolFunctionAndAppProfile && !isNameFieldHidden)
+                        || (hasSameProtocolFunctionAndAppProfile
+                            && isNameFieldHidden
+                            && nameFieldValue === (link.title[scope.lang] || ''))
                     ) {
                       return c;
                     }
                   }
-                  return scope.config.types[0];
+                  return DEFAULT_CONFIG;
                 }
 
                 gnOnlinesrc.register('onlinesrc', function(linkToEditOrType) {
