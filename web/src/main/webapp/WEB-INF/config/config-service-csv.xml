@@ -28,7 +28,7 @@
     <service name="csv.search">
       <documentation><![CDATA[
         Search service returning results in CSV format.
-        
+
         Parameters:
         * Any search criteria supported by Lucene search service.
         ]]></documentation>
@@ -45,7 +45,9 @@
       <class name=".services.main.Result">
         <param name="range" value="all"/>
       </class>
-      <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8"/>
+      <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8">
+        <call name="documentFileName" class=".guiservices.util.GetCsvFileName"/>
+      </output>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
 
