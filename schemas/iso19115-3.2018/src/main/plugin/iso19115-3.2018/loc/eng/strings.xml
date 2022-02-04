@@ -89,6 +89,7 @@
   <eo-level>Level</eo-level>
   <eo-feature-type>Feature type</eo-feature-type>
   <eo-acquisition-pattern>Acquisition pattern</eo-acquisition-pattern>
+  <eo-acquisition-info-add>Add acquisition info and source</eo-acquisition-info-add>
   <eo-compositing>Compositing</eo-compositing>
   <eo-main-ig-parameters>Main instrumental or geophysical parameters</eo-main-ig-parameters>
   <eo-gcmd>Keywords (GCMD)</eo-gcmd>

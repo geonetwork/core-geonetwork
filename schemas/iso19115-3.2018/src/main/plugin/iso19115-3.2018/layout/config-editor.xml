@@ -560,6 +560,22 @@
                 </snippet>
               </template>
             </action>
+
+
+            <action type="add"
+                    if="count(*/mdb:acquisitionInformation) = 0"
+                    btnLabel="eo-acquisition-info-add"
+                    or="acquisitionInformation"
+                    in="/*">
+              <template>
+                <snippet>
+                  <mdb:acquisitionInformation>
+                    <mac:MI_AcquisitionInformation>
+                    </mac:MI_AcquisitionInformation>
+                  </mdb:acquisitionInformation>
+                </snippet>
+              </template>
+            </action>
           </section>
 
 
@@ -1024,6 +1040,7 @@
       </tab>
       <flatModeExceptions>
         <for name="cit:otherCitationDetails"/>
+        <for name="mdb:acquisitionInformation"/>
       </flatModeExceptions>
     </view>
 

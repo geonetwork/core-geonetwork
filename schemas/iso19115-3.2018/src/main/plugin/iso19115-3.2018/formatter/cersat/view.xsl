@@ -293,28 +293,31 @@
                 <xsl:variable name="online"
                               select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
                 <xsl:if test="count($online) > 0">
-                  <xsl:for-each select="$online">
+                  <xsl:for-each-group select="$online"
+                                      group-by="cit:protocol/*/text()">
+                    <!-- Group by protocol -->
                     <div>
                       <strong>
-                        <xsl:value-of select="if (cit:description/*/text() != '')
-                                              then cit:description/*/text()
-                                              else cit:protocol/*/text()"/>
+                        <xsl:value-of select="current-grouping-key()"/>
                       </strong>
-                      <xsl:choose>
-                        <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')">
-                          <xsl:value-of select="cit:linkage/*/text()"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <a title="{cit:protocol/*/text()}"
-                             href="{cit:linkage/*/text()}">
-                            <xsl:value-of select="if (cit:name/*/text() != '')
-                                                then cit:name/*/text()
-                                                else cit:linkage/*/text()"/>
-                          </a>
-                        </xsl:otherwise>
-                      </xsl:choose>
+                      <xsl:for-each select="current-group()">
+                        <div title="{cit:name/*/text()}">
+                          <xsl:choose>
+                            <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')">
+                              <xsl:value-of select="cit:linkage/*/text()"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                              <a href="{cit:linkage/*/text()}">
+                                <xsl:value-of select="cit:linkage/*/text()"/>
+                              </a>
+                            </xsl:otherwise>
+                          </xsl:choose>
+
+                          <xsl:value-of select="cit:description/*/text()"/>
+                        </div>
+                      </xsl:for-each>
                     </div>
-                  </xsl:for-each>
+                  </xsl:for-each-group>
                   <br/>
                 </xsl:if>
               <!--</div>

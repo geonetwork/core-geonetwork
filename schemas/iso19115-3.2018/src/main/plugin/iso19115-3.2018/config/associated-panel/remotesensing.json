@@ -192,33 +192,11 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "Tools",
-        "label": "Naiad",
-        "copyLabel": "name",
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "WWW:LINK",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "information",
             "hidden": true,
             "isMultilingual": false
           }
@@ -243,7 +221,8 @@
             "isMultilingual": false
           },
           "name": {
-            "value": "User guide"
+            "value": "User guide",
+            "hidden": true
           },
           "desc": {},
           "function": {
@@ -272,7 +251,8 @@
             "isMultilingual": false
           },
           "name": {
-            "value": "Processing and validation"
+            "value": "Processing and validation",
+            "hidden": true
           },
           "desc": {},
           "function": {
@@ -300,7 +280,10 @@
             "hidden": true,
             "isMultilingual": false
           },
-          "name": {},
+          "name": {
+            "value": "Other document",
+            "hidden": true
+          },
           "desc": {},
           "function": {
             "value": "information",

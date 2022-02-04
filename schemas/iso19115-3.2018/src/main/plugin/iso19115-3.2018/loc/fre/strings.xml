@@ -81,6 +81,7 @@
   <eo-level>Niveau</eo-level>
   <eo-feature-type>Type d'entité</eo-feature-type>
   <eo-acquisition-pattern>Type d'acquisition</eo-acquisition-pattern>
+  <eo-acquisition-info-add>Add acquisition info and source</eo-acquisition-info-add>
   <eo-compositing>Méthode de fusion</eo-compositing>
   <eo-main-ig-parameters>Principaux paramètres instrumentaux ou géophysiques</eo-main-ig-parameters>
   <eo-gcmd>Mots clés (GCMD)</eo-gcmd>
