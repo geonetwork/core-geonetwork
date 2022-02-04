@@ -333,8 +333,7 @@
         },
         link: function (scope, element, attrs) {
 
-          var sextantThesaurusWithHierarchyInLabel = [];
-            Object.keys(SEXTANT_LEGACY_FACET_MAPPING)
+          var sextantThesaurusWithHierarchyInLabel = Object.keys(SEXTANT_LEGACY_FACET_MAPPING)
             .filter(function(k) {
               return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0].indexOf('_tree.key') !== -1;
             }).map(function(k) {
