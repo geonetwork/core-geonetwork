@@ -34,6 +34,7 @@ public class DoiBuilder {
      * @return
      */
     public static String create(String prefix, String metadataUuid) {
-        return prefix + "/" + metadataUuid;
+        String sep = prefix.indexOf("/") > -1 ? "" : "/";
+        return prefix + sep + metadataUuid;
     }
 }
