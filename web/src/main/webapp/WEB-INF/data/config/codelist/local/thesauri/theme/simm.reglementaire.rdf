@@ -13,194 +13,644 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85924491-69bb-470d-91aa-f772a19a1764">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Aires Marines Protégées</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Aires Marines Protégées</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux1">
+<rdf:Description rdf:nodeID="node1fi913p4nx15">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85924491-69bb-470d-91aa-f772a19a1764">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#814144ea-7f7b-4098-a719-e1d6f6b4e389">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Convention sur la Diversité Biologique</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Convention sur la Diversité Biologique</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux2">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c4e0575b-fb30-44c1-bdb0-36780466072b">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#814144ea-7f7b-4098-a719-e1d6f6b4e389">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1042f432-3974-459e-b99e-be38c882004d">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Conventions des mers régionales</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Conventions des mers régionales</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux3">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85924491-69bb-470d-91aa-f772a19a1764">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1042f432-3974-459e-b99e-be38c882004d">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e95c2382-fed1-435c-88b5-d69e301a76a2">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Cadre pour la Planification de l'Espace Maritime (DCPEM)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Cadre pour la Planification de l'Espace Maritime (DCPEM)</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux4">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#814144ea-7f7b-4098-a719-e1d6f6b4e389">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e95c2382-fed1-435c-88b5-d69e301a76a2">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c8e073b0-c059-406b-91eb-9d2b97ce292a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Cadre Stratégie pour le Milieu Marin (DCSMM)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Cadre Stratégie pour le Milieu Marin (DCSMM)</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux5"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux5">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e95c2382-fed1-435c-88b5-d69e301a76a2">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c8e073b0-c059-406b-91eb-9d2b97ce292a">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc1a2945-9fdb-4bb0-a352-2c661afb931a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Cadre sur l'Eau (DCE)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Cadre sur l'Eau (DCE)</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux6">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c8e073b0-c059-406b-91eb-9d2b97ce292a">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc1a2945-9fdb-4bb0-a352-2c661afb931a">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8cb617bf-3327-4d1d-9d58-a77a784d7630">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Politique Commune des Pêches</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Politique Commune des Pêches</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux7">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#497aba13-6e86-482a-a19a-f553ac5d0195">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8cb617bf-3327-4d1d-9d58-a77a784d7630">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx7"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#816400fa-b5b4-4413-88ac-c631878190e4">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Stratégie Nationale du trait de côte</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Stratégie Nationale du trait de côte</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux8">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#45631936-bb03-4845-b965-dcac2186797a">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#816400fa-b5b4-4413-88ac-c631878190e4">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx8"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b5a4ca04-1fe5-4943-8b0a-622973a3e6b4">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Stratégie Nationale pour la mer et le littoral</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Stratégie Nationale pour la mer et le littoral</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963gux9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9d963gux9">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#816400fa-b5b4-4413-88ac-c631878190e4">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b5a4ca04-1fe5-4943-8b0a-622973a3e6b4">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx9"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b40d72db-2a82-4998-b62a-3612681e427b">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Eaux de baignade</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Eaux de baignade</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu2r7kx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu2r7kx1">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#48b2b157-fdab-4ad7-97a6-5d650b72cd39">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b40d72db-2a82-4998-b62a-3612681e427b">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx10"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#497aba13-6e86-482a-a19a-f553ac5d0195">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Oiseaux</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Oiseaux</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu37ccx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu37ccx1">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bef901f7-fe35-4a51-904c-badb686d25a1">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#497aba13-6e86-482a-a19a-f553ac5d0195">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx11"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bef901f7-fe35-4a51-904c-badb686d25a1">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Habitat, Faune et Flore</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Habitat, Faune et Flore</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu3jbpx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu3jbpx1">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b40d72db-2a82-4998-b62a-3612681e427b">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bef901f7-fe35-4a51-904c-badb686d25a1">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx12"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx12">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#48b2b157-fdab-4ad7-97a6-5d650b72cd39">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Directive Cadre sur les Déchets</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Directive Cadre sur les Déchets</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu3riox1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu3riox1">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc1a2945-9fdb-4bb0-a352-2c661afb931a">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#48b2b157-fdab-4ad7-97a6-5d650b72cd39">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx13"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#45631936-bb03-4845-b965-dcac2186797a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Réglementation Espèces Exotiques Envahissantes</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Réglementation Espèces Exotiques Envahissantes</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu438tx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu438tx1">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8cb617bf-3327-4d1d-9d58-a77a784d7630">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#45631936-bb03-4845-b965-dcac2186797a">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx14"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fi913p4nx14">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c4e0575b-fb30-44c1-bdb0-36780466072b">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Conventions et protocoles de l’Organisation Maritime Internationale</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Conventions et protocoles de l’Organisation Maritime Internationale</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fu4d6ux1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e9fu4d6ux1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1042f432-3974-459e-b99e-be38c882004d">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c4e0575b-fb30-44c1-bdb0-36780466072b">
+	<ns5:BoundedBy rdf:nodeID="node1fi913p4nx15"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85924491-69bb-470d-91aa-f772a19a1764">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Aires Marines Protégées</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Marine Protected Areas</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Aires Marines Protégées</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Marine Protected Areas</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1042f432-3974-459e-b99e-be38c882004d">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Conventions des mers régionales</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Regional Sea Conventions</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Conventions des mers régionales</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Regional Sea Conventions</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c4e0575b-fb30-44c1-bdb0-36780466072b">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Conventions et protocoles de l’Organisation Maritime Internationale</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">International Maritime Organisation conventions and protocols</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Conventions et protocoles de l’Organisation Maritime Internationale</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">International Maritime Organisation conventions and protocols</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#814144ea-7f7b-4098-a719-e1d6f6b4e389">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Convention sur la Diversité Biologique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Convention on Biological Diversity</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Convention sur la Diversité Biologique</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Convention on Biological Diversity</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e95c2382-fed1-435c-88b5-d69e301a76a2">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre pour la Planification de l'Espace Maritime (DCPEM)</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Maritime Spatial Planning Directive (MSP)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Cadre pour la Planification de l'Espace Maritime (DCPEM)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Maritime Spatial Planning Directive (MSP)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c8e073b0-c059-406b-91eb-9d2b97ce292a">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre Stratégie pour le Milieu Marin (DCSMM)</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Marine Strategy Framework Directive (MSFD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Cadre Stratégie pour le Milieu Marin (DCSMM)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Marine Strategy Framework Directive (MSFD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc1a2945-9fdb-4bb0-a352-2c661afb931a">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre sur l'Eau (DCE)</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Water Framework Directive (WFD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Cadre sur l'Eau (DCE)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Water Framework Directive (WFD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#48b2b157-fdab-4ad7-97a6-5d650b72cd39">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre sur les Déchets</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Waste Framework Directive (WaFD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Cadre sur les Déchets</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Waste Framework Directive (WaFD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b40d72db-2a82-4998-b62a-3612681e427b">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Eaux de baignade</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Bathing Water Directive (BWD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Eaux de baignade</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Bathing Water Directive (BWD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bef901f7-fe35-4a51-904c-badb686d25a1">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Habitat, Faune et Flore</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Habitats Directive (HD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Habitat, Faune et Flore</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Habitats Directive (HD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#497aba13-6e86-482a-a19a-f553ac5d0195">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Directive Oiseaux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Birds Directive (BD)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Directive Oiseaux</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Birds Directive (BD)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8cb617bf-3327-4d1d-9d58-a77a784d7630">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Politique Commune des Pêches</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Common fisheries policy (CFP)</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Politique Commune des Pêches</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Common fisheries policy (CFP)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#45631936-bb03-4845-b965-dcac2186797a">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Réglementation Espèces Exotiques Envahissantes</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Invasive Alien Species (IAS) Regulation</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Réglementation Espèces Exotiques Envahissantes</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Invasive Alien Species (IAS) Regulation</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#816400fa-b5b4-4413-88ac-c631878190e4">
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Stratégie Nationale du trait de côte</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">National Coastline Strategy</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Stratégie Nationale du trait de côte</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">National Coastline Strategy</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b5a4ca04-1fe5-4943-8b0a-622973a3e6b4">
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">National Strategy for the Sea and Coastline</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Stratégie Nationale pour la mer et le littoral</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">National Strategy for the Sea and Coastline</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Stratégie Nationale pour la mer et le littoral</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>

@@ -4,161 +4,161 @@
          xmlns:ns5="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Sous-regions marines</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Western Mediterranean</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-Mditerraneoccidentale"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#2"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-MersCeltiques"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-GolfedeGascogne"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#4"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-ManchemerduNord"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-GolfedeGascogne">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Bay of Biscay</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Bay of Biscay</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Golfe de Gascogne</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-ManchemerduNord">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Channel-North Sea</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Channel-North Sea</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Manche mer du Nord</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-MersCeltiques">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Celtic Seas</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Celtic Seas</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Mers Celtiques</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-Mditerraneoccidentale">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Western Mediterranean</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Western Mediterranean</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Méditerranée occidentale</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/France</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/National</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Nouvelle-Caldonie"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#8"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-OcanIndien"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#9"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-St-Pierre-et-Miquelon"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#10"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Clipperton"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#11"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Wallis-et-Futuna"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#12"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Antillesfranaises"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#13"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Guyanefranaise"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#14"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Polynsiefranaise"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#15"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Antillesfranaises">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Antilles</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Antilles françaises</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Clipperton">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Clipperton Island</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Clipperton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Guyanefranaise">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Guiana</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Guyane française</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Nouvelle-Caldonie">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#11">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/New Caledonia</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Nouvelle-Calédonie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-OcanIndien">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#12">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Indian Ocean</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Océan Indien</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Polynsiefranaise">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#13">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Polynesia</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Polynésie française</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-St-Pierre-et-Miquelon">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#14">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/St Pierre and Miquelon</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/St-Pierre-et-Miquelon</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Wallis-et-Futuna">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Sous-regionsmarines#15">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Overseas France/Wallis and Futuna</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Wallis-et-Futuna</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
-   </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#">
-      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">National</skos:prefLabel>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">National</skos:prefLabel>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Sous-regionsmarines#7"/>
    </rdf:Description>
 </rdf:RDF>

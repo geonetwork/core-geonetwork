@@ -1,126 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:ns3="http://purl.org/dc/elements/1.1/"
-	xmlns:ns5="http://www.opengis.net/gml#"
-	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-
-<rdf:Description rdf:about="http://geonetwork-opensource.org/France Energies Marines - Façades">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>France Energies Marines - Façades</ns3:title>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#3ce2c213-f48c-4054-9ec8-35815ae091ca">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France métropolitaine/Manche Est - Mer du Nord</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Metropolitan France/Eastern Channel - North Sea</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdce2trux1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdce2trux1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-4.1135149999999996 48.6131220481844295</ns5:lowerCorner>
-	<ns5:upperCorner>2.5455367862066320 51.5568870009182803</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#d5448298-f7f1-443e-a5fa-82d7e62dc29a">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France métropolitaine/Méditerranée</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Metropolitan France/Mediterranean Sea</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl1gm6x1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl1gm6x1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>3.0244543215278448 40.0833320009296301</ns5:lowerCorner>
-	<ns5:upperCorner>10.2499996999999947 43.7848875117043690</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#ee433998-4160-4669-b9af-3e65f0e07860">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France métropolitaine/Nord Atlantique - Manche Ouest</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Metropolitan France/North Atlantic - Western Channel</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl346fx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl346fx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-10.0838359999998843 46.2583330009422582</ns5:lowerCorner>
-	<ns5:upperCorner>-1.1296059999999994 49.4977500009313545</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#a3e5993f-c7c3-4e64-a23b-bca743e6a7ad">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France métropolitaine/Sud Atlantique</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Metropolitan France/South Atlantic</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl4naox1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl4naox1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-9.2189789999999974 43.3729488772581249</ns5:lowerCorner>
-	<ns5:upperCorner>-0.6006243226552603 46.3438699009421171</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#376b55bc-6489-4a04-a3b0-5469ee892384">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France d'outre-mer/Antilles</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Overseas France/French Indies</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl6b0ax1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl6b0ax1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-63.6311110999999983 14.0822863999999992</ns5:lowerCorner>
-	<ns5:upperCorner>-57.5336068000000012 18.5318508999999985</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#b926b3be-c6db-43b2-a188-24f468f6e08f">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France d'outre-mer/Sud océan Indien</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Overseas France/South Indian Ocean</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl89rex1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl89rex1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>37.5500606000000019 -53.2258670000000009</ns5:lowerCorner>
-	<ns5:upperCorner>81.8108105999999964 -10.6502780999999995</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#b34a4d45-4e11-42cb-9f8c-1723e246c229">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France d'outre-mer/Guyane</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Overseas France/French Guiana</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdcl9ipux1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdcl9ipux1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-53.9473429000000024 4.5083352000000003</ns5:lowerCorner>
-	<ns5:upperCorner>-49.4092555000000004 10.2705035000000002</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#30c5dfed-cf6e-484d-bfd3-bf5d235114fe">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/France d'outre-mer/Saint-Pierre-et-Miquelon</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Overseas France/Saint Pierre and Miquelon</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1fdclb1trx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1fdclb1trx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-57.0967780000000005 43.4157348999999968</ns5:lowerCorner>
-	<ns5:upperCorner>-55.9022482999999966 47.3648510000000016</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ns3="http://purl.org/dc/elements/1.1/"
+         xmlns:ns5="http://www.opengis.net/gml#"
+         xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+      <ns3:title>France Energies Marines - Facades</ns3:title>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#1">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/France métropolitaine</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#2"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#3"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#4"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#5"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#2">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Eastern Channel - North Sea</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/France métropolitaine/Manche Est - Mer du Nord</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#1"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#3">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/Mediterranean Sea</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/France métropolitaine/Méditerranée</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#1"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#4">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/North Atlantic - Western Channel</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/France métropolitaine/Nord Atlantique - Manche Ouest</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#1"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#5">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Metropolitan France/South Atlantic</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/France métropolitaine/Sud Atlantique</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="https://registry.sextant.ifremer.fr/FranceEnergiesMarines-Facades#1"/>
+   </rdf:Description>
 </rdf:RDF>

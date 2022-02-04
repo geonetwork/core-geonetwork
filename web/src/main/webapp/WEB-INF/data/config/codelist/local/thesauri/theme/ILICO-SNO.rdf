@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/ILICO-SNO">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>ILICO-SNO</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#eec04e33-4a55-4cf7-b77c-df40cf5b27b4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">BenthOBS</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Réseau d’observation de la macrofaune benthique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif16ok6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif16ok6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#1d8446ec-1ad8-48b5-8560-4b46b63838dd">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">COAST-HF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Coastal OceAn observing SysTem – High Frequency</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif173hfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif173hfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#d0bb3ce9-aca5-4a2f-b127-cfe406b09832">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">CORAIL</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Service National d’Observation des récifs coralliens de Polynésie française</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif17figx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif17figx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#576dac6f-d476-4ca7-96f2-cd31fb2dacd9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">DYNALIT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Dynamique du littoral et du trait de côte</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif17rf1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif17rf1x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#018746ac-3381-4d70-9175-cdbb90e76f30">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">MOOSE</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Mediterranean Ocean Observing System fo the Environment</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif18709x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif18709x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#d440b711-1047-4673-9e6d-1654f07933eb">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">PHYTOBS</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Réseau d'observation du phytoplancton</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif18hi0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif18hi0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#bbfcc91b-c26b-471b-ae31-fe8378116059">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ReefTEMPS</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Réseau d'observation des eaux côtières du Pacifique insulaire</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif19ke8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif19ke8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#2a1f6e3a-b1aa-453c-adac-4470a6b43d62">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SOMLIT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Service d’Observation en Milieu LIttoral</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif19utrx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif19utrx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#1f478712-886b-4272-ac0f-d0be4cfeccb4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SONEL</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Système d’Observation du Niveau des Eaux Littorales</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif1a9agx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif1a9agx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/ILICOSNO#c1d11d11-7c6b-4129-b0a3-f8d4d05ca43a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ILICO</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Infrastructure de recherche littorale et côtière</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fif1aipqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fif1aipqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

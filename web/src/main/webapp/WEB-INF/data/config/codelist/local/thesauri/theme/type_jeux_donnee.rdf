@@ -4,98 +4,98 @@
          xmlns:ns4="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Type de jeux de donnée ODATIS</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Administrative data</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données administratives</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Referencedatasets"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Compositeproducts"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#4"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Indicators"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#5"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Modeloutputs"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#6"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Modeloutputs">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Model outputs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Données de type modèle</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#2"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Indicators">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Indicators</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Indicateurs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#2"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Compositeproducts">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Composite products</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Produits composites</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#2"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Referencedatasets">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Reference datasets</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Références statiques</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#2"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#7">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Networks"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#8"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Seacruises"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#9"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Seacruises">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations/Sea cruises</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ/Campagnes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Networks">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations/Networks</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ/Réseaux</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Remotesensing">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/TypedejeuxdedonnéeODATIS#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Remote sensing</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>

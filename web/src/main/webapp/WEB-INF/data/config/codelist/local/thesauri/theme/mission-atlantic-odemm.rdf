@@ -4,711 +4,711 @@
          xmlns:ns5="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Mission Atlantic - ODEMM</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Cephalopods"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#2"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Coastalpelagic"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-searockandreef"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#4"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seasediment"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#5"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seafish"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#6"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seaelasmobranchs"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#7"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Demersalelasmobranchs"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#8"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Demersalfish"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#9"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Littoralrockandreef"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#10"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Littoralsediment"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#11"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Mangroves"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#12"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Marinebirds"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#13"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Marinemammals"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#14"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Oceanicpelagic"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#15"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Pelagicelasmobranchs"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#16"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Pelagicfish"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#17"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Reptiles"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#18"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Saltmarsh"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#19"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shallowsediment"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#20"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shallowrockandreef"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#21"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfpelagic"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#22"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfrockandreef"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#23"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfsediment"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#24"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Sloperockandreef"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#25"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Slopesediment"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#26"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Cephalopods">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Cephalopods</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Cephalopods</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Coastalpelagic">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Coastal pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Coastal pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seaelasmobranchs">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Deep-sea elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Deep-sea elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seafish">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Deep-sea fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Deep-sea fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-searockandreef">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Deep-sea rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Deep-sea rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Deep-seasediment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#7">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Deep-sea sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Deep-sea sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Demersalelasmobranchs">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Demersal elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Demersal elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Demersalfish">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Demersal fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Demersal fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Littoralrockandreef">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Littoral rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Littoral rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Littoralsediment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#11">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Littoral sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Littoral sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Mangroves">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#12">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Mangroves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Mangroves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Marinebirds">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#13">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Marine birds</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Marine birds</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Marinemammals">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#14">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Marine mammals</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Marine mammals</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Oceanicpelagic">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#15">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Oceanic pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Oceanic pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Pelagicelasmobranchs">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#16">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Pelagic elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Pelagic elasmobranchs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Pelagicfish">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#17">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Pelagic fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Pelagic fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Reptiles">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#18">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Reptiles</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Reptiles</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Saltmarsh">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#19">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Saltmarsh</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Saltmarsh</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shallowrockandreef">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#20">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Shallow rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Shallow rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shallowsediment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#21">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Shallow sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Shallow sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfpelagic">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#22">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Shelf pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Shelf pelagic</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfrockandreef">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#23">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Shelf rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Shelf rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Shelfsediment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#24">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Shelf sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Shelf sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Sloperockandreef">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#25">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Slope rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Slope rock and reef</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents-Slopesediment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#26">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Ecosystem components/Slope sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Ecosystem components/Slope sediment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Ecosystemcomponents"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Abrasion"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#28"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Barriertospeciesmovement"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#29"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Bycatch"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#30"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Contaminants"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#31"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Currentchanges"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#32"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Electromagneticchanges"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#33"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Incidentalloss"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#34"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Invasivespecies"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#35"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Marinelitter"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#36"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Noise"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#37"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Non-livingresources"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#38"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-OrganicmatterNP"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#39"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-pHchanges"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#40"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Salinityregime"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#41"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Sealing"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#42"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Siltationsmothering"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#43"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Speciesextraction"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#44"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Thermalregime"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#45"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Waveexposure"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#46"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Abrasion">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#28">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Abrasion</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Abrasion</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Barriertospeciesmovement">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#29">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Barrier to species movement</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Barrier to species movement</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Bycatch">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#30">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Bycatch</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Bycatch</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Contaminants">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#31">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Contaminants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Contaminants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Currentchanges">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#32">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Current changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Current changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Electromagneticchanges">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#33">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Electromagnetic changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Electromagnetic changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Incidentalloss">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#34">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Incidental loss</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Incidental loss</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Invasivespecies">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#35">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Invasive species</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Invasive species</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Marinelitter">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#36">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Marine litter</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Marine litter</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Noise">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#37">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Noise</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Noise</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Non-livingresources">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#38">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Non-living resources</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Non-living resources</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-OrganicmatterNP">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#39">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Organic matter, NP</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Organic matter, NP</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Salinityregime">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#40">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Salinity regime</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Salinity regime</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Sealing">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#41">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Sealing</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Sealing</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Siltationsmothering">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#42">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Siltation, smothering</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Siltation, smothering</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Speciesextraction">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#43">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Species extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Species extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Thermalregime">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#44">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Thermal regime</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Thermal regime</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-Waveexposure">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#45">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/Wave exposure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/Wave exposure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures-pHchanges">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#46">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Pressures/pH changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Pressures/pH changes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Pressures"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#27"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Aggregates"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#48"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Agriculture"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#49"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Aquaculture"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#50"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Coastalinfrastructure"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#51"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Desalinisation"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#52"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Fishing"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#53"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Harvestingcollecting"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#54"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Land-basedindustry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#55"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Military"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#56"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Navigationaldredging"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#57"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Non-renewableenergy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#58"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Nuclearenergy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#59"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Renewableenergy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#60"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Research"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#61"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Shipping"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#62"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Telecoms"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#63"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Tourismrecreation"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#64"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Wastewater"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#65"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Aggregates">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#48">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Aggregates</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Aggregates</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Agriculture">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#49">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Agriculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Agriculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Aquaculture">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#50">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Coastalinfrastructure">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#51">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Coastal infrastructure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Coastal infrastructure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Desalinisation">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#52">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Desalinisation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Desalinisation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Fishing">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#53">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Fishing</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Fishing</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Harvestingcollecting">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#54">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Harvesting, collecting</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Harvesting, collecting</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Land-basedindustry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#55">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Land-based industry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Land-based industry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Military">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#56">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Military</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Military</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Navigationaldredging">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#57">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Navigational dredging</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Navigational dredging</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Non-renewableenergy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#58">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Non-renewable energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Non-renewable energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Nuclearenergy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#59">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Nuclear energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Nuclear energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Renewableenergy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#60">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Renewable energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Renewable energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Research">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#61">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Research</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Research</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Shipping">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#62">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Shipping</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Shipping</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Telecoms">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#63">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Telecoms</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Telecoms</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Tourismrecreation">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#64">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Tourism, recreation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Tourism, recreation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors-Wastewater">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#65">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sectors/Waste water</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Sectors/Waste water</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-ODEMM#Sectors"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-ODEMM#47"/>
    </rdf:Description>
 </rdf:RDF>

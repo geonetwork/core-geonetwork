@@ -4,188 +4,188 @@
          xmlns:ns5="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Thématiques - SIMM</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Industrieetnergie"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#2"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Loisirs"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-PcheetAquaculture"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#4"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-TransportmaritimeetPorts"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#5"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-UrbanisationetArtificialisation"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#6"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Analyseconomiqueetsociale"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#7"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Analyseconomiqueetsociale">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Economic and social analysis</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Analyse économique et sociale</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Industrieetnergie">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Industry and energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Industrie et énergie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Loisirs">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Leisure activities</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Loisirs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-PcheetAquaculture">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Fisheries and aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Pêche et Aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-TransportmaritimeetPorts">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Shipping and Ports</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Transport maritime et Ports</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-UrbanisationetArtificialisation">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#7">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Uses and Human Activities/Urbanisation and Artificialisation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Urbanisation et Artificialisation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Espces"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#9"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Gologie"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#10"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Habitats"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#11"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Hydrodynamique"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#12"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Pollutions"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#13"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Biogochimie"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#14"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Littoral"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#15"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Bathymtrie"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#16"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Bathymtrie">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Bathymetry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Bathymétrie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Biogochimie">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Biogeochemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Biogéochimie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Espces">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#11">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Species</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Espèces</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Gologie">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#12">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Geology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Géologie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Habitats">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#13">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Habitats</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Habitats</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Hydrodynamique">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#14">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Hydrodynamics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Hydrodynamique</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Littoral">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#15">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Coastal areas</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Littoral</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Pollutions">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#16">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environmental Status/Pollution</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Pollutions</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/Thématiques-SIMM#8"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#17">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Concrete action</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Actions concrètes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/Thématiques-SIMM#18">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Research</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Recherche</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>

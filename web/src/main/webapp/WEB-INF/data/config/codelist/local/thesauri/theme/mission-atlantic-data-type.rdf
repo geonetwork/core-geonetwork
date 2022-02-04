@@ -17,13 +17,11 @@
 	<ns2:prefLabel xml:lang="en">Acoustic data</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Acoustic data</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en">Acoustic data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s16rgvx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s16rgvx1">
+<rdf:Description rdf:nodeID="node1flnsiqrex1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -33,13 +31,11 @@
 	<ns2:prefLabel xml:lang="en">Biological data</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Biological data</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en">Biological data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s172q4x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s172q4x1">
+<rdf:Description rdf:nodeID="node1flnsiqrex2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -49,13 +45,11 @@
 	<ns2:prefLabel xml:lang="en">Environmental data</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Environmental data</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en">Environmental data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s17a2sx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s17a2sx1">
+<rdf:Description rdf:nodeID="node1flnsiqrex3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -65,30 +59,29 @@
 	<ns2:prefLabel xml:lang="en">Imaging data</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Imaging data</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en">Imaging data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s17h86x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s17h86x1">
+<rdf:Description rdf:nodeID="node1flnsiqrex4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#72cdb99b-aa89-4443-94bc-644065550781">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4be36c8f-a1d3-4d46-a161-c6fbd898be06">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Modeling data</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">Modeling data</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Modeling data</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Modeling data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s17pg2x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s17pg2x1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1flnsiqrex7">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4be36c8f-a1d3-4d46-a161-c6fbd898be06">
+	<ns2:scopeNote xml:lang="en">Spatial data products</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex7"/>
+	<ns2:prefLabel xml:lang="fr">Spatial data products</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Spatial data products</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Spatial data products</ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#a39e783a-bc21-4d0d-a418-7ac208efff5d">
@@ -97,26 +90,24 @@
 	<ns2:prefLabel xml:lang="en">Socio-economic data</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Socio-economic data</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en">Socio-economic data</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s1829ex1"/>
+	<ns5:BoundedBy rdf:nodeID="node1flnsiqrex6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s1829ex1">
+<rdf:Description rdf:nodeID="node1flnsiqrex6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4be36c8f-a1d3-4d46-a161-c6fbd898be06">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#49eaf422-61d9-4648-8dd3-8ba9e9aa256b">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Spatial data products</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">Spatial data products</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Spatial data products</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Spatial data products</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1f4s18bvgx1"/>
+	<ns2:prefLabel xml:lang="fr">Modelling data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Modelling data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Modelling data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Modelling data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1flo4v2urx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1f4s18bvgx1">
+<rdf:Description rdf:nodeID="node1flo4v2urx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner> </ns5:lowerCorner>
 	<ns5:upperCorner> </ns5:upperCorner>

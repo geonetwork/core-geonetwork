@@ -10,47 +10,41 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#b0f7650d-34ae-4c36-a60f-cb605293407c">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#edefa239-f0db-4399-a524-93d65aabaa85">
-	<ns5:BoundedBy rdf:nodeID="node1eou5876vx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou5876vx1">
+<rdf:Description rdf:nodeID="node1fevk78r3x1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou5athox1">
+<rdf:Description rdf:nodeID="node1fevk78r3x2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#df6ae833-51dc-43d6-b9f0-ec9623d4af69">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#edefa239-f0db-4399-a524-93d65aabaa85">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#df6ae833-51dc-43d6-b9f0-ec9623d4af69">
-	<ns5:BoundedBy rdf:nodeID="node1eou58fqsx1"/>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou58fqsx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou5athox1">
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1fevk78r3x2">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -58,42 +52,37 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#df6ae833-51dc-43d6-b9f0-ec9623d4af69">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#696a94c7-2361-41f4-9611-71ff4f46a81e">
-	<ns5:BoundedBy rdf:nodeID="node1eou58olpx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou58olpx1">
+<rdf:Description rdf:nodeID="node1fevk78r3x4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou5bk8kx1">
+<rdf:Description rdf:nodeID="node1fevk78r3x5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#696a94c7-2361-41f4-9611-71ff4f46a81e">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#edefa239-f0db-4399-a524-93d65aabaa85">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
-	<ns5:BoundedBy rdf:nodeID="node1eou596d1x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou596d1x1">
+<rdf:Description rdf:nodeID="node1fevk78r3x6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -101,34 +90,32 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#5b226924-55d4-4515-8d46-92a8a93e16f7">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#696a94c7-2361-41f4-9611-71ff4f46a81e">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#5b226924-55d4-4515-8d46-92a8a93e16f7">
-	<ns5:BoundedBy rdf:nodeID="node1eou59ftqx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou59ftqx1">
+<rdf:Description rdf:nodeID="node1fevk78r3x7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#13b2086c-fce8-4381-a6cc-2d1abce19049">
-	<ns5:BoundedBy rdf:nodeID="node1eou5b93cx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou5b93cx1">
+<rdf:Description rdf:nodeID="node1fevk78r3x8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -136,15 +123,15 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#5b226924-55d4-4515-8d46-92a8a93e16f7">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
-	<ns5:BoundedBy rdf:nodeID="node1eou59q23x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou59q23x1">
+<rdf:Description rdf:nodeID="node1fevk78r3x9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -153,417 +140,276 @@
 	<ns3:title>SIH - Façade maritime</ns3:title>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1eou59q23x1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1fevk78r3x9">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5b93cx1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
-	<ns5:BoundedBy rdf:nodeID="node1eou5a2evx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#b0f7650d-34ae-4c36-a60f-cb605293407c">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5a2evx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#b0f7650d-34ae-4c36-a60f-cb605293407c">
-	<ns5:BoundedBy rdf:nodeID="node1eou57tlix1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou57tlix1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5a2evx1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5b93cx1">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5bk8kx1">
-	<ns5:upperCorner> </ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#31f7d872-9f1b-421e-8b02-1989f568bc26">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#31f7d872-9f1b-421e-8b02-1989f568bc26">
-	<ns5:BoundedBy rdf:nodeID="node1eou5aakix1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5aakix1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5bk8kx1">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#f85b6cf7-741c-4133-a978-ed75e400db76">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#31f7d872-9f1b-421e-8b02-1989f568bc26">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#f85b6cf7-741c-4133-a978-ed75e400db76">
-	<ns5:BoundedBy rdf:nodeID="node1eou5alfox1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1eou5alfox1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#13b2086c-fce8-4381-a6cc-2d1abce19049">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
-	<ns5:BoundedBy rdf:nodeID="node1eou5bk8kx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#f85b6cf7-741c-4133-a978-ed75e400db76">
-	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
-	<ns5:BoundedBy rdf:nodeID="node1eou5athox1"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#b0f7650d-34ae-4c36-a60f-cb605293407c">
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Collectivité d’Outre-Mer (COM)</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#edefa239-f0db-4399-a524-93d65aabaa85">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Collectivité d’Outre-Mer (COM)/Saint-Pierre-et-Miquelon</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#df6ae833-51dc-43d6-b9f0-ec9623d4af69">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#696a94c7-2361-41f4-9611-71ff4f46a81e">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)/Guadeloupe</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)/Guyane</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#5b226924-55d4-4515-8d46-92a8a93e16f7">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)/La Réunion</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)/Martinique</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Départements d’outre-mer (DOM)/Mayotte</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#31f7d872-9f1b-421e-8b02-1989f568bc26">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Étranger</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#f85b6cf7-741c-4133-a978-ed75e400db76">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Métropole française</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Métropole française/Atlantique</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#13b2086c-fce8-4381-a6cc-2d1abce19049">
-	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Métropole française/Manche - Mer du Nord</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x10"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fevk78r3x10">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
+	<ns2:prefLabel xml:lang="fr">Atlantique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fevk78r3x10">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fevk78r3x8">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Mayotte</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fevk78r3x5">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x5"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
+	<ns5:BoundedBy rdf:nodeID="node1fevk78r3x2"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#94392035-80a6-46d8-b1ca-200bfe103731">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Martinique</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#e2d7871c-b0cf-4b1d-835d-3da5490ff138">
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#bee131f1-d9e3-46ed-815c-4b235c395b67">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Méditerranée</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#edefa239-f0db-4399-a524-93d65aabaa85">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Saint-Pierre-et-Miquelon</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#696a94c7-2361-41f4-9611-71ff4f46a81e">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Guadeloupe</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#29db63ea-b10b-4162-894b-070dba743959">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Guyane</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#5b226924-55d4-4515-8d46-92a8a93e16f7">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">La Réunion</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#4d80c343-58d6-4259-8424-a71c44424d88">
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_facade_maritime#13b2086c-fce8-4381-a6cc-2d1abce19049">
 	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
 	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
 	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
@@ -574,7 +420,7 @@
 	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
 	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
 	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">Métropole française/Méditerranée</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Manche - Mer du Nord</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
 	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
 	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>

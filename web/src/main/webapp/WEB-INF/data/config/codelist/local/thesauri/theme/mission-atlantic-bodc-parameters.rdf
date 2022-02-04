@@ -4,855 +4,848 @@
          xmlns:ns5="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Mission Atlantic - BODC Parameters</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Atmosphere</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Atmosphere</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Atmosphericchemistry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#2"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Meteorology"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Palaeoclimate"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#4"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Atmosphericchemistry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Atmosphere/Atmospheric chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Atmosphere/Atmospheric chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Meteorology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Atmosphere/Meteorology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Atmosphere/Meteorology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere-Palaeoclimate">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Atmosphere/Palaeoclimate</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Atmosphere/Palaeoclimate</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Atmosphere"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Bacteriaandviruses"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#6"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Biotaabundancebiomassanddiversity"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#7"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Biotacomposition"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#8"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Birdsmammalsandreptiles"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#9"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Diseasedamageandmortality"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#10"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Fish"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#11"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Macroalgaeandseagrass"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#12"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Microzooplankton"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#13"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Otherbiologicalmeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#14"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Phytoplanktonandmicrophytobenthos"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#15"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Pigments"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#16"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Rockandsedimentbiota"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#17"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Underwaterphotography"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#18"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Zooplankton"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#19"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Bacteriaandviruses">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Bacteria and viruses</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Bacteria and viruses</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Biotaabundancebiomassanddiversity">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#7">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Biota abundance, biomass and diversity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Biota abundance, biomass and diversity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Biotacomposition">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Biota composition</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Biota composition</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Birdsmammalsandreptiles">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Birds, mammals and reptiles</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Birds, mammals and reptiles</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Diseasedamageandmortality">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Disease, damage and mortality</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Disease, damage and mortality</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Fish">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#11">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Fish</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Macroalgaeandseagrass">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#12">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Macroalgae and seagrass</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Macroalgae and seagrass</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Microzooplankton">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#13">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Microzooplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Microzooplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Otherbiologicalmeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#14">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Other biological measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Other biological measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Phytoplanktonandmicrophytobenthos">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#15">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Phytoplankton and microphytobenthos</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Phytoplankton and microphytobenthos</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Pigments">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#16">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Pigments</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Pigments</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Rockandsedimentbiota">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#17">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Rock and sediment biota</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Rock and sediment biota</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Underwaterphotography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#18">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Underwater photography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Underwater photography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography-Zooplankton">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#19">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Biological oceanography/Zooplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biological oceanography/Zooplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Biologicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#5"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Otherinorganicchemicalmeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#21"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Otherorganicchemicalmeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#22"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-PCBsandorganicmicropollutants"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#23"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Nutrients"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#24"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Aminoacids"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#25"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Biotacomposition"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#26"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Carbonnitrogenandphosphorus"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#27"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Carbonatesystem"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#28"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Dissolvedgases"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#29"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Fattyacids"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#30"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Halocarbons"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#31"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Hydrocarbons"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#32"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Isotopes"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#33"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Metalandmetalloidconcentrations"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#34"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Aminoacids">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#21">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Amino acids</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Amino acids</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Biotacomposition">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#22">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Biota composition</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Biota composition</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Carbonnitrogenandphosphorus">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#23">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Carbon, nitrogen and phosphorus</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Carbon, nitrogen and phosphorus</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Carbonatesystem">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#24">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Carbonate system</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Carbonate system</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Dissolvedgases">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#25">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Dissolved gases</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Dissolved gases</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Fattyacids">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#26">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Fatty acids</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Fatty acids</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Halocarbons">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#27">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Halocarbons</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Halocarbons</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Hydrocarbons">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#28">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Hydrocarbons</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Hydrocarbons</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Isotopes">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#29">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Isotopes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Isotopes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Metalandmetalloidconcentrations">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#30">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Metal and metalloid concentrations</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Metal and metalloid concentrations</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Nutrients">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#31">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Nutrients</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Nutrients</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Otherinorganicchemicalmeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#32">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Other inorganic chemical measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Other inorganic chemical measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-Otherorganicchemicalmeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#33">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/Other organic chemical measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/Other organic chemical measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography-PCBsandorganicmicropollutants">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#34">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Chemical oceanography/PCBs and organic micropollutants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Chemical oceanography/PCBs and organic micropollutants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Chemicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#20"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#35">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Cross-discipline</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Cross-discipline</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline-Fluxes"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#36"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline-Ratemeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#37"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline-Fluxes">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#36">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Cross-discipline/Fluxes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Cross-discipline/Fluxes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#35"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline-Ratemeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#37">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Cross-discipline/Rate measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Cross-discipline/Rate measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Cross-discipline"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#35"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#38">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Environment</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Constructionandstructures"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#39"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Habitat"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#40"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Pollution"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#41"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Constructionandstructures">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#39">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environment/Construction and structures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Environment/Construction and structures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#38"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Habitat">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#40">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environment/Habitat</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Environment/Habitat</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#38"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment-Pollution">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#41">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Environment/Pollution</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Environment/Pollution</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Environment"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#38"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Pollution"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#43"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Tourism"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#44"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Saltextraction"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#45"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Aquaculture"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#46"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-AreaManagement"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#47"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Cables"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#48"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Constructionandstructures"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#49"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-CulturalHeritage"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#50"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Energy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#51"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Fisheries"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#52"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Hydrocarbonextraction"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#53"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Mining"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#54"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Pipelines"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#55"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Transport"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#56"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Aquaculture">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#43">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Aquaculture</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-AreaManagement">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#44">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Area Management</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Area Management</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Cables">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#45">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Cables</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Cables</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Constructionandstructures">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#46">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Construction and structures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Construction and structures</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-CulturalHeritage">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#47">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Cultural Heritage</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Cultural Heritage</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Energy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#48">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Energy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Fisheries">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#49">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Fisheries</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Fisheries</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Hydrocarbonextraction">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#50">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Hydrocarbon extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Hydrocarbon extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Mining">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#51">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Mining</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Mining</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Pipelines">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#52">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Pipelines</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Pipelines</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Pollution">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#53">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Pollution</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Pollution</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Saltextraction">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#54">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Salt extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Salt extraction</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Tourism">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#55">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Tourism</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Tourism</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities-Transport">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#56">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Human activities/Transport</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Human activities/Transport</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Humanactivities"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#42"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Fieldgeophysics"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#58"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Geochronologyandstratigraphy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#59"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Geothermalmeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#60"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Gravitymagneticsandbathymetry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#61"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentbiota"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#62"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentchemistry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#63"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentlithologyandmineralogy"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#64"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentphysicalproperties"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#65"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentsedimentology"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#66"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sedimentporewaterchemistry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#67"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sedimentationanderosionprocesses"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#68"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sonarandseismics"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#69"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Suspendedparticulatematerial"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#70"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Underwaterphotography"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#71"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Fieldgeophysics">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#58">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Field geophysics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Field geophysics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Geochronologyandstratigraphy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#59">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Geochronology and stratigraphy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Geochronology and stratigraphy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Geothermalmeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#60">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Geothermal measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Geothermal measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Gravitymagneticsandbathymetry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#61">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Gravity, magnetics and bathymetry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Gravity, magnetics and bathymetry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentbiota">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#62">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Rock and sediment biota</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Rock and sediment biota</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentchemistry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#63">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Rock and sediment chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Rock and sediment chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentlithologyandmineralogy">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#64">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Rock and sediment lithology and mineralogy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Rock and sediment lithology and mineralogy</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentphysicalproperties">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#65">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Rock and sediment physical properties</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Rock and sediment physical properties</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Rockandsedimentsedimentology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#66">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Rock and sediment sedimentology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Rock and sediment sedimentology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sedimentporewaterchemistry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#67">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Sediment pore water chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Sediment pore water chemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sedimentationanderosionprocesses">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#68">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Sedimentation and erosion processes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Sedimentation and erosion processes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Sonarandseismics">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#69">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Sonar and seismics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Sonar and seismics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Suspendedparticulatematerial">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#70">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Suspended particulate material</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Suspended particulate material</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology-Underwaterphotography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#71">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine geology/Underwater photography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Marine geology/Underwater photography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Marinegeology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#57"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Acoustics"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#73"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Currents"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#74"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Opticalproperties"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#75"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Otherphysicaloceanographicmeasurements"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#76"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Sealevel"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#77"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Watercolumntemperatureandsalinity"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#78"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Waves"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#79"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Acoustics">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#73">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Acoustics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Acoustics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Currents">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#74">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Currents</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Currents</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Opticalproperties">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#75">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Optical properties</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Optical properties</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Otherphysicaloceanographicmeasurements">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#76">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Other physical oceanographic measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Other physical oceanographic measurements</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Sealevel">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#77">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Sea level</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Sea level</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Watercolumntemperatureandsalinity">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#78">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Water column temperature and salinity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Water column temperature and salinity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography-Waves">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#79">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical oceanography/Waves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physical oceanography/Waves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#Physicaloceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#72"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#">
-      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Administration and dimensions</skos:prefLabel>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Administration and dimensions</skos:prefLabel>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
-   </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/MissionAtlantic-BODCParameters#">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/MissionAtlantic-BODCParameters#80">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Cryosphere</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>

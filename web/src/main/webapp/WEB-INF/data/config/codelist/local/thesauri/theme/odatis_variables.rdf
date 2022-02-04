@@ -4,483 +4,483 @@
          xmlns:ns5="http://www.opengis.net/gml#"
          xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       <ns3:title>Variables ODATIS</ns3:title>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#1">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Metal"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#2"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Chemicalelementsandcontaminants"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#3"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-CDOM"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#4"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Dissolvedoxygen"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#5"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Isotopes"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#6"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Nutrients"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#7"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-AlkalinitypH"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#8"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Pigments"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#9"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-AlkalinitypH">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#2">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Alkalinity (pH)</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Alcalinité (pH)</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-CDOM">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#3">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/CDOM</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/CDOM</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Chemicalelementsandcontaminants">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#4">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Chemical elements and contaminants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Eléments chimiques et contaminants</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Isotopes">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Isotopes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Isotopes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Metal">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#6">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Metal</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Métaux et métalloides</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Nutrients">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#7">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Nutrients</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Nutriments (sels nutritifs)</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Dissolvedoxygen">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#8">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Dissolved oxygen</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Oxygène dissous</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry-Pigments">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#9">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biogeochemistry/Pigments</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biogéochimie marine/Pigments</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiogeochemistry"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#1"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#10">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Zooplankton"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#11"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Bivalves"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#12"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Tropicalmarinorganisms"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#13"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Suspendedmatter"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#14"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Benthichabitats"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#15"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Toxins"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#16"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Pathogenicorganisms"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#17"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Phytoplankton"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#18"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Bivalves">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#11">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Bivalves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Bivalves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Benthichabitats">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#12">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Benthic habitats</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Habitats benthiques</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Suspendedmatter">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#13">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Suspended matter</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Matière en suspension</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Tropicalmarinorganisms">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#14">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Tropical marin organisms</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Organismes marins tropicaux</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Pathogenicorganisms">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#15">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Pathogenic organisms</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Organismes pathogènes</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Phytoplankton">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#16">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Phytoplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Phytoplancton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Toxins">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#17">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Toxins</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Toxines</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology-Zooplankton">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#18">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Marine Biology/Zooplankton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Biologie marine/Zooplancton</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#MarineBiology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#10"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#19">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Geology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Géologie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Bathymetry"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#20"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Sediments"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#21"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Coastline"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#22"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Flow"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#23"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Bathymetry">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#20">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Geology/Bathymetry</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Géologie/Bathymétrie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#19"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Flow">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#21">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Geology/Flow</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Géologie/Débit</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#19"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Sediments">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#22">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Geology/Sediments</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Géologie/Flux sédimentaire</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#19"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology-Coastline">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#23">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Geology/Coastline</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Géologie/Trait de côte</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Geology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#19"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#24">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Atmosphericpressure"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#25"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Humidity"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#26"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Wind"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#27"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Rain"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#28"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Radiativeflux"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#29"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Aerosol"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#30"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-AirTemperature"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#31"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Aerosol">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#25">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Aerosol</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Aérosols</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Radiativeflux">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#26">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Radiative flux</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Flux radiatifs</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Humidity">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#27">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Humidity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Humidité</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Atmosphericpressure">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#28">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Atmospheric pressure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Pression atmosphérique</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Rain">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#29">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Rain</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Précipitation</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-AirTemperature">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#30">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Air Temperature</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Température Air</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology-Wind">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#31">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Meteorology/Wind</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Météorologie/Vent</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#Meteorology"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#24"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#32">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Salinity"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#33"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Tides"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#34"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Acoustics"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#35"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Waves"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#36"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-SeaIce"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#37"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Pressure"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#38"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Turbidity"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#39"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Opticalparameters"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#40"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-SSHSeasurfaceheight"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#41"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Temperature"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#42"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Currents"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#43"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Other"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#44"/>
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-OceanHeatContent"/>
+                     rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#45"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Acoustics">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#33">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Acoustics</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Acoustique</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Other">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#34">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Other</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Autre</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-OceanHeatContent">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#35">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Ocean Heat Content</skos:prefLabel>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physique de l'Océan/Contenu thermique de l’océan</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Contenu thermique de l’océan</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Currents">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#36">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Currents</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Courant</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-SeaIce">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#37">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Sea Ice</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Glace de mer</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Tides">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#38">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Tides</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Marée</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Opticalparameters">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#39">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Optical parameters</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Paramètres optiques</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Pressure">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#40">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Pressure</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Pression</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-SSHSeasurfaceheight">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#41">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/SSH (Sea surface height)</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/SSH (hauteur de mer)</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Salinity">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#42">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Salinity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Salinité</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Temperature">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#43">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Temperature</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Température</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Turbidity">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#44">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Turbidity</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Turbidité</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography-Waves">
+   <rdf:Description rdf:about="https://registry.sextant.ifremer.fr/VariablesODATIS#45">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Physical Oceanography/Waves</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Physique de l'Océan/Vague</skos:prefLabel>
       <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
       <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/VariablesODATIS#PhysicalOceanography"/>
+                    rdf:resource="https://registry.sextant.ifremer.fr/VariablesODATIS#32"/>
    </rdf:Description>
 </rdf:RDF>
