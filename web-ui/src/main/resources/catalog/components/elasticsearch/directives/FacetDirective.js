@@ -311,8 +311,8 @@
   ]
 
   module.directive('esFacet', [
-    'gnLangs', '$filter',
-    function (gnLangs, $filter) {
+    'gnLangs', '$filter', 'SEXTANT_LEGACY_FACET_MAPPING',
+    function (gnLangs, $filter, SEXTANT_LEGACY_FACET_MAPPING) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -332,18 +332,22 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
-          var sextantThesaurusWithHierarchyInLabel = [
-            'th_sextant-theme_tree.key',
-            'th_type_jeux_donnee_tree.key',
-            'th_odatis_variables_tree.key',
-            'th_dcsmm-area_tree.key',
-            'th_simm-thematiques_tree.key',
-            'th_mission-atlantic-bodc-parameters_tree.key',
-            'th_mission-atlantic-odemm_tree.key'];
+
+          var sextantThesaurusWithHierarchyInLabel = [];
+            Object.keys(SEXTANT_LEGACY_FACET_MAPPING)
+            .filter(function(k) {
+              return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0].indexOf('_tree.key') !== -1;
+            }).map(function(k) {
+              return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0];
+            }).filter(function(v, i, array) {
+              return array.indexOf(v) === i;
+            });
           function buildLabel() {
             if (scope.ctrl
               && sextantThesaurusWithHierarchyInLabel.indexOf(
                 scope.ctrl.facet.key) !== -1) {
+              // In sextant, the label contains all the hierarchy to the root
+              // Removing parent part of the label to only have current node label
               var parentLabel = scope.$parent.ctrl.item && scope.$parent.ctrl.item.value
                 ? $filter('facetTranslator')(scope.$parent.ctrl.item.value) + '/'
                 : '/';
