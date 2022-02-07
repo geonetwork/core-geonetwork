@@ -25,7 +25,7 @@
       {
         "group": "directAccess",
         "label": "localFilePath",
-        "copyLabel": "name",
+        "copyLabel": "desc",
         "sources": {
           "filestore": true
         },
@@ -41,7 +41,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "download",
             "hidden": true,
@@ -65,7 +67,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "download",
             "hidden": true,
@@ -112,7 +116,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "download",
             "hidden": true,
@@ -144,7 +150,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "browsing",
             "hidden": true,
@@ -168,7 +176,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "browsing",
             "hidden": true,
