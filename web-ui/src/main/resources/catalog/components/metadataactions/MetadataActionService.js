@@ -95,6 +95,29 @@
       };
 
       /**
+       * Index the current metadata record.
+       * @param {string} md
+       */
+      this.indexMd = function(md) {
+        return $http.get('../api/records/index', {
+          params: {
+            uuids: [md.uuid]
+          }
+        }).then(function(response) {
+          var res = response.data;
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.count', res),
+            type: res.success ? 'success' : 'danger'
+          });
+        }, function(response) {
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.error'),
+            type: 'danger'
+          });
+        });
+      };
+
+      /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.

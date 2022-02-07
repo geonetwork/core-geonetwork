@@ -14,6 +14,24 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li role="menuitem">
+        <a data-ng-click="addToSelection(md)"
+           data-ng-if="user.isEditorOrMore() && md.draft != 'y' && isSelected === false">
+          <input aria-label="Click to select or unselect" class="ng-pristine ng-valid ng-empty ng-touched" gn-selection-md="" ng-model="isSelected" type="checkbox">
+          <span data-translate="">addRecordToSelection</span>
+          <span class="badge ng-binding" data-ng-show="selectedCount > 0">{{selectedCount}}</span>
+        </a>
+      </li>
+      <li role="menuitem">
+        <a data-ng-click="removeFromSelection(md)"
+           data-ng-if="user.isEditorOrMore() && md.draft != 'y' && isSelected === true">
+          <input aria-label="Click to select or unselect" class="ng-pristine ng-valid ng-empty ng-touched" gn-selection-md="" ng-model="isSelected" type="checkbox">
+          <span data-translate="">removeRecordFromSelection</span>
+          <span class="badge ng-binding" data-ng-show="selectedCount > 0">{{selectedCount}}</span>
+        </a>
+      </li>
+      <li class="divider ng-scope" data-ng-if="user.isConnected() && user.canEditRecord(md) && md.draft != 'y'"
+          role="menuitem"></li>
+      <li role="menuitem">
         <a href=""
            data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
@@ -170,6 +188,16 @@
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && tasks.length > 0 && hasVisibletasks">&nbsp;</li>
 
+      <li role="menuitem">
+        <a data-ng-click="mdService.indexMd(md)"
+           data-ng-if="user.isEditorOrMore() && md.draft != 'y'"
+           href="">
+          <span class="fa fa-fw fa-cogs"></span>&nbsp;
+          <span data-translate="">indexRecord</span>
+        </a>
+      </li>
+      <li class="divider ng-scope" data-ng-if="user.isConnected() && user.canEditRecord(md) && md.draft != 'y'"
+          role="menuitem"></li>
 
       <li role="menuitem">
         <a href=""

@@ -28,10 +28,10 @@
   var module = angular.module('gn_selection_directive', []);
 
   module.directive('gnSelectionWidget', [
-    '$translate', 'hotkeys',
+    '$translate', '$rootScope', 'hotkeys',
     'gnHttp', 'gnMetadataActions', 'gnConfig', 'gnConfigService',
     'gnSearchSettings', 'gnSearchManagerService',
-    function($translate, hotkeys,
+    function($translate, $rootScope, hotkeys,
              gnHttp, gnMetadataActions, gnConfig, gnConfigService,
              gnSearchSettings, gnSearchManagerService) {
 
@@ -41,7 +41,14 @@
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
             'selection-widget.html',
         link: function(scope, element, attrs) {
-
+          $rootScope.$on('$locationChangeSuccess', function (event, current, previous) {
+            gnSearchManagerService.selected(scope.searchResults.selectionBucket)
+              .success(function(res) {
+                if (angular.isArray(res)) {
+                  scope.searchResults.selectedCount = res.length;
+                }
+              });
+          });
           scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
