@@ -328,6 +328,8 @@
                               select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
               <xsl:with-param name="title"
                               select="$schemaStrings/cersat-resources"/>
+              <xsl:with-param name="withGroupHeader"
+                              select="false()"/>
             </xsl:call-template>
           </div>
         </div>
@@ -599,7 +601,12 @@
   <xsl:template name="render-cersat-links">
     <xsl:param name="links" as="node()*"/>
     <xsl:param name="title" as="xs:string?"/>
+    <xsl:param name="withGroupHeader" as="xs:boolean?" select="true()"/>
 
+    <!-- See the mess described in
+    https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/440
+    and link config in remotesensing.json
+    -->
     <xsl:if test="count($links) > 0">
       <xsl:if test="$title">
         <h2>
@@ -609,14 +616,35 @@
 
       <xsl:for-each-group select="$links"
                           group-by="cit:protocol/*/text()">
-        <!-- Group by protocol -->
         <div>
-          <strong>
-            <xsl:value-of select="current-grouping-key()"/>
-          </strong>
+          <xsl:variable name="groupLabel"
+                        select="if (current-grouping-key() = 'NETWORK:LINK')
+                                then 'name' else 'description'"/>
+          <xsl:variable name="descriptions"
+                        select="distinct-values(current-group()/
+                          cit:*[local-name() = $groupLabel]/*/text())"/>
+          <xsl:variable name="allWithSameDesc"
+                        select="count($descriptions) = 1"/>
+
+          <xsl:if test="$withGroupHeader">
+            <strong>
+              <xsl:value-of select="if ($allWithSameDesc)
+                                    then $descriptions
+                                    else current-grouping-key()"/>
+            </strong>
+          </xsl:if>
           <xsl:for-each select="current-group()">
+            <xsl:sort select="cit:name/*/text()"/>
             <div title="{cit:name/*/text()}">
-              <xsl:value-of select="cit:description/*/text()"/>
+              <xsl:if test="not($withGroupHeader)">
+                <xsl:value-of select="if (cit:name/*/text() != '')
+                                    then concat(cit:name/*/text(), ' - ')
+                                    else ''"/>
+              </xsl:if>
+
+              <xsl:value-of select="if (not($allWithSameDesc) and cit:description/*/text() != '')
+                                    then concat(cit:description/*/text(), ' - ')
+                                    else ''"/>
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
                   <xsl:value-of select="cit:linkage/*/text()"/>
@@ -625,6 +653,10 @@
                   <a href="{cit:linkage/*/text()}">
                     <xsl:value-of select="cit:linkage/*/text()"/>
                   </a>
+
+                  <xsl:if test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
+                    [dataset id: <xsl:value-of select="cit:name/*/text()"/>]
+                  </xsl:if>
                 </xsl:otherwise>
               </xsl:choose>
             </div>
