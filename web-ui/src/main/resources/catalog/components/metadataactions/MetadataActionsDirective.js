@@ -126,7 +126,7 @@
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
           scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
-          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+          scope.newStatus = {status: scope.task ? scope.task.id : -1, owner: null, dueDate: null, changeMessage: ''};
 
 
           // Retrieve last status to set it in the form
