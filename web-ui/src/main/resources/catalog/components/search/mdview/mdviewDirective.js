@@ -113,7 +113,8 @@
                 'uuid',
                 'overview.*',
                 'resource*',
-                'cl_status*'
+                'cl_status*',
+                'cl_spatialRepresentationType*'
               ]
             },
             "size": scope.size,
