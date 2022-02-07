@@ -186,7 +186,11 @@
               }
 
 
-              var dataType = scope.element.md.spatialRepresentationType;
+              var dataTypes = scope.element.md.cl_spatialRepresentationType;
+              var dataType;
+              if (dataTypes && dataTypes.length > 0) {
+                dataType = dataTypes[0]["key"];
+              }
               dataType = dataType == 'grid' ? 'raster' : dataType;
 
               // To pass the extent into an object for scope issues

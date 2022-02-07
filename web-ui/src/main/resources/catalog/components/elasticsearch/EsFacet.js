@@ -61,6 +61,7 @@
       'documentStandard',
       'standardNameObject.default',
       'cl_status*',
+      'cl_spatialRepresentationType*',
       'mdStatus*',
       'recordLink',
       'th_sextant-theme_tree' // SPECIFIC SEXTANT

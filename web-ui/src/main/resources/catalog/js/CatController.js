@@ -768,6 +768,12 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
+            'cl_spatialRepresentationType.key': {
+              'terms': {
+                'field': 'cl_spatialRepresentationType.key',
+                'size': 15
+              }
+            },
             'sourceCatalogue': {
               'terms': {
                 'field': 'sourceCatalogue',
