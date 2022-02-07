@@ -302,8 +302,9 @@
                       </strong>
                       <xsl:for-each select="current-group()">
                         <div title="{cit:name/*/text()}">
+                          <xsl:value-of select="cit:description/*/text()"/>
                           <xsl:choose>
-                            <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')">
+                            <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
                               <xsl:value-of select="cit:linkage/*/text()"/>
                             </xsl:when>
                             <xsl:otherwise>
@@ -312,8 +313,6 @@
                               </a>
                             </xsl:otherwise>
                           </xsl:choose>
-
-                          <xsl:value-of select="cit:description/*/text()"/>
                         </div>
                       </xsl:for-each>
                     </div>
