@@ -290,37 +290,14 @@
                   <br/>
                 </xsl:if>
 
-                <xsl:variable name="online"
-                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
-                <xsl:if test="count($online) > 0">
-                  <xsl:for-each-group select="$online"
-                                      group-by="cit:protocol/*/text()">
-                    <!-- Group by protocol -->
-                    <div>
-                      <strong>
-                        <xsl:value-of select="current-grouping-key()"/>
-                      </strong>
-                      <xsl:for-each select="current-group()">
-                        <div title="{cit:name/*/text()}">
-                          <xsl:value-of select="cit:description/*/text()"/>
-                          <xsl:choose>
-                            <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
-                              <xsl:value-of select="cit:linkage/*/text()"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                              <a href="{cit:linkage/*/text()}">
-                                <xsl:value-of select="cit:linkage/*/text()"/>
-                              </a>
-                            </xsl:otherwise>
-                          </xsl:choose>
-                        </div>
-                      </xsl:for-each>
-                    </div>
-                  </xsl:for-each-group>
-                  <br/>
-                </xsl:if>
-              <!--</div>
-            </div>-->
+
+                <xsl:call-template name="render-cersat-links">
+                  <xsl:with-param name="links"
+                                  select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
+                </xsl:call-template>
+
+            <!--</div>
+          </div>-->
 
             <xsl:variable name="citation"
                           select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
@@ -346,34 +323,12 @@
             <xsl:variable name="resources"
                         select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
 
-            <xsl:if test="count($resources) &gt; 0">
-              <h2>
-                <xsl:value-of select="$schemaStrings/cersat-resources"/>
-              </h2>
-
-              <xsl:for-each select="$resources">
-                <div>
-                  <strong>
-                    <xsl:value-of select="if (cit:description/*/text() != '')
-                                            then cit:description/*/text()
-                                            else cit:protocol/*/text()"/>
-                  </strong>
-                  <xsl:choose>
-                    <xsl:when test="cit:protocol/*/text() = 'Local'">
-                      <xsl:value-of select="cit:linkage/*/text()"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a title="{cit:protocol/*/text()}"
-                         href="{cit:linkage/*/text()}">
-                        <xsl:value-of select="if (cit:name/*/text() != '')
-                                              then cit:name/*/text()
-                                              else cit:linkage/*/text()"/>
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </div>
-              </xsl:for-each>
-            </xsl:if>
+            <xsl:call-template name="render-cersat-links">
+              <xsl:with-param name="links"
+                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
+              <xsl:with-param name="title"
+                              select="$schemaStrings/cersat-resources"/>
+            </xsl:call-template>
           </div>
         </div>
       </div>
@@ -638,6 +593,46 @@
       </div>
     </div>-->
 
+  </xsl:template>
+
+
+  <xsl:template name="render-cersat-links">
+    <xsl:param name="links" as="node()*"/>
+    <xsl:param name="title" as="xs:string?"/>
+
+    <xsl:if test="count($links) > 0">
+      <xsl:if test="$title">
+        <h2>
+          <xsl:value-of select="$title"/>
+        </h2>
+      </xsl:if>
+
+      <xsl:for-each-group select="$links"
+                          group-by="cit:protocol/*/text()">
+        <!-- Group by protocol -->
+        <div>
+          <strong>
+            <xsl:value-of select="current-grouping-key()"/>
+          </strong>
+          <xsl:for-each select="current-group()">
+            <div title="{cit:name/*/text()}">
+              <xsl:value-of select="cit:description/*/text()"/>
+              <xsl:choose>
+                <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
+                  <xsl:value-of select="cit:linkage/*/text()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{cit:linkage/*/text()}">
+                    <xsl:value-of select="cit:linkage/*/text()"/>
+                  </a>
+                </xsl:otherwise>
+              </xsl:choose>
+            </div>
+          </xsl:for-each>
+        </div>
+      </xsl:for-each-group>
+      <br/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="render-field"
