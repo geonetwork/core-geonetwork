@@ -1269,11 +1269,13 @@
                 scope.$watch('params.linkType', function(newValue, oldValue) {
                   if (newValue !== oldValue) {
                     scope.config.multilingualFields = [];
-                    angular.forEach(newValue.fields, function(f, k) {
-                      if (f.isMultilingual !== false) {
-                        scope.config.multilingualFields.push(k);
-                      }
-                    });
+                    if (angular.isDefined(newValue.fields)) {
+                      angular.forEach(newValue.fields, function(f, k) {
+                        if (f.isMultilingual !== false) {
+                          scope.config.multilingualFields.push(k);
+                        }
+                      });
+                    }
 
                     if (!scope.isEditing) {
                       resetForm();
