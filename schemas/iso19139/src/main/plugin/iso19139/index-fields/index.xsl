@@ -986,10 +986,8 @@
 
       <xsl:for-each select="gmd:distributionInfo/*">
         <xsl:for-each
-          select="gmd:distributionFormat/*/gmd:name/gco:CharacterString">
-          <format>
-            <xsl:value-of select="."/>
-          </format>
+          select="gmd:distributionFormat/*/gmd:name/gco:CharacterString[. != '']">
+          <xsl:copy-of select="gn-fn-index:add-field('format', .)"/>
         </xsl:for-each>
 
         <!-- Indexing distributor contact -->
