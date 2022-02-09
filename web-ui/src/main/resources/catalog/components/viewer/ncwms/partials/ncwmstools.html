@@ -44,7 +44,7 @@
     <div class="form-group" ng-if="isLayerNcwms() && !isLayerOceanotron()">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
-        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value"
+        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value" config="{}"
              data-date-format="dd-mm-yyyy" date-available="layer.get('time').values">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <input class="form-control input-sm" type="text">
@@ -56,12 +56,12 @@
     <div class="form-group gn-required" ng-if="isLayerOceanotron()" ng-class="{'has-error': !ncTime.value.from || !ncTime.value.to}">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
-        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value.from"
+        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value.from" config="{}
              data-date-format="dd-mm-yyyy" date-available="layer.get('time').values">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <input class="form-control input-sm" type="text">
         </div>
-        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value.to"
+        <div class="input-group date" gn-bootstrap-datepicker="ncTime.value.to" config="{}
              data-date-format="dd-mm-yyyy" date-available="layer.get('time').values">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <input class="form-control input-sm" type="text">
