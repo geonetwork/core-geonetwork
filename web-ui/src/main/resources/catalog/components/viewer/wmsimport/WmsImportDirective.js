@@ -493,12 +493,12 @@
           scope.isParentNode = angular.isDefined(scope.member.Layer);
 
           scope.handle = function(evt) {
+            evt.stopPropagation();
             if (scope.isParentNode) {
               scope.toggleNode();
             } else {
               select();
             }
-            evt.stopPropagation();
           };
 
           // Add all subchildren
