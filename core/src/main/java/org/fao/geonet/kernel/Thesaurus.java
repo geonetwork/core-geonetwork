@@ -681,7 +681,7 @@ public class Thesaurus {
     /**
      * Set the title of the thesaurus and save the graph to the repository.
      */
-    public void addTitleElement(String thesaurusTitle) throws IOException, AccessDeniedException, GraphException {
+    public void addTitleElement(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
 
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
@@ -690,7 +690,7 @@ public class Thesaurus {
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceDC = "http://purl.org/dc/elements/1.1/";
 
-        URI mySubject = myFactory.createURI("http://geonetwork-opensource.org/", thesaurusTitle);
+        URI mySubject = myFactory.createURI(namespace, thesaurusTitle);
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
         URI titleURI = myFactory.createURI(namespaceDC, "title");
 

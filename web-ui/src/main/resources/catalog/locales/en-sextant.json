@@ -124,5 +124,6 @@
   "textInput": "Annotation",
   "facet-availableInServices": "Available in",
   "facet-OrgForResource": "Contact for the resource",
-  "facet-sourceCatalogue": "Provided by"
+  "facet-sourceCatalogue": "Provided by",
+  "buildThesaurusHierarchy": "Build hierarchy"
 }
