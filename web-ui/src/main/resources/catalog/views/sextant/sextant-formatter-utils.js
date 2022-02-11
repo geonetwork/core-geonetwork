@@ -63,7 +63,7 @@
     toggleButton.style.bottom = '0';
     toggleButton.style.left = '0';
     toggleButton.style.right = '0';
-    toggleButton.style.padding = '0.5em';
+    toggleButton.style.padding = '0 0.5em 0.5em 0.5em';
 
     // get parent background color to determine the gradient
     var parentBgColor = getComputedStyle(parentElement).backgroundColor;
