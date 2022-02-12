@@ -44,16 +44,14 @@
   });
 
   /**
-   * Filters internal settings used by GeoNetwork,
+   * Filters non-editable settings used by GeoNetwork,
    * not intended to be configured by the user.
    */
-  module.filter('hideGeoNetworkInternalSettings', function() {
+  module.filter('hideGeoNetworkNonEditableSettings', function() {
     return function(input) {
       var filtered = [];
-      var internal = ['system/userFeedback/lastNotificationDate',
-        'system/security/passwordEnforcement/pattern'];
       angular.forEach(input, function(el) {
-        if (internal.indexOf(el.name) === -1) {
+        if (el.editable === true) {
           filtered.push(el);
         }
       });
