@@ -149,7 +149,7 @@
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
-          'editable'];
+          'editable', 'queryBase'];
         if(p.any || luceneQueryString) {
           var queryStringParams = [];
           if (p.any) {
@@ -157,7 +157,8 @@
             var queryExpression = p.any.match(/^q\((.*)\)$/);
             if (queryExpression == null) {
               // var queryBase = '${any} resourceTitleObject.default:(${any})^2',
-              var queryBase = '(' + gnGlobalSettings.gnCfg.mods.search.queryBase + ')',
+              var queryBase = '(' +
+                  (p.queryBase || gnGlobalSettings.gnCfg.mods.search.queryBase) + ')',
                 defaultQuery = '${any}';
               if (queryBase.indexOf(defaultQuery) === -1) {
                 console.warn('Check your configuration. Query base \'' +
