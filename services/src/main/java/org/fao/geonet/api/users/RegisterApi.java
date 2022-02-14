@@ -156,6 +156,7 @@ public class RegisterApi {
 
         // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
+        user.setSurname(userRegisterDto.getSurname());
         user.setOrganisation(userRegisterDto.getOrganisation());
         user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
         user.getAddresses().add(userRegisterDto.getAddress());

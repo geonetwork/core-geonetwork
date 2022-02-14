@@ -44,6 +44,8 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
+    <xsl:import href="protocol-mapping.xsl"></xsl:import>
+
     <xsl:output method="xml" indent="yes"/>
     <xsl:strip-space elements="*"/>
 
@@ -308,21 +310,37 @@
               "Aide Sociale",
               "Aide famille"
               ],....-->
-            <mri:descriptiveKeywords>
-              <mri:MD_Keywords>
-                <xsl:for-each select="keyword|theme">
-                  <mri:keyword>
-                    <gco:CharacterString>
-                      <xsl:value-of select="name"/>
-                    </gco:CharacterString>
-                  </mri:keyword>
-                </xsl:for-each>
-                <mri:type>
-                  <mri:MD_KeywordTypeCode codeListValue="theme"
-                                          codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                </mri:type>
-              </mri:MD_Keywords>
-            </mri:descriptiveKeywords>
+            <xsl:if test="keyword">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="keyword">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
+
+            <xsl:if test="theme">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="theme">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                  <mri:type>
+                    <mri:MD_KeywordTypeCode codeListValue="theme"
+                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
+                  </mri:type>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
 
             <!--
             license_url: "http://opendatacommons.org/licenses/odbl/",
@@ -398,6 +416,7 @@
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
                 <xsl:for-each select="distribution">
+                  <xsl:variable name="format" select="format"/>
                   <mrd:onLine>
                     <cit:CI_OnlineResource>
                       <cit:linkage>
@@ -407,7 +426,7 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:value-of select="mediaType"/>
+                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
@@ -417,12 +436,39 @@
                       </cit:name>
                       <cit:description>
                         <gco:CharacterString>
-                          <xsl:value-of select="format"/>
+                          <xsl:value-of select="$format"/>
                         </gco:CharacterString>
                       </cit:description>
                     </cit:CI_OnlineResource>
                   </mrd:onLine>
                 </xsl:for-each>
+              </mrd:MD_DigitalTransferOptions>
+            </mrd:transferOptions>
+            <mrd:transferOptions>
+              <mrd:MD_DigitalTransferOptions>
+                  <mrd:onLine>
+                    <cit:CI_OnlineResource>
+                      <cit:linkage>
+                        <gco:CharacterString>
+                          <xsl:value-of select="landingPage"/>
+                        </gco:CharacterString>
+                      </cit:linkage>
+                      <cit:protocol>
+                        <gco:CharacterString>
+                          WWW:LINK:LANDING_PAGE
+                        </gco:CharacterString>
+                      </cit:protocol>
+                      <cit:name>
+                        <gco:CharacterString>
+                          Landing Page
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:description>
+                        <gco:CharacterString>
+                        </gco:CharacterString>
+                      </cit:description>
+                    </cit:CI_OnlineResource>
+                  </mrd:onLine>
               </mrd:MD_DigitalTransferOptions>
             </mrd:transferOptions>
           </mrd:MD_Distribution>

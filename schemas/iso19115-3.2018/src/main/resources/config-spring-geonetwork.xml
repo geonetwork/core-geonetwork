@@ -45,6 +45,10 @@
                       cit:name/gco:CharacterString = '{{name}}']
                     /cit:applicationProfile/gco:CharacterString/text())"/>
         </bean>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+			    <property name="id" value="doi-get"/>
+			    <property name="xpath" value="//cit:CI_OnlineResource[cit:protocol/gco:CharacterString = 'DOI']/cit:linkage/cit:URL/text()"/>
+		    </bean>
       </list>
     </property>
   </bean>

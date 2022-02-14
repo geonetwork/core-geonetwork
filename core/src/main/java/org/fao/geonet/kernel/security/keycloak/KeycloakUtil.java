@@ -25,25 +25,38 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.fao.geonet.utils.Log;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import javax.annotation.PostConstruct;
 
-public class KeycloakUtil {
+public class KeycloakUtil implements SecurityProviderUtil {
     public static String signinPath = null;
     private static LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
     @Autowired
     private LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint0;
 
+    @Autowired
+    private KeycloakUserUtils keycloakUserUtils;
+
     @PostConstruct
     private void init () {
         loginUrlAuthenticationEntryPoint = this.loginUrlAuthenticationEntryPoint0;
     }
 
+    /**
+     * Retrieve sign in path which will be used in the keycloak settings.
+     * @return  the sign in path
+     */
     public static String getSigninPath() {
         if (signinPath == null) {
             try {
@@ -61,5 +74,37 @@ public class KeycloakUtil {
             }
         }
         return signinPath;
+    }
+
+    /**
+     * Retrieve authentication header value as a bearer token
+     * @return  the authentication header value. In most cases it should be a bearer token header value. i.e. "Bearer ....."
+     */
+    @Override
+    public String getSSOAuthenticationHeaderValue() {
+        if (SecurityContextHolder.getContext().getAuthentication().getDetails() instanceof RefreshableKeycloakSecurityContext) {
+            RefreshableKeycloakSecurityContext refreshableKeycloakSecurityContext =
+                (RefreshableKeycloakSecurityContext) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            return "Bearer " + refreshableKeycloakSecurityContext.getTokenString();
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve user details from the keycloak token
+     * return the user details information
+     * @param auth authentication object to get the user details from
+     * @return the user details information based on the keycloak token
+     */
+    @Override
+    public UserDetails getUserDetails(Authentication auth) {
+        if (auth != null && auth.getPrincipal() instanceof KeycloakPrincipal) {
+            return keycloakUserUtils.getUserDetails(((KeycloakPrincipal) auth.getPrincipal()).getKeycloakSecurityContext().getToken(), false);
+        } else {
+            // If unknown auth class then return null.
+            // This will occur when it is an anonymous user.
+            return null;
+        }
+
     }
 }

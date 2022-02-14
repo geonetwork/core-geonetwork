@@ -148,6 +148,7 @@
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.isFilterTagsDisplayedInSearch = gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
+      $scope.showMapInFacet = gnGlobalSettings.gnCfg.mods.search.showMapInFacet;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;
       $scope.exactTitleToggle = gnGlobalSettings.gnCfg.mods.search.exactTitleToggle;

@@ -35,6 +35,106 @@
     'gn_esri_service'
   ]);
 
+  module.factory('gnMapServicesCache',
+    ['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        var mapservicesCache = null;
+
+        return {
+          getMapservices: function() {
+            if (mapservicesCache === null) {
+              var client = new XMLHttpRequest();
+              client.open('GET', '../api/mapservices', false);
+              client.setRequestHeader("accept", "application/json");
+              client.send();
+              if (client.status === 200) {
+                mapservicesCache = JSON.parse(client.responseText);
+              }
+            }
+            return mapservicesCache;
+          },
+
+          getMapservice: function(url) {
+            var mapservices = this.getMapservices();
+            if (mapservices !== null) {
+              for (var j = 0; j < mapservices.length; j++){
+                if ((mapservices[j].urlType='TEXT' && url.indexOf(mapservices[j].url) === 0) ||
+                    (mapservices[j].urlType='REGEXP') && (new RegExp(mapservices[j].url)).test(url)) {
+                  return mapservices[j];
+                }
+              }
+            }
+            return null;
+          },
+
+          getAuthorizationHeaderValue: function(mapservice) {
+            if (mapservice.authType === 'BEARER') {
+              // keycloak public client is the only supported bearer token at this time.
+              if (keycloak) {
+                if (keycloak.token) {
+                  return "Bearer " + keycloak.token;
+                } else {
+                  console.log("No token available. Will perform anonymous request")
+                }
+              } else {
+                console.log("No public client available to retreive token. Will perform anonymous request")
+              }
+            } else {
+              // For basic auth, we need to use proxy for security reasons as the username and password is not availabe in java.
+              // return 'Basic ' + btoa(user + ':' + pass);
+              return null;
+            }
+          },
+
+          // As this is a authorized mapservice lets use the authization load function for loading the images/tiles
+          authorizationLoadFunction: function(tile, src) {
+            var srcUrl = src;
+            var mapservice = this.getMapservice(srcUrl);
+            if (mapservice !== null) {
+              // If we are using a proxy then adjust the url.
+              if (mapservice.useProxy) {
+                // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+                console.log("Warning: attempting to get Using authorized Map service to get tile/image via proxy - this should have already been handled.")
+                tile.getImage().src  = gnGlobalSettings.proxyUrl + encodeURIComponent(srcUrl);
+              } else {
+                // Todo future add client side authentication request.
+                // For now set the src without authentication
+                tile.getImage().src = srcUrl
+              }
+            } else {
+              // Not a registered mapservice so just use the existing url
+              tile.getImage().src = srcUrl;
+            }
+          },
+
+
+          authorizationFunctionLegend: function(mapservice, legendUrl) {
+            var srcUrl = legendUrl.OnlineResource;
+
+            var mapservice = this.getMapservice(srcUrl);
+            if (mapservice !== null) {
+              // If we are using a proxy then adjust the url.
+              if (mapservice.useProxy) {
+                // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+                console.log("Warning: attempting to get Using authorized Map service to get legend/image via proxy - this should have already been handled.")
+                legendUrl.OnlineResource = gnGlobalSettings.proxyUrl + encodeURIComponent(srcUrl);
+                legend = data;
+              } else {
+                // Todo future add client side authentication request.
+                // For now set the src without authentication
+                legendUrl.OnlineResource = srcUrl
+                legend = srcUrl;
+              }
+            } else {
+              // Not a registered mapservice so just use the existing url
+              legendUrl.OnlineResource = srcUrl
+              legend = srcUrl;
+            }
+          }
+        };
+      }
+    ]);
+
   /**
    * @ngdoc service
    * @kind function
@@ -66,11 +166,12 @@
       'gnAlertService',
       '$http',
       'gnEsriUtils',
+      'gnMapServicesCache',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnMetadataManager, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-          $http, gnEsriUtils) {
+          $http, gnEsriUtils, gnMapServicesCache) {
 
         /**
          * @description
@@ -86,13 +187,10 @@
         };
         var getLayerInMap = function(map, name, url, style) {
           if (gnWmsQueue.isPending(url, name, style)) {
-            return true;
+            return null;
           }
 
-          if(getTheLayerFromMap(map, name, url, style) != null) {
-            return true;
-          }
-          return null;
+          return getTheLayerFromMap(map, name, url, style);
         };
 
         /**
@@ -104,11 +202,18 @@
          * @param {string} url of the service
          */
         var getTheLayerFromMap = function(map, name, url, style) {
+
+          // If style is undefined use empty value to compare with source.getParams().STYLES,
+          // that returns empty value for the default style.
+          if (style == undefined) {
+            style = '';
+          }
+
           for (var i = 0; i < map.getLayers().getLength(); i++) {
             var l = map.getLayers().item(i);
             var source = l.getSource();
             if (source instanceof ol.source.WMTS &&
-                l.get('url') == url) {
+                l.get('url').toLowerCase() == url.toLowerCase()) {
               if (l.get('name') == name) {
                 return l;
               }
@@ -117,9 +222,22 @@
                 source instanceof ol.source.ImageWMS) {
               if (source.getParams().LAYERS == name &&
                   source.getParams().STYLES == style &&
-                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                  l.get('url').split('?')[0].toLowerCase() == url.split('?')[0].toLowerCase()) {
                 return l;
               }
+            }
+            else if (source instanceof ol.source.ImageArcGISRest) {
+              if (!!name) {
+                if ((url.toLowerCase().indexOf(source.getUrl().toLowerCase()) == 0) &&
+                  source.getParams().LAYERS == "show:" + name) {
+                  return l;
+                }
+              } else {
+                if (source.getUrl().toLowerCase() == url.toLowerCase()) {
+                  return l;
+                }
+              }
+
             }
           }
           return null;
@@ -720,6 +838,21 @@
 
             var loadFunction;
 
+            // If this is an authorized mapservice then we need to adjust the url or add auth headers
+            // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+            if (options.url !== null && options.url.startsWith("http") && !options.url.startsWith(gnGlobalSettings.proxyUrl)) {
+               var mapservice = gnMapServicesCache.getMapservice(options.url);
+               if (mapservice !== null) {
+                  if (mapservice.useProxy) {
+                     // If we are using a proxy then adjust the url.
+                     options.url = gnGlobalSettings.proxyUrl + encodeURIComponent(options.url);
+                  } else {
+                     // If not using the proxy then we need to use a custom loadFunction to set the authentication header
+                     loadFunction = gnMapServicesCache.authorizationLoadFunction;
+                  }
+               }
+            }
+
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
               var config = {
@@ -897,7 +1030,23 @@
               }
 
               if (legendUrl) {
-                legend = legendUrl.OnlineResource;
+
+                // If this is an authorized mapservice then we need to adjust the url or add auth headers
+                // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+                if (legendUrl !== null && legendUrl.OnlineResource !== null && legendUrl.OnlineResource.startsWith("http") && !legendUrl.OnlineResource.startsWith(gnGlobalSettings.proxyUrl)) {
+                   var mapservice = gnMapServicesCache.getMapservice(legendUrl.OnlineResource);
+                   if (mapservice !== null) {
+                      if (mapservice.useProxy) {
+                         // If we are using a proxy then adjust the url.
+                         legendUrl.OnlineResource= gnGlobalSettings.proxyUrl + encodeURIComponent(legendUrl.OnlineResource);
+                       } else {
+                         // If not using the proxy then we need to use a custom loadFunction to set the authentication header
+                         legendUrl.OnlineResource = gnMapServicesCache.authorizationFunctionLegend(mapservice, legendUrl);
+                       }
+                   }
+                }
+
+                legend = legendUrl.OnlineResource
               }
 
               if (angular.isDefined(getCapLayer.Attribution)) {
@@ -1151,15 +1300,24 @@
 
                   var parts = url.split('?');
 
+                  var parametersMap = {
+                    service: 'WFS',
+                    request: 'GetFeature',
+                    version: getCapLayer.version,
+                    srsName: map.getView().getProjection().getCode(),
+                    bbox: extent.join(',')
+                  };
+
+                  if (parametersMap.version < "2.0.0") {
+                    parametersMap.typeName = getCapLayer.name.prefix + ':' +
+                      getCapLayer.name.localPart;
+                  } else {
+                    parametersMap.typeNames = getCapLayer.name.prefix + ':' +
+                      getCapLayer.name.localPart;
+                  }
+
                   var urlGetFeature = gnUrlUtils.append(parts[0],
-                      gnUrlUtils.toKeyValue({
-                        service: 'WFS',
-                        request: 'GetFeature',
-                        version: getCapLayer.version,
-                        srsName: map.getView().getProjection().getCode(),
-                        bbox: extent.join(','),
-                        typename: getCapLayer.name.prefix + ':' +
-                                   getCapLayer.name.localPart}));
+                      gnUrlUtils.toKeyValue(parametersMap));
 
                   //Fix, ArcGIS fails if there is a bbox:
                   if(getCapLayer.version == '1.1.0') {
@@ -1169,7 +1327,7 @@
                           request: 'GetFeature',
                           version: getCapLayer.version,
                           srsName: map.getView().getProjection().getCode(),
-                          typename: getCapLayer.name.prefix + ':' +
+                          typeName: getCapLayer.name.prefix + ':' +
                                      getCapLayer.name.localPart}));
                   }
 
@@ -1432,19 +1590,41 @@
             return defer.promise;
           },
 
-          addEsriRestFromScratch: function(map, url, name, createOnly, md) {
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.addEsriRestLayer:gnMap
+           * @name gnMap#addEsriRestLayer
+           *
+           * @description
+           * Here is the method to use when you want to add a ESRIREst layer from
+           * a url and a name (layer identifier).
+           *
+           * Return a promise with ol.Layer as data is succeed, and url/name
+           * if failure.
+           * If createOnly, we don't add the layer to the map.
+           * If the md object is given, we add it to the layer, or we try
+           * to retrieve it in the catalog
+           *
+           * @param {ol.Map} map to add the layer
+           * @param {string} url of the service
+           * @param {string} name of the layer (identifier)
+           * @param {boolean} createOnly or add it to the map
+           * @param {!Object} md object
+           */
+          addEsriRestLayer: function(map, url, name, createOnly, md) {
             if (url === '') {
               var error = "Trying to add an ESRI layer with no service URL. Layer name is " + name + ". Check the metadata or the map.";
               console.warn(error);
               return $q.reject(error);
             }
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
-            var layer = !!name && parseInt(name).toString() === name
+            var layer = angular.isNumber(name)
               ? name
               : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
 
-            var olLayer = getTheLayerFromMap(map, name, url);
+            // Use the url and the layer identifier to check if the layer exists
+            var olLayer = getTheLayerFromMap(map, layer, url);
             if (olLayer !== null) {
               if(md) {
                 olLayer.set('md', md);
@@ -2021,7 +2201,7 @@
                       opt);
                   break;
                 }
-                this.addEsriRestFromScratch(map, opt.url, opt.name)
+                this.addEsriRestLayer(map, opt.url, opt.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);

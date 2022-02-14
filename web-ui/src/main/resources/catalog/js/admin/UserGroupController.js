@@ -341,7 +341,7 @@
       $scope.hideResetPassword = function() {
         if ((!$scope.userSelected) ||
             (!$scope.userSelected.security)) {
-          return false;
+          return true;
         }
 
         return (($scope.userSelected.security.authtype == 'LDAP') ||
@@ -566,12 +566,24 @@
       };
 
       /**
-       * Delete a user.
+       * Ask for confirmation to delete an user.
        */
-      $scope.deleteUser = function(formId) {
+      $scope.removeUser = function(logoName) {
+        $('#gn-confirm-remove-user').modal('show');
+      }
+
+      /**
+       * Remove the user and refresh the list when done.
+       */
+      $scope.confirmRemoveUser = function() {
         $http.delete('../api/users/' +
             $scope.userSelected.id)
             .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('userRemoved'),
+                timeout: 2,
+                type: 'success'});
+
               $scope.unselectUser();
               loadUsers();
             })
@@ -698,10 +710,25 @@
         }
       };
 
-      $scope.deleteGroup = function(formId) {
+      /**
+       * Ask for confirmation to delete a group.
+       */
+      $scope.removeGroup = function(logoName) {
+        $('#gn-confirm-remove-group').modal('show');
+      }
+
+      /**
+       * Remove the group and refresh the list when done.
+       */
+      $scope.confirmRemoveGroup = function() {
         $http.delete('../api/groups/' +
                 $scope.groupSelected.id + '?force=true')
             .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('groupRemoved'),
+                timeout: 2,
+                type: 'success'});
+
               $scope.unselectGroup();
               loadGroups();
             })

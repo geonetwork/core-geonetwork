@@ -161,9 +161,12 @@
             $http.post('../api/search/records/_search', {"query": {
                 "bool" : {
                   "must": [
-                    {"multi_match": {
+                    {
+                      "multi_match": {
                         "query": $routeParams.id,
-                        "fields": ['id', 'uuid']}},
+                        "fields": ['id^2', 'uuid']
+                      }
+                    },
                     {"terms": {"draft": ["n", "y", "e"]}},
                     {"terms": {"isTemplate": ["n", "y", "s"]}}
                   ]
@@ -570,8 +573,8 @@
                 closeEditor();
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant(reason.data.error.message),
-                  error: reason.data.error.description,
+                  title: reason.data.message, //returned error JSON obj
+                  error: reason.data.description,
                   timeout: 0,
                   type: 'danger'
                 });

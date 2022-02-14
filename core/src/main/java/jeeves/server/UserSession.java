@@ -26,6 +26,8 @@ package jeeves.server;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -217,6 +219,12 @@ public class UserSession {
                 return (User) auth.getPrincipal();
             } else if (auth.getPrincipal() instanceof LDAPUser) {
                 return ((LDAPUser) auth.getPrincipal()).getUser();
+            } else {
+                // Try to get user Details from other security providers
+                SecurityProviderUtil securityProviderUtil = SecurityProviderConfiguration.getSecurityProviderUtil();
+                if (securityProviderUtil != null) {
+                    return (User)securityProviderUtil.getUserDetails(auth);
+                }
             }
         }
         return null;
