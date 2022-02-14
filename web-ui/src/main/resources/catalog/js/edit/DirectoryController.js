@@ -61,6 +61,7 @@
     'gnMetadataManager',
     'gnMetadataActions',
     'gnGlobalSettings',
+    'gnSearchSettings',
     'gnConfig',
     function($scope, $routeParams, $http,
         $rootScope, $translate, $compile,
@@ -72,6 +73,7 @@
         gnMetadataManager,
         gnMetadataActions,
         gnGlobalSettings,
+        gnSearchSettings,
         gnConfig) {
 
       // option to allow only administrators
@@ -94,34 +96,24 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
+
+      var directorySearchSettings = gnGlobalSettings.gnCfg.mods.editor.directory;
+
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
         configId: 'directory',
         any: '',
         params: {
-          sortBy: 'resourceTitleObject.default.keyword',
+          sortBy: directorySearchSettings.sortBy
+            || gnSearchSettings.sortBy,
           isTemplate: ['s'],
           from: 1,
-          to: 20
+          to: 20,
+          queryBase: directorySearchSettings.queryBase
+            || gnSearchSettings.queryBase
         },
-        sortbyValues: [
-          {
-            sortBy: 'resourceTitleObject.default.keyword',
-            sortOrder: ''
-          },
-          {
-            sortBy: 'recordOwner',
-            sortOrder: ''
-          },
-          {
-            sortBy: 'dateStamp',
-            sortOrder: 'desc'
-          },
-          {
-            sortBy: 'valid',
-            sortOrder: ''
-          }
-        ]
+        sortbyValues: directorySearchSettings.sortbyValues
+          || gnSearchSettings.sortbyValues
       };
 
       $scope.searchObj = angular.extend({}, $scope.defaultSearchObj);
