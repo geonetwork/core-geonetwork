@@ -665,7 +665,7 @@
             <xsl:sort select="cit:name/*/text()"/>
             <div title="{cit:name/*/text()}">
               <xsl:value-of select="if (cit:name/*/text() != '')
-                                  then concat(cit:name/*/text(), ' - ')
+                                  then concat(cit:name/*/text(), ': ')
                                   else ''"/>
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
