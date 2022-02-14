@@ -16,7 +16,7 @@
           data-icon-only="true"
           class="pull-left"></div>
       <div class="btn-toolbar pull-right">
-        <button class="btn btn-default"
+        <button class="btn btn-default" data-ng-disabled="newStatus.status == -1"
                 data-gn-click-and-spin="updateStatus()">
           {{"mdStatusButton-" + statusToSelect | translate}}
         </button>
@@ -61,7 +61,7 @@
                   data-ng-model="newStatus.changeMessage"></textarea>
       </div>
 
-      <button class="btn btn-default"
+      <button class="btn btn-default" data-ng-disabled="newStatus.status == -1"
               data-gn-click-and-spin="updateStatus()">
         <i class="fa fa-mail-forward"></i>&nbsp;
         <span data-translate="">triggerTask</span>

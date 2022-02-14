@@ -562,6 +562,80 @@
 
   /**
    * @ngdoc directive
+   * @name gn_utility.directive:gnCopyToClipboard
+   * @function
+   *
+   * @description
+   * Put a string in a input field with copy to clipboard functions attached to it.
+   *
+   * The code to be used in a HTML page:
+   * 
+   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}"></span>
+   *
+   * or
+   *
+   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="true"></span>
+   *
+   * The first option displays an input and copy button. Copying the text to the clipboard is triggered by
+   * clicking on the button or in the input.
+   *
+   * The second option only displays the copy button (in case the input is not needed). The input is
+   * moved out of sight, because for copying you need an input (or textarea)
+   */
+  module.directive('gnCopyToClipboard', ['gnAlertService','$translate',
+    function (gnAlertService,$translate) {
+      return {
+        restrict: 'A',
+        scope: {
+          copytext: '@gnCopyToClipboard',
+          buttononly: '@gnCopyButtonOnly'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/copytoclipboard.html',
+        link: function(scope, element, attr) {
+
+          var target = element.find('input:first');
+          scope.moveinput = (scope.buttononly === 'true');
+
+          scope.copyToClipboard = function() {
+            // select the current focus
+            var currentFocus = document.activeElement;
+
+            // set focus on the text input
+            target.focus();
+            target[0].setSelectionRange(0, target.val().length);
+
+            // copy the selection
+            var succeed;
+
+            try {
+              succeed = document.execCommand("copy");
+            } catch (e) {
+              console.warn(e);
+              succeed = false;
+            }
+
+            // Restore original focus
+            if (currentFocus && typeof currentFocus.focus === "function") {
+              currentFocus.focus();
+            }
+
+            if (succeed) {
+              gnAlertService.addAlert({
+                msg: $translate.instant('textCopied'),
+                delay: 5000,
+                type: 'success'});
+            }
+
+            return succeed;
+          };
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
    * @name gn_utility.directive:gnMetadataPicker
    * @function
    *
@@ -1735,6 +1809,45 @@
         ngModel.$formatters.push(function (value) {
           return parseFloat(value);
         });
+      }
+    };
+  });
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnHideShowPassword
+   *
+   * @description
+   * Toggles the visibility of a  related input password field.
+   * To be used in input type=password fields and display a button
+   * to toggle the visibility of the password field.
+   *
+   */
+  module.directive('gnHideShowPassword', function() {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        inputId: '@'
+      },
+      templateUrl: '../../catalog/components/utility/' +
+        'partials/hideshowpassword.html',
+      link: function (scope) {
+        scope.showHideClass = 'fa fa-eye-slash';
+
+        scope.hideShowPassword = function(){
+          var target = $('#' + scope.inputId)[0];
+
+          if(target != null) {
+            if(target.type == 'password') {
+              target.type = 'text';
+              scope.showHideClass = 'fa fa-eye-slash';
+            } else {
+              target.type = 'password';
+              scope.showHideClass = 'fa fa-eye';
+            }
+          }
+        };
       }
     };
   });

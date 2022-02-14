@@ -37,6 +37,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
+import org.fao.geonet.events.md.MetadataIndexStarted;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -530,6 +531,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 });
 
                 fields.putAll(addExtraFields(fullMd));
+
+                if (fullMd != null) {
+                    this.publisher.publishEvent(new MetadataIndexStarted(fullMd, fields));
+                }
 
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
             }

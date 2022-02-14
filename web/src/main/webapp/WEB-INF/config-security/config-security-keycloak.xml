@@ -71,13 +71,14 @@
     <constructor-arg name="adapterDeploymentContext" ref="adapterDeploymentContext"/>
   </bean>
   <bean id="keycloakUtil" class="org.fao.geonet.kernel.security.keycloak.KeycloakUtil" />
-  <bean id="keycloakAuthenticationProvider" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider" />
+  <bean id="keycloakAuthenticationProvider" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProvider" />
   <bean id="userSessionManagement" class="org.fao.geonet.kernel.security.keycloak.KeycloakHttpSessionManager" />
   <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter">
     <constructor-arg ref="userSessionManagement" />
   </bean>
   <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" >
       <constructor-arg ref="userSessionManagement" />
+      <constructor-arg ref="csrfFilter" />
   </bean>
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
@@ -85,7 +86,7 @@
   <bean id="keycloakSecurityContextRequestFilter"
         class="org.keycloak.adapters.springsecurity.filter.KeycloakSecurityContextRequestFilter" />
 
-  <bean id="keycloakLogoutHandler" class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutHandler">
+  <bean id="keycloakLogoutHandler" class="org.keycloak.adapters.springsecurity.authentication.KeycloakLogoutHandler">
     <constructor-arg ref="adapterDeploymentContext" />
   </bean>
 
