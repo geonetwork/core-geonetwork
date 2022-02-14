@@ -396,7 +396,7 @@
       function hasKeywordWithSlash() {
         if ($scope.thesaurusSelected) {
           $scope.hasKeywordWithSlash = false;
-          $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
+          $http.get('../api/registries/vocabularies/search?type=STARTS_WITH' +
             '&thesaurus=' + $scope.thesaurusSelected.key +
             '&rows=1' +
             '&q=' + (encodeURI('/') || '*') +
