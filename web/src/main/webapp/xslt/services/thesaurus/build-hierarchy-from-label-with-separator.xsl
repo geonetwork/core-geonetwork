@@ -1,8 +1,12 @@
 <xsl:stylesheet version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:dc="http://purl.org/dc/terms/"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-                xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#"
-                xmlns:void="http://rdfs.org/ns/void#" xmlns:gml="http://www.opengis.net/gml#"
+                xmlns:grg="http://www.isotc211.org/schemas/grg/"
+                xmlns:owl="http://www.w3.org/2002/07/owl#"
+                xmlns:void="http://rdfs.org/ns/void#"
+                xmlns:util="java:java.util.UUID"
+                xmlns:gml="http://www.opengis.net/gml#"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="#all">
 
   <xsl:output encoding="UTF-8" indent="yes" method="xml"/>
@@ -106,7 +110,7 @@
                           select="$existingConcepts[skos:prefLabel = current()]/@rdf:about"/>
             <id><xsl:value-of select="if ($existingConceptId != '')
                                       then $existingConceptId
-                                      else concat($baseUri, '#', position())"/></id>
+                                      else concat($baseUri, '#', util:toString(util:randomUUID()))"/></id>
             <xsl:copy-of select="$concepts/keyword[key = current()][1]/*"/>
           </keyword>
         </xsl:for-each>
