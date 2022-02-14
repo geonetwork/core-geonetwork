@@ -664,13 +664,14 @@
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
             <div title="{cit:name/*/text()}">
-              <xsl:if test="not($withGroupHeader)">
+<!--              <xsl:if test="not($withGroupHeader)">-->
                 <xsl:value-of select="if (cit:name/*/text() != '')
                                     then concat(cit:name/*/text(), ' - ')
                                     else ''"/>
-              </xsl:if>
+<!--              </xsl:if>-->
 
-              <xsl:value-of select="if (not($allWithSameDesc) and cit:description/*/text() != '')
+<!--              <xsl:value-of select="if (not($allWithSameDesc) and cit:description/*/text() != '')-->
+              <xsl:value-of select="if (cit:description/*/text() != '')
                                     then concat(cit:description/*/text(), ': ')
                                     else ''"/>
               <xsl:choose>
