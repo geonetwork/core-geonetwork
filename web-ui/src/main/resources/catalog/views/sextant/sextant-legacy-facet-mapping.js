@@ -482,10 +482,10 @@
         }
     },
     'SIH_Types_donnees': {
-      'th_sih_type_donnees.default':
+      'th_sih_type_donnees_tree.key':
         {
           'terms': {
-            'field': 'th_sih_type_donnees.default',
+            'field': 'th_sih_type_donnees_tree.key',
             'size': 300
           }
         }
