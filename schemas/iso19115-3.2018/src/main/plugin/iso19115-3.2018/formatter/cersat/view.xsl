@@ -614,9 +614,22 @@
         </h2>
       </xsl:if>
 
+      <xsl:variable name="linkLabels" as="node()*">
+        <link key="NETWORK:LINK" label="Local path"/>
+        <link key="WWW:FTP" label="FTP"/>
+        <link key="OGC:WMS" label="WMS"/>
+        <link key="WWW:OPENDAP" label="OPeNDAP"/>
+        <link key="WWW:OPENSEARCH" label="OpenSearch"/>
+        <link key="WWW:LINK" label="Download from website"/>
+<!--        <link key="WWW:LINKTHREDDS" label="THREDDS"/>-->
+      </xsl:variable>
+
       <xsl:for-each-group select="$links"
-                          group-by="cit:protocol/*/text()">
+                          group-by="concat(cit:protocol/*/text(), cit:description/*/text())">
+        <br/>
         <div>
+          <!--
+          Get Label from description
           <xsl:variable name="groupLabel"
                         select="if (current-grouping-key() = 'NETWORK:LINK')
                                 then 'name' else 'description'"/>
@@ -632,7 +645,22 @@
                                     then $descriptions
                                     else current-grouping-key()"/>
             </strong>
+          </xsl:if>-->
+
+          <!-- Hard coded label-->
+          <xsl:variable name="allWithSameDesc"
+                        select="false()"/>
+          <xsl:if test="$withGroupHeader">
+            <xsl:variable name="groupLabel"
+                          select="if (current-grouping-key() != 'WWW:LINKTHREDDS')
+                                  then $linkLabels[starts-with(current-grouping-key(), @key)]/@label
+                                  else 'THREDDS'"/>
+
+            <strong>
+              <xsl:value-of select="$groupLabel"/>
+            </strong>
           </xsl:if>
+
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
             <div title="{cit:name/*/text()}">
@@ -643,7 +671,7 @@
               </xsl:if>
 
               <xsl:value-of select="if (not($allWithSameDesc) and cit:description/*/text() != '')
-                                    then concat(cit:description/*/text(), ' - ')
+                                    then concat(cit:description/*/text(), ': ')
                                     else ''"/>
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
