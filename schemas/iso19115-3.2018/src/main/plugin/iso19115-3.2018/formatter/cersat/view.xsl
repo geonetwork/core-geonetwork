@@ -328,8 +328,6 @@
                               select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
               <xsl:with-param name="title"
                               select="$schemaStrings/cersat-resources"/>
-              <xsl:with-param name="withGroupHeader"
-                              select="false()"/>
             </xsl:call-template>
           </div>
         </div>
@@ -621,11 +619,19 @@
         <link key="WWW:OPENDAP" label="OPeNDAP"/>
         <link key="WWW:OPENSEARCH" label="OpenSearch"/>
         <link key="WWW:LINK" label="Download from website"/>
+        <link key="WWW:LINKUser guide" label="User guide"/>
+        <link key="WWW:LINKProcessing and validation" label="Processing and validation"/>
+        <link key="WWW:LINKOther document" label="Other document"/>
 <!--        <link key="WWW:LINKTHREDDS" label="THREDDS"/>-->
       </xsl:variable>
 
+      <xsl:variable name="isInformation"
+                    select="$links/cit:function/*/@codeListValue = 'information'"/>
+      <xsl:variable name="groupLabel"
+                    select="if ($isInformation)
+                            then 'name' else 'description'"/>
       <xsl:for-each-group select="$links"
-                          group-by="concat(cit:protocol/*/text(), cit:description/*/text())">
+                          group-by="concat(cit:protocol/*/text(), cit:*[local-name() = $groupLabel]/*/text())">
         <br/>
         <div>
           <!--
@@ -651,9 +657,11 @@
           <xsl:variable name="allWithSameDesc"
                         select="false()"/>
           <xsl:variable name="groupLabel"
-                        select="if (current-grouping-key() != 'WWW:LINKTHREDDS')
-                                  then $linkLabels[starts-with(current-grouping-key(), @key)]/@label
-                                  else 'THREDDS'"/>
+                        select="if (current-grouping-key() = 'WWW:LINKTHREDDS')
+                                  then 'THREDDS'
+                                  else if ($isInformation)
+                                  then $linkLabels[current-grouping-key() = @key]/@label
+                                  else $linkLabels[starts-with(current-grouping-key(), @key)]/@label"/>
 
           <xsl:if test="$withGroupHeader">
             <strong>
