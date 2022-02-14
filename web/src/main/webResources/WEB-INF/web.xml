@@ -481,6 +481,72 @@
     </cookie-config>
   </session-config>
 
+  <!-- Uncomment for ECAS -->
+<!--  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>GeoNetwork</web-resource-name>
+      <description>Requires users to be authenticated but does not require them to be authorized</description>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description>allow users with any role</description>
+      <role-name>*</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <description>Encryption is not required for the application in general.</description>
+      <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>ECAS</auth-method>
+    <realm-name>GeoNetwork ECAS Realm</realm-name>
+  </login-config>
+
+  &lt;!&ndash; role: ecasTestRole &ndash;&gt;
+  <security-role>
+    <description>Application-defined role</description>
+
+    &lt;!&ndash; CHANGE THIS !!! // START (12) &ndash;&gt;
+
+    &lt;!&ndash; PUT YOUR ROLE NAME HERE &ndash;&gt;
+    <role-name>INTERNET</role-name>
+
+    &lt;!&ndash; CHANGE THIS !!! // END (12) &ndash;&gt;
+
+  </security-role>
+
+  &lt;!&ndash; role: adminRole &ndash;&gt;
+  <security-role>
+    <description>Application-defined role</description>
+    <role-name>LIVENEWS</role-name>
+  </security-role>
+
+  &lt;!&ndash; role: EUROPEAN_COMMISSION &ndash;&gt;
+  <security-role>
+    <description>Application-defined role</description>
+    <role-name>EUROPEAN_COMMISSION</role-name>
+  </security-role>
+
+  &lt;!&ndash; role: EXTERNAL_INTRAMUROS &ndash;&gt;
+  <security-role>
+    <description>Application-defined role</description>
+    <role-name>EXTERNAL_INTRAMUROS</role-name>
+  </security-role>
+
+  &lt;!&ndash; role: unauthorizedRole &ndash;&gt;
+  <security-role>
+    <description>Role to show an example of unauthorized access</description>
+    <role-name>unauthorizedRole</role-name>
+  </security-role>
+
+  <security-role>
+    <description>
+      The role that is required to log in to the Manager Application
+    </description>
+    <role-name>*</role-name>
+  </security-role>-->
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
