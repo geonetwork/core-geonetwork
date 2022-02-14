@@ -630,6 +630,9 @@
       <xsl:variable name="groupLabel"
                     select="if ($isInformation)
                             then 'name' else 'description'"/>
+      <xsl:variable name="listLabel"
+                    select="if ($isInformation)
+                            then 'description' else 'name'"/>
       <xsl:for-each-group select="$links"
                           group-by="concat(cit:protocol/*/text(), cit:*[local-name() = $groupLabel]/*/text())">
         <br/>
@@ -671,9 +674,9 @@
 
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
-            <div title="{cit:name/*/text()}">
-              <xsl:value-of select="if (cit:name/*/text() != '')
-                                  then concat(cit:name/*/text(), ': ')
+            <div>
+              <xsl:value-of select="if (cit:*[local-name() = $listLabel]/*/text() != '')
+                                  then concat(cit:*[local-name() = $listLabel]/*/text(), ': ')
                                   else ''"/>
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
