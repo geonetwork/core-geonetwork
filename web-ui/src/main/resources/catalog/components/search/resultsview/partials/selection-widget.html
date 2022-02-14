@@ -165,14 +165,14 @@
       </li>
 
 
-      <li data-ng-if="collectionTemplates && collectionTemplates.length > 0"
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates && collectionTemplates.length > 0"
           class="divider"></li>
-      <li data-ng-if="collectionTemplates && collectionTemplates.length > 0"
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates && collectionTemplates.length > 0"
           class="dropdown-header">
         <i class="fa fa-fw gn-icon-series"></i>&nbsp;
         <span translate>createCollectionFromSelectionAs</span>
       </li>
-      <li data-ng-if="collectionTemplates"
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates"
           data-ng-repeat="c in collectionTemplates">
         <a href="" data-ng-click="createCollection(c)">
           <span translate>{{c.resourceTitle}}</span>
