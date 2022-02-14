@@ -650,12 +650,12 @@
           <!-- Hard coded label-->
           <xsl:variable name="allWithSameDesc"
                         select="false()"/>
-          <xsl:if test="$withGroupHeader">
-            <xsl:variable name="groupLabel"
-                          select="if (current-grouping-key() != 'WWW:LINKTHREDDS')
+          <xsl:variable name="groupLabel"
+                        select="if (current-grouping-key() != 'WWW:LINKTHREDDS')
                                   then $linkLabels[starts-with(current-grouping-key(), @key)]/@label
                                   else 'THREDDS'"/>
 
+          <xsl:if test="$withGroupHeader">
             <strong>
               <xsl:value-of select="$groupLabel"/>
             </strong>
@@ -664,16 +664,9 @@
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
             <div title="{cit:name/*/text()}">
-<!--              <xsl:if test="not($withGroupHeader)">-->
-                <xsl:value-of select="if (cit:name/*/text() != '')
-                                    then concat(cit:name/*/text(), ' - ')
-                                    else ''"/>
-<!--              </xsl:if>-->
-
-<!--              <xsl:value-of select="if (not($allWithSameDesc) and cit:description/*/text() != '')-->
-              <xsl:value-of select="if (cit:description/*/text() != '')
-                                    then concat(cit:description/*/text(), ': ')
-                                    else ''"/>
+              <xsl:value-of select="if (cit:name/*/text() != '')
+                                  then concat(cit:name/*/text(), ' - ')
+                                  else ''"/>
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
                   <xsl:value-of select="cit:linkage/*/text()"/>
