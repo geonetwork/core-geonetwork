@@ -97,7 +97,7 @@
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
 
-      var directorySearchSettings = gnGlobalSettings.gnCfg.mods.editor.directory;
+      var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
 
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
