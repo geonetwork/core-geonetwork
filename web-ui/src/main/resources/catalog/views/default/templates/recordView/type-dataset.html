@@ -1,5 +1,7 @@
 <!-- title & summary -->
 <div class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-top gn-margin-bottom gn-padding-bottom">
+  <div ng-include="'../../catalog/views/default/templates/recordView/status.html'"/>
+
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
   </div>
@@ -107,7 +109,7 @@
       </span>
       <div>
         <h3 data-translate="">scale</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="d in mdView.current.record.resolutionScaleDenominator"
               class="gn-scale">{{d}}
           </li>
@@ -122,7 +124,7 @@
       </span>
       <div>
         <h3 data-translate="">resolution</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="r in mdView.current.record.resolutionDistance">{{r}}</li>
         </ul>
       </div>
@@ -135,7 +137,7 @@
       </span>
       <div>
         <h3 data-translate="">crs</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="r in mdView.current.record.crsDetails">
             <a ng-show="r.url" href="{{r.url}}">{{r.name || r.code}}</a>
             <span ng-hide="r.url">{{r.name || r.code}}</span>
@@ -213,7 +215,7 @@
       </span>
       <div>
         <h3 data-translate="">identifier</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
             <span data-ng-bind-html="i.code | linky"/>
           </li>
@@ -229,7 +231,7 @@
       </span>
       <div>
         <h3 data-translate="">language</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="l in mdView.current.record.resourceLanguage">
             {{l | translate}}
           </li>

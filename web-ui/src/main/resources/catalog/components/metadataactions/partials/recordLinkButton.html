@@ -1,6 +1,6 @@
 <a type="button"
    data-ng-show="hasAction"
-   data-ng-class="{'btn btn-default': !isDropDown || iconMode === 'only'}"
+   data-ng-class="{'btn btn-default btn-sm': !isDropDown || iconMode === 'only'}"
    class="text-wrap {{btnClass}}"
    data-ng-click="service.doAction(mainType, link, record)">
   <i class="fa"
@@ -26,7 +26,7 @@
      title="{{'remoteRecord' | translate}}"></i>
 </a>
 <a data-ng-show="!hasAction"
-   data-ng-class="{'btn btn-default': !isDropDown || iconMode === 'only'}"
+   data-ng-class="{'btn btn-default btn-sm': !isDropDown || iconMode === 'only'}"
    class="{{btnClass}}"
    data-ng-href="{{link.url}}">
   <i class="fa"

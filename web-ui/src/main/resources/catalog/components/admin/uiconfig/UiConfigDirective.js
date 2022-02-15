@@ -162,6 +162,7 @@
           }, true);
 
           scope.sortOrderChoices = ['asc', 'desc'];
+          scope.searchResultContactChoices = ['Org', 'OrgForResource', 'OrgForDistribution'];
 
           // ng-model can't bind to object key, so
           // when key value change, reorganize object.

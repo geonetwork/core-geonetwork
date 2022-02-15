@@ -11,7 +11,7 @@
     <div data-ng-if="mdView.current.record.contact">
       <h3 data-translate="">contact</h3>
       <div data-gn-metadata-contacts="mdView.current.record.contact"
-             data-gn-mode="org-role"
+             data-gn-mode="role"
              data-layout="icon"/>
     </div>
     <div data-ng-if="showCitation"
@@ -24,7 +24,7 @@
       <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
         <i class="fa fa-fw fa-file-code-o"></i>
       </span>
-      <a class="btn btn-default"
+      <a class="btn btn-default btn-sm"
          data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">
         <span data-translate="">metadataInXML</span>
       </a>
@@ -47,7 +47,7 @@
       </span>
       <div>
         <h3 data-translate="">metadataLanguage</h3>
-        <ul class="gn-label-list">
+        <ul class="gn-comma-list">
           <li data-ng-repeat="l in mdLanguages">
             {{l | translate}}
           </li>

@@ -281,6 +281,7 @@
   "regexpFlags-c": "disables case insensitive matching",
   "createCollectionFromSelectionAs": "Create collection from selection as",
   "supplementalInformation": "Supplemental Information",
+  "sourceDescription": "Source description",
   "orderingInstructions": "Ordering instructions",
   "siblingsReverseLinks": "Other resources (other record links)",
   "focusOnFrom": "Focus on resources from ",
@@ -291,10 +292,9 @@
   "facet-linkProtocol": "Protocol",
   "copyToClipboard": "Copy to clipboard.",
   "copyUrlToClipboard": "Copy URL to clipboard.",
-  "supplementalInformation": "Supplemental Information",
   "copyHarvesterConfig": "Copy harvester config",
   "addHarvesterFromClipboard": "Copy harvester config from clipboard",
   "harvesterConfigIsNotJson": "The harvester config must be a JSON configuration.",
   "harvesterConfigIsNotValid": "The harvester config does not look to be a valid configuration.",
-  "specificationConformance": "Quality reports"
+  "specificationConformance": "Specification conformance"
 }

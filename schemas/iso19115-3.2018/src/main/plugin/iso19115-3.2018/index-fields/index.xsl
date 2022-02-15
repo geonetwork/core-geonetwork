@@ -1033,6 +1033,10 @@
           <hassource><xsl:value-of select="@uuidref"/></hassource>
           <xsl:copy-of select="gn-fn-index:build-record-link(@uuidref, $xlink, @xlink:title, 'sources')"/>
         </xsl:for-each>
+
+        <xsl:for-each select=".//mrl:source/*/mrl:description[gco:CharacterString != '']">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('sourceDescription', ., $allLanguages)"/>
+        </xsl:for-each>
       </xsl:for-each>
 
 
@@ -1072,10 +1076,8 @@
 
       <xsl:for-each select="mdb:distributionInfo/*">
         <xsl:for-each select="mrd:distributionFormat/*/
-                                mrd:formatSpecificationCitation/*/cit:title/*/text()">
-          <format>
-            <xsl:value-of select="."/>
-          </format>
+                                mrd:formatSpecificationCitation/*/cit:title/*/text()[. != '']">
+          <xsl:copy-of select="gn-fn-index:add-field('format', .)"/>
         </xsl:for-each>
 
         <xsl:for-each select="mrd:distributor/mrd:MD_Distributor[mrd:distributorContact]">

@@ -102,6 +102,9 @@ public class EsHTTPProxy {
         "       \t}\n" +
         "}";
 
+    private static final String SEARCH_ENDPOINT = "_search";
+    private static final String MULTISEARCH_ENDPOINT = "_msearch";
+
     @Autowired
     AccessManager accessManager;
 
@@ -282,7 +285,7 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, "_search", httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
     }
 
 
@@ -314,7 +317,7 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, "_msearch", httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
     }
 
 
@@ -359,7 +362,7 @@ public class EsHTTPProxy {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
-        if ("_search".equals(endPoint) || "_msearch".equals(endPoint)) {
+        if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode nodeQuery = objectMapper.readTree(body);
@@ -392,10 +395,10 @@ public class EsHTTPProxy {
                 }
                 requestBody.append(node.toString()).append(System.lineSeparator());
             }
-            handleRequest(context, httpSession, request, response, url,
+            handleRequest(context, httpSession, request, response, url, endPoint,
                 requestBody.toString(), true, selectionBucket, relatedTypes);
         } else {
-            handleRequest(context, httpSession, request, response, url,
+            handleRequest(context, httpSession, request, response, url, endPoint,
                 body, true, selectionBucket, relatedTypes);
         }
     }
@@ -524,6 +527,7 @@ public class EsHTTPProxy {
                                HttpServletRequest request,
                                HttpServletResponse response,
                                String sUrl,
+                               String endPoint,
                                String requestBody,
                                boolean addPermissions,
                                String selectionBucket,
@@ -626,7 +630,7 @@ public class EsHTTPProxy {
                 }
 
                 try {
-                    processResponse(context, httpSession, streamFromServer, streamToClient, selectionBucket, addPermissions, relatedTypes);
+                    processResponse(context, httpSession, streamFromServer, streamToClient, endPoint, selectionBucket, addPermissions, relatedTypes);
                     streamToClient.flush();
                 } finally {
                     IOUtils.closeQuietly(streamFromServer);
@@ -650,6 +654,7 @@ public class EsHTTPProxy {
 
     private void processResponse(ServiceContext context, HttpSession httpSession,
                                  InputStream streamFromServer, OutputStream streamToClient,
+                                 String endPoint,
                                  String bucket,
                                  boolean addPermissions,
                                  RelatedItemType[] relatedTypes) throws Exception {
@@ -660,25 +665,48 @@ public class EsHTTPProxy {
         final Set<String> selections = (addPermissions ?
             SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket) : new HashSet<>());
 
-        JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
-            if (addPermissions) {
-                addUserInfo(doc, context);
-                addSelectionInfo(doc, selections);
-            }
-
-            if (relatedTypes.length > 0) {
-                addRelatedTypes(doc, relatedTypes, context);
-            }
-
-            // Remove fields with privileges info
-            if (doc.has("_source")) {
-                ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                for (ReservedOperation o : ReservedOperation.values()) {
-                    sourceNode.remove("op" + o.getId());
+        if (endPoint.equals(SEARCH_ENDPOINT)) {
+            JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
+                if (addPermissions) {
+                    addUserInfo(doc, context);
+                    addSelectionInfo(doc, selections);
                 }
-            }
-        });
+
+                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                    addRelatedTypes(doc, relatedTypes, context);
+                }
+
+                // Remove fields with privileges info
+                if (doc.has("_source")) {
+                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+                    for (ReservedOperation o : ReservedOperation.values()) {
+                        sourceNode.remove("op" + o.getId());
+                    }
+                }
+            });
+        } else {
+            JsonStreamUtils.addInfoToDocsMSearch(parser, generator, doc -> {
+                if (addPermissions) {
+                    addUserInfo(doc, context);
+                    addSelectionInfo(doc, selections);
+                }
+
+                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                    addRelatedTypes(doc, relatedTypes, context);
+                }
+
+                // Remove fields with privileges info
+                if (doc.has("_source")) {
+                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+                    for (ReservedOperation o : ReservedOperation.values()) {
+                        sourceNode.remove("op" + o.getId());
+                    }
+                }
+            });
+        }
+
         generator.flush();
         generator.close();
     }

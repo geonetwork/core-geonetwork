@@ -53,7 +53,8 @@
         </div>
       </div>
       <div class="gn-md-contact">
-        {{md.OrgForResource[0]}}
+        <!-- Handle string and array results -->
+        {{[].concat(md[searchResultContact || 'OrgForResource'])[0]}}
       </div>
     </div>
     <!-- /.gn-card-body -->

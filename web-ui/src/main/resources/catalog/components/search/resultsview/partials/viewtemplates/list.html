@@ -51,11 +51,28 @@
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3">
           <div class="gn-md-contact">
-            <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index">
+
+            <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForResource'">
               <img data-ng-if="::c.logo"
                     data-ng-src="{{::c.logo}}"
                     class="gn-source-logo"
                     title="{{::c.organisation}} ({{::c.role}})"/>
+              {{::c.organisation}} ({{::c.role | translate}})
+            </p>
+
+            <p data-ng-repeat="c in ::md.getAllContacts().distribution | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForDistribution'">
+              <img data-ng-if="::c.logo"
+                   data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
+                   title="{{::c.organisation}} ({{::c.role}})"/>
+              {{::c.organisation}} ({{::c.role | translate}})
+            </p>
+
+            <p data-ng-repeat="c in ::md.getAllContacts().metadata | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'Org'">
+              <img data-ng-if="::c.logo"
+                   data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
+                   title="{{::c.organisation}} ({{::c.role}})"/>
               {{::c.organisation}} ({{::c.role | translate}})
             </p>
           </div>

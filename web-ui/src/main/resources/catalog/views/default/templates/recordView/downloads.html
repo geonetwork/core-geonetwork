@@ -6,5 +6,6 @@
 
 <div data-ng-if="mdView.current.record.orderingInstructions">
   <h2 data-translate="">orderingInstructions</h2>
-  <p data-ng-bind-html="mdView.current.record.orderingInstructions | linky | newlines"/>
+  <p data-ng-repeat="o in mdView.current.record.orderingInstructions"
+     data-ng-bind-html="o | linky | newlines"/>
 </div>

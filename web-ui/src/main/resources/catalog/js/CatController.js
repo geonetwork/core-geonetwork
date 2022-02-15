@@ -556,6 +556,7 @@ goog.require('gn_alert');
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
+          'searchResultContact': 'OrgForResource',
           'formatter': {
             'list': [{
               'label': 'defaultView',
@@ -690,14 +691,14 @@ goog.require('gn_alert');
         },
         'recordview': {
           'isSocialbarEnabled': true,
-          'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
+          'showStatusWatermarkFor': '',
           'showStatusTopBarFor': '',
           'showCitation': {
             'enabled': false,
             'if': null // {'documentStandard': ['iso19115-3.2018']}
           },
           'sortKeywordsAlphabetically': true,
-          'mainThesaurus': ['th_gemet'],
+          'mainThesaurus': ['th_gemet', 'th_gemet-theme'],
           'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
           'internalThesaurus': [],
           'collectionTableConfig': {

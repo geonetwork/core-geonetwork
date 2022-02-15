@@ -1,6 +1,8 @@
 <div data-ng-if="::layout === 'icon'">
   <ul>
+
     <li class="gn-contact-card"
+        data-ng-if="mode == 'default'"
         data-ng-repeat="c in mdContacts track by $index"
         gn-popover
         gn-popover-dismiss=".content">
@@ -38,6 +40,111 @@
         <div data-gn-search-filter-link="OrgForResource"
              data-filter="c.organisation"
              data-label="focusOnFrom">{{c.organisation}}</div>
+      </div>
+    </li>
+
+    <!-- Group by role -->
+    <li class="gn-contact-card"
+        data-ng-if="mode == 'role'"
+        data-ng-repeat="cnts in mdContacts | groupBy:'role' track by $index"
+        gn-popover
+        gn-popover-dismiss=".content">
+
+      <div gn-popover-anchor
+           class="row">
+        <div class="col-md-12">
+          <div class="gn-contact-card-role">
+            {{cnts[0].role | translate}}
+          </div>
+          <div class="col-md-12" data-ng-repeat="c in cnts | orderBy:'organisation'">
+            <div class="row">
+              <div class="col-md-4"
+                   data-gn-circle-letter-icon="c.organisation"/>
+              <div class="col-md-8">
+                <div class="gn-contact-card-org-group">
+                  <span data-ng-if="::c.website">
+                    <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
+                  </span>
+                  <span data-ng-if="::!c.website">
+                    {{c.organisation}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div gn-popover-content>
+<!--     Removing for now, because if you close open popup
+   the title disappear. <h3 class="popover-title">{{cnts[0].role | translate}}</h3>-->
+        <div data-ng-repeat="c in cnts | orderBy:'organisation'">
+          <div data-gn-metadata-individual="c"/>
+
+          <address data-ng-if="c.address != '' || c.phone != ''">
+            <div data-ng-if="c.address != ''">{{c.address}}</div>
+            <a href="tel:{{c.phone}}"
+               data-ng-if="c.phone != ''">
+              <span data-translate="">call</span> {{c.phone}}
+            </a>
+          </address>
+
+          <div data-gn-search-filter-link="OrgForResource"
+               data-filter="c.organisation"
+               data-label="focusOnFrom">{{c.organisation}}</div>
+
+          <hr data-ng-if="!$last"/>
+        </div>
+      </div>
+    </li>
+
+    <!-- Group by organisation/role -->
+    <li class="gn-contact-card"
+        data-ng-if="mode == 'org-role'"
+        data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole"
+        gn-popover
+        gn-popover-dismiss=".content">
+
+      <div gn-popover-anchor
+           class="row">
+        <div class="col-md-4"
+             data-gn-circle-letter-icon="org"/>
+
+        <div class="col-md-8" ng-repeat="c in contactByOrgRole">
+          <div class="gn-contact-card-org-group">
+            <span data-ng-if="::c.website">
+              <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
+            </span>
+            <span data-ng-if="::!c.website">
+              {{c.organisation}}
+            </span>
+          </div>
+
+          <div class="gn-contact-card-group-role" data-ng-repeat="r in ::c.roles">
+            {{r | translate}} <span data-ng-if="!$last"><br/></span>
+          </div>
+
+          </div>
+      </div>
+
+      <div gn-popover-content>
+        <div data-ng-repeat="c in contactByOrgRole">
+          <div data-gn-metadata-individual="c"/>
+
+          <address data-ng-if="c.address != '' || c.phone != ''">
+            <div data-ng-if="c.address != ''">{{c.address}}</div>
+            <a href="tel:{{c.phone}}"
+               data-ng-if="c.phone != ''">
+              <span data-translate="">call</span> {{c.phone}}
+            </a>
+          </address>
+
+          <div data-gn-search-filter-link="OrgForResource"
+               data-filter="c.organisation"
+               data-label="focusOnFrom">{{c.organisation}}</div>
+
+          <hr data-ng-if="!$last"/>
+        </div>
       </div>
     </li>
   </ul>
