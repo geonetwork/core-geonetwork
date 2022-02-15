@@ -4,30 +4,7 @@
       'gn-info-list-large': type === 'large',
       'gn-info-list-small': type === 'small'}">
 
-  <h2>{{title}}</h2>
-
   <div class="">
-    <div data-ng-repeat="filter in filtersToProcess"
-         class="row">
-      <div class="col-md-3 text-right">
-        {{('facet-' + filter) | facetKeyTranslator}}
-      </div>
-      <div class="col-md-9">
-        <div class="btn-group"
-             role="group"
-             aria-label="filter">
-          <button data-ng-repeat="(key, b) in agg[filter].buckets"
-                  data-ng-click="filterRecordsBy(filter, b.key)"
-                  type="button"
-                  class="btn btn-default btn-sm gn-margin-right-sm gn-margin-bottom-sm"
-                  data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
-          >{{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
-          </button>
-        </div>
-      </div>
-    </div>
-
-
     <div id="info-toggle-buttons"
          class="btn-group pull-right"
          data-toggle="buttons"
