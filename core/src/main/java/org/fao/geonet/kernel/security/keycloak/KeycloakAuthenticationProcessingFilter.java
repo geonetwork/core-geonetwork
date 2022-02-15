@@ -34,9 +34,9 @@ import org.keycloak.adapters.springsecurity.filter.QueryParamPresenceRequestMatc
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -94,7 +94,8 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
 
             String username = "UNIDENTIFIED";
             try {
-                UserDetails userDetails = keycloakUserUtils.setupUser(request, keycloakPrincipal);
+                // Get the user details from the token and also apply changes to the database if needed.
+                UserDetails userDetails = keycloakUserUtils.getUserDetails(keycloakPrincipal.getKeycloakSecurityContext().getToken(), true);
 
                 if (userDetails != null) {
                     username = userDetails.getUsername();
@@ -106,13 +107,12 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                                         + userDetails.getAuthorities());
                     }
 
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    auth.setDetails(keycloakPrincipal.getKeycloakSecurityContext());
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    context.setAuthentication(authResult);
+                    SecurityContextHolder.setContext(context);
 
                     Log.info(Geonet.SECURITY, "User '" + userDetails.getUsername()
-                            + "' properly authenticated via Keycloak");
+                            + "' authenticated via Keycloak");
 
 
                     if (((KeycloakAuthenticationToken) authResult).isInteractive()) {

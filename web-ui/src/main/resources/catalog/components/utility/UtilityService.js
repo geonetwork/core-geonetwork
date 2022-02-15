@@ -320,7 +320,7 @@
         function getPermalink(title, url) {
           gnPopup.createModal({
             title: $translate.instant('permalinkTo', {title: title}),
-            content: '<div gn-permalink-input="' + url + '"></div>'
+            content: '<span gn-copy-to-clipboard="' + url + '"></span>'
           });
         };
 

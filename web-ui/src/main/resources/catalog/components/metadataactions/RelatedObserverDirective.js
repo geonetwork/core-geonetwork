@@ -78,6 +78,11 @@
           this.scope.gnRelatedLoadFinished = true;
           if (!this.scope.relatedsFound) {
             this.rootScope.$broadcast('tabChangeRequested', 'general');
+          } else {
+            // Issue the event to update the proper tab if the user requested
+            // a different tab in the url, for example:
+            // /metadata/UUID?tab=contact
+            this.rootScope.$broadcast('tabChangeRequested', 'relations');
           }
         }
       };
