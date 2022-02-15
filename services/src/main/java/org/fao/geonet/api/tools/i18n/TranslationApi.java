@@ -217,11 +217,21 @@ public class TranslationApi {
                 translationsRepository.save(t);
             });
         } else {
+            Set<String> addedLanguages = new HashSet<>();
             translations.forEach(e -> {
                 if (values.containsKey(e.getLangId())) {
                     e.setValue(values.get(e.getLangId()));
+                    addedLanguages.add(e.getLangId());
                 }
             });
+            values.keySet().stream().filter(l -> !addedLanguages.contains(l))
+                    .forEach(l -> {
+                        Translations t = new Translations();
+                        t.setLangId(l);
+                        t.setFieldName(key);
+                        t.setValue(values.get(l));
+                        translations.add(t);
+                    });
             translationsRepository.saveAll(translations);
         }
         translationPackBuilder.clearCache();

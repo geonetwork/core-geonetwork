@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,29 +21,29 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.kernel.security;
+package org.fao.geonet.events.md;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.google.common.collect.Multimap;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
 
 /**
- * Some basic configuration utils to be used by security providers
+ * Event launched when the indexation of a metadata record started, but not yet committed,
+ * allowing to update the fields for indexing.
  *
  */
-public interface SecurityProviderUtil {
-    /**
-     * Retrieve authentication header value
-     * @return the authentication header value. In most cases it should be a bearer token header value. i.e. "Bearer ....."
-     */
-    String getSSOAuthenticationHeaderValue();
+public class MetadataIndexStarted extends MetadataEvent {
 
-    /**
-     * Retrieve user details for the security provider
-     * return the user details information
-     * @param auth authentication object to get the user details from
-     * @return the user details information
-     */
-    UserDetails getUserDetails(Authentication auth);
+    private static final long serialVersionUID = 5119421930299384126L;
+
+    private Multimap<String, Object> indexFields;
+
+    public MetadataIndexStarted(AbstractMetadata metadata, Multimap<String, Object> indexFields) {
+        super(metadata);
+        this.indexFields = indexFields;
+    }
+
+    public Multimap<String, Object> getIndexFields() {
+        return indexFields;
+    }
 }
-
-

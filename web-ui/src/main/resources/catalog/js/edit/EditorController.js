@@ -161,9 +161,12 @@
             $http.post('../api/search/records/_search', {"query": {
                 "bool" : {
                   "must": [
-                    {"multi_match": {
+                    {
+                      "multi_match": {
                         "query": $routeParams.id,
-                        "fields": ['id', 'uuid']}},
+                        "fields": ['id^2', 'uuid']
+                      }
+                    },
                     {"terms": {"draft": ["n", "y", "e"]}},
                     {"terms": {"isTemplate": ["n", "y", "s"]}}
                   ]

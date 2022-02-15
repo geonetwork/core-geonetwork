@@ -2029,4 +2029,44 @@
       };
     }
   ]);
+
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnHideShowPassword
+   *
+   * @description
+   * Toggles the visibility of a  related input password field.
+   * To be used in input type=password fields and display a button
+   * to toggle the visibility of the password field.
+   *
+   */
+  module.directive('gnHideShowPassword', function() {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        inputId: '@'
+      },
+      templateUrl: '../../catalog/components/utility/' +
+        'partials/hideshowpassword.html',
+      link: function (scope) {
+        scope.showHideClass = 'fa fa-eye-slash';
+
+        scope.hideShowPassword = function(){
+          var target = $('#' + scope.inputId)[0];
+
+          if(target != null) {
+            if(target.type == 'password') {
+              target.type = 'text';
+              scope.showHideClass = 'fa fa-eye-slash';
+            } else {
+              target.type = 'password';
+              scope.showHideClass = 'fa fa-eye';
+            }
+          }
+        };
+      }
+    };
+  });
 })();
