@@ -395,6 +395,10 @@
             </div>
             <div class="panel-body">
               <div class="row gn-margin-bottom">
+                <span><strong>{{ 'lastRun' | translate }}:</strong> {{ harvesterSelected.info.lastRun | gnFromNow }} ({{harvesterSelected.info.lastRun | date: 'yyyy-MM-dd, HH:mm:ss'}})</span><br>
+                <hr>
+              </div>
+              <div class="row gn-margin-bottom">
                 <ul class="col-md-4 text-center list-group gn-nomargin-bottom">
                   <li class="list-group-item">
                     <h1><i class="fa fa-file-text-o"></i> {{ searchResults.count }}</h1>
