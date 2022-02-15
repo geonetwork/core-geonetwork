@@ -90,12 +90,10 @@
         </ogc:Not>
       </xsl:when>
       <xsl:when test="$filter/operator = 'NOTEQUAL'">
-        <ogc:Not>
-          <ogc:PropertyIsEqualTo>
+          <ogc:PropertyIsNotEqualTo>
             <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
             <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
-          </ogc:PropertyIsEqualTo>
-        </ogc:Not>
+          </ogc:PropertyIsNotEqualTo>
       </xsl:when>
       <xsl:when test="$filter/operator = 'LESSTHAN'">
         <ogc:PropertyIsLessThan>
