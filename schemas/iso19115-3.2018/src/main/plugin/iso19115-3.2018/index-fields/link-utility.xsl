@@ -101,6 +101,10 @@
             <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
                                  select="cit:title"/>
           </title>
+          <description>
+            <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                                 select="cit:onlineResource/*/cit:description"/>
+          </description>
           <protocol><xsl:value-of select="$docType/@protocol"/></protocol>
           <function><xsl:value-of select="$docType/@function"/></function>
           <type>onlinesrc</type>
