@@ -1393,7 +1393,7 @@ goog.require('gn_alert');
           },
           // Privileges management may be allowed for harvested records.
           canManagePrivileges: function(md) {
-            if (md.isHarvested
+            if (md && md.isHarvested
                 && JSON.parse(md.isHarvested) == true
                 && gnConfig['system.harvester.enablePrivilegesManagement'] === true
                 && md.edit) {
