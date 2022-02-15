@@ -41,7 +41,6 @@
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
             'selection-widget.html',
         link: function(scope, element, attrs) {
-
           scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
@@ -225,19 +224,24 @@
 
   module.directive('gnSelectionMd', ['gnSearchManagerService',
     function(gnSearchManagerService) {
-
       return {
         restrict: 'A',
+        scope: {
+          'md': '=gnSelectionMd',
+          'bucket': '=bucket',
+          'results': '=results'
+        },
         link: function(scope, element, attrs) {
-
-          scope.change = function() {
+          element[0] && element[0].addEventListener('click', function(e){
             var method = element[0].checked ? 'select' : 'unselect';
             gnSearchManagerService[method](
-                scope.md.uuid, scope.searchResults.selectionBucket).
+                scope.md.uuid, scope.bucket).
                 success(function(res) {
-                  scope.searchResults.selectedCount = parseInt(res, 10);
+                  scope.md.selected = element[0].checked;
+                  scope.results.selectedCount = parseInt(res, 10);
                 });
-          };
+            e.stopPropagation();
+          });
 
         }
       };

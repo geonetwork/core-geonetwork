@@ -9,11 +9,12 @@
          data-ng-class="{'gn-record-selected': md.selected}">
       <div class="gn-md-title">
         <div class="gn-md-select">
-          <input data-gn-selection-md
+          <input data-gn-selection-md="md"
+                 data-bucket="searchResults.selectionBucket"
+                 data-results="searchResults"
                  type="checkbox"
                  data-ng-model="md.selected"
-                 aria-label="{{'clickToSelect' | translate}}"
-                 data-ng-change="change()"/>
+                 aria-label="{{'clickToSelect' | translate}}"/>
         </div>
         <span class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"></span>
         <h1>

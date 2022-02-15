@@ -1,10 +1,12 @@
 <table class="table gn-results-editor">
   <tr data-ng-repeat="md in searchResults.records">
     <td>
-      <input data-gn-selection-md type="checkbox"
+      <input data-gn-selection-md="md"
+             data-bucket="searchResults.selectionBucket"
+             data-results="searchResults"
+             type="checkbox"
              data-ng-model="md.selected"
-             aria-label="{{'clickToSelect' | translate}}"
-             data-ng-change="change()"/>
+             aria-label="{{'clickToSelect' | translate}}"/>
     </td>
     <td>
       <gn-md-type-widget metadata="md"></gn-md-type-widget>

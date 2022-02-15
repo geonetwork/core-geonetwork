@@ -161,11 +161,13 @@
                   data-ng-repeat="md in searchResults.records">
 
                 <div class="flex-row" ng-if="!templatesShown()">
-                  <input class="flex-no-shrink" type="checkbox"
-                         data-gn-selection-md
+                  <input class="flex-no-shrink"
+                         data-gn-selection-md="md"
+                         data-bucket="searchResults.selectionBucket"
+                         data-results="searchResults"
+                         type="checkbox"
                          data-ng-model="md.selected"
-                         aria-label="{{clickToSelect | translate}}"
-                         data-ng-change="change()"/>
+                         aria-label="{{'clickToSelect' | translate}}"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 
@@ -257,10 +259,12 @@
                 <div class="entry-title entry-is-template"
                      ng-if="templatesShown()">
 
-                  <input data-gn-selection-md type="checkbox"
+                  <input data-gn-selection-md="md"
+                         data-bucket="searchResults.selectionBucket"
+                         data-results="searchResults"
+                         type="checkbox"
                          data-ng-model="md.selected"
-                         aria-label="{{'clickToSelect' | translate}}"
-                         data-ng-change="change()"/>
+                         aria-label="{{'clickToSelect' | translate}}"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 

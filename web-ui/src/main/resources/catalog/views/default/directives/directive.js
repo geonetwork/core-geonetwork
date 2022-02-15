@@ -112,7 +112,7 @@
               scope.tasks = data;
               scope.getVisibleTasks();
             });
-          };
+          }
 
           scope.getVisibleTasks = function() {
             $.each(scope.tasks, function(i,t) {
