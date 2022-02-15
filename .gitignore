@@ -40,9 +40,6 @@ schematrons/.build
 target/
 transifex/transifex-format/
 web-itest/jcs_caching
-web-ui-docs/node
-web-ui-docs/node_modules
-web-ui-docs/package-lock.json
 web-ui/src/main/resources/catalog/lib/gn*.min.js
 web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
