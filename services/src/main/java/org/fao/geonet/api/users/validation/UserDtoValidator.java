@@ -27,6 +27,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -39,6 +40,11 @@ import java.util.List;
  *
  */
 public class UserDtoValidator implements Validator {
+    SecurityProviderConfiguration securityProviderConfiguration;
+
+    public UserDtoValidator(SecurityProviderConfiguration securityProviderConfiguration) {
+        this.securityProviderConfiguration = securityProviderConfiguration;
+    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -63,6 +69,15 @@ public class UserDtoValidator implements Validator {
                     + user.getUsername() + " ignore case already exists");
         }
 
-        PasswordValidationUtils.rejectIfInvalid(errors, user.getPassword());
+        boolean checkPassword = true;
+
+        if (securityProviderConfiguration != null) {
+            checkPassword = securityProviderConfiguration.getLoginType().equals("DEFAULT") ||
+                securityProviderConfiguration.getLoginType().equals("FORM");
+        }
+
+        if (checkPassword) {
+            PasswordValidationUtils.rejectIfInvalid(errors, user.getPassword());
+        }
     }
 }

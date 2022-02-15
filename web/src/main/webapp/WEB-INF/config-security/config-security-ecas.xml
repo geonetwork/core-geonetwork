@@ -94,4 +94,9 @@
     <security:authentication-provider ref="casAuthenticationProvider" />
   </security:authentication-manager>
 
+  <bean id="ecasConfiguration"
+        class="org.fao.geonet.kernel.security.ecas.EcasConfiguration">
+    <property name="updateProfile" value="false"/>
+    <property name="updateGroup" value="false"/>
+  </bean>
 </beans>

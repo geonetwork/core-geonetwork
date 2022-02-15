@@ -43,6 +43,7 @@ import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.fao.geonet.kernel.security.ecas.ECasUserDetailsBuilderService;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -55,6 +56,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -433,7 +435,7 @@ public class UsersApi {
         }
 
         // Validate userDto data
-        UserDtoValidator userValidator = new UserDtoValidator();
+        UserDtoValidator userValidator = new UserDtoValidator(securityProviderConfiguration);
         userValidator.validate(userDto, bindingResult);
         String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
         if (StringUtils.isNotEmpty(errorMessage)) {
@@ -453,12 +455,25 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
+        boolean setPassword = true;
+        if (securityProviderConfiguration != null) {
+            setPassword = securityProviderConfiguration.getLoginType().equals("DEFAULT") ||
+                securityProviderConfiguration.getLoginType().equals("FORM");
+        }
+
         User user = new User();
-        user.getSecurity().setPassword(
-            PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-                userDto.getPassword()));
+        if (setPassword) {
+            user.getSecurity().setPassword(
+                PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
+                    userDto.getPassword()));
+        }
 
         fillUserFromParams(user, userDto);
+
+        UserDetailsService userDetailsService = (UserDetailsService) ApplicationContextHolder.get().getBean("userDetailsService");
+        if (userDetailsService instanceof ECasUserDetailsBuilderService) {
+            user.getSecurity().setAuthType("ECAS");
+        }
 
         user = userRepository.save(user);
         setUserGroups(user, groups);

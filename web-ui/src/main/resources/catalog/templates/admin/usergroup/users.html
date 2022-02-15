@@ -116,8 +116,8 @@
                    data-translate="">duplicatedValueFoundUserName</p>
               </div>
             </div>
-            <!-- Password are disabled when updating user -->
-            <div ng-if="userOperation == 'newuser'">
+            <!-- Password are disabled when updating user and if no login form used, where the user is redirected to another system to authenticate -->
+            <div ng-if="userOperation == 'newuser' && !isDisableLoginForm">
               <div
                 data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ||
                                gnUserEdit.password.$error.maxlength ||  gnUserEdit.password.$error.pattern ? 'has-error' : ''"
