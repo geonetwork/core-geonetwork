@@ -531,7 +531,7 @@ ul.container-list {
         padding-left: 0;
       }
       &.gn-table-attribute {
-        padding-left: 8px;
+        padding: 0;
         table {
           th {
             border-top: 0;
@@ -563,26 +563,41 @@ ul.container-list {
     }
   }
   ul {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     padding: 0;
     li.gn-contact-card {
       list-style-type: none;
-      width: calc(100%/2);
       text-align: left;
-      float: left;
-      padding: 5px;
+      padding: 10px;
+      border-radius: 3px;
+      &:hover, &:focus {
+        background-color: #f8f8f8;
+      }
+      [gn-popover-anchor] {
+        &:hover, &:focus {
+          color: #000;
+        }
+      }
       .col-md-6, .col-md-4 {
         padding-left: 0px;
         padding-right: 0px;
       }
       .gn-contact-card-org {
-        padding: 5px;
+        padding: 5px 0;
         margin-bottom: 10px;
       }
       .gn-contact-card-role {
         font-style: italic;
         font-weight: bolder;
+      }
+      .gn-contact-card-org-group {
+        font-style: italic;
+        font-weight: bolder;
+      }
+      .gn-contact-card-group-role {
+        padding: 5px;
       }
     }
   }

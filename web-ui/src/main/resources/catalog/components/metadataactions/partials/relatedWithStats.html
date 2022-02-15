@@ -4,59 +4,55 @@
       'gn-info-list-large': type === 'large',
       'gn-info-list-small': type === 'small'}">
 
-  <div class="row">
-    <div class="col-md-2">
-      <h2>{{title}}</h2>
+  <h2>{{title}}</h2>
+
+  <div class="">
+    <div data-ng-repeat="filter in filtersToProcess"
+         class="row">
+      <div class="col-md-3 text-right">
+        {{('facet-' + filter) | facetKeyTranslator}}
+      </div>
+      <div class="col-md-9">
+        <div class="btn-group"
+             role="group"
+             aria-label="filter">
+          <button data-ng-repeat="(key, b) in agg[filter].buckets"
+                  data-ng-click="filterRecordsBy(filter, b.key)"
+                  type="button"
+                  class="btn btn-default btn-sm gn-margin-right-sm gn-margin-bottom-sm"
+                  data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
+          >{{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="col-md-10">
-      <div data-ng-repeat="filter in filtersToProcess"
-           class="row">
-        <div class="col-md-3">
-          <div class="pull-right">{{('facet-' + filter) | facetKeyTranslator}}</div>
-        </div>
-        <div class="col-md-9">
-          <div class="btn-group"
-               role="group"
-               aria-label="filter">
-            <button data-ng-repeat="(key, b) in agg[filter].buckets"
-                    data-ng-click="filterRecordsBy(filter, b.key)"
-                    data-ng-disabled="b.doc_count === children.length"
-                    type="button"
-                    class="btn btn-default"
-                    data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
-            >{{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
-            </button>
-          </div>
-        </div>
-      </div>
 
 
-      <div id="info-toggle-buttons"
-           class="btn-group pull-right"
-           data-toggle="buttons"
-           data-ng-if="showTypes">
-        <button id="btn-toggle-blocks" type="button" class="btn btn-default"
-                data-ng-click="toggleListType('blocks')"
-                data-ng-model="type"
-                data-ng-class="{'active': type === 'blocks' || type === undefined}"
-                aria-label="{{'listTypeBlocks' | translate}}">
-          <i class="fa fa-th-large" aria-hidden="true"></i>
-        </button>
-        <button id="btn-toggle-large" type="button" class="btn btn-default"
-                data-ng-click="toggleListType('large')"
-                data-ng-model="type"
-                data-ng-class="{'active': type === 'large'}"
-                aria-label="{{'listTypeLarge' | translate}}">
-          <i class="fa fa-bars" aria-hidden="true"></i>
-        </button>
-        <button id="btn-toggle-small" type="button" class="btn btn-default"
-                data-ng-click="toggleListType('small')"
-                data-ng-model="type"
-                data-ng-class="{'active': type === 'small'}"
-                aria-label="{{'listTypeSmall' | translate}}">
-          <i class="fa fa-align-justify" aria-hidden="true"></i>
-        </button>
-      </div>
+    <div id="info-toggle-buttons"
+         class="btn-group pull-right"
+         data-toggle="buttons"
+         data-ng-if="showTypes">
+      <button id="btn-toggle-blocks" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('blocks')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'blocks' || type === undefined}"
+              aria-label="{{'listTypeBlocks' | translate}}">
+        <i class="fa fa-th-large" aria-hidden="true"></i>
+      </button>
+      <button id="btn-toggle-large" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('large')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'large'}"
+              aria-label="{{'listTypeLarge' | translate}}">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </button>
+      <button id="btn-toggle-small" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('small')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'small'}"
+              aria-label="{{'listTypeSmall' | translate}}">
+        <i class="fa fa-align-justify" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 
@@ -65,6 +61,7 @@
                       md="md.record"
                       formatter-url="formatter.defaultUrl">
       <span class="label label-default gn-card-badge"
+            title="{{md.record.resourceType[0] | translate}}"
             data-ng-class="{
             'gn-card-series': md.record.resourceType[0] === 'series',
             'gn-card-nonGeographicDataset': md.record.resourceType[0] === 'nonGeographicDataset',

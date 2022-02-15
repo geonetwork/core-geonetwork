@@ -422,7 +422,11 @@
             resource.locTitle = $filter('gnLocalized')(resource.title);
             resource.locDescription = $filter('gnLocalized')(resource.description);
             resource.locUrl = $filter('gnLocalized')(resource.url);
-            var protocolOrType = resource.protocol + (resource.serviceType || '');
+            var protocolOrType = angular.isDefined(resource.protocol)
+              ? (resource.protocol
+                + (angular.isDefined(resource.serviceType) ? resource.serviceType : ''))
+              : '';
+
             // Case for links
             if (angular.isString(protocolOrType)) {
               if (resource && resource.function === 'legend') {

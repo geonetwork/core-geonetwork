@@ -139,7 +139,9 @@
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
-
+          if (gnGlobalSettings.gnCfg.mods.map.disabledTools.filter) {
+            return;
+          }
           var indexUrl, uuid, ftName, appProfile,
             appProfilePromise, wfsIndexJobSavedPromise;
           scope.managerOnly = scope.managerOnly === 'true';

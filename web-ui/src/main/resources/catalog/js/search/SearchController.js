@@ -104,6 +104,9 @@
       $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
         '../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html';
 
+      /* Default contact to display */
+      $scope.searchResultContact =  gnSearchSettings.searchResultContact;
+
       $scope.getAnySuggestions = function(val, searchObj) {
         return suggestService.getAnySuggestions(val, searchObj);
       };

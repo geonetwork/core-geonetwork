@@ -1033,6 +1033,10 @@
           <hassource><xsl:value-of select="@uuidref"/></hassource>
           <xsl:copy-of select="gn-fn-index:build-record-link(@uuidref, $xlink, @xlink:title, 'sources')"/>
         </xsl:for-each>
+
+        <xsl:for-each select=".//mrl:source/*/mrl:description[gco:CharacterString != '']">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('sourceDescription', ., $allLanguages)"/>
+        </xsl:for-each>
       </xsl:for-each>
 
 

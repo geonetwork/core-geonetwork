@@ -1,21 +1,3 @@
-<h2 data-translate="">summary</h2>
-
-<!-- Display the first metadata status (apply to ISO19139 record) -->
-<section data-ng-if="mdView.current.record.cl_status.length > 0"
-         data-ng-repeat="c in mdView.current.record.cl_status track by $index">
-  <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1"
-       class="gn-margin-bottom flex-row">
-        <span class="badge badge-rounded gn-status-{{c.key}}"
-              title="{{c.key | translate}}">
-          <i class="fa fa-fw fa-check"></i>
-        </span>
-    <div>
-      <h3 data-translate="">cl_status</h3>
-      {{c.key | translate}}
-    </div>
-  </div>
-</section>
-
 <section class="gn-md-side-dates"
          data-ng-if="mdView.current.record.resourceDate.length > 0">
   <div>
@@ -35,3 +17,6 @@
     </ul>
   </div>
 </section>
+
+<div data-gn-keyword-badges="mdView.current.record"
+     data-thesaurus="viewConfig.mainThesaurus"/>

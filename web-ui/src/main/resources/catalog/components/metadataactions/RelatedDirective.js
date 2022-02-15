@@ -443,6 +443,72 @@
         }]);
 
 
+  module
+    .directive('gnRecordsFilters', ['$rootScope',
+      function($rootScope) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordsFilters.html';
+          },
+          scope: {
+            agg: '=',
+            filters: '=',
+            title: '@'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            // Show display type toggle if no type selected only
+            scope.showTypes = !angular.isDefined(scope.type);
+            scope.type = scope.type || 'blocks';
+            scope.criteria = {p: {}};
+
+            function removeEmptyFilters(filters, agg) {
+              var cleanFilterPos = [];
+
+              Object.keys(agg).forEach(function(key) {
+                if (agg[key].buckets.length == 0) {
+                  cleanFilterPos.push(key);
+                }
+              });
+
+              _.remove(filters, function (filter) {
+                return cleanFilterPos.indexOf(filter) > -1;
+              });
+            }
+
+
+            function reset() {
+              scope.current = undefined;
+              $rootScope.$broadcast('RecordsFiltersUpdated', {
+                key: '',
+                value: ''
+              });
+            }
+
+            // Remove the filters without values
+            scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
+            scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
+
+            reset();
+
+            scope.filterRecordsBy = function(key, value) {
+              var newKey = key + '-' + value;
+              if (newKey === scope.current) {
+                reset();
+                return;
+              }
+              scope.current = key + '-' + value;
+
+              $rootScope.$broadcast('RecordsFiltersUpdated', {
+                key: key,
+                value: value
+              });
+            };
+          }
+        };
+      }]);
 
   module
     .directive('gnRelatedWithStats', [
@@ -468,6 +534,10 @@
             scope.type = scope.type || 'blocks';
             scope.criteria = {p: {}};
 
+            scope.$on('RecordsFiltersUpdated', function (event, result) {
+              scope.filterRecordsBy(result.key, result.value);
+            });
+
             function removeEmptyFilters(filters, agg) {
               var cleanFilterPos = [];
 
@@ -492,7 +562,6 @@
 
             function reset() {
               scope.displayedRecords = scope.children;
-              scope.current = undefined;
               sort();
             }
 
@@ -507,12 +576,11 @@
             };
 
             scope.filterRecordsBy = function(key, value) {
-              var newKey = key + '-' + value;
-              if (newKey === scope.current) {
+              if ((key === '') || (value === '')) {
                 reset();
                 return;
               }
-              scope.current = key + '-' + value;
+
               scope.displayedRecords = [];
               var b = scope.agg[key].buckets;
               b.forEach(function (k) {
@@ -653,12 +721,14 @@
             // * object path eg. cl_status.key
             // * links by type eg. link:OGC
             columns: '@',
-            labels: '@'
+            labels: '@',
+            agg: '='
           },
           link: function(scope, element, attrs, controller) {
             var initialized = false;
             scope.columnsConfig = scope.columns.split(',');
             scope.data = [];
+            scope.displayedRecords = [];
             scope.headers = [];
             scope.isArray = angular.isArray;
 
@@ -672,6 +742,7 @@
 
             function loadData() {
               scope.data = [];
+              scope.displayedRecords = [];
               scope.records.map(function(r) {
                 r = new Metadata(r.record);
                 var recordData = {};
@@ -682,11 +753,10 @@
                 });
                 recordData.md = r;
                 scope.data.push(recordData);
+                scope.displayedRecords.push(recordData);
               });
-              scope.data.sort(function(a, b) {
-                var sortBy = scope.columnsConfig[0];
-                return a[sortBy].localeCompare(b[sortBy])
-              });
+
+              sort();
             }
 
             scope.$watchCollection('records', function(n, o) {
@@ -695,6 +765,43 @@
                 initialized = true;
               }
             });
+
+            function sort() {
+              scope.displayedRecords.sort(function(a, b) {
+                var sortBy = scope.columnsConfig[0];
+                return a[sortBy].localeCompare(b[sortBy])
+              });
+            }
+
+            function reset() {
+              scope.displayedRecords = scope.data;
+              sort();
+            }
+
+            scope.$on('RecordsFiltersUpdated', function (event, result) {
+              scope.filterRecordsBy(result.key, result.value);
+            });
+
+            scope.filterRecordsBy = function(key, value) {
+              if ((key === '') || (value === '')) {
+                reset();
+                return;
+              }
+              scope.displayedRecords = [];
+              var b = scope.agg[key].buckets;
+              b.forEach(function (k) {
+                if (k.key === value) {
+                  k.docs.hits.hits.forEach(function (r) {
+                    scope.displayedRecords =
+                      scope.displayedRecords.concat(_.filter(scope.data,  function (item) {
+                        return item.md._id === r._id;
+                      }));
+                  });
+                }
+              });
+
+              sort();
+            };
           }
         }
     }]);

@@ -46,7 +46,7 @@
         },
         link: function(scope, element, attrs, controller) {
           scope.$watch('md', function(n, o) {
-            if (n == null || n == undefined) {
+            if (n == null || n == undefined || (n && n.uuid == undefined)) {
               return;
             }
 
