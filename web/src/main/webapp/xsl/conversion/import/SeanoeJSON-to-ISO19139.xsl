@@ -98,13 +98,13 @@
                             <gmd:CI_ResponsibleParty>
                                 <gmd:role>
                                     <gmd:CI_RoleCode codeList="./resources/codeList.xml#CI_RoleCode"
-                                                     codeListValue="originator">originator
+                                                     codeListValue="author">author
                                     </gmd:CI_RoleCode>
                                 </gmd:role>
 
                                 <gmd:organisationName>
                                     <gco:CharacterString>
-                                        <xsl:value-of select="authorOrg/Name"/>
+                                        <xsl:value-of select="$authorOrg/Name"/>
                                     </gco:CharacterString>
                                 </gmd:organisationName>
 
