@@ -35,6 +35,8 @@
 
   <xsl:param name="updateAllFromMembers" select="true()"/>
 
+  <xsl:param name="withXlink" select="false()"/>
+
   <xsl:variable name="metadata"
                 select="/"/>
 
