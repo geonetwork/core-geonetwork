@@ -443,6 +443,10 @@
           var queryHook = params.query.function_score.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
 
+          if (angular.isArray(currentSearch.filters)) {
+            params.query.function_score.query.bool.filter = currentSearch.filters;
+          }
+
           this.buildQueryClauses(
             queryHook, currentSearch.params,
             luceneQueryString, currentSearch.state);
