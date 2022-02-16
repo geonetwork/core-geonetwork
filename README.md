@@ -6,7 +6,7 @@
 
 # Features
 
-* Immediate search access to local and distributed geospatial catalogues
+* Immediate search access to local and distributed geospatial catalogues.
 * Uploading and downloading of data, graphics, documents, pdf files and any other content type
 * An interactive Web Map Viewer to combine Web Map Services from distributed servers around the world
 * Online editing of metadata with a powerful template system
