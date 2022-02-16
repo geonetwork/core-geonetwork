@@ -340,6 +340,7 @@
     "processReportNotOwner": "Not editable records",
     "processReportNullRecords": "Records not found",
     "processReportProcessedRecords": "Records processed",
+    "processReportUnchangedRecords": "Records unchanged",
     "processReportTotalRecords": "Records to process",
     "recordsProcessed": "records processed",
     "batchediting": "Batch editing",

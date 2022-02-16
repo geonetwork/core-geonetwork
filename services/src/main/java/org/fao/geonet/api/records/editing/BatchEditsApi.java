@@ -282,6 +282,8 @@ public class BatchEditsApi implements ApplicationContextAware {
                         String xmlBefore = outp.outputString(beforeMetadata);
                         String xmlAfter = outp.outputString(afterMetadata);
                         new RecordUpdatedEvent(record.getId(), userSession.getUserIdAsInt(), xmlBefore, xmlAfter).publish(appContext);
+                    } else {
+                        report.incrementUnchangedRecords();
                     }
                 } catch (Exception e) {
                     report.addMetadataError(record, e);

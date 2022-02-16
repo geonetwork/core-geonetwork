@@ -2,19 +2,25 @@
   <div class="panel panel-default"
        data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
     <div class="panel-heading gn-padding-left gn-padding-right">
-      <span data-translate="">processReportFor</span>
-      {{processReport.processId | translate}}<br/>
-      <p> {{processReport.totalRecords}}
-        <span data-translate="">recordsProcessed</span>
-        ({{processReport.startIsoDateTime}}
-              <span data-ng-show="processReport.running"
-              >...</span>
-              <span data-ng-hide="processReport.running"> -
-                {{processReport.endIsoDateTime}}</span>) =
-        {{processReport.totalTimeInSeconds}}s</p>
+      <strong>
+        <span data-translate="">processReportFor</span>
+        {{processReport.processId | translate}}
+      </strong>
     </div>
     <div class="panel-body gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left">
       <table class="table table-striped">
+        <tr>
+          <td colspan="2">
+            {{processReport.numberOfRecords}}
+              <span data-translate="">recordsProcessed</span>
+              ({{processReport.startIsoDateTime}}
+              <span data-ng-show="processReport.running"
+              >...</span>
+              <span data-ng-hide="processReport.running"> -
+                  {{processReport.endIsoDateTime}}</span>) =
+              {{processReport.totalTimeInSeconds}}s
+          </td>
+        </tr>
         <tr>
           <td class="gn-padding-left">{{('processReportTotalRecords') | translate}}</td>
           <td class="text-right gn-padding-right">{{processReport.numberOfRecords}}</td>
@@ -22,6 +28,10 @@
         <tr>
           <td class="gn-padding-left">{{('processReportProcessedRecords') | translate}}</td>
           <td class="text-right gn-padding-right">{{processReport.numberOfRecordsProcessed}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportUnchangedRecords') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfRecordsUnchanged}}</td>
         </tr>
         <tr>
           <td class="gn-padding-left">{{('processReportNullRecords') | translate}}</td>
