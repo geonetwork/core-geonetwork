@@ -510,7 +510,8 @@
         request.query,
         facet.path,
         facet.items.length + (moreItemsNumber || 20),
-        undefined, undefined,
+        facet.include || undefined,
+        facet.exclude || undefined,
         facetConfigs
         );
     }
