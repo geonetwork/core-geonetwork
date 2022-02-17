@@ -149,7 +149,7 @@
             sourceUuid: id,
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
-            isVisibleByAllGroupMembers: withFullPrivileges ? 'true' : 'false',
+            allowEditGroupMembers: withFullPrivileges ? 'true' : 'false',
             targetUuid: metadataUuid || '',
             hasCategoryOfSource: hasCategoryOfSource ? 'true' : 'false'
           });
