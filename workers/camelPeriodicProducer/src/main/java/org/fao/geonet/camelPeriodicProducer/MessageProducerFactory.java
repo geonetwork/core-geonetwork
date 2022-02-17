@@ -30,6 +30,8 @@ import org.apache.camel.model.RouteDefinition;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.TriggerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +43,7 @@ public class MessageProducerFactory {
     protected RouteBuilder routeBuilder;
     @Autowired
     protected QuartzComponent quartzComponent;
-
+    private static Logger LOGGER = LoggerFactory.getLogger("geonetwork.harvest.wfs.camel");
     @PostConstruct
     public void init() throws Exception {
         quartzComponent.start();
@@ -73,6 +75,15 @@ public class MessageProducerFactory {
     public void destroy(Long id) throws Exception {
         routeBuilder.getContext().removeRouteDefinition(findRoute(id));
         routeBuilder.getContext().removeEndpoints("quartz2://" + id);
+
+    }
+
+    public void shutdown() {
+        try {
+            quartzComponent.shutdown();
+        } catch (Exception e) {
+            LOGGER.error("Error while trying to shutdown quartz", e);
+        }
     }
 
     private void writeRoute(MessageProducer messageProducer) throws Exception {
