@@ -521,6 +521,11 @@ goog.require('gn_alert');
               'search/resultsview/partials/viewtemplates/list.html',
             'tooltip': 'List',
             'icon': 'fa-bars'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/table.html',
+            'tooltip': 'Table',
+            'icon': 'fa-table'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
