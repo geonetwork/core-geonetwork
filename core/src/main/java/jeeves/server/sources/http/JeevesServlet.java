@@ -206,7 +206,10 @@ public class JeevesServlet extends HttpServlet {
         langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
         langCookie.setComment("Keeps the last language chosen to be the preferred language");
         langCookie.setVersion(1);
-        langCookie.setPath("/");
+        langCookie.setPath(req.getContextPath());
+        langCookie.setHttpOnly(req.getServletContext().getSessionCookieConfig().isHttpOnly());
+        langCookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
+
         res.addCookie(langCookie);
 
         //--- execute request
