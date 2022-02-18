@@ -856,7 +856,8 @@ goog.require('gn_alert');
           'sortBy': 'relevance',
           // Add some fuzziness when search on directory entries
           // but boost exact match.
-          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
+          'queryBase': 'any.${searchLang}:(${any}*)'
+          // 'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
         },
         'admin': {
           'enabled': true,
