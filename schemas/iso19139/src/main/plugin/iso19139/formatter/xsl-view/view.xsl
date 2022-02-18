@@ -742,7 +742,7 @@
         <xsl:when test="$email != ''">
           <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
           <a href="mailto:{normalize-space($email)}">
-            <sup class="fa fa-envelope"></sup>
+            <sup class="fa fa-envelope">&#160;</sup>
           </a>
         </xsl:when>
         <xsl:otherwise>

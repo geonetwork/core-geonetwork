@@ -348,7 +348,7 @@
         </xsl:if>
 
 
-        <div class="row vcenter">
+        <div class="row">
           <div class="col-md-9">
             <header>
               <xsl:if test="$header != 'false'">
@@ -360,6 +360,7 @@
             </header>
           </div>
           <div class="col-md-3">
+            <xsl:comment select="'languages'"/>
             <xsl:call-template name="render-language-switcher"/>
           </div>
         </div>
@@ -409,8 +410,12 @@
             <div>
               <div data-gn-userfeedback='md'
                    data-gn-user="{{{{user.username}}}}"
-                   data-ng-if="isUserFeedbackEnabled &amp;&amp; md.draft != 'y'"/>
-              <div data-gn-md-feedback="md"></div>
+                   data-ng-if="isUserFeedbackEnabled &amp;&amp; md.draft != 'y'">
+                <xsl:comment select="'feedback'"/>
+              </div>
+              <div data-gn-md-feedback="md">
+                <xsl:comment select="'feedback'"/>
+              </div>
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
