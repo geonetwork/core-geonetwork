@@ -1310,32 +1310,22 @@
                     version: getCapLayer.version,
                     srsName: map.getView().getProjection().getCode(),
                     bbox: extent.join(',')
-                  };
+                  }, typename =
+                      (getCapLayer.name.prefix.length > 0 ?
+                        (getCapLayer.name.prefix + ':') : '')
+                      + getCapLayer.name.localPart;
 
-                  if (parametersMap.version < "2.0.0") {
-                    parametersMap.typeName = getCapLayer.name.prefix + ':' +
-                      getCapLayer.name.localPart;
-                  } else {
-                    parametersMap.typeNames = getCapLayer.name.prefix + ':' +
-                      getCapLayer.name.localPart;
+                  parametersMap[parametersMap.version < "2.0.0"
+                    ? 'typeName' : 'typeNames'] = typename;
+
+                  //Fix, ArcGIS fails if there is a bbox:
+                  // TODO: A better ArcGIS check could be better?
+                  if(getCapLayer.version == '1.1.0') {
+                    delete parametersMap.bbox;
                   }
 
                   var urlGetFeature = gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue(parametersMap));
-
-                  //Fix, ArcGIS fails if there is a bbox:
-                  if(getCapLayer.version == '1.1.0') {
-                    urlGetFeature = gnUrlUtils.append(parts[0],
-                        gnUrlUtils.toKeyValue({
-                          service: 'WFS',
-                          request: 'GetFeature',
-                          version: getCapLayer.version,
-                          srsName: map.getView().getProjection().getCode(),
-                          typeName: getCapLayer.name.prefix + ':' +
-                                     getCapLayer.name.localPart}));
-                  }
-
-
 
                   //If this goes through the proxy, don't remove parameters
                   if(getCapLayer.useProxy
