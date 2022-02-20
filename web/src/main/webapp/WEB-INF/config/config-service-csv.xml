@@ -45,8 +45,21 @@
       <class name=".services.main.Result">
         <param name="range" value="all"/>
       </class>
-      <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8">
+      <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/csv; charset=UTF-8">
         <call name="documentFileName" class=".guiservices.util.GetCsvFileName"/>
+        <!-- Default report filename is "metadata_{datetime}.csv"
+
+             To use a different report filename format you can modify this setting to include a filename such as the following
+             which would create a file called test.csv
+
+             <call name="documentFileName" class=".guiservices.util.GetCsvFileName">
+               <param name="fileName" value="test"/>
+             </call>
+
+             The following template fields are allowed to be used: {year}, {month}, {day}, {date} and {datetime}.
+             Template fields are replaced with the related date values. {date} uses 'yyyyMMdd' format and {datetime} uses 'yyyyMMddHHmmss' format
+
+         -->
       </output>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>

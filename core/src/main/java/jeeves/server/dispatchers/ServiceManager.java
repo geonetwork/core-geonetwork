@@ -1064,10 +1064,6 @@ public class ServiceManager {
                 }
 
                 String documentName = guiElem.getChildText("documentFileName");
-                if (StringUtils.isNotBlank(documentName)) {
-                    SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-                    documentName = documentName.replace("{datetime}", datetimeFormat.format(Calendar.getInstance().getTime()));
-                }
 
                 addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
 
@@ -1122,7 +1118,7 @@ public class ServiceManager {
                                 }
 
                                 if (outPage.getContentType() != null
-                                    && outPage.getContentType().startsWith("text/plain")) {
+                                    && (outPage.getContentType().startsWith("text/plain") || outPage.getContentType().startsWith("text/csv"))) {
                                     String contentDisposition = "";
                                     if (StringUtils.isNotBlank(documentName)) {
                                         contentDisposition = "filename="+documentName;
