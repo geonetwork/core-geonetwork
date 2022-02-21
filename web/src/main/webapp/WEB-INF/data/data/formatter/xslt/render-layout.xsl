@@ -368,7 +368,7 @@
           <div class="col-md-9">
             <header>
               <xsl:if test="$view != 'sdn'">
-                <div>
+                <div>&#160;
                   <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
                 </div>
               </xsl:if>
