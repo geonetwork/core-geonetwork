@@ -563,5 +563,14 @@
     "metadataInfoReport": "Metadata information",
     "metadataErrorReport": "Metadata errors",
     "copyToClipboard": "Copy the text to the clipboard",
-    "textCopied": "Text has been copied to the clipboard."
+    "textCopied": "Text has been copied to the clipboard.",
+    "statusWorkflow-0": "Unknown",
+    "statusWorkflow-1": "Draft",
+    "statusWorkflow-2": "Approved",
+    "statusWorkflow-3": "Retired",
+    "statusWorkflow-4": "Submitted",
+    "statusWorkflow-5": "Rejected",
+    "statusWorkflow-21": "Approved with working copy",
+    "statusWorkflow-24": "Approved with working copy submitted",
+    "facet-statusWorkflow": "Workflow progress"
 }
