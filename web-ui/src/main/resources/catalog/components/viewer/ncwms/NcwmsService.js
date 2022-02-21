@@ -114,12 +114,12 @@
       this.formatNcwmsAvailableDates = function(layer) {
         if (!layer.get('time')) { return; }
 
-        var isRange = layer.get('time').values[0] && layer.get('time').values[0].indexOf('/') > -1;
+        var isRange = layer.get('time').values[0] && layer.get('time').values[0].toString().indexOf('/') > -1;
 
         // convert date range (start/end) to an array of all days
         if (isRange) {
           var dates = [];
-          var dateParts = layer.get('time').values[0].split('/');
+          var dateParts = layer.get('time').values[0].toString().split('/');
           var current = moment.utc(dateParts[0]);
           var end = moment.utc(dateParts[1]);
           var interval = dateParts.length > 2 ? moment.duration(dateParts[2]) : moment.duration(1, 'd');
