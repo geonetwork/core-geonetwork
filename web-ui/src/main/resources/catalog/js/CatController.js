@@ -839,10 +839,18 @@ goog.require('gn_alert');
           this.gnCfg.mods.search.sortbyValues = angular.extend({
             mods: {
               search: {
-                sortbyValues: {}
+                sortbyValues: []
               }
             }
           }, config).mods.search.sortbyValues;
+
+          this.gnCfg.mods.search.downloadFormatter = angular.extend({
+            mods: {
+              search: {
+                downloadFormatter: []
+              }
+            }
+          }, config).mods.search.downloadFormatter;
 
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
@@ -872,6 +880,7 @@ goog.require('gn_alert');
         copy.mods.search.grid.related = [];
         copy.mods.search.sortbyValues = [];
         copy.mods.search.hitsperpageValues = [];
+        copy.mods.search.downloadFormatter = [];
         copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};
