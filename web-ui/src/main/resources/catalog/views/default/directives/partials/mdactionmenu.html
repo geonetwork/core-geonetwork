@@ -28,6 +28,15 @@
           <span class="fa fa-fw fa-user"></span>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>
+      <li role="menuitem"
+          data-ng-if="isMdApiGatewayEnable && md.isOwned() && user.isUserAdminOrMore()">
+        <a href=""
+           data-ng-href="{{mdApiGatewayUrl.replace('{uuid}', md.getUuid())}}"
+           target="_blank">
+          <span class="fa fa-fw fa-user"></span>&nbsp;
+          <span data-translate="">apiManagement</span>
+        </a>
+      </li>
       <!-- Retired metadata can't be published -->
       <li role="menuitem"
           data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
