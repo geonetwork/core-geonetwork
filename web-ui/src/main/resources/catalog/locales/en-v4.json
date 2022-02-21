@@ -119,6 +119,8 @@
   "exactMatch-help": "Exact match means that '\"' are added to the search terms.",
   "titleOnly": "Search in title only",
   "titleOnly-help": "Search in title only.",
+  "searchForcedLang": "Only in {{forcedLang}} records",
+  "searchForcedLang-help": "Search only in the records which are translated in the language of the UI",
   "wfsIndexingEndDate": "Last indexing date",
   "wfsIndexingScheduled": "Scheduled?",
   "wfsIndexingNewSchedule": "Add WFS harvester",

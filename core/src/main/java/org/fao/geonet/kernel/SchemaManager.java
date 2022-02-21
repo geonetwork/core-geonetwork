@@ -30,6 +30,8 @@ package org.fao.geonet.kernel;
 import com.google.common.annotations.VisibleForTesting;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.xlink.XLink;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -44,7 +46,12 @@ import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
+import org.fao.geonet.kernel.schema.subtemplate.Status;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
@@ -161,6 +168,7 @@ public class SchemaManager {
                         get().
                         getBean(schemaBeanIdentifier);
                 }
+                lazyInitializePluginIfSubtemplateAware(schemaIdentifier, schemaPlugin);
             }
         } catch (Exception e) {
             // No bean for this schema
@@ -1928,4 +1936,45 @@ public class SchemaManager {
         }
         return listOfTypenames;
     }
+
+    private static void lazyInitializePluginIfSubtemplateAware(String schemaIdentifier, SchemaPlugin schemaPlugin) {
+        if (schemaPlugin instanceof SubtemplateAwareSchemaPlugin && !((SubtemplateAwareSchemaPlugin) schemaPlugin).isInitialised()) {
+            SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+            //ISO19139KeywordReplacer keywordReplacer = ApplicationContextHolder.get().getBean(ISO19139KeywordReplacer.class);
+            IsoLanguagesMapper isoLanguagesMapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+            ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
+                    new ManagersProxy() {
+
+                        @Override
+                        public Path getSchemaDir() {
+                            return schemaManager.getSchemaDir(schemaIdentifier);
+                        }
+
+                        @Override
+                        public String getIso1LangCode(String iso2LangCode) {
+                            return isoLanguagesMapper.iso639_2_to_iso639_1(iso2LangCode);
+                        }
+
+                        @Override
+                        public Status replaceAllKeyword(Element md) {
+                            return new Status();
+                        }
+
+                        @Override
+                        public String getDefaultIndex() {
+                            return null;
+                        }
+
+                    },
+                    CONSTANT_PROXY);
+        }
+    }
+
+    private static final ConstantsProxy CONSTANT_PROXY = new ConstantsProxy() {
+        @Override
+        public Namespace getNAMESPACE_XLINK() {
+            return XLink.NAMESPACE_XLINK;
+        }
+    };
+
 }

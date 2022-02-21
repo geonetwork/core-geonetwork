@@ -36,6 +36,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -69,6 +70,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:extents-test-context.xml")
+@Ignore
 public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
     private static boolean DO_NOT_SAVE_IMAGE_TO_DISK = true;
 

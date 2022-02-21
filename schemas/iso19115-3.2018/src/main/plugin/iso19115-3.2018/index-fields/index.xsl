@@ -385,6 +385,8 @@
 
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceCredit', mri:credit[* != ''], $allLanguages)"/>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('supplementalInformation', mri:supplementalInformation[* != ''], $allLanguages)"/>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('purpose', mri:purpose[* != ''], $allLanguages)"/>
 
         <xsl:variable name="overviews"
                       select="mri:graphicOverview/mcc:MD_BrowseGraphic/

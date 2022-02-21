@@ -81,24 +81,59 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
 
-## Multilingual configuration (beta)
+## Multilingual configuration
+### Index
+Multilingual fields are indexed as objects with the `default` value, and one value per language eg. `langfre`.
+eg.
+```javascript
+resourceTitleObject: {
+  default: 'hello',
+  langfre: 'bonjour',
+  langeng: 'hello',
+  langspa: 'hola'
+}
+```
 
-* Stop Elasticsearch
-* Define which analyzer to use https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html depending on the language(s) used in your catalogue
-* Build the application with the default analyzer to use (or configure it in `data/index/records.json`)
+At the moment, the index works properly for the following languages:
+* English
+* French
+* German
+* Italian
+* Spanish
 
-  ```shell script
-  mvn clean install -Des.default.analyzer=french_heavy
-  ```
+The `datadir/config/index/records.json` associates each language property eg. `langfre` to a dedicated analyzer.
+The analyzer helps for the indexing and the search to manage
+* accents
+* synonym
+* plural
+* stop words
+* elision
+* etc..
 
-* Install ICU plugin (if needed)
+The index field `any` is now an object. All multilingual fields are copied into the any object within the matching language property.
+The any object helps to perform a full text search on all or only one langage.
 
-  ```shell script
-  elasticsearch-plugin install analysis-icu
-  ```
+`any.default` contains the `any` for all default values.
 
-* Start Elasticsearch
-* Drop and rebuild your index
+`any.common` contains all values which are not translated (eg. `uuid`).
+
+To perform a search on any, please use
+- `any.\\*` to search in all languages
+- `any.default` to only search in the default index
+- `any.langfre` to search only in the french language.
+
+By default the search is performed on all languages.
+
+### Add a new language
+To add a new language, update the index schema in `datadir/config/index/records.json` and update the containing fields starting with `lang`.
+
+First create a full text search field for the new language in the `any` object field eg. `any.langfre` and define the proper analyzer.
+
+Then add the new language like the others.
+
+From the admin console > tools, Delete index and reindex.
+
+Don't hesitate to propose a Pull Request with the new language.
 
 
 # Production use

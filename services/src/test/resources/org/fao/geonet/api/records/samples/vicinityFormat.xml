@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Format xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+    <gmd:name>
+        <gco:CharacterString>ShapeFile</gco:CharacterString>
+    </gmd:name>
+    <gmd:version>
+        <gco:CharacterString>Grass Version 6.1</gco:CharacterString>
+    </gmd:version>
+</gmd:MD_Format>

@@ -362,7 +362,8 @@
         </xsl:apply-templates>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceCredit', gmd:credit, $allLanguages)"/>
-
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('supplementalInformation', gmd:supplementalInformation, $allLanguages)"/>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('purpose', gmd:purpose, $allLanguages)"/>
 
         <xsl:variable name="overviews"
                       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/

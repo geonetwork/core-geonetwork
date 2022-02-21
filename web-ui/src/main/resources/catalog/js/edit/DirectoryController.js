@@ -184,7 +184,7 @@
         // in the template dropdown
         $http.post('../api/search/records/_search', {
           "_source": {"includes": [
-              "uuid", "root", "resourceTitle", "isTemplate"]},
+              "uuid", "root", "resourceTitle*", "isTemplate"]},
           "query": {
             "bool" : {
               "must": [
@@ -201,7 +201,8 @@
                 edit: md._source.edit,
                 selected: md._source.selected,
                 isTemplate: md._source.isTemplate,
-                resourceTitle: md._source.resourceTitle
+                resourceTitle: md._source.resourceTitleObject
+                  ? md._source.resourceTitleObject.default : md._source.resourceTitle
               };
             });
           }
