@@ -53,7 +53,7 @@
   var searchFormController =
       function($scope, $location, $parse, $translate, gnSearchManagerService,
                Metadata, gnSearchLocation, gnESClient,
-               gnESService, gnESFacet, gnAlertService) {
+               gnESService, gnESFacet, gnAlertService, md5) {
     var defaultParams = {};
     var self = this;
 
@@ -165,6 +165,28 @@
       $scope.finalParams = finalParams;
       var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state,
         $scope.searchObj.configId, $scope.searchObj.filters);
+
+      function buildSearchKey(esParams) {
+        var param = angular.copy(esParams, {});
+        ['from', 'size', 'sort'].forEach(function(k) {
+          delete param[k];
+        });
+        return md5.createHash(JSON.stringify(param));
+      }
+
+      // Compute facet only if search is reset or new filters apply
+      // When moving in pages or changing sort,
+      // no need to compute aggregations again and again
+      var searchKey = buildSearchKey(esParams),
+          dontComputeAggs = $scope.searchResults.searchKey === searchKey,
+          lastSearchAggs = undefined;
+      if (dontComputeAggs) {
+        lastSearchAggs = $scope.searchResults.facets;
+        delete esParams.aggregations;
+      }
+      // console.log(dontComputeAggs, $scope.searchResults.searchKey, searchKey);
+      $scope.searchResults.searchKey = searchKey;
+
       gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
         .then(function(data) {
         // data is not an object: this is an error
@@ -185,7 +207,8 @@
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = data.hits.total.value;
-        $scope.searchResults.facets = data.facets || {}
+        $scope.searchResults.facets = dontComputeAggs
+          ? lastSearchAggs : (data.facets || {})
 
         // compute page number for pagination
         if ($scope.hasPagination) {
@@ -652,7 +675,8 @@
     'gnESClient',
     'gnESService',
     'gnESFacet',
-    'gnAlertService'
+    'gnAlertService',
+    'md5'
   ];
 
   /**
