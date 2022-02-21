@@ -24,7 +24,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0"
                 exclude-result-prefixes="#all">
-  <xsl:import href="../xsl-view/view.xsl"/>
+  <xsl:import href="../cersat/view.xsl"/>
 
-  <xsl:variable name="view" select="'earthObservation'"/>
+  <xsl:variable name="view" select="'cersat'"/>
+  <xsl:variable name="template" select="'cersat-summary-view'"/>
 </xsl:stylesheet>

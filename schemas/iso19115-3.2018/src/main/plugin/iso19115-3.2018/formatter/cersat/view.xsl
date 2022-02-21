@@ -216,7 +216,7 @@
 
                   <xsl:for-each select=".//cit:electronicMailAddress">
                     <a href="mailto:{.}">
-                      <i class="fa fa-envelope"></i>
+                      <i class="fa fa-envelope">&#160;</i>
                     </a>
                   </xsl:for-each>
                   <xsl:if test="position() != last()">, </xsl:if>
@@ -307,7 +307,7 @@
                 <div>
                   <xsl:value-of select="$schemaStrings/cersat-citation"/>
                 </div>
-                <div class="cersat-bg-white">
+                <div class="cersat-bg-white">&#160;
                   <xsl:call-template name="get-iso19115-3.2018-localised">
                     <xsl:with-param name="langId" select="$langId"/>
                   </xsl:call-template>
@@ -574,7 +574,7 @@
                   <xsl:value-of select=".//cit:party/*/cit:name"/>
                   <xsl:for-each select=".//cit:electronicMailAddress">
                     <a href="mailto:{.}">
-                      <i class="fa fa-envelope"></i>
+                      <i class="fa fa-envelope">&#160;</i>
                     </a>
                   </xsl:for-each>
                 </xsl:for-each>
