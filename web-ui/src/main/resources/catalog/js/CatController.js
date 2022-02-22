@@ -852,6 +852,39 @@ goog.require('gn_alert');
             }
           }, config).mods.search.downloadFormatter;
 
+          this.gnCfg.mods.search.resultViewTpls = angular.extend({
+            mods: {
+              search: {
+                resultViewTpls: []
+              }
+            }
+          }, config).mods.search.resultViewTpls;
+
+          this.gnCfg.mods.search.formatter = angular.extend({
+            mods: {
+              search: {
+                formatter: {}
+              }
+            }
+          }, config).mods.search.formatter;
+
+          this.gnCfg.mods.search.linkTypes = angular.extend({
+            mods: {
+              search: {
+                linkTypes: {}
+              }
+            }
+          }, config).mods.search.linkTypes;
+
+          this.gnCfg.mods.map.projectionList = angular.extend({
+            mods: {
+              map: {
+                projectionList: []
+              }
+            }
+          }, config).mods.map.projectionList;
+
+
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
           this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
@@ -881,11 +914,15 @@ goog.require('gn_alert');
         copy.mods.search.sortbyValues = [];
         copy.mods.search.hitsperpageValues = [];
         copy.mods.search.downloadFormatter = [];
+        copy.mods.search.resultViewTpls = [];
+        copy.mods.search.formatter = {};
+        copy.mods.search.linkTypes = {};
         copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};
         copy.mods.admin.facetConfig = {};
         copy.mods.map["map-editor"].layers = [];
+        copy.mods.map.projectionList = [];
         return copy;
       },
       getProxyUrl: function() {
