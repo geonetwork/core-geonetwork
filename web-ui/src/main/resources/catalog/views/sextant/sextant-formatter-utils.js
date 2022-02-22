@@ -16,6 +16,8 @@
     var toggleBtn = element.querySelector('.sxt-collapse-toggle');
     toggleBtn.innerHTML = '<span class="fa fa-lg fa-plus-circle"></span>';
     element.setAttribute('data-collapsed', '');
+
+    toggleBtn.removeAttribute('background');
   }
 
   /**
@@ -29,6 +31,7 @@
     var toggleBtn = element.querySelector('.sxt-collapse-toggle');
     toggleBtn.innerHTML = '<span class="fa fa-lg fa-minus-circle"></span>';
     element.removeAttribute('data-collapsed');
+    toggleBtn.style.background = getParentBackgroundStyle(element);
   }
 
   /**
@@ -51,6 +54,20 @@
   }
 
   /**
+   * Returns the background style using the parent element color
+   * @param {string} background css value
+   */
+  function getParentBackgroundStyle(parentElement) {
+    var parentBgColor = getComputedStyle(parentElement).backgroundColor;
+    var baseColor = '255, 255, 255';
+    var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
+    if (matches && parentBgColor !== 'rgba(0, 0, 0, 0)') {
+      baseColor = matches[1];
+    }
+    return 'linear-gradient(0deg, rgba(' + baseColor + ', 1) 40%, rgba(' + baseColor + ', 0))';
+  }
+
+  /**
    * Creates a toggle button and position it in the parent element
    * @param {HTMLElement} parentElement
    */
@@ -63,16 +80,10 @@
     toggleButton.style.bottom = '0';
     toggleButton.style.left = '0';
     toggleButton.style.right = '0';
-    toggleButton.style.padding = '0 0.5em 0.5em 0.5em';
+    toggleButton.style.padding = '0.5em 0.5em 0.5em 0.5em';
 
     // get parent background color to determine the gradient
-    var parentBgColor = getComputedStyle(parentElement).backgroundColor;
-    var baseColor = '255, 255, 255';
-    var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
-    if (matches && parentBgColor !== 'rgba(0, 0, 0, 0)') {
-      baseColor = matches[1];
-    }
-    toggleButton.style.background = 'linear-gradient(0deg, rgba(' + baseColor + ', 1) 40%, rgba(' + baseColor + ', 0))'
+    toggleButton.style.background = getParentBackgroundStyle(parentElement);
     parentElement.appendChild(toggleButton);
     return toggleButton;
   }
@@ -82,7 +93,7 @@
    */
   sxtFormatterUtils = {
     /**
-     * This will process the targetted elements to shorten the
+     * This will process the targeted elements to shorten the
      * ones that are too long, and offer a "read more" option
      * @param {string} selector CSS selector
      */
