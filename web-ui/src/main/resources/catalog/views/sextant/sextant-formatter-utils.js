@@ -16,8 +16,7 @@
     var toggleBtn = element.querySelector('.sxt-collapse-toggle');
     toggleBtn.innerHTML = '<span class="fa fa-lg fa-plus-circle"></span>';
     element.setAttribute('data-collapsed', '');
-
-    toggleBtn.removeAttribute('background');
+    toggleBtn.style.background = getParentBackgroundStyle(element);
   }
 
   /**
@@ -31,7 +30,7 @@
     var toggleBtn = element.querySelector('.sxt-collapse-toggle');
     toggleBtn.innerHTML = '<span class="fa fa-lg fa-minus-circle"></span>';
     element.removeAttribute('data-collapsed');
-    toggleBtn.style.background = getParentBackgroundStyle(element);
+    toggleBtn.style.removeProperty('background');
   }
 
   /**
