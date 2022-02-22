@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: 'geocat/gn4-inspire-geoportal'
 
 jobs:
   docker_image:
@@ -42,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: 'ghrc.io/geocat/gn4-inspire-geoportal'
+          images: '{{ env.REGISTRY }}/{{ env.IMAGE_NAME }}'
           labels: |
             org.opencontainers.image.vendor=GeoCat B.V.
           flavor: |
