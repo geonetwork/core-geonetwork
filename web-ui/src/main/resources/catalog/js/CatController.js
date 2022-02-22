@@ -275,7 +275,7 @@ goog.require('gn_alert');
             'group': {
               'terms': {
                 'field': 'groupPublishedId',
-                'size': 200,
+                'size': 300,
                 'include': '.*',
                 'exclude': '1'
               },
