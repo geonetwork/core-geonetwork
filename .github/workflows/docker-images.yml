@@ -42,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: 'geocat/gn4-inspire-geoportal'
+          images: 'ghrc.io/geocat/gn4-inspire-geoportal'
           labels: |
             org.opencontainers.image.vendor=GeoCat B.V.
           flavor: |
