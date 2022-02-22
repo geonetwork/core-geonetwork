@@ -42,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: '{{ env.REGISTRY }}/{{ env.IMAGE_NAME }}'
+          images: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}'
           labels: |
             org.opencontainers.image.vendor=GeoCat B.V.
           flavor: |
