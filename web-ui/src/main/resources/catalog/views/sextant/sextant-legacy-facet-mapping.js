@@ -298,7 +298,7 @@
         {
           'terms': {
             'field': 'groupOwner',
-            'size': 199,
+            'size': 300,
             'order': {'_key': 'asc'}
           }
         }
