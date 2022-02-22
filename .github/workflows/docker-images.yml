@@ -46,7 +46,7 @@ jobs:
           labels: |
             org.opencontainers.image.vendor=GeoCat B.V.
           flavor: |
-            latest=auto
+            latest=true
           tags: |
             type=ref,event=branch
             type=ref,event=pr
