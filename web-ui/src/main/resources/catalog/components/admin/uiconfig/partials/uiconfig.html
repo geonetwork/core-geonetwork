@@ -886,11 +886,23 @@
 
               <div data-ng-switch-when="searchResultContact">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <select class="form-control"
-                        id="ui-searchResultContact-{{$index}}"
-                        data-ng-options="o | translate for o in searchResultContactChoices"
-                        data-ng-model="mCfg[key]">
-                </select>
+                <div class="input-group">
+                  <input class="form-control"
+                         id="ui-searchResultContact-{{$index}}"
+                         data-ng-model="mCfg[key]"/>
+                  <div class="input-group-btn">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-right">
+                        <li data-ng-repeat="o in searchResultContactChoices">
+                          <a href="" data-ng-click="mCfg[key] = o">{{o | translate}} ({{o}})</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
                 <p class="help-block"
                    data-ng-init="helpKey = 'ui-' + key + '-help'"
                    data-ng-show="(helpKey | translate) != helpKey"
