@@ -219,9 +219,13 @@ goog.require('gn_alert');
                 "filter": { "exists": { "field": "parentUuid" } },
                 "weight": 0.3
               },
-              // Boost down obsolete records
+              // Boost down obsolete and superseded records
               {
                 "filter": { "match": { "cl_status.key": "obsolete" } },
+                "weight": 0.2
+              },
+              {
+                "filter": { "match": { "cl_status.key": "superseded" } },
                 "weight": 0.3
               },
               // {
