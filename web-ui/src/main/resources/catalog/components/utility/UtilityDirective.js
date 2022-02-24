@@ -876,7 +876,7 @@
           '             viewBox="0 0 500 500">' +
           '    <defs>' +
           '      <pattern id="image{{imageId}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
-          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + org + \'.png\'}}"></image>' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + orgKey + \'.png\'}}"></image>' +
           '      </pattern>' +
           '    </defs>' +
           '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
@@ -885,15 +885,18 @@
           '          font-size="300">{{hasIcon ? \'\' : org.substr(0, 1).toUpperCase()}}</text>' +
           '</svg>',
         scope: {
-          org: '=gnCircleLetterIcon'
+          org: '=gnCircleLetterIcon',
+          orgKey: '=',
         },
         link: function(scope, element, attrs) {
           scope.hasIcon = false;
           scope.imageId = Math.random().toString(36).substr(2, 9)
-          $http.get('../api/logos/' + scope.org + '.png', {cache: true})
-            .then(function(r) {
-            scope.hasIcon = r.status === 200;
-          });
+          if (scope.orgKey) {
+            $http.get('../api/logos/' + scope.orgKey + '.png', {cache: true})
+              .then(function(r) {
+              scope.hasIcon = r.status === 200;
+            });
+          }
         }
       };
     }
@@ -1685,6 +1688,12 @@
                    .replace('{{node}}', gnConfig.env.node) +
             '?redirect=' + encodeURIComponent(window.location.href);
         return href;
+      }}
+  ]);
+  module.filter('getMailDomain', [function() {
+      return function(mail) {
+        return (mail && mail.indexOf('@') !== -1)
+          ? mail.replace(/.*@(.*)/, '$1') : '';
       }}
   ]);
   /**

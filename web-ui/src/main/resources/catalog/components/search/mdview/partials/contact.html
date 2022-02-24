@@ -9,7 +9,8 @@
       <div gn-popover-anchor
            class="row">
         <div class="col-md-4"
-             data-gn-circle-letter-icon="c.organisation"/>
+             data-gn-circle-letter-icon="c.organisation"
+             data-org-key="c.email | getMailDomain"/>
 
         <div class="col-md-8">
           <div class="gn-contact-card-role">
@@ -59,7 +60,8 @@
           <div class="col-md-12" data-ng-repeat="c in cnts | orderBy:'organisation'">
             <div class="row">
               <div class="col-md-4"
-                   data-gn-circle-letter-icon="c.organisation"/>
+                   data-gn-circle-letter-icon="c.organisation"
+                   data-org-key="c.email | getMailDomain"/>
               <div class="col-md-8">
                 <div class="gn-contact-card-org-group">
                   <span data-ng-if="::c.website">
@@ -108,7 +110,8 @@
       <div gn-popover-anchor
            class="row">
         <div class="col-md-4"
-             data-gn-circle-letter-icon="org"/>
+             data-gn-circle-letter-icon="org"
+             data-org-key="contactByOrgRole[0].email | getMailDomain"/>
 
         <div class="col-md-8" ng-repeat="c in contactByOrgRole">
           <div class="gn-contact-card-org-group">
