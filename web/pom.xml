@@ -615,7 +615,7 @@
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
 	        <artifactId>git-commit-id-plugin</artifactId>
-	        <version>2.2.6</version>
+	        <version>4.9.9</version>
 	        <executions>
                   <execution>
                     <phase>initialize</phase>
@@ -643,6 +643,7 @@
 	            <skip>false</skip>
 	            <runOnlyOnce>false</runOnlyOnce>
 	            <excludeProperties>
+                <excludeProperty>^git.local.branch.*$</excludeProperty>
 	            </excludeProperties>
 							<includeOnlyProperties>
 								<includeOnlyProperty>^git.tags$</includeOnlyProperty>
