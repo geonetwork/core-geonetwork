@@ -11,6 +11,9 @@ RUN sed -i "s/<sec:filter-chain\s* pattern=\"\/dashboards\/\*\*\"\s* filters=\"\
 #RUN    cat "web/src/main/webapp/WEB-INF/config-security/config-security-core.xml" | grep dashboards
 
 
+RUN mvn -X -B -f web/pom.xml git-commit-id:revision 
+RUN find . -name git.properties
+
 RUN mvn -B clean install -DskipTests -T2C
 
 RUN find web/target -name git.properties
