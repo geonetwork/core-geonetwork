@@ -11,8 +11,8 @@ RUN sed -i "s/<sec:filter-chain\s* pattern=\"\/dashboards\/\*\*\"\s* filters=\"\
 #RUN    cat "web/src/main/webapp/WEB-INF/config-security/config-security-core.xml" | grep dashboards
 
 
-RUN --mount=type=cache,target=/root/.m2/repository \
-     mvn -X -B -f pom.xml clean install -DskipTests -T2C
+RUN mvn -B clean install -DskipTests -T2C
+
 RUN find web/target -name git.properties
 RUN mkdir -p /var/lib/jetty/webapps
 RUN unzip web/target/geonetwork.war  -d /var/lib/jetty/webapps/geonetwork
