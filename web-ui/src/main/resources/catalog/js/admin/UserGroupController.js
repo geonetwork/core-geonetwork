@@ -344,7 +344,7 @@
           return true;
         }
 
-        return (($scope.userSelected.security.authtype == 'LDAP') ||
+        return (($scope.userSelected.security.authType == 'LDAP') ||
             ($scope.userSelected.username !== $scope.user.username));
       };
 
