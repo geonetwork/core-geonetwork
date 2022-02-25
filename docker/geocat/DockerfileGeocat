@@ -1,24 +1,18 @@
-FROM --platform=$BUILDPLATFORM maven:3-jdk-8 as downloader
+FROM --platform=$BUILDPLATFORM ubuntu:focal as downloader
 
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN apt-get update && apt-get install -y --no-install-recommends git zip unzip
+RUN mkdir -p /var/lib/jetty/webapps
+
+RUN apt-get update && apt-get install -y --no-install-recommends unzip
 
 WORKDIR /tmp/geonetwork
-COPY . /tmp/geonetwork/
+COPY war/geonetwork.war .
+RUN unzip geonetwork.war -d geonetwork
 # Protect kibnana dashboards
-RUN sed -i "s/<sec:filter-chain\s* pattern=\"\/dashboards\/\*\*\"\s* filters=\"\"/<sec:filter-chain pattern=\"\/dashboards\/**\" filters=\"securityContextPersistenceFilter, adminUserFilter\"/" "web/src/main/webapp/WEB-INF/config-security/config-security-core.xml"
+RUN sed -i "s/<sec:filter-chain\s* pattern=\"\/dashboards\/\*\*\"\s* filters=\"\"/<sec:filter-chain pattern=\"\/dashboards\/**\" filters=\"securityContextPersistenceFilter, adminUserFilter\"/" "geonetwork/WEB-INF/config-security/config-security-core.xml"
 #RUN    cat "web/src/main/webapp/WEB-INF/config-security/config-security-core.xml" | grep dashboards
 
-
-RUN mvn -X -B -f web/pom.xml git-commit-id:revision 
-RUN find . -name git.properties
-
-RUN mvn -B clean install -DskipTests -T2C
-
-RUN find web/target -name git.properties
-RUN mkdir -p /var/lib/jetty/webapps
-RUN unzip web/target/geonetwork.war  -d /var/lib/jetty/webapps/geonetwork
 
  
 
@@ -36,13 +30,13 @@ ENV JAVA_OPTS "-Xmx2048M -Xss2M -XX:+UseConcMarkSweepGC -Djava.security.egd=file
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 
-COPY --from=downloader /var/lib/jetty/webapps/geonetwork ${CATALINA_HOME}/webapps/geonetwork
+COPY --from=downloader /tmp/geonetwork/geonetwork ${CATALINA_HOME}/webapps/geonetwork
 
 RUN cp "${CATALINA_HOME}"/webapps/geonetwork/WEB-INF/lib/postgresql-*.jar "${CATALINA_HOME}/lib" \
     && mkdir -p ${DATA_DIR}
 
 
-COPY ./docker/geocat/entrypoint.sh  /entrypoint.sh
+COPY ./entrypoint.sh  /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["catalina.sh", "run"]
 EXPOSE 8080 8009
