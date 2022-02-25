@@ -121,6 +121,9 @@
                   moreLikeThisQuery,
                   {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
                   {"terms": {"draft": ["n", "e"]}}
+                ],
+                "must_not" : [
+                  {"terms": {"uuid": []}}
                 ]}
             }
           };
@@ -134,6 +137,7 @@
             if (scope.md == null) {
               return;
             }
+            query.query.bool.must_not[0].terms.uuid = [scope.md.uuid]
             query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
             $http.post('../api/search/records/_search', query).then(function (r) {
               scope.similarDocuments = r.data.hits.hits.map(function(r) {

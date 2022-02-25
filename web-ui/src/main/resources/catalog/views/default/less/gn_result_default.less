@@ -98,7 +98,7 @@
   .gn-card-badge {
     padding: 15px;
     margin-top: 30px !important;
-    color: #fff;
+    color: #0e0e0e;
     position: absolute;
     left: -5px;
     bottom: 10px;
@@ -140,34 +140,27 @@
     }
   }
   .gn-card-series {
-    background-color: lighten(@brand-primary, 15%);
-    color: #fff;
-    a {
-      color: #fff;
-    }
+    background-color: lighten(@gray-base, 85%);
     &:hover {
-      background-color: lighten(@brand-primary, 15%);
+      background-color: lighten(@gray-base, 85%);
     }
   }
   .gn-card-dataset {
-    background-color: lighten(@brand-info, 15%);
-    a {
-      color: #000;
-    }
+    background-color: @gray-lighter;
     &:hover {
-      background-color: lighten(@brand-info, 15%);
+      background-color: @gray-lighter;
     }
   }
   .gn-card-nonGeographicDataset {
-    background-color: @brand-warning;
+    background-color: @gray-lighter;
     &:hover {
-      background-color: @brand-warning;
+      background-color: @gray-lighter;
     }
   }
   .gn-card-service, .gn-card-application {
-    background-color: @brand-success;
+    background-color: lighten(@gray-base, 85%);
     &:hover {
-      background-color: @brand-success;
+      background-color: lighten(@gray-base, 85%);
     }
   }
   .gn-series {

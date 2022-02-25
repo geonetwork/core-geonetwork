@@ -36,33 +36,6 @@
       </div>
     </div>
 
-
-    <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails"
-         class="gn-margin-bottom flex-row">
-      <span class="badge badge-rounded">
-        <i class="fa fa-fw fa-calendar"></i>
-      </span>
-      <div>
-        <h3 data-translate="">tempExtent</h3><br/>
-        <p data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
-          <span data-ng-show="range.start">
-              <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
-              <span data-gn-humanize-time="{{range.start.date}}"/>
-              <span data-ng-show="range.start.calendarEraName">{{range.start.calendarEraName | translate}}</span>
-          </span>
-          <span class="spacer">
-            <i class="fa fa-long-arrow-right"></i>
-          </span>
-          <span data-ng-show="range.end">
-            <span data-ng-show="range.end.indeterminatePosition">{{range.end.indeterminatePosition | translate}}&nbsp;</span>
-            <span data-gn-humanize-time="{{range.end.date}}"/>
-            <span data-ng-show="range.end.calendarEraName">{{range.end.calendarEraName | translate}}</span>
-          </span>
-        </p>
-      </div>
-    </div>
-
-
     <div data-ng-show="mdView.current.record.resourceVerticalRange"
          class="gn-margin-bottom flex-row">
       <span class="badge badge-rounded">
@@ -153,6 +126,8 @@
 <div class="row">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
+
+    <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
   <div class="gn-md-side"
@@ -201,8 +176,6 @@
 <div class="row">
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
-
-    <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
   <div class="col-md-4 gn-md-side">
