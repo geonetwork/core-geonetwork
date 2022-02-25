@@ -886,7 +886,7 @@
           '</svg>',
         scope: {
           org: '=gnCircleLetterIcon',
-          orgKey: '=',
+          orgKey: '='
         },
         link: function(scope, element, attrs) {
           scope.hasIcon = false;
