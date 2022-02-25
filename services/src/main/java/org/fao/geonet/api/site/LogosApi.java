@@ -36,6 +36,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
@@ -70,6 +71,9 @@ public class LogosApi {
     private static final String[] iconExt = {".gif", ".png", ".jpg", ".jpeg"};
     @Autowired
     GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    SettingManager settingManager;
+
     @Autowired
     GroupRepository groupRepository;
     private final DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
@@ -212,7 +216,8 @@ public class LogosApi {
         try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, logoDirectory)) {
             if (image != null) {
                 response.sendRedirect(String.format(
-                    "../../../images/harvesting/%s",
+                    "%simages/harvesting/%s",
+                    settingManager.getBaseURL(),
                     URLEncoder.encode(file, "UTF-8")));
             } else {
                 throw new ResourceNotFoundException(String.format(
