@@ -148,7 +148,7 @@
               }
             });
 
-            $http.post('../api/search/records/_msearch', body).then(function (data) {
+            $http.post('../../srv/api/search/records/_msearch', body).then(function (data) {
               gnMdViewObj.current.record.relatedRecords = [];
 
               var recordMap = {};
@@ -165,6 +165,13 @@
                     resourceTitle: $filter('gnLocalized')(l.title),
                     remoteUrl: $filter('gnLocalized')(l.url)
                   }) : recordMap[l.id];
+
+                  // Open record not in current portal as a remote record
+                  if (l.origin === 'catalog') {
+                    l.record.remoteUrl = '../../srv/'
+                      + gnGlobalSettings.iso3lang
+                      + '/catalog.search#/metadata/' + l.id;
+                  }
                 })
               });
 
