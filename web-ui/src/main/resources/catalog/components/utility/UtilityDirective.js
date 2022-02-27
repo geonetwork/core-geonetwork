@@ -569,7 +569,7 @@
    * Put a string in a input field with copy to clipboard functions attached to it.
    *
    * The code to be used in a HTML page:
-   * 
+   *
    * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}"></span>
    *
    * or
@@ -1339,6 +1339,13 @@
               // to use in ng-repeat
               scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
+                  // Reset pagination to the first page when the filtered results have less results
+                  // than the ones needed to be displayed in the current page
+                  if (scope.items().length < ((scope.paginator.currentPage *
+                    scope.paginator.pageSize)+1)) {
+                    scope.paginator.currentPage = 0;
+                  }
+
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;
