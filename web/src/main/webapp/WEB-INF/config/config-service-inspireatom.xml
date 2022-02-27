@@ -32,27 +32,6 @@
       <class name="org.fao.geonet.services.inspireatom.AtomHarvester"/>
     </service>
 
-    <!-- OpenDescription document -->
-    <service name="atom.description">
-      <class name="org.fao.geonet.services.inspireatom.AtomServiceDescription"/>
-
-      <output sheet="../xslt/services/inspire-atom/opensearch.xsl"
-              contentType="text/xml; charset=UTF-8"/>
-    </service>
-
-    <!-- Describe -->
-    <service name="atom.describe" >
-      <class name="org.fao.geonet.services.inspireatom.AtomDescribe"/>
-
-      <output sheet="../xslt/services/inspire-atom/describe.xsl"
-              contentType="application/atom+xml"/>
-    </service>
-
-    <!-- GetData -->
-    <service name="atom.download">
-      <class name="org.fao.geonet.services.inspireatom.AtomGetData"/>
-    </service>
-
     <!-- Search -->
     <service name="atom.search">
       <class name="org.fao.geonet.services.inspireatom.AtomSearch"/>

@@ -140,15 +140,7 @@
     <from>^/(.*)/catalog.search\?.*uuid=(.*)</from>
     <to type="permanent-redirect">%{context-path}/#/metadata/$2</to>
   </rule>
-
-  <rule>
-    <note>
-      INSPIRE Atom OpenSearchDescription
-    </note>
-    <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
-    <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
-  </rule>
-
+  
   <rule>
     <note>
       INSPIRE Atom search (html)
@@ -194,22 +186,6 @@
 
   <rule>
     <note>
-      INSPIRE Atom Describe (service)
-    </note>
-    <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
-  </rule>
-
-  <rule>
-    <note>
-      INSPIRE Atom DescribeBy
-    </note>
-    <from>^/opensearch/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe</to>
-  </rule>
-
-  <rule>
-    <note>
       INSPIRE Atom Predefined Service Describe
     </note>
     <from>^/(.*)/atom.predefined.service?(.*)$</from>
@@ -223,15 +199,6 @@
     <from>^/(.*)/atom.predefined.dataset?(.*)$</from>
     <to type="forward">/srv/atom/describe/dataset?$2</to>
   </rule>
-
-  <rule>
-    <note>
-      INSPIRE Atom GetData
-    </note>
-    <from>^/opensearch/(.*)/download?(.*)$</from>
-    <to type="forward">/srv/$1/atom.download</to>
-  </rule>
-
 
   <!-- hide jsession id from google bot -->
   <outbound-rule encodefirst="true">
