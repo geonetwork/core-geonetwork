@@ -190,14 +190,16 @@
           templateUrl: '../../catalog/components/userfeedback/' +
           'partials/userfeedbackfull.html',
           link: function(scope) {
+            scope.userName = null;
+
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
                 scope.metatdataUUID = m.getUuid();
                 scope.metatdataTitle = m.getTitle();
+                scope.userName = $rootScope.user.username;
               }
             }
-
 
             initRecord(scope.record);
 
@@ -212,6 +214,7 @@
                 initRecord(n);
               }
             });
+
 
             scope.$watch('userName', function(newValue, oldValue) {
               if (newValue) {
@@ -270,8 +273,7 @@
           restrict: 'AEC',
           replace: true,
           scope: {
-            record: '=gnUserfeedbacknew',
-            userName: '@gnUser'
+            record: '=gnUserfeedbacknew'
           },
           templateUrl: '../../catalog/components/' +
           'userfeedback/partials/userfeedbacknew.html',
@@ -287,6 +289,7 @@
                 var m = new Metadata(md);
                 scope.metatdataUUID = m.getUuid();
                 scope.metatdataTitle = m.getTitle();
+                scope.userName = $rootScope.user.username;
               }
             }
 
