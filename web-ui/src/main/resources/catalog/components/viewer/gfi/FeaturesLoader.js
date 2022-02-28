@@ -96,7 +96,7 @@
 
     // Sextant specific
     var infoFormat = this.ncwmsService.isLayerNcwms(layer) ? 'text/xml' :
-                'application/json';
+                'application/vnd.ogc.gml';
 
     //check if infoFormat is available in getCapabilities
     if(layer.get('capRequest') &&
