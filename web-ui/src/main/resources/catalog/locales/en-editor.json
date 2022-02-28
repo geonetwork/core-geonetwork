@@ -418,5 +418,6 @@
     "draft": "Working copy",
     "link": "Link",
     "link-text": "Link text",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
+    "allowEditGroupMembers": "Allow group editors to edit"
 }
