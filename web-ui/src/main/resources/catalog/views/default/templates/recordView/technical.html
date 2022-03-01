@@ -6,20 +6,34 @@
       <div class="col-md-4 gn-md-side">
         <section class="gn-md-side-dates"
                  data-ng-if="mdView.current.record.resourceDate.length > 0">
-            <ul>
-              <li data-ng-repeat="date in mdView.current.record.resourceDate">
-                <div class="badge badge-rounded"
-                     data-ng-class="{'danger': date.type === 'deprecated'}">
-                  <i class="fa fa-fw"
-                     data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
-                </div>
-                <span>
-              <h3 data-translate>{{date.type | translate}}</h3>
-              <span data-gn-humanize-time="{{date.date}}"/>
-            </span>
-              </li>
-            </ul>
+          <ul>
+            <li data-ng-repeat="date in mdView.current.record.resourceDate">
+              <div class="badge badge-rounded"
+                   data-ng-class="{'danger': date.type === 'deprecated'}">
+                <i class="fa fa-fw"
+                   data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}" />
+              </div>
+              <span>
+                <h3 data-translate>{{date.type | translate}}</h3>
+                <span data-gn-humanize-time="{{date.date}}"></span>
+              </span>
+            </li>
+          </ul>
         </section>
+
+
+        <div data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency.length > 0"
+             class="gn-margin-bottom flex-row">
+          <span class="badge badge-rounded" title="{{'updateFrequency' | translate}}">
+            <i class="fa fa-fw fa-language"></i>
+          </span>
+          <div>
+            <h3 data-translate="">updateFrequency</h3>
+            <p data-ng-repeat="c in mdView.current.record.cl_maintenanceAndUpdateFrequency">
+              {{c.default}}
+            </p>
+          </div>
+        </div>
       </div>
 
 
@@ -37,7 +51,7 @@
             <h3 data-translate="">{{(t.title || key) | translate}}</h3>
 
             <div data-gn-keyword-badges="mdView.current.record"
-                 data-thesaurus="key"/>
+                 data-thesaurus="key" />
           </div>
         </div>
       </div>
@@ -53,7 +67,7 @@
             <h3 data-translate="">identifier</h3>
             <ul class="gn-comma-list">
               <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
-                <span data-ng-bind-html="i.code | linky"/>
+                <span data-ng-bind-html="i.code | linky" />
               </li>
             </ul>
           </div>
@@ -75,7 +89,7 @@
           </div>
         </div>
 
-        <div ng-include="'../../catalog/views/default/templates/recordView/categories.html'"/>
+        <div ng-include="'../../catalog/views/default/templates/recordView/categories.html'" />
 
         <div data-ng-if="mdView.current.record.cl_classification > 0"
              class="gn-margin-bottom flex-row">
@@ -87,7 +101,8 @@
             <ul>
               <li data-ng-repeat="c in mdView.current.record.cl_classification">{{c.default}}</li>
             </ul>
-          </div>ß
+          </div>
+          ß
         </div>
       </div>
     </div>
