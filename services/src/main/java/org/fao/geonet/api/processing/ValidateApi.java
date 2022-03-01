@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -293,8 +294,12 @@ public class ValidateApi {
 
     private MInspireEtfValidateProcess getRegistredMInspireEtfValidateProcess(ServiceContext serviceContext) {
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        String URL_QUERY = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
+        if (StringUtils.isEmpty(URL_QUERY)) {
+            URL_QUERY = URL;
+        }
 
-        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(URL, serviceContext, appContext);
+        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(URL, URL_QUERY, serviceContext, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
         try {
             mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());

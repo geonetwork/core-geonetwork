@@ -41,7 +41,8 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private final ApplicationContext appContext;
     /** Shared validation service context used as a fallback if thread local unavailable */
     private ServiceContext validationServiceContext;
-    private String URL;
+    private final String URL;
+    private final String URL_QUERY;
 
     private ObjectName probeName;
     private int metadataToAnalyseCount = -1;
@@ -95,9 +96,10 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         return this.probeName;
     }
 
-    public MInspireEtfValidateProcess(String URL,
+    public MInspireEtfValidateProcess(String URL, String URL_QUERY,
                                       ServiceContext serviceContext, ApplicationContext appContext) {
         this.URL = URL;
+        this.URL_QUERY = URL_QUERY;
         this.validationServiceContext = serviceContext;
         this.appContext = appContext;
 
@@ -186,7 +188,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             }
 
                                             if (applyCondition) {
-                                                String testId = inspireValidatorUtils.submitFile(context, URL,
+                                                String testId = inspireValidatorUtils.submitFile(context, URL, URL_QUERY,
                                                     new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
 
                                                 inspireValidatorUtils.waitUntilReady(context, URL, testId);

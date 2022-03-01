@@ -392,12 +392,23 @@
                              id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
                              placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
                       <span class="input-group-btn">
-                      <div class="btn btn-default"
-                           onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
-                           data-translate="">validatorUseInspireOne</div>
-                    </span>
+                        <div class="btn btn-default"
+                             onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
+                             data-translate="">validatorUseInspireOne</div>
+                      </span>
                     </div>
 
+                    <div class="input-group"
+                         data-ng-switch-when="system/inspire/remotevalidation/urlquery" >
+                      <input type="text" class="form-control"
+                             id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                             placeholder="{{'system/inspire/remotevalidation/urlquery-placeholder' | translate}}" />
+                      <span class="input-group-btn">
+                        <div class="btn btn-default"
+                             onClick="document.getElementById('system/inspire/remotevalidation/urlquery').value = 'https://inspire.ec.europa.eu/validator/';"
+                             data-translate="">validatorUseInspireOne</div>
+                      </span>
+                    </div>
 
                     <!-- Default -->
                     <input data-ng-switch-default="" type="text" class="form-control"

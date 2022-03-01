@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -211,7 +212,10 @@ public class InspireValidationApi {
         String id = String.valueOf(metadata.getId());
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-
+        String URL_QUERY = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
+        if (StringUtils.isEmpty(URL_QUERY)) {
+            URL_QUERY = URL;
+        }
 
         Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
         if (md == null) {
@@ -266,7 +270,7 @@ public class InspireValidationApi {
 
             InputStream metadataToTest = convertElement2InputStream(md);
 
-            String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
+            String testId = inspireValidatorUtils.submitFile(context, URL, URL_QUERY, metadataToTest, testsuite, metadata.getUuid());
 
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 
