@@ -530,7 +530,7 @@ public class EsSearchManager implements ISearchManager {
             .add("link")
             .add("crsDetails")
             .add("format")
-            .add("orderingInstructions")
+            .add("orderingInstructionsObject")
             .add("contact")
             .add("contactForResource")
             .add("contactForDistribution")
