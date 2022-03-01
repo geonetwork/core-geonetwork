@@ -215,6 +215,7 @@
   "IndexReadOnlyHealthCheck": "Index is in readonly mode",
   "summary": "Summary",
   "metadataRecords": "Metadata records",
+  "accessAndUseConstraints": "Access and use constraints",
   "results": "Results",
   "format-zip": "ZIP",
   "facet-geometry": "Spatial filter",

@@ -5,15 +5,13 @@
         <i class="fa fa-fw fa-gavel"></i>
       </span>
   <div>
-    <h2 data-translate="">legalConstraints</h2>
-    <ul>
-      <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
-        <span data-ng-bind-html="i | linky | newlines"/>
-      </li>
-      <li data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
-        <span data-ng-bind-html="i | linky | newlines"/>
-      </li>
-    </ul>
+    <h2 data-translate="">accessAndUseConstraints</h2>
+    <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
+        <span data-ng-bind-html="i | capitalize | linky | newlines"/>
+    </p>
+    <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
+      <span data-ng-bind-html="i | linky | newlines"/>
+    </p>
   </div>
 </div>
 
@@ -24,11 +22,9 @@
       </span>
   <div>
     <h2 data-translate="">securityConstraints</h2>
-    <ul>
-      <li data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
-        <span data-ng-bind-html="i | linky | newlines"/>
-      </li>
-    </ul>
+    <p data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
+      <span data-ng-bind-html="i | linky | newlines"/>
+    </p>
   </div>
 </div>
 
@@ -39,10 +35,8 @@
       </span>
   <div>
     <h2 data-translate="">resourceConstraints</h2>
-    <ul>
-      <li data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
-        <span data-ng-bind-html="i | linky | newlines"/>
-      </li>
-    </ul>
+    <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
+      <span data-ng-bind-html="i | linky | newlines"/>
+    </p>
   </div>
 </div>
