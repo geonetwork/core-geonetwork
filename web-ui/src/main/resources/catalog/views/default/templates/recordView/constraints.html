@@ -6,12 +6,12 @@
       </span>
   <div>
     <h2 data-translate="">accessAndUseConstraints</h2>
-    <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
-        <span data-ng-bind-html="i | capitalize | linky | newlines"/>
-    </p>
-    <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
-      <span data-ng-bind-html="i | linky | newlines"/>
-    </p>
+
+    <p data-gn-metadata-object-field="MD_LegalConstraintsOtherConstraints"
+       data-record="mdView.current.record"/>
+
+    <p data-gn-metadata-object-field="MD_LegalConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
   </div>
 </div>
 
@@ -22,9 +22,9 @@
       </span>
   <div>
     <h2 data-translate="">securityConstraints</h2>
-    <p data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
-      <span data-ng-bind-html="i | linky | newlines"/>
-    </p>
+
+    <p data-gn-metadata-object-field="MD_SecurityConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
   </div>
 </div>
 
@@ -35,8 +35,8 @@
       </span>
   <div>
     <h2 data-translate="">resourceConstraints</h2>
-    <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
-      <span data-ng-bind-html="i | linky | newlines"/>
-    </p>
+
+    <p data-gn-metadata-object-field="MD_ConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
   </div>
 </div>

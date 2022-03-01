@@ -242,6 +242,18 @@
       };
     }]);
 
+  module.directive('gnMetadataObjectField', [function() {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'objectFieldWithLink.html',
+        restrict: 'A',
+        scope: {
+          field: '@gnMetadataObjectField',
+          record: '='
+        }
+      }
+    }]);
+
   module.directive('gnMetadataRate', [
     '$http', 'gnConfig', 'gnConfigService',
     function($http, gnConfig, gnConfigService) {
