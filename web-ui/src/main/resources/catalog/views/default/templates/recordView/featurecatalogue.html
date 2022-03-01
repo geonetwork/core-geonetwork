@@ -1,7 +1,6 @@
-
-<!-- data model / feature catalog -->
-<div class="row"
-     data-ng-if="mdView.current.record.featureTypes">
+<div class="row gn-section"
+     data-ng-if="mdView.current.record.featureTypes
+                 || mdView.current.record.relatedRecords.fcats.length > 0">
   <div class="col-md-12 gn-record">
     <div data-ng-repeat="featureType in mdView.current.record.featureTypes">
 

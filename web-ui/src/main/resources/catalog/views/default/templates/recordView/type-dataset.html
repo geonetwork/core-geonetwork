@@ -13,7 +13,7 @@
 </div>
 
 <!-- map & extent -->
-<div class="row gn-padding-top">
+<div class="row gn-section gn-padding-top">
   <div class="col-md-8 gn-record">
     <h2 data-translate="">spatialExtent</h2>
     <div data-gn-data-preview="mdView.current.record"/>
@@ -87,7 +87,7 @@
 </div>
 
 <!-- links (Download, API, Others) -->
-<div class="row">
+<div class="row gn-section">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
     <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
@@ -129,19 +129,19 @@
   </div>
 </div>
 
+
 <div ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
 
 <div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
 
 
-<div ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"/>
+<div class="gn-section"
+     ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"/>
 
 
-<div class="row">
+<div class="row gn-section">
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
-  </div>
-  <div class="col-md-4 gn-md-side">
   </div>
 </div>
 
@@ -151,7 +151,8 @@
   </div>
 </div>
 
-<div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+<div class="gn-section"
+     ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
 
 <div ng-include="'../../catalog/views/default/templates/recordView/share.html'"/>
 
