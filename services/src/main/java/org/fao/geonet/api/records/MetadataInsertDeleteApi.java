@@ -71,6 +71,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
@@ -164,6 +165,9 @@ public class MetadataInsertDeleteApi {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    IMetadataOperations metadataOperations;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
@@ -282,8 +286,10 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_VALIDATE, required = false) @RequestParam(required = false, defaultValue = "false") final boolean rejectIfInvalid,
         @Parameter(description = API_PARAM_RECORD_XSL, required = false) @RequestParam(required = false, defaultValue = "_none_") final String transformWith,
         @Parameter(description = API_PARAM_FORCE_SCHEMA, required = false) @RequestParam(required = false) String schema,
+        @Parameter(description = "Is editable by group members with editor profile? "
+            + "If not, only the author and administrator can edit the record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean allowEditGroupMembers,
         @Parameter(description = "(experimental) Add extra information to the record.", required = false) @RequestParam(required = false) final String extra,
-        HttpServletRequest request) throws Exception {
+         HttpServletRequest request) throws Exception {
         if (url == null && xml == null && serverFolder == null) {
             throw new IllegalArgumentException(
                 String.format("XML fragment or a URL or a server folder MUST be provided."));
@@ -299,7 +305,7 @@ public class MetadataInsertDeleteApi {
                     String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
             }
             Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
-                    rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
+                    rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported from XML with UUID '%s'", pair.two()));
 
             triggerImportEvent(request, pair.two());
@@ -320,7 +326,7 @@ public class MetadataInsertDeleteApi {
                 }
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(metadataType, xmlContent, uuidProcessing, group, category,
-                            rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
+                            rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
                     report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                             String.format("Metadata imported from URL with UUID '%s'", pair.two()));
                     triggerImportEvent(request, pair.two());
@@ -380,7 +386,7 @@ public class MetadataInsertDeleteApi {
                 } else {
                     try {
                         Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
-                                category, rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
+                                category, rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
                         report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                                 String.format("Metadata imported from server folder with UUID '%s'", pair.two()));
 
@@ -416,10 +422,8 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "Assign a custom UUID. If this UUID already exist an error is returned. "
             + "This is enabled only if metadata create / generate UUID settings is activated.", required = false) @RequestParam(required = false) String targetUuid,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = true) @RequestParam(required = true) final String group,
-        @Parameter(description = "Is published to all user group members? "
-            + "If not, only the author and administrator can edit the record.", required = false) @RequestParam(required = false, defaultValue = "false")
-        // TODO: Would be more flexible to add a privilege object ?
-        final boolean isVisibleByAllGroupMembers,
+        @Parameter(description = "Is editable by group members with editor profile? "
+            + "If not, only the author and administrator can edit the record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean allowEditGroupMembers,
         @Parameter(description = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
         @Parameter(description = "Copy categories from source?", required = false) @RequestParam(required = false, defaultValue = "false") final boolean hasCategoryOfSource,
         @Parameter(description = "Is child of the record to copy?", required = false) @RequestParam(required = false, defaultValue = "false") final boolean isChildOfSource,
@@ -466,7 +470,7 @@ public class MetadataInsertDeleteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         String newId = dataManager.createMetadata(context, String.valueOf(sourceMetadata.getId()), group,
             settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
-            isChildOfSource ? sourceMetadata.getUuid() : null, metadataType.toString(), isVisibleByAllGroupMembers,
+            isChildOfSource ? sourceMetadata.getUuid() : null, metadataType.toString(), allowEditGroupMembers,
             metadataUuid);
 
         triggerCreationEvent(request, newId);
@@ -535,6 +539,8 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_XSL, required = false) @RequestParam(required = false, defaultValue = "_none_") final String transformWith,
         @Parameter(description = API_PARAM_FORCE_SCHEMA, required = false) @RequestParam(required = false) String schema,
         @Parameter(description = "(experimental) Add extra information to the record.", required = false) @RequestParam(required = false) final String extra,
+        @Parameter(description = "Is editable by group members with editor profile? "
+            + "If not, only the author and administrator can edit the record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean allowEditGroupMembers,
         HttpServletRequest request) throws Exception {
         if (file == null) {
             throw new IllegalArgumentException(String.format("A file MUST be provided."));
@@ -582,7 +588,7 @@ public class MetadataInsertDeleteApi {
                     }
                 } else {
                     Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadStream(f.getInputStream()),
-                            uuidProcessing, group, category, rejectIfInvalid, publishToAll, transformWith, schema,
+                            uuidProcessing, group, category, rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema,
                             extra, request);
                     report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported with UUID '%s'", pair.two()));
 
@@ -804,7 +810,8 @@ public class MetadataInsertDeleteApi {
 
     private Pair<Integer, String> loadRecord(MetadataType metadataType, Element xmlElement,
                                              final MEFLib.UuidAction uuidProcessing, final String group, final String[] category,
-                                             final boolean rejectIfInvalid, final boolean publishToAll, final String transformWith, String schema,
+                                             final boolean rejectIfInvalid, final boolean publishToAll,
+                                             final boolean allowEditGroupMembers, final String transformWith, String schema,
                                              final String extra, HttpServletRequest request) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -894,10 +901,14 @@ public class MetadataInsertDeleteApi {
         // Set template
         dataManager.setTemplate(iId, metadataType, null);
 
+        if (allowEditGroupMembers) {
+            metadataOperations.copyDefaultPrivForGroup(context, String.valueOf(iId), group, allowEditGroupMembers);
+        }
+
         if (publishToAll) {
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
         }
 
         dataManager.activateWorkflowIfConfigured(context, id.get(0), group);
