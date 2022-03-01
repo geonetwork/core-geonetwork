@@ -534,6 +534,25 @@
             scope.type = scope.type || 'blocks';
             scope.criteria = {p: {}};
 
+            scope.filterRecordsBy = function(key, value) {
+              if ((key === '') || (value === '')) {
+                reset();
+                return;
+              }
+
+              scope.displayedRecords = [];
+              var b = scope.agg[key].buckets;
+              b.forEach(function (k) {
+                if (k.key === value) {
+                  k.docs.hits.hits.forEach(function (r) {
+                    scope.displayedRecords =
+                      scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
+                  });
+                  sort();
+                }
+              });
+            };
+
             scope.$on('RecordsFiltersUpdated', function (event, result) {
               scope.filterRecordsBy(result.key, result.value);
             });
@@ -555,7 +574,8 @@
             function sort() {
               if (scope.sortBy) {
                 scope.displayedRecords.sort(function(a, b) {
-                  return a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
+                  return a.record[scope.sortBy]
+                    && a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
                 });
               }
             }
@@ -573,25 +593,6 @@
 
             scope.toggleListType = function(type) {
               scope.type = type;
-            };
-
-            scope.filterRecordsBy = function(key, value) {
-              if ((key === '') || (value === '')) {
-                reset();
-                return;
-              }
-
-              scope.displayedRecords = [];
-              var b = scope.agg[key].buckets;
-              b.forEach(function (k) {
-                if (k.key === value) {
-                  k.docs.hits.hits.forEach(function (r) {
-                    scope.displayedRecords =
-                      scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
-                  });
-                  sort();
-                }
-              });
             };
           }
         };
@@ -769,7 +770,8 @@
             function sort() {
               scope.displayedRecords.sort(function(a, b) {
                 var sortBy = scope.columnsConfig[0];
-                return a[sortBy].localeCompare(b[sortBy])
+                return a[sortBy]
+                  && a[sortBy].localeCompare(b[sortBy])
               });
             }
 
