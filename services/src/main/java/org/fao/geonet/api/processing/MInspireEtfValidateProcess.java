@@ -49,6 +49,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private final ApplicationContext appContext;
     private final ServiceContext serviceContext;
     private final String URL;
+    private final String URL_QUERY;
 
     private ObjectName probeName;
     private int metadataToAnalyseCount = -1;
@@ -61,10 +62,11 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
 
     public MInspireEtfValidateProcess(String catalogueId,
-                                      String URL,
+                                      String URL, String URL_QUERY,
                                       ServiceContext serviceContext,
                                       ApplicationContext appContext) {
         this.URL = URL;
+        this.URL_QUERY = URL_QUERY;
         this.serviceContext = serviceContext;
         this.appContext = appContext;
 
@@ -187,7 +189,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                                 String testId = null;
                                                 String getRecordByIdUrl = null;
                                                 if (StringUtils.isEmpty(mode)) {
-                                                    testId = inspireValidatorUtils.submitFile(serviceContext, URL,
+                                                    testId = inspireValidatorUtils.submitFile(serviceContext, URL, URL_QUERY,
                                                         new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
                                                 } else {
                                                     String portal = null;
@@ -212,7 +214,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                                             portal,
                                                             ISO19139Namespaces.GMD.getURI(),
                                                             record.getUuid());
-                                                        testId = inspireValidatorUtils.submitUrl(serviceContext, URL, getRecordByIdUrl, entry.getKey(), record.getUuid());
+                                                        testId = inspireValidatorUtils.submitUrl(serviceContext, URL, URL_QUERY, getRecordByIdUrl, entry.getKey(), record.getUuid());
                                                     }
                                                 }
                                                 if (testId != null) {
