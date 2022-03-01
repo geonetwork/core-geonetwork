@@ -209,8 +209,7 @@ public class InspireValidatorUtils {
      * @throws IOException
      */
     public boolean checkServiceStatus(ServiceContext context, String endPoint) throws IOException {
-
-        HttpGet request = new HttpGet(endPoint + CheckStatus_URL);
+        HttpGet request = new HttpGet(StringUtils.removeEnd(endPoint, "/") + CheckStatus_URL);
 
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
@@ -238,7 +237,7 @@ public class InspireValidatorUtils {
      */
     private String uploadMetadataFile(ServiceContext context, String endPoint, InputStream xml) {
 
-        HttpPost request = new HttpPost(endPoint + TestObjects_URL + "?action=upload");
+        HttpPost request = new HttpPost(StringUtils.removeEnd(endPoint, "/") + TestObjects_URL + "?action=upload");
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
@@ -286,7 +285,7 @@ public class InspireValidatorUtils {
             testsuite = getDefaultTestSuite();
         }
 
-        HttpGet request = new HttpGet(endPoint + ExecutableTestSuites_URL);
+        HttpGet request = new HttpGet(StringUtils.removeEnd(endPoint, "/") + ExecutableTestSuites_URL);
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
@@ -351,7 +350,7 @@ public class InspireValidatorUtils {
      */
     private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) throws JSONException, IOException {
 
-        HttpPost request = new HttpPost(endPoint + TestRuns_URL);
+        HttpPost request = new HttpPost(StringUtils.removeEnd(endPoint, "/") + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
@@ -442,7 +441,7 @@ public class InspireValidatorUtils {
             return false;
         }
 
-        HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId + "/progress");
+        HttpGet request = new HttpGet(StringUtils.removeEnd(endPoint, "/") + TestRuns_URL + "/" + testId + "/progress");
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
@@ -492,7 +491,7 @@ public class InspireValidatorUtils {
             throw new Exception("");
         }
 
-        HttpGet request = new HttpGet(endPoint + TestRuns_URL + "/" + testId);
+        HttpGet request = new HttpGet(StringUtils.removeEnd(endPoint, "/") + TestRuns_URL + "/" + testId);
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
@@ -575,14 +574,14 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
+    public String submitFile(ServiceContext context, String serviceEndpoint, String serviceQueryEndpoint, InputStream record, String testsuite, String testTitle)
         throws IOException, JSONException {
 
-        if (checkServiceStatus(context, serviceEndpoint)) {
+        if (checkServiceStatus(context, serviceQueryEndpoint)) {
             // Get the tests to execute
-            List<String> tests = getTests(context, serviceEndpoint, testsuite);
+            List<String> tests = getTests(context, serviceQueryEndpoint, testsuite);
             // Upload file to test
-            String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
+            String testFileId = uploadMetadataFile(context, serviceQueryEndpoint, record);
 
             if (testFileId == null) {
                 Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
@@ -613,11 +612,11 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitUrl(ServiceContext context, String serviceEndpoint, String getRecordById, String testsuite, String testTitle)
+    public String submitUrl(ServiceContext context, String serviceEndpoint, String serviceEndpointQuery, String getRecordById, String testsuite, String testTitle)
         throws IOException, JSONException {
 
         try {
-            if (checkServiceStatus(context, serviceEndpoint)) {
+            if (checkServiceStatus(context, serviceEndpointQuery)) {
                 // Get the tests to execute
                 List<String> tests = getTests(context, serviceEndpoint, testsuite);
                 if (tests == null || tests.size() == 0) {
