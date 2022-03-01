@@ -1,7 +1,9 @@
+<h2 data-translate="">resourceContact</h2>
+
 <div class="row" data-ng-if="mdView.current.record.contactForResource">
   <div data-gn-metadata-contacts="mdView.current.record.contactForResource"
        data-gn-mode="role"
-       data-layout="icon"/>
+       data-layout="icon" />
 </div>
 
 <div data-ng-if="mdView.current.record.resourceCredit"
@@ -12,6 +14,6 @@
   <div>
     <h3 data-translate="">credit</h3>
     <div data-ng-repeat="c in mdView.current.record.resourceCredit"
-         data-ng-bind-html="c | linky | newlines"/>
+         data-ng-bind-html="c | linky | newlines" />
   </div>
 </div>

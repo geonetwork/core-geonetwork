@@ -66,21 +66,4 @@
     </div>
   </div>
 
-
-  <div data-ng-repeat="(key, t) in mdView.current.record.allKeywords"
-       data-ng-if="(user.canEditRecord(mdView.current.record)
-                     && viewConfig.internalThesaurus
-                     && viewConfig.internalThesaurus.indexOf(key) !== -1)
-                    || highlightedThesaurus.indexOf(key) === -1"
-       class="gn-margin-bottom flex-row">
-    <span class="badge badge-rounded">
-      <i class="fa fa-fw fa-tags"></i>
-    </span>
-    <div>
-      <h3 data-translate="">{{(t.title || key) | translate}}</h3>
-
-      <div data-gn-keyword-badges="mdView.current.record"
-           data-thesaurus="key"/>
-    </div>
-  </div>
 </div>
