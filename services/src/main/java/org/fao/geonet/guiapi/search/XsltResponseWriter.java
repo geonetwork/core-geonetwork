@@ -159,7 +159,7 @@ public class XsltResponseWriter {
         try {
             Map<String, String> values = mapper.readValue(jsonPath.toFile(), Map.class);
             Element element = this.xml.getChild(TRANSLATIONS);
-            values.forEach((k, v) -> element.addContent(new Element(k).setText(v)));
+            values.forEach((k, v) -> element.addContent(new Element(k.replace(":", "_")).setText(v)));
         } catch (IOException e) {
             Log.warning(Geonet.SEARCH_ENGINE, String.format(
                 "Can't find JSON file '%s'.", jsonPath.toString()
