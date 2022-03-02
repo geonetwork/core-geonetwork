@@ -155,8 +155,11 @@
                 });
 
                 scope.$watch('mdFeedbackOpen', function(value) {
-                  if (value == true)
+                  var modal = element.find('.modal');
+                  if (value == true) {
                     $(element).find('.modal').modal('show');
+                    $('.g').append(modal.data('bs.modal').$backdrop);
+                  }
                   else
                     $(element).find('.modal').modal('hide');
                 });
