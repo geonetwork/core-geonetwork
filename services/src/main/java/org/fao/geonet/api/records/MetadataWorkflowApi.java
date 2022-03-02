@@ -258,7 +258,9 @@ public class MetadataWorkflowApi {
         if (metadataStatus.getStatusValue().getType() == StatusValueType.workflow
             && !isMdWorkflowEnable) {
             throw new FeatureNotEnabledException(
-                "Metadata workflow is disabled, can not be set the status of metadata");
+                "Metadata workflow is disabled, can not be set the status of metadata")
+                .withMessageKey("exception.resourceNotEnabled.workflow")
+                .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
         // --- only allow the owner of the record to set its status
@@ -276,7 +278,9 @@ public class MetadataWorkflowApi {
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
             if (isInvalid) {
-                throw new Exception("Metadata is invalid: can't be submitted or approved");
+                throw new NotAllowedException("Metadata is invalid: can't be submitted or approved")
+                    .withMessageKey("exception.resourceInvalid.metadata")
+                    .withDescriptionKey("exception.resourceInvalid.metadata.description");
             }
         }
 

@@ -176,10 +176,21 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         FeatureNotEnabledException.class
     })
-    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+    public ApiError runtimeExceptionHandler(final HttpServletRequest request, final Exception exception) {
         storeApiErrorCause(exception);
 
-        return new ApiError("feature_disabled", exception);
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("feature_disabled", exception);
+        } else {
+            return null;
+        }
     }
 
 
