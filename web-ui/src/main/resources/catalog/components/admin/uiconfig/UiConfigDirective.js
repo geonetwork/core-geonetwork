@@ -106,6 +106,7 @@
             var result = obj;
             for (var i = 0, n = fields.length; i < n && result !== undefined; i++) {
               var field = fields[i];
+              if (field === "__proto__" || field === "constructor") continue;
               if (i === n - 1) {
                 result[field] = val;
               } else {

@@ -3,6 +3,7 @@
             data-ng-bind-html="record[field][$index] | capitalize | linky | newlines"/>
   <a data-ng-if="i.link"
      data-ng-href="{{i.link}}"
+     rel="noopener noreferrer"
      target="_blank">
     {{record[field][$index] | capitalize}}
   </a>

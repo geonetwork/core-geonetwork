@@ -468,10 +468,12 @@
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
           'keywordBadges.html',
+        scope: {
+          record: '=gnKeywordBadges',
+          thesaurus: '=thesaurus'
+        },
         link: function(scope, element, attrs) {
-          scope.record = scope.$eval(attrs['gnKeywordBadges']);
           scope.allKeywords = scope.record && scope.record.allKeywords;
-          scope.thesaurus = scope.$eval(attrs['thesaurus']);
           scope.getOrderByConfig = function(thesaurus) {
             return thesaurus === 'th_regions'
               ? ['-group','default']
