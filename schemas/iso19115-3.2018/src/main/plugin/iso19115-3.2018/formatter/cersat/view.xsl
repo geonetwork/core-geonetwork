@@ -175,7 +175,7 @@
               <img data-gn-img-modal="md"
                    class="gn-img-thumbnail pull-left"
                    alt="{$schemaStrings/overview}"
-                   src="{mcc:fileName/*}"/>
+                   src="{mcc:fileName/*|mcc:fileName/*/@src}"/>
             </xsl:for-each>
 
             <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:abstract">

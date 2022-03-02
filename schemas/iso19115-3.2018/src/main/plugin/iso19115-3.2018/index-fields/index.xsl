@@ -472,14 +472,13 @@
 
         <xsl:variable name="overviews"
                       select="mri:graphicOverview/mcc:MD_BrowseGraphic/
-                                mcc:fileName/gco:CharacterString[. != '']"/>
-
+                                mcc:fileName/(gco:CharacterString[. != '']|gcx:FileName[@src != ''])"/>
         <xsl:copy-of select="gn-fn-index:add-field('hasOverview', if (count($overviews) > 0) then 'true' else 'false')"/>
 
 
         <xsl:for-each select="$overviews">
           <overview type="object">{
-            "url": "<xsl:value-of select="normalize-space(.)"/>"
+            "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
             <xsl:if test="$isStoringOverviewInIndex">
               <xsl:variable name="data"
                             select="util:buildDataUrl(., 140)"/>
