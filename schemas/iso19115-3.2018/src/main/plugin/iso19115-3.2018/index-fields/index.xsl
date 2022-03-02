@@ -1037,8 +1037,8 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="string(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
-            "date": "<xsl:value-of select="*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+            <xsl:if test="gn-fn-index:is-isoDate((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1])">
+              "date": "<xsl:value-of select="(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1]" />",
             </xsl:if>
             <xsl:if test="*/mdq:specification/*/cit:title/*/@xlink:href">
               "link": "<xsl:value-of select="*/mdq:specification/*/cit:title/*/@xlink:href"/>",
