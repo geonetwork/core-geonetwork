@@ -155,10 +155,10 @@
                 });
 
                 scope.$watch('mdFeedbackOpen', function(value) {
-                  var modal = element.find('.modal');
                   if (value == true) {
                     $(element).find('.modal').modal('show');
-                    $('.g').append(modal.data('bs.modal').$backdrop);
+                    // hide main backdrop not pretty
+                    document.querySelector('.modal-backdrop.fade.in').style.display = 'none';
                   }
                   else
                     $(element).find('.modal').modal('hide');
