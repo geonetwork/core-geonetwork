@@ -229,7 +229,7 @@
           </div>
         </section>
       </xsl:when>
-      <xsl:when test="$language != all and $portalLink != ''">
+      <xsl:when test="$language != 'all' and $portalLink != ''">
         <xsl:variable name="defaultUrl"
                       select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
         <!--<xsl:variable name="defaultUrl"
@@ -447,6 +447,7 @@
             <xsl:if test="$css != 'checkpoint' and
                           $view != 'emodnetHydrography' and
                           $view != 'earthObservation' and
+                          $view != 'cersat' and
                           $view != 'sdn'">
 
               <!--<section class="gn-md-side-providedby">

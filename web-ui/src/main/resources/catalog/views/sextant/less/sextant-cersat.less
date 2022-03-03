@@ -1,14 +1,34 @@
-.gn-view-cersat {
-  & > .gn-md-view > div.row {
-    & > .col-md-9 {
-      width: 100%;
-    }
+// Only apply to main app
+[gn-metadata-display] {
+  .gn-view-cersat {
+    & > .gn-md-view > div.row {
+      & > .col-md-9 {
+        width: 100%;
+      }
 
-    & > .col-md-3 {
-      display: none;
+      & > .col-md-3 {
+        display: none;
+      }
     }
   }
+}
 
+// Landing page formatter
+.gn-nojs {
+  .gn-view-cersat {
+    & > .gn-md-view > div.row {
+      & > .col-md-9 {
+        width: 100%;
+      }
+      & > .col-md-3 {
+        width: 33.33333333333333%;
+        float: right;
+      }
+    }
+  }
+}
+
+.gn-view-cersat {
   .gn-img-thumbnail {
     width: 50%;
     padding-right: 6px;
@@ -53,7 +73,7 @@
 
   .cersat-head-badge {
     & > div {
-      width: 30%;
+      //width: 30%;
       float: left;
       margin-right: 1%;
       padding-left: 10px;

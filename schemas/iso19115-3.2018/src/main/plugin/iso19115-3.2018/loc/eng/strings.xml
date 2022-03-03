@@ -138,6 +138,8 @@
   <eo-issues>Issues</eo-issues>
   <eo-issues-add>Add issue</eo-issues-add>
   <eo-processstep-add>Add process step</eo-processstep-add>
+  <eo-add-publication-date>Add publication date</eo-add-publication-date>
+  <eo-publication-date>Publication date</eo-publication-date>
 
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs4258>ETRS89</addCrs4258>

@@ -193,6 +193,11 @@ form.gn-editor {
       }
     }
   }
+  // GN fix does not look to be enough in Sextant
+  // https://github.com/geonetwork/core-geonetwork/pull/5525/commits
+  .gn-field.gn-status {
+    float: none !important;
+  }
   // addintional info
   .well.well-sm {
     background: @state-info-bg;

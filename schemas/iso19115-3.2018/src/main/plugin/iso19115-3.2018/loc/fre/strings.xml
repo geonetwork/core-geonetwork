@@ -129,6 +129,8 @@
   <eo-issues>Problèmes</eo-issues>
   <eo-issues-add>Ajouter un problème</eo-issues-add>
   <eo-processstep-add>Ajouter une étape de processus</eo-processstep-add>
+  <eo-add-publication-date>Add publication date</eo-add-publication-date>
+  <eo-publication-date>Publication date</eo-publication-date>
 
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>

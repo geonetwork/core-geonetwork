@@ -472,25 +472,55 @@
                               [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
                               'Centre de données ODATIS')]"/>
 
-            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle"
+            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code"
                    name="eo-collection-id"/>
             <action type="add"
                     name="eo-collection-id"
                     btnLabel="eo-collection-id-add"
-                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle) = 0"
-                    or="alternateTitle"
+                    if="count(//*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code) = 0"
+                    or="identifier"
                     in="/*/mdb:identificationInfo/*/mri:citation/*">
               <template>
                 <snippet>
-                  <cit:alternateTitle>
-                    <gco:CharacterString></gco:CharacterString>
-                  </cit:alternateTitle>
+                  <cit:identifier>
+                    <mcc:MD_Identifier>
+                      <mcc:version>
+                        <gco:CharacterString></gco:CharacterString>
+                      </mcc:version>
+                      <mcc:code>
+                        <gco:CharacterString></gco:CharacterString>
+                      </mcc:code>
+                    </mcc:MD_Identifier>
+                  </cit:identifier>
                 </snippet>
               </template>
             </action>
 
+            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:date"/>
+            <action type="add"
+                    name="eo-add-publication-date"
+                    btnLabel="eo-add-publication-date"
+                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue = 'publication']) = 0"
+                    or="date"
+                    in="/*/mdb:identificationInfo/*/mri:citation/*">
+              <template>
+                <snippet>
+                  <cit:date>
+                    <cit:CI_Date>
+                      <cit:date>
+                        <gco:Date/>
+                      </cit:date>
+                      <cit:dateType>
+                        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                             codeListValue="publication"/>
+                      </cit:dateType>
+                    </cit:CI_Date>
+                  </cit:date>
+                </snippet>
+              </template>
+            </action>
 
-            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code"
+            <!-- DOI in identifier - deprecated <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code"
                    name="eo-doi"/>
             <action type="add"
                     name="eo-doi"
@@ -512,9 +542,42 @@
                   </cit:identifier>
                 </snippet>
               </template>
+            </action>-->
+
+
+            <field xpath="/*/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/* = 'DOI']/cit:linkage"
+                   name="eo-doi"/>
+            <action type="add"
+                    name="eo-doi"
+                    btnLabel="eo-doi-add"
+                    if="count(//mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/* = 'DOI']) = 0"
+                    or="transferOptions"
+                    in="/*/mdb:distributionInfo/*">
+              <template>
+                <snippet>
+                  <mrd:transferOptions>
+                    <mrd:MD_DigitalTransferOptions>
+                      <mrd:onLine>
+                        <cit:CI_OnlineResource>
+                          <cit:linkage>
+                            <gco:CharacterString>https://doi.org/10....</gco:CharacterString>
+                          </cit:linkage>
+                          <cit:protocol>
+                            <gco:CharacterString>DOI</gco:CharacterString>
+                          </cit:protocol>
+                          <cit:name>
+                            <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                          </cit:name>
+                        </cit:CI_OnlineResource>
+                      </mrd:onLine>
+                    </mrd:MD_DigitalTransferOptions>
+                  </mrd:transferOptions>
+                </snippet>
+              </template>
             </action>
 
-            <field xpath="/*/mdb:identificationInfo/*/mri:status"/>
+            <field xpath="/*/mdb:identificationInfo/*/mri:status" or="status"
+                   in="/*/mdb:identificationInfo/*"/>
 
           </section>
 
@@ -904,9 +967,19 @@
 
         </section>
         <section name="eo-usage">
+          <!--<field xpath="/*/mdb:identificationInfo/*/mri:resourceConstraints/
+                          mco:MD_LegalConstraints/mco:otherConstraints[1]"
+                 name="eo-usage-policy"/>-->
           <field xpath="/*/mdb:identificationInfo/*/mri:resourceConstraints/
                           mco:MD_LegalConstraints/mco:otherConstraints[1]"
-                 name="eo-usage-policy"/>
+                 name="eo-usage-policy"
+                 use="data-gn-keyword-picker">
+            <directiveAttributes
+              data-thesaurus-key="local.theme.codelist_use_limitation"
+              data-display-definition="true"
+              data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+          </field>
+
 
           <field xpath="/*/mdb:identificationInfo/*/mri:resourceConstraints/
                           mco:MD_LegalConstraints/mco:otherConstraints[2]"
@@ -957,6 +1030,7 @@
         </section>
         <section name="eo-issues">
           <field xpath="/*/mdb:identificationInfo/*/mri:resourceSpecificUsage/*/mri:identifiedIssues"/>
+
 
           <action type="add"
                   btnLabel="eo-issues-add"

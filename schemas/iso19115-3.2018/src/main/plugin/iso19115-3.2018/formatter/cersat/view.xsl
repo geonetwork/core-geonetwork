@@ -123,7 +123,7 @@
             <xsl:for-each select="$version">
               <xsl:sort select="gml:timePosition" order="descending"/>
               <xsl:if test="position() = 1">
-                <div class="cersat-bg cersat-bg-lightgreen">
+                <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
                   <div>
                     <xsl:value-of select="$schemaStrings/cersat-version"/>
                   </div>
@@ -136,13 +136,13 @@
             <xsl:variable name="doiUrl"
                           select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*[contains(lower-case(text()), 'doi')]"/>
             <xsl:if test="$doiUrl != ''">
-              <div class="cersat-bg cersat-bg-lightgreen">
+              <div class="cersat-bg cersat-bg-lightgreen" style="width:57%">
                 <div>
                   DOI
                 </div>
                 <div class="cersat-bg-white">
                   <a href="{$doiUrl}">
-                    <xsl:value-of select="$doiUrl"/>
+                    <xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/>
                   </a>
                 </div>
               </div>
@@ -152,7 +152,7 @@
             <xsl:variable name="status"
                           select="$metadata/mdb:identificationInfo/*/mri:status/*/@codeListValue"/>
             <xsl:if test="$status != ''">
-              <div class="cersat-bg cersat-bg-lightgreen">
+              <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
                 <div>
                   <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
                 </div>
@@ -225,6 +225,21 @@
               </div>
             </xsl:if>
 
+            <xsl:variable name="publicationDate"
+                          select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date/*"/>
+            <xsl:if test="count($publicationDate) > 0">
+              <div class="">
+                <strong>
+                  <xsl:value-of select="$schemaStrings/eo-publication-date"/>
+                </strong>
+
+                <xsl:for-each select="$publicationDate">
+                  <xsl:value-of select="."/>
+                  <xsl:if test="position() != last()">, </xsl:if>
+                </xsl:for-each>
+              </div>
+            </xsl:if>
+
             <xsl:variable name="gcmd-keyword"
                           select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
                                     [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
@@ -250,7 +265,6 @@
               <xsl:value-of select="$schemaStrings/cersat-dataaccess"/>
             </h2>
             <div class="">
-
               <xsl:variable name="accessPolicy"
                             select="$metadata/mdb:identificationInfo/*
                                     /mri:resourceConstraints/mco:MD_LegalConstraints
@@ -267,7 +281,19 @@
                                           'MD_RestrictionCode',
                                           $accessPolicy)"/>
                 <xsl:value-of select="$codelistTranslation"/>
-              </xsl:if>
+              </xsl:if>&#160;
+            </div>
+            <div class="">
+              <xsl:variable name="usagePolicy"
+                            select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
+                                mco:MD_LegalConstraints/mco:otherConstraints[1]/*/text()"/>
+
+              <xsl:if test="$usagePolicy != ''">
+                <strong>
+                  <xsl:value-of select="$schemaStrings/eo-usage-policy"/>
+                </strong>
+                <xsl:value-of select="$usagePolicy"/>
+              </xsl:if>&#160;
             </div>
 
             <xsl:variable name="formats"
@@ -327,7 +353,7 @@
       </div>
       <div class="col-md-4">
         <div class="panel panel-default">
-          <div class="panel-heading">ID: <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle/*/text()"/></div>
+          <div class="panel-heading">ID: <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*/text()"/></div>
           <div class="panel-body">
 
             <xsl:variable name="projects"
