@@ -74,6 +74,8 @@
       $scope.isLoadingHarvesterHistory = false;
       $scope.deleting = []; // all harvesters being deleted
 
+
+
       var unbindStatusListener = null;
 
       var bboxProperties = ['bbox-xmin', 'bbox-ymin', 'bbox-xmax', 'bbox-ymax'];
@@ -246,6 +248,10 @@
         $scope.harvesterNew = true;
         $scope.harvesterHistory = {};
         $scope.harvesterSelected = window['gnHarvester' + type].createNew();
+        // Select 1st tab in tabset when creating a new harvester
+        $timeout(function() {
+          angular.element('#harvester-tabset ul:first li:first a').triggerHandler('click');
+        });
       };
 
       $scope.cloneHarvester = function(id) {
