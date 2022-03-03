@@ -486,6 +486,10 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 if (running) {
                     return OperResult.ALREADY_RUNNING;
                 }
+
+                // Clear previous result
+                this.result = null;
+
                 getScheduler().triggerJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
                 return OperResult.OK;
             } else {
