@@ -158,7 +158,7 @@
         }
 
         if ((runningHarvesters.length == 0) && (runningRemoteHarvesters.length == 0) && existRunningHarvestersNotReady) {
-          setTimeout(pollHarvesterStatus, 10000);
+          setTimeout(pollHarvesterStatus, 2000);
           return;
         }
 
