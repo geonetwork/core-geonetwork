@@ -118,16 +118,15 @@
         <div class="row">
           <div class="col-md-12 cersat-head-badge">
             <xsl:variable name="version"
-                          select="$metadata/mdb:resourceLineage/*/mrl:processStep/*/mrl:stepDateTime/*"/>
+                          select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:version/*/text()"/>
 
             <xsl:for-each select="$version">
-              <xsl:sort select="gml:timePosition" order="descending"/>
               <xsl:if test="position() = 1">
                 <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
                   <div>
                     <xsl:value-of select="$schemaStrings/cersat-version"/>
                   </div>
-                  <div class="cersat-bg-white"><xsl:value-of select="gml:identifier"/></div>
+                  <div class="cersat-bg-white"><xsl:value-of select="."/></div>
                 </div>
               </xsl:if>
             </xsl:for-each>

@@ -462,6 +462,30 @@
             <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:version"
                    name="eo-version"/>
 
+            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:date"/>
+            <action type="add"
+                    name="eo-add-publication-date"
+                    btnLabel="eo-add-publication-date"
+                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue = 'publication']) = 0"
+                    or="date"
+                    in="/*/mdb:identificationInfo/*/mri:citation/*">
+              <template>
+                <snippet>
+                  <cit:date>
+                    <cit:CI_Date>
+                      <cit:date>
+                        <gco:Date/>
+                      </cit:date>
+                      <cit:dateType>
+                        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                             codeListValue="publication"/>
+                      </cit:dateType>
+                    </cit:CI_Date>
+                  </cit:date>
+                </snippet>
+              </template>
+            </action>
+
             <field xpath="/*/mdb:identificationInfo/*/mri:descriptiveKeywords
                               [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
                               'Cersat - Project')]"
@@ -492,30 +516,6 @@
                       </mcc:code>
                     </mcc:MD_Identifier>
                   </cit:identifier>
-                </snippet>
-              </template>
-            </action>
-
-            <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:date"/>
-            <action type="add"
-                    name="eo-add-publication-date"
-                    btnLabel="eo-add-publication-date"
-                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue = 'publication']) = 0"
-                    or="date"
-                    in="/*/mdb:identificationInfo/*/mri:citation/*">
-              <template>
-                <snippet>
-                  <cit:date>
-                    <cit:CI_Date>
-                      <cit:date>
-                        <gco:Date/>
-                      </cit:date>
-                      <cit:dateType>
-                        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                             codeListValue="publication"/>
-                      </cit:dateType>
-                    </cit:CI_Date>
-                  </cit:date>
                 </snippet>
               </template>
             </action>
