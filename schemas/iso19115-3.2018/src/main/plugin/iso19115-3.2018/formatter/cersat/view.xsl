@@ -133,7 +133,7 @@
 
 
             <xsl:variable name="doiUrl"
-                          select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*[contains(lower-case(text()), 'doi')]"/>
+                          select="$metadata/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/* = 'DOI']/cit:linkage/*/text()"/>
             <xsl:if test="$doiUrl != ''">
               <div class="cersat-bg cersat-bg-lightgreen" style="width:57%">
                 <div>
