@@ -334,10 +334,11 @@
             scope.initPopup = function() {
 
               var modal = element.find('.modal');
-              $('.g').append(element.find('.modal'));
               modal.on('shown.bs.modal', function() {
                 $('.g').append(modal.data('bs.modal').$backdrop);
+                document.querySelector('.modal-backdrop.fade.in').style.display = 'none';
               });
+
 
               if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
                 console.log('Metadata UUID is null');
