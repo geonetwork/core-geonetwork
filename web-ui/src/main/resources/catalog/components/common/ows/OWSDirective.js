@@ -55,7 +55,9 @@
                };
                scope.select = function(layer) {
                  if (scope.selectionMode.indexOf('multiple') >= 0) {
-                   if (scope.selection.indexOf(layer) < 0) {
+                   var layerInSelection = _.find(scope.selection,  {'Name': layer.Name});
+
+                   if (layerInSelection == undefined) {
                      scope.selection.push(layer);
                    }
                    else {

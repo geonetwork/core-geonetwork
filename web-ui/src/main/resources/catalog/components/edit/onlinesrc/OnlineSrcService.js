@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
@@ -54,8 +54,11 @@
     '$translate',
     '$filter',
     'Metadata',
+    'gnUrlUtils',
+    'gnGlobalSettings',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $window, $rootScope, $translate, $filter, Metadata) {
+             $q, $http, $window, $rootScope, $translate, $filter, Metadata,
+             gnUrlUtils, gnGlobalSettings) {
 
       var reload = false;
       var openCb = {};
@@ -112,17 +115,29 @@
         if (angular.isArray(params.selectedLayers) &&
             params.selectedLayers.length > 0) {
           var names = [],
-              descs = [];
+            descs = [];
 
           angular.forEach(params.selectedLayers, function(layer) {
             names.push(layer.Name || layer.name);
             descs.push(layer.Title || layer.title);
           });
 
-          angular.extend(params, {
-            name: names.join(','),
-            desc: descs.join(',')
-          });
+          var addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+
+          if (angular.isDefined(addLayersInUrl)) {
+            params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
+            params.url = gnUrlUtils.append(params.url, addLayersInUrl + '=' + names.join(','));
+
+            angular.extend(params, {
+              desc: descs.join(',')
+            });
+          } else {
+            angular.extend(params, {
+              name: names.join(','),
+              desc: descs.join(',')
+            });
+          }
+
         }
         delete params.layers;
         delete params.selectedLayers;

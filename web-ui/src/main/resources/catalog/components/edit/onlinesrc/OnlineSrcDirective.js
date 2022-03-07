@@ -528,6 +528,7 @@
                 scope.stateObj = {};
                 var projectedExtent = null;
 
+                scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
 
                 function loadLayers() {
                   scope.map.get('creationPromise').then(function() {
@@ -1008,6 +1009,10 @@
                   });
                 };
 
+                scope.isMultipleLayerSelection = function (){
+                  return scope.isEditing && !angular.isDefined(scope.addLayersInUrl);
+                }
+
                 scope.onAddSuccess = function() {
                   gnEditor.refreshEditorForm();
                   scope.onlinesrcService.reload = true;
@@ -1154,7 +1159,27 @@
                       && scope.params.protocol.indexOf('DOWNLOAD') !== -1) {
                       scope.params.function = 'download';
                     }
-                    scope.loadCurrentLink();
+                    scope.loadCurrentLink().then(function () {
+                      // Get the selected layers
+                      var selectedLayersNames = [];
+
+                      if (angular.isDefined(scope.addLayersInUrl)) {
+                        var params = gnUrlUtils.parseKeyValue(scope.params.url.split('?')[1]);
+
+                        if (params[scope.addLayersInUrl]) {
+                          selectedLayersNames = params[scope.addLayersInUrl].split(',');
+                        }
+
+                        scope.layers.forEach(function(l) {
+                          if (selectedLayersNames.indexOf(l.Name) != -1) {
+                            scope.params.selectedLayers.push(l);
+                          }
+                        });
+
+                        scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
+                      }
+                    });
+
                   }
                 });
 
@@ -1191,21 +1216,31 @@
                         descs = [];
 
                     angular.forEach(scope.params.selectedLayers,
-                        function(layer) {
-                          names.push(layer.Name || layer.name);
-                          descs.push(layer.Title || layer.title);
-                        });
-
-                    if (scope.isMdMultilingual) {
-                      var langCode = scope.mdLangs[scope.mdLang];
-                      scope.params.name[langCode] = names.join(',');
-                      scope.params.desc[langCode] = descs.join(',');
-                    }
-                    else {
-                      angular.extend(scope.params, {
-                        name: names.join(','),
-                        desc: descs.join(',')
+                      function (layer) {
+                        names.push(layer.Name || layer.name);
+                        descs.push(layer.Title || layer.title);
                       });
+
+                    if (angular.isDefined(scope.addLayersInUrl)) {
+                      if (scope.isMdMultilingual) {
+                        var langCode = scope.mdLangs[scope.mdLang];
+                        scope.params.desc[langCode] = descs.join(',');
+                      } else {
+                        angular.extend(scope.params, {
+                          desc: descs.join(',')
+                        });
+                      }
+                    } else {
+                      if (scope.isMdMultilingual) {
+                        var langCode = scope.mdLangs[scope.mdLang];
+                        scope.params.name[langCode] = names.join(',');
+                        scope.params.desc[langCode] = descs.join(',');
+                      } else {
+                        angular.extend(scope.params, {
+                          name: names.join(','),
+                          desc: descs.join(',')
+                        });
+                      }
                     }
                   }
                 });
