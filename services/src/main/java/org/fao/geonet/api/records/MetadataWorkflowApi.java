@@ -252,7 +252,7 @@ public class MetadataWorkflowApi {
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
-        int author = context.getUserSession().getUserIdAsInt();
+        int author = status.getUserId() == null? context.getUserSession().getUserIdAsInt() : status.getUserId();
         MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
 
         if (metadataStatus.getStatusValue().getType() == StatusValueType.workflow

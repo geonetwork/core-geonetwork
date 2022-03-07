@@ -32,6 +32,7 @@ public class MetadataStatusParameter {
     private String dueDate;
     private String closeDate;
     private Integer owner;
+    private Integer userId;
 
     public StatusValueType getType() {
         return type;
@@ -80,4 +81,8 @@ public class MetadataStatusParameter {
     public void setOwner(Integer owner) {
         this.owner = owner;
     }
+
+    public Integer getUserId() { return userId; }
+
+    public void setUserId(Integer userId) { this.userId = userId; }
 }
