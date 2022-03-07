@@ -155,10 +155,8 @@
                 });
 
                 scope.$watch('mdFeedbackOpen', function(value) {
-                  if (value == true) {
+                  if (value) {
                     $(element).find('.modal').modal('show');
-                    // hide main backdrop not pretty
-                    document.querySelector('.modal-backdrop.fade.in').style.display = 'none';
                   }
                   else
                     $(element).find('.modal').modal('hide');
