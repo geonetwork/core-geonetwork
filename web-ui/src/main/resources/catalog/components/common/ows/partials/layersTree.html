@@ -1,0 +1,21 @@
+<div class="table-content-container gn-layers-grid-container">
+
+  <h5 translate="">wmsSelectedLayers</h5>
+
+  <ul>
+    <li data-ng-repeat="layer in selection">
+      {{layer.Title || layer.title}}
+
+      <a
+         class="btn btn-link btn-xs"
+         data-ng-click="removeLayer(layer)"
+         class="btn btn-default btn-xs">
+        <i class="fa fa-times text-danger"></i>
+      </a>
+    </li>
+  </ul>
+
+  <hr/>
+
+  <gn-cap-tree-col-editor collection='layers.Layer'></gn-cap-tree-col-editor>
+</div>

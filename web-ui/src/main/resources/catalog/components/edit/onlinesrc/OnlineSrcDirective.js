@@ -482,9 +482,10 @@
         '$http',
         '$filter',
         '$log',
+        '$q',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
             gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnUrlUtils, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http, $filter, $log) {
+            $rootScope, $translate, $timeout, $http, $filter, $log, $q) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -510,6 +511,7 @@
 
                 scope.loaded = false;
                 scope.layers = null;
+                scope.capabilitiesLayers = null;
                 scope.mapId = 'gn-thumbnail-maker-map';
                 scope.map = null;
                 scope.dataFormats = null;
@@ -528,7 +530,7 @@
                 scope.stateObj = {};
                 var projectedExtent = null;
 
-                scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+                scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
 
                 function loadLayers() {
                   scope.map.get('creationPromise').then(function() {
@@ -909,6 +911,7 @@
                 };
                 var resetProtocol = function() {
                   scope.layers = [];
+                  scope.capabilitiesLayers = null;
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
                     if (scope.clearFormOnProtocolChange) {
@@ -1009,9 +1012,13 @@
                   });
                 };
 
-                scope.isMultipleLayerSelection = function (){
-                  return scope.isEditing && !angular.isDefined(scope.addLayersInUrl);
+                scope.isMultipleLayerSelection = function () {
+                  return scope.isEditing && (scope.addLayersInUrl == '');
                 }
+
+                scope.isWMSProtocolWithLayersInUrl = function () {
+                  return ((scope.OGCProtocol == 'WMS')  && (scope.addLayersInUrl != ''));
+                };
 
                 scope.onAddSuccess = function() {
                   gnEditor.refreshEditorForm();
@@ -1035,7 +1042,7 @@
                   }
 
                   if (!url) {
-                    return;
+                    return $q.reject( "" );
                   }
                   if (scope.OGCProtocol) {
                     scope.layers = [];
@@ -1049,6 +1056,7 @@
                                 scope.layers.push(l);
                               }
                             });
+                            scope.capabilitiesLayers = capabilities;
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
@@ -1056,6 +1064,7 @@
                       return gnOwsCapabilities.getWMTSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
+                            scope.capabilitiesLayers = null;
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.Layer, function(l) {
                               if (angular.isDefined(l.Identifier)) {
@@ -1072,6 +1081,7 @@
                       return gnWfsService.getCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
+                          scope.capabilitiesLayers = null;
                           scope.isUrlOk = true;
                           angular.forEach(
                            capabilities.featureTypeList.featureType,
@@ -1116,6 +1126,7 @@
                     });
                   } else {
                     scope.isUrlOk = true;
+                    return $q.reject( "" );
                   }
                 };
 
@@ -1139,6 +1150,27 @@
                   return null;
                 }
 
+                var processSelectedWMSLayers = function() {
+                  if (scope.isWMSProtocolWithLayersInUrl()) {
+                    // Get the selected layers
+                    var selectedLayersNames = [];
+
+                    var params = gnUrlUtils.parseKeyValue(scope.params.url.split('?')[1]);
+
+                    if (params[scope.addLayersInUrl]) {
+                      selectedLayersNames = params[scope.addLayersInUrl].split(',');
+                    }
+
+                    scope.layers.forEach(function(l) {
+                      if (selectedLayersNames.indexOf(l.Name) != -1) {
+                        scope.params.selectedLayers.push(l);
+                      }
+                    });
+
+                    scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
+                  }
+                };
+
                 /**
                  * On protocol combo Change.
                  * Update OGCProtocol values to display or hide
@@ -1159,27 +1191,10 @@
                       && scope.params.protocol.indexOf('DOWNLOAD') !== -1) {
                       scope.params.function = 'download';
                     }
+
                     scope.loadCurrentLink().then(function () {
-                      // Get the selected layers
-                      var selectedLayersNames = [];
-
-                      if (angular.isDefined(scope.addLayersInUrl)) {
-                        var params = gnUrlUtils.parseKeyValue(scope.params.url.split('?')[1]);
-
-                        if (params[scope.addLayersInUrl]) {
-                          selectedLayersNames = params[scope.addLayersInUrl].split(',');
-                        }
-
-                        scope.layers.forEach(function(l) {
-                          if (selectedLayersNames.indexOf(l.Name) != -1) {
-                            scope.params.selectedLayers.push(l);
-                          }
-                        });
-
-                        scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
-                      }
+                      processSelectedWMSLayers();
                     });
-
                   }
                 });
 
@@ -1194,7 +1209,10 @@
                       urls[scope.ctrl.urlCurLang] : urls;
 
                   if (curUrl) {
-                    scope.loadCurrentLink();
+                    scope.loadCurrentLink().then(function () {
+                      // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
+                      processSelectedWMSLayers();
+                    });
                     scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
                   }
 
@@ -1221,7 +1239,7 @@
                         descs.push(layer.Title || layer.title);
                       });
 
-                    if (angular.isDefined(scope.addLayersInUrl)) {
+                    if (scope.isWMSProtocolWithLayersInUrl()) {
                       if (scope.isMdMultilingual) {
                         var langCode = scope.mdLangs[scope.mdLang];
                         scope.params.desc[langCode] = descs.join(',');

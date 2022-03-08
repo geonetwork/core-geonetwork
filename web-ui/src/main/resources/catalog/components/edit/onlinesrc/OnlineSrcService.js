@@ -122,9 +122,9 @@
             descs.push(layer.Title || layer.title);
           });
 
-          var addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+          var addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
 
-          if (angular.isDefined(addLayersInUrl)) {
+          if ((addLayersInUrl != '') && (params.protocol.indexOf('OGC:WMS') >= 0)) {
             params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
             params.url = gnUrlUtils.append(params.url, addLayersInUrl + '=' + names.join(','));
 
