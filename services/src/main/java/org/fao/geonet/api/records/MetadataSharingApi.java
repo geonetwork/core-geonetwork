@@ -915,13 +915,25 @@ public class MetadataSharingApi {
                 Vector<OperationAllowedId> sourcePriv =
                     retrievePrivileges(serviceContext, String.valueOf(metadata.getId()), sourceUsr, sourceGrp);
 
+                // Let's not reassign to the reserved groups.
+                // If the request is to reassign to reserved group then ignore the request and
+                // use the source group.
+                Integer groupIdentifierUsed = groupIdentifier;
+                if (ReservedGroup.isReserved(groupIdentifier)) {
+                    groupIdentifierUsed = sourceGrp;
+                    report.addMetadataInfos(metadata, String.format(
+                        "Reserved group '%s' on metadata '%s' is not allowed. Group owner will not be changed.",
+                        groupIdentifier, metadata.getUuid()
+                    ));
+                }
+
                 // -- Set new privileges for new owner from privileges of the old
                 // -- owner, if none then set defaults
                 if (sourcePriv.size() == 0) {
                     dataManager.copyDefaultPrivForGroup(
                         serviceContext,
                         String.valueOf(metadata.getId()),
-                        String.valueOf(groupIdentifier),
+                        String.valueOf(groupIdentifierUsed),
                         false);
                     report.addMetadataInfos(metadata, String.format(
                         "No privileges for user '%s' on metadata '%s', so setting default privileges",
@@ -937,15 +949,15 @@ public class MetadataSharingApi {
                         }
                         dataManager.setOperation(serviceContext,
                             metadata.getId(),
-                            groupIdentifier,
+                            groupIdentifierUsed,
                             priv.getOperationId());
                     }
                 }
 
                 Long metadataId = Long.valueOf(metadata.getId());
                 ApplicationContext context = ApplicationContextHolder.get();
-                if (!Objects.equals(groupIdentifier, sourceGrp)) {
-                    Group newGroup = groupRepository.findOne(groupIdentifier);
+                if (!Objects.equals(groupIdentifierUsed, sourceGrp)) {
+                    Group newGroup = groupRepository.findOne(groupIdentifierUsed);
                     Group oldGroup = sourceGrp == null ? null : groupRepository.findOne(sourceGrp);
                     new RecordGroupOwnerChangeEvent(metadataId,
                         ApiUtils.getUserSession(session).getUserIdAsInt(),
@@ -960,7 +972,7 @@ public class MetadataSharingApi {
                 // -- set the new owner into the metadata record
                 dataManager.updateMetadataOwner(metadata.getId(),
                     String.valueOf(userIdentifier),
-                    String.valueOf(groupIdentifier));
+                    String.valueOf(groupIdentifierUsed));
                 report.addMetadataId(metadata.getId());
                 report.incrementProcessedRecords();
                 listOfUpdatedRecords.add(metadata.getId() + "");
