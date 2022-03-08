@@ -30,11 +30,13 @@
   goog.require('gn');
   goog.require('gn_cat_controller');
   goog.require('gn_login_controller');
+  goog.require('gn_cors_interceptor');
 
   var module = angular.module('gn_login', [
     'gn',
     'gn_login_controller',
-    'gn_cat_controller'
+    'gn_cat_controller',
+    'gn_cors_interceptor'
   ]);
 
   module.config(['$LOCALES', function($LOCALES) {
