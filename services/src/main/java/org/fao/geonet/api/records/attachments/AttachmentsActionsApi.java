@@ -123,16 +123,15 @@ public class AttachmentsActionsApi {
         HttpServletRequest request
     )
         throws Exception {
-      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
-        String metadataId = dataMan.getMetadataId(metadataUuid);
-        Lib.resource.checkEditPrivilege(context, metadataId);
+            ApiUtils.canEditRecord(metadataUuid, request);
 
-        Path thumbnailFile = thumbnailMaker.generateThumbnail(
-            jsonConfig,
-            rotationAngle);
+            Path thumbnailFile = thumbnailMaker.generateThumbnail(
+                jsonConfig,
+                rotationAngle);
 
-        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
-      }
+            return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC, false);
+        }
     }
 }
