@@ -29,12 +29,12 @@
           <span data-translate="">transferOwnership</span>
         </a></li>
       <li role="menuitem"
-          data-ng-if="isMdApiGatewayEnable && md.isOwned() && user.isUserAdminOrMore()">
+          data-ng-if="isMdWorkflowHelperEnable && md.isOwned() && user.isUserAdminOrMore()" data-ng-repeat="app in workFlowApps">
         <a href=""
-           data-ng-href="{{mdApiGatewayUrl.replace('{uuid}', md.getUuid())}}"
+           data-ng-href="{{app.url.replace('{parameters}', md.getUuid())}}"
            target="_blank">
           <span class="fa fa-fw fa-user"></span>&nbsp;
-          <span data-translate="">apiManagement</span>
+          {{app.label}}
         </a>
       </li>
       <!-- Retired metadata can't be published -->

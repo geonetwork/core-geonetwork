@@ -373,7 +373,6 @@
   "within": "Within",
   "within_bbox": "Within",
   "transferOwnership": "Transfer Ownership",
-  "apiManagement": "API Management",
   "selectNewOwner": "Select New Owner",
   "selectGroup": "Select Group",
   "loadUsersError":"Error loading users",

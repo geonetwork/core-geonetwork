@@ -104,8 +104,9 @@
 
           gnConfigService.load().then(function(c) {
             scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
-            scope.isMdApiGatewayEnable = gnConfig['metadata.api.gateway.enabled'];
-            scope.mdApiGatewayUrl = gnConfig['metadata.api.gateway.url'];
+
+            scope.isMdWorkflowHelperEnable = gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
+            scope.workFlowApps = gnGlobalSettings.gnCfg.mods.workflowHelper.apps;
           });
 
           function loadTasks() {
