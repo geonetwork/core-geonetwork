@@ -106,7 +106,11 @@
       <version>2.0.0-M24</version>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
