@@ -50,6 +50,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -470,9 +471,13 @@ public class UsersApi {
 
         fillUserFromParams(user, userDto);
 
-        UserDetailsService userDetailsService = (UserDetailsService) ApplicationContextHolder.get().getBean("userDetailsService");
-        if (userDetailsService instanceof ECasUserDetailsBuilderService) {
-            user.getSecurity().setAuthType("ECAS");
+        try {
+            UserDetailsService userDetailsService = (UserDetailsService) ApplicationContextHolder.get().getBean("userDetailsService");
+            if (userDetailsService instanceof ECasUserDetailsBuilderService) {
+                user.getSecurity().setAuthType("ECAS");
+            }
+        } catch (NoSuchBeanDefinitionException ex) {
+            // Ignore
         }
 
         user = userRepository.save(user);
