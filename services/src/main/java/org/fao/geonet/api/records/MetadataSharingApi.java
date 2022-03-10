@@ -865,7 +865,7 @@ public class MetadataSharingApi {
                 report, dataManager, accessManager,
                 serviceContext, listOfUpdatedRecords, metadataUuid, session);
             dataManager.flush();
-            dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+            dataManager.indexMetadata(listOfUpdatedRecords);
 
         } catch (Exception exception) {
             report.addError(exception);
