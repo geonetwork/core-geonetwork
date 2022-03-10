@@ -1063,6 +1063,8 @@ public class ServiceManager {
                     guiServicesTimerContext.stop();
                 }
 
+                String documentName = guiElem.getChildText("documentFileName");
+
                 addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
 
                 Element rootElem = new Element(Jeeves.Elem.ROOT)
@@ -1116,11 +1118,16 @@ public class ServiceManager {
                                 }
 
                                 if (outPage.getContentType() != null
-                                    && outPage.getContentType().startsWith("text/plain")) {
-                                    req.beginStream(outPage.getContentType(), -1L, "attachment;", cache);
+                                    && (outPage.getContentType().startsWith("text/plain") || outPage.getContentType().startsWith("text/csv"))) {
+                                    String contentDisposition = "";
+                                    if (StringUtils.isNotBlank(documentName)) {
+                                        contentDisposition = "filename="+documentName;
+                                    }
+                                    req.beginStream(outPage.getContentType(), -1L, "attachment;"+contentDisposition, cache);
                                 } else {
                                     req.beginStream(outPage.getContentType(), cache);
                                 }
+
                                 req.getOutputStream().write(baos.toByteArray());
                                 req.endStream();
                             }
