@@ -40,6 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.attachments.Store;
@@ -296,6 +297,10 @@ public class MetadataInsertDeleteApi {
         }
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        checkUserProfileToImportMetadata(userSession);
+
+
         if (xml != null) {
             Element element = null;
             try {
@@ -545,9 +550,13 @@ public class MetadataInsertDeleteApi {
         if (file == null) {
             throw new IllegalArgumentException(String.format("A file MUST be provided."));
         }
+
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
+
+            checkUserProfileToImportMetadata(context.getUserSession());
+
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
@@ -933,4 +942,23 @@ public class MetadataInsertDeleteApi {
         dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
+
+    /**
+     * Checks if the user profile is allowed to import metadata.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToImportMetadata(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (userSession.getProfile().ordinal() > Profile.findProfileIgnoreCase(allowedUserProfileToImportMetadata).ordinal()) {
+                throw new NotAllowedException("The user has no permissions to import metadata.");
+            }
+        }
+
+    }
+
 }
