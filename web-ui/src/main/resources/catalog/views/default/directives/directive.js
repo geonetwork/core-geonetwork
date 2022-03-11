@@ -104,6 +104,9 @@
 
           gnConfigService.load().then(function(c) {
             scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
+            scope.isMdWorkflowAssistEnable = gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
+            scope.workflowAssistApps = gnGlobalSettings.gnCfg.mods.workflowHelper.apps;
           });
 
           function loadTasks() {

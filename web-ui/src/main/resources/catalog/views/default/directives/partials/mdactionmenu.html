@@ -154,6 +154,17 @@
           <span data-translate="">enableWorkflow</span>
         </a>
       </li>
+      <!--metadata workflow assistance external link(s)-->
+      <li role="menuitem"
+          data-ng-if="isMdWorkflowEnable && md.isWorkflowEnabled()
+          && isMdWorkflowAssistEnable && md.isOwned() && user.isUserAdminOrMore()" data-ng-repeat="app in workflowAssistApps">
+        <a href=""
+           data-ng-href="{{app.url.replace('{parameters}', md.getUuid())}}"
+           target="_blank">
+          <span class="fa fa-fw fa-user"></span>&nbsp;
+          <span data-translate="">{{app.labelKey}}&nbsp;</span>
+        </a>
+      </li>
 
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && user.canEditRecord(md) && md.draft != 'y'"></li>

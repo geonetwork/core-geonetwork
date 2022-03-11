@@ -796,6 +796,12 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
+        },
+        'workflowHelper': {
+          'enabled': false,
+          'apps': [
+            {'url': '', 'labelKey': ''}
+          ]
         }
       }
     };
