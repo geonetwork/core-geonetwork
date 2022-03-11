@@ -588,113 +588,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.22.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <environmentVariables>
-            <pgsqlPort>${database_container.port}</pgsqlPort>
-            <ldapPort>${ldap_container.port}</ldapPort>
-          </environmentVariables>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>0.34.1</version>
-        <executions>
-          <execution>
-            <id>build-containers</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-            <configuration>
-              <images>
-                <image>
-                  <name>sextant-ldap</name>
-                  <build>
-                    <dockerFile>${project.basedir}/src/test/docker/ldap/Dockerfile</dockerFile>
-                  </build>
-                </image>
-              </images>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-          <execution>
-            <id>launch-containers</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>start</goal>
-            </goals>
-            <configuration>
-              <images>
-                <image>
-                  <name>postgres:9.6-alpine</name>
-                  <alias>database</alias>
-                  <run>
-                    <env>
-                      <POSTGRES_USER>sextant</POSTGRES_USER>
-                      <POSTGRES_PASSWORD>sextant</POSTGRES_PASSWORD>
-                      <POSTGRES_DB>sextant</POSTGRES_DB>
-                    </env>
-                    <ports>
-                      <port>database_container.port:5432</port>
-                    </ports>
-                    <wait>
-                      <time>20000</time>
-                      <tcp>
-                        <mode>mapped</mode>
-                        <ports>
-                          <port>5432</port>
-                        </ports>
-                      </tcp>
-                    </wait>
-                  </run>
-                </image>
-                <image>
-                  <name>sextant-ldap</name>
-                  <alias>ldap</alias>
-                  <run>
-                    <ports>
-                      <port>ldap_container.port:389</port>
-                    </ports>
-                    <wait>
-                      <time>20000</time>
-                      <tcp>
-                        <mode>mapped</mode>
-                        <ports>
-                          <port>389</port>
-                        </ports>
-                      </tcp>
-                    </wait>
-                  </run>
-                </image>
-              </images>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-          <execution>
-            <id>remove-containers</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop</goal>
-            </goals>
-            <configuration>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -723,6 +616,89 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.34.1</version>
+            <executions>
+              <execution>
+                <id>build-containers</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <configuration>
+                  <images>
+                    <image>
+                      <name>sextant-ldap</name>
+                      <build>
+                        <dockerFile>${project.basedir}/src/test/docker/ldap/Dockerfile</dockerFile>
+                      </build>
+                    </image>
+                  </images>
+                </configuration>
+              </execution>
+              <execution>
+                <id>launch-containers</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+                <configuration>
+                  <images>
+                    <image>
+                      <name>postgres:9.6-alpine</name>
+                      <alias>database</alias>
+                      <run>
+                        <env>
+                          <POSTGRES_USER>sextant</POSTGRES_USER>
+                          <POSTGRES_PASSWORD>sextant</POSTGRES_PASSWORD>
+                          <POSTGRES_DB>sextant</POSTGRES_DB>
+                        </env>
+                        <ports>
+                          <port>database_container.port:5432</port>
+                        </ports>
+                        <wait>
+                          <time>20000</time>
+                          <tcp>
+                            <mode>mapped</mode>
+                            <ports>
+                              <port>5432</port>
+                            </ports>
+                          </tcp>
+                        </wait>
+                      </run>
+                    </image>
+                    <image>
+                      <name>sextant-ldap</name>
+                      <alias>ldap</alias>
+                      <run>
+                        <ports>
+                          <port>ldap_container.port:389</port>
+                        </ports>
+                        <wait>
+                          <time>20000</time>
+                          <tcp>
+                            <mode>mapped</mode>
+                            <ports>
+                              <port>389</port>
+                            </ports>
+                          </tcp>
+                        </wait>
+                      </run>
+                    </image>
+                  </images>
+                </configuration>
+              </execution>
+              <execution>
+                <id>remove-containers</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>3.0.0-M4</version>
@@ -733,6 +709,10 @@
               </includes>
               <runOrder>alphabetical</runOrder>
               <forkCount>${system.numCores}</forkCount>
+              <environmentVariables>
+                <pgsqlPort>${database_container.port}</pgsqlPort>
+                <ldapPort>${ldap_container.port}</ldapPort>
+              </environmentVariables>
             </configuration>
             <executions>
               <execution>
@@ -749,7 +729,6 @@
               </execution>
             </executions>
           </plugin>
-
           <plugin>
             <groupId>com.github.alexcojocaru</groupId>
             <artifactId>elasticsearch-maven-plugin</artifactId>
@@ -782,7 +761,6 @@
       </build>
     </profile>
   </profiles>
-
   <properties>
     <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>
