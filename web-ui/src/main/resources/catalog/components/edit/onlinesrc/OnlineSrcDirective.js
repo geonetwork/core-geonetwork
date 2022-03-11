@@ -530,8 +530,6 @@
                 scope.stateObj = {};
                 var projectedExtent = null;
 
-                scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
-
                 function loadLayers() {
                   scope.map.get('creationPromise').then(function() {
                     if (!angular.isArray(scope.map.getSize()) ||
@@ -866,6 +864,25 @@
                         }
                       }
 
+                      /**
+                       *  Default configuration to handle WMS resources:
+                       *
+                       *    - resourcename: Add layer names to the name and description fields of the online resources.
+                       *    - url: Add layer names to url parameter defined in gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam
+                       */
+                      if (!scope.config.wmsResources) {
+                        scope.config.wmsResources.addLayerNamesMode = "resourcename";
+                      }
+
+                      if (scope.config.wmsResources.addLayerNamesMode == "url") {
+                        scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
+                      } else {
+                        scope.addLayersInUrl = '';
+                      }
+
+                      if (scope.addLayersInUrl == '') {
+                        scope.config.wmsResources.addLayerNamesMode = "resourcename";
+                      }
 
                       if (withInit) {
                         init();
@@ -1006,18 +1023,22 @@
                     processParams.selectedLayers = scope.params.selectedLayers;
                   }
                   processParams.process = scope.params.linkType.process;
+
+                  processParams.wmsResources = scope.config.wmsResources;
+                  processParams.addLayersInUrl = scope.addLayersInUrl;
+
                   return scope.onlinesrcService.add(
                       processParams, scope.popupid).then(function() {
                     resetForm();
                   });
                 };
 
-                scope.isMultipleLayerSelection = function () {
-                  return scope.isEditing && (scope.addLayersInUrl == '');
-                }
+                scope.isWMSProtocol = function () {
+                  return (scope.OGCProtocol == 'WMS');
+                };
 
                 scope.isWMSProtocolWithLayersInUrl = function () {
-                  return ((scope.OGCProtocol == 'WMS')  && (scope.addLayersInUrl != ''));
+                  return (scope.isWMSProtocol()  && (scope.addLayersInUrl != ''));
                 };
 
                 scope.onAddSuccess = function() {
@@ -1151,6 +1172,7 @@
                 }
 
                 var processSelectedWMSLayers = function() {
+                  // Only in layer tree widget
                   if (scope.isWMSProtocolWithLayersInUrl()) {
                     // Get the selected layers
                     var selectedLayersNames = [];
@@ -1239,16 +1261,7 @@
                         descs.push(layer.Title || layer.title);
                       });
 
-                    if (scope.isWMSProtocolWithLayersInUrl()) {
-                      if (scope.isMdMultilingual) {
-                        var langCode = scope.mdLangs[scope.mdLang];
-                        scope.params.desc[langCode] = descs.join(',');
-                      } else {
-                        angular.extend(scope.params, {
-                          desc: descs.join(',')
-                        });
-                      }
-                    } else {
+                    if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
                       if (scope.isMdMultilingual) {
                         var langCode = scope.mdLangs[scope.mdLang];
                         scope.params.name[langCode] = names.join(',');

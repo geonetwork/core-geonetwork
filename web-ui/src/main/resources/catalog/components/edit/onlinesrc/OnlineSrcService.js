@@ -122,25 +122,25 @@
             descs.push(layer.Title || layer.title);
           });
 
-          var addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
+          var addLayersInUrl = params.addLayersInUrl;
 
           if ((addLayersInUrl != '') && (params.protocol.indexOf('OGC:WMS') >= 0)) {
             params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
             params.url = gnUrlUtils.append(params.url, addLayersInUrl + '=' + names.join(','));
+          }
 
-            angular.extend(params, {
-              desc: descs.join(',')
-            });
-          } else {
+          if (params.wmsResources.addLayerNamesMode == "resourcename") {
             angular.extend(params, {
               name: names.join(','),
               desc: descs.join(',')
             });
           }
-
         }
+
         delete params.layers;
         delete params.selectedLayers;
+        delete params.wmsResources;
+        delete params.addLayersInUrl;
         return params;
       };
 
