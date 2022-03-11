@@ -1180,6 +1180,7 @@
                     var params = gnUrlUtils.parseKeyValue(scope.params.url.split('?')[1]);
 
                     if (params[scope.addLayersInUrl]) {
+                      scope.params.selectedLayers = [];
                       selectedLayersNames = params[scope.addLayersInUrl].split(',');
                     }
 
@@ -1190,6 +1191,14 @@
                     });
 
                     scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
+                  } else {
+                    var selectedLayersNames = scope.params.name.split(',');
+                    scope.params.selectedLayers = [];
+                    scope.layers.forEach(function(l) {
+                      if (selectedLayersNames.indexOf(l.Name) != -1) {
+                        scope.params.selectedLayers.push(l);
+                      }
+                    });
                   }
                 };
 

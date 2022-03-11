@@ -1,8 +1,9 @@
 <div class="table-content-container gn-layers-grid-container">
 
-  <h5 translate="">wmsSelectedLayers</h5>
+  <h5 data-ng-if="selection.length > 0" data-translate="">wmsSelectedLayers</h5>
+  <h5 data-ng-if="selection.length == 0" data-translate="">wmsSelectedLayersNone</h5>
 
-  <ul>
+  <ul data-ng-if="selection.length > 0">
     <li data-ng-repeat="layer in selection">
       {{layer.Title || layer.title}}
       <span data-ng-if="layer.Name || layer.name">({{layer.Name || layer.name}})</span>

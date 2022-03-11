@@ -85,7 +85,8 @@
               'partials/layersTree.html',
             scope: {
               selection: '=',
-              layers: '='
+              layers: '=',
+              selectionMode: '='
             },
             controller: ['$scope', function($scope) {
               this.isSelected = function(layer) {
@@ -98,6 +99,10 @@
                 var layerInSelection = _.find($scope.selection,  {'Name': layer.Name});
 
                 if (layerInSelection == undefined) {
+                  if ($scope.selectionMode == 'single') {
+                    $scope.selection = [];
+                  }
+
                   $scope.selection.push(layer);
                 }
                 else {

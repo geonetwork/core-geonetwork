@@ -173,7 +173,8 @@
                 <div data-gn-layers-tree
                      id="gn-addonlinesrc-layers-row"
                      class="col-sm-9 col-md-offset-2"
-                     data-ng-if="OGCProtocol != null  && isWMSProtocolWithLayersInUrl()"
+                     data-ng-if="OGCProtocol != null  && isWMSProtocol()"
+                     data-selection-mode="(!isWMSProtocolWithLayersInUrl() && isEditing) ? 'single' : 'multiple'"
                      data-layers="capabilitiesLayers"
                      data-selection="params.selectedLayers">
                 </div>
@@ -182,7 +183,7 @@
                 <div data-gn-layers-grid
                      id="gn-addonlinesrc-layers-row"
                      class="col-sm-9 col-md-offset-2"
-                     data-ng-if="OGCProtocol != null && !isWMSProtocolWithLayersInUrl()"
+                     data-ng-if="OGCProtocol != null && !isWMSProtocol()"
                      data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
                      data-layers="layers"
                      data-selection="params.selectedLayers">
