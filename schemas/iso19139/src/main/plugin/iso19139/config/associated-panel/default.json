@@ -51,7 +51,7 @@
     }],
     "multilingualFields": ["name", "desc"],
     "wmsResources": {
-      "addLayerNamesMode": "url"
+      "addLayerNamesMode": "resourcename"
     }
   }
 }
