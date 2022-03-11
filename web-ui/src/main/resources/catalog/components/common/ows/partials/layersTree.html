@@ -5,6 +5,7 @@
   <ul>
     <li data-ng-repeat="layer in selection">
       {{layer.Title || layer.title}}
+      <span data-ng-if="layer.Name || layer.name">({{layer.Name || layer.name}})</span>
 
       <a
          class="btn btn-link btn-xs"
