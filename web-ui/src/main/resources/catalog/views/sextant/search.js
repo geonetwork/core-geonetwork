@@ -236,6 +236,8 @@
         });
 
       $scope.getAnySuggestions = function(val, searchObj) {
+        delete searchObj.searchMap;
+        delete searchObj.viewerMap;
         return suggestService.getAnySuggestions(val, searchObj);
       };
 
