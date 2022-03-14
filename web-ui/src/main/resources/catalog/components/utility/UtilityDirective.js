@@ -569,7 +569,7 @@
    * Put a string in a input field with copy to clipboard functions attached to it.
    *
    * The code to be used in a HTML page:
-   * 
+   *
    * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}"></span>
    *
    * or
@@ -1833,21 +1833,35 @@
       templateUrl: '../../catalog/components/utility/' +
         'partials/hideshowpassword.html',
       link: function (scope) {
-        scope.showHideClass = 'fa fa-eye-slash';
+        var cssInputPasswordType = 'fa fa-eye';
+        var cssInputTextType = 'fa fa-eye-slash';
+
+        var target = $('#' + scope.inputId)[0];
+
+        var updateInputCss = function() {
+          if(target != null) {
+            if(target.type == 'password') {
+              scope.showHideClass = cssInputPasswordType;
+            } else {
+              scope.showHideClass =  cssInputTextType;
+            }
+          }
+        }
 
         scope.hideShowPassword = function(){
-          var target = $('#' + scope.inputId)[0];
-
+          // Toggle the control type and button icon
           if(target != null) {
             if(target.type == 'password') {
               target.type = 'text';
-              scope.showHideClass = 'fa fa-eye-slash';
             } else {
               target.type = 'password';
-              scope.showHideClass = 'fa fa-eye';
             }
+
+            updateInputCss();
           }
         };
+
+        updateInputCss();
       }
     };
   });
