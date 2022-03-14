@@ -27,7 +27,7 @@ var gnHarvestercsw2 = {
         "every" : "0 0 0 ? * *",
         "oneRunOnly" : false,
         "overrideUuid": "SKIP",
-        "status" : "active",
+        "status" : "inactive",
         "remoteHarvesterNestedServices": false,
         "numberOfRecordsPerRequest": 20,
         "errorConfigNextRecordsNotZero": false,

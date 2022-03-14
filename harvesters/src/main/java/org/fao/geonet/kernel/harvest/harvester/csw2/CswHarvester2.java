@@ -160,6 +160,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                 remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 check = false;
+                                thiz.stop(Common.Status.INACTIVE);
+                                thiz.running = false;
                             } else {
                                 OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
 
@@ -186,7 +188,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         log.info(harvesterStatus.toString());
                                     }
 
-                                    thiz.stop(Common.Status.ACTIVE);
+                                    thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                     check = false;
