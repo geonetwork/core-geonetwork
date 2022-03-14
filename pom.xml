@@ -415,7 +415,7 @@
       <dependency>
         <groupId>org.locationtech.jts</groupId>
         <artifactId>jts-core</artifactId>
-        <version>1.16.1</version>
+        <version>1.18.2</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -1528,7 +1528,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>23.0</geotools.version>
+    <geotools.version>26.3</geotools.version>
     <pg.version>42.2.5</pg.version>
 
     <spring.version>5.2.6.RELEASE</spring.version>

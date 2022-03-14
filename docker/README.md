@@ -4,7 +4,7 @@ Cette documentation fournit les étapes à suivre afin d'obtenir une composition
 docker fonctionnelle comportant les éléments suivants:
 
 * Sextant (GN fork)
-* CAS (version 4.2.7)
+* CAS (version 6.2.2)
 * LDAP (contenant les schémas ifremer)
 * PostGreSQL / PostGIS
 * Elasticsearch
