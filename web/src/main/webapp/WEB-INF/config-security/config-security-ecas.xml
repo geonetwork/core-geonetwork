@@ -39,7 +39,7 @@
 
   <bean id="logoutSuccessHandler"
         class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-    <property name="defaultTargetUrl" value="${cas.logout.url}"></property>
+    <property name="defaultTargetUrl" value="${ecas.logout.url}"></property>
   </bean>
 
   <!-- J2EE pre-authentication -->
