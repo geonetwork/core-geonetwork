@@ -174,11 +174,18 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
                                     !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
                                     try {
+                                        log.info(harvesterStatus.toString());
                                         Thread.sleep(10 * 1000);
                                     } catch (InterruptedException e) {
                                         log.error(e);
                                     }
                                 } else {
+                                    if (state.equals(OrchestratedHarvestProcessState.ERROR)) {
+                                        log.error(harvesterStatus.toString());
+                                    } else {
+                                        log.info(harvesterStatus.toString());
+                                    }
+
                                     thiz.stop(Common.Status.ACTIVE);
                                     thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
