@@ -69,10 +69,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.PathSpec;
-import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
@@ -139,6 +136,9 @@ public class SiteApi {
     MetadataRepository metadataRepository;
 
     @Autowired
+    MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
     EsRestClient esRestClient;
 
     @Autowired
@@ -152,9 +152,7 @@ public class SiteApi {
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
         SettingManager settingMan = gc.getBean(SettingManager.class);
-        SettingInfo si = context.getBean(SettingInfo.class);
 
         LogUtils.refreshLogConfiguration();
 
@@ -271,7 +269,6 @@ public class SiteApi {
             HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
@@ -283,7 +280,7 @@ public class SiteApi {
 
             // Add virtual settings based on internal settings.
             // eg. if mail server is defined, allow email interactions ...
-            String mailServer = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String mailServer = settingManager.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
             publicSettings.add(new Setting()
                 .setName(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST + Settings.VIRTUAL_SETTINGS_SUFFIX_ISDEFINED)
                 .setDataType(SettingDataType.BOOLEAN)
@@ -305,7 +302,7 @@ public class SiteApi {
             if (key != null && key.length > 0) {
                 Collections.addAll(settingList, key);
             }
-            List<Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
+            List<Setting> settings = settingManager.getSettings(settingList.toArray(new String[0]));
             ListIterator<Setting> iterator = settings.listIterator();
 
             // Cleanup internal settings for not authenticated users.
@@ -356,14 +353,13 @@ public class SiteApi {
             HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {
             return
-                sm.getAll();
+                settingManager.getAll();
         } else {
             if (set != null && set.length > 0) {
                 for (SettingSet s : set) {
@@ -376,7 +372,7 @@ public class SiteApi {
             if (key != null && key.length > 0) {
                 Collections.addAll(settingList, key);
             }
-            List<Setting> settings = sm.getSettings(settingList.toArray(new String[0]));
+            List<Setting> settings = settingManager.getSettings(settingList.toArray(new String[0]));
             ListIterator<Setting> iterator = settings.listIterator();
 
             // Cleanup internal settings for not authenticated users.
@@ -411,15 +407,14 @@ public class SiteApi {
         HttpServletRequest request
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        String currentUuid = sm.getSiteId();
-        String oldSiteName = sm.getSiteName();
+        String currentUuid = settingManager.getSiteId();
+        String oldSiteName = settingManager.getSiteName();
 
-        if (!sm.setValues(allRequestParams)) {
+        if (!settingManager.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
         }
 
-        String newSiteName = sm.getSiteName();
+        String newSiteName = settingManager.getSiteName();
         // Update site source name/translations if the site name is updated
         if (!oldSiteName.equals(newSiteName)) {
             SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
@@ -436,7 +431,7 @@ public class SiteApi {
 
         // Update the system default timezone. If the setting is blank use the timezone user.timezone property from command line or
         // TZ environment variable
-        String zoneId = StringUtils.defaultIfBlank(sm.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true),
+        String zoneId = StringUtils.defaultIfBlank(settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true),
                 SettingManager.DEFAULT_SERVER_TIMEZONE.getId());
         TimeZone.setDefault(TimeZone.getTimeZone(zoneId));
 
@@ -662,6 +657,12 @@ public class SiteApi {
     ) throws Exception {
         Map<String, Object> info = new HashMap<>();
         long dbCount = metadataRepository.count();
+
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        if (isMdWorkflowEnable) {
+            dbCount += metadataDraftRepository.count();
+        }
+
         info.put("db.count", dbCount);
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
@@ -748,8 +749,7 @@ public class SiteApi {
         checkFileName(file);
         FilePathChecker.verify(file);
 
-        SettingManager settingMan = appContext.getBean(SettingManager.class);
-        String nodeUuid = settingMan.getSiteId();
+        String nodeUuid = settingManager.getSiteId();
 
         Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
         final Path resourcesDir =
