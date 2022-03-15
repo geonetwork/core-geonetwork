@@ -36,6 +36,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -459,7 +461,7 @@ public class CatalogApi {
             .withXml(response)
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
-            .asPdf(httpResponse, settingManager.getValue("metadata/pdfReport/pdfName"));
+            .asPdf(httpResponse, replaceFilenamePlaceholder(settingManager.getValue("metadata/pdfReport/pdfName"), "pdf"));
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -529,6 +531,13 @@ public class CatalogApi {
             .withXml(response)
             .withXsl("xslt/services/csv/csv-search.xsl")
             .asElement();
+
+        // Determine filename to use
+        String fileName =  replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
+
+        httpResponse.setContentType("text/csv");
+        httpResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+        httpResponse.setContentLength(r.getText().length());
         httpResponse.getWriter().write(r.getText());
     }
 
@@ -719,5 +728,39 @@ public class CatalogApi {
         ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
         return sm.getBaseURL().replaceAll(pathFinder.getBaseUrl() + "/", "");
 
+    }
+
+    private String replaceFilenamePlaceholder(String fileName,  String extension) {
+        // Checks for a parameter documentFileName with the document file name,
+        // otherwise uses a default value
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "document." + extension;
+
+        } else {
+            if (!fileName.endsWith("." + extension)) {
+                fileName = fileName + "." + extension;
+            }
+
+            Map<String, String> values = new HashMap<String, String>();
+            values.put("siteName", settingManager.getSiteName());
+
+            Calendar c = Calendar.getInstance();
+            values.put("year", c.get(Calendar.YEAR) + "");
+            values.put("month", c.get(Calendar.MONTH) + "");
+            values.put("day", c.get(Calendar.DAY_OF_MONTH) + "");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            values.put("date", dateFormat.format(c.getTime()));
+            values.put("datetime", datetimeFormat.format(c.getTime()));
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
+            values.put("ISOdatetime", df.format(new Date()));
+
+            StrSubstitutor sub = new StrSubstitutor(values, "{", "}");
+            fileName = sub.replace(fileName);
+
+        }
+        return fileName;
     }
 }
