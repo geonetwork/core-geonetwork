@@ -159,8 +159,8 @@
           data-ng-if="isMdWorkflowEnable && md.isWorkflowEnabled()
           && isMdWorkflowAssistEnable && md.isOwned() && user.isUserAdminOrMore()" data-ng-repeat="app in workflowAssistApps">
         <a href=""
-           data-ng-href="{{app.url.replace('{parameters}', md.getUuid())}}"
-           target="_blank">
+           data-ng-href="{{app.url.replace('{uuid}', md.getUuid()).replace('{lang}', lang)}}"
+           target="_blank" rel="noopener">
           <span class="fa fa-fw fa-user"></span>&nbsp;
           <span data-translate="">{{app.labelKey}}&nbsp;</span>
         </a>
