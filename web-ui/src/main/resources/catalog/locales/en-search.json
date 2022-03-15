@@ -534,6 +534,6 @@
   "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
   "rssFeed": "RSS feed",
   "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
-  "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document."
-
+  "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
+  "approve": "Approve"
 }

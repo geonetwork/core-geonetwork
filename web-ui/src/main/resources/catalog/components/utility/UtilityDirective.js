@@ -248,9 +248,16 @@
         scope: {
           processReport: '=gnBatchReport'
         },
-        templateUrl: '../../catalog/components/utility/' +
-            'partials/batchreport.html',
+        templateUrl: function ($element, $attrs) {
+          return $attrs.templateUrl || '../../catalog/components/utility/' +
+            'partials/batchreport.html'
+        },
         link: function(scope, element, attrs) {
+          scope.hasMetadataInfo = function() {
+            return (scope.processReport && scope.processReport.metadataInfos &&
+              (Object.keys(scope.processReport.metadataInfos).length > 0));
+          }
+
           scope.$watch('processReport', function(n, o) {
             if (n && n != o) {
               scope.processReportWarning = n.notFound != 0 ||
