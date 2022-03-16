@@ -130,6 +130,9 @@
         <div id="gn-harvest-harvester-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningHarvest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningHarvest === true">-->
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest === true">harvesterIsRunning</h2>
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest !== true">harvester</h2>
+
+          <p data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest === true">harvesterDescription</p>
+
           <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
@@ -148,6 +151,7 @@
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker === true">linkCheckerIsRunning</h2>
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker !== true">linkChecker</h2>
 
+          <p data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker === true">linkCheckerDescription</p>
 
           <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.linkCheckStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
@@ -170,6 +174,9 @@
         <div id="gn-harvest-ingester-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningIngest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningIngest === true">-->
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest === true">ingesterIsRunning</h2>
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest !== true">ingester</h2>
+
+          <p data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest === true">ingesterDescription</p>
+
           <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.ingestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
