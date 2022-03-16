@@ -1080,11 +1080,12 @@
           <tr data-ng-repeat="opt in mCfg[key] track by $index">
             <td>
               <div class="input-group">
+                <span class="input-group-addon">{{'ui-workflowAssistApps-appUrl' | translate}}</span>
                 <input type="text"
                        class="form-control"
                        id="ui-appUrl-{{$index}}"
                        data-ng-model="opt.appUrl"/>
-                <span class="input-group-addon"> Label Key </span>
+                <span class="input-group-addon">{{'ui-workflowAssistApps-appLabelKey' | translate}}</span>
                 <input type="text"
                        class="form-control"
                        id="ui-appLabelKey-{{$index}}"
@@ -1110,8 +1111,11 @@
           </tr>
         </table>
         <p class="help-block"
-           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-          {{('ui-' + key + '-help') | translate}} </p>
+           data-ng-init="helpKey = 'ui-' + key + '-help'"
+           data-ng-show="(helpKey | translate) != helpKey"
+           translate="">
+          {{helpKey}}
+        </p>
       </div>
 
     </div>

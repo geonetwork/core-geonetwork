@@ -159,7 +159,7 @@
           data-ng-if="isMdWorkflowEnable && md.isWorkflowEnabled()
           && isMdWorkflowAssistEnable && user.canEditRecord(md)" data-ng-repeat="app in workFlowApps">
         <a href=""
-           data-ng-href="{{app.appUrl.replace('{uuid}', md.getUuid()).replace('{isoLang}', iso2Lang)}}"
+           data-ng-href="{{app.appUrl.replace('{uuid}', md.getUuid()).replace('{lang}', lang).replace('{isoLang}', iso2Lang)}}"
            target="_blank" rel="noopener">
           <span class="fa fa-fw fa-user"></span>&nbsp;
           <span data-translate="">{{app.appLabelKey}}&nbsp;</span>
