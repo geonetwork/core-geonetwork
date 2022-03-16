@@ -20,9 +20,6 @@
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
   }
-  button:focus {
-    outline: 0;
-  }
   button:focus [role=tooltip],
   button:hover [role=tooltip] {
     clip: auto;
@@ -37,11 +34,15 @@
     z-index: 9000;
   }
   .search-container {
-    button:hover [role=tooltip] {
-      right: auto;
-      margin-left: 1.5em;
-      margin-top: -7px;
-      padding-top: 9px;
+    button {
+      &:hover, &:focus {
+        [role=tooltip] {
+          right: auto;
+          margin-left: 1.5em;
+          margin-top: -7px;
+          padding-top: 9px;
+        }
+      }
     }
   }
   @media screen and (max-height: 768px) {
@@ -119,6 +120,11 @@
     left: @viewport-padding;
     width: 20em;
     max-width: 75%;
+    .form-control {
+      &:focus {
+        outline: 2px auto -webkit-focus-ring-color;
+      }
+    }
     .dropdown-menu {
       width: 100%;
       top: ~"calc(100% - 3px)";
