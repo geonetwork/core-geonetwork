@@ -624,6 +624,9 @@
           console.warn(fieldName + ' is not defined in this record.');
         }
       },
+      getUuid: function() {
+        return this.uuid;
+      },
       isPublished: function() {
         return JSON.parse(this.isPublishedToAll) === true;
       },

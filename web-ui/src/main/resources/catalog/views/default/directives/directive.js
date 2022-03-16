@@ -87,8 +87,8 @@
   ]);
 
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
-    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
+    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings', 'gnLangs',
+    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings, gnLangs) {
       return {
         restrict: 'A',
         replace: true,
@@ -106,7 +106,9 @@
             scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
             scope.isMdWorkflowAssistEnable = gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
-            scope.workflowAssistApps = gnGlobalSettings.gnCfg.mods.workflowHelper.apps;
+            scope.workFlowApps = gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
+            scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+
           });
 
           function loadTasks() {

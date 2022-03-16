@@ -799,8 +799,8 @@ goog.require('gn_alert');
         },
         'workflowHelper': {
           'enabled': false,
-          'apps': [
-            {'url': '', 'labelKey': ''}
+          'workflowAssistApps': [
+            {'appUrl': '', 'appLabelKey': ''}
           ]
         }
       }
