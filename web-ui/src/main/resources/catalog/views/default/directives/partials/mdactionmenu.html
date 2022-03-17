@@ -155,13 +155,15 @@
         </a>
       </li>
       <!--metadata workflow assistance external link(s)-->
+      <li role="menuitem" class="divider"
+          data-ng-if="user.isConnected() && user.canEditRecord(md) && isMdWorkflowAssistEnable"></li>
       <li role="menuitem"
-          data-ng-if="isMdWorkflowEnable && md.isWorkflowEnabled()
+          data-ng-if="user.isConnected()
           && isMdWorkflowAssistEnable && user.canEditRecord(md)" data-ng-repeat="app in workFlowApps">
         <a href=""
            data-ng-href="{{app.appUrl.replace('{uuid}', md.getUuid()).replace('{lang}', lang).replace('{isoLang}', iso2Lang)}}"
            target="_blank" rel="noopener">
-          <span class="fa fa-fw fa-user"></span>&nbsp;
+          <span class="fa fa-fw fa-external-link"></span>&nbsp;
           <span data-translate="">{{app.appLabelKey}}&nbsp;</span>
         </a>
       </li>
