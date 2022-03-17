@@ -665,11 +665,11 @@
           }
         }
     },
-    'cersat-platform': {
-      'th_cersat_platform.default':
+    'platforms': {
+      'platforms':
         {
           'terms': {
-            'field': 'th_cersat_platform.default',
+            'field': 'platforms',
             'size': 300
           }
         }
@@ -692,15 +692,24 @@
           }
         }
     },
-    'cersat-sensor': {
-      'th_cersat_sensor.default':
+    'instruments': {
+      'instruments':
         {
           'terms': {
-            'field': 'th_cersat_sensor.default',
+            'field': 'instruments',
             'size': 300
           }
         }
     },
+    'geoDescription': {
+      'geoDescription':
+        {
+          'terms': {
+            'field': 'geoDescription',
+            'size': 300
+          }
+        }
+    },    
     'cersat-processing-level': {
       'th_cersat_processing_level.default':
         {
