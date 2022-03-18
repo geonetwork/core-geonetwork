@@ -148,6 +148,18 @@
           }
 
           var esFacetTemplate = SEXTANT_LEGACY_FACET_MAPPING[sxtFacet.key];
+
+          // generic facet if not defined
+          if (!esFacetTemplate) {
+            esFacetTemplate = {};
+            esFacetTemplate[sxtFacet.key] = {
+              'terms': {
+                'field': sxtFacet.key,
+                'size': 300
+              }
+            }
+          }
+
           var esFacetName = Object.keys(esFacetTemplate)[0];
           var esFacet = angular.extend({}, esFacetTemplate);
           esFacet[esFacetName].meta = angular.extend({

@@ -665,15 +665,6 @@
           }
         }
     },
-    'platforms': {
-      'platforms':
-        {
-          'terms': {
-            'field': 'platforms',
-            'size': 300
-          }
-        }
-    },
     'cersat-latency': {
       'th_cersat_latency.default':
         {
@@ -692,24 +683,6 @@
           }
         }
     },
-    'instruments': {
-      'instruments':
-        {
-          'terms': {
-            'field': 'instruments',
-            'size': 300
-          }
-        }
-    },
-    'geoDescription': {
-      'geoDescription':
-        {
-          'terms': {
-            'field': 'geoDescription',
-            'size': 300
-          }
-        }
-    },    
     'cersat-processing-level': {
       'th_cersat_processing_level.default':
         {

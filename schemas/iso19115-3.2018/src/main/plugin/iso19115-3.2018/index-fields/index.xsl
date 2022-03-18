@@ -401,6 +401,9 @@
             <xsl:variable name="instruments"
                           select="ancestor::mdb:MD_Metadata/mdb:acquisitionInformation
                                     /*/mac:instrument/*/mac:identifier/*/mcc:code/*/text()"/>
+            <xsl:variable name="processingLevel"
+                          select="ancestor::mrc:MI_CoverageDescription/mrc:processingLevelCode
+                                    /*/mcc:code/*/text()"/>
 
             <xsl:variable name="customAbstract">
               <xsl:if test="count($projects) > 0">
@@ -441,6 +444,10 @@
                 <xsl:value-of select="concat('Spatial resolution: ', string-join($res, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
               </xsl:if>
             </xsl:variable>
+
+            <platforms><xsl:value-of select="$platforms"></xsl:value-of></platforms>
+            <instruments><xsl:value-of select="$instruments"></xsl:value-of></instruments>
+            <processingLevel><xsl:value-of select="$processingLevel"></xsl:value-of></processingLevel>
 
             <resourceAbstractObject type="object">{
               "default": "<xsl:value-of select="gn-fn-index:json-escape($customAbstract)"/>"
@@ -633,6 +640,8 @@
                                 gex:geographicIdentifier/mcc:MD_Identifier/
                                   mcc:code[*/normalize-space(.) != '']
                               |//gex:EX_Extent/gex:description[*/normalize-space(.) != '']"/>
+
+        <geoDescription><xsl:value-of select="$geoDesciption"></xsl:value-of></geoDescription>
 
         <xsl:for-each select="$keywordTypes">
           <xsl:variable name="type"
