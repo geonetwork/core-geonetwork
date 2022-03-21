@@ -27,6 +27,7 @@ package org.fao.geonet.guiapi.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
+import org.apache.xml.utils.XML11Char;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -159,9 +160,18 @@ public class XsltResponseWriter {
         try {
             Map<String, String> values = mapper.readValue(jsonPath.toFile(), Map.class);
             Element element = this.xml.getChild(TRANSLATIONS);
-            values.forEach((k, v) -> element.addContent(new Element(k.replace(":", "_")).setText(v)));
+            values.forEach((k, v) -> {
+                if (XML11Char.isXML11ValidNCName(k)) {
+                    element.addContent(new Element(k).setText(v));
+                } else {
+                    Log.warning(Geonet.GEONETWORK, String.format(
+                        "JSON key '%s' can't be used in XSLT API response. Avoid usage of XML invalid characters in keys if this key is required in XSLT processing.",
+                        k
+                    ));
+                }
+            });
         } catch (IOException e) {
-            Log.warning(Geonet.SEARCH_ENGINE, String.format(
+            Log.warning(Geonet.GEONETWORK, String.format(
                 "Can't find JSON file '%s'.", jsonPath.toString()
             ));
         }
