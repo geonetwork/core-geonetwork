@@ -162,7 +162,7 @@ public class EsHTTPProxy {
             related = MetadataApi.getAssociatedResources(
                 context.getLanguage(), context,
                 context.getBean(IMetadataUtils.class)
-                    .findOne(getSourceString(doc, Geonet.IndexFieldNames.ID)),
+                    .findOneByUuid(doc.get("_id").asText()),
                 relatedTypes, 0, 100);
         } catch (Exception e) {
             LOGGER.warn("Failed to load related types for {}. Error is: {}",
