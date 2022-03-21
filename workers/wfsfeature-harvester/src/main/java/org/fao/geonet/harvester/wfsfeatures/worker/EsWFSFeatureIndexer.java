@@ -268,7 +268,7 @@ public class EsWFSFeatureIndexer {
 //            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
 
             SimpleFeatureCollection fc = wfs.getFeatureSource(resolvedTypeName).getFeatures();
-            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
+            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("EPSG:4326"));
             FeatureIterator<SimpleFeature> features = rfc.features();
 
             try {
