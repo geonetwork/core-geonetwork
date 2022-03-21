@@ -445,8 +445,12 @@
               </xsl:if>
             </xsl:variable>
 
-            <platforms><xsl:value-of select="$platforms"></xsl:value-of></platforms>
-            <instruments><xsl:value-of select="$instruments"></xsl:value-of></instruments>
+            <xsl:for-each select="$platforms">
+              <platforms><xsl:value-of select="."></xsl:value-of></platforms>
+            </xsl:for-each>
+            <xsl:for-each select="$instruments">
+              <instruments><xsl:value-of select="."></xsl:value-of></instruments>
+            </xsl:for-each>
             <processingLevel><xsl:value-of select="$processingLevel"></xsl:value-of></processingLevel>
 
             <resourceAbstractObject type="object">{
@@ -635,20 +639,20 @@
         <xsl:variable name="keywordTypes"
                       select="distinct-values(.//mri:descriptiveKeywords/*/
                                 mri:type/*/@codeListValue[. != ''])"/>
-        <xsl:variable name="geoDesciption"
+        <xsl:variable name="geoDescription"
                       select="//gex:geographicElement/gex:EX_GeographicDescription/
                                 gex:geographicIdentifier/mcc:MD_Identifier/
-                                  mcc:code[*/normalize-space(.) != '']
+                                  mcc:code[*/normalize-space(.) != '']/*
                               |//gex:EX_Extent/gex:description[*/normalize-space(.) != '']"/>
 
-        <geoDescription><xsl:value-of select="$geoDesciption"></xsl:value-of></geoDescription>
+        <geoDescription><xsl:value-of select="$geoDescription"></xsl:value-of></geoDescription>
 
         <xsl:for-each select="$keywordTypes">
           <xsl:variable name="type"
                         select="."/>
           <xsl:variable name="keywordsForType"
                         select="$keywords[../mri:type/*/@codeListValue = $type]
-                        |$geoDesciption[$type = 'place']"/>
+                        |$geoDescription[$type = 'place']"/>
           <xsl:element name="keywordType-{$type}">
             <xsl:attribute name="type" select="'object'"/>
             [<xsl:for-each select="$keywordsForType">

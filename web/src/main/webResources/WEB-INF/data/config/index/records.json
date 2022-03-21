@@ -1776,6 +1776,15 @@
       },
       "root": {
         "type": "keyword"
+      },
+      "platforms": {
+        "type": "keyword"
+      },
+      "instruments": {
+        "type": "keyword"
+      },
+      "geoDescription": {
+        "type": "keyword"
       }
     }
   }
