@@ -1818,7 +1818,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
           </action>
 
@@ -1893,7 +1893,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
           </action>
 
@@ -1968,7 +1968,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
           </action>
         </section>
@@ -2063,7 +2063,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~distributor"/>
           </action>
 
@@ -2324,7 +2324,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider"/>
           </action>
           <action type="add"
@@ -2435,7 +2435,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
           </action>
           <action type="add"
@@ -2651,7 +2651,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
           </action>
 

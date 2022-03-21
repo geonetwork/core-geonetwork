@@ -1588,7 +1588,7 @@
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"
               data-transformation="contact-from-iso19139-to-iso19115-3"/>
           </action>
@@ -1706,7 +1706,7 @@
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"
               data-transformation="contact-from-iso19139-to-iso19115-3"/>
           </action>
