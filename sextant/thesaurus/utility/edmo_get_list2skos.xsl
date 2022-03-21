@@ -18,7 +18,7 @@
       <skos:ConceptScheme rdf:about="{$thesaurusId}">
         <dc:title>SDN EDMO Identifier</dc:title>
         <dc:description> SKOS thesaurus created from
-          http://seadatanet.maris2.nl/webservices/edmo/ws_edmo_get_list. </dc:description>
+          https://edmo.seadatanet.org/webservices/edmo/ws_edmo_get_list. </dc:description>
         <dcterms:issued>2014-10-08</dcterms:issued>
         <dcterms:modified>2014-10-08</dcterms:modified>
       </skos:ConceptScheme>
