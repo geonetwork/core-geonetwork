@@ -277,7 +277,7 @@ public class EsWFSFeatureIndexer {
             // END
             ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode(epsg));
 
-            FeatureIterator<SimpleFeature> features = fc.features();
+            FeatureIterator<SimpleFeature> features = rfc.features();
 
             try {
                 while (features.hasNext()) {
