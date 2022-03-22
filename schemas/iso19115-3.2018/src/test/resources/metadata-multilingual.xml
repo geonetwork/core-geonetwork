@@ -71,9 +71,32 @@
       </cit:party>
     </cit:CI_Responsibility>
   </mdb:contact>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2022-02-23T16:48:58.92Z</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+          codeListValue="revision"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2009-07-02T14:46:24</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation
+        </cit:CI_DateTypeCode>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
   <mdb:metadataStandard>
     <cit:CI_Citation>
-      <cit:title xsi:type="lan:PT_FreeText_PropertyType">
+      <cit:title gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
         <gco:CharacterString>ISO 19115-3</gco:CharacterString>
         <lan:PT_FreeText>
           <lan:textGroup>
@@ -170,7 +193,7 @@
     <mri:MD_DataIdentification>
       <mri:citation>
         <cit:CI_Citation>
-          <cit:title xsi:type="lan:PT_FreeText_PropertyType">
+          <cit:title gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Template for Vector data (multilingual)</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -193,8 +216,7 @@
                 </lan:LocalisedCharacterString>
               </lan:textGroup>
               <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#AR">نموذج البيانات الموجهة (متعددة اللغات)
-                </lan:LocalisedCharacterString>
+                <lan:LocalisedCharacterString locale="#AR"></lan:LocalisedCharacterString>
               </lan:textGroup>
               <lan:textGroup>
                 <lan:LocalisedCharacterString locale="#RU">Шаблон для векторных данных (многоязычное)

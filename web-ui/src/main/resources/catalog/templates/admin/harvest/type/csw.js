@@ -105,7 +105,7 @@ var gnHarvestercsw = {
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
       + '    <xpathFilter>' + h.site.xpathFilter + '</xpathFilter>'
-      + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
+      + '    <xslfilter>' + _.escape(h.site.xslfilter) + '</xslfilter>'
       + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
       + '    <sortBy>' + h.site.sortBy + '</sortBy>'
       + '    <queryScope>' + h.site.queryScope + '</queryScope>'

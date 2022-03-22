@@ -632,7 +632,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 log.debug("     metadata filtered.");
                 md = processedMetadata;
             } catch (Exception e) {
-                log.warning("     processing error " + processName + "}): " + e.getMessage());
+                log.warning("     processing error " + processName + ": " + e.getMessage());
             }
         }
         return md;
