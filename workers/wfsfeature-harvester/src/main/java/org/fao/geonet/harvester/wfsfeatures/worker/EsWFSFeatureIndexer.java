@@ -235,6 +235,7 @@ public class EsWFSFeatureIndexer {
         String url                              = state.getParameters().getUrl();
         String typeName                         = state.getParameters().getTypeName();
         String resolvedTypeName                 = state.getResolvedTypeName();
+        String strategyId                       = state.strategyId;
         Map<String, String> tokenizedFields     = state.getParameters().getTokenizedFields();
         WFSDataStore wfs                        = state.getWfsDatastore();
         Map<String, String> featureAttributes   = state.getFields();
@@ -268,8 +269,15 @@ public class EsWFSFeatureIndexer {
 //            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
 
             SimpleFeatureCollection fc = wfs.getFeatureSource(resolvedTypeName).getFeatures();
-            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("EPSG:4326"));
-            FeatureIterator<SimpleFeature> features = rfc.features();
+            // temp FIX for SEXTANT
+            String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
+            if (strategyId.contains("qgis")) {
+                epsg = "EPSG:4326";
+            }
+            // END
+            ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode(epsg));
+
+            FeatureIterator<SimpleFeature> features = fc.features();
 
             try {
                 while (features.hasNext()) {

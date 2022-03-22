@@ -47,6 +47,7 @@ public class WFSHarvesterExchangeState implements Serializable {
     private transient Map<String, String> fields = new LinkedHashMap<String, String>();
     private transient WFSDataStore wfsDatastore = null;
     private String resolvedTypeName = null;
+    public String strategyId = null;
 
     public WFSHarvesterParameter getParameters() {
         return parameters;
@@ -138,10 +139,10 @@ public class WFSHarvesterExchangeState implements Serializable {
             }
 
             wfsDatastore = factory.createDataStore(m);
-
             // Default to GeoTools auto mode for MapServer. https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/313
             if(factory instanceof WFSDataStoreWithStrategyInvestigator) {
                 WFSClientWithStrategyInvestigator wfsClientWithStrategyInvestigator = (WFSClientWithStrategyInvestigator) wfsDatastore.getWfsClient();
+                this.strategyId = wfsClientWithStrategyInvestigator.getStrategyId();
                 if ("mapserver".equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
                     Map connectionParameters = new HashMap();
                     connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", parameters.getUrl());
