@@ -197,12 +197,15 @@
             queryStringParams.push(luceneQueryString);
           }
 
-          queryHook.must.push({
+          var queryString = {
             query_string: {
-              // minimum_should_match: '70%',
               query: queryStringParams.join(' AND ').trim()
             }
-          });
+          };
+
+          angular.extend(queryString.query_string,
+            gnGlobalSettings.gnCfg.mods.search.queryBaseOptions || {});
+          queryHook.must.push(queryString);
         }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
