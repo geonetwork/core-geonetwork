@@ -100,7 +100,9 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
 
 
         RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
-        result.processId = remoteHarvesterApiClient.startHarvest(remoteHarvesterConfiguration);
+        result.processId = remoteHarvesterApiClient.startHarvest(remoteHarvesterConfiguration, log);
+
+        log.info("Remote CSW harvester, processId " + result.processId);
 
         //remoteHarvesterApiClient.retrieveProgress(result.processId);
 

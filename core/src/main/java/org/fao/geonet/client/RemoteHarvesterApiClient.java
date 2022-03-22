@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.client.model.RemoteHarvesterConfiguration;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -32,7 +33,7 @@ public class RemoteHarvesterApiClient {
     }
 
 
-    public String startHarvest(RemoteHarvesterConfiguration harvesterConfiguration)
+    public String startHarvest(RemoteHarvesterConfiguration harvesterConfiguration, Logger log)
         throws RemoteHarvesterApiClientException {
         String harvestUrl = url + "/startHarvest";
 
@@ -76,6 +77,8 @@ public class RemoteHarvesterApiClient {
                 processId = jsonObject.get("processID").getAsString();
             }
         } catch (Exception ex) {
+            log.error("Remote CSW harvester, startHarvest: " + ex.getMessage());
+            log.error(ex);
             throw new RemoteHarvesterApiClientException(ex.getMessage());
 
         } finally {
@@ -90,7 +93,7 @@ public class RemoteHarvesterApiClient {
     }
 
 
-    public OrchestratedHarvestProcessStatus retrieveProgress(String processId) throws RemoteHarvesterApiClientException {
+    public OrchestratedHarvestProcessStatus retrieveProgress(String processId, Logger log) throws RemoteHarvesterApiClientException {
         String harvesterProgressUrl = url + String.format("/getstatus/%s", processId);
 
         ClientHttpResponse httpResponse = null;
@@ -127,6 +130,10 @@ public class RemoteHarvesterApiClient {
                 harvesterStatus = gson.fromJson(response, OrchestratedHarvestProcessStatus.class);
             }
         } catch (Exception ex) {
+            if (log != null) {
+                log.error("Remote CSW harvester, retrieveProgress: " + ex.getMessage());
+                log.error(ex);
+            }
             throw new RemoteHarvesterApiClientException(ex.getMessage());
 
         } finally {
@@ -140,7 +147,7 @@ public class RemoteHarvesterApiClient {
         return harvesterStatus;
     }
 
-    public void abortHarvest(String processId) throws RemoteHarvesterApiClientException {
+    public void abortHarvest(String processId, Logger log) throws RemoteHarvesterApiClientException {
         String harvesterProgressUrl = url + String.format("/abort/%s", processId);
 
         ClientHttpResponse httpResponse = null;
@@ -164,6 +171,8 @@ public class RemoteHarvesterApiClient {
                 throw new RemoteHarvesterApiClientException(message);
             }
         } catch (Exception ex) {
+            log.error("Remote CSW harvester, abortHarvest: " + ex.getMessage());
+            log.error(ex);
             throw new RemoteHarvesterApiClientException(ex.getMessage());
 
         } finally {

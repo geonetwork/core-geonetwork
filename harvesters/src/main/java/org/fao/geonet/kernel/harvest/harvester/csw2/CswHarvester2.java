@@ -126,6 +126,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
             processId = ((CswRemoteHarvestResult) result).processId;
         } catch (Exception ex) {
+            log.error("Remote CSW harvester, doHarvest error: " + ex.getMessage());
             log.error(ex);
             running = false;
 
@@ -157,13 +158,13 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                     while (check) {
                         try {
                             if (thiz.cancelMonitor.get()) {
-                                remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
+                                remoteHarvesterApiClient.abortHarvest(harvesterProcessId, log);
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 check = false;
                                 thiz.stop(Common.Status.INACTIVE);
                                 thiz.running = false;
                             } else {
-                                OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
+                                OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId, log);
 
                                 OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
 
@@ -176,16 +177,16 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
                                     !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
                                     try {
-                                        log.info(harvesterStatus.toString());
+                                        log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                         Thread.sleep(10 * 1000);
                                     } catch (InterruptedException e) {
                                         log.error(e);
                                     }
                                 } else {
                                     if (state.equals(OrchestratedHarvestProcessState.ERROR)) {
-                                        log.error(harvesterStatus.toString());
+                                        log.error(String.format("Monitor harvester process progress (%s), error: %s" , harvesterProcessId, harvesterStatus.toString()));
                                     } else {
-                                        log.info(harvesterStatus.toString());
+                                        log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
 
                                     thiz.stop(Common.Status.INACTIVE);

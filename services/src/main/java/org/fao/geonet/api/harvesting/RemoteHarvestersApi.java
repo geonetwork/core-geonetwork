@@ -96,7 +96,7 @@ public class RemoteHarvestersApi {
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
 
         for(int i = 0; i < id.length; i++) {
-            OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i]);
+            OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i], null);
             OrchestratedHarvestProcessState state = harvesterProcessStatus.getOrchestratedHarvestProcessState();
 
             RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
@@ -151,7 +151,7 @@ public class RemoteHarvestersApi {
 
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
-        OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId);
+        OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId, null);
 
         RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
         remoteHarvesterInfoStatus.processID = harvesterProcessStatus.getProcessID();
