@@ -133,10 +133,13 @@ goog.require('gn_alert');
           // 'queryBase': '${any}',
           // Full text but more boost on title match
           // * Search in languages depending on the strategy selected
-          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2 resourceTitleObject.${searchLang}:\"${any}\"^6',
+          'queryBase': 'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:(${any})^2 OR resourceTitleObject.${searchLang}:\"${any}\"^6',
+          'queryBaseOptions': {
+            'default_operator': 'AND'
+          },
           // TODO: Exact match should not even analyze
           // so we could create an exact field not analyzed in the index maybe?
-          'queryExactMatch': 'any.${searchLang}:\"${any})\" any.common:\"${any}\" resourceTitleObject.${searchLang}:\"${any}\"^2',
+          'queryExactMatch': 'any.${searchLang}:\"${any})\" OR any.common:\"${any}\" OR resourceTitleObject.${searchLang}:\"${any}\"^2',
           // * Force UI language - in this case set languageStrategy to searchInUILanguage
           // and disable language options in searchOptions
           // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
