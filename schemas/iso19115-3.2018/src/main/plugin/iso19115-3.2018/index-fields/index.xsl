@@ -391,14 +391,13 @@
 
         <xsl:variable name="overviews"
                       select="mri:graphicOverview/mcc:MD_BrowseGraphic/
-                                mcc:fileName/gco:CharacterString[. != '']"/>
-
+                                mcc:fileName/(gco:CharacterString[. != '']|gcx:FileName[@src != ''])"/>
         <xsl:copy-of select="gn-fn-index:add-field('hasOverview', if (count($overviews) > 0) then 'true' else 'false')"/>
 
 
         <xsl:for-each select="$overviews">
           <overview type="object">{
-            "url": "<xsl:value-of select="normalize-space(.)"/>"
+            "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
             <xsl:if test="$isStoringOverviewInIndex">
               <xsl:variable name="data"
                             select="util:buildDataUrl(., 140)"/>
@@ -922,8 +921,8 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="gn-fn-index:is-isoDate(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
-            "date": "<xsl:value-of select="*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+            <xsl:if test="gn-fn-index:is-isoDate((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1])">
+              "date": "<xsl:value-of select="(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1]" />",
             </xsl:if>
             <xsl:if test="*/mdq:specification/*/cit:title/*/@xlink:href">
               "link": "<xsl:value-of select="*/mdq:specification/*/cit:title/*/@xlink:href"/>",
