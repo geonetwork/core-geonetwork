@@ -115,6 +115,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             messageProducerEntity.getWfsHarvesterParam().getUrl(),
             typeName,
             metadataUuid);
+        wfsHarvesterParam.setStrategy("investigator");
 
         try {
             HashMap<String, Object> applicationProfile = getApplicationProfile(metadataUuid, typeName);
