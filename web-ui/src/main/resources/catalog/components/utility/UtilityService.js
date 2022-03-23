@@ -322,7 +322,7 @@
         function getPermalink(title, url) {
           gnPopup.createModal({
             title: $translate.instant('permalinkTo', {title: title}),
-            content: '<div gn-permalink-input="' + url + '"></div>'
+            content: '<span gn-copy-to-clipboard="' + url + '"></span>'
           });
         };
 
@@ -785,6 +785,12 @@
   module.filter('sanitizeHtmlFilter', ['$filter', '$sanitize', function($filter, $sanitize) {
     return function(input) {
       return $sanitize(input);
+    }
+  }]);
+
+  module.filter('toJson', [function() {
+    return function(input) {
+      return JSON.stringify(input);
     }
   }]);
 })();

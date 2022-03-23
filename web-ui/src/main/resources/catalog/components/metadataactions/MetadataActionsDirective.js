@@ -63,7 +63,7 @@
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
           scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
-          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+          scope.newStatus = {status: scope.task ? scope.task.id : -1, owner: null, dueDate: null, changeMessage: ''};
 
 
           // Retrieve last status to set it in the form
@@ -97,6 +97,11 @@
                 '/status', scope.newStatus
             ).then(
                 function(response) {
+                  //After the new status is approved, the working copy will get deleted and will not get searched.
+                  //The search parameter will need to reset to draft=n
+                  if (angular.isDefined(scope.md.draft) && scope.newStatus.status === "2") {
+                    scope.md.draft = "n";
+                  }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
@@ -438,21 +443,6 @@
           scope.userGroupDefined = false;
           scope.userGroups = null;
 
-          scope.selectUser = function(user) {
-            scope.selectedUser = user;
-            scope.editorSelectedId = user.id;
-            $http.get('../api/users/' + id + '/groups')
-                .success(function(data) {
-                  var uniqueGroup = {};
-                  angular.forEach(data, function(g) {
-                    if (!uniqueGroup[g.group.id]) {
-                      uniqueGroup[g.group.id] = g.group;
-                    }
-                  });
-                  $scope.editorGroups = uniqueGroup;
-                });
-          };
-
           scope.selectGroup = function(group) {
             scope.selectedGroup = group;
           };
@@ -468,7 +458,20 @@
                         $translate.instant('group-' + g.groupId);
                   }
                 });
-                scope.userGroups = uniqueUserGroups;
+
+                // Sort by group name and user name
+                var sortedKeys = Object.keys(uniqueUserGroups).sort(function (a, b) {
+                  var ka = uniqueUserGroups[a].groupNameTranslated + '|' + uniqueUserGroups[a].userName;
+                  var kb = uniqueUserGroups[b].groupNameTranslated + '|' + uniqueUserGroups[b].userName;
+
+                  return ka.localeCompare(kb);
+                })
+
+                scope.userGroups = {};
+                angular.forEach(sortedKeys, function(g) {
+                  scope.userGroups[g] = uniqueUserGroups[g];
+                });
+
                 if (scope.userGroups && Object.keys(scope.userGroups).length > 0) {
                   scope.userGroupDefined = true;
                 } else {

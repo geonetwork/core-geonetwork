@@ -3,16 +3,21 @@
 @btn-link-disabled-color: #707070;
 @dropdown-link-disabled-color: #707070;
 
-[data-gn-map-field] > [ol-map] {
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  right: 0;
-  bottom: 0;
-  position: fixed !important;
-  z-index: 99;
-  width: 250px !important;
-  height: 250px !important;
-  margin: 5px;
+.gn-map-fixed { 
+  [ol-map] {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    right: 0;
+    bottom: 0;
+    position: fixed !important;
+    z-index: 99;
+    width: 250px !important;
+    height: 250px !important;
+    margin: 5px;
+  }
+}
+.gn-map-relative {
+  position: relative;
 }
 
 // map viewer

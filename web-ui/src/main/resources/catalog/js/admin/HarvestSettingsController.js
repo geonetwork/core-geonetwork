@@ -31,7 +31,7 @@
   goog.require('gn_importxsl');
 
   var module = angular.module('gn_harvest_settings_controller',
-      ['gn_category',
+      ['ui.bootstrap.typeahead', 'gn_category',
        'gn_importxsl']);
 
   /**
@@ -191,11 +191,9 @@
             .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
-                  label: value
+                  type: value,
+                  label: 'harvester-' + value
                 };
-                $translate('harvester-' + value).then(function(translated) {
-                  $scope.harvesterTypes[value].text = translated;
-                });
 
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')

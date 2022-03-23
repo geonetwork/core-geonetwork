@@ -42,8 +42,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,38 +114,15 @@ public class XsltResponseWriter {
         return Xml.getString(asElement());
     }
 
-    public void asPdf(HttpServletResponse response, String documentName) throws Exception {
+    public void asPdf(HttpServletResponse response, String fileName) throws Exception {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());
 
-//        // Checks for a parameter documentFileName with the document file name,
-//        // otherwise uses a default value
-        if (StringUtils.isEmpty(documentName)) {
-            documentName = "document.pdf";
-        } else {
-            if (!documentName.endsWith(".pdf")) {
-                documentName = documentName + ".pdf";
-            }
-
-            Calendar c = Calendar.getInstance();
-
-            documentName = documentName.replace("{year}", c.get(Calendar.YEAR) + "");
-            documentName = documentName.replace("{month}", c.get(Calendar.MONTH) + "");
-            documentName = documentName.replace("{day}", c.get(Calendar.DAY_OF_MONTH) + "");
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-            documentName = documentName.replace("{date}", dateFormat.format(c.getTime()));
-            documentName = documentName.replace("{datetime}", datetimeFormat.format(c.getTime()));
-        }
-
         response.setContentType("application/pdf");
-        response.addHeader("Content-Disposition", "attachment; filename=" + documentName);
+        response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
         response.setContentLength((int) file.toFile().length());
         response.getOutputStream().write(Files.readAllBytes(file));
         response.getOutputStream().flush();
-
     }
 
     public XsltResponseWriter withJson(String json) {

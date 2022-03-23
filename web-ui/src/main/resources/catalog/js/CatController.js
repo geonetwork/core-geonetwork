@@ -546,7 +546,7 @@ goog.require('gn_alert');
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=xml'
+              'url' : '/formatters/xsl-view?root=div&view=advanced'
             }]
           },
           'downloadFormatter': [{
@@ -573,6 +573,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showMapInFacet': false,
           'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,
@@ -581,6 +582,9 @@ goog.require('gn_alert');
           },
           'savedSelection': {
             'enabled': false
+          },
+          "addWMSLayersToMap": {
+            "urlLayerParam": ""
           }
         },
         'map': {
@@ -832,6 +836,14 @@ goog.require('gn_alert');
             }
           }, config).mods.header.languages;
 
+          this.gnCfg.mods.search.sortbyValues = angular.extend({
+            mods: {
+              search: {
+                sortbyValues: {}
+              }
+            }
+          }, config).mods.search.sortbyValues;
+
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
           this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
@@ -858,6 +870,8 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.search.sortbyValues = [];
+        copy.mods.search.hitsperpageValues = [];
         copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};

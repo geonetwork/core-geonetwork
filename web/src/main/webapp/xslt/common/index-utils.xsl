@@ -60,7 +60,7 @@
     <xsl:param name="value" as="xs:string?"/>
     <xsl:value-of select="if ($value castable as xs:date
                           or $value castable as xs:dateTime
-                          or matches($value, '[0-9]{4}(-[0-9]{2})?'))
+                          or matches($value, '^[0-9]{4}$|^[0-9]{4}-(0[1-9]|1[012])$'))
                           then true() else false()"/>
   </xsl:function>
 

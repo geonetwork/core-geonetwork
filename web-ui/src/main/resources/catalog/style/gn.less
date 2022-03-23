@@ -376,6 +376,14 @@ div.gn-scroll-spy {
           max-height: 250px;
         }
       }
+      // error message
+      .alert {
+        position: fixed;
+        bottom: 0;
+        width: calc(~"100% - 100px");
+        margin-left: 200px;
+        margin-right: 200px;
+      }
     }
   }
   .modal-dialog {
@@ -914,6 +922,21 @@ input.ng-invalid {
 
   &:hover {
     opacity: 1;
+  }
+}
+
+.gn-copy-clipboard {
+  &.gn-hide-input {
+    display: inline-block;
+    // old trick to not hide the input but position it out of sight
+    input[type=text] {
+      position: absolute;
+      left: -99999px;
+    }
+    .btn {
+      border-radius: @border-radius-base !important;
+      border: 1px solid @btn-default-border;
+    }
   }
 }
 

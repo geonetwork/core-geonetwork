@@ -111,6 +111,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
+
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
      * bundle's loc directory)
@@ -240,10 +243,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-
-        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         if (StringUtils.isNotEmpty(iso3lang)) {
-            language = LanguageUtils.locale2gnCode(iso3lang);
+            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
         }
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
@@ -302,7 +304,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,
-                LanguageUtils.locale2gnCode(locale.getISO3Language()),
+                isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }

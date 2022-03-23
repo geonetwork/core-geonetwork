@@ -1,7 +1,29 @@
+/*
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.api.reports;
 
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -67,7 +89,7 @@ public class ReportInternalMetadata implements IReport {
             csvFilePrinter.println();
 
             String[] entries = (
-                "Metadata ID#Metadata Title#Metadata Create date#"
+                "Metadata ID#Metadata Title#Metadata Create date#Metadata Update date#"
                     + "Owner Username#Owner Surname#Owner Name#Owner Email#"
                     + "Group Owner#Group Owner Email").split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
@@ -91,7 +113,7 @@ public class ReportInternalMetadata implements IReport {
                     metadata.getSourceInfo().getOwner();
                 if (mdUserOwner != null) {
                     Optional<User> userOwnerFilter = users.stream().filter(
-                        u -> u.getId() == mdUserOwner)
+                            u -> u.getId() == mdUserOwner)
                         .findFirst();
 
                     if (userOwnerFilter.isPresent()) {
@@ -112,7 +134,7 @@ public class ReportInternalMetadata implements IReport {
                     metadata.getSourceInfo().getGroupOwner();
                 if (mdGroupOwner != null) {
                     Optional<Group> groupOwnerFilter = groups.stream().filter(
-                        g -> g.getId() == mdGroupOwner)
+                            g -> g.getId() == mdGroupOwner)
                         .findFirst();
                     if (groupOwnerFilter.isPresent()) {
                         Group groupOwner = groupOwnerFilter.get();
@@ -137,6 +159,7 @@ public class ReportInternalMetadata implements IReport {
                 record.add(metadata.getUuid());
                 record.add("" + mdTitle);
                 record.add("" + metadata.getDataInfo().getCreateDate());
+                record.add("" + metadata.getDataInfo().getChangeDate());
                 record.add(userOwnerUsername);
                 record.add(userOwnerSurname);
                 record.add(userOwnerName);
