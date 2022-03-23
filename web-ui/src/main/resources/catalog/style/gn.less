@@ -159,6 +159,16 @@ div[gn-transfer-ownership] * .list-group {
   #gn-new-metadata-container, #gn-import-container {
     padding-top: 70px;
   }
+  #gn-import-reports-row {
+    max-height: calc(~"100vh - @{gn-header-height} - @{gn-menubar-height} - 120px");
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  #gn-import-uploadfile-list {
+    max-height: 525px;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
 }
 
 a {
@@ -189,9 +199,9 @@ a {
 }
 .gn-img-modal {
   width: 95vw;
-
+  background-color: #fff;
   img {
-    width: 100%
+    max-width: 100%
   }
   .gn-img-background {
     background-image: linear-gradient(to bottom,transparent,rgba(0,0,0,0.74));
@@ -827,11 +837,6 @@ html[lang=fre] {
   color: #d3d3d3;
 }
 
-button, .btn, .btn:active, a {
-  &:focus {
-    outline: none;
-  }
-}
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -1350,13 +1355,17 @@ gn-indexing-task-status {
 .flex-nowrap, .flex-no-wrap { flex-wrap: nowrap; }
 .flex-wrap { flex-wrap: wrap; }
 .flex-wrap-r { flex-wrap: wrap-reverse; }
+.flex-grow-4 { flex-grow: 4; }
+.flex-self-center { align-self: center; }
 .text-wrap { white-space: normal; }
 .text-nowrap, .text-no-wrap { white-space: nowrap; }
 .text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.text-small { font-size: 12px;}
+.text-medium { font-size: 20px; }
+.text-large { font-size: 30px; }
 .width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
 .height-auto { height: auto !important; max-height: none !important; }
-
 
 html {
   // As a side-effect of setting the @viewport in bootstrap,
