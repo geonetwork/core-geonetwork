@@ -768,21 +768,14 @@ goog.require('gn_alert');
           'editorIndentType': '',
           'allowRemoteRecordLink': true,
           'facetConfig': {
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key',
-                'size': 20
+                'field': 'resourceType'
               }
             },
             'cl_status.key': {
               'terms': {
                 'field': 'cl_status.key',
-                'size': 15
-              }
-            },
-            'sourceCatalogue': {
-              'terms': {
-                'field': 'sourceCatalogue',
                 'size': 15
               }
             },
@@ -796,48 +789,91 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'valid_inspire',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'sourceCatalogue': {
+              'terms': {
+                'field': 'sourceCatalogue',
+                'size': 100,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'groupOwner': {
               'terms': {
                 'field': 'groupOwner',
-                'size': 10
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'recordOwner': {
               'terms': {
                 'field': 'recordOwner',
-                'size': 10
-              }
-            },
-            'groupPublishedId': {
-              'terms': {
-                'field': 'groupPublishedId',
-                'size': 10
-              }
-            },
-            'documentStandard': {
-              'terms': {
-                'field': 'documentStandard',
-                'size': 10
-              }
-            },
-            'isHarvested': {
-              'terms': {
-                'field': 'isHarvested',
-                'size': 2
-              }
-            },
-            'isTemplate': {
-              'terms': {
-                'field': 'isTemplate',
-                'size': 5
+                'size': 5,
+                'include': '.*'
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'isPublishedToAll': {
               'terms': {
                 'field': 'isPublishedToAll',
                 'size': 2
+              }
+            },
+            'groupPublishedId': {
+              'terms': {
+                'field': 'groupPublishedId',
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
+              }
+            },
+            'documentStandard': {
+              'terms': {
+                'field': 'documentStandard',
+                'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 2
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isTemplate': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 5
+              },
+              'meta': {
+                'collapsed': true
               }
             }
           }
