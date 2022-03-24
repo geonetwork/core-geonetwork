@@ -110,7 +110,7 @@ goog.require('gn_alert');
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
+          'homeUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'showSocialBarInFooter': true,
           'fluidLayout': true,
           'facetConfig': {
