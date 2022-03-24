@@ -82,9 +82,9 @@ public class KeycloakUtil implements SecurityProviderUtil {
      */
     @Override
     public String getSSOAuthenticationHeaderValue() {
-        if (SecurityContextHolder.getContext().getAuthentication().getDetails() instanceof RefreshableKeycloakSecurityContext) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof KeycloakPrincipal) {
             RefreshableKeycloakSecurityContext refreshableKeycloakSecurityContext =
-                (RefreshableKeycloakSecurityContext) SecurityContextHolder.getContext().getAuthentication().getDetails();
+                (RefreshableKeycloakSecurityContext) ((KeycloakPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getKeycloakSecurityContext();
             return "Bearer " + refreshableKeycloakSecurityContext.getTokenString();
         }
         return null;

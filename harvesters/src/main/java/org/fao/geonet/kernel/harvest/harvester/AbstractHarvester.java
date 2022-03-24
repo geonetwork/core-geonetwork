@@ -881,10 +881,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         P copy = (P) params.copy();
         //--- update variables
         copy.update(node);
+        String lastRun = harvesterSettingsManager.getValue("harvesting/id:" + id + "/info/lastRun");
         String path = "harvesting/id:" + id;
         harvesterSettingsManager.removeChildren(path);
         //--- update database
         storeNode(copy, path);
+        // -- preserve lastRun information
+        harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
         //--- we update a copy first because if there is an exception CswParams
         //--- could be half updated and so it could be in an inconsistent state
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
