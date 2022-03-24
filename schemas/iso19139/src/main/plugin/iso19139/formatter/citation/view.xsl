@@ -50,16 +50,20 @@
       <xsl:for-each select="$authors">
         <author>
           <xsl:variable name="name"
-                        select="normalize-space(.//gmd:individualName[1])"/>
+                        select=".//gmd:individualName[1]"/>
 
-          <xsl:value-of select="$name"/>
-          <xsl:if test="$name != ''">(</xsl:if>
+          <xsl:for-each select="$name">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select=".//gmd:organisationName">
             <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="$name">)</xsl:if>
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
         </author>
       </xsl:for-each>
     </xsl:variable>
@@ -107,16 +111,20 @@
       <xsl:for-each select="$publishers">
         <author>
           <xsl:variable name="name"
-                        select="normalize-space(.//gmd:individualName[1])"/>
+                        select=".//gmd:individualName[1]"/>
 
-          <xsl:value-of select="$name"/>
-          <xsl:if test="$name != ''">(</xsl:if>
+          <xsl:for-each select="$name">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select=".//gmd:organisationName">
             <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="$name">)</xsl:if>
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
         </author>
       </xsl:for-each>
     </xsl:variable>
