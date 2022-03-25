@@ -679,7 +679,7 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'statusWorkflow': {
+            'mdStatus': {
               'terms': {
                 'field': 'statusWorkflow',
                 'size': 20
