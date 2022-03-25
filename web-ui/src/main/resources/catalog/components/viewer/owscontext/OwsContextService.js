@@ -667,7 +667,9 @@
               olL.set('title', layer.title);
               olL.set('label', layer.title);
             }
-            olL.set('metadataUuid', layer.metadataUuid || '');
+            if (layer.metadataUuid) {
+              olL.set('metadataUuid', layer.metadataUuid);
+            }
             if (bgIdx) {
               olL.set('bgIdx', bgIdx);
             } else if (index) {
