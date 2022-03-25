@@ -835,13 +835,15 @@ goog.require('gn_alert');
                 'size': 2
               }
             },
-            'groupPublishedId': {
+            'group': {
               'terms': {
                 'field': 'groupPublishedId',
-                'size': 200,
-                'include': '.*'
+                'size': 300,
+                'include': '.*',
+                'exclude': '1'
               },
               'meta': {
+                'field': 'groupPublishedId',
                 'orderByTranslation': true,
                 'filterByTranslation': true,
                 'displayFilter': true,
