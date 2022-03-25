@@ -485,6 +485,12 @@
       var sortConfig = gnSearchSettings.sortBy;
       angular.extend($scope.searchObj, {
         advancedMode: false,
+        defaultParams: {
+          isTemplate: 'n'
+        },
+        params: {
+          isTemplate: 'n'
+        },
         viewerMap: viewerMap,
         searchMap: searchMap,
         panier: [],
