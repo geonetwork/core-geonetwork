@@ -679,6 +679,12 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
+            'statusWorkflow': {
+              'terms': {
+                'field': 'statusWorkflow',
+                'size': 20
+              }
+            },
             'cl_status.key': {
               'terms': {
                 'field': 'cl_status.key',
