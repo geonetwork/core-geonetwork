@@ -9,7 +9,6 @@
            id="anySearchField"
            autocomplete="off"
            ng-model="searchInput.model"
-           data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
            data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
            typeahead-focus-first="false"
            typeahead-loading="anyLoading"
