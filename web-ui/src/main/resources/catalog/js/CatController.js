@@ -683,6 +683,9 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'statusWorkflow',
                 'size': 20
+              },
+              'meta': {
+                'field': 'statusWorkflow'
               }
             },
             'cl_status.key': {
