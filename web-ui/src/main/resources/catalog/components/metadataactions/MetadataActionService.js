@@ -279,6 +279,14 @@
             });
       };
 
+      this.approve = function(bucket, scope) {
+        gnUtilityService.openModal({
+          title: 'batchApproveTitle',
+          content: '<div gn-metadata-batch-approve selection-bucket="' + bucket + '"></div>'
+        }, scope, 'StatusUpdated');
+
+      };
+
       this.openPrivilegesBatchPanel = function(scope, bucket) {
         gnUtilityService.openModal({
           title: 'privileges',

@@ -59,6 +59,7 @@
               gnConfig[gnConfig.key.isInspireEnabled] &&
               angular.isString(gnConfig['system.inspire.remotevalidation.url']);
             scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'];
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
           });
 
           scope.$on('operationOnSelectionStart', function() {

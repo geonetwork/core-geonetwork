@@ -28,6 +28,69 @@
 
   var module = angular.module('gn_mdactions_directive', []);
 
+  module.directive('gnMetadataBatchApprove', ['$translate', '$http',
+    'gnMetadataManager', 'gnUtilityService',
+    function($translate, $http, gnMetadataManager, gnUtilityService) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'batchapprove.html',
+        scope: {
+          selectionBucket: '@'
+        },
+        link: function(scope) {
+          var translations = null;
+          $translate(['metadataApproved']).then(function(t) {
+            translations = t;
+          });
+
+          scope.changeMessage = '';
+          scope.directApproval = false;
+
+          scope.approve = function() {
+            scope.$broadcast('operationOnSelectionStart');
+
+            return $http.put('../api/records/approve',
+              {
+                bucket: scope.selectionBucket,
+                message: scope.changeMessage,
+                directApproval: scope.directApproval
+              }).then(
+              function(response) {
+                scope.processReport = response.data;
+                var reportTemplate = '../../catalog/components/utility/' +
+                  'partials/batchreport-workflow.html'
+
+                scope.$broadcast('operationOnSelectionStop');
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: translations.metadataApproved,
+                  content: '<div gn-batch-report="processReport" template-url="' + reportTemplate + '"></div>',
+                  className: 'gn-status-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('StatusUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'StatusUpdated');
+              }, function(response) {
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('metadataStatusUpdated', false);
+
+                scope.$emit('StatusUpdated', {
+                  title: $translate.instant('metadataStatusUpdatedErrors'),
+                  error: response.data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+          };
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnMetadataStatusUpdater
