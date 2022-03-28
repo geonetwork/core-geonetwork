@@ -391,6 +391,19 @@ public class MetadataWorkflowApi {
 
         //--- reindex metadata
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
+
+        //--- reindex metadata
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
+
+        // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+        // status of the published and draft versions
+        if (metadata instanceof MetadataDraft) {
+            Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+            if (metadataApproved != null) {
+                metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true);
+            }
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(

@@ -1207,7 +1207,14 @@
             }
           };
 
-          init();
+          // init once we have a config
+          var initDone = false;
+          var unwatchInit = scope.$watch('config', function(n, o) {
+            if (!n) { return; }
+            init();
+            initDone = true;
+            unwatchInit();
+          });
 
           // model -> view
           if (!isRange) {
@@ -1223,9 +1230,6 @@
             });
           }
           else {
-            scope.$watch('config', function(n, o) {
-              init();
-            });
             scope.$watchCollection('date', function(newValue, oldValue) {
               if (!scope.date) {
                 scope.date = {};

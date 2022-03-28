@@ -520,11 +520,14 @@
     "analyseRecordFinishedWithErrors": "Analyse over, {{total}} records processed with {{errors}} errorrs",
     "testLinkRunning": "{{total}} links to test...",
     "testLinkFinished": "Testing links over, {{total}} links tested",
+    "mdStatus-0": "Unknown",
     "mdStatus-1": "Draft",
     "mdStatus-2": "Approved",
     "mdStatus-3": "Retired",
     "mdStatus-4": "Submitted",
     "mdStatus-5": "Rejected",
+    "mdStatus-21": "Approved with working copy",
+    "mdStatus-24": "Approved with working copy submitted",
     "mdStatusTitle-41": "Cancel approval submission",
     "mdStatusTitle-31": "Restore record to draft status",
     "mdStatusTitle-42": "Approve metadata",
@@ -569,5 +572,6 @@
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
     "metadataInfoReport": "Metadata information",
-    "metadataErrorReport": "Metadata errors"
+    "metadataErrorReport": "Metadata errors",
+    "facet-mdStatus": "Workflow progress"
 }
