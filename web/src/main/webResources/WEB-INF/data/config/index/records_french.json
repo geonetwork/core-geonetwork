@@ -1607,6 +1607,9 @@
       },
       "root": {
         "type": "keyword"
+      },
+      "statusWorkflow": {
+        "type": "keyword"
       }
     }
   }
