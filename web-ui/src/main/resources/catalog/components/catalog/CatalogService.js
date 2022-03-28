@@ -736,14 +736,14 @@
               if (type.substr(0, 1) == '#') {
                 var protocolMatch = link.protocol == type.substr(1, type.length - 1);
                 if ((protocolMatch && groupId === undefined) ||
-                    (protocolMatch && groupId != undefined && groupId == link.group)) {
+                    (protocolMatch && groupId != undefined && groupId === link.group)) {
                   ret.push(link);
                 }
               }
               else {
                 if (link.protocol.toLowerCase().indexOf(
                     type.toLowerCase()) >= 0 &&
-                    (!groupId || groupId == link.group)) {
+                    (groupId === undefined || groupId === link.group)) {
                   ret.push(link);
                 }
               }

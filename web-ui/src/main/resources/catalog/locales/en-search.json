@@ -174,7 +174,7 @@
   "listOfCategories": "Categories",
   "formats": "Formats",
   "addLayers": "Add layers",
-  "serviceUrl": "http://...",
+  "serviceUrl": "https://...",
   "serviceUrlLabel": "Service URL",
   "CurrentLayers": "Layers",
   "SearchLayer": "Search",
@@ -536,5 +536,6 @@
   "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
   "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
   "seriesComposedOf": "Composed of",
-  "seriesCoveringPeriod": "Covering period"
+  "seriesCoveringPeriod": "Covering period",
+  "approve": "Approve"
 }

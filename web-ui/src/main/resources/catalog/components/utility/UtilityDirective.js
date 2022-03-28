@@ -323,9 +323,16 @@
         scope: {
           processReport: '=gnBatchReport'
         },
-        templateUrl: '../../catalog/components/utility/' +
-            'partials/batchreport.html',
+        templateUrl: function ($element, $attrs) {
+          return $attrs.templateUrl || '../../catalog/components/utility/' +
+            'partials/batchreport.html'
+        },
         link: function(scope, element, attrs) {
+          scope.hasMetadataInfo = function() {
+            return (scope.processReport && scope.processReport.metadataInfos &&
+              (Object.keys(scope.processReport.metadataInfos).length > 0));
+          }
+
           scope.$watch('processReport', function(n, o) {
             if (n && n != o) {
               scope.processReportWarning = n.notFound != 0 ||
@@ -1397,7 +1404,14 @@
             }
           };
 
-          init();
+          // init once we have a config
+          var initDone = false;
+          var unwatchInit = scope.$watch('config', function(n, o) {
+            if (!n) { return; }
+            init();
+            initDone = true;
+            unwatchInit();
+          });
 
           // model -> view
           if (!isRange) {
@@ -1413,9 +1427,6 @@
             });
           }
           else {
-            scope.$watch('config', function(n, o) {
-              init();
-            });
             scope.$watchCollection('date', function(newValue, oldValue) {
               if (!scope.date) {
                 scope.date = {};

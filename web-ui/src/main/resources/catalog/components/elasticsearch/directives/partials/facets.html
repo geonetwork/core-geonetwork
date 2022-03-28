@@ -60,11 +60,12 @@
             <span class="fa fa-filter"></span>
           </span>
           <input title="{{'facetIncludeFilter' | translate}}"
+                aria-label="{{'facetIncludeFilter' | translate}}"
                 ng-model="facet.include"
                 ng-model-options="{debounce: 300}"
                 ng-change="ctrl.filterTerms(facet)"
                 placeholder="{{'filter' | translate}}"
-                autocomplete="nope"
+                autocomplete="false"
                 class="form-control input-sm"
                 type="text"
                 />
