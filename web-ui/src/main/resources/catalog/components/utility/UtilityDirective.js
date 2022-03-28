@@ -2034,8 +2034,6 @@
         templateUrl: '../../catalog/components/utility/' +
           'partials/metadataselector.html',
         link: function(scope, element, attrs) {
-          scope.selectedMetadata = null;
-
           scope.searchObj.params = angular.extend({},
             scope.searchObj.defaultParams);
 
@@ -2044,7 +2042,7 @@
           };
 
           scope.selectMetadata = function(md) {
-            scope.selectedMetadata = md;
+            scope.md = md;
             scope.uuid = md.uuid;
           }
 
