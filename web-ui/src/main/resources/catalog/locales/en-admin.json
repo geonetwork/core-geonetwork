@@ -1190,7 +1190,7 @@
     "ui-languages-help": "Define the list of languages in the language selector",
     "ui-mod-home": "Home page",
     "ui-appUrl": "Application URL",
-    "ui-appUrl-help": "URL of the home page. Can contain the following variables between 2 opening and closing '{': <ul><li><strong>node</strong> for the current portal</li><li><strong>lang</strong> for 3 letters language code</li><li> <strong>isoLang</strong> for 2 letters language code.</li></ul>",
+    "ui-appUrl-help": "URL which can contain the following variables between '{' and '}': <ul><li><strong>node</strong> for the current portal</li><li><strong>lang</strong> for 3 letters language code</li><li> <strong>isoLang</strong> for 2 letters language code.</li></ul>",
     "ui-advancedSearchTemplate": "Template for advanced search form",
     "ui-advancedSearchTemplate-help": "Allows the customization of the advanced search form with a custom template.",
     "ui-mod-search": "Search application",
