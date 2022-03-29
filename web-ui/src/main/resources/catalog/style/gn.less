@@ -23,6 +23,25 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+/* skiplink */
+.gn-skiplink {
+  margin: 10px;
+  top: 0;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  transform: translateX(-200%);
+  transition: transform 0.3s;
+  z-index: 10000;
+  &:focus {
+    transform: translateX(0%);
+    outline: 2px auto @brand-warning !important;
+  }
+}
+.gn-skiplink-nav {
+  top: @gn-header-height;
+}
+
 .gn-portal {
   .navbar {
     display: none;

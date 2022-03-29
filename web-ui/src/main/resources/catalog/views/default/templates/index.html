@@ -1,3 +1,13 @@
+<div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'"
+     data-ng-controller="gnsScrollController">
+  <button class="btn btn-warning gn-skiplink"
+          type="button"
+          data-ng-click="gotoAnchor('main-content')"
+          data-ng-class="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader ? 'gn-skiplink-top' : 'gn-skiplink-nav'">
+    <span translate="">skipLink</span>
+  </button>
+</div>
+
 <header class="gn-header"
         data-ng-show="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader">
   <div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
@@ -19,9 +29,9 @@
      xmlns="http://www.w3.org/1999/html">
 </nav>
 
-<div class="gn-search-page"
-     role="main"
-     data-ng-controller="GnSearchController">
+<main class="gn-search-page"
+      id="main-content"
+      data-ng-controller="GnSearchController">
   <cookiewarning></cookiewarning>
   <div class=""
        data-ng-controller="gnsDefault">
@@ -43,7 +53,7 @@
            data-ng-if="activeTab == '/page'"/>
     </div>
   </div>
-</div>
+</main>
 
 
 <footer class="navbar navbar-default gn-bottom-bar"

@@ -573,5 +573,6 @@
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
     "metadataInfoReport": "Metadata information",
     "metadataErrorReport": "Metadata errors",
-    "facet-mdStatus": "Workflow progress"
+    "facet-mdStatus": "Workflow progress",
+    "skipLink": "Skip and go to the content"
 }
