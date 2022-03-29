@@ -114,7 +114,8 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             proxyRequest.setHeader("X-Forwarded-Proto", servletRequest.getScheme());
             proxyRequest.setHeader("X-Forwarded-Prefix", servletRequest.getContextPath() + this.doForwardHostPrefixPath);
         }
-
+        // remove host on proxy request to avoid issues in case of redirection
+        proxyRequest.removeHeaders("Host");
     }
 
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
