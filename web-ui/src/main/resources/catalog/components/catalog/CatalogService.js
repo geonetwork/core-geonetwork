@@ -650,6 +650,9 @@
       getTitle: function() {
         return this.title || this.defaultTitle;
       },
+      getUuid: function() {
+        return this.uuid;
+      },
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
