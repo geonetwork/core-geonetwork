@@ -472,7 +472,7 @@
               <a target="_blank"
                  data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
-                <span>{{'(' + resource.associationType + ')'}}</span>
+                <span>{{'(' + (resource.associationType | translate) + ')'}}</span>
               </a>
             </div>
             <div class="col-md-1 text-right">
