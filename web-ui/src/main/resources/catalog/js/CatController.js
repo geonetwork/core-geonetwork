@@ -958,6 +958,12 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
+        },
+        'workflowHelper': {
+          'enabled': false,
+          'workflowAssistApps': [
+            {'appUrl': '', 'appLabelKey': ''}
+          ]
         }
       }
     };
@@ -1018,7 +1024,8 @@ goog.require('gn_alert');
         'locationThesaurus',
         'distributionConfig',
         'collectionTableConfig',
-        'queryBaseOptions'
+        'queryBaseOptions',
+        'workflowAssistApps'
       ],
       current: null,
       isDisableLoginForm: false,
