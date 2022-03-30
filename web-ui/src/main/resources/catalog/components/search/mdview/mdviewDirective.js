@@ -98,10 +98,10 @@
             'morelikethis.html';
         },
         link: function(scope, element, attrs, controller) {
-          var initSize = 4;
+          var initSize = attrs['size'] ? parseInt(attrs['size']) : 4;
           scope.similarDocuments = [];
           scope.size = initSize;
-          scope.pageSize = 4;
+          scope.pageSize = initSize;
           scope.maxSize = 8;
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
