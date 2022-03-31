@@ -199,7 +199,7 @@
 
         var url = printConfigUrlPrefix + '../api/records/zip?';
         url += angular.isDefined(uuid) ?
-            '&uuid=' + uuid : '&format=full';
+            '&uuid=' + uuid : '';
         url += angular.isDefined(bucket) ?
             '&bucket=' + bucket : '';
         url += angular.isDefined(approved) ?
