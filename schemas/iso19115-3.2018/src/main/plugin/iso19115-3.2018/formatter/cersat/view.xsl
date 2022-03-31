@@ -195,32 +195,9 @@
                 <strong>
                   <xsl:value-of select="$schemaStrings/eo-cersat-author"/>
                 </strong>
-                <xsl:for-each select="$authors">
-                  <xsl:variable name="org"
-                                select=".//cit:party/cit:CI_Organisation/cit:name/gco:CharacterString"/>
-
-                  <xsl:variable name="individuals"
-                                select=".//cit:CI_Individual/cit:name/gco:CharacterString"/>
-
-                  <xsl:choose>
-                    <xsl:when  test="$individuals">
-                      <xsl:value-of select="string-join($individuals, ', ')"/>
-                      <xsl:if test="$org != ''">
-                        <xsl:value-of select="concat(' (', $org, ')')"/>
-                      </xsl:if>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$org"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-
-                  <xsl:for-each select=".//cit:electronicMailAddress">
-                    <a href="mailto:{.}">
-                      <i class="fa fa-envelope">&#160;</i>
-                    </a>
-                  </xsl:for-each>
-                  <xsl:if test="position() != last()">, </xsl:if>
-                </xsl:for-each>
+                <xsl:call-template name="render-cersat-contacts-list">
+                  <xsl:with-param name="contacts" select="$authors"/>
+                </xsl:call-template>
               </div>
             </xsl:if>
 
@@ -595,14 +572,10 @@
                                         current-grouping-key())"/>
 
                 <strong><xsl:value-of select="$codelistTranslation"/></strong>
-                <xsl:for-each select="current-group()">
-                  <xsl:value-of select=".//cit:party/*/cit:name"/>
-                  <xsl:for-each select=".//cit:electronicMailAddress">
-                    <a href="mailto:{.}">
-                      <i class="fa fa-envelope">&#160;</i>
-                    </a>
-                  </xsl:for-each>
-                </xsl:for-each>
+
+                <xsl:call-template name="render-cersat-contacts-list">
+                  <xsl:with-param name="contacts" select="current-group()"/>
+                </xsl:call-template>
               </div>
             </xsl:for-each-group>
           </div>
@@ -618,6 +591,43 @@
       </div>
     </div>-->
 
+  </xsl:template>
+
+
+  <xsl:template name="render-cersat-contacts-list">
+    <xsl:param name="contacts" as="node()*"/>
+    <xsl:for-each select="$contacts">
+      <xsl:variable name="org"
+                    select=".//cit:party/cit:CI_Organisation/cit:name/gco:CharacterString"/>
+
+      <xsl:variable name="individuals"
+                    select=".//cit:CI_Individual[cit:name/gco:CharacterString != '']"/>
+
+      <xsl:choose>
+        <xsl:when test="$individuals">
+          <xsl:for-each select="$individuals">
+            <xsl:value-of select="./cit:name/gco:CharacterString"/>
+            <xsl:if test="$org != ''">
+              <xsl:value-of select="concat(' (', $org, ')')"/>
+            </xsl:if>
+            <xsl:for-each select=".//cit:electronicMailAddress/*/text()">
+              <a href="mailto:{.}">
+                <i class="fa fa-envelope">&#160;</i>
+              </a>
+            </xsl:for-each>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$org"/>
+          <xsl:for-each select=".//cit:electronicMailAddress/*/text()">
+            <a href="mailto:{.}">
+              <i class="fa fa-envelope">&#160;</i>
+            </a>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="position() != last()">, </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
 
