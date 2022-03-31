@@ -365,11 +365,13 @@ div.gn-scroll-spy {
       }
       // error message
       .alert {
-        position: fixed;
-        bottom: 0;
-        width: calc(~"100% - 100px");
-        margin-left: 200px;
-        margin-right: 200px;
+        &.alert-warning {
+          position: fixed;
+          bottom: 0;
+          width: calc(~"100% - 100px");
+          margin-left: 200px;
+          margin-right: 200px;
+        }
       }
     }
   }
