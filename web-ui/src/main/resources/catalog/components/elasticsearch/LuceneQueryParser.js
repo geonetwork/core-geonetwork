@@ -104,7 +104,7 @@
         }
         if (chunks && chunks.length) {
           query_string += '('
-          query_string += chunks.join(' ')
+          query_string += chunks.join(' OR ')
           query_string += ')'
         }
       } else if (angular.isString(node)) {

@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Engin færsla fannst með eitt eða fleiri WMS lög skráð.",
     "noRecordFoundWithResourceRegisteredmap": "Engin færsla fannst með eitt eða fleiri kort skráð. ",
     "tmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (TMS) sem finna má hér  <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
-    "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+    "esri:restLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér<a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér <a href='{{url}}' target='_blank'> {{url}}</a>.",
     "wmtsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMTS) sem finna má hér <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",

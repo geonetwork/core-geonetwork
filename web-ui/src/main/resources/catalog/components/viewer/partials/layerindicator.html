@@ -1,6 +1,7 @@
 <span class="badge"
-      data-ng-class="layerQueue.queue.length > 0 ? '' : 'invisible'"
+      data-ng-if="layerQueue[mapType]"
+      data-ng-class="layerQueue[mapType].length > 0 ? '' : 'invisible'"
       title="{{'layersLoading' | translate}}">
-  {{layerQueue.queue.length}}
+  {{layerQueue[mapType].length}}
   <i class="fa fa-spin fa-spinner"/>
 </span>

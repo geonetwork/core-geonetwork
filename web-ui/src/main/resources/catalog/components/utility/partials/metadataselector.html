@@ -1,0 +1,36 @@
+<div>
+  <div class="input-group dropdown" data-ng-search-form="">
+    <input class="form-control"
+           data-ng-model="uuid"
+           id="{{elementName}}"
+           name="{{elementName}}"/>
+    <span class="input-group-addon">
+      {{md.resourceTitleObject.default}}
+    </span>
+    <div class="input-group-btn">
+      <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              data-ng-click="updateParams();triggerSearch();" type="text">
+        <i class="fa fa-search"/>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li>
+          <input class="form-control"
+                 onClick="window.event.stopPropagation()"
+                 data-ng-change="updateParams();triggerSearch();" type="text"
+                 data-toggle="dropdown"
+                 data-ng-model="searchObj.any"
+                 data-ng-model-options="{debounce: 200}"
+                 placeholder="{{'search' | translate}}"/>
+        </li>
+        <li data-ng-repeat="md in searchResults.records">
+          <a href=""
+             data-ng-click="selectMetadata(md)">
+            {{md.resourceTitleObject.default}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

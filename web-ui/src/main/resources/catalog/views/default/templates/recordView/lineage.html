@@ -1,0 +1,45 @@
+<div class="row"
+     data-ng-if="mdView.current.record.lineage
+                 || mdView.current.record.sourceDescription
+                 || mdView.current.record.supplementalInformation">
+  <div class="col-md-8 gn-record">
+    <div data-ng-if="mdView.current.record.lineage">
+      <h2 data-translate="">lineage</h2>
+      <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
+    </div>
+
+    <div data-ng-if="mdView.current.record.sourceDescription">
+      <h2 data-translate="">sourceDescription</h2>
+      <p data-ng-bind-html="mdView.current.record.sourceDescription | linky | newlines"/>
+    </div>
+
+    <div data-ng-if="mdView.current.record.supplementalInformation">
+      <h2 data-translate="">supplementalInformation</h2>
+      <p data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"/>
+    </div>
+
+  </div>
+  <!-- /.col-md-8 gn-record -->
+  <div class="gn-md-side"
+       data-ng-class="[].concat(mdView.current.record.relatedRecords.sources, mdView.current.record.relatedRecords.hassources).length > 3 ? 'col-md-12' : 'col-md-4'">
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-types="sources"
+         data-layout="card"
+         data-has-results="hasRelations.sources"
+         data-title="{{'sourceDatasets' | translate}}">
+    </div>
+    <div data-ng-if="mdView.current.record.relatedRecords"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-types="hassources"
+         data-layout="card"
+         data-has-results="hasRelations.hassources"
+         data-title="{{'isSourceOfDatasets' | translate}}">
+    </div>
+  </div>
+</div>
+
+<div ng-include="'../../catalog/views/default/templates/recordView/quality.html'"/>
+

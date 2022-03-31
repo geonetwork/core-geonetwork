@@ -1,0 +1,44 @@
+<tabset id="detail-tabset" type="tabs" justified="false" role="tablist">
+
+  <!-- common -->
+  <tab heading="{{'mdTabCommon' | translate}}"
+       role="tab"
+       active="infoTabs.common.active">
+    <h2 data-translate="">aboutThisResource</h2>
+    <div ng-include="'../../catalog/views/default/templates/recordView/common.html'"/>
+  </tab>
+  <!-- /common -->
+
+  <!-- technical & metadata -->
+  <tab heading="{{'mdTabTechnical' | translate}}"
+       role="tab"
+       active="infoTabs.technical.active">
+    <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+  </tab>
+  <!-- /technical & metadata -->
+
+  <!-- contact -->
+  <tab heading="{{'mdTabContact' | translate}}"
+       role="tab"
+       active="infoTabs.contact.active">
+    <h2 data-translate="">resourceContact</h2>
+    <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
+  </tab>
+  <!-- /contact -->
+
+  <!-- downloads & links -->
+  <tab heading="{{'mdTabRelations' | translate}}"
+       role="tab"
+       active="infoTabs.relations.active">
+    <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
+  </tab>
+  <!-- /downloads & links -->
+
+  <!-- (associated) resources -->
+  <tab heading="{{'mdTabResources' | translate}}"
+       role="tab"
+       active="infoTabs.resources.active">
+    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
+  </tab>
+  <!-- /(associated) resources -->
+</tabset>

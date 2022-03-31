@@ -1,0 +1,39 @@
+<div class="row gn-block-similar gn-margin-top gn-margin-bottom">
+  <div class="col-md-12 gn-record">
+    <div data-gn-more-like-this="mdView.current.record"/>
+  </div>
+</div>
+
+<div class="row gn-padding-top"
+     data-ng-show="isRecordHistoryEnabled
+                 && user.isEditorOrMore()
+                 && mdView.current.record.draft != 'y'">
+  <div class="col-md-12">
+    <div data-gn-record-history="mdView.current.record"
+         data-collapsed="true"></div>
+  </div>
+</div>
+
+<div class="row gn-margin-top">
+  <div class="col-md-12">
+    <div data-ng-if="mdView.current.record.indexingErrorMsg
+                  && user.canEditRecord(mdView.current.record)"
+         class="panel panel-warning">
+      <div class="panel-heading"
+           data-gn-slide-toggle="true">
+        <i class="fa fa-fw fa-cog"/>
+        <span data-translate=""
+              data-translate-values="{count: mdView.current.record.indexingErrorMsg.length}">indexingErrorMessages</span>
+      </div>
+      <div class="panel-body">
+        <ul>
+          <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg track by $index">
+            <code>
+              {{e}}
+            </code>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

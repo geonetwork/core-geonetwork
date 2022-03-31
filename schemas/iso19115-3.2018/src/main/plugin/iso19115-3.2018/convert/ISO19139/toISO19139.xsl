@@ -87,7 +87,7 @@
       <xsl:variable name="nameSpacePrefix">
         <xsl:call-template name="getNamespacePrefix"/>
       </xsl:variable>
-      
+
       <xsl:element name="{concat($nameSpacePrefix,':',local-name(.))}">
         <xsl:call-template name="add-namespaces"/>
 
@@ -224,10 +224,10 @@
         <xsl:variable name="nameSpacePrefix">
           <xsl:call-template name="getNamespacePrefix"/>
         </xsl:variable>
-        
+
         <xsl:variable name="isService"
                       select="local-name(.) = 'SV_ServiceIdentification'"/>
-      
+
         <xsl:element name="{concat($nameSpacePrefix,':',local-name(.))}">
           <xsl:apply-templates select="@*"/>
           <xsl:apply-templates select="mri:citation"/>
@@ -307,7 +307,7 @@
             <xsl:with-param name="codeListValue" select="srv2:couplingType/srv2:SV_CouplingType/@codeListValue"/>
           </xsl:call-template>
           <xsl:apply-templates select="srv2:containsOperations"/>
-          
+
           <!-- Add mandatory contains operation -->
           <xsl:if test="$isService and not(srv2:containsOperations)">
             <srv:containsOperations/>
@@ -409,7 +409,7 @@
       <!-- TODO -->
     </gmd:contentInfo>
   </xsl:template>
-  
+
   <!-- Add mandatory includedWithDataset if not present. -->
   <xsl:template match="mrc:MD_FeatureCatalogueDescription[not(mrc:includedWithDataset)]">
     <gmd:MD_FeatureCatalogueDescription>
@@ -420,7 +420,7 @@
       <xsl:apply-templates select="mrc:featureTypes|mrc:featureCatalogueCitation"/>
     </gmd:MD_FeatureCatalogueDescription>
   </xsl:template>
-  
+
   <xsl:template match="mri:associatedResource">
     <gmd:aggregationInfo>
       <gmd:MD_AggregateInformation>
@@ -434,18 +434,34 @@
     <gmd:aggregateDataSetIdentifier>
       <gmd:MD_Identifier>
         <gmd:code>
-          <gco:CharacterString><xsl:value-of select="@uuidref"/></gco:CharacterString>
+          <xsl:choose>
+            <xsl:when test="@xlink:href">
+              <gmx:Anchor>
+                <xsl:copy-of select="@xlink:*"/>
+                <xsl:value-of select="@uuidref"/>
+              </gmx:Anchor>
+            </xsl:when>
+            <xsl:otherwise>
+              <gco:CharacterString><xsl:value-of select="@uuidref"/></gco:CharacterString>
+            </xsl:otherwise>
+          </xsl:choose>
         </gmd:code>
       </gmd:MD_Identifier>
     </gmd:aggregateDataSetIdentifier>
   </xsl:template>
 
   <xsl:template match="mri:MD_AssociatedResource/mri:name" priority="2">
-    <gmd:aggregateDataSetIdentifier>
-      <gmd:MD_Identifier>
-        <xsl:apply-templates select="cit:CI_Citation/*/mcc:MD_Identifier/*"/>
-      </gmd:MD_Identifier>
-    </gmd:aggregateDataSetIdentifier>
+    <gmd:aggregateDataSetName>
+      <xsl:apply-templates select="*"/>
+    </gmd:aggregateDataSetName>
+
+    <xsl:for-each select="cit:CI_Citation/*/mcc:MD_Identifier/*">
+      <gmd:aggregateDataSetIdentifier>
+        <gmd:MD_Identifier>
+          <xsl:apply-templates select="."/>
+        </gmd:MD_Identifier>
+      </gmd:aggregateDataSetIdentifier>
+    </xsl:for-each>
 
     <!--<gmd:aggregateDataSetName>
       <xsl:apply-templates select="*"/>
@@ -462,7 +478,7 @@
   <xsl:template match="mdq:pass[gco2:Boolean = '']" priority="2">
     <gmd:pass gco:nilReason="missing"/>
   </xsl:template>
-  
+
   <xsl:template match="mdb:dataQualityInfo">
     <gmd:dataQualityInfo>
       <gmd:DQ_DataQuality>
@@ -617,7 +633,7 @@
                                     cit:ISBN|
                                     cit:ISSN|
                                     cit:onlineResource"/>
-      
+
       <!-- Special attention is required for CI_ResponsibleParties that are included in the CI_Citation only for a URL. These are currently identified as those
         with no name elements (individualName, organisationName, or positionName)
       -->
@@ -627,7 +643,7 @@
         count(cit:party/cit:CI_Organisation/cit:organisationName/gco2:CharacterString) = 0]">
         <xsl:call-template name="CI_ResponsiblePartyToOnlineResource"/>
       </xsl:for-each>
-      
+
       <xsl:apply-templates select="cit:graphic"/>
     </xsl:element>
   </xsl:template>
@@ -666,7 +682,7 @@
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>
     </xsl:variable>
-    
+
     <xsl:variable name="parentName"
                   select="local-name()"/>
 
@@ -677,7 +693,7 @@
       </xsl:element>
     </xsl:for-each>
   </xsl:template>
-  
+
   <xsl:template match="cit:CI_Responsibility" priority="5">
     <xsl:choose>
       <xsl:when test="count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco2:CharacterString) +
@@ -767,7 +783,7 @@
       <xsl:apply-templates select="*"/>
     </gmd:contactInfo>
   </xsl:template>
-  
+
   <xsl:template match="cit:contactInfo/cit:CI_Contact/cit:phone[1]">
     <!-- Only phone number and facsimile are allowed in ISO19139 -->
     <gmd:phone>
@@ -952,26 +968,6 @@
         </xsl:element>
       </xsl:when>
     </xsl:choose>
-  </xsl:template>
-
-
-
-  <xsl:template name="characterStringSubstitutions">
-    <xsl:param name="parentElement"/>
-    <!-- This template takes a parent of a gco:CharacterString element and writes out the child for several possible substitutions  -->
-    <xsl:for-each select="$parentElement/*">
-      <xsl:choose>
-        <xsl:when test="local-name(.)='CharacterString'">
-          <xsl:copy-of select="."/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:element name="{concat('gmx:',local-name(.))}">
-            <xsl:copy-of select="@*" copy-namespaces="no"/>
-            <xsl:value-of select="."/>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="writeDateTime">

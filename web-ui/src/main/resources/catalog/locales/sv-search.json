@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Ingen post hittades med ett eller flera WMS-lager registrerade.",
     "noRecordFoundWithResourceRegisteredmap": "Ingen post hittades med en eller flera kartor registrerade.",
     "tmsLinkDetails": "Denna datamängd publiceras i visningstjänsten (TMS) tillgänglig på <a href='{{url}}' target='_blank'>{{url}}</a> med identifieraren <strong>{{layer}}</strong> .",
-    "esriRestLinkDetails": "ESRI REST-tjänst <a href='{{url}}' target='_blank'>{{url}}</a> .",
+    "esri:restLinkDetails": "ESRI REST-tjänst <a href='{{url}}' target='_blank'>{{url}}</a> .",
     "wmsLinkDetails": "Denna datamängd publiceras i visningstjänsten (WMS) tillgänglig på <a href='{{url}}' target='_blank'>{{url}}</a> med lagernamn <strong>{{layer}}</strong> .",
     "wmsServiceLinkDetails": "Denna datamängd publiceras i visningstjänsten (WMS) som är tillgänglig på <a href='{{url}}' target='_blank'>{{url}}</a> .",
     "wmtsLinkDetails": "Denna datamängd publiceras i visningstjänsten (WMTS) tillgänglig på <a href='{{url}}' target='_blank'>{{url}}</a> med identifieraren <strong>{{layer}}</strong> .",

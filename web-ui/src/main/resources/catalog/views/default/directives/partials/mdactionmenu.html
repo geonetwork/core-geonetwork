@@ -14,8 +14,23 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li role="menuitem">
+        <label>
+          <input class="fa fa-fw"
+                 data-gn-selection-md="md"
+                 data-bucket="searchObj.selectionBucket"
+                 data-results="searchObj"
+                 type="checkbox"
+                 data-ng-model="md.selected"
+                 aria-label="{{'clickToSelect' | translate}}"/>
+          <span data-ng-hide="md.selected" data-translate="">addRecordToSelection</span>
+          <span data-ng-show="md.selected" data-translate="">removeRecordFromSelection</span>
+        </label>
+      </li>
+      <li class="divider"
+          role="menuitem"></li>
+      <li role="menuitem">
         <a href=""
-           data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+           data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
           <span class="fa fa-fw fa-key"></span>&nbsp;
           <span data-translate="">privileges</span>
@@ -30,7 +45,7 @@
         </a></li>
       <!-- Retired metadata can't be published -->
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
+          data-ng-if="user.canManagePrivileges(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -183,7 +198,6 @@
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && tasks.length > 0 && hasVisibletasks">&nbsp;</li>
 
-
       <li role="menuitem">
         <a href=""
            data-ng-if="user.isEditorOrMore() && md.draft != 'y'"
@@ -198,6 +212,18 @@
            data-ng-click="mdService.createChild(md)">
           <span class="fa fa-fw fa-sitemap"></span>&nbsp;
           <span data-translate="">createChild</span>
+        </a>
+      </li>
+
+      <li class="divider"
+          data-ng-if="user.isAdministrator()"
+          role="menuitem"></li>
+      <li role="menuitem">
+        <a data-ng-click="mdService.indexMd(md)"
+           data-ng-if="user.isAdministrator()"
+           href="">
+          <span class="fa fa-fw fa-cogs"></span>&nbsp;
+          <span data-translate="">indexRecord</span>
         </a>
       </li>
     </ul>

@@ -136,19 +136,19 @@
                   var currentUILang2_3char = gnCurrentEdit.allLanguages.iso2code[currentUILang_3char];
                   if (currentUILang2_3char) {
                     currentUILang2_3char = currentUILang2_3char.replace("#", "");
-                    if (!_.contains(result,currentUILang2_3char))
+                    if (!_.includes(result,currentUILang2_3char))
                       result.push(currentUILang2_3char);
                   }
 
 
                   if (gnLangs.langs[currentUILang_3char]) {
                        v = gnLangs.langs[currentUILang_3char];
-                       if (!_.contains(result,v))
+                       if (!_.includes(result,v))
                          result.push(v);
                   }
                   if ( (currentUILang2_3char)  &&  (gnLangs.langs[currentUILang2_3char])) {
                       v = gnLangs.langs[currentUILang2_3char];
-                       if (!_.contains(result,v))
+                       if (!_.includes(result,v))
                          result.push(v);
                   }
                   return result;

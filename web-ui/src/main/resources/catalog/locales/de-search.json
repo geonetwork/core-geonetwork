@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Kein Datensatz mit einem oder mehreren registrierten WMS-Layern gefunden.",
     "noRecordFoundWithResourceRegisteredmap": "Kein Datensatz mit einer oder mehreren registrierten Karten gefunden.",
     "tmsLinkDetails": "Dieser Datensatz wird im View Service (TMS) veröffentlicht, der unter <a href='{{url}}' target='_blank'>{{url}}</a> mit dem Bezeichner <strong>{{layer}}</strong> verfügbar ist.",
-    "esriRestLinkDetails": "ESRI REST-Service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+    "esri:restLinkDetails": "ESRI REST-Service <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmsLinkDetails": "Dieser Datensatz ist im Darstellungsdienst (WMS) unter <a href='{{url}}' target='_blank'>{{url}}</a> mit dem Layernamen <strong>{{layer}}</strong> veröffentlicht.",
     "wmsServiceLinkDetails": "Dieser Datensatz ist im Darstellungsdienst (WMS) unter <a href='{{url}}' target='_blank'>{{url}}</a> veröffentlicht.",
     "wmtsLinkDetails": "Dieser Datensatz ist im Darstellungsdienst (WMTS) unter <a href='{{url}}' target='_blank'>{{url}}</a> mit dem Identifikator <strong>{{layer}}</strong> veröffentlicht.",

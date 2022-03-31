@@ -30,9 +30,49 @@
    *
    * @constructor
    */
-  var GnFeaturesTableService = function() {
+  var GnFeaturesTableService = function($q, $http) {
+    this.$q = $q;
+    this.$http = $http;
   };
   GnFeaturesTableService.prototype.load = function() {
+  };
+  GnFeaturesTableService.prototype.loadFeatureCatalogue = function(uuid, record) {
+    var deferred = this.$q.defer(), recordUuid = undefined;
+    if (record && record.featureTypes && record.featureTypes[0]) {
+      var dictionary = {};
+      record.featureTypes[0].attributeTable.map(function(col) {
+        dictionary[col.code] = col;
+      })
+      deferred.resolve(dictionary);
+      return deferred.promise;
+    } else if (record && record.uuid && uuid === undefined) {
+      recordUuid = record.uuid;
+    } else {
+      recordUuid = uuid;
+    }
+
+    this.dictionary = this.$http.get(
+      '../api/records/' + recordUuid + '/featureCatalog', {
+        cache: true,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(function(response) {
+        if(response.data['decodeMap'] != null) {
+          var dictionary = {};
+          Object.keys(response.data['decodeMap']).map(function(key) {
+            dictionary[key] = {
+              code: response.data['decodeMap'][key][0],
+              name: response.data['decodeMap'][key][1]
+            }
+          });
+          deferred.resolve(dictionary);
+        }
+      }, function () {
+        deferred.resolve();
+      });
+    return deferred.promise;
   };
 
   /**
@@ -72,6 +112,6 @@
   module.service('gnFeaturesTableManager',
       ['gnFeaturesTableLoader', GnFeaturesTableManager]);
 
-  module.service('gnFeaturesTableService', GnFeaturesTableService);
+  module.service('gnFeaturesTableService', ['$q', '$http', GnFeaturesTableService]);
 
 })();

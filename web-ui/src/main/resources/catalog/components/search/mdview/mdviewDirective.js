@@ -46,7 +46,7 @@
         },
         link: function(scope, element, attrs, controller) {
           scope.$watch('md', function(n, o) {
-            if (n == null || n == undefined) {
+            if (n == null || n == undefined || (n && n.uuid == undefined)) {
               return;
             }
 
@@ -86,7 +86,8 @@
    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
    */
   module.directive('gnMoreLikeThis', [
-    '$http', 'gnGlobalSettings', function($http, gnGlobalSettings) {
+    '$http', 'gnGlobalSettings', 'Metadata',
+    function($http, gnGlobalSettings, Metadata) {
       return {
         scope: {
           md: '=gnMoreLikeThis'
@@ -97,11 +98,11 @@
             'morelikethis.html';
         },
         link: function(scope, element, attrs, controller) {
-          var initSize = 6;
+          var initSize = attrs['size'] ? parseInt(attrs['size']) : 4;
           scope.similarDocuments = [];
           scope.size = initSize;
-          scope.pageSize = 5;
-          scope.maxSize = 19;
+          scope.pageSize = initSize;
+          scope.maxSize = 8;
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
           var query = {
@@ -120,6 +121,9 @@
                   moreLikeThisQuery,
                   {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
                   {"terms": {"draft": ["n", "e"]}}
+                ],
+                "must_not" : [
+                  {"terms": {"uuid": []}}
                 ]}
             }
           };
@@ -133,9 +137,12 @@
             if (scope.md == null) {
               return;
             }
-            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitleObject.default;
+            query.query.bool.must_not[0].terms.uuid = [scope.md.uuid]
+            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
             $http.post('../api/search/records/_search', query).then(function (r) {
-              scope.similarDocuments = r.data.hits;
+              scope.similarDocuments = r.data.hits.hits.map(function(r) {
+                return new Metadata(r);
+              });
             })
           }
           scope.$watch('md', function() {
@@ -149,6 +156,56 @@
       };
     }]);
 
+  module.directive('gnDataPreview', [
+    'gnMapsManager', 'gnMap', 'gnSearchSettings',
+    function(gnMapsManager, gnMap, gnSearchSettings) {
+      return {
+        scope: {
+          md: '=gnDataPreview'
+        },
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+            'datapreview.html',
+        controller: ['$scope', '$timeout',
+          function ($scope, $timeout) {
+          $scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          $scope.hasExtent = false;
+          $scope.extentLayer = new ol.layer.Vector({
+            source: new ol.source.Vector(),
+            map: $scope.map,
+            style: gnSearchSettings.olStyles.mdExtent
+          });
+
+          this.addRecordsExtent = function(records) {
+            $scope.extentLayer.getSource().clear();
+
+            for (var i = 0; i < records.length; i++) {
+              var feat = gnMap.getBboxFeatureFromMd(records[i],
+                $scope.map.getView().getProjection());
+              $scope.extentLayer.getSource().addFeature(feat);
+              $scope.hasExtent = !!feat.getGeometry();
+            }
+
+            if ($scope.hasExtent) {
+              $timeout(function() {
+                $scope.map.getView().fit(
+                  $scope.extentLayer.getSource().getExtent(),
+                  $scope.map.getSize());
+              }, 100);
+            }
+          }
+        }],
+        link: function(scope, element, attrs, ctrl) {
+          if (scope.md) {
+            scope.map.get('creationPromise').then(function() {
+              ctrl.addRecordsExtent([scope.md]);
+              scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
+                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+              });
+            })
+          }
+        }
+      };
+    }]);
 
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
@@ -183,6 +240,18 @@
           });
         }
       };
+    }]);
+
+  module.directive('gnMetadataObjectField', [function() {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'objectFieldWithLink.html',
+        restrict: 'A',
+        scope: {
+          field: '@gnMetadataObjectField',
+          record: '='
+        }
+      }
     }]);
 
   module.directive('gnMetadataRate', [
@@ -269,7 +338,10 @@
         restrict: 'A',
         scope: {
           mdContacts: '=gnMetadataContacts',
-          mode: '@gnMode'
+          // Group by 'default', 'role', 'org-role'
+          mode: '@gnMode',
+          // 'icon' or 'list' (default)
+          layout: '@layout'
         },
         link: function(scope, element, attrs, controller) {
           if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
@@ -294,7 +366,7 @@
                   function(contact) {
                     var copy = angular.copy(contact[0]);
                     angular.extend(copy, {
-                      roles: _.pluck(contact, 'role')
+                      roles: _.map(contact, 'role')
                     });
 
                     return copy;
@@ -381,4 +453,33 @@
       };
     }]
   );
+
+  module.directive('gnMetadataIndividual', [
+    '$http', '$filter',
+    function($http, $filter) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'individual.html'
+      }}]);
+
+
+  module.directive('gnKeywordBadges', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'keywordBadges.html',
+        scope: {
+          record: '=gnKeywordBadges',
+          thesaurus: '=thesaurus'
+        },
+        link: function(scope, element, attrs) {
+          scope.allKeywords = scope.record && scope.record.allKeywords;
+          scope.getOrderByConfig = function(thesaurus) {
+            return thesaurus === 'th_regions'
+              ? ['-group','default']
+              : (gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically
+                ? 'default' : '')
+          };
+        }
+      }}]);
 })();

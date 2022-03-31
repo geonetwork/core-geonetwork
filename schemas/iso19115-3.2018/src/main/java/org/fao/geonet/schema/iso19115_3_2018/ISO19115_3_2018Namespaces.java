@@ -15,6 +15,9 @@ public class ISO19115_3_2018Namespaces {
     public static final Namespace MRI =
             Namespace.getNamespace("mri",
                     "http://standards.iso.org/iso/19115/-3/mri/1.0");
+    public static final Namespace CIT =
+            Namespace.getNamespace("cit",
+                    "http://standards.iso.org/iso/19115/-3/cit/2.0");
     public static final Namespace SRV =
             Namespace.getNamespace("srv",
                     "http://standards.iso.org/iso/19115/-3/srv/2.1");

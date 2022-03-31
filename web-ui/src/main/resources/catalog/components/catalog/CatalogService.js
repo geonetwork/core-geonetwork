@@ -217,18 +217,28 @@
 
         /**
          * @ngdoc method
-         * @name gnMetadataManager#getMdObjByUuid
+         * @name gnMetadataManager#getMdObjByUuidInPortal
          * @methodOf gnMetadataManager
          *
          * @description
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
+         * @param {portal} portal name to query, null to use the current portal
          * @param {string} uuid or id of the metadata
          * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
          * @return {HttpPromise} of the $http post
          */
-        getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.post('../api/search/records/_search', {"query": {
+        getMdObjByUuidInPortal: function(portal, uuid, isTemplate) {
+          var url;
+
+          if (portal == null) {
+            // Use current portal
+            url = '../api/search/records/_search';
+          } else {
+            url = '../../' + portal + '/api/search/records/_search';
+          }
+
+          return $http.post(url, {"query": {
               "bool" : {
                 "must": [
                   {"multi_match": {
@@ -239,12 +249,28 @@
                 ]
               }
             }}).then(function(r) {
-              if (r.data.hits.total.value > 0) {
-                return new Metadata(r.data.hits.hits[0]);
-              } else {
-                console.warn("Record with UUID/ID " + uuid + " not found.")
-              }
-              });
+            if (r.data.hits.total.value > 0) {
+              return new Metadata(r.data.hits.hits[0]);
+            } else {
+              console.warn("Record with UUID/ID " + uuid + " not found.")
+            }
+          });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjByUuid
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog current portal. Trigger a search and
+         * return a promise.
+         * @param {string} uuid or id of the metadata
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
+         */
+        getMdObjByUuid: function(uuid, isTemplate) {
+          return this.getMdObjByUuidInPortal(null, uuid, isTemplate);
         },
 
         /**
@@ -570,10 +596,16 @@
       // Multilingual fields
       $.each(this, function(key, value) {
         var fieldName = key;
-        // Object fields and codelist are storing translations.
+        // Object fields, allKeywords, th_* and codelist are storing translations.
         // Create a field with the UI translation or fallback to default.
         if (key.endsWith('Object') || key.indexOf('cl_') === 0) {
           record.translate(fieldName);
+        } else if (key === 'allKeywords') {
+          Object.keys(this).forEach(function(th) {
+            record.translate(th, record.allKeywords[th].keywords);
+          });
+        } else if (key.match(/th_.*(?<!_tree|Number)$/) != null) {
+          record.translate(key, this);
         }
       });
 
@@ -585,11 +617,12 @@
 
 
     Metadata.prototype = {
-      // For codelist, default property is replaced
+      // For codelist and keywords, default property is replaced
       // For Object, a new field is created without the Object suffix.
-      translate: function(fieldName) {
-        var fieldValues = this[fieldName],
-          isCodelist = fieldName.indexOf('cl_') === 0;
+      translate: function(fieldName, fieldValues) {
+        var fieldValues = fieldValues || this[fieldName],
+          isCodelist = fieldName.indexOf('cl_') === 0,
+          isObject = fieldName.endsWith('Object');
 
         // In object lang prop, in translations, default prop.
         function getCodelistTranslation(o) {
@@ -607,10 +640,12 @@
             if (isCodelist) {
               o.default = getCodelistTranslation(o);
             } else {
-              translatedValues.push(o['lang' + gnLangs.current] || o.default);
+              var translation = o['lang' + gnLangs.current] || o.default;
+              translatedValues.push(translation);
+              o.default = translation;
             }
           });
-          if (!isCodelist) {
+          if (isObject) {
             this[fieldName.slice(0, -6)] = translatedValues;
           }
         } else if (angular.isObject(fieldValues)) {
@@ -773,6 +808,20 @@
           });
         }
         return res;
+      },
+      getKeywordsGroupedByUriBase: function(thesaurusId, groupExtractionRegex) {
+        var thesaurus = this.allKeywords[thesaurusId];
+        if (thesaurus && thesaurus.keywords) {
+          var keywordsWithGroup = [];
+          for (var i = 0; i < thesaurus.keywords.length; i++) {
+            var k = angular.copy(thesaurus.keywords[i]);
+            k.group = k.link ? k.link.replaceAll(new RegExp(groupExtractionRegex, 'g'), '$1') : '';
+            keywordsWithGroup.push(k);
+          }
+          return keywordsWithGroup;
+        } else {
+          return [];
+        }
       }
     };
     return Metadata;

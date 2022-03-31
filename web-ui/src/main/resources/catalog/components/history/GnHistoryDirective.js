@@ -39,7 +39,8 @@
           restrict: 'A',
           replace: true,
           scope: {
-            md: '=gnRecordHistory'
+            md: '=gnRecordHistory',
+            collapsed: '@'
           },
           templateUrl:
           '../../catalog/components/history/partials/recordHistory.html',

@@ -139,7 +139,9 @@
          return {
            buildEditUrlPrefix: function(service) {
              var params = ['../api/records/',
-               gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id, '/', service, '?'];
+               gnCurrentEdit.metadata
+                 ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id,
+               '/', service, '?'];
              gnCurrentEdit.tab ?
              params.push('&currTab=', gnCurrentEdit.tab) :
              params.push('&currTab=', 'default');

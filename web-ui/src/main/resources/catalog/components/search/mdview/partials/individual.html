@@ -1,0 +1,25 @@
+<div data-ng-if="c.email != ''">
+  <a href="mailto:{{c.email}}">
+    <i class="fa fa-fw fa-envelope"></i>
+    <span data-ng-hide="c.individual">{{c.email}}</span>
+    <span data-ng-show="c.individual">{{c.individual}}</span>
+    <span data-ng-show="c.position">({{c.position}})</span>
+  </a>
+</div>
+<div data-ng-if="c.email === ''">{{c.individual}}
+  <span data-ng-show="c.position">({{c.position}})</span>
+</div>
+<div data-ng-repeat="id in c.identifiers">
+  <span data-ng-show="id.link == '' && id.code.indexOf('http') === -1">
+    {{id.code || id.link}}
+    <span data-ng-show="id.codeSpace">({{id.codeSpace}})</span>
+  </span>
+  <a data-ng-show="id.code.indexOf('http') === 0 && id.link == ''"
+     href="{{id.code}}">{{id.code}}
+    <span data-ng-show="id.codeSpace != ''">({{id.codeSpace}})</span>
+  </a>
+  <a data-ng-show="id.link != ''"
+     href="{{id.link}}">{{id.code || id.link}}
+    <span data-ng-show="id.codeSpace != ''">({{id.codeSpace}})</span>
+  </a>
+</div>
