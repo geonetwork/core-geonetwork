@@ -612,9 +612,10 @@
             </xsl:if>
             <xsl:for-each select=".//cit:electronicMailAddress/*/text()">
               <a href="mailto:{.}">
-                <i class="fa fa-envelope">&#160;</i>
+                <i class="fa fa-envelope"><xsl:comment>mail</xsl:comment></i>
               </a>
             </xsl:for-each>
+            <xsl:if test="position() != last()">, </xsl:if>
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
