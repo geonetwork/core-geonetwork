@@ -342,7 +342,7 @@
             <xsl:variable name="projects"
                           select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
             [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
-            'Cersat - Project')]/*/mri:keyword"/>
+            'Cersat - Project')]/*/mri:keyword[*/text() != '']"/>
             <xsl:if test="count($projects) > 0">
               <div class="row cersat-bg cersat-bg-orange">
                 <div>
@@ -353,7 +353,7 @@
                     <xsl:call-template name="get-iso19115-3.2018-localised">
                       <xsl:with-param name="langId" select="$langId"/>
                     </xsl:call-template>
-                    <xsl:if test="position() &lt; last()">, </xsl:if>
+                    <xsl:if test="position() &lt; last()">,</xsl:if>&#160;
                   </xsl:for-each>
                 </div>
               </div>
