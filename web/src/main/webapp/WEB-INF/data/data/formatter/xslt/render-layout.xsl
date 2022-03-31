@@ -420,7 +420,9 @@
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
 
-            <xsl:call-template name="render-portal-link"/>
+            <xsl:if test="$view != 'cersat'">
+              <xsl:call-template name="render-portal-link"/>
+            </xsl:if>
 
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">

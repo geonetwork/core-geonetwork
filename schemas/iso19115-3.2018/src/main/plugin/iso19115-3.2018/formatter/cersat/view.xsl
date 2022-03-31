@@ -351,6 +351,13 @@
         </div>
       </div>
       <div class="col-md-4">
+
+        <!-- In landing page, cersat access to the portal is here
+        instead of default position (see render-layout). -->
+        <xsl:if test="$portalLink != ''">
+          <xsl:call-template name="render-portal-link"/>
+        </xsl:if>
+
         <div class="panel panel-default">
           <div class="panel-heading">ID: <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*/text()"/></div>
           <div class="panel-body">
