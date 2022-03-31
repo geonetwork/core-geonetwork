@@ -79,7 +79,7 @@
       },
       {
         "group": "directAccess",
-        "label": "onlineDownloadWWW",
+        "label": "onlineDownloadWWWHTTPs",
         "icon": "fa gn-icon-onlinesrc",
         "process": "onlinesrc-add",
         "fields": {

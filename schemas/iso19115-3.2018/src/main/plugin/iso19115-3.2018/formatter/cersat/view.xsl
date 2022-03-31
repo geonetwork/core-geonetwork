@@ -149,7 +149,7 @@
 
 
             <xsl:variable name="status"
-                          select="$metadata/mdb:identificationInfo/*/mri:status/*/@codeListValue"/>
+                          select="$metadata/mdb:identificationInfo/*/mri:status[1]/*/@codeListValue"/>
             <xsl:if test="$status != ''">
               <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
                 <div>
@@ -324,10 +324,10 @@
                 <div>
                   <xsl:value-of select="$schemaStrings/cersat-citation"/>
                 </div>
-                <div class="cersat-bg-white">&#160;
+                <div class="cersat-bg-white">
                   <xsl:call-template name="get-iso19115-3.2018-localised">
                     <xsl:with-param name="langId" select="$langId"/>
-                  </xsl:call-template>
+                  </xsl:call-template>&#160;
                 </div>
               </div>
             </xsl:for-each>
@@ -636,7 +636,7 @@
         <link key="OGC:WMS" label="WMS"/>
         <link key="WWW:OPENDAP" label="OPeNDAP"/>
         <link key="WWW:OPENSEARCH" label="OpenSearch"/>
-        <link key="WWW:LINK" label="Download from website"/>
+        <link key="WWW:LINK" label="HTTPS"/>
         <link key="WWW:LINKUser guide" label="User guide"/>
         <link key="WWW:LINKProcessing and validation" label="Processing and validation"/>
         <link key="WWW:LINKOther document" label="Other document"/>

@@ -1114,6 +1114,7 @@
       </tab>
       <flatModeExceptions>
         <for name="cit:otherCitationDetails"/>
+        <for name="mri:status"/>
         <for name="mdb:acquisitionInformation"/>
       </flatModeExceptions>
     </view>
