@@ -8,7 +8,7 @@
   </div>
 
   <fieldset id="gn-harvest-settings-gn-basic-row">
-    <legend id="gn-harvest-settings-gn-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-gn-basic-title"><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
@@ -105,11 +105,14 @@
 
 
   <fieldset id="gn-harvest-settings-gn-advanced-row">
-    <legend id="gn-harvest-settings-gn-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend id="gn-harvest-settings-gn-advanced-title"><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div id="gn-harvest-settings-gn-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
+    <div data-gn-harvester-extras="harvesterSelected"></div>
+
+    <div id="gn-harvest-settings-gn-advanced-remote-row"
+         data-gn-harvester-account="harvesterSelected"/>
 
     <div id="gn-harvest-settings-gn-advanced-mef-row">
       <label class="control-label">
