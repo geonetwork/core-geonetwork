@@ -771,10 +771,10 @@
         }
     },
     'fem_technologies': {
-      'th_fem_technologies.default':
+      'th_fem_technologies_tree.key':
         {
           'terms': {
-            'field': 'th_fem_technologies.default',
+            'field': 'th_fem_technologies_tree.key',
             'size': 300
           }
         }
