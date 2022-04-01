@@ -402,7 +402,7 @@
                           select="ancestor::mdb:MD_Metadata/mdb:acquisitionInformation
                                     /*/mac:instrument/*/mac:identifier/*/mcc:code/*/text()"/>
             <xsl:variable name="processingLevel"
-                          select="ancestor::mrc:MI_CoverageDescription/mrc:processingLevelCode
+                          select="ancestor::mdb:MD_Metadata//mrc:MI_CoverageDescription/mrc:processingLevelCode
                                     /*/mcc:code/*/text()"/>
 
             <xsl:variable name="customAbstract">
