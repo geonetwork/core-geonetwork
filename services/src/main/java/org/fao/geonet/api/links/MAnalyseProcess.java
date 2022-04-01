@@ -46,13 +46,17 @@ public class MAnalyseProcess implements SelfNaming {
     private long testLinkDate = Long.MAX_VALUE;
 
 
-    public MAnalyseProcess(LinkRepository linkRepository, MetadataRepository metadataRepository, UrlAnalyzer urlAnalyser, ApplicationContext appContext) {
+    public MAnalyseProcess(String catalogueId,
+                           LinkRepository linkRepository,
+                           MetadataRepository metadataRepository,
+                           UrlAnalyzer urlAnalyser,
+                           ApplicationContext appContext) {
         this.linkRepository = linkRepository;
         this.metadataRepository = metadataRepository;
         this.urlAnalyser = urlAnalyser;
         this.appContext = appContext;
         try {
-            this.probeName = new ObjectName(String.format("geonetwork:name=url-check,idx=%s", this.hashCode()));
+            this.probeName = new ObjectName(String.format("geonetwork-%s:name=url-check,idx=%s", catalogueId, this.hashCode()));
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }

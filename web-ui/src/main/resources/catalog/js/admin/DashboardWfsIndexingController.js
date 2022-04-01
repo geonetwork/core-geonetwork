@@ -370,17 +370,9 @@
                 var labelNow = $translate.instant('wfsIndexingTrigger');
                 var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
-                return '<div class="dropdown">' +
-                  '  <button class="btn btn-default dropdown-toggle" ' +
-                  '          title="' + $translate.instant('wfsHarvesterActions') + '"' +
-                  '          type="button" data-toggle="dropdown"><icon class="fa fa-fw fa-cog"></icon><span class="caret"></span>' +
-                  '  </button>' +
-                  '  <ul class="dropdown-menu dropdown-menu-right">' +
-                  '    <li><a href="#" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a></li>' +
-                  '    <li><a href="#" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play"/>' + labelNow + '</a></li>' +
-                  '    <li><a href="#" data-delete-key="' + key + '"><icon class="fa fa-fw fa-times"/>' + labelDelete + '</a></li>' +
-                  '  </ul>' +
-                  '</div>';
+                return '<a class="btn btn-xs btn-block btn-default" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a>' +
+                  '<a class="btn btn-xs btn-block btn-primary" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play"/>' + labelNow + '</a>' +
+                  '<a class="btn btn-xs btn-block btn-danger" data-delete-key="' + key + '"><icon class="fa fa-fw fa-times"/>' + labelDelete + '</a>';
               }
             }],
             locale: getBsTableLang()
@@ -471,8 +463,8 @@
           function(response) {
             if (response.status == 200) {
               var appProfile = angular.fromJson(response.data['0']);
-              params.tokenizedFields = appProfile.tokenizedFields;
-              params.treeFields = appProfile.treeFields;
+              params.tokenizedFields = (appProfile && appProfile.tokenizedFields) || null;
+              params.treeFields = (appProfile && appProfile.treeFields) || null;
               return params
             }
           }).catch(function() {

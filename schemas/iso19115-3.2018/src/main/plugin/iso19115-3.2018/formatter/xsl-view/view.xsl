@@ -153,7 +153,7 @@
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                  <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                     <span class="badge"><xsl:copy-of select="."/></span>
                   </a>
                 </xsl:otherwise>
@@ -173,7 +173,7 @@
                 <span class="badge"><xsl:copy-of select="."/></span>
               </xsl:when>
               <xsl:otherwise>
-                <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </a>
               </xsl:otherwise>
@@ -976,7 +976,7 @@
 
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="*[@uuidref]"
+                match="srv:operatesOn[@uuidref]|mrc:featureCatalogueCitation[@uuidref]|mrl:source[@uuidref]|mri:metadataReference[@uuidref]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 

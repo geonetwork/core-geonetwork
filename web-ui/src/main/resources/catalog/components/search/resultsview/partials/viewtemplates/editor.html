@@ -1,10 +1,12 @@
 <table class="table gn-results-editor">
   <tr data-ng-repeat="md in searchResults.records">
     <td>
-      <input data-gn-selection-md type="checkbox"
+      <input data-gn-selection-md="md"
+             data-bucket="searchResults.selectionBucket"
+             data-results="searchResults"
+             type="checkbox"
              data-ng-model="md.selected"
-             aria-label="{{'clickToSelect' | translate}}"
-             data-ng-change="change()"/>
+             aria-label="{{'clickToSelect' | translate}}"/>
     </td>
     <td>
       <gn-md-type-widget metadata="md"></gn-md-type-widget>
@@ -49,7 +51,7 @@
           <div class="btn-group">
             <a class="btn btn-default"
                data-ng-href=""
-               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+               data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
                data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
                title="{{'privileges' | translate}}">
               <i class="fa text-muted"
@@ -68,7 +70,8 @@
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
                              && md.draft != 'e'"
                data-gn-click-and-spin="deleteRecord(md)"
-               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
+               data-ng-init="translateValues = {resourceTitle: (md.resourceTitle | json)}"
+               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:translateValues}}"
                title="{{'delete' | translate}}">
               <i class="fa fa-times text-danger"></i>
             </a>

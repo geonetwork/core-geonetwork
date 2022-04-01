@@ -43,10 +43,12 @@
   goog.require('gn_scroll_spy');
   goog.require('gn_sources_controller');
   goog.require('gn_system_settings_controller');
+  goog.require('gn_languages_controller');
 
   var module = angular.module('gn_settings_controller',
       ['gn_system_settings_controller',
        'gn_csw_settings_controller',
+       'gn_languages_controller',
        'gn_mapserver_controller',
        'gn_csw_test_controller',
        'gn_logo_settings_controller',
@@ -100,6 +102,11 @@
               icon: 'fa-database',
               label: 'manageSources',
               href: '#/settings/sources'
+            },{
+              type: 'languages',
+              icon: 'fa-comments',
+              label: 'languagesAndTranslations.manage',
+              href: '#/settings/languages'
             },{
               type: 'csw',
               label: 'manageCSW',

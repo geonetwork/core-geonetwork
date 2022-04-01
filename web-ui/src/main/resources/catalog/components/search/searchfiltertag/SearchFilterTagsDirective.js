@@ -229,10 +229,10 @@
               }
             }, true);
 
-            scope.isSpecificParameter = function(filter) {
+            scope.isSpecificParameter = function(key) {
               // full text search and uuid on selection only
               // are not translated like facet.
-              return filter.key === 'any' || filter.key === 'uuid';
+              return key === 'any' || key === 'uuid';
             }
             scope.getFilterType = function(filter) {
               if (filter.value && filter.value.match

@@ -166,7 +166,7 @@ public class XsltFormatter implements FormatterImpl {
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
         return "textResponse".equals(transformed.getName()) ?
-            transformed.getTextNormalize() :
+            transformed.getText() :
             Xml.getString(transformed);
     }
 }

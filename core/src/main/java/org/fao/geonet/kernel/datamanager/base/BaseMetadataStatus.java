@@ -71,6 +71,15 @@ public class BaseMetadataStatus implements IMetadataStatus {
         return metadataStatusRepository.count(MetadataStatusSpecs.hasUserId(userId)) > 0;
     }
 
+    @Override
+    public void transferMetadataStatusOwnership(int oldUserId, int newUserId) throws Exception {
+        List<MetadataStatus> oldUserStatus = metadataStatusRepository.findAll(MetadataStatusSpecs.hasUserId(oldUserId));
+        oldUserStatus.stream().forEach(s -> {
+            s.setUserId(newUserId);
+        });
+        metadataStatusRepository.saveAll(oldUserStatus);
+    }
+
     /**
      * Return last workflow status for the metadata id
      */

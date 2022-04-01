@@ -1386,6 +1386,7 @@
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo" required="no"/>
     <xsl:param name="isRequired" required="no"/>
+
     <xsl:if
       test="(($parentEditInfo and (
               $parentEditInfo/@del = 'true' or

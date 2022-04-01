@@ -48,6 +48,11 @@
   than the max length 32766. -->
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
+  <!-- List of keywords to search for to flag a record as opendata.
+   Do not put accents or upper case letters here as comparison will not
+   take them in account. -->
+  <xsl:variable name="openDataKeywords"
+                select="'opendata|open data|donnees ouvertes'"/>
 
   <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
 
@@ -159,7 +164,15 @@
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="elements" as="node()*"/>
     <xsl:param name="languages" as="node()?"/>
-    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, false())"/>
+    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, false(), false())"/>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-index:add-multilingual-field" as="node()*">
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="elements" as="node()*"/>
+    <xsl:param name="languages" as="node()?"/>
+    <xsl:param name="asJson" as="xs:boolean?"/>
+    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, $asJson, false())"/>
   </xsl:function>
 
   <!--
@@ -196,14 +209,17 @@
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="elements" as="node()*"/>
     <xsl:param name="languages" as="node()?"/>
+    <!-- Return the JSON object directly if true, wrap it in an element if false. -->
     <xsl:param name="asJson" as="xs:boolean?"/>
+    <xsl:param name="asXml" as="xs:boolean?"/>
 
     <xsl:variable name="mainLanguage"
                   select="$languages/lang[@id='default']/@value"/>
 
-<!--    <xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>-->
-<!--    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
-
+    <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>
+    <xsl:message>gn-fn-index:add-field elements <xsl:copy-of select="$elements"/></xsl:message>
+    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>
+-->
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
@@ -212,7 +228,6 @@
         <xsl:choose>
           <!-- Not ISO but multilingual eg. DC or DCAT -->
           <xsl:when test="$languages and count($element//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0">
-
             <xsl:if test="position() = 1">
               <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
                                              $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
@@ -264,13 +279,16 @@
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:if test="$textObject != ''">
+      <xsl:if test="count($textObject[. != '']) > 0">
         <xsl:choose>
           <xsl:when test="$asJson">
             <xsl:if test="$isArray and position() = 1">[</xsl:if>
             {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
             <xsl:if test="$isArray and position() != last()">,</xsl:if>
             <xsl:if test="$isArray and position() = last()">]</xsl:if>
+          </xsl:when>
+          <xsl:when test="$asXml">
+            <xsl:copy-of select="$textObject"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:element name="{$fieldName}Object">
@@ -283,6 +301,141 @@
     </xsl:for-each>
   </xsl:function>
 
+
+  <!-- Convert to ASCII,
+       Replace . by -,
+       Keep only letters, numbers and _ and -. -->
+  <xsl:function name="gn-fn-index:build-field-name">
+    <xsl:param name="value"/>
+
+    <xsl:value-of select="replace(
+                            replace(
+                              replace(
+                                normalize-unicode($value, 'NFKD'),
+                                '\P{IsBasicLatin}', '')
+                              , '\.', '-'),
+                            '[^a-zA-Z0-9_-]', '')"/>
+  </xsl:function>
+
+  <xsl:template name="build-all-keyword-fields" as="node()*">
+    <xsl:param name="allKeywords" as="node()?"/>
+
+    <!-- Build global tag field -->
+    <tag type="object">
+      [<xsl:for-each select="$allKeywords//keyword">
+      {
+      <xsl:value-of select="string-join(values/value, ', ')"/>
+      <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+      }
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>]
+    </tag>
+
+    <tagNumber>
+      <xsl:value-of select="count($allKeywords//keyword)"/>
+    </tagNumber>
+
+    <isOpenData>
+      <xsl:value-of select="count(
+                        $allKeywords//keyword/values/value[matches(
+                          normalize-unicode(
+                            replace(
+                              normalize-unicode(
+                                lower-case(normalize-space(text())),
+                                'NFKD'),
+                            '\p{Mn}', ''),
+                          'NFKC'),
+                        $openDataKeywords)]) > 0"/></isOpenData>
+
+
+    <!-- Build index field for type
+    keywordType-place: [{default: France}]-->
+    <xsl:for-each-group select="$allKeywords" group-by="thesaurus/info/@type">
+      <xsl:element name="keywordType-{current-grouping-key()}">
+        <xsl:attribute name="type" select="'object'"/>
+        [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
+        {
+        <xsl:value-of select="string-join(values/value, ', ')"/>
+        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>]
+      </xsl:element>
+    </xsl:for-each-group>
+
+    <!-- Field with keyword count eg. th_regionsNumber -->
+    <xsl:for-each select="$allKeywords/thesaurus[info/@field]">
+      <xsl:element name="{info/@field}Number">
+        <xsl:value-of select="count(keywords/keyword)"/>
+      </xsl:element>
+
+      <xsl:element name="{info/@field}">
+        <xsl:attribute name="type" select="'object'"/>
+        [<xsl:for-each select="keywords/keyword">
+        {
+        <xsl:value-of select="string-join(values/value, ', ')"/>
+        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>]
+      </xsl:element>
+    </xsl:for-each>
+
+    <!-- Object field with all thesaurus and all keywords. -->
+    <allKeywords type="object">{
+      <xsl:for-each select="$allKeywords/thesaurus[info/@field]">
+        "<xsl:value-of select="if (info/@field != '') then info/@field else 'otherKeywords'"/>": {
+        <xsl:if test="info/@id != ''">
+          "id": "<xsl:value-of select="gn-fn-index:json-escape(info/@id)"/>",
+        </xsl:if>
+        "title": "<xsl:value-of select="gn-fn-index:json-escape(info/@title)"/>",
+        "theme": "<xsl:value-of select="gn-fn-index:json-escape(info/@type)"/>",
+        <xsl:if test="info/@uri != ''">
+          "link": "<xsl:value-of select="gn-fn-index:json-escape(info/@uri)"/>",
+        </xsl:if>
+        "keywords": [
+        <xsl:for-each select="keywords/keyword">
+          {
+          <xsl:value-of select="string-join(values/value, ', ')"/>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]}
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+      }
+    </allKeywords>
+
+    <xsl:for-each select="$allKeywords/thesaurus[keywords/keyword/tree/*/value]">
+      <xsl:element name="{info/@field}_tree">
+        <xsl:attribute name="type" select="'object'"/>{
+        <xsl:variable name="defaults"
+                      select="distinct-values(keywords/keyword/tree/defaults/value)"/>
+        <xsl:variable name="keys"
+                      select="distinct-values(keywords/keyword/tree/keys/value)"/>
+
+        <xsl:if test="count($defaults) > 0">"default": [
+          <xsl:for-each select="$defaults">
+            <xsl:sort select="."/>
+            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/><xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]<xsl:if test="count($keys) > 0">,</xsl:if>
+        </xsl:if>
+        <xsl:if test="count($keys) > 0">"key": [
+          <xsl:for-each select="$keys">
+            <xsl:sort select="."/>
+            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/><xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
+        </xsl:if>
+        }</xsl:element>
+    </xsl:for-each>
+
+    <xsl:for-each select="$allKeywords//indexingErrorMsg">
+      <indexingErrorMsg><xsl:value-of select="."/></indexingErrorMsg>
+    </xsl:for-each>
+  </xsl:template>
 
   <!--
 
@@ -371,6 +524,9 @@
   </xsl:function>
 
 
+  <!-- Return all paths based on broader/narrower relation up to top.
+  If keyword is a label, returns labels, if URI, returns URIs
+  -->
   <xsl:template name="get-keyword-tree-values" as="node()*">
     <xsl:param name="keyword" as="xs:string"/>
     <xsl:param name="thesaurus" as="xs:string"/>
@@ -400,7 +556,7 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start != ''">
+      <xsl:if test="$start castable as xs:date or $start castable as xs:dateTime">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$start/@*[. != '']">
@@ -408,7 +564,7 @@
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end != ''">
+      <xsl:if test="$end castable as xs:date or $end castable as xs:dateTime">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$end/@*[. != '']">
@@ -429,178 +585,47 @@
   </xsl:template>
 
 
-  <xsl:template name="build-thesaurus-fields">
-    <xsl:param name="thesaurus" as="xs:string"/>
-    <xsl:param name="thesaurusId" as="xs:string"/>
-    <xsl:param name="keywords" as="node()*"/>
-    <xsl:param name="mainLanguage" as="xs:string?"/>
-    <xsl:param name="allLanguages" as="node()?"/>
+  <!-- Produce a thesaurus field name valid in an XML document
+  and as an Elasticsearch field name. -->
+  <xsl:function name="gn-fn-index:build-thesaurus-index-field-name">
+    <xsl:param name="thesaurusId" as="xs:string?"/>
+    <xsl:param name="thesaurusName" as="xs:string?"/>
 
-    <!-- Index keyword characterString including multilingual ones
-     and element like gmx:Anchor including the href attribute
-     which may contains keyword identifier. -->
-    <xsl:variable name="thesaurusField"
-                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9-_]', ''))"/>
-
-    <xsl:element name="{$thesaurusField}Number">
-      <xsl:value-of select="count($keywords)"/>
-    </xsl:element>
-
-    <xsl:if test="count($keywords) > 0">
-      <xsl:element name="{$thesaurusField}">
-        <xsl:attribute name="type" select="'object'"/>
-        [<xsl:for-each select="$keywords">
-        <xsl:variable name="uri"
-                      select="util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage)"/>
-
-        <xsl:variable name="k">
-          <xsl:choose>
-            <xsl:when test="$uri != ''">
-              <!-- Add an anchor -->
-              <xsl:copy>
-                <gmx:Anchor xlink:href="{$uri}"></gmx:Anchor>
-                <xsl:copy-of select="*"/>
-              </xsl:copy>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:copy-of select="."/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-
-        <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', $k, $allLanguages)/text()"/>
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>]
-      </xsl:element>
-
-
-      <!-- If keyword is related to a thesaurus available
-      in current catalogue, checked the keyword exists in the thesaurus.
-      If not, report an error in indexingErrorMsg field.
-
-      This case may trigger editor warning message when a keyword is not
-       found in the thesaurus. Try to anticipate this and advertise those
-       records in the admin.
-
-       TODO: Thesaurus id must be defined by a check in thesaurus manager based on multilingual titles.-->
-      <xsl:for-each select="$keywords">
-        <xsl:if test="$thesaurusId != ''
-                and util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage) = ''">
-          <indexingErrorMsg>Warning / Keyword <xsl:value-of select="(*/text())[1]"/> not found in <xsl:value-of select="$thesaurusId"/>.</indexingErrorMsg>
-          <indexingError>true</indexingError>
-        </xsl:if>
-      </xsl:for-each>
-
-
-      <xsl:variable name="thesaurusTree" as="node()">
-        <values>
-          <xsl:for-each select="$keywords">
-            <xsl:variable name="nodes" as="node()*">
-              <xsl:copy-of select="*:CharacterString/text()
-                                          |*:Anchor/text()
-                                          |*:Anchor/@xlink:href"/>
-              <xsl:if test="not(*:Anchor)">
-                <xsl:variable name="uri"
-                              select="util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage)"/>
-                <xsl:if test="$uri != ''">
-                  <xsl:attribute name="xlink:href" select="$uri"/>
-                </xsl:if>
-              </xsl:if>
-            </xsl:variable>
-            <xsl:for-each select="$nodes">
-              <xsl:variable name="keywordTree" as="node()*">
-                <xsl:call-template name="get-keyword-tree-values">
-                  <xsl:with-param name="keyword"
-                                  select="."/>
-                  <xsl:with-param name="thesaurus"
-                                  select="$thesaurusId"/>
-                  <xsl:with-param name="language"
-                                  select="$mainLanguage"/>
-                </xsl:call-template>
-              </xsl:variable>
-
-              <xsl:variable name="type"
-                            select="if (name() = 'xlink:href') then 'key' else 'default'"/>
-              <xsl:for-each select="$keywordTree[. != '']">
-                <xsl:element name="{$type}">
-                  <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
-                </xsl:element>
-              </xsl:for-each>
-            </xsl:for-each>
-          </xsl:for-each>
-        </values>
-      </xsl:variable>
-
-
-      <xsl:if test="count($thesaurusTree/*) > 0">
-        <xsl:element name="{$thesaurusField}_tree">
-          <xsl:attribute name="type" select="'object'"/>{
-          <xsl:variable name="defaults"
-                        select="distinct-values($thesaurusTree/default)"/>
-          <xsl:variable name="keys"
-                        select="distinct-values($thesaurusTree/key)"/>
-
-          <xsl:if test="count($defaults) > 0">"default": [
-            <xsl:for-each select="$defaults">
-              <xsl:sort select="."/>
-              <xsl:value-of select="."/><xsl:if test="position() != last()">,</xsl:if>
-            </xsl:for-each>
-            ]<xsl:if test="count($keys) > 0">,</xsl:if>
-          </xsl:if>
-          <xsl:if test="count($keys) > 0">"key": [
-            <xsl:for-each select="$keys">
-              <xsl:sort select="."/>
-              <xsl:value-of select="."/><xsl:if test="position() != last()">,</xsl:if>
-            </xsl:for-each>
-            ]
-          </xsl:if>
-          }</xsl:element>
-      </xsl:if>
-    </xsl:if>
-  </xsl:template>
-
-
-  <!-- Deprecated -->
-  <xsl:template name="build-tree-values">
-    <xsl:param name="values"/>
-    <xsl:param name="fieldName" as="xs:string"/>
-    <xsl:param name="thesaurus" as="xs:string"/>
-    <xsl:param name="language" as="xs:string?" select="'eng'"/>
-    <xsl:param name="allTreeField" as="xs:boolean"/>
-
-    <xsl:variable name="paths">
-      <xsl:for-each select="$values">
-        <xsl:variable name="keywordsWithHierarchy"
-                      select="util:getKeywordHierarchy(normalize-space(.), $thesaurus, $language)"/>
-
-        <xsl:if test="count($keywordsWithHierarchy) > 0">
-          <xsl:for-each select="$keywordsWithHierarchy">
-            <xsl:variable name="path" select="tokenize(., '\^')"/>
-            <xsl:for-each select="$path">
-              <xsl:variable name="position"
-                            select="position()"/>
-              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '^')"/></value>
-            </xsl:for-each>
-          </xsl:for-each>
-        </xsl:if>
-      </xsl:for-each>
+    <xsl:variable name="oldFieldNameMapping" as="node()*">
+      <!-- INSPIRE themes are loaded from INSPIRE registry. The thesaurus key changed. -->
+      <thesaurus old="th_inspire-theme"
+                 new="th_httpinspireeceuropaeutheme-theme"/>
+      <thesaurus old="th_SpatialScope"
+                 new="th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
     </xsl:variable>
 
-    <xsl:for-each-group select="$paths/*" group-by=".">
-      <xsl:sort select="."/>
-      <xsl:if test="$fieldName != ''">
-        <xsl:element name="{$fieldName}">
-          <xsl:value-of select="."/>
-        </xsl:element>
-      </xsl:if>
+    <xsl:variable name="key">
+      <xsl:choose>
+        <xsl:when test="starts-with($thesaurusId, 'geonetwork.thesaurus')">
+          <!-- eg. geonetwork.thesaurus.local.theme.dcsmm.area = dcsmm.area-->
+          <xsl:value-of select="string-join(
+                                  tokenize($thesaurusId, '\.')[position() > 4], '.')"/>
+        </xsl:when>
+        <xsl:when test="normalize-space($thesaurusId) != ''">
+          <xsl:value-of select="normalize-space($thesaurusId)"/>
+        </xsl:when>
+        <xsl:when test="normalize-space($thesaurusName) != ''">
+          <xsl:value-of select="replace(normalize-unicode($thesaurusName, 'NFKD'), '\P{IsBasicLatin}', '')"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
 
-      <xsl:if test="$allTreeField">
-        <xsl:element name="keywords_tree">
-          <xsl:value-of select="."/>
-        </xsl:element>
-      </xsl:if>
-    </xsl:for-each-group>
-  </xsl:template>
+    <xsl:variable name="keyWithoutDot"
+                  select="replace($key, '\.', '-')"/>
+
+    <xsl:variable name="fieldName"
+                  select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+
+    <xsl:value-of select="if($oldFieldNameMapping[@old = $fieldName])
+                          then $oldFieldNameMapping[@old = $fieldName]/@new
+                          else $fieldName"/>
+  </xsl:function>
+
 
   <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
     <xsl:param name="v" as="xs:string?"/>

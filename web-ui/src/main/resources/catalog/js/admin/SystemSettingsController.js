@@ -89,8 +89,60 @@
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
     'gnUtilityService', '$timeout', 'gnGlobalSettings',
+    'gnConfig', 'gnESClient', 'Metadata',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings) {
+             gnUtilityService, $timeout, gnGlobalSettings,
+             gnConfig, gnESClient, Metadata) {
+
+      $scope.selectTemplate = function (setting, md) {
+        setting.value = md.uuid;
+        $scope.defaultMetadataTemplate = md;
+      };
+
+      // Metadata template to select by default when
+      // creating new metadata
+      $scope.defaultMetadataTemplate = null;
+
+      $scope.metadataTemplateSearchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          isTemplate: 'y',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+
+      function loadDefaultMetadataTemplate() {
+        var preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
+
+        if (preferredTemplate){
+          var query =
+            {"query": {
+                "term": {
+                  "uuid": {
+                    "value": preferredTemplate
+                  }
+                }
+              }, "from": 0, "size": 1};
+
+          gnESClient.search(query).then(function(data) {
+            angular.forEach(data.hits.hits, function(record) {
+              var md = new Metadata(record);
+              $scope.defaultMetadataTemplate = md;
+            });
+          });
+        }
+      }
+
+      $scope.$watchCollection('settings', function(n, o){
+        if (n != o) {
+          loadDefaultMetadataTemplate();
+        }
+      });
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -137,6 +189,11 @@
         $http.get('../api/site/info/build')
             .success(function(data) {
               $scope.systemInfo = data;
+            });
+
+        $http.get('../api/site/info/notificationLevels')
+            .success(function(data) {
+              $scope.notificationLevels = data;
             });
 
         // load log files
@@ -213,7 +270,7 @@
         $scope.uiConfiguration = undefined;
         $scope.uiConfigurationId = '';
         $scope.uiConfigurationIdIsValid = false;
-        $http.get('../api/ui')
+        return $http.get('../api/ui')
           .success(function(data) {
             for (var i = 0; i < data.length; i ++) {
               data[i].configuration == angular.toJson(data[i].configuration);
@@ -264,16 +321,16 @@
         $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
       };
       $scope.updateUiConfig = function() {
-        $scope.createOrUpdateUiConfiguration(true);
+        return $scope.createOrUpdateUiConfiguration(true);
       };
       $scope.createOrUpdateUiConfiguration = function(isUpdate, id) {
         var newid = id || $scope.uiConfiguration.id;
         $scope.lastUiConfiguration = newid;
         if (newid) {
-          $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
+          return $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
             "id": newid,
-            // TODO: copy an existing one?
-            "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
+            "configuration": (isUpdate ? $scope.uiConfiguration.configuration
+              : null)
           }, {responseType: 'text'}).then(function(r) {
             loadUiConfigurations();
           }, function(r) {
@@ -292,7 +349,7 @@
 
       $scope.confirmDeleteUiConfig = function() {
         $scope.lastUiConfiguration = undefined;
-        $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
+        return $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
           loadUiConfigurations();
         });
       };
@@ -516,4 +573,31 @@
       loadSettings();
     }]);
 
+  /**
+   * GnMapContextRecordController provides de search object to query
+   * metadata with public (download privilege to group ALL)
+   * map context resources (OGC:OWS-C protocol).
+   */
+  module.controller('GnMapContextRecordController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.searchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          op1: 1,
+          linkProtocol: 'OGC:OWS-C',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.defaultParams);
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any = $scope.searchObj.any;
+      };
+    }]);
 })();

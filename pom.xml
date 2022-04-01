@@ -387,9 +387,15 @@
       </dependency>
 
       <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>1.14.3</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
-        <version>2.3.11</version>
+        <version>2.4.21</version>
       </dependency>
 
       <!-- universal character set detector -->
@@ -556,7 +562,7 @@
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.12.0</version>
+        <version>2.12.2</version>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
@@ -814,7 +820,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>29.0-jre</version>
+        <version>30.0-jre</version>
       </dependency>
       <dependency>
         <groupId>com.yammer.metrics</groupId>
@@ -835,12 +841,6 @@
         <groupId>com.yammer.metrics</groupId>
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jsoup</groupId>
-        <artifactId>jsoup</artifactId>
-        <version>1.14.3</version>
       </dependency>
 
       <!-- Tests -->
@@ -1149,7 +1149,7 @@
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
-        <version>2.0.19</version>
+        <version>2.0.24</version>
       </dependency>
       <dependency>
         <groupId>org.jasypt</groupId>
@@ -1160,6 +1160,11 @@
         <groupId>org.jasypt</groupId>
         <artifactId>jasypt-hibernate5</artifactId>
         <version>${jasypt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>diff_match_patch</groupId>
+        <artifactId>diff_match_patch</artifactId>
+        <version>current</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1199,6 +1204,10 @@
       <id>osgeo</id>
       <name>OSGeo repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+    <repository>
+      <id>redhat</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
     </repository>
 
     <!-- managed by repo.osgeo.org k-int-cache -->
@@ -1347,7 +1356,6 @@
         <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <!--<module>web-ui-docs</module>-->
         <module>web</module>
       </modules>
     </profile>
@@ -1476,7 +1484,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.11.1</es.version>
+    <es.version>7.15.1</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1527,7 +1535,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.27.v20200227</jetty.version>
+    <jetty.version>9.4.44.v20210927</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 

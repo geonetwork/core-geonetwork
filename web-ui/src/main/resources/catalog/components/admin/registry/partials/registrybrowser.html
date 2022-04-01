@@ -60,7 +60,7 @@
     registryChooseType
     </label>
     <select class="form-control"
-            data-ng-options="t as t.label for t in itemClass | orderBy:'label' track by t.key"
+            data-ng-options="t as t.label group by t.group for t in itemClass | orderBy:'label' track by t.key"
             data-ng-model="selectedClassUrl">
       <!--<option data-ng-repeat="t in itemClass | orderBy:'label' track by t.key"
               value="{{t}}" title="{{t.description}}">{{t.label}}</option>-->

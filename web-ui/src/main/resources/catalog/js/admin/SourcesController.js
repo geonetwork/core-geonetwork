@@ -39,9 +39,23 @@
       $scope.filter = {
         types: {'portal': true, 'subportal': true, 'externalportal': true, 'harvester': true}
       };
+
+      $scope.serviceRecordSearchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          type: 'service',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+
       $scope.selectSource = function(source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
-        source.groupOwner = source.groupOwner != null ? source.groupOwner + '' : null;
+        source.groupOwner = source.groupOwner || null;
         $scope.source = source;
       };
 

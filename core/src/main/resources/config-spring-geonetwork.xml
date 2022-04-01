@@ -221,7 +221,9 @@
 
   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
     <property name="namingStrategy" ref="namingStrategy"/>
+    <property name="registrationPolicy" value="IGNORE_EXISTING"/>
   </bean>
+
   <bean id="namingStrategy"
         class="org.springframework.jmx.export.naming.KeyNamingStrategy">
     <property name="mappings">

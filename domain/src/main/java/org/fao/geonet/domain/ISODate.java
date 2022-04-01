@@ -23,7 +23,6 @@
 
 package org.fao.geonet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.StringUtils;
@@ -37,11 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -252,8 +247,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      *
      * @return The date and time in ISO format.
      */
-    //@JsonProperty("dateAndTime")
-    @JsonIgnore
+    @JsonProperty("dateAndTimeUtc")
     public String getDateAndTimeUtc() {
         return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
     }

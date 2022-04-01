@@ -458,6 +458,14 @@
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
+          } else if (source instanceof ol.source.ImageArcGISRest) {
+            name = '{type=arcgis,name=' + layer.getSource().getParams().LAYERS.replace('show:', '') + '}';
+            params.server = [{
+              onlineResource: [{
+                href: layer.get('url')
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }];
           } else if (source instanceof ol.source.ImageWMS ||
               source instanceof ol.source.TileWMS) {
             name = layer.get('name');
@@ -647,15 +655,15 @@
           var promise;
 
           if (type === 'wmts') {
-            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           } else if (type === 'arcgis') {
-            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly);
+            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           // if it's not WMTS, let's assume it is wms
           // (so as to be sure to return something)
           else {
-            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           return promise.then(function(olL) {

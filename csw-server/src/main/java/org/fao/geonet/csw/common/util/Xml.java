@@ -46,6 +46,8 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.SchemaManager;
 
+import static org.fao.geonet.utils.Xml.getSAXBuilder;
+
 //=============================================================================
 
 /**
@@ -66,10 +68,7 @@ public class Xml {
 
     public static Element loadString(String data, boolean validate)
         throws IOException, JDOMException {
-        SAXBuilder builder = new SAXBuilder(validate);
-        builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
-
-
+        SAXBuilder builder = getSAXBuilder(validate);
         Document jdoc = builder.build(new StringReader(data));
 
         return (Element) jdoc.getRootElement().detach();
@@ -82,10 +81,8 @@ public class Xml {
      */
 
     public static Element loadStream(InputStream input) throws IOException, JDOMException {
-        SAXBuilder builder = new SAXBuilder();
-        builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+        SAXBuilder builder = getSAXBuilder(false);
         Document jdoc = builder.build(input);
-
         return (Element) jdoc.getRootElement().detach();
     }
 

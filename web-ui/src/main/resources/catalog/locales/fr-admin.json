@@ -801,6 +801,8 @@
     "system/feedback/mailServer/ignoreSslCertificateErrors": "Ignorer les erreurs causées par le certificat SSL du server de mail",
     "system/harvester": "Moissonnage",
     "system/harvester/enableEditing": "Autoriser l'édition des fiches moissonnées",
+    "system/harvester/enablePrivilegesManagement": "Only allow privileges management on harvested records",
+    "system/harvester/enablePrivilegesManagement-help": "Do not enable editing for only privileges management.",
     "system/harvester/disabledHarvesterTypes": "Protocoles de moissonage désactivés",
     "system/harvester/disabledHarvesterTypes-help": "Liste séparée par des virgules ou des espaces des protocoles de moissonnage désactivés. Par exemple : arcsde, csw, filesystem, geonetwork, geonetwork20, geoPREST, oaipmh, ogcwxs, thredds, wfsfeatures.",
     "system/harvesting": "Noeuds distants",

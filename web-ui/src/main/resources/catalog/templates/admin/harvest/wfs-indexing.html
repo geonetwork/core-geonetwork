@@ -16,13 +16,13 @@
              ng-model-options="{ debounce: 500 }"
              ng-change="filterWfsBsWithInput()" placeholder="{{'filter' | translate}}" aria-describedby="basic-addon1">
       <div class="flex-spacer flex-grow"></div>
-      <button type="button" class="btn btn-primary" ng-click="refreshJobList()">
+      <button type="button" class="btn btn-default" ng-click="refreshJobList()">
         <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
            ng-disabled="loading"/>&nbsp;
         <span translate>refresh</span>
       </button>
       <div class="flex-spacer"></div>
-      <button type="button" class="btn btn-success" ng-click="openScheduleSettings()">
+      <button type="button" class="btn btn-primary" ng-click="openScheduleSettings()">
         <i class="fa fa-plus"/>&nbsp;
         <span translate>wfsIndexingNewSchedule</span>
       </button>

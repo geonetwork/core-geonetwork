@@ -172,7 +172,7 @@
               {{resource.description | gnLocalized: lang}}
 
               <div data-ng-if="resource.lUrl !== null
-                               && resource.lUrl.match('/doi/') !== null"
+                               && resource.lUrl.match('doi.org') !== null"
                    data-gn-doi-wizard="gnCurrentEdit.uuid"
                    data-gn-doi-url="resource.lUrl"
                    data-xs-mode="true"></div>
@@ -472,7 +472,7 @@
               <a target="_blank"
                  data-ng-href="{{buildMetadataLink(resource)}}">
                 {{resource.title | gnLocalized: lang}}
-                <span>{{'(' + resource.associationType + ')'}}</span>
+                <span>{{'(' + (resource.associationType | translate) + ')'}}</span>
               </a>
             </div>
             <div class="col-md-1 text-right">
@@ -493,7 +493,7 @@
           data-ng-show="::isCategoryEnable('sibling') && relations.associated">
         <i class="fa fa-sign-out"></i>
         <i class="icon-external-link"></i>&nbsp;
-        <span data-translate="">siblings</span>&nbsp;
+        <span data-translate="">siblingsReverseLinks</span>&nbsp;
       </h2>
       <ul class="list-group"
           data-ng-show="::isCategoryEnable('sibling') && relations.associated">

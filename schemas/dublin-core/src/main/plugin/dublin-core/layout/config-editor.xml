@@ -63,7 +63,7 @@
         <for name="dc:subject"/>
       </flatModeExceptions>
     </view>
-    <view name="advanced">
+    <view name="advanced" upAndDownControlHidden="true">
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>

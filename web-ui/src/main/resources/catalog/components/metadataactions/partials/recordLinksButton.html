@@ -1,0 +1,49 @@
+<div data-ng-init="isDropDown = btn.indexOf('dropdown') === 0;
+                   oneLink = (links.length === 1 && btn === 'dropdownOrButton')"
+     data-ng-class="{
+      'btn-group': isDropDown,
+      'hidden': links.length === 0
+     }">
+
+  <!-- Buttons -->
+  <div data-ng-if="!isDropDown || oneLink"
+       data-ng-repeat="l in ::links"
+       data-gn-record-link-button="l"
+       data-btn="::btn"
+       data-icon-class="::iconClass"
+       data-icon-mode="::iconMode === 'dropdownOnly' ? 'only' : iconMode"
+       data-btn-class="::btnClass"
+       data-type="::type"
+       data-ng-disabled="::btnDisabled"
+       data-record="record"/>
+
+
+  <!-- Dropdown -->
+  <button data-ng-if="isDropDown && !oneLink"
+          data-ng-disabled="::btnDisabled"
+          type="button"
+          role="button"
+          class=" {{btnClass || 'btn btn-default btn-sm'}} dropdown-toggle"
+          data-toggle="dropdown"
+          title="{{::altTitle | translate}}"
+          aria-label="{{::altTitle | translate}}">
+    <span class="fa"
+          data-ng-if="iconMode !== 'none'"
+          data-ng-class="icon"></span>
+    <span data-ng-if="::title">{{::title | translate}}</span>
+    <span class="caret"></span>
+  </button>
+
+  <ul data-ng-if="isDropDown"
+      class="dropdown-menu" role="menu">
+    <li data-ng-repeat="l in ::links | orderBy:['function', 'name']"
+        data-gn-record-link-button="l"
+        data-btn="::btn"
+        data-type="::type"
+        data-icon-class="::iconClass"
+        data-icon-mode="::iconMode === 'dropdownOnly' ? 'none' : iconMode"
+        data-record="record"></li>
+
+    <div data-ng-transclude=""/>
+  </ul>
+</div>
