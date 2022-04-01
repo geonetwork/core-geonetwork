@@ -1,0 +1,93 @@
+<div class="panel panel-default"
+     data-ng-show="processReport"
+     data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
+
+  <div class="panel-heading">
+    <span data-translate="">processReportFor</span>
+    {{processReport.processId | translate}}<br/>
+    <p> {{processReport.totalRecords}}
+      <span data-translate="">recordsProcessed</span>
+      ({{processReport.startIsoDateTime}}
+      <span data-ng-show="processReport.running"
+      >...</span>
+      <span data-ng-hide="processReport.running"> -
+              {{processReport.endIsoDateTime}}</span>) =
+      {{processReport.totalTimeInSeconds}}s</p>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <tr>
+        <td>{{('processReportTotalRecords') | translate}}</td>
+        <td class="text-right">{{processReport.numberOfRecords}}</td>
+      </tr>
+      <tr>
+        <td>{{('processReportProcessedRecords') | translate}}</td>
+        <td class="text-right">{{processReport.numberOfRecordsProcessed}}</td>
+      </tr>
+      <tr>
+        <td>{{('processReportNullRecords') | translate}}</td>
+        <td class="text-right">{{processReport.numberOfNullRecords}}</td>
+      </tr>
+      <tr>
+        <td>{{('processReportErrors') | translate}}</td>
+        <td class="text-right">
+          {{processReport.numberOfRecordsWithErrors}}
+          <div data-ng-repeat="value in processReport.errors"
+               alt="{{value.stack}}">
+            {{value.message}}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>{{('processReportNotOwner') | translate}}</td>
+        <td class="text-right">{{processReport.numberOfRecordsNotEditable}}</td>
+      </tr>
+    </table>
+
+    <div data-ng-hide="processReport.numberOfRecordsWithErrors == 0">
+      <h3 data-translate="">metadataErrorReport</h3>
+      <div class="batch-report-metadata-info">
+        <table class="table table-striped">
+          <tr>
+            <th data-translate="">identifier</th>
+            <th data-translate="">error</th>
+          </tr>
+          <tr data-ng-repeat="(key, errors) in processReport.metadataErrors">
+            <td>#{{key}}</td>
+            <td>
+              <ul>
+                <li data-ng-repeat="value in errors">
+                  <h4>{{value.message}}</h4>
+                  <pre>{{value.stack}}</pre>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div data-ng-hide="!hasMetadataInfo()" >
+      <h3 data-translate="">metadataInfoReport</h3>
+
+      <div class="batch-report-metadata-info">
+        <table class="table table-striped">
+          <tr>
+            <th data-translate="">identifier</th>
+            <th data-translate="">info</th>
+          </tr>
+          <tr data-ng-repeat="(key, infos) in processReport.metadataInfos">
+            <td>{{infos[0].uuid}}</td>
+            <td>
+              <ul>
+                <li data-ng-repeat="value in infos">
+                  {{value.message}}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

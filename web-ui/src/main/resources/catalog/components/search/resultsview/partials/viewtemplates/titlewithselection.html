@@ -1,9 +1,11 @@
 <ul class="list-group gn-resultview gn-resultview-title">
   <li class="list-group-item" data-ng-repeat="md in searchResults.records">
-    <input data-gn-selection-md type="checkbox"
+    <input data-gn-selection-md="md"
+           data-bucket="searchResults.selectionBucket"
+           data-results="searchResults"
+           type="checkbox"
            data-ng-model="md.selected"
-           aria-label="{{'clickToSelect' | translate}}"
-           data-ng-change="change()"/>
+           aria-label="{{'clickToSelect' | translate}}"/>
     <i class="fa text-muted" data-ng-class="'gn-recordtype-' + md.isTemplate"
        data-ng-show="user.isReviewerOrMore()"
        title="{{('isTemplate' + md.isTemplate) | translate}}"></i>

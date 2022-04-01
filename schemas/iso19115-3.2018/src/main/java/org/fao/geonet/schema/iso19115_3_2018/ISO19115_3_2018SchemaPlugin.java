@@ -42,7 +42,7 @@ public class ISO19115_3_2018SchemaPlugin
     LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19115-3";
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
 
@@ -57,6 +57,7 @@ public class ISO19115_3_2018SchemaPlugin
                 .add(ISO19115_3_2018Namespaces.MRL)
                 .add(ISO19115_3_2018Namespaces.LAN)
                 .add(ISO19115_3_2018Namespaces.MRI)
+                .add(ISO19115_3_2018Namespaces.CIT)
                 .add(ISO19115_3_2018Namespaces.SRV)
                 .add(ISO19115_3_2018Namespaces.XLINK)
                 .build();

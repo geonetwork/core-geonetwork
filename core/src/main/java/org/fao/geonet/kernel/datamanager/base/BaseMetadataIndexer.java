@@ -80,7 +80,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
-    private MetadataStatusRepository statusRepository;
+    protected MetadataStatusRepository statusRepository;
 
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
@@ -568,6 +568,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Optional<Group> g = groupRepository.findById(groupId);
                 if (g.isPresent()) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
+                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED + "Id", g.get().getId());
 
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {

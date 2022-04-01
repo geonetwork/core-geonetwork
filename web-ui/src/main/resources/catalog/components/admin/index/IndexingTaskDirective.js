@@ -111,26 +111,24 @@
    * <gn-indexing-tasks-container />
    */
   module.directive('gnIndexingTasksContainer', [
-    '$http',
-    function ($http) {
+    '$http', 'gnConfig', 'gnConfigService',
+    function ($http, gnConfig, gnConfigService) {
       return {
         restrict: 'E',
         scope: {},
         templateUrl: '../../catalog/components/admin/index/partials/indexingstatuscontainer.html',
-        link: function (scope, element, attrs) {
-        },
         controllerAs: 'ctrl',
         controller: [
-          '$scope', '$element', '$attrs',
-          function ($scope, $element, $attrs) {
+          function () {
             this.tasks = [];
 
             var me = this;
 
             this.refresh = function () {
-              $http.get('../../jolokia/read/geonetwork:name=indexing-task,idx=*')
+              $http.get('../../jolokia/read/'
+                + 'geonetwork-' + gnConfig['system.site.siteId']
+                + ':name=indexing-task,idx=*')
                 .then(function (result) {
-                  //console.log(result);
                   me.tasks.length = 0;
 
                   if (!result.data || !result.data.value) { return; }
@@ -151,7 +149,9 @@
                 });
             }
 
-            this.refresh();
+            gnConfigService.load().then(function(c) {
+              me.refresh();
+            });
           }
         ]
       };

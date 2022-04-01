@@ -1,53 +1,56 @@
-<div class="gn-facet-item flex-row width-100">
-  <a href
-     class="gn-facet-collapse-toggle"
-     ng-click="ctrl.toggleCollapse()">
-    <span ng-if="::ctrl.item.aggs[0].items.length || ctrl.item.items"
-          class="fa"
-          ng-class="ctrl.item.collapsed ? 'fa-plus-circle' : 'fa-minus-circle'">
-    </span>
-  </a>
-  <a href
-     class="flex-row flex-align-center flex-shrink width-100"
-     ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
-     title="{{::ctrl.item.value}}"
-     ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
-    <span class="fa fa-fw"
-          ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
-    </span>
-    <span class="gn-facet-label flex-shrink text-ellipsis">
-      {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
-    </span>
-    <span ng-if="ctrl.item.count" class="gn-facet-count flex-no-shrink gn-facet-count-{{ctrl.item.count}}">{{::ctrl.item.count}}</span>
-  </a>
-  <div class="flex-spacer"></div>
-  <a href
-     class="facet-invert"
-     title="{{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
-     ng-click="ctrl.toggleInvert()">
-    <span class="fa"
-          ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus'"></span>
-  </a>
-</div>
-<div class="gn-facet-children"
-     ng-show="!ctrl.item.collapsed">
+<div>
+  <div class="gn-facet-item flex-row width-100">
+    <a href
+       aria-label="{{'toggleOptions' | translate}}"
+       class="gn-facet-collapse-toggle"
+       ng-click="ctrl.toggleCollapse()">
+      <span ng-if="::ctrl.item.aggs[0].items.length || ctrl.item.items"
+            class="fa"
+            ng-class="ctrl.item.collapsed ? 'fa-plus-circle' : 'fa-minus-circle'">
+      </span>
+    </a>
+    <a href
+       class="flex-row flex-align-center flex-shrink width-100"
+       ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
+       title="{{::ctrl.item.value}}"
+       ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
+      <span class="fa fa-fw"
+            ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
+      </span>
+      <span class="gn-facet-label flex-shrink text-ellipsis">
+        {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
+      </span>
+      <span ng-if="ctrl.item.count" class="gn-facet-count flex-no-shrink gn-facet-count-{{ctrl.item.count}}">{{::ctrl.item.count}}</span>
+    </a>
+    <div class="flex-spacer"></div>
+    <a href
+       class="facet-invert"
+       title="{{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
+       ng-click="ctrl.toggleInvert()">
+      <span class="fa"
+            ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus'"></span>
+    </a>
+  </div>
+  <div class="gn-facet-children"
+       ng-show="!ctrl.item.collapsed">
 
-  <!--  Nested term facets (intermediate level in the tree)-->
-  <div ng-if="::nestedFacet.items.length"
-       ng-repeat="nestedFacet in ::ctrl.item.aggs track by nestedFacet.key">
-    <div es-facet="::nestedFacet"
+    <!--  Nested term facets (intermediate level in the tree)-->
+    <div ng-if="::nestedFacet.items.length"
+         ng-repeat="nestedFacet in ::ctrl.item.aggs track by nestedFacet.key">
+      <div es-facet="::nestedFacet"
+           es-facet-item="::item"
+           class="gn-facet-container"
+           ng-if="::nestedFacet.items.length"
+           ng-repeat="item in ::nestedFacet.items">
+      </div>
+    </div>
+
+    <!--  Hierachical facets-->
+    <div es-facet="::ctrl.facet"
          es-facet-item="::item"
          class="gn-facet-container"
-         ng-if="::nestedFacet.items.length"
-         ng-repeat="item in ::nestedFacet.items">
+         ng-if="::ctrl.item.items.length"
+         ng-repeat="item in ::ctrl.item.items">
     </div>
-  </div>
-
-  <!--  Hierachical facets-->
-  <div es-facet="::ctrl.facet"
-       es-facet-item="::item"
-       class="gn-facet-container"
-       ng-if="::ctrl.item.items.length"
-       ng-repeat="item in ::ctrl.item.items">
   </div>
 </div>

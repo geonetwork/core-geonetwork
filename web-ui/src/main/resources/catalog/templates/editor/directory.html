@@ -136,7 +136,7 @@
 
               <div class="col-xs-6 col-lg-4 col-lg-pull-5">
                 <div class="" data-gn-selection-widget=""
-                    data-exclude-actions-pattern="export*|validate|updateCategories"
+                    data-exclude-actions-pattern="exportPDF|exportCSV|collection|validate|updateCategories"
                     data-results="searchResults"></div>
               </div>
 
@@ -161,11 +161,13 @@
                   data-ng-repeat="md in searchResults.records">
 
                 <div class="flex-row" ng-if="!templatesShown()">
-                  <input class="flex-no-shrink" type="checkbox"
-                         data-gn-selection-md
+                  <input class="flex-no-shrink"
+                         data-gn-selection-md="md"
+                         data-bucket="searchResults.selectionBucket"
+                         data-results="searchResults"
+                         type="checkbox"
                          data-ng-model="md.selected"
-                         aria-label="{{clickToSelect | translate}}"
-                         data-ng-change="change()"/>
+                         aria-label="{{'clickToSelect' | translate}}"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 
@@ -257,10 +259,12 @@
                 <div class="entry-title entry-is-template"
                      ng-if="templatesShown()">
 
-                  <input data-gn-selection-md type="checkbox"
+                  <input data-gn-selection-md="md"
+                         data-bucket="searchResults.selectionBucket"
+                         data-results="searchResults"
+                         type="checkbox"
                          data-ng-model="md.selected"
-                         aria-label="{{'clickToSelect' | translate}}"
-                         data-ng-change="change()"/>
+                         aria-label="{{'clickToSelect' | translate}}"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 
@@ -382,8 +386,13 @@
             </div>
             <div class="form-group" data-ng-show="groups && groups.length > 1">
               <label class="control-label" data-translate="">inGroup</label>
-              <div data-groups-combo="" data-owner-group="importData.group" lang="lang"
-                   data-groups="groups" data-exclude-special-groups="false"/>
+              <div id="gn-import-assigngroup-list"
+                   data-groups-combo=""
+                   data-owner-group="importData.group"
+                   data-optional="false"
+                   lang="lang"
+                   data-groups="groups"
+                   data-exclude-special-groups="true"/>
             </div>
           </form>
         </div>

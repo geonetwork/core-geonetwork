@@ -74,8 +74,16 @@
                 data-ng-class="h.loaded ? '' : 'disabled'">
               <a href="" data-ng-click="addHarvester(h.type)"
                  title="{{'harvester-' + h.type + 'Help' | translate}}">
-                <span translate>{{h.label}}</span>
+                <span>{{h.label}}</span>
                 <span data-ng-hide="h.loaded" translate>notYetSupported</span>
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href=""
+                 data-ng-click="addFromClipboard()">
+                {{'addHarvesterFromClipboard' | translate}}
+                <i class="fa fa-paste"/>
               </a>
             </li>
           </ul>
@@ -181,6 +189,14 @@
           </div>
           <div class="panel-body"
                data-ng-hide="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
+
+            <div gn-copy-to-clipboard-button=""
+                 class="pull-right"
+                 data-text="{{harvesterSelected}}"
+                 data-ng-hide="harvesterSelected['@id'] == ''"
+                 title="{{'copyHarvesterConfig' | translate}}"
+                 timeout="1000"/>
+
             <div id="gn-harvest-settings-info" class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
               <strong data-translate="">harvesterIsRunning</strong>
             </div>

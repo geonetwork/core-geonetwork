@@ -118,7 +118,7 @@
                offset: getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone)
              })
              scope.timezoneNames.push({name: '----', offset: ''})
-             _.each(moment.tz.names(), function(tz, index, list) {
+             _.forEach(moment.tz.names(), function(tz, index, list) {
                scope.timezoneNames.push({
                  name: tz,
                  offset: getTimeZoneOffset(tz)

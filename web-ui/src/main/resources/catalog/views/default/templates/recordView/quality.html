@@ -1,0 +1,22 @@
+<div class="row"
+     data-ng-if="mdView.current.record.specificationConformance">
+  <div class="col-md-8 gn-record">
+    <div>
+      <h2 data-translate="">specificationConformance</h2>
+      <ul class="list-group">
+        <li class="list-group-item"
+            data-ng-repeat="c in mdView.current.record.specificationConformance"
+            title="{{c.explanation}}">
+          <i class="fa fa-fw"
+             data-ng-class="{
+               'fa-check text-success': c.pass == 'true',
+               '': c.pass == '',
+               'fa-times text-danger': c.pass == 'false'
+               }"></i>
+          <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
+          <span data-ng-if="::!c.link">{{c.title}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

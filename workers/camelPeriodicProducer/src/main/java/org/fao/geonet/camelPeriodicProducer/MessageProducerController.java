@@ -23,6 +23,7 @@
 
 package org.fao.geonet.camelPeriodicProducer;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.repository.MessageProducerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,37 +86,54 @@ public class MessageProducerController {
         }
     }
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create and save a message to trigger data indexing.",
+        description = "If existing (same URL, same feature type), update and start the process."
+    )
     @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody MessageProducerEntity messageProducerEntity) {
-        InnerEntityManager innerEntityManager = new InnerEntityManager();
-        try {
-            messageProducerEntity = innerEntityManager.beginMergeAndPersist(messageProducerEntity);
-            messageProducerService.registerAndStart(messageProducerEntity);
-            innerEntityManager.commit();
+        MessageProducerEntity message = msgProducerRepository.findOneByUrlAndFeatureType(
+            messageProducerEntity.getWfsHarvesterParam().getUrl(),
+            messageProducerEntity.getWfsHarvesterParam().getTypeName());
+        if (message != null) {
+            // Maybe we should return IllegalArgumentException for consistency with other API?
+            update(message.getId(), messageProducerEntity, true);
             return ResponseEntity.ok().body(messageProducerEntity);
-        } catch (PersistenceException e) {
-            innerEntityManager.rollback();
-            ErrorResponse response = new ErrorResponse("Could not create object in database", sqlCause(e));
-            return ResponseEntity.badRequest().body(response);
-        } catch (Exception e) {
-            innerEntityManager.rollback();
-            ErrorResponse response = new ErrorResponse("An unknown error occurred", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        } finally {
-            innerEntityManager.close();
+        } else {
+            InnerEntityManager innerEntityManager = new InnerEntityManager();
+            try {
+                messageProducerEntity = innerEntityManager.beginMergeAndPersist(messageProducerEntity);
+                messageProducerService.registerAndStart(messageProducerEntity);
+                innerEntityManager.commit();
+                return ResponseEntity.ok().body(messageProducerEntity);
+            } catch (PersistenceException e) {
+                innerEntityManager.rollback();
+                ErrorResponse response = new ErrorResponse("Could not create object in database", sqlCause(e));
+                return ResponseEntity.badRequest().body(response);
+            } catch (Exception e) {
+                innerEntityManager.rollback();
+                ErrorResponse response = new ErrorResponse("An unknown error occurred", e.getMessage());
+                return ResponseEntity.badRequest().body(response);
+            } finally {
+                innerEntityManager.close();
+            }
         }
     }
 
     @PreAuthorize("hasAuthority('Administrator')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody MessageProducerEntity messageProducerEntity) {
+    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody MessageProducerEntity messageProducerEntity, boolean registerAndStart) {
         if (msgProducerRepository.existsById(id)) {
             InnerEntityManager innerEntityManager = new InnerEntityManager();
             try {
                 messageProducerEntity.setId(id);
                 messageProducerEntity = innerEntityManager.beginMergeAndPersist(messageProducerEntity);
-                messageProducerService.changeMessageAndReschedule(messageProducerEntity);
+                if (registerAndStart) {
+                    messageProducerService.registerAndStart(messageProducerEntity);
+                } else {
+                    messageProducerService.changeMessageAndReschedule(messageProducerEntity);
+                }
                 innerEntityManager.commit();
                 return ResponseEntity.ok().body(messageProducerEntity);
             } catch (PersistenceException e) {

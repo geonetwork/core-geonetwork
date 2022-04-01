@@ -163,6 +163,7 @@
               <xsl:if test="$related != ''">
                 <div gn-related="md"
                      data-user="user"
+                     data-layout="card"
                      data-types="{$related}"><xsl:comment select="'icon'"/></div>
               </xsl:if>
             </header>
@@ -299,6 +300,7 @@
                 </h2>
                 <div gn-related="md"
                      data-user="user"
+                     data-layout="card"
                      data-types="{$sideRelated}">
                   Not available
                 </div>
@@ -601,16 +603,21 @@
 
     <xsl:variable name="root"
                   select="."/>
-    <xsl:for-each select="$tableConfig/row/col[@xpath]">
-      <xsl:variable name="node">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$root/*"/>
-          <xsl:with-param name="in" select="concat('/', @xpath)"/>
-        </saxon:call-template>
-      </xsl:variable>
-      <td><xsl:apply-templates mode="render-value"
-                               select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>
-    </xsl:for-each>
+
+    <!-- Only if child context. eg. <gmd:pointOfContact xlink:href=
+    may not have children if xlink fails to resolve. -->
+    <xsl:if test="$root/*">
+      <xsl:for-each select="$tableConfig/row/col[@xpath]">
+        <xsl:variable name="node">
+          <saxon:call-template name="{concat('evaluate-', $schema)}">
+            <xsl:with-param name="base" select="$root/*"/>
+            <xsl:with-param name="in" select="concat('/', @xpath)"/>
+          </saxon:call-template>
+        </xsl:variable>
+        <td><xsl:apply-templates mode="render-value"
+                                 select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>
+      </xsl:for-each>
+    </xsl:if>
   </xsl:template>
 
 

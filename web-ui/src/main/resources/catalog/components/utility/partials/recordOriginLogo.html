@@ -1,4 +1,4 @@
-<div>
+<span class="gn-providedby-logo">
   <img data-ng-if="isPreferGroupLogo && recordGroup.logo"
      data-ng-src="{{gnUrl}}../images/harvesting/{{recordGroup.logo}}"
      title="{{recordGroup.label | gnLocalized}}"
@@ -8,4 +8,5 @@
        data-ng-src="{{gnUrl}}../images/logos/{{md.sourceCatalogue}}.png"
        aria-label="{{'sourceCatalog' | translate}}"
        class="gn-source-logo"/>
-</div>
+  <strong>{{recordGroup.label | gnLocalized}}</strong>
+</span>

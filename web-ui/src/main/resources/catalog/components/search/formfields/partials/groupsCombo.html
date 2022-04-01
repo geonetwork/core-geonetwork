@@ -1,8 +1,7 @@
 <div class="dynamic-list">
-  <select class="form-control " data-ng-model="ownerGroup" data-ng-disabled="disabled">
-    <option data-ng-repeat="g in groups | orderBy:'name'" value="{{g['@id'] || g.id}}"
-            data-ng-selected="ownerGroup == (g['@id'] ? g['@id'] : g.id)">
-      {{g.label[lang]|empty:g.name}}
-    </option>
+  <select class="form-control"
+          data-ng-options="g as g.label[lang]|empty:g.name for g in groups | orderBy:'name'"
+          data-ng-model="selectedGroup"
+          data-ng-disabled="disabled">
   </select>
 </div>

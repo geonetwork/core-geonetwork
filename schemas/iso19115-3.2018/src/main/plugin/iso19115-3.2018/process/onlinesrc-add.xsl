@@ -165,7 +165,7 @@
     <xsl:if test="$url">
       <!-- If a name is provided loop on all languages -->
       <xsl:choose>
-        <xsl:when test="contains($name, ',')">
+        <xsl:when test="starts-with($protocol, 'OGC:') and contains($name, ',')">
           <xsl:for-each select="tokenize($name, ',')">
             <mrd:onLine>
               <cit:CI_OnlineResource>

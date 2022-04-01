@@ -131,10 +131,24 @@
 
     <div id="gn-harvest-settings-csw-advanced-xsl-row">
       <label id="gn-harvest-settings-csw-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
-      <div id="gn-harvest-settings-csw-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.site.xslfilter"/>
+      <div id="gn-harvest-settings-csw-advanced-xsl-list"
+           data-gn-import-xsl="harvesterSelected.site.xslfilter"
+           data-mode="btn-group"/>
 
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
+
+    <div id="gn-harvest-settings-csw-advanced-sortBy-row">
+      <label id="gn-harvest-settings-csw-advanced-sortBy-label"
+             class="control-label"
+             data-translate="">sortBy</label>
+      <input id="gn-harvest-settings-csw-advanced-sortBy-input"
+             type="text"
+             class="form-control gn-csw-criteria"
+             data-ng-model="harvesterSelected.site.sortBy"/>
+      <p class="help-block" data-translate="">csw-sortByHelp</p>
+    </div>
+
     <div id="gn-harvest-settings-csw-advanced-scheme-row">
       <div class="row">
         <div id="gn-harvest-settings-csw-advanced-scheme-output-row"
@@ -153,6 +167,7 @@
             <option value="" disabled="" data-translate="">csw-recommendedValues</option>
             <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore</option>
             <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
+            <option value="http://standards.iso.org/iso/19115/-3/mdb/2.0">ISO 19115-3</option>
           </select>
         </div>
       </div>

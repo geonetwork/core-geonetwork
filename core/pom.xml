@@ -126,7 +126,7 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>
-      <version>4.8.3.Final</version>
+      <version>15.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -498,6 +498,10 @@
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
       <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
     </dependency>
     <dependency>
       <groupId>org.owasp.esapi</groupId>

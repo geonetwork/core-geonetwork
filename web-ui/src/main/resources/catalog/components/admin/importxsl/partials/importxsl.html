@@ -1,4 +1,25 @@
-<select class="form-control"
-        data-ng-model="element"
-        data-ng-options="(c | translate) for c in stylesheets | orderBy: c">
-</select>
+<div>
+  <select class="form-control"
+          data-ng-show="mode !== 'btn-group'"
+          data-ng-model="element"
+          data-ng-options="(c | translate) for c in stylesheets | orderBy: c">
+  </select>
+  <div class="input-group"
+       data-ng-show="mode === 'btn-group'">
+    <input class="form-control"
+           type="text"
+           data-ng-model="element"/>
+    <div class="input-group-btn">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li data-ng-repeat="c in stylesheets | orderBy: c">
+            <a href="" data-ng-click="setValue(c)">{{c | translate}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

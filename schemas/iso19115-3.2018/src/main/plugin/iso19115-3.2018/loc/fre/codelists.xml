@@ -389,7 +389,7 @@
     </entry>
     <entry>
       <code>originator</code>
-      <label>A l’origine de</label>
+      <label>Producteur</label>
       <description>Organisme qui a commandé la ressource. Acteur qui a été
         habilité à créer la ressource et qui a mis en place les moyens pour la
         constituer
@@ -405,7 +405,7 @@
     </entry>
     <entry>
       <code>principalInvestigator</code>
-      <label>Point de recherche</label>
+      <label>Investigateur principal</label>
       <description>Personne clé pour obtenir des informations sur la ressource
         et les recherches conduites autour de la ressource&#xA;Acteur qui a
         assuré la réalisation de la ressource,éventuellement en faisant appel à
@@ -485,7 +485,7 @@
     </entry>
     <entry>
       <code>funder</code>
-      <label>Investisseur</label>
+      <label>Financeur</label>
       <description>Partie offrant un soutien financier pour la ressource
       </description>
     </entry>

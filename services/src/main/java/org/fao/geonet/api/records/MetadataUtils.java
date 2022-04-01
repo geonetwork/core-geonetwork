@@ -192,9 +192,10 @@ public class MetadataUtils {
 
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
+
                     String origin;
                     // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null, false);
+                    Element searchResult = search("\"" + resource.getUuid() + "\"", RelatedItemType.siblings.value(), context, from, to, fast, null, false);
                     // If can't be find, skip the result.
                     if (hasResult(searchResult)) {
                         origin = ORIGIN_PORTAL;
@@ -271,7 +272,7 @@ public class MetadataUtils {
                     for (String fcat_uuid : listOfUUIDs) {
                         String origin;
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
-                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null, false);
+                        Element searchResult = search("\"" + fcat_uuid + "\"", RelatedItemType.fcats.value(), context, from, to, fast, null, false);
                         // If can't be find, skip the result.
                         if (hasResult(searchResult)) {
                             origin = ORIGIN_PORTAL;
@@ -324,7 +325,7 @@ public class MetadataUtils {
         return relatedRecords;
     }
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+    private static Element search(String uuidQueryValue, String type, ServiceContext context, String from, String to,
                                   String fast, String exclude, boolean ignorePortalFilter) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
@@ -354,7 +355,7 @@ public class MetadataUtils {
         }
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery),
+            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuidQueryValue, excludeQuery),
             ignorePortalFilter ? null : portalFilter,
             FIELDLIST_CORE,
             fromValue, (toValue - fromValue));
@@ -534,7 +535,7 @@ public class MetadataUtils {
      *  - portal: the metadata is available in the current portal.
      *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
      *
-     * @param uuid
+     * @param uuidQueryValue
      * @param type
      * @param context
      * @param from
@@ -546,17 +547,17 @@ public class MetadataUtils {
      * @return
      * @throws Exception
      */
-    private static Element calculateResults(String uuid, String type, ServiceContext context, String from, String to,
+    private static Element calculateResults(String uuidQueryValue, String type, ServiceContext context, String from, String to,
                                     String fast, String exclude, String extraDumpFields,
                                     String portalFilter) throws Exception {
 
         // Search related resources ignoring portal filter
-        Element results = search(uuid, type, context, from, to, fast, exclude, true);
+        Element results = search(uuidQueryValue, type, context, from, to, fast, exclude, true);
 
         // Check if the portal has a filter
         if (StringUtils.isNotEmpty(portalFilter)) {
             // Search related resources with the portal filter
-            Element resultsForPortal = search(uuid, type, context, from, to, fast, exclude, false);
+            Element resultsForPortal = search(uuidQueryValue, type, context, from, to, fast, exclude, false);
 
             // Build the set of uuids from portal results
             HashSet<String> portalResultsUuids = new HashSet<>();

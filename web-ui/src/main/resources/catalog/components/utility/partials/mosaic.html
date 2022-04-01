@@ -1,0 +1,6 @@
+<div class="gallery">
+  <div data-ng-repeat="i in images">
+    <img data-ng-src="{{i.data || (i.url | thumbnailUrlSize: imageSize)}}"/>
+
+  </div>
+</div>
