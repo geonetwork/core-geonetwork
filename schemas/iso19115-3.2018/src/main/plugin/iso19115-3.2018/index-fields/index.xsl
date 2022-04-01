@@ -446,12 +446,14 @@
             </xsl:variable>
 
             <xsl:for-each select="$platforms">
-              <platforms><xsl:value-of select="."></xsl:value-of></platforms>
+              <platforms><xsl:value-of select="."/></platforms>
             </xsl:for-each>
             <xsl:for-each select="$instruments">
-              <instruments><xsl:value-of select="."></xsl:value-of></instruments>
+              <instruments><xsl:value-of select="."/></instruments>
             </xsl:for-each>
-            <processingLevel><xsl:value-of select="$processingLevel"></xsl:value-of></processingLevel>
+            <xsl:for-each select="$processingLevel">
+              <processingLevel><xsl:value-of select="."/></processingLevel>
+            </xsl:for-each>
 
             <resourceAbstractObject type="object">{
               "default": "<xsl:value-of select="gn-fn-index:json-escape($customAbstract)"/>"

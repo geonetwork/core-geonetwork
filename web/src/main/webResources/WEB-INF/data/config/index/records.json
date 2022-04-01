@@ -1783,6 +1783,9 @@
       "instruments": {
         "type": "keyword"
       },
+      "processingLevel": {
+        "type": "keyword"
+      },
       "geoDescription": {
         "type": "keyword"
       }
