@@ -43,7 +43,7 @@ public class CswParams extends AbstractParams {
 
     public String outputSchema;
 
-    public String sortBy = "identifier:A";
+    public String sortBy = "";
 
     public boolean rejectDuplicateResource;
 
@@ -123,7 +123,7 @@ public class CswParams extends AbstractParams {
         xpathFilter = Util.getParam(site, "xpathFilter", "");
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
-        sortBy = Util.getParam(site, "sortBy", sortBy);
+        sortBy = Util.getParam(site, "sortBy", "");
 
         icon = Util.getParam(site, "icon", icon);
 
