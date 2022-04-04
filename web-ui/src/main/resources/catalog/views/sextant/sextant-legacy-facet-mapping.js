@@ -711,10 +711,10 @@
         }
     },
     'theme-GCMDparameter': {
-      'th_GCMDparameter.default':
+      'th_GCMDparameter_tree.key':
         {
           'terms': {
-            'field': 'th_GCMDparameter.default',
+            'field': 'th_GCMDparameter_tree.key',
             'size': 300
           }
         }
