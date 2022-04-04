@@ -1201,6 +1201,8 @@
     "ui-paginationInfo": "Default number of records per page",
     "ui-sortbyValues": "Type of sort options",
     "ui-sortBy": "Default sort by option",
+    "sortBy": "Sort by",
+    "csw-sortByHelp": "Define sort option for GetRecords query. This can solve issue for large sets where some records may change on the remote node during harvesting and returned in different pages. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.",
     "ui-facetsSummaryType": "Type of facet",
     "ui-facetsSummaryType-help": "List of facets is defined in the config-summary.xml file but the user can select a different set of facets. Default is 'details'. Other options: 'manager'.",
     "ui-resultViewTpls": "List of templates for search results",
