@@ -2536,15 +2536,6 @@
       <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                      rdf:resource="http://www.data.ifremer.fr/thesaurus#cc86035a-2d31-4cc3-8232-d66a359705e9"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.data.ifremer.fr/thesaurus#c48ba51a-3bb4-4cea-a853-3a20c32f4013">
-      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sea Ice/</skos:prefLabel>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
-      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
-      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
-      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                    rdf:resource="https://registry.sextant.ifremer.fr/Cersat-GCMDparameter#4b35dc0a-8dd0-4312-9fcf-16c2d24c3e1c"/>
-   </rdf:Description>
    <rdf:Description rdf:about="http://www.data.ifremer.fr/thesaurus#477fa602-a8ff-4038-9382-77449f15dbd5">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Sea Ice/Heat Flux</skos:prefLabel>
