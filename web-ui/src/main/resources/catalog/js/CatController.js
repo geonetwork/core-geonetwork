@@ -964,6 +964,10 @@ goog.require('gn_alert');
           'workflowAssistApps': [
             {'appUrl': '', 'appLabelKey': ''}
           ]
+        },
+        'helperDocumentHost': {
+          'enabled': false,
+          'appUrl': ''
         }
       }
     };
@@ -1036,6 +1040,9 @@ goog.require('gn_alert');
         this.applyConfig(configOverlay);
         this.setLegacyOption(gnViewerSettings, gnSearchSettings);
         this.gnUrl = gnUrl || '../';
+        if (this.gnCfg.mods.helperDocumentHost.enabled) {
+          this.docUrl = this.gnCfg.mods.helperDocumentHost.appUrl;
+        }
         this.proxyUrl = this.gnUrl + '../proxy?url=';
       },
       setLegacyOption: function(gnViewerSettings, gnSearchSettings) {
