@@ -79,7 +79,7 @@
     "noChangesToApply": "Definire prima le modifiche per aggiornare i record selezionati.",
     "selectRecordsToEdit": "Seleziona uno o più record da modificare.",
     "tooManyRecordInSelForSearch": "There are too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
-    "advancedBatchEditMode": "Modalità avanzata (XPath)",
+    "advancedBatchEditMode": "XPath mode",
     "cancel": "Annulla",
     "cancelChangesFromNow": "Annulla tutte le modifiche dall'inizio della sessione di modifica {{timeAgo}}.",
     "cancelling": "Cancelling ...",
@@ -105,7 +105,7 @@
     "country": "Paese",
     "createA": "Creare un",
     "createChildOf": "Crea un record \"figlio\"",
-    "createCopyOf": "Crea una copia di",
+    "createCopyOf": "Create copy",
     "createMetadata": "Crea",
     "createMetadataError": "Crea errore di metadati",
     "createMetadataForGroup": "Crea e pubblica per editor di gruppo",
@@ -300,7 +300,7 @@
     "suggestions": "Suggerimenti",
     "removeThumbnail": "Rimuovi miniatura",
     "thumbnailMaker": "Crea miniatura",
-    "thumbnailMaker-help": "Tutti gli strati WMS registrati nel record dei metadati vengono aggiunti alla mappa. Scegli un layout (miniatura consigliata), una scala, ingrandisci l'area di interesse per generare la miniatura.",
+    "thumbnailMaker-help": "All WMS layers registered in the metadata record are added to the map. Choose a layout, a scale, zoom to the area of interest to generate the thumbnail.",
     "to-iso19139-keyword": "testo (consigliato)",
     "to-iso19139-keyword-as-xlink": "collegamento",
     "to-iso19139-keyword-as-xlink-help": "Utile per creare un collegamento tra il record e il thesaurus. Un attributo xlink: href viene aggiunto all'elemento gmd: descriptiveKeywords.",
@@ -350,7 +350,6 @@
     "sourceRecord": "Record sorgente",
     "deleteField": "Elimina questo campo",
     "deleteFieldSet": "Elimina questo insieme di campi",
-    "onlyMyRecord": "Solo i miei record",
     "toggleSection": "Attiva / disattiva espandi / richiudi",
     "editorBoardInfo": "Crea o importa un nuovo record da questa pagina. Accedi e gestisci rapidamente tutti i record di metadati.",
     "minorEditHelp": "Non aggiornare il timestamp in fase di salvataggio",
@@ -419,5 +418,6 @@
     "draft": "Working copy",
     "link": "Collegamento",
     "link-text": "Link text",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
+    "allowEditGroupMembers": "Allow group editors to edit"
 }
