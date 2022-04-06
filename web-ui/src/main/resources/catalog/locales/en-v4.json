@@ -304,5 +304,8 @@
   "ui-showMaps": "Show latest maps in home page",
   "ui-queryBaseOptions": "Search query options",
   "ui-queryBaseOptions-help": "Check <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-top-level-params'>documentation</a> for more details",
-  "sortBy": "Sort by"
+  "sortBy": "Sort by",
+  "uuidMergePolicy": "UUID merge policy",
+  "filteringAndProcessing": "Filtering and processing response",
+  "recordCreationOptions": "Record creation options"
 }

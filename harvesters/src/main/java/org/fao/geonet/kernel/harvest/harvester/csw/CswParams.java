@@ -92,7 +92,7 @@ public class CswParams extends AbstractParams {
         xslfilter = Util.getParam(site, "xslfilter", "");
         xpathFilter = Util.getParam(site, "xpathFilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
-        sortBy = Util.getParam(site, "sortBy", sortBy);
+        sortBy = Util.getParam(site, "sortBy", "");
         icon = Util.getParam(site, "icon", "default.gif");
 
         if (filters != null) {
