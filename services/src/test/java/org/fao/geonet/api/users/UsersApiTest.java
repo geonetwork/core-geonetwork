@@ -345,7 +345,6 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new Gson();
         PasswordResetDto passwordReset = new PasswordResetDto();
-        passwordReset.setPasswordOld("testuser-editor-password");
         passwordReset.setPassword("NewPassword1$");
         passwordReset.setPassword2("NewPassword1$");
 
@@ -356,6 +355,18 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.description", is("The old password is not valid.")));
+
+
+        passwordReset.setPasswordOld("testuser-editor-password");
+        json = gson.toJson(passwordReset);
+
+        this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
 

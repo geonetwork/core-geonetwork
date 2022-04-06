@@ -73,6 +73,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -586,6 +587,11 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    private boolean isUserAllowedToResetWithoutOldPassword(Profile myProfile) {
+        boolean isAdminAllowed = settingManager.getValueAsBool(SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET, false);
+        return isAdminAllowed && myProfile == Profile.Administrator;
+    }
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Resets user password",
         description = "Resets the user password.")
@@ -630,7 +636,9 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(Integer.toString(userIdentifier))) {
+        if (myProfile != Profile.Administrator
+            && myProfile != Profile.UserAdmin
+            && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
@@ -641,8 +649,12 @@ public class UsersApi {
 
         PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
 
-        if (!encoder.matches(passwordResetDto.getPasswordOld(), user.get().getPassword())) {
-            throw new IllegalArgumentException("The old password is not valid");
+        if (isUserAllowedToResetWithoutOldPassword(myProfile) == false
+            && (passwordResetDto.getPasswordOld() == null
+            || !encoder.matches(
+            passwordResetDto.getPasswordOld(),
+            user.get().getPassword()))) {
+            throw new IllegalArgumentException("The old password is not valid.");
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
