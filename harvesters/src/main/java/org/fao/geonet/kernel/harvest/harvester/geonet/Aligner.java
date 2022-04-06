@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -57,10 +58,12 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -101,6 +104,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private Map<String, Object> processParams = new HashMap<String, Object>();
     private MetadataRepository metadataRepository;
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+    private SettingManager settingManager;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
                    GeonetParams params, Element remoteInfo) {
@@ -114,6 +118,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
         dataMan = gc.getBean(DataManager.class);
         metadataManager = gc.getBean(IMetadataManager.class);
         metadataRepository = gc.getBean(MetadataRepository.class);
+        settingManager = gc.getBean(SettingManager.class);
+
         result = new HarvestResult();
 
         //--- save remote categories and groups into hashmaps for a fast access
@@ -494,10 +500,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
             return null;
         }
 
+        if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
+            // In GeoNetwork 3.x, links to resources changed:
+            // * thumbnails contains full URL instead of file name only
+            // * API mode change old URL structure.
+            MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
+        }
+
         if (!params.xslfilter.equals("")) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
         }
+
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
@@ -779,6 +793,13 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 throw new NoSuchElementException("Unable to find a metadata with ID: " + id);
             }
         } else {
+            if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
+                // In GeoNetwork 3.x, links to resources changed:
+                // * thumbnails contains full URL instead of file name only
+                // * API mode change old URL structure.
+                MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
+            }
+
             if (!params.xslfilter.equals("")) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
                     md, processName, processParams);
