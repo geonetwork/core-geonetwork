@@ -45,6 +45,8 @@ var gnHarvesteroaipmh = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
+              "lastRunSuccess" : [],
+              "elapsedTime" : [],
               "running": false
             }
           };

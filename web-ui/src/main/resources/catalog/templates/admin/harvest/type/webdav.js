@@ -43,6 +43,8 @@ var gnHarvesterwebdav = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
+                "lastRunSuccess" : [],
+                "elapsedTime" : [],
                 "running" : false
             }
         };

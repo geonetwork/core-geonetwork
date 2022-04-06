@@ -40,6 +40,8 @@ var gnHarvesterfilesystem = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
+                "lastRunSuccess" : [],
+                "elapsedTime" : [],
                 "running" : false
             }
         };

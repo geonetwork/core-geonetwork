@@ -37,13 +37,12 @@ import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
-import org.quartz.SchedulerException;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -192,13 +191,20 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
+                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/lastRunSuccess",
+                                        thiz.harvesterSettingsManager.getValue("harvesting/id:" + thiz.getID() + "/info/lastRun"));
+                                    long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+
+                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/elapsedTime",
+                                        elapsedTime);
+
                                     check = false;
                                 }
                             }
 
                         } catch (Exception ex) {
-                            // TODO: Handle
-                            ex.printStackTrace();
+                            thiz.log.error(ex.getMessage());
+                            thiz.log.error(ex);
                         }
                     }
 

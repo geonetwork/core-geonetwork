@@ -102,6 +102,16 @@
         <lastRun>
           <xsl:value-of select="$info/lastRun/value"/>
         </lastRun>
+
+        <lastRunSuccess>
+          <xsl:value-of select="$info/lastRunSuccess/value"/>
+        </lastRunSuccess>
+
+        <elapsedTime>
+          <xsl:value-of select="$info/elapsedTime/value"/>
+        </elapsedTime>
+
+        <xsl:apply-templates select="$info" mode="info"/>
       </info>
     </node>
   </xsl:template>
@@ -155,6 +165,7 @@
   <xsl:template match="*" mode="filters"/>
   <xsl:template match="*" mode="bboxFilter"/>
   <xsl:template match="*" mode="other"/>
+  <xsl:template match="*" mode="info"/>
 
   <!-- ============================================================================================= -->
 

@@ -46,6 +46,8 @@ var gnHarvesterthredds = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
+                "lastRunSuccess" : [],
+                "elapsedTime" : [],
                 "running" : false
             }
         };
@@ -54,7 +56,7 @@ var gnHarvesterthredds = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'

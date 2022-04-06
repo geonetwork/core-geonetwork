@@ -42,6 +42,8 @@ var gnHarvestergeoPREST = {
             "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
+              "lastRunSuccess" : [],
+              "elapsedTime" : [],
               "running": false
             }
           };
@@ -50,7 +52,7 @@ var gnHarvestergeoPREST = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <baseUrl>' + h.site.baseUrl.replace(/&/g, '&amp;') + '</baseUrl>'

@@ -52,6 +52,8 @@ var gnHarvestercsw2 = {
       } ],
       "info" : {
         "lastRun" : [],
+        "lastRunSuccess" : [],
+        "elapsedTime" : [],
         "running" : false
       }
     };

@@ -45,6 +45,8 @@ var gnHarvestersimpleurl = {
       "categories" : [],
       "info" : {
         "lastRun" : [],
+        "lastRunSuccess" : [],
+        "elapsedTime" : [],
         "running" : false
       }
     };

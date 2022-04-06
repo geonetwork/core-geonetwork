@@ -570,6 +570,8 @@
     "keywords-mapper": "Keyword mapper",
     "language": "Language",
     "lastRun": "Last run ",
+    "lastRunSuccess": "Last run successful ",
+    "elapsedTime": "Elapsed time ",
     "latestNews": "Latest news",
     "layer":"layer",
     "listOfSchemas": "Standards available",

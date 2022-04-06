@@ -50,6 +50,8 @@ var gnHarvesterogcwxs = {
             "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
+                "lastRunSuccess" : [],
+                "elapsedTime" : [],
                 "running" : false
             }
         };

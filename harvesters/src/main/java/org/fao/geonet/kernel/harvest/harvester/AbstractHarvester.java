@@ -48,6 +48,7 @@ import org.fao.geonet.exceptions.UnknownHostEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -57,11 +58,7 @@ import org.fao.geonet.kernel.harvest.harvester.csw2.CswHarvester2;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
@@ -143,6 +140,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     protected IMetadataManager metadataManager;
     protected IMetadataUtils metadataUtils;
 
+    protected MetadataRepository metadataRepository;
+    protected IMetadataIndexer metadataIndexer;
+
     protected P params;
     protected T result;
 
@@ -182,6 +182,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
         this.metadataManager = context.getBean(IMetadataManager.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
+        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
     }
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
@@ -682,6 +684,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         h.process();
                         logger.info("Ended harvesting from node : " + nodeName);
 
+                        if (!(this instanceof CswHarvester2)) {
+                            harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRunSuccess", lastRun);
+
+                            long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+                            harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/elapsedTime", elapsedTime);
+                        }
+
                         if (getParams().isOneRunOnly()) {
                             stop(Status.INACTIVE);
                         }
@@ -894,11 +903,15 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         copy.update(node);
         String path = "harvesting/id:" + id;
         String lastRun = harvesterSettingsManager.getValue("harvesting/id:" + id + "/info/lastRun");
+        String lastRunSuccess = harvesterSettingsManager.getValue("harvesting/id:" + id + "/info/lastRunSuccess");
+        String elapsedTime = harvesterSettingsManager.getValue("harvesting/id:" + id + "/info/elapsedTime");
         harvesterSettingsManager.removeChildren(path);
         //--- update database
         storeNode(copy, path);
         // Preserve lastRun information
         harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
+        harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRunSuccess", lastRunSuccess);
+        harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/elapsedTime", elapsedTime);
         //--- we update a copy first because if there is an exception CswParams
         //--- could be half updated and so it could be in an inconsistent state
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
@@ -979,6 +992,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         //--- setup stats node ----------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + infoId, "lastRun", "");
+        harvesterSettingsManager.add(ID_PREFIX + infoId, "lastRunSuccess", "");
+        harvesterSettingsManager.add(ID_PREFIX + infoId, "elapsedTime", "");
 
         //--- store privileges and categories ------------------------
 

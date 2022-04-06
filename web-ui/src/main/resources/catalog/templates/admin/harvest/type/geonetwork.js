@@ -59,6 +59,8 @@ var gnHarvestergeonetwork = {
       "groupsCopyPolicy": [],
       "info":   {
         "lastRun": [],
+        "lastRunSuccess" : [],
+        "elapsedTime" : [],
         "running": false
       }
     };

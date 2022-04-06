@@ -32,6 +32,9 @@
                 <i class="fa fa-spinner fa-spin fa-2x"/>
               </span>
               <span>{{ 'lastRun' | translate }}: {{ h.info.lastRun | gnFromNow }} ({{h.info.lastRun | date: 'yyyy-MM-dd, HH:mm:ss'}})</span><br>
+              <span data-ng-if="h.info.lastRunSuccess.length > 0">{{ 'lastRunSuccess' | translate }}: {{ h.info.lastRunSuccess | gnFromNow }} ({{h.info.lastRunSuccess | date: 'yyyy-MM-dd, HH:mm:ss'}})</span><br>
+              <span data-ng-if="h.info.elapsedTime.length > 0">{{ 'elapsedTime' | translate }}: {{ h.info.elapsedTime }} sec</span><br>
+
               <span>{{ 'harvesterRecords' | translate }}</span>
               <table data-ng-hide="h.info.running" class="table table-bordered table-condensed table-striped">
                 <thead>
@@ -403,6 +406,8 @@
             <div class="panel-body">
               <div class="row gn-margin-bottom">
                 <span><strong>{{ 'lastRun' | translate }}:</strong> {{ harvesterSelected.info.lastRun | gnFromNow }} ({{harvesterSelected.info.lastRun | date: 'yyyy-MM-dd, HH:mm:ss'}})</span><br>
+                <span data-ng-if="harvesterSelected.info.lastRunSuccess.length > 0"><strong>{{ 'lastRunSuccess' | translate }}:</strong> {{ harvesterSelected.info.lastRunSuccess | gnFromNow }} ({{harvesterSelected.info.lastRunSuccess | date: 'yyyy-MM-dd, HH:mm:ss'}})</span><br>
+                <span data-ng-if="harvesterSelected.info.elapsedTime.length > 0"><strong>{{ 'elapsedTime' | translate }}:</strong> {{ harvesterSelected.info.elapsedTime }} sec</span><br>
                 <hr>
               </div>
               <div class="row gn-margin-bottom">
