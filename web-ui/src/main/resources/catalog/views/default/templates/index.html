@@ -31,7 +31,7 @@
       <div data-ng-include="'../../catalog/views/default/templates/home.html'"
            data-ng-if="activeTab == '/home'"/>
       <div data-ng-include="'../../catalog/views/default/templates/results.html'"
-           data-ng-if="activeTab == '/search'"/>
+           data-ng-show="activeTab == '/search'"/>
       <div data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled && activeTab == '/map'"
            data-ng-include="'../../catalog/views/default/templates/map.html'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
