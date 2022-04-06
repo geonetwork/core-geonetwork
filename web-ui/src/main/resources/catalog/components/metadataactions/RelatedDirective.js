@@ -77,39 +77,6 @@
       return (promise);
     };
 
-    this.parseFilters = function(filters) {
-      var separator = ':';
-      return filters
-        .split(' AND ')
-        .map(function(clause) {
-          var filter = clause.split(separator),
-            field = filter.shift(),
-            not = field && field.startsWith('-');
-          return {
-            field: not ? field.substr(1) : field,
-            regex: new RegExp(filter.join(separator)),
-            not: not
-          }
-        });
-    };
-
-    this.testFilters = function(filters, object) {
-      var results = [];
-      filters.forEach(function(filter, j) {
-        var prop = object[filter.field];
-        if (prop
-          && ((!filter.not && prop.match(filter.regex) != null)
-            || (filter.not && prop.match(filter.regex) == null))) {
-          results[j] = true;
-        } else {
-          results[j] = false;
-        }
-      });
-      return results.reduce(function(prev, curr) {
-        return prev && curr;
-      })
-    };
-
     this.getMdsRelated = function(mds, types) {
       var uuids = mds.map(function (md) {
         return md.uuid;
@@ -219,8 +186,8 @@
    */
   module
     .directive('gnRelatedContainer', [
-        'gnRelatedResources', 'gnRelatedService',
-      function (gnRelatedResources, gnRelatedService) {
+        'gnRelatedResources', 'gnConfigService',
+      function (gnRelatedResources, gnConfigService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -253,11 +220,11 @@
                 if (scope.mode === 'tabset'
                   && config.filter
                   && angular.isArray(value)) {
-                  var filters = gnRelatedService.parseFilters(config.filter)
+                  var filters = gnConfigService.parseFilters(config.filter)
 
                   config.relations[type] = [];
                   for (var i = 0; i < value.length; i++) {
-                    gnRelatedService.testFilters(filters, value[i])
+                    gnConfigService.testFilters(filters, value[i])
                     && config.relations[type].push(value[i]);
                   }
                   config.relationFound = config.relations[type].length > 0;
@@ -280,9 +247,10 @@
         'gnSearchSettings',
         'gnRelatedResources',
         'gnExternalViewer',
+        'gnConfigService',
         function(gnRelatedService, gnGlobalSettings,
                  gnSearchSettings, gnRelatedResources,
-                 gnExternalViewer) {
+                 gnExternalViewer, gnConfigService) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -346,11 +314,11 @@
                     scope.sizeConfig[idx] = scope.size;
                   }
                   if (scope.filter && angular.isArray(value)) {
-                    var filters = gnRelatedService.parseFilters(scope.filter)
+                    var filters = gnConfigService.parseFilters(scope.filter)
 
                     scope.relations[idx] = [];
                     for (var i = 0; i < value.length; i++) {
-                      gnRelatedService.testFilters(filters, value[i])
+                      gnConfigService.testFilters(filters, value[i])
                         && scope.relations[idx].push(value[i]);
                     }
                     scope.relationFound = scope.relations[idx].length > 0;
