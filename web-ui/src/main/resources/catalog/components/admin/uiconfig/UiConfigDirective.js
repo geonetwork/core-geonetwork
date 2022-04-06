@@ -27,6 +27,17 @@
 
   var module = angular.module('gn_ui_config_directive', ['ui.ace', 'gn_timezone_selector']);
 
+  module.directive('gnUiConfigHelp', [
+    function() {
+      return {
+        restrict: 'E',
+        replace: 'true',
+        template: '<p class="help-block"' +
+          '           data-ng-show="((\'ui-\' + key + \'-help\') | translate) != (\'ui-\' + key + \'-help\')"' +
+          '           data-ng-bind-html="(\'ui-\' + key + \'-help\') | translate"></p>'
+      }
+    }]);
+
   module.directive('gnUiConfig', [
     'gnGlobalSettings', 'gnProjService', '$translate',
     function(gnGlobalSettings, gnProjService, $translate) {

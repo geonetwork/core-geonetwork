@@ -79,9 +79,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
@@ -121,9 +119,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="addWMSLayersToMap">
@@ -147,9 +143,7 @@
                    data-ng-switch-when-separator="|">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
                 <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}}</p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="languages">
@@ -190,9 +184,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -232,9 +224,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -280,9 +270,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -328,9 +316,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -371,9 +357,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="linkTypes">
@@ -408,9 +392,7 @@
                     </tr>
                   </table>
                 </div>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -424,9 +406,7 @@
                          data-ng-model="mCfg[key][type]"/>&nbsp;
                   <label for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
 
-                  <p class="help-block"
-                     data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
-                    {{('ui-' + key + type + '-help') | translate}} </p>
+                  <gn-ui-config-help/>
                 </div>
               </div>
 
@@ -440,9 +420,7 @@
                   <label class="control-label"
                          for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
 
-                  <p class="help-block"
-                     data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
-                    {{('ui-' + key + type + '-help') | translate}} </p>
+                  <gn-ui-config-help/>
                 </div>
               </div>
 
@@ -489,9 +467,7 @@
                     </tr>
                   </table>
                 </div>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -533,17 +509,13 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <!-- Projection Switcher -->
               <div data-ng-switch-when="switcherProjectionList">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/projectionSwitcher.html'">
                 </div>
               </div>
@@ -556,9 +528,7 @@
                        data-gn-timezone-selector=""
                        data-element-timezone="{{value}}"
                        data-ng-model="mCfg[key]"/>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -568,9 +538,7 @@
                 <input type="number"
                        class="form-control"
                        data-ng-model="value.hitsPerPage"/>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -583,9 +551,7 @@
                 <label class="control-label"
                        for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
 
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
 
@@ -670,9 +636,7 @@
                          class="form-control"
                          data-ng-model="mCfg[key].url"/>
                 </div>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="grid">
@@ -699,9 +663,7 @@
                   </tr>
                 </table>
                 <p class="help-block">{{ 'gridConfigRelatedTypes-help' | translate }}</p>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="logoInHeaderPosition">
@@ -731,34 +693,25 @@
                     <span data-translate="">right</span>
                   </label>
                 </div>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <!-- map configs -->
               <div data-ng-switch-when="map-viewer">
                 <h3>{{('ui-' + key) | translate}}</h3>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
                 </div>
               </div>
               <div data-ng-switch-when="map-search">
                 <h3>{{('ui-' + key) | translate}}</h3>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
                 </div>
               </div>
               <div data-ng-switch-when="map-editor">
                 <h3>{{('ui-' + key) | translate}}</h3>
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
                 </div>
               </div>
@@ -794,10 +747,7 @@
                   </label>
                 </div>
 
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="editorIndentType">
@@ -819,10 +769,7 @@
                     <span data-translate="">ui-editorIndentType-colored</span>
                   </label>
                 </div>
-
-                <p class="help-block"
-                   data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-                  {{('ui-' + key + '-help') | translate}} </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="externalViewer">
@@ -903,12 +850,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="help-block"
-                   data-ng-init="helpKey = 'ui-' + key + '-help'"
-                   data-ng-show="(helpKey | translate) != helpKey"
-                   translate="">
-                  {{helpKey}}
-                </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-when="workflowAssistApps">
@@ -947,12 +889,7 @@
                     </td>
                   </tr>
                 </table>
-                <p class="help-block"
-                   data-ng-init="helpKey = 'ui-' + key + '-help'"
-                   data-ng-show="(helpKey | translate) != helpKey"
-                   translate="">
-                  {{helpKey}}
-                </p>
+                <gn-ui-config-help/>
               </div>
 
               <div data-ng-switch-default>
@@ -960,12 +897,7 @@
                 <input type="text"
                        class="form-control"
                        data-ng-model="mCfg[key]"/>
-                <p class="help-block"
-                   data-ng-init="helpKey = 'ui-' + key + '-help'"
-                   data-ng-show="(helpKey | translate) != helpKey"
-                   translate="">
-                  {{helpKey}}
-                </p>
+                <gn-ui-config-help/>
               </div>
             </div>
           </fieldset>
