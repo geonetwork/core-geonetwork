@@ -576,8 +576,8 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', ['gnLangs', '$translate',
-    function(gnLangs, $translate) {
+  module.factory('Metadata', ['gnLangs', '$translate', 'gnRelatedService',
+    function(gnLangs, $translate, gnRelatedService) {
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
@@ -757,6 +757,19 @@
         });
         this.linksCache[key] = ret;
         return ret;
+      },
+      getLinksByFilter: function(filter) {
+        if (this.linksCache[filter]) {
+          return this.linksCache[filter];
+        }
+        var filters = gnRelatedService.parseFilters(filter),
+          links = this.getLinks(), matches = [];
+        for (var i = 0; i < links.length; i++) {
+          gnRelatedService.testFilters(filters, links[i])
+          && matches.push(links[i]);
+        }
+        this.linksCache[filter] = matches;
+        return matches;
       },
       /**
        * Return an object containing metadata contacts

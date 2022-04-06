@@ -707,8 +707,8 @@
 
   module
     .directive('gnRecordsTable', [
-      'Metadata',
-      function(Metadata) {
+      'Metadata', 'gnRelatedService',
+      function(Metadata, gnRelatedService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -747,10 +747,13 @@
               scope.records.map(function(r) {
                 r = new Metadata(r.record);
                 var recordData = {};
+
                 scope.columnsConfig.map(function(c) {
-                  recordData[c] = c.startsWith('link/')
-                    ? r.getLinksByType(c.split('/')[1])
-                    : (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  if (c.startsWith('link/')) {
+                    recordData[c] = r.getLinksByFilter(c.split('/')[1]);
+                  } else {
+                    recordData[c] = (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  }
                 });
                 recordData.md = r;
                 scope.data.push(recordData);
@@ -806,5 +809,5 @@
             };
           }
         }
-    }]);
+      }]);
 })();
