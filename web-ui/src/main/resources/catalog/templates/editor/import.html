@@ -359,9 +359,13 @@
                 <!--id and uuid from single import-->
                 <div data-ng-repeat="(key, value) in report.metadataInfos">
                   <span>{{value[0].message}}</span>
+                  <a href='catalog.search#/metadata/{{key}}'
+                    title="{{'view' | translate}}">
+                    <i class='fa fa-fw fa-eye'></i>
+                  </a>
                   <a href='#/metadata/{{key}}?redirectUrl=catalog.edit'
                     title="{{'edit' | translate}}">
-                    <i class='fa fa-pencil'></i>
+                    <i class='fa fa-fw fa-pencil'></i>
                   </a>
                 </div>
                 <div data-ng-repeat="(key, value) in report.errors">
