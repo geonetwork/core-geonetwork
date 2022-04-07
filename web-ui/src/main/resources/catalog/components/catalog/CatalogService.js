@@ -545,7 +545,7 @@
           var results = [];
           filters.forEach(function(filter, j) {
             var prop = object[filter.field];
-            if (prop
+            if (prop !== undefined
               && ((!filter.not && prop.match(filter.regex) != null)
                 || (filter.not && prop.match(filter.regex) == null))) {
               results[j] = true;
