@@ -240,7 +240,7 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:for-each select="mdb:metadataScope/*/mdb:name">
-        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName',., $allLanguages)"/>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
 
 
