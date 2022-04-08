@@ -263,10 +263,13 @@
                          data-ng-show="currentXpath.value != ''"></i>
                     </li>
                   </ul>
+
+                  <div gn-batch-edit-examples-selector="setExample"/>
                 </div>
 
                 <form class="form-horizontal" id="gn-batch-changes">
                   <div data-ng-show="editType === 'xpathEdits'">
+
                     <form class="form-horizontal"
                           name="xpathConfigForm"
                           novalidate="">
@@ -311,6 +314,8 @@
                         </p>
                       </div>
                     </form>
+
+
 
                     <ul class="list-group">
                       <li data-ng-repeat="c in changes | filter:isXpath"

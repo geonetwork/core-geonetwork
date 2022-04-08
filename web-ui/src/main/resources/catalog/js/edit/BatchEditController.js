@@ -527,6 +527,10 @@
         });
       };
 
+      $scope.setExample = function(e) {
+        $scope.currentXpath = e;
+      };
+
       function init() {
         $http.get('../api/standards/batchconfiguration').
             success(function(data) {
