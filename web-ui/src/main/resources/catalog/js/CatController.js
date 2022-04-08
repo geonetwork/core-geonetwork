@@ -359,10 +359,50 @@ goog.require('gn_alert');
           this.gnCfg.mods.search.sortbyValues = angular.extend({
             mods: {
               search: {
-                sortbyValues: {}
+                sortbyValues: []
               }
             }
           }, config).mods.search.sortbyValues;
+
+          this.gnCfg.mods.search.downloadFormatter = angular.extend({
+            mods: {
+              search: {
+                downloadFormatter: []
+              }
+            }
+          }, config).mods.search.downloadFormatter;
+
+          this.gnCfg.mods.search.resultViewTpls = angular.extend({
+            mods: {
+              search: {
+                resultViewTpls: []
+              }
+            }
+          }, config).mods.search.resultViewTpls;
+
+          this.gnCfg.mods.search.formatter = angular.extend({
+            mods: {
+              search: {
+                formatter: {}
+              }
+            }
+          }, config).mods.search.formatter;
+
+          this.gnCfg.mods.search.linkTypes = angular.extend({
+            mods: {
+              search: {
+                linkTypes: {}
+              }
+            }
+          }, config).mods.search.linkTypes;
+
+          this.gnCfg.mods.map.projectionList = angular.extend({
+            mods: {
+              map: {
+                projectionList: []
+              }
+            }
+          }, config).mods.map.projectionList;
         }
 
         this.gnUrl = gnUrl || '../';
@@ -387,7 +427,12 @@ goog.require('gn_alert');
         copy.mods.search.grid.related = [];
         copy.mods.search.sortbyValues = [];
         copy.mods.search.hitsperpageValues = [];
+        copy.mods.search.downloadFormatter = [];
+        copy.mods.search.resultViewTpls = [];
+        copy.mods.search.formatter = {};
+        copy.mods.search.linkTypes = {};
         copy.mods.map["map-editor"].layers = [];
+        copy.mods.map.projectionList = [];
         return copy;
       },
       getProxyUrl: function() {
