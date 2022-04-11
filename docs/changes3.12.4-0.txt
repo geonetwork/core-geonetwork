@@ -1,0 +1,45 @@
+================================================================================
+===
+=== GeoNetwork 3.12.4: List of changes
+===
+================================================================================
+- Fix removal of elements in the UI configuration (#6238)
+- [BP] Metadata editor - allow to add WMS layer names in the URL (#6195) - iso19139 online resource panel update
+- [BP] Metadata editor - allow to add WMS layer names in the URL (#6195)
+- [BP] Harvester of type Geonetwork using MEF format doesn't update the server in the online resource links for uploaded files/thumbnails. Fixes #2785
+- Remove wrong metadata get uuid method related to a51a3798e41bdc8bf271d4cbf96269a227a6ea7f
+- [BP] Update metadata import API to use multilingual texts for the import report and exceptions (#6220)
+- Harvester / CSW / Add sortby option. (#6223)
+- [BP] Fix for the alert info message accidentally falling partly outside the popup (#6218)
+- [BP] External workflow assist app links. (#6201)
+- [BP] Update French translations for iso19139 topic categories (#6209)
+- [BP] Home url instead of generic appUrl in ui setting home (#6214)
+- [BP] remove Thumbnail recommended text (#6197)
+- [BP] Fixed issue with getting keycloak token from upgraded security context. (#6207)
+- [BP] Add Accept-Language header in login controller requests, to set the correct language in the requests done in the login page (#6196)
+- [BP] Preserve harvester last run date when updating the harvester configuration (#6166)
+- Export metadata as csv to download (not in browsing mode) (#6150)
+- [BP] Fix the thumbnail generator using the metadata view services for metadata working copies (#6179)
+- [BP] Reindex the working copy when transferred the ownership of a single metadata. Related to #6144 (#6190)
+- [BP] Don't allow transfer ownership to reserved groups. (#6193)
+- [BP] Add French message. Related to #6015 (#6191)
+- [BP] Add multilingual exceptions in metadata workflow API (#6182)
+- [BP] Configuration of the INSPIRE API endpoint to use instead of the INSPIRE API gateway URL for all endpoints except /v2/TestRuns to preserve quotas (#6146)
+- [BP] Local INSPIRE Atom feed xslt: (#5815)
+- [BP] User feedback improvements (#5443) (#6073)
+- [BP] Fix authentication type property name in user form (#5817)
+- [BP] Configure HttpOnly for language cookie and fix the cookie path. Fixes #6151
+- [BP] Configure HttpOnly for session timeout cookies and fix the cookie path. Fixes #6151
+- [BP] Add German translations for Datacite schematron rules (#6159)
+- [BP] Metadata status dialog - disable button until receiving the current metadata status value (#6149)
+- Updated keycloak to use the correct granted authority (#6134)
+- [BP] Add proxy level security support for map services (#5941)
+- [BP] Fix bug with Keycloak backchannel logout not working due to CSRF issue. (#6132)
+- [BP] Metadata publish - check if the metadata owner group has the workflow enabled (#6141)
+- [BP] Metadata detail page - fix trigger metadata tab selection (#6142)
+- [BP] Update transfer ownership to handle when the metadata workflow is enabled the approved version of the metadata with a working copy (#6144)
+- [BP] Display the alert message within the online resource popup (#6109)
+- [BP] Use typeNames in the WFS URL when version is >= "2.0.0" (#6143)
+- [BP] Restore redirect for /geonetwork?uuid=1234 permalinks
+- [BP] Fix the cron expression for the INSPIRE ATOM harvester (#6131)
+- [BP] Fix issue with CMIS connection during startup (#6106)
