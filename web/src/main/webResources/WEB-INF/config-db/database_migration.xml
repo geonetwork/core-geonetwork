@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+\<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -294,7 +294,7 @@
         <value>WEB-INF/classes/setup/sql/migrate/v3123/migrate-</value>
       </list>
     </entry>
-   <entry key="3124">
+   <entry key="3.12.4">
     <list>
       <value>WEB-INF/classes/setup/sql/migrate/v3124/migrate-</value>
     </list>
