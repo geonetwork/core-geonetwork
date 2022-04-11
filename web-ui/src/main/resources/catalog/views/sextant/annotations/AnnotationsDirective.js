@@ -223,11 +223,17 @@
             })
           };
 
-          scope.layer.on('change:visible', function(e){
-            if (e.oldValue) {
-              scope.annotationsLayer.setVisible(false);
-            } else {
+          scope.layer.on('change:visible', function(e) {
+
+            if( scope.layer.get('annotationsUuid') != e.target.get('annotationsUuid')) {
+              return
+            }
+            if (!e.oldValue)  {
+
               scope.annotationsLayer.setVisible(true);
+            }
+            else {
+              scope.annotationsLayer.setVisible(false);
             }
 
           });
@@ -238,7 +244,9 @@
 
           scope.$on('$destroy', function() {
             scope.map.removeLayer(scope.annotationsLayer);
-            scope.annotationsLayer.getSource().un(listenerKey);
+            if (listenerKey) {
+              scope.annotationsLayer.getSource().un(listenerKey);
+            }
             scope.annotationsLayer.active = false;
           });
         }
