@@ -98,7 +98,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -173,6 +177,9 @@ public class MetadataInsertDeleteApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
@@ -967,11 +974,32 @@ public class MetadataInsertDeleteApi {
                 StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
 
             // Is the user profile is higher than the profile allowed to import metadata?
-            if (userSession.getProfile().ordinal() > Profile.findProfileIgnoreCase(allowedUserProfileToImportMetadata).ordinal()) {
+            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to import metadata.");
             }
         }
 
+    }
+
+    /**
+     * Checks if the current user has a role using the role hierarchy.
+     *
+     * @param role  Role to check.
+     * @param roleHierarchy  Role hierarchy.
+     * @return true if the current user has a role using the role hierarchy, otherwise false.
+     */
+    private boolean hasHierarchyRole(String role, RoleHierarchy roleHierarchy) {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        Collection<? extends GrantedAuthority> hierarchyAuthorities = roleHierarchy.getReachableGrantedAuthorities(authorities);
+
+        for (GrantedAuthority authority : hierarchyAuthorities) {
+            if (authority.getAuthority().equals(role)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
