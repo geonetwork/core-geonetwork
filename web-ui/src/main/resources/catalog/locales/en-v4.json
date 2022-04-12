@@ -310,6 +310,6 @@
   "uuidMergePolicy": "UUID merge policy",
   "filteringAndProcessing": "Filtering and processing response",
   "recordCreationOptions": "Record creation options",
-  "batchEditConfigIsNotValid": "Batch edit configuration is invalid.",
+  "batchEditConfigIsNotValid": "Batch edit configuration is invalid. It must be a JSON <pre>{\"insertMode\": \"gn_add\", \"xpath\": \"...\", \"value\": \"...\"}</pre>",
   "batchEditConfigIsNotJson": "Batch edit configuration is not JSON."
 }

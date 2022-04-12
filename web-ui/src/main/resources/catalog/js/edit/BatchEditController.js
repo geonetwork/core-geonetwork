@@ -188,7 +188,9 @@
              gnCurrentEdit, gnSchemaManagerService,
              gnPopup, $translate, gnClipboard, $rootScope) {
 
-      $scope.editTypes = ['searchAndReplace', 'xpathEdits', 'batchEdits'];
+      $scope.editTypes = [{id: 'searchAndReplace', icon: 'fa-refresh fa-rotate-90'},
+        {id: 'xpathEdits', icon: 'fa-code'},
+        {id: 'batchEdits', icon: 'fa-wpforms'}];
 
       // Simple tab handling.
       $scope.selectedStep = 1;
@@ -561,7 +563,7 @@
             success(function(data) {
               $scope.fieldConfig = data;
               gnSchemaManagerService.getNamespaces();
-              $scope.setType($scope.editTypes[0]);
+              $scope.setType($scope.editTypes[0].id);
             }).error(function(response) {
               console.warn(response);
             });
