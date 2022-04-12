@@ -309,5 +309,6 @@
   "sortBy": "Sort by",
   "uuidMergePolicy": "UUID merge policy",
   "filteringAndProcessing": "Filtering and processing response",
-  "recordCreationOptions": "Record creation options"
+  "recordCreationOptions": "Record creation options",
+  "properties": "Properties"
 }
