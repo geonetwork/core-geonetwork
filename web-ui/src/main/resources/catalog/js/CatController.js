@@ -1244,6 +1244,9 @@ goog.require('gn_alert');
       $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
       $scope.isFooterEnabled = gnGlobalSettings.gnCfg.mods.footer.enabled;
+      $scope.filter = {
+        types: {'portal': true, 'subportal': true, 'externalportal': true, 'harvester': true}
+      };
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
@@ -1254,6 +1257,30 @@ goog.require('gn_alert');
         var onMdView =  $location.absUrl().indexOf('/metadata/') > -1;
         return !onMdView && gnGlobalSettings.gnCfg.mods.footer.showSocialBarInFooter;
       };
+
+      function getPortals() {
+        var url = '../api/sources';
+        $http.get(url)
+          .success(function(data) {
+            $scope.sources = data;
+            filterPortals();
+            $scope.isNew = false;
+          });
+      }
+      getPortals();
+
+      function filterPortals() {
+        $scope.filteredPortals = [];
+        $scope.filteredSubPortals = 0;
+        $scope.sources.forEach(function(s) {
+          if ($scope.filter.types[s.type] === true) {
+            $scope.filteredPortals.push(s);
+          }
+          if (s.type === 'subportal') {
+            $scope.filteredSubPortals++;
+          }
+        });
+      }
 
       function detectNode(detector) {
         if (detector.regexp) {
