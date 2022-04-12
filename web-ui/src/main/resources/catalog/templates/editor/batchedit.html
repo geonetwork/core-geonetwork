@@ -310,6 +310,11 @@
                                   type="submit">
                             <i class="fa fa-plus"></i>
                           </button>
+
+                          <button class="btn btn-default"
+                                  data-ng-click="pasteFromClipboard()">
+                            <i class="fa fa-paste"></i>
+                          </button>
                         </div>
                         </p>
                       </div>
@@ -333,6 +338,9 @@
                                 data-ng-click="removeXpathChange(c)">
                           <i class="fa fa-times text-danger"></i>
                         </button>
+                        <button gn-copy-to-clipboard-button=""
+                                data-btn-class="btn btn-default"
+                                data-text="{{c}}"/>
                       </li>
                     </ul>
                   </div>

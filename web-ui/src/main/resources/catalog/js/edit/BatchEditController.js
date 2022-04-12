@@ -182,9 +182,11 @@
     'gnCurrentEdit',
     'gnSchemaManagerService',
     'gnPopup', '$translate',
+    'gnClipboard', '$rootScope',
     function($scope, $location, $http, $compile, $httpParamSerializer,
-        gnSearchSettings, gnGlobalSettings,
-        gnCurrentEdit, gnSchemaManagerService, gnPopup, $translate) {
+             gnSearchSettings, gnGlobalSettings,
+             gnCurrentEdit, gnSchemaManagerService,
+             gnPopup, $translate, gnClipboard, $rootScope) {
 
       $scope.editTypes = ['searchAndReplace', 'xpathEdits', 'batchEdits'];
 
@@ -412,6 +414,29 @@
       $scope.removeXpathChange = function(c) {
         $scope.removeChange(c.xpath, c.value);
         xpathCounter--;
+      };
+      $scope.pasteFromClipboard = function() {
+        gnClipboard.paste().then(function(text) {
+          try {
+            var config = JSON.parse(text);
+            if (config['insertMode']) {
+              $scope.currentXpath = config;
+            } else {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('batchEditConfigIsNotValid'),
+                timeout: 2,
+                type: 'danger'
+              });
+            }
+          } catch (e) {
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('batchEditConfigIsNotJson'),
+              error: e,
+              timeout: 2,
+              type: 'danger'
+            });
+          }
+        });
       };
       $scope.editXpathChange = function(c) {
         $scope.removeChange(c.xpath, c.value);

@@ -309,5 +309,7 @@
   "sortBy": "Sort by",
   "uuidMergePolicy": "UUID merge policy",
   "filteringAndProcessing": "Filtering and processing response",
-  "recordCreationOptions": "Record creation options"
+  "recordCreationOptions": "Record creation options",
+  "batchEditConfigIsNotValid": "Batch edit configuration is invalid.",
+  "batchEditConfigIsNotJson": "Batch edit configuration is not JSON."
 }
