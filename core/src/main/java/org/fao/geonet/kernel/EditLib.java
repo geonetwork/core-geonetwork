@@ -662,7 +662,20 @@ public class EditLib {
                             ));
                         } else {
                             int index = parent.indexOf(propEl);
-                            parent.addContent(index, child);
+
+                            // Non existing element already created
+                            // eg. Insert xpath
+                            // mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor
+                            // with snippet <mrd:distributor
+                            // and record does not contain mrd:distributor.
+                            // It was created on xpath analysis step above.
+                            // In this case, insert the fragment at the target
+                            // Check on children size may not be strict enough
+                            if (propEl.getChildren().size() == 0) {
+                                parent.setContent(index, child);
+                            } else {
+                                parent.addContent(index, child);
+                            }
                         }
                     } else {
                         // Add an element of same type in the target node
@@ -810,22 +823,6 @@ public class EditLib {
                 currentNode = addElement(metadataSchema,
                     currentNode.getParentElement(),
                     currentNode.getQualifiedName());
-            } else {
-                // Element already created
-                // eg. Insert xpath
-                // mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor
-                // with snippet <mrd:distributor
-                // and record does not contain mrd:distributor.
-                // It was created on xpath analysis step above.
-                // In this case, insert the fragment in existing
-                List children = value.getNodeValue().getChildren();
-                if (children.size() > 0) {
-                    String nodeToInsertName = ((Element) children.get(0))
-                        .getQualifiedName();
-                    if (currentNode.getQualifiedName().equals(nodeToInsertName)) {
-                        currentNode = currentNode.getParentElement();
-                    }
-                }
             }
 
             // clean before update

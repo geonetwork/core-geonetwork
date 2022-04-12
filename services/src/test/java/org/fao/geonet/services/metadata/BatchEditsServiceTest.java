@@ -201,7 +201,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
             new BatchEditParameter(
                 "/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor[1]",
-                "<gn_add><mrd:distributor xmlns:mrd=\"http://standards.iso.org/iso/19115/-3/mrd/1.0\"/></gn_add>"
+                "<gn_add><mrd:distributor xmlns:mrd=\"http://standards.iso.org/iso/19115/-3/mrd/1.0\"><mrd:MD_Distributor/></mrd:distributor></gn_add>"
             )
         };
 
