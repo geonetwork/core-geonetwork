@@ -174,7 +174,7 @@
     "listOfCategories": "Kategorie",
     "formats": "Formáty",
     "addLayers": "Přidat vrstvy",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "Služba URL",
     "CurrentLayers": "Vrstvy",
     "SearchLayer": "Vyhledat",
@@ -532,5 +532,10 @@
     "displayMousePosition": "Zobrazit pozici myši (klávesovou zkratkou 'c' zkopírujete polohu do schránky).",
     "copyMousePosition": "Zkopírovat pozici myši do schránky",
     "printUnsupportedLayerTypes": "Následující typy vrstev jsou k dispozici, ale nelze je vytisknout",
-    "rssFeed": "RSS kanál"
+    "rssFeed": "RSS kanál",
+    "esriCapabilitiesFailed": "Chyba při načítání dokumentu ESRI Rest schopností.",
+    "esriCapabilitiesNoValid": "Odpověď není platným dokumentem o možnostech ESRI Rest.",
+    "seriesComposedOf": "Složen z",
+    "seriesCoveringPeriod": "Krycí období",
+    "approve": "Schválit"
 }

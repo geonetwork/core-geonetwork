@@ -8,7 +8,7 @@
   </div>
 
   <fieldset id="gn-harvest-settings-sde-basic-row">
-    <legend id="gn-harvest-settings-sde-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-sde-basic-title"><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div id="gn-harvest-settings-sde-basic-server-row" data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''">
@@ -67,7 +67,7 @@
   </fieldset>
 
   <fieldset id="gn-harvest-settings-sde-advanced-row">
-    <legend id="gn-harvest-settings-sde-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend id="gn-harvest-settings-sde-advanced-title"><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 

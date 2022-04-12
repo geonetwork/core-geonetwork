@@ -174,7 +174,7 @@
     "listOfCategories": "Kategorien",
     "formats": "Formate",
     "addLayers": "Layer hinzufügen",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "Dienst URL",
     "CurrentLayers": "Layer",
     "SearchLayer": "Suche ...",
@@ -532,5 +532,10 @@
     "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
     "copyMousePosition": "Copy mouse position to clipboard",
     "printUnsupportedLayerTypes": "Die folgenden Layertypen sind vorhanden, können jedoch nicht gedruckt werden",
-    "rssFeed": "RSS-Feed"
+    "rssFeed": "RSS-Feed",
+    "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
+    "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
+    "seriesComposedOf": "Composed of",
+    "seriesCoveringPeriod": "Covering period",
+    "approve": "Genehmigen"
 }

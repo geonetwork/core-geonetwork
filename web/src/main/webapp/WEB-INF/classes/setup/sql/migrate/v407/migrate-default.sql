@@ -10,7 +10,14 @@ INSERT INTO Users (id, username, password, name, surname, profile, kind, organis
 INSERT INTO Address (id, address, city, country, state, zip) VALUES  (0, '', '', '', '', '');
 INSERT INTO UserAddress (userid, addressid) VALUES  (0, 0);
 
+-- WARNING: Security / Add this settings only if you need to allow admin
+-- users to be able to reset user password. If you have mail server configured
+-- user can reset password directly. If not, then you may want to add that settings
+-- if you don't have access to the database.
+-- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/password/allowAdminReset', 'false', 2, 12004, 'n');
 
 UPDATE Settings SET value='4.0.7' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
+UPDATE Settings SET editable = 'n' WHERE name = 'system/userFeedback/lastNotificationDate';
+UPDATE Settings SET editable = 'n' WHERE name = 'system/security/passwordEnforcement/pattern';

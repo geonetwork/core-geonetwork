@@ -419,5 +419,7 @@
     "link": "Link",
     "link-text": "Link text",
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
-    "allowEditGroupMembers": "Allow group editors to edit"
+    "allowEditGroupMembers": "Allow group editors to edit",
+    "wmsSelectedLayers": "Selected layers",
+    "wmsSelectedLayersNone": "No layers selected"
 }

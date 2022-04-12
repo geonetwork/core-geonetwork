@@ -713,8 +713,8 @@ goog.require('gn_alert');
           'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
           'internalThesaurus': [],
           'collectionTableConfig': {
-            'labels': 'title,cl_status,format,Esri,view,download,file,atom',
-            'columns': 'resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed'
+            'labels': 'title,cl_status,format,download,WMS,WFS,Atom,Links',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:WWW:DOWNLOAD.*,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:atom:feed,link/protocol:WWW:LINK.*'
           },
           'distributionConfig': {
             // 'layout': 'tabset',
