@@ -137,7 +137,7 @@
     <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.harvest.wfs.features">
-    <level value="ERROR"/>
+    <level value="DEBUG"/>
   </logger>
   <logger name="geonetwork.backup">
     <level value="ERROR"/>
@@ -221,6 +221,8 @@
     <appender-ref ref="allConsoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <!-- Check also domain/src/main/resources/config-spring-geonetwork.xml
+  show_sql properties. -->
   <logger name="org.hibernate.SQL" additivity="false">
     <level value="ERROR"/>
     <appender-ref ref="consoleAppender"/>
