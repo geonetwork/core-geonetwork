@@ -309,7 +309,8 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" }
               },
               'meta': {
-                'collapsed': true
+                'collapsed': true,
+                'orderByTranslation': true
                 // 'translateOnLoad': true,
                 // 'treeKeySeparator': '^'
               }
@@ -355,7 +356,8 @@ goog.require('gn_alert');
               },
               'meta': {
                 'collapsed': true,
-                'translateOnLoad': true
+                'translateOnLoad': true,
+                'orderByTranslation': true
               }
             },
             // GEMET configuration for non multilingual catalog

@@ -332,7 +332,6 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
-
           var sextantThesaurusWithHierarchyInLabel = Object.keys(SEXTANT_LEGACY_FACET_MAPPING)
             .filter(function(k) {
               return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0].indexOf('_tree.key') !== -1;
@@ -353,6 +352,15 @@
               scope.ctrl.item.label =
                 $filter('facetTranslator')(scope.ctrl.item.value)
                   .replace(parentLabel, '');
+
+              if (scope.ctrl.item.items && scope.ctrl.item.items.length > 0) {
+                scope.ctrl.item.items.forEach(function(facet) {
+                  var treePathTranslated = $filter('facetTranslator')(facet.value),
+                    endNodeLabel = treePathTranslated.substr(
+                      treePathTranslated.lastIndexOf('/') + 1, treePathTranslated.length)
+                  facet.label = endNodeLabel;
+                })
+              }
             }
           }
 

@@ -48,6 +48,6 @@
        es-facet-item="::item"
        class="gn-facet-container"
        ng-if="::ctrl.item.items.length"
-       ng-repeat="item in ::ctrl.item.items">
+       ng-repeat="item in ctrl.item.items | orderBy:'label'">
   </div>
 </div>
