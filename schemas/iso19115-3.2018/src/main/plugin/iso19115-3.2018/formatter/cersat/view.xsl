@@ -610,11 +610,22 @@
             <xsl:if test="$org != ''">
               <xsl:value-of select="concat(' (', $org, ')')"/>
             </xsl:if>
-            <xsl:for-each select=".//cit:electronicMailAddress/*/text()">
+            <xsl:variable name="individualEmails"
+                          select=".//cit:electronicMailAddress/*/text()"/>
+            <xsl:for-each select="$individualEmails">
               <a href="mailto:{.}">
                 <i class="fa fa-envelope"><xsl:comment>mail</xsl:comment></i>
               </a>
             </xsl:for-each>
+
+            <!-- Check if the org has emails. -->
+            <xsl:if test="not($individualEmails)">
+              <xsl:for-each select="../../cit:contactInfo//cit:electronicMailAddress/*/text()">
+                <a href="mailto:{.}">
+                  <i class="fa fa-envelope"><xsl:comment>mail</xsl:comment></i>
+                </a>
+              </xsl:for-each>
+            </xsl:if>
             <xsl:if test="position() != last()">, </xsl:if>
           </xsl:for-each>
         </xsl:when>
