@@ -454,7 +454,10 @@ public class EsWFSFeatureIndexer {
             titleResolver = new TitleResolver() {
                 @Override
                 public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
-                    objectNode.put("resourceTitle", simpleFeature.getAttribute(defaultTitleAttribute).toString());
+                    Object titleAttribute = simpleFeature.getAttribute(defaultTitleAttribute);
+                    if (titleAttribute != null) {
+                        objectNode.put("resourceTitle", titleAttribute.toString());
+                    }
                 }
             };
         } else {
