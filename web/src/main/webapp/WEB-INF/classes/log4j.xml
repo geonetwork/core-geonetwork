@@ -140,7 +140,7 @@
     <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.harvest.wfs.features">
-    <level value="DEBUG"/>
+    <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.backup">
     <level value="ERROR"/>
