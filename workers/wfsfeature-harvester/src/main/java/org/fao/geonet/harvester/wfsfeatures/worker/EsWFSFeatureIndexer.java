@@ -42,6 +42,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
+import org.geotools.data.DataSourceException;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
@@ -63,6 +64,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -291,6 +293,17 @@ public class EsWFSFeatureIndexer {
                             feature = features.next();
                             featurePointer = String.format("%s/id:%s", featurePointer, feature.getID());
                         } catch (Exception e) {
+                            if (e.getCause() instanceof IOException
+                                || e.getCause() instanceof DataSourceException) {
+                                String msg = String.format(
+                                    "Error while getting feature %s. Exception is: %s. Harvesting task will be stopped. This is probably a problem with the data source or some network related issues. Try to relaunch it later.",
+                                    featurePointer,
+                                    e.getMessage()
+                                );
+                                LOGGER.warn(msg);
+                                report.put("error_ss", msg);
+                                break;
+                            }
                             String msg = String.format(
                                 "Error on reading %s. Exception is: %s",
                                 featurePointer, e.getMessage()
