@@ -209,19 +209,21 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     // SEXTANT SPECIFIC: replace whitespace in keys to underscore (mutates object)
     public static JSONObject sanitize(JSONObject json) throws JSONException {
         JSONArray names = json.names();
-        for (int i = 0; i < names.length(); i++) {
-            String key = names.getString(i);
-            if (key.contains(" ")) {
-                String oldKey = key;
-                key = key.replaceAll(" ", "_");
-                json.put(key, json.get(oldKey));
-                json.remove(oldKey);
-            }
-            Object value = json.opt(key);
-            if (value instanceof JSONObject) {
-                sanitize((JSONObject) value);
-            } else if (value instanceof JSONArray) {
-                sanitize((JSONArray) value);
+        if (names != null) {
+            for (int i = 0; i < names.length(); i++) {
+                String key = names.getString(i);
+                if (key.contains(" ")) {
+                    String oldKey = key;
+                    key = key.replaceAll(" ", "_");
+                    json.put(key, json.get(oldKey));
+                    json.remove(oldKey);
+                }
+                Object value = json.opt(key);
+                if (value instanceof JSONObject) {
+                    sanitize((JSONObject) value);
+                } else if (value instanceof JSONArray) {
+                    sanitize((JSONArray) value);
+                }
             }
         }
         return json;
