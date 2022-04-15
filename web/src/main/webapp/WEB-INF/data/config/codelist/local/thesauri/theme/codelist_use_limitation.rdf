@@ -48,10 +48,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-sa/4.0/">
-	<skos:prefLabel xml:lang="fr">CC-BY-NC-SA (Creative Commons - Attribution, Pas de modification)</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">CC-BY-NC-SA (Creative Commons - Attribution, Pas de modification, Partage dans les mêmes conditions)</skos:prefLabel>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:prefLabel xml:lang="en">CC-BY-NC-SA (Creative Commons - Attribution, Pas de modification)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">CC-BY-NC-SA (Creative Commons - Attribution, No commercial usage, Sharing under the same conditions)</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="https://creativecommons.org/licenses/by-nd/4.0/">
