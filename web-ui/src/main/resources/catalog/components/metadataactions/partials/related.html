@@ -38,8 +38,16 @@
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
         <!-- Always display title if available -->
         <a data-ng-if="::(r.title | gnLocalized: lang).length"
+           data-ng-hide="r.origin == 'remote'"
            href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}">
           {{::(r.title | gnLocalized: lang)}}
+        </a>
+        <a data-ng-if="::(r.title | gnLocalized: lang).length"
+           data-ng-show="r.origin == 'remote'"
+           href="{{r.url | gnLocalized: lang}}">
+          {{::(r.title | gnLocalized: lang)}}
+
+          <strong data-ng-show="r.initiativeType"> ({{r.initiativeType | translate}})</strong>
         </a>
         <!-- Display description if available -->
         <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
