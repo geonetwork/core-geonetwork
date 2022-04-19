@@ -335,6 +335,9 @@
               field: 'endDate',
               title: $translate.instant('wfsIndexingEndDate'),
               sortable: true,
+              sorter: function(a, b) {
+                return a && a.localeCompare(b);
+              },
               formatter: function(value, row) {
                 if (value) {
                   var date = gnHumanizeTimeService(value, null, true);
