@@ -303,9 +303,73 @@
             </gmd:MD_LegalConstraints>
           </gmd:resourceConstraints>
 
+          <!--
+              "linked dataset":[
+        {
+            "title":"EMSO-Azores observatory real-time data 2013 deployment",
+            "doi":"10.12770/D259A47C-AC78-4755-9194-AAAB428E5590",
+            "authors":"Blandin Jérôme, Cannat Mathilde, Sarradin Pierre-Marie, Ballu Valérie, Romuald, Daniel, Godfroy Anne, Legrand Julien, Laës-Huon Agathe, Rommevaux-Jestin Céline, Sarrazin Jozée, Colaço Ana, Carval Thierry, Coail Jean-Yves, Coulombiers Thibaut, Wayne, Crawford, Guyader Gérard, Hussni Sara, Kerboul André, Pichavant Pascal",
+            "publication year":2015,
+            "publisher":"Sismer"
+          -->
           <xsl:for-each select="linked_dataset[doi]|linked_document[doi]">
+            <xsl:variable name="title"
+                          select="concat(authors, ' (', publication_year, '). ', title, '')"/>
+
             <gmd:aggregationInfo>
               <gmd:MD_AggregateInformation>
+
+                <gmd:aggregateDataSetName>
+                  <gmd:CI_Citation>
+                    <gmd:title>
+                      <gco:CharacterString>
+                        <xsl:value-of select="title"/>
+                      </gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                      <gmd:CI_Date>
+                        <gmd:date>
+                          <gco:Date><xsl:value-of select="publication_year"/></gco:Date>
+                        </gmd:date>
+                        <gmd:dateType>
+                          <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                                               codeListValue="publication"/>
+                        </gmd:dateType>
+                      </gmd:CI_Date>
+                    </gmd:date>
+                    <xsl:for-each select="publisher">
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:organisationName>
+                            <gco:CharacterString>
+                              <xsl:value-of select="."/>
+                            </gco:CharacterString>
+                          </gmd:organisationName>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
+                                             codeListValue="publisher"/>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </xsl:for-each>
+                    <xsl:for-each select="tokenize(authors, ', ')">
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:individualName>
+                            <gco:CharacterString>
+                              <xsl:value-of select="."/>
+                            </gco:CharacterString>
+                          </gmd:individualName>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
+                                             codeListValue="author"/>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </xsl:for-each>
+                  </gmd:CI_Citation>
+                </gmd:aggregateDataSetName>
+
                 <gmd:aggregateDataSetIdentifier>
                   <gmd:MD_Identifier>
                     <gmd:code>
@@ -316,7 +380,6 @@
                     </gmd:code>
                   </gmd:MD_Identifier>
                 </gmd:aggregateDataSetIdentifier>
-                <!-- TODO: Citation + view mode -->
                 <gmd:associationType>
                   <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
                                               codeListValue="crossReference"/>
