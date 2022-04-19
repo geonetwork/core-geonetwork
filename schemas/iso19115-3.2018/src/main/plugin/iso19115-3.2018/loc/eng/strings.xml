@@ -81,6 +81,7 @@
   <eo-tab-contact>Contact</eo-tab-contact>
   <eo-tab-description>Description</eo-tab-description>
   <eo-version>Version</eo-version>
+  <eo-add-version>Add a version</eo-add-version>
   <eo-reference>Reference</eo-reference>
   <eo-keywords>Dataset properties</eo-keywords>
   <eo-collection-id>Collection ID</eo-collection-id>

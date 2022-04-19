@@ -461,6 +461,41 @@
             <field xpath="/*/mdb:identificationInfo/*/mri:abstract"/>
             <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:version"
                    name="eo-version"/>
+            <action type="add"
+                    name="eo-add-version"
+                    btnLabel="eo-add-version"
+                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:identifier) = 0"
+                    or="identifier"
+                    in="/*/mdb:identificationInfo/*/mri:citation/*">
+              <template>
+                <snippet>
+                  <cit:identifier>
+                    <mcc:MD_Identifier>
+                      <mcc:code gco:nilReason="missing">
+                        <gco:CharacterString/>
+                      </mcc:code>
+                      <mcc:version gco:nilReason="missing">
+                        <gco:CharacterString/>
+                      </mcc:version>
+                    </mcc:MD_Identifier>
+                  </cit:identifier>
+                </snippet>
+              </template>
+            </action>
+            <action type="add"
+                    name="eo-add-version"
+                    btnLabel="eo-add-version"
+                    if="count(//mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:version) = 0"
+                    or="version"
+                    in="/*/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*">
+              <template>
+                <snippet>
+                  <mcc:version gco:nilReason="missing">
+                    <gco:CharacterString/>
+                  </mcc:version>
+                </snippet>
+              </template>
+            </action>
 
             <field xpath="/*/mdb:identificationInfo/*/mri:citation/*/cit:date"/>
             <action type="add"
