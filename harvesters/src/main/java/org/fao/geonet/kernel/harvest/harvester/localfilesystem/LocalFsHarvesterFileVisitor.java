@@ -161,7 +161,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 processXml(file);
             }
         } catch (Throwable e) {
-            LOGGER.error("An error occurred while harvesting a local file:{}.", e.getMessage());
+            LOGGER.error("An error occurred while harvesting file {}. Error is: {}.",
+                file.toAbsolutePath().normalize(), e.getMessage());
         }
         return FileVisitResult.CONTINUE;
     }
@@ -176,7 +177,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         ObjectMapper objectMapper = new ObjectMapper();
         Element recordAsElement;
         try {
-            LOGGER.error("reading file: {}", filePath);
+            LOGGER.debug("reading file: {}", filePath);
             String uuid = com.google.common.io.Files.getNameWithoutExtension(file.getFileName().toString());
             String recordAsJson = objectMapper.readTree(filePath.toFile()).toString();
             JSONObject sanitizedJson = sanitize(new JSONObject(recordAsJson));
