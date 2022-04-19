@@ -316,6 +316,7 @@
                     </gmd:code>
                   </gmd:MD_Identifier>
                 </gmd:aggregateDataSetIdentifier>
+                <!-- TODO: Citation + view mode -->
                 <gmd:associationType>
                   <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
                                               codeListValue="crossReference"/>
@@ -433,10 +434,7 @@
                     </gmd:protocol>
                     <gmd:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="traitement"/>
-                        <xsl:if test="Description_EN != ''">
-                          <xsl:value-of select="concat(' (', Description_EN, ')')"/>
-                        </xsl:if>
+                        <xsl:value-of select="Description_EN"/>
                       </gco:CharacterString>
                     </gmd:name>
                     <xsl:if test="traitement != ''">
