@@ -11,7 +11,8 @@
       <li ng-repeat="link in downloads">
         <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md, $event)" title="{{link.description || (link.name + ' - ' + link.contentType)}}">
           <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-          {{link.description || (link.name + ' - ' + link.contentType) }} </a></li>
+          {{link.description
+          || (link.name + (link.contentType ? ' - ' + link.contentType : '')) }} </a></li>
       <li class="divider"></li>
       <li>
         <a href="" data-ng-click="resultviewFns.addAllMdLayersToPanier(downloads, md)">

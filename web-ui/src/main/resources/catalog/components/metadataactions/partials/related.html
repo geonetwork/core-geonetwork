@@ -12,13 +12,22 @@
          data-ng-repeat="r in items track by $index">
       <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
         <strong>
+          <!-- Sextant specific
+           Seanoe related documents have a initiativeType with document or dataset.
+           Display specific icon and label as we can't make distinction in all siblings
+           that are groups together. -->
           <div data-ng-class="{'hidden': $index != 0}"
                class="clearfix">
             <i class="fa"
-               data-ng-class="icon"/>
+               data-ng-class="r.initiativeType == 'document' || r.initiativeType == 'dataset'
+                              ? 'fa-exchange' : icon"/>
           </div>
 
+          <strong data-ng-class="{'hidden': $index != 0}"
+                  data-ng-show="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
+                  data-translate="">references</strong>
           <strong  data-ng-class="{'hidden': $index != 0}"
+                   data-ng-hide="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
                    data-ng-if="(mainType !== 'WMS')
                             && (mainType !== 'WMSSERVICE')
                             && (mainType !== 'WMTS')
