@@ -1432,7 +1432,18 @@ gn-indexing-task-status {
 .width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
 .height-auto { height: auto !important; max-height: none !important; }
-
+.col-2 {
+  column-count: 2;
+  div {
+    break-inside: avoid;
+  }
+}
+.col-3 {
+  column-count: 3;
+  div {
+    break-inside: avoid;
+  }
+}
 
 html {
   // As a side-effect of setting the @viewport in bootstrap,
