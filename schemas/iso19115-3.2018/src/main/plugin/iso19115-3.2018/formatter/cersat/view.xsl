@@ -682,6 +682,7 @@
                             then 'description' else 'name'"/>
       <xsl:for-each-group select="$links"
                           group-by="concat(cit:protocol/*/text(), cit:*[local-name() = $groupLabel]/*/text())">
+        <xsl:sort select="cit:protocol/*/text()"/>
         <br/>
         <div>
           <!--
