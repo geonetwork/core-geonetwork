@@ -55,12 +55,12 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu gn-menu-xs clearfix">
-          <li class="dropdown-header">switchPortals</li>
+          <li class="dropdown-header" translate="">switchPortals</li>
           <li class="divider"></li>
           <li class="gn-menuitem-xs" role="menuitem"
               data-ng-repeat="p in filteredPortals | orderBy:'name'"
               data-ng-class="info['node/id'] == p.uuid ? 'active' : ''">
-            <a href="../../{{p.uuid}}/{{lang}}/catalog.search#/home">
+            <a href="../../{{(p.type === 'portal' ? 'srv' : p.uuid)}}/{{lang}}/catalog.search#/home">
               <img class="gn-source-logo"
                    data-ng-src="{{'../../images/' + (p.type === 'subportal' ? 'harvesting/' +  p.logo : 'logos/' +  p.uuid + '.png')}}"/>
               {{::p.label[lang]}}

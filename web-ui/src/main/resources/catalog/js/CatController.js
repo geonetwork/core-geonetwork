@@ -1264,7 +1264,6 @@ goog.require('gn_alert');
           .success(function(data) {
             $scope.sources = data;
             filterPortals();
-            $scope.isNew = false;
           });
       }
       getPortals();
@@ -1276,7 +1275,7 @@ goog.require('gn_alert');
           if ($scope.filter.types[s.type] === true) {
             $scope.filteredPortals.push(s);
           }
-          if (s.type === 'subportal') {
+          if (s.type !== 'portal') {
             $scope.filteredSubPortals++;
           }
         });
