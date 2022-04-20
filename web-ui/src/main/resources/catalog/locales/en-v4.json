@@ -310,5 +310,8 @@
   "uuidMergePolicy": "UUID merge policy",
   "filteringAndProcessing": "Filtering and processing response",
   "recordCreationOptions": "Record creation options",
-  "testLink": "Test"
+  "testLink": "Test",
+  "metadata/link": "Link analysis",
+  "metadata/link/excludedUrlPattern": "Exclude URL from link analysis",
+  "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)"
 }
