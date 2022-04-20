@@ -31,8 +31,10 @@
     ['gn_utility_service']);
 
   module.controller('GnDashboardRecordLinksController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', 'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
-    function($scope, $routeParams, $http, $rootScope, $translate, gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
+    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$element',
+    'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
+    function($scope, $routeParams, $http, $rootScope, $translate, $element,
+             gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
       $scope.filter = {};
       $scope.groupLinkFilter = null;
@@ -44,6 +46,9 @@
 
       $scope.analyzeLinks = function() {
         $http.post('../api/records/links?analyze=true');
+      };
+      $scope.testLink = function(url) {
+        $http.post('../api/records/links/analyze?url=' + url);
       };
 
       $scope.downloadAsCsv = function() {
@@ -67,6 +72,16 @@
 
       $scope.$watch('groupIdFilter', $scope.triggerSearch);
       $scope.$watch('groupOwnerIdFilter', $scope.triggerSearch);
+
+      $element.on('post-body.bs.table', function() {
+        $element.find('a[data-job-key]').click(function(event) {
+          var btn = $(event.currentTarget);
+          $scope.$apply(function() {
+            $scope.testLink(btn.attr('data-job-key'));
+          });
+          event.preventDefault();
+        });
+      });
 
       $scope.bsTableControl = {
         options: {
@@ -183,7 +198,13 @@
                 ulElem = ulElem + '</ul>';
                 return ulElem;
               }.bind(this)
-            }
+            }, {
+            title: $translate.instant('testLink'),
+            formatter: function(value, row) {
+              var key = row.url;
+              return '<a class="btn btn-xs btn-block btn-default" data-job-key="' + key + '"><icon class="fa fa-fw fa-play"></icon></a>';
+            }.bind(this)
+          }
           ],
           locale: getBsTableLang()
         }
