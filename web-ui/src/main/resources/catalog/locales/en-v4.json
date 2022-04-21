@@ -13,6 +13,7 @@
   "otherKeywords-": "Keywords",
   "link-datasets": "Service",
   "link-services": "Service",
+  "brothersAndSisters": "Siblings",
   "languagesAndTranslations.manage": "Languages & translations",
   "languages.manage": "Registered languages in database",
   "languages.manage.help": "Language stored in database are used to store translations for database entity like group names, portal titles, ... Limiting the list of languages to the minimum simplify admin console entry forms.",
