@@ -14,9 +14,8 @@
 
 <!-- map & extent -->
 <div class="row gn-section gn-padding-top">
-  <h2 data-translate="">spatialExtent</h2>
   <div class="col-md-8 gn-record">
-
+    <h2 data-translate="">spatialExtent</h2>
     <div data-gn-data-preview="mdView.current.record"/>
 
     <br/>
@@ -79,7 +78,7 @@
     <h2 data-translate="">technicalInformation</h2>
   </div>
   <div class="col-md-12 gn-md-side gn-nopadding-top">
-    <div class="col-3" ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
+    <div class="col-3 gn-padding-bottom-lg" ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
   </div>
 </div>
 
@@ -104,7 +103,7 @@
   </div>
 </div>
 
-<div class="row gn-section"
+<div class="row gn-section gn-padding-bottom-lg"
      data-ng-if="mdView.current.record.specificationConformance">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/quality.html'"/>
