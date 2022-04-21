@@ -497,13 +497,13 @@
                     </gmd:protocol>
                     <gmd:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="Description_EN"/>
+                        <xsl:value-of select="traitement"/>
                       </gco:CharacterString>
                     </gmd:name>
-                    <xsl:if test="traitement != ''">
+                    <xsl:if test="Description_EN != ''">
                       <gmd:description>
                         <gco:CharacterString>
-                          <xsl:value-of select="traitement"/>
+                          <xsl:value-of select="Description_EN"/>
                         </gco:CharacterString>
                       </gmd:description>
                     </xsl:if>
