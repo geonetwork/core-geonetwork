@@ -27,7 +27,7 @@
         data-ng-repeat="p in portals | orderBy:'name'">
       <a href="../../{{p.uuid}}/{{lang}}/catalog.search">
         <img class="gn-source-logo"
-             data-ng-src="{{'../../images/harvesting/' +  p.logo + '.png'}}"/>
+             data-ng-src="{{'../../images/harvesting/' +  p.logo}}"/>
         {{::p.label[lang]}}
       </a>
     </li>
