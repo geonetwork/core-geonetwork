@@ -83,7 +83,7 @@
                      class="pull-right"></div>
               </legend>
               <!-- According to data type -->
-              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
+              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkNonEditableSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
                   data-ng-if="s.name != ''">
 
