@@ -26,13 +26,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.utils.Log;
@@ -48,6 +51,9 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Select a list of elements stored in session.
@@ -74,6 +80,9 @@ public class UserSelectionsApi {
 
     @Autowired
     IMetadataUtils metadataRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get list of user selection sets")
     @RequestMapping(
@@ -244,26 +253,48 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
-        if (!selection.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+        String myUserId = session.getUserId();
+
+        if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
+            myUserId.equals(Integer.toString(userIdentifier))) {
+            Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+            if (!selection.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "Selection with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
+            }
+
+            Optional<User> user = userRepository.findById(userIdentifier);
+            if (!user.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "User with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
+            }
+
+            if (!(myUserId.equals(Integer.toString(userIdentifier))) && myProfile == Profile.UserAdmin) {
+
+                //--- retrieve session user groups and check to see whether this user is
+                //--- allowed to get this info
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).or(hasUserId
+                    (userIdentifier)));
+                if (adminlist.isEmpty()) {
+                    throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
+                }
+            }
+
+            if (selection.isPresent()) {
+                return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
+            }
+            return null;
+
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        if (selection.isPresent()) {
-            return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
-        }
-        return null;
     }
 
 
@@ -299,36 +330,59 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
-        if (!selection.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+        String myUserId = session.getUserId();
 
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        for (String u : uuid) {
-            // Check record exist
-            if (metadataRepository.existsMetadataUuid(u)) {
-                UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
-                try {
-                    umsRepository.save(e);
-                } catch (Exception e1) {
-                    Log.error(API.LOG_MODULE_NAME, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
-                }
-            } else {
-                return new ResponseEntity<>(u, HttpStatus.NOT_FOUND);
+        if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
+            myUserId.equals(Integer.toString(userIdentifier))) {
+            Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+            if (!selection.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "Selection with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
             }
+
+            Optional<User> user = userRepository.findById(userIdentifier);
+            if (!user.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "User with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
+            }
+
+            if (!(myUserId.equals(Integer.toString(userIdentifier))) && myProfile == Profile.UserAdmin) {
+
+                //--- retrieve session user groups and check to see whether this user is
+                //--- allowed to get this info
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).or(hasUserId
+                    (userIdentifier)));
+                if (adminlist.isEmpty()) {
+                    throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
+                }
+            }
+
+            for (String u : uuid) {
+                // Check record exist
+                if (metadataRepository.existsMetadataUuid(u)) {
+                    UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
+                    try {
+                        umsRepository.save(e);
+                    } catch (Exception e1) {
+                        Log.error(API.LOG_MODULE_NAME, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
+                    }
+                } else {
+                    return new ResponseEntity<>(u, HttpStatus.NOT_FOUND);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do this");
         }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
 
@@ -364,33 +418,55 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
-        if (!selection.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+        String myUserId = session.getUserId();
 
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        if (uuid == null || uuid.length == 0) {
-            umsRepository.deleteAllBySelectionAndUser(selectionIdentifier, userIdentifier);
-        } else {
-            for (String u : uuid) {
-                UserSavedSelectionId e = new UserSavedSelectionId()
-                    .setSelectionId(selectionIdentifier)
-                    .setUserId(userIdentifier)
-                    .setMetadataUuid(u);
-                umsRepository.deleteById(e);
+        if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
+            myUserId.equals(Integer.toString(userIdentifier))) {
+            Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+            if (!selection.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "Selection with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
             }
+
+            Optional<User> user = userRepository.findById(userIdentifier);
+            if (!user.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "User with id '%d' does not exist.",
+                    selectionIdentifier
+                ));
+            }
+
+            if (!(myUserId.equals(Integer.toString(userIdentifier))) && myProfile == Profile.UserAdmin) {
+
+                //--- retrieve session user groups and check to see whether this user is
+                //--- allowed to get this info
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).or(hasUserId
+                    (userIdentifier)));
+                if (adminlist.isEmpty()) {
+                    throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
+                }
+            }
+
+            if (uuid == null || uuid.length == 0) {
+                umsRepository.deleteAllBySelectionAndUser(selectionIdentifier, userIdentifier);
+            } else {
+                for (String u : uuid) {
+                    UserSavedSelectionId e = new UserSavedSelectionId()
+                        .setSelectionId(selectionIdentifier)
+                        .setUserId(userIdentifier)
+                        .setMetadataUuid(u);
+                    umsRepository.deleteById(e);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do this");
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 }
