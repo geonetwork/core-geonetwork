@@ -65,7 +65,7 @@
 </div>
 
 <div class="row gn-section"
-     data-ng-if="mdView.current.record.featureTypes
+     data-ng-if="mdView.current.record.featureTypes.length
                  || mdView.current.record.relatedRecords.fcats.length > 0">
   <div class="col-md-12 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
@@ -80,7 +80,7 @@
 </div>
 
 <!-- lineage -->
-<div class="gn-section"
+<div class="row gn-section"
      data-ng-if="mdView.current.record.lineage
                  || mdView.current.record.sourceDescription
                  || mdView.current.record.supplementalInformation">

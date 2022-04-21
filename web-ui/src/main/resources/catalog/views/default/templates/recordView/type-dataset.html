@@ -84,7 +84,7 @@
 </div>
 
 <div class="row gn-section"
-     data-ng-if="mdView.current.record.featureTypes
+     data-ng-if="mdView.current.record.featureTypes.length
                  || mdView.current.record.relatedRecords.fcats.length > 0">
   <div class="col-md-12 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
@@ -104,14 +104,13 @@
   </div>
 </div>
 
-<div class="row"
+<div class="row gn-section"
      data-ng-if="mdView.current.record.specificationConformance">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/quality.html'"/>
   </div>
 </div>
 
-<!-- contact -->
 <div class="row gn-section">
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
