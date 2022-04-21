@@ -101,7 +101,8 @@ goog.require('gn_alert');
           'fluidHeaderLayout': true,
           'showGNName': true,
           'isHeaderFixed': false,
-          'isMenubarAccessible': true
+          'isMenubarAccessible': true,
+          'showPortalSwitcher': true
         },
         'cookieWarning': {
           'enabled': true,
