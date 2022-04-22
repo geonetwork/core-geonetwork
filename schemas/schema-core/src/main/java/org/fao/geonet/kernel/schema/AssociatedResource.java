@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-/**
- * Created by francois on 8/19/14.
- */
 public class AssociatedResource {
     private String uuid;
     private String initiativeType;

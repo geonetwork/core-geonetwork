@@ -34,6 +34,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
+import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -83,18 +84,6 @@ public class MetadataUtils {
     public static final boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
-
-
-    /**
-     * Constants for metadata origin:
-     *
-     *  - portal: the metadata is available in the current portal.
-     *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
-     *  - remote: the metadata is available in a remote resource, used for operatesOn resources.
-     */
-    private static final String ORIGIN_PORTAL = "portal";
-    private static final String ORIGIN_CATALOG = "catalog";
-    private static final String ORIGIN_REMOTE = "remote";
 
     public static class RelatedTypeDetails {
         private String query;
@@ -165,9 +154,12 @@ public class MetadataUtils {
         // parent (either parent identifier or associated resources),
         // services using operatesOn
         // sources
+        // feature catalogues
+        //
         // * Those who requires a search to find associated records eg.
         // children
         // brothers&sisters
+        //
         // * Those pointing to remote records
         Arrays.stream(types).forEach(type -> {
             if (type == RelatedItemType.children) {
@@ -187,6 +179,7 @@ public class MetadataUtils {
                             listOfUUIDs
                         ));
                 }
+                // TODO: remote
             } else if (type == RelatedItemType.siblings) {
                 Set<AssociatedResource> listOfAssociatedResources =
                     schemaPlugin.getAssociatedResourcesUUIDs(xml);
@@ -271,7 +264,7 @@ public class MetadataUtils {
                 // Set properties eg. remote, associationType, ...
                 record.setProperties(relatedTypeDetails.recordsProperties.get(uuid));
                 record.setRecord(mapper.readTree("{}"));
-                record.setOrigin("remote");
+                record.setOrigin(RelatedItemOrigin.remote.name());
                 records.add(record);
             }
             associated.put(type, records);
@@ -286,6 +279,7 @@ public class MetadataUtils {
 
         // TODO: Visible to current user?
         // TODO: Remote ones ?
+        // TODO: Editable relation
         // TODO: Find those in the portal
         return associated;
     }
@@ -378,9 +372,9 @@ public class MetadataUtils {
                     Element searchResult = search("\"" + resource.getUuid() + "\"", RelatedItemType.siblings.value(), context, from, to, fast, null, false);
                     // If can't be find, skip the result.
                     if (hasResult(searchResult)) {
-                        origin = ORIGIN_PORTAL;
+                        origin = RelatedItemOrigin.portal.name();
                     } else {
-                        origin = ORIGIN_CATALOG;
+                        origin = RelatedItemOrigin.catalog.name();
                     }
 
                     Element sibContent = getRecord(resource.getUuid(), context, dm);
@@ -455,9 +449,9 @@ public class MetadataUtils {
                         Element searchResult = search("\"" + fcat_uuid + "\"", RelatedItemType.fcats.value(), context, from, to, fast, null, false);
                         // If can't be find, skip the result.
                         if (hasResult(searchResult)) {
-                            origin = ORIGIN_PORTAL;
+                            origin = RelatedItemOrigin.portal.name();
                         } else {
-                            origin = ORIGIN_CATALOG;
+                            origin = RelatedItemOrigin.catalog.name();
                         }
 
                         Element metadata = new Element("metadata");
@@ -751,13 +745,13 @@ public class MetadataUtils {
             // Process the full results to add the origin depending if are available in the portal or not
             if (results.getChild("response") != null) {
                 for (Element r : (List<Element>) results.getChild("response").getChildren()) {
-                    String origin = ORIGIN_CATALOG;
+                    String origin = RelatedItemOrigin.catalog.name();
 
                     String uuidValue = r.getChildText("uuid");
 
                     // Is the result available in the portal?
                     if (portalResultsUuids.contains(uuidValue)) {
-                        origin = ORIGIN_PORTAL;
+                        origin = RelatedItemOrigin.portal.name();
                     }
 
                     r.setAttribute("origin", origin);
@@ -767,7 +761,7 @@ public class MetadataUtils {
             // No portal filter: set origin to portal
             if (results.getChild("response") != null) {
                 for (Element r : (List<Element>) results.getChild("response").getChildren()) {
-                    r.setAttribute("origin", ORIGIN_PORTAL);
+                    r.setAttribute("origin", RelatedItemOrigin.portal.name());
                 }
             }
         }
@@ -797,7 +791,7 @@ public class MetadataUtils {
                     if (type.equals(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TYPE))
                         && "remote".equals(linkProperties.get("origin"))) {
                         Element record = new Element("metadata");
-                        record.setAttribute("origin", ORIGIN_REMOTE);
+                        record.setAttribute("origin", RelatedItemOrigin.remote.name());
 
                         if (type.equals(RelatedItemType.siblings.value())) {
                             if (linkProperties.get("associationType") != null) {
