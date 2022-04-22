@@ -37,9 +37,17 @@
     [
     <xsl:for-each
       select="/root/items/item">
-      <xsl:variable name="value">
+      <xsl:variable name="valueAux">
         <xsl:call-template name="replaceString">
           <xsl:with-param name="expr" select="@term"/>
+          <xsl:with-param name="pattern" select="'\'"/>
+          <xsl:with-param name="replacement" select="'\\'"/>
+        </xsl:call-template>
+      </xsl:variable>
+
+      <xsl:variable name="value">
+        <xsl:call-template name="replaceString">
+          <xsl:with-param name="expr" select="$valueAux"/>
           <xsl:with-param name="pattern" select="'&quot;'"/>
           <xsl:with-param name="replacement" select="'\&quot;'"/>
         </xsl:call-template>
