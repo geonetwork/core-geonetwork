@@ -89,6 +89,7 @@ public class MetadataUtils {
     public static class RelatedTypeDetails {
         private String query;
         private Set<String> expectedRecords = new HashSet<>();
+        private Set<String> remoteRecords = new HashSet<>();
         private Map<String, Map<String, String>> recordsProperties = new HashMap<>();
 
         public RelatedTypeDetails(String query) {
@@ -102,6 +103,13 @@ public class MetadataUtils {
             this.query = query;
             this.expectedRecords = expectedRecords;
             this.recordsProperties = recordsProperties;
+        }
+
+        public RelatedTypeDetails(String query, Set<String> expectedRecords, Map<String, Map<String, String>> recordsProperties, Set<String> remoteRecords) {
+            this.query = query;
+            this.expectedRecords = expectedRecords;
+            this.recordsProperties = recordsProperties;
+            this.remoteRecords = remoteRecords;
         }
 
         public String getQuery() {
@@ -126,6 +134,10 @@ public class MetadataUtils {
 
         public void setRecordsProperties(Map<String, Map<String, String>> recordsProperties) {
             this.recordsProperties = recordsProperties;
+        }
+
+        public Set<String> getRemoteRecords() {
+            return remoteRecords;
         }
     }
 
@@ -184,7 +196,7 @@ public class MetadataUtils {
             } else if (type == RelatedItemType.siblings) {
                 Set<AssociatedResource> listOfAssociatedResources =
                     schemaPlugin.getAssociatedResourcesUUIDs(xml);
-
+                Set<String> remoteRecords = new HashSet<>();
                 if (listOfAssociatedResources.size() > 0) {
                     Set<String> listOfUUIDs = listOfAssociatedResources.stream()
                         .map(AssociatedResource::getUuid)
@@ -197,6 +209,9 @@ public class MetadataUtils {
                         properties.put("resourceTitle", r.getTitle());
                         properties.put("url", r.getUrl());
                         recordsProperties.put(r.getUuid(), properties);
+                        if (r.isRemote()) {
+                            remoteRecords.add(r.getUuid());
+                        }
                     };
                     queries.put(type,
                         new RelatedTypeDetails(
@@ -204,7 +219,8 @@ public class MetadataUtils {
                             listOfUUIDs.stream()
                                 .collect(Collectors.joining("\" OR \"", "\"", "\""))),
                             listOfUUIDs,
-                            recordsProperties
+                            recordsProperties,
+                            remoteRecords
                         ));
                     // TODO: Can be not found if remote
                     allSearchedUuids.addAll(listOfUUIDs);
@@ -244,6 +260,7 @@ public class MetadataUtils {
                 FIELDLIST_CORE,
                 start, size);
             Set<String> expectedUuids = relatedTypeDetails.getExpectedRecords();
+            Set<String> remoteRecords = relatedTypeDetails.getRemoteRecords();
 
             List<AssociatedRecord> records = new ArrayList<>();
             if (result.getHits().getTotalHits().value > 0) {
@@ -260,10 +277,14 @@ public class MetadataUtils {
                     if (expectedUuids.contains(e.getId())) {
                         expectedUuids.remove(e.getId());
                     }
+                    // Remote records may be found in current catalogue (eg. if harvested)
+                    if (remoteRecords.contains(e.getId())) {
+                        remoteRecords.remove(e.getId());
+                    }
                 }
             }
 
-            buildRemoteRecords(mapper, relatedTypeDetails, expectedUuids, records);
+            buildRemoteRecords(mapper, relatedTypeDetails, records);
             associated.put(type, records);
         }
 
@@ -281,9 +302,10 @@ public class MetadataUtils {
         return associated;
     }
 
-    private static void buildRemoteRecords(ObjectMapper mapper, RelatedTypeDetails relatedTypeDetails, Set<String> expectedUuids, List<AssociatedRecord> records) throws JsonProcessingException {
-        // expectedUuids are remote records + TODO not allowed one
-        for(String uuid : expectedUuids) {
+    private static void buildRemoteRecords(ObjectMapper mapper,
+                                           RelatedTypeDetails relatedTypeDetails,
+                                           List<AssociatedRecord> records) throws JsonProcessingException {
+        for(String uuid : relatedTypeDetails.getRemoteRecords()) {
             AssociatedRecord record = new AssociatedRecord();
             record.setUuid(uuid);
             // Set properties eg. remote, url, title, associationType, ...
