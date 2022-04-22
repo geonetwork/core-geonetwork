@@ -214,7 +214,13 @@ public class MetadataUtils {
                     }
                 }
             }
-            relatedRecords.addContent(new Element("siblings").addContent(response));
+            // May have been added by brothersAndSisters step above.
+            Element container = relatedRecords.getChild("siblings");
+            if (container == null) {
+                container = new Element("siblings");
+                relatedRecords.addContent(container);
+            }
+            container.addContent(response);
             appendRemoteRecord("siblings", mdIndexFields, relatedRecords.getChild("siblings"));
         }
 
@@ -369,6 +375,9 @@ public class MetadataUtils {
                 final Map<String, Object> source = e.getSourceAsMap();
                 record.addContent(new Element("id").setText((String) source.get(Geonet.IndexFieldNames.ID)));
                 record.addContent(new Element("uuid").setText((String) source.get(Geonet.IndexFieldNames.UUID)));
+                if (type.equals("brothersAndSisters")) {
+                    record.setAttribute("association", "brothersAndSisters");
+                }
 
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCETITLE, "title");
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCEABSTRACT, "abstract");

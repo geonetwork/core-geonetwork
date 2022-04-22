@@ -13,6 +13,7 @@
   "otherKeywords-": "Keywords",
   "link-datasets": "Service",
   "link-services": "Service",
+  "brothersAndSisters": "Siblings",
   "languagesAndTranslations.manage": "Languages & translations",
   "languages.manage": "Registered languages in database",
   "languages.manage.help": "Language stored in database are used to store translations for database entity like group names, portal titles, ... Limiting the list of languages to the minimum simplify admin console entry forms.",
@@ -311,5 +312,7 @@
   "filteringAndProcessing": "Filtering and processing response",
   "recordCreationOptions": "Record creation options",
   "batchEditConfigIsNotValid": "Batch edit configuration is invalid. It must be a JSON <pre>{\"insertMode\": \"gn_add\", \"xpath\": \"...\", \"value\": \"...\"}</pre>",
-  "batchEditConfigIsNotJson": "Batch edit configuration is not JSON."
+  "batchEditConfigIsNotJson": "Batch edit configuration is not JSON.",
+  "portals": "Change Portals",
+  "switchPortals": "Switch to another Portal"
 }

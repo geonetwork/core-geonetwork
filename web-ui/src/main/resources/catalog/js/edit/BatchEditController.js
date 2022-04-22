@@ -251,13 +251,13 @@
         regexpFlags: ''
       };
       $scope.searchAndReplaceChanges = [];
-      $scope.searchAndReplaceChanges.push($scope.searchAndReplaceField);
+      $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
       $scope.regexpFlags = ['i', 'c', 'n', 'm'];
 
       $scope.setType = function(type) {
         $scope.editType = type;
         if (type === 'searchAndReplace') {
-          $scope.searchAndReplaceChanges.push($scope.searchAndReplaceField);
+          $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
         } else {
           $scope.searchAndReplaceChanges.length = 0;
         }
