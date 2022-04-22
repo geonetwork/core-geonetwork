@@ -699,6 +699,7 @@
                        *    - url: Add layer names to url parameter defined in gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam
                        */
                       if (!scope.config.wmsResources) {
+                        scope.config.wmsResources = {};
                         scope.config.wmsResources.addLayerNamesMode = "resourcename";
                       }
 
