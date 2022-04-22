@@ -21,15 +21,13 @@ public class EsFilterBuilder {
 
     private static AccessManager accessManager;
 
-    @Autowired
-    NodeInfo node;
+    private static SourceRepository sourceRepository;
 
     @Autowired
-    SourceRepository sourceRepository;
-
-    @Autowired
-    public EsFilterBuilder(AccessManager accessManager) {
+    public EsFilterBuilder(AccessManager accessManager, SourceRepository sourceRepository) {
+        EsFilterBuilder.sourceRepository = sourceRepository;
         EsFilterBuilder.accessManager = accessManager;
+
     }
 
     public static String buildPermissionsFilter(ServiceContext context) throws Exception {
@@ -37,7 +35,7 @@ public class EsFilterBuilder {
 
         // If admin you can see all
         if (Profile.Administrator.equals(userSession.getProfile())) {
-            return "*";
+            return "*:*";
         } else {
             // op0 (ie. view operation) contains one of the ids of your groups
             Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
@@ -61,9 +59,9 @@ public class EsFilterBuilder {
     /**
      * Add search privilege criteria to a query.
      */
-    public String build(ServiceContext context, String type) throws Exception {
+    public static String build(ServiceContext context, String type, boolean isSearchingForDraft, NodeInfo node) throws Exception {
         StringBuilder query = new StringBuilder();
-        query.append(buildPermissionsFilter(context).trim());
+        query.append(EsFilterBuilder.buildPermissionsFilter(context).trim());
 
         if (type.equalsIgnoreCase("metadata")) {
             query.append(" AND (isTemplate:n)");
@@ -73,21 +71,23 @@ public class EsFilterBuilder {
             query.append(" AND (isTemplate:s)");
         }
 
-        final String portalFilter = buildPortalFilter();
+        if (!isSearchingForDraft) {
+            query.append(" AND (draft:n OR draft:e)");
+        }
+
+        final String portalFilter = EsFilterBuilder.buildPortalFilter(node);
         if (!"".equals(portalFilter)) {
             query.append(" ").append(portalFilter);
         }
         return query.toString();
-
     }
 
-    private String buildPortalFilter() {
+    public static String buildPortalFilter(NodeInfo node) {
         // If the requested portal define a filter
         // Add it to the request.
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             final Optional<Source> portal = sourceRepository.findById(node.getId());
             if (portal.isPresent() && StringUtils.isNotEmpty(portal.get().getFilter())) {
-                //LOGGER.debug("Applying portal filter: {}", portal.getFilter());
                 return portal.get().getFilter().replace("\"", "\\\"");
             }
         }

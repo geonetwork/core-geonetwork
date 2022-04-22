@@ -41,7 +41,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.es.EsHTTPProxy;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -50,6 +49,7 @@ import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -136,11 +136,10 @@ public class CatalogApi {
     @Autowired
     private ServletContext servletContext;
     @Autowired
-    EsHTTPProxy esHTTPProxy;
-    @Autowired
     LanguageUtils languageUtils;
     @Autowired
     IsoLanguagesMapper isoLanguagesMapper;
+
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
      */
@@ -284,7 +283,7 @@ public class CatalogApi {
                     // and service record. At some point this might be extended to all type of relations.
                     final SearchResponse searchResponse = searchManager.query(
                         String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
-                        esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
+                        EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
                         FIELDLIST_UUID, 0, maxhits);
 
                     Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
@@ -375,7 +374,7 @@ public class CatalogApi {
             String.format(
                 "uuid:(\"%s\")",
                 String.join("\" or \"", uuidList)),
-            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_PDF, 0, maxhits);
 
 
@@ -435,9 +434,9 @@ public class CatalogApi {
                     });
                 } else if (v instanceof HashMap && e.getKey().equals("geom")) {
                     Element t = new Element(e.getKey());
-                    t.setText(((HashMap)v).get("coordinates").toString());
+                    t.setText(((HashMap) v).get("coordinates").toString());
                     r.addContent(t);
-                }  else if (v instanceof HashMap) {
+                } else if (v instanceof HashMap) {
                     // Skip.
                 } else {
                     Element t = new Element(e.getKey());
@@ -510,7 +509,7 @@ public class CatalogApi {
 
         final SearchResponse searchResponse = searchManager.query(
             String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
-            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_CORE, 0, maxhits);
 
         Element response = new Element("response");
@@ -525,7 +524,7 @@ public class CatalogApi {
             }
         });
 
-        Element r = new XsltResponseWriter(null,"search")
+        Element r = new XsltResponseWriter(null, "search")
             .withXml(response)
             .withXsl("xslt/services/csv/csv-search.xsl")
             .asElement();
