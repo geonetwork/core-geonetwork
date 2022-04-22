@@ -924,6 +924,7 @@
           "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
           "url": "<xsl:value-of select="$xlink"/>"
           }</recordLink>
+        <hasfeaturecat><xsl:value-of select="@uuidref"/></hasfeaturecat>
       </xsl:for-each>
 
 

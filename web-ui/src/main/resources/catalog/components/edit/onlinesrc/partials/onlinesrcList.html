@@ -420,13 +420,13 @@
 
       <!-- ******* List of datasets associated with this feature catalogs ******* -->
       <h2 class="onlinesrc-title"
-          data-ng-show="::isCategoryEnable('fcats') && relations.hasfeaturecats">
+          data-ng-show="::isCategoryEnable('hasfeaturecats') && relations.hasfeaturecats">
         <i class="fa fa-files-o"></i>
         <i class="icon-external-link"></i>&nbsp;
         <span data-translate="">hasFeatureCatalog</span>
       </h2>
       <ul class="list-group"
-          data-ng-show="::isCategoryEnable('fcats') && relations.hasfeaturecats">
+          data-ng-show="::isCategoryEnable('hasfeaturecats') && relations.hasfeaturecats">
         <li class="list-group-item"
             data-ng-repeat="resource in relations.hasfeaturecats | orderBy:'title'">
           <div class="row">

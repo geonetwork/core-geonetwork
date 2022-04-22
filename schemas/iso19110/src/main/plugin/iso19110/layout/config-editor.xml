@@ -67,6 +67,8 @@
   <views>
     <view name="default">
       <sidePanel>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="hasfeaturecats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>

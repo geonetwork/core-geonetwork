@@ -995,6 +995,7 @@
         <xsl:variable name="xlink"
                       select="@xlink:href"/>
         <xsl:copy-of select="gn-fn-index:build-record-link(@uuidref, $xlink, @xlink:title, 'fcats')"/>
+        <hasfeaturecat><xsl:value-of select="@uuidref"/></hasfeaturecat>
       </xsl:for-each>
 
 
