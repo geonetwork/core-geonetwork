@@ -85,6 +85,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -565,6 +567,29 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
             .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
+    }
+
+
+    @Test
+    public void getAssociated() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/related-test.zip");
+        importMetadata.invoke();
+        final String SERIE_UUID = "87e54d56-323f-4201-88ac-7ac7f9d8ee25";
+        final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
+
+        ResultActions resultActions = mockMvc.perform(get("/srv/api/records/" + SERIE_UUID + "/associated")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+
+        MvcResult result = resultActions.andReturn();
+        String contentAsString = result.getResponse().getContentAsString();
+
     }
 
     @Test

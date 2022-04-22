@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class EsFilterBuilder {
 
-    @Autowired
-    AccessManager accessManager;
+    private static AccessManager accessManager;
 
     @Autowired
     NodeInfo node;
@@ -28,7 +27,12 @@ public class EsFilterBuilder {
     @Autowired
     SourceRepository sourceRepository;
 
-    private String buildPermissionsFilter(ServiceContext context) throws Exception {
+    @Autowired
+    public EsFilterBuilder(AccessManager accessManager) {
+        EsFilterBuilder.accessManager = accessManager;
+    }
+
+    public static String buildPermissionsFilter(ServiceContext context) throws Exception {
         final UserSession userSession = context.getUserSession();
 
         // If admin you can see all

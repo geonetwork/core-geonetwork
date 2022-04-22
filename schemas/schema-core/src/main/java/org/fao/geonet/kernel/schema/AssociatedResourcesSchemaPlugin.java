@@ -42,7 +42,6 @@ public interface AssociatedResourcesSchemaPlugin {
      */
     public abstract Set<String> getAssociatedParentUUIDs(Element metadata);
 
-
     public abstract Set<String> getAssociatedDatasetUUIDs(Element metadata);
 
     public abstract Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata);

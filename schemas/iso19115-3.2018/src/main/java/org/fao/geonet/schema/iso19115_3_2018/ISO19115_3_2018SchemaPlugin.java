@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces.XLINK;
+
 
 /**
  * Created by francois on 6/15/14.
@@ -59,7 +61,7 @@ public class ISO19115_3_2018SchemaPlugin
                 .add(ISO19115_3_2018Namespaces.MRI)
                 .add(ISO19115_3_2018Namespaces.CIT)
                 .add(ISO19115_3_2018Namespaces.SRV)
-                .add(ISO19115_3_2018Namespaces.XLINK)
+                .add(XLINK)
                 .build();
 
         allTypenames = ImmutableMap.<String, Namespace>builder()
@@ -113,7 +115,9 @@ public class ISO19115_3_2018SchemaPlugin
                             .getAttributeValue("codeListValue");
                     }
 
-                    AssociatedResource resource = new AssociatedResource(sibUuid, initType, associationType);
+                    String title = agId.getAttributeValue("title", XLINK);
+                    String url = agId.getAttributeValue("href", XLINK);
+                    AssociatedResource resource = new AssociatedResource(sibUuid, initType, associationType, url, title);
                     listOfResources.add(resource);
                 }
             }
@@ -386,7 +390,7 @@ public class ISO19115_3_2018SchemaPlugin
                 op.setAttribute("uuidref", uuid);
 
                 String hRefLink = baseUrl + "api/records/" + uuid + "/formatters/xml";
-                op.setAttribute("href", hRefLink, ISO19115_3_2018Namespaces.XLINK);
+                op.setAttribute("href", hRefLink, XLINK);
 
                 root.addContent(op);
             });
@@ -471,11 +475,11 @@ public class ISO19115_3_2018SchemaPlugin
 
             if (isEmptyLink) {
                 el.setNamespace(ISO19115_3_2018Namespaces.GCO).setName("CharacterString");
-                el.removeAttribute("href", ISO19115_3_2018Namespaces.XLINK);
+                el.removeAttribute("href", XLINK);
                 return el;
             } else {
                 el.setNamespace(ISO19115_3_2018Namespaces.GCX).setName("Anchor");
-                el.setAttribute("href", "", ISO19115_3_2018Namespaces.XLINK);
+                el.setAttribute("href", "", XLINK);
                 return el;
             }
         } else if (elementToProcess && StringUtils.isNotEmpty(parsedAttributeName) &&

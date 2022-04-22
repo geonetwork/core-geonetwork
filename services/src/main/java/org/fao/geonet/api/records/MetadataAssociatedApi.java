@@ -145,6 +145,9 @@ public class MetadataAssociatedApi {
         String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext context = ApiUtils.createServiceContext(request);
 
+        if (type.length == 0) {
+            type = RelatedItemType.values();
+        }
         return MetadataUtils.getAssociated(context, md, type, start, start + rows);
     }
 }
