@@ -276,7 +276,6 @@
 
       .directive('groupsCombo', ['$http', function($http) {
         return {
-
           restrict: 'A',
           templateUrl:
               '../../catalog/components/search/formfields/' +
@@ -299,11 +298,14 @@
             var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
             scope.disabled = scope.disabled ? true : false;
             scope.selectedGroup = null;
-            scope.$watch('selectedGroup', function(n, o) {
-              if (n && (n.hasOwnProperty('id') || n.hasOwnProperty('@id'))) {
-                scope.ownerGroup = scope.selectedGroup['@id'] || scope.selectedGroup.id;
+            function setSelected(group) {
+              var groupId = parseInt(group);
+              if (groupId != NaN) {
+                scope.selectedGroup = scope.groups.find(function (v) {
+                  return v.id === groupId || v['@id'] === groupId
+                });
               }
-            });
+            }
 
             $http.get(url, {cache: true}).
               success(function(data) {
@@ -327,18 +329,23 @@
                   });
                 }
 
-                var groupId = parseInt(scope.ownerGroup);
-                if (groupId != NaN) {
-                  scope.selectedGroup = scope.groups.find(function(v) {
-                    return v.id === groupId || v['@id'] === groupId
-                  });
-
-                  if (scope.selectedGroup === undefined) {
-                    scope.selectedGroup = scope.groups[0];
-                  }
-                } else if (setDefaultValue) {
+                setSelected(scope.ownerGroup);
+                if (setDefaultValue && scope.selectedGroup === undefined) {
+                  scope.selectedGroup = scope.groups[0];
+                } else if (scope.selectedGroup === undefined) {
                   scope.selectedGroup = scope.groups[0];
                 }
+
+                scope.$watch('selectedGroup', function(n, o) {
+                  if (n && (n.hasOwnProperty('id') || n.hasOwnProperty('@id'))) {
+                    scope.ownerGroup = scope.selectedGroup['@id'] || scope.selectedGroup.id;
+                  }
+                });
+                scope.$watch('ownerGroup', function(n, o) {
+                  if (n !== o) {
+                    setSelected(scope.ownerGroup);
+                  }
+                });
               });
           }
         };

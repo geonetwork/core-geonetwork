@@ -13,6 +13,7 @@
   "otherKeywords-": "Keywords",
   "link-datasets": "Service",
   "link-services": "Service",
+  "brothersAndSisters": "Siblings",
   "languagesAndTranslations.manage": "Languages & translations",
   "languages.manage": "Registered languages in database",
   "languages.manage.help": "Language stored in database are used to store translations for database entity like group names, portal titles, ... Limiting the list of languages to the minimum simplify admin console entry forms.",
@@ -313,5 +314,7 @@
   "testLink": "Test",
   "metadata/link": "Link analysis",
   "metadata/link/excludedUrlPattern": "Exclude URL from link analysis",
-  "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)"
+  "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)",
+  "portals": "Change Portals",
+  "switchPortals": "Switch to another Portal"
 }

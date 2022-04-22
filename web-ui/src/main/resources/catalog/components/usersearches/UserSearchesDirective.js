@@ -27,6 +27,31 @@
   var module = angular.module('gn_usersearches_directive', []);
 
 
+  module.directive('gnPortalSwitcher', ['$http', 'gnGlobalSettings',
+    function($http, gnGlobalSettings) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/usersearches/partials/portalswitcher.html',
+        link: function postLink(scope, element, attrs) {
+          scope.showPortalSwitcher = gnGlobalSettings.gnCfg.mods.header.showPortalSwitcher;
+
+          function getPortals() {
+            var url = '../api/sources/subportal';
+            $http.get(url)
+              .success(function(data) {
+                scope.portals = data.filter(function(p) {
+                  return p.uuid != scope.nodeId;
+                });
+              });
+          }
+          if (scope.showPortalSwitcher) {
+            getPortals();
+          }
+        }
+      }
+  }]);
+
   /**
    * Directive to display featured user searches in the home page.
    *

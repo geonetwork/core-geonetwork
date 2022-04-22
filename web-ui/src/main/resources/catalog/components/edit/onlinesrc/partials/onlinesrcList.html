@@ -477,7 +477,7 @@
             </div>
             <div class="col-md-1 text-right">
               <a href="" class="onlinesrc-remove"
-                 data-ng-if="readonly !== true"
+                 data-ng-if="readonly !== true && resource.associationType != 'brothersAndSisters'"
                  title="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  aria-label="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                  data-ng-click="onlinesrcService.removeSibling(resource)">
