@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.api.records;
 
+import static org.apache.fop.fonts.type1.AdobeStandardEncoding.p;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -74,16 +75,20 @@ import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -524,167 +529,4 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().string(isEmptyOrNullString()));
     }
 
-
-    @Test
-    public void getRelatedNonExistent() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MockHttpSession mockHttpSession = loginAsAnonymous();
-        String nonExistentUuid = UUID.randomUUID().toString();
-
-        mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
-
-        mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
-            .andExpect(status().isNotFound())
-            .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/apiError/code").string("resource_not_found"));
-
-    }
-
-    @Test
-    public void getRelatedNonAllowed() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MockHttpSession mockHttpSession = loginAsAnonymous();
-
-        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
-            .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
-
-        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
-            .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
-            .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
-    }
-
-
-    @Test
-    public void getAssociated() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MockHttpSession mockHttpSession = loginAsAdmin();
-
-        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
-        importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/related-test.zip");
-        importMetadata.invoke();
-        final String SERIE_UUID = "87e54d56-323f-4201-88ac-7ac7f9d8ee25";
-        final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
-
-        ResultActions resultActions = mockMvc.perform(get("/srv/api/records/" + SERIE_UUID + "/associated")
-                .session(mockHttpSession)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
-
-        MvcResult result = resultActions.andReturn();
-        String contentAsString = result.getResponse().getContentAsString();
-
-    }
-
-    @Test
-    public void getRelated() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MockHttpSession mockHttpSession = loginAsAdmin();
-
-        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
-        importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/mef2-related.zip");
-        importMetadata.invoke();
-        final String MAIN_UUID = "655bb8a1-0324-470f-8dff-bb64e849291c";
-        final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
-
-
-        /* TODOES
-	 mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
-
-        mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/related/onlines").exists());
-
-        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/related")
-            .param("type", RelatedItemType.thumbnails.toString())
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            //.andExpect(jsonPath("$.children").isNotEmpty())
-            .andExpect(jsonPath("$." + RelatedItemType.thumbnails, notNullValue()));
-
-        // Request each type
-        for (RelatedItemType type : RelatedItemType.values()) {
-            if (type == RelatedItemType.hassources ||
-                type == RelatedItemType.related ||
-                type == RelatedItemType.hasfeaturecats ||
-                type == RelatedItemType.brothersAndSisters ||
-                type == RelatedItemType.thumbnails) {
-                // TODO modify mef2-related.zip test metadata to contain a valid hassources value
-                continue;
-            }
-            String uuidToTest = MAIN_UUID;
-            if (type == RelatedItemType.datasets) {
-                uuidToTest = DATASET_UUID;
-            }
-            mockMvc.perform(get("/srv/api/records/" + uuidToTest + "/related")
-                .param("type", type.toString())
-                .session(mockHttpSession)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-                .andExpect(jsonPath("$." + type).isNotEmpty())
-                .andExpect(jsonPath("$").value(hasKey(type.toString())));
-
-            mockMvc.perform(get("/srv/api/records/" + uuidToTest + "/related")
-                .param("type", type.toString())
-                .session(mockHttpSession)
-                .accept(MediaType.APPLICATION_XML))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_XML))
-                .andExpect(xpath("/related/" + type.toString() + "/item").exists());
-        }
-
-        // Check start and row parameters
-
-
-        mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
-            .param("type", RelatedItemType.children.toString())
-            .param("start", "2")
-            .param("rows", "1")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$." + RelatedItemType.children).isArray())
-            .andExpect(jsonPath("$." + RelatedItemType.children, hasSize(1)));
-
-        mockMvc.perform(get("/srv/api/records/" + MAIN_UUID + "/related")
-            .param("type", RelatedItemType.children.toString())
-            .param("start", "2")
-            .param("rows", "1")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/related/" + RelatedItemType.children + "/item").exists())
-            .andExpect(xpath("/related/" + RelatedItemType.children + "/item").nodeCount(1));
-*/
-    }
 }

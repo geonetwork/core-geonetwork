@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -148,6 +149,7 @@ public class MetadataUtils {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
+        SettingManager settingManager = gc.getBean(SettingManager.class);
         EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
 
         Element xml = dm.getMetadata(context, md.getId() + "",
@@ -174,28 +176,38 @@ public class MetadataUtils {
         // children
         // brothers&sisters
         //
-        // * Those pointing to remote records
+        // * All of them could be remote records
         Arrays.stream(types).forEach(type -> {
-            if (type == RelatedItemType.children) {
+            if (type == RelatedItemType.children
+                || type == RelatedItemType.associated
+                || type == RelatedItemType.hasfeaturecats
+                || type == RelatedItemType.services
+                || type == RelatedItemType.hassources) {
                 queries.put(type,
                     new RelatedTypeDetails(
                         String.format("+%s:(%s)",
                             relatedIndexFields.get(type.value()), "\"" + md.getUuid() + "\"")
                     ));
-            } else if (type == RelatedItemType.parent) {
-                Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(xml);
-                if (listOfUUIDs.size() > 0) {
-                    queries.put(type,
-                        new RelatedTypeDetails(
-                            String.format("+uuid:(%s)",
-                            listOfUUIDs.stream()
-                                .collect(Collectors.joining("\" OR \"", "\"", "\""))),
-                            listOfUUIDs
-                        ));
+            } else if (schemaPlugin != null
+                && (type == RelatedItemType.siblings
+                || type == RelatedItemType.parent
+                || type == RelatedItemType.fcats
+                || type == RelatedItemType.datasets
+                || type == RelatedItemType.sources)) {
+                Set<AssociatedResource> listOfAssociatedResources = new HashSet<>();
+                if (type == RelatedItemType.siblings) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedResourcesUUIDs(xml);
+                } else if (type == RelatedItemType.sources) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedSources(xml);
+                } else if (type == RelatedItemType.datasets) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedDatasets(xml);
+                } else if (type == RelatedItemType.parent) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedParents(xml);
+                } else if (type == RelatedItemType.fcats) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedFeatureCatalogues(xml);
                 }
-            } else if (type == RelatedItemType.siblings) {
-                Set<AssociatedResource> listOfAssociatedResources =
-                    schemaPlugin.getAssociatedResourcesUUIDs(xml);
+
+
                 Set<String> remoteRecords = new HashSet<>();
                 if (listOfAssociatedResources.size() > 0) {
                     Set<String> listOfUUIDs = listOfAssociatedResources.stream()
@@ -209,7 +221,9 @@ public class MetadataUtils {
                         properties.put("resourceTitle", r.getTitle());
                         properties.put("url", r.getUrl());
                         recordsProperties.put(r.getUuid(), properties);
-                        if (r.isRemote()) {
+                        boolean isRemote = r.getUrl() != null
+                            && !r.getUrl().startsWith(settingManager.getBaseURL());
+                        if (isRemote) {
                             remoteRecords.add(r.getUuid());
                         }
                     };
@@ -222,10 +236,9 @@ public class MetadataUtils {
                             recordsProperties,
                             remoteRecords
                         ));
-                    // TODO: Can be not found if remote
                     allSearchedUuids.addAll(listOfUUIDs);
                 }
-            } else if (type == RelatedItemType.brothersAndSisters) {
+            } else if (schemaPlugin != null && type == RelatedItemType.brothersAndSisters) {
                 // Get parents
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(xml);
                 // and search for records associated to them
@@ -239,8 +252,6 @@ public class MetadataUtils {
                         listOfUUIDs
                     ));
                 allSearchedUuids.addAll(listOfUUIDs);
-            } else {
-//                queries.put(type, "");
             }
         });
 
@@ -249,15 +260,15 @@ public class MetadataUtils {
             new HashMap<RelatedItemType, List<AssociatedRecord>>();
         Set<String> allCatalogueUuids = new HashSet<>();
 
-        String privilgesFilter = buildPermissionsFilter(context);
+        String privilegesFilter = buildPermissionsFilter(context);
         ObjectMapper mapper = new ObjectMapper();
         for (RelatedItemType type : queries.keySet()) {
             // TODO: Use msearch ?
             RelatedTypeDetails relatedTypeDetails = queries.get(type);
             final SearchResponse result = searchMan.query(
                 relatedTypeDetails.getQuery(),
-                privilgesFilter,
-                FIELDLIST_CORE,
+                privilegesFilter,
+                FIELDLIST_RELATED,
                 start, size);
             Set<String> expectedUuids = relatedTypeDetails.getExpectedRecords();
             Set<String> remoteRecords = relatedTypeDetails.getRemoteRecords();
@@ -271,7 +282,6 @@ public class MetadataUtils {
                     // Set properties eg. remote, associationType, ...
                     record.setProperties(relatedTypeDetails.recordsProperties.get(e.getId()));
                     record.setRecord(mapper.readTree(e.getSourceAsString()));
-                    // TODO: Check in portal or not
                     record.setOrigin(RelatedItemOrigin.catalog.name());
                     records.add(record);
                     if (expectedUuids.contains(e.getId())) {
@@ -288,15 +298,7 @@ public class MetadataUtils {
             associated.put(type, records);
         }
 
-        Set<String> remoteUuid = allSearchedUuids.stream()
-            .filter(u -> !allCatalogueUuids.contains(u))
-            .collect(Collectors.toSet());
-
         assignPortalOrigin(start, size, searchMan, associated, allCatalogueUuids);
-
-        System.out.println("All:" + allCatalogueUuids.stream().collect(Collectors.joining(",")));
-        System.out.println("Found:" + allSearchedUuids.stream().collect(Collectors.joining(",")));
-        System.out.println("Remote:" + remoteUuid.stream().collect(Collectors.joining(",")));
 
         // TODO: Editable relation
         return associated;

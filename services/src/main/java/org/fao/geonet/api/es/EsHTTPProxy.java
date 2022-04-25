@@ -44,6 +44,8 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.MetadataApi;
+import org.fao.geonet.api.records.MetadataUtils;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.constants.Edit;
@@ -158,10 +160,10 @@ public class EsHTTPProxy {
     private static void addRelatedTypes(ObjectNode doc,
                                         RelatedItemType[] relatedTypes,
                                         ServiceContext context) {
-        RelatedResponse related = null;
+        Map<RelatedItemType, List<AssociatedRecord>> related = null;
         try {
-            related = MetadataApi.getAssociatedResources(
-                context.getLanguage(), context,
+            related = MetadataUtils.getAssociated(
+                context,
                 context.getBean(IMetadataUtils.class)
                     .findOneByUuid(doc.get("_id").asText()),
                 relatedTypes, 0, 100);

@@ -33,8 +33,10 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by francois on 6/15/14.
@@ -73,12 +75,10 @@ public class DublinCoreSchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
-        ElementFilter elementFilter = new ElementFilter("isPartOf", DublinCoreNamespaces.DCT);
-        return Xml.filterElementValues(
-            metadata,
-            elementFilter,
-            null, null,
-            null);
+        return getAssociatedParents(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
     }
 
     public Set<String> getAssociatedDatasetUUIDs(Element metadata) {
@@ -95,6 +95,33 @@ public class DublinCoreSchemaPlugin
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
         return null;
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedParents(Element metadata) {
+        ElementFilter elementFilter = new ElementFilter("isPartOf", DublinCoreNamespaces.DCT);
+        return Xml.filterElementValues(
+            metadata,
+            elementFilter,
+            null, null,
+            null).stream()
+            .map(uuid -> new AssociatedResource(uuid, "", "isPartOf"))
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedDatasets(Element metadata) {
+        return new HashSet<>();
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
+        return new HashSet<>();
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedSources(Element metadata) {
+        return new HashSet<>();
     }
 
     @Override

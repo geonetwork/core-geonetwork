@@ -41,6 +41,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -279,15 +281,16 @@ public class CatalogApi {
                 for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
                     String uuid = iter.next();
 
-                    // Search for children records
-                    // and service record. At some point this might be extended to all type of relations.
-                    final SearchResponse searchResponse = searchManager.query(
-                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
-                        EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
-                        FIELDLIST_UUID, 0, maxhits);
+                    Map<RelatedItemType, List<AssociatedRecord>> associated =
+                        MetadataUtils.getAssociated(context,
+                            metadataRepository.findOneByUuid(uuid),
+                            RelatedItemType.values(), 0, maxhits);
 
-                    Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
-                        tmpUuid.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+                    associated.forEach((type, list) -> {
+                        list.forEach(r -> {
+                            tmpUuid.add(r.getUuid());
+                        });
+                    });
                 }
 
                 if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {

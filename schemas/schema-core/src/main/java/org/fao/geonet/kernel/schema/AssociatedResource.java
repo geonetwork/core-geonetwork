@@ -97,11 +97,4 @@ public class AssociatedResource {
         this.url = url;
     }
 
-    public boolean isRemote() {
-        // Empty title is a valid approach for current implementation
-        // of remote record support - see https://github.com/geonetwork/core-geonetwork/pull/4899
-        // Maybe a better check would be in the future to check URL
-        // if it starts with current node ?
-        return !StringUtils.isEmpty(title);
-    }
 }
