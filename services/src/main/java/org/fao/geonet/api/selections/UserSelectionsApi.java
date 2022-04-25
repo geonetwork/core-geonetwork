@@ -286,10 +286,7 @@ public class UserSelectionsApi {
                 }
             }
 
-            if (selection.isPresent()) {
-                return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
-            }
-            return null;
+            return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
 
         } else {
             throw new IllegalArgumentException("You don't have rights to do this");
