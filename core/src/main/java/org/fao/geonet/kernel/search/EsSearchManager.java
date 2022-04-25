@@ -99,6 +99,7 @@ public class EsSearchManager implements ISearchManager {
 
     public static Map<String, String> relatedIndexFields;
     public static Set<String> FIELDLIST_CORE;
+    public static Set<String> FIELDLIST_RELATED;
     public static Set<String> FIELDLIST_UUID;
 
     static {
@@ -125,6 +126,21 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.UUID)
             .add(Geonet.IndexFieldNames.RESOURCETITLE)
             .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("operatesOn")
+            .build();
+
+        FIELDLIST_RELATED = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add("overview.*")
+            .add("link")
+            .add("format")
+            .add("resourceType")
+            .add("cl_status.key")
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
             .add("operatesOn")
