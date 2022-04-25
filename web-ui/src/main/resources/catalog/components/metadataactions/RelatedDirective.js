@@ -209,7 +209,7 @@
    *
    * Example configuration:
    *
-   * <div data-gn-related-container="md"
+   * <div data-gn-record-links="md"
    *      data-mode="tabset"
    *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
    *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
@@ -218,7 +218,7 @@
    * </div>
    */
   module
-    .directive('gnRelatedContainer', [
+    .directive('gnRecordLinks', [
         'gnRelatedResources', 'gnRelatedService',
       function (gnRelatedResources, gnRelatedService) {
         return {
@@ -228,7 +228,7 @@
               '../../catalog/components/metadataactions/partials/relatedContainer.html';
           },
           scope: {
-            md: '=gnRelatedContainer',
+            md: '=gnRecordLinks',
             mode: '=',
             relatedConfig: '='
           },
@@ -244,7 +244,9 @@
               config.relations = {};
 
               t.forEach(function (type) {
-                config.relations[type] = scope.md.relatedRecords[type] || {};
+                config.relations[type] =
+                  (type === 'onlines' ? scope.md.link : scope.md.relatedRecords[type])
+                  || {};
                 config.relationFound = config.relations[type].length > 0;
 
                 var value = config.relations[type];
@@ -353,7 +355,6 @@
                       gnRelatedService.testFilters(filters, value[i])
                         && scope.relations[idx].push(value[i]);
                     }
-                    scope.relationFound = scope.relations[idx].length > 0;
                   } else {
                     scope.relations[idx] = value;
                   }
@@ -370,6 +371,8 @@
                     }
                     scope.relations.associated = [];
                   }
+
+                  scope.relationFound = scope.relations[idx].length > 0;
                 });
               };
 
@@ -425,10 +428,11 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    if (scope.md.relatedRecords) {
+                    if (scope.md.relatedRecords || scope.md.link) {
                       var relations = {};
                       scope.types.split('|').map(function(t) {
-                        relations[t] = scope.md.relatedRecords[t];
+                        relations[t] =
+                          (t === 'onlines' ? scope.md.link : scope.md.relatedRecords[t]);
                       })
                       scope.loadRelations(relations);
                     } else {
@@ -546,7 +550,7 @@
                 if (k.key === value) {
                   k.docs.hits.hits.forEach(function (r) {
                     scope.displayedRecords =
-                      scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
+                      scope.displayedRecords.concat(_.filter(scope.children, {uuid: r._id}));
                   });
                   sort();
                 }
@@ -574,8 +578,8 @@
             function sort() {
               if (scope.sortBy) {
                 scope.displayedRecords.sort(function(a, b) {
-                  return a.record[scope.sortBy]
-                    && a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
+                  return a[scope.sortBy]
+                    && a[scope.sortBy].localeCompare(b[scope.sortBy])
                 });
               }
             }
@@ -662,6 +666,7 @@
         }
       }]);
 
+
   /**
    * Can support a link returned by the related API
    * or a link in a metadata record.
@@ -745,7 +750,7 @@
               scope.data = [];
               scope.displayedRecords = [];
               scope.records.map(function(r) {
-                r = new Metadata(r.record);
+                r = new Metadata(r);
                 var recordData = {};
                 scope.columnsConfig.map(function(c) {
                   recordData[c] = c.startsWith('link/')

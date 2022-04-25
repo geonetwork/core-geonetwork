@@ -703,7 +703,7 @@ goog.require('gn_alert');
           'internalThesaurus': [],
           'collectionTableConfig': {
             'labels': 'title,cl_status,format,Esri,view,download,file,atom',
-            'columns': 'resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed'
+            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:ESRI:REST,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:WWW:DOWNLOAD,link/protocol:atom:feed'
           },
           'distributionConfig': {
             // 'layout': 'tabset',
@@ -1227,6 +1227,7 @@ goog.require('gn_alert');
       $scope.redirectUrlAfterSign = window.location.href;
 
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnGlobalSettings.isDefaultNode = $scope.isDefaultNode;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;

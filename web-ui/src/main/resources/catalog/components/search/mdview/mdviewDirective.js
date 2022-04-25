@@ -46,7 +46,10 @@
         },
         link: function(scope, element, attrs, controller) {
           scope.$watch('md', function(n, o) {
-            if (n == null || n == undefined || (n && n.uuid == undefined)) {
+            if (n == null
+                || n == undefined
+                || (n && n.uuid == undefined)
+                || (n && n.remoteUrl !== undefined)) {
               return;
             }
 
@@ -137,7 +140,9 @@
             if (scope.md == null) {
               return;
             }
-            query.query.bool.must_not[0].terms.uuid = [scope.md.uuid]
+            // Exclude self and all related records
+            query.query.bool.must_not[0].terms.uuid =
+              [scope.md.uuid].concat(scope.md.relatedRecords ? scope.md.relatedRecords.uuids : [])
             query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
             $http.post('../api/search/records/_search', query).then(function (r) {
               scope.similarDocuments = r.data.hits.hits.map(function(r) {

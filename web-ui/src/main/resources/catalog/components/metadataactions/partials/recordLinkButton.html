@@ -10,7 +10,7 @@
   <span class="visible-lg-*" data-ng-if="iconMode !== 'only'">
     {{::isDropDown
     ? link.desc || link.name || link.url
-    : (service.getLabel(mainType, type)) | translate}}
+    : (service.getLabel(mainType, type) | translate)}}
   </span>
 
   <br data-ng-if="isSibling"/>
@@ -33,6 +33,6 @@
      data-ng-if="iconMode !== 'none'"
      data-ng-class="icon" />
   <span class="visible-lg-*">
-    {{::link.title | gnLocalized: lang}}
+    {{::link.title | gnLocalized: lang}}AA
   </span>
 </a>

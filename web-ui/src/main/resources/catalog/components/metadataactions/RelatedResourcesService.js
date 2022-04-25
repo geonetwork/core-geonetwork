@@ -265,7 +265,8 @@
             },
             'ATOM' : {
               iconClass: 'fa-globe',
-              label: 'download'
+              label: 'download',
+              action: openLink
             },
             'WCS' : {
               iconClass: 'fa-globe',
@@ -419,9 +420,9 @@
           };
 
           this.getType = function(resource, type) {
-            resource.locTitle = $filter('gnLocalized')(resource.title);
-            resource.locDescription = $filter('gnLocalized')(resource.description);
-            resource.locUrl = $filter('gnLocalized')(resource.url);
+            resource.locTitle = $filter('gnLocalized')(resource.name) || resource.name;
+            resource.locDescription = $filter('gnLocalized')(resource.description) || resource.description;
+            resource.locUrl = $filter('gnLocalized')(resource.url) || resource.url;
             var protocolOrType = angular.isDefined(resource.protocol)
               ? (resource.protocol
                 + (angular.isDefined(resource.serviceType) ? resource.serviceType : ''))
