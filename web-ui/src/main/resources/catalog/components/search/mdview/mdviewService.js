@@ -93,7 +93,6 @@
         // Record with associations
         if (md.resourceType && md.related) {
           var relatedRecords = md.related;
-          delete md.related;
           var recordsMap = {};
           // Collect stats using search service
           if (relatedRecords) {
@@ -132,7 +131,9 @@
                   '  "query": {' +
                   '    "bool": {' +
                   '      "must": [' +
-                  '        { "terms": { "uuid": ["' + Object.keys(recordsMap).join('","') + '"]} },' +
+                  '        { "terms": { "uuid": ["' +
+                  relatedRecords[k].map(function(md) {return md._id;}).join('","') +
+                  '"]} },' +
                   '        { "terms": { "isTemplate": ["n"] } }' +
                   '      ]' +
                   '    }' +
@@ -147,7 +148,7 @@
 
             // Collect stats in main portal as some records may not be visible in subportal
             $http.post('../../srv/api/search/records/_msearch', body).then(function (data) {
-              gnMdViewObj.current.record.relatedRecords = [];
+              gnMdViewObj.current.record.related = [];
 
               Object.keys(relatedRecords).map(function (k) {
                 relatedRecords[k] && relatedRecords[k].map(function (l, i) {
@@ -164,12 +165,12 @@
                 })
               });
 
-              gnMdViewObj.current.record.relatedRecords = relatedRecords;
-              gnMdViewObj.current.record.relatedRecords.all = Object.values(recordsMap);
-              gnMdViewObj.current.record.relatedRecords.uuids = Object.keys(recordsMap);
+              gnMdViewObj.current.record.related = relatedRecords;
+              gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+              gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
 
               relatedRecordKeysWithValues.forEach(function (key, index) {
-                gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
+                gnMdViewObj.current.record.related['aggregations_' + key] = data.data.responses[index].aggregations;
               });
             });
           }
@@ -220,7 +221,7 @@
       };
 
       this.buildRelatedTypesQueryParameter = function(types) {
-        types = types || ('onlines|parent|children|sources|hassources|' +
+        types = types || ('parent|children|sources|hassources|' +
             'brothersAndSisters|services|datasets|' +
             'siblings|associated|fcats|related');
         return 'relatedType=' + types.split('|').join('&relatedType=');

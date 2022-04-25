@@ -16,34 +16,34 @@
 <div class="col-md-12 gn-record">
 
   <!-- Records filters -->
-  <div data-ng-if="mdView.current.record.relatedRecords"
+  <div data-ng-if="mdView.current.record.related.uuids"
     data-gn-records-filters
-    data-agg="mdView.current.record.relatedRecords.children.length > 0
-        ? mdView.current.record.relatedRecords.aggregations_children
-        :mdView.current.record.relatedRecords.aggregations_siblings"
+    data-agg="mdView.current.record.related.children.length > 0
+        ? mdView.current.record.related.aggregations_children
+        :mdView.current.record.related.aggregations_siblings"
     data-title="{{'seriesComposedOf' | translate}}">
   </div>
 
   <!-- Related records -->
-  <div data-ng-if="mdView.current.record.relatedRecords"
-       data-gn-related-with-stats="mdView.current.record.relatedRecords.children.length > 0
-                                          ? mdView.current.record.relatedRecords.children
-                                          : mdView.current.record.relatedRecords.siblings"
-       data-agg="mdView.current.record.relatedRecords.children.length > 0
-        ? mdView.current.record.relatedRecords.aggregations_children
-        :mdView.current.record.relatedRecords.aggregations_siblings"
+  <div data-ng-if="mdView.current.record.related.uuids"
+       data-gn-related-with-stats="mdView.current.record.related.children.length > 0
+                                          ? mdView.current.record.related.children
+                                          : mdView.current.record.related.siblings"
+       data-agg="mdView.current.record.related.children.length > 0
+        ? mdView.current.record.related.aggregations_children
+        :mdView.current.record.related.aggregations_siblings"
        data-type="'blocks'"
        data-sort-by="resourceTitle"
        data-title="{{'seriesComposedOf' | translate}}">
   </div>
 
   <!-- Related records table -->
-  <div data-gn-records-table="mdView.current.record.relatedRecords.children.length > 0
-                              ? mdView.current.record.relatedRecords.children
-                              : mdView.current.record.relatedRecords.siblings"
-       data-agg="mdView.current.record.relatedRecords.children.length > 0
-        ? mdView.current.record.relatedRecords.aggregations_children
-        :mdView.current.record.relatedRecords.aggregations_siblings"
+  <div data-gn-records-table="mdView.current.record.related.children.length > 0
+                              ? mdView.current.record.related.children
+                              : mdView.current.record.related.siblings"
+       data-agg="mdView.current.record.related.children.length > 0
+        ? mdView.current.record.related.aggregations_children
+        :mdView.current.record.related.aggregations_siblings"
        labels="{{::viewConfig.collectionTableConfig.labels}}"
        columns="{{::viewConfig.collectionTableConfig.columns}}" />
 </div>
@@ -54,7 +54,7 @@
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
   </div>
   <div class="col-md-4 gn-md-side">
-    <div data-ng-if="mdView.current.record.relatedRecords"
+    <div data-ng-if="mdView.current.record.related.uuids"
          data-gn-related="mdView.current.record"
          data-user="user"
          data-layout="card"
@@ -66,7 +66,7 @@
 
 <div class="row gn-section"
      data-ng-if="mdView.current.record.featureTypes.length
-                 || mdView.current.record.relatedRecords.fcats.length > 0">
+                 || mdView.current.record.related.fcats.length > 0">
   <div class="col-md-12 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
   </div>

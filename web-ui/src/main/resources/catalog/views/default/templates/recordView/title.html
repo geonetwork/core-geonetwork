@@ -15,11 +15,11 @@
   </h1>
 
   <div data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
-                    && mdView.current.record.relatedRecords"
+                    && mdView.current.record.related"
        data-gn-record-mosaic=""
-       records="mdView.current.record.relatedRecords.all" size="8"/>
+       records="mdView.current.record.related.all" size="8"/>
 
-  <div data-ng-if="mdView.current.record.relatedRecords"
+  <div data-ng-if="mdView.current.record.related.uuids"
        data-gn-related="mdView.current.record"
        data-user="user"
        data-alt-title="{{'memberOf' | translate}}"

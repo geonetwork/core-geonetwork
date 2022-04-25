@@ -89,70 +89,6 @@
         }
       });
     };
-    this.getMdsRelatedWithMultipleSearch = function(mds, types) {
-      var uuids = mds.map(function(md) {
-        return md.uuid;
-      });
-      // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
-      // Is a service: If record.operatesOn then uuid: record.operatesOn
-      // Is a sibling?: agg_associated: record.uuid
-
-      var promise = $q.defer();
-      var body = '';
-      var searchFields = {
-        'children': 'parentUuid',
-        'services': 'recordOperateOn',
-        'hassources': 'hassources',
-        'associated': 'agg_associated',
-        'hasfeaturecats': 'hasfeaturecats'
-      };
-      for (var j = 0; j < mds.length; j++) {
-        for (var i = 0; i < types.length; i++) {
-          body += '{"index": "records"}\n';
-          switch (types[i]) {
-            case 'services':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            case 'children':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            default:
-              body += '{"query": {"match_all": {}}, "from": 0, "size": 0}\n'
-          }
-        }
-      }
-      $http.post('../api/search/records/_msearch', body).then(function (r) {
-        var related = {};
-        for (var j = 0; j < mds.length; j++) {
-          var uuid = mds[j].uuid;
-          related[uuid] = {};
-          for (var i = 0; i < types.length; i++) {
-            var t = types[i];
-            var values = [];
-            var results = r.data.responses[i + j];
-            if (results.hits.total.value > 0) {
-              for (var k = 0; k < results.hits.hits.length; k ++) {
-                var record = results.hits.hits[k];
-                values.push({
-                  id: record._source.id,
-                  title: {eng: record._source.resourceTitleObject.default}
-                });
-              }
-            }
-            related[uuid][t] = values.length > 0 ? values : undefined;
-          }
-        }
-        promise.resolve({data: related});
-      });
-
-      return promise.promise;
-    };
   }]);
 
   /**
@@ -212,7 +148,7 @@
 
               t.forEach(function (type) {
                 config.relations[type] =
-                  (type === 'onlines' ? scope.md.link : scope.md.relatedRecords[type])
+                  (type === 'onlines' ? scope.md.link : scope.md.related[type])
                   || {};
                 config.relationFound = config.relations[type].length > 0;
 
@@ -241,6 +177,48 @@
         }
       }
     ]);
+
+  module
+    .directive('gnRelatedList', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedSimpleList.html',
+          scope: {
+            md: '=gnRelatedList',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRelatedDropdown', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedDropdown.html',
+          scope: {
+            md: '=gnRelatedDropdown',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+            scope.hasRelations = false;
+            if (scope.md && scope.md.related) {
+              var total = 0;
+              Object.keys(scope.md.related).map(function(t) {
+                total += scope.md.related[t].length;
+              });
+              scope.hasRelations = total > 0;
+            }
+          }
+        }
+    }]);
 
   module
       .directive('gnRelated', [
@@ -308,7 +286,7 @@
 
                   // init object if required
                   scope.relations = scope.relations || {};
-                  scope.relationFound = true;
+                  scope.relationFound = false;
                   scope.hasResults = true;
 
                   if (!scope.relations[idx]) {
@@ -396,11 +374,11 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    if (scope.md.relatedRecords || scope.md.link) {
+                    if (scope.md.related || scope.md.link) {
                       var relations = {};
                       scope.types.split('|').map(function(t) {
                         relations[t] =
-                          (t === 'onlines' ? scope.md.link : scope.md.relatedRecords[t]);
+                          (t === 'onlines' ? scope.md.link : scope.md.related[t]);
                       })
                       scope.loadRelations(relations);
                     } else {

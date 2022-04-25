@@ -642,6 +642,16 @@
         }
       });
 
+      if (this.related) {
+        $.each(Object.keys(this.related), function(value, key) {
+          if (angular.isArray(record.related[key])) {
+            record.related[key] = record.related[key].map(function(r) {
+              return new Metadata(r);
+            })
+          }
+        });
+      }
+
       // See below; probably not necessary
       this.linksCache = [];
 
