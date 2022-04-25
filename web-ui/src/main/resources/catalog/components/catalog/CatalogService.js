@@ -804,6 +804,17 @@
         this.linksCache[filter] = matches;
         return matches;
       },
+      isLinkDisabled: function(link) {
+        // TODO: Should be more consistent with schema-ident.xml filter section
+        var p = link && link.protocol;
+        if (p.match(/OGC:WMS|ESRI:REST|OGC:WFS/i) != null) {
+          return this.dynamic === false;
+        }
+        if (p.match(/WWW:DOWNLOAD.*|ATOM.*|DB.*|FILE.*/i) != null) {
+          return this.download === false;
+        }
+        return false;
+      },
       /**
        * Return an object containing metadata contacts
        * as an array and resource contacts as array

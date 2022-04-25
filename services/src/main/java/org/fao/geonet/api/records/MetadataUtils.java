@@ -24,7 +24,9 @@
 package org.fao.geonet.api.records;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +36,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.es.EsHTTPProxy;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
@@ -281,7 +284,18 @@ public class MetadataUtils {
                     record.setUuid(e.getId());
                     // Set properties eg. remote, associationType, ...
                     record.setProperties(relatedTypeDetails.recordsProperties.get(e.getId()));
-                    record.setRecord(mapper.readTree(e.getSourceAsString()));
+                    JsonNode source = mapper.readTree(e.getSourceAsString());
+                    ObjectNode doc = mapper.createObjectNode();
+                    doc.set("_source", source);
+                    EsHTTPProxy.addUserInfo(doc, context);
+                    Iterator<String> fieldNames = doc.fieldNames();
+                    while (fieldNames.hasNext()) {
+                        String field = fieldNames.next();
+                        if (!"_source".equals(field)) {
+                            ((ObjectNode) source).set(field, doc.get(field));
+                        }
+                    }
+                    record.setRecord(source);
                     record.setOrigin(RelatedItemOrigin.catalog.name());
                     records.add(record);
                     if (expectedUuids.contains(e.getId())) {

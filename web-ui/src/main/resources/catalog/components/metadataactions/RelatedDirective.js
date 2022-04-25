@@ -616,7 +616,7 @@
             // empty or dropdown or dropdownOrButton (if one link)
             btn: '@',
             btnClass: '@',
-            btnDisabled: '=',
+            // btnDisabled: '=',
             type: '=',
             title: '@',
             altTitle: '@',
@@ -629,6 +629,8 @@
             if (scope.links && scope.links.length > 0) {
               scope.mainType = gnRelatedResources.getType(scope.links[0], scope.type || 'onlines');
               scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.links[0]);
             }
           }
         }
@@ -643,8 +645,8 @@
    * user privileges. For metadata link, check download/dynamic properties.
    */
   module
-    .directive('gnRecordLinkButton', ['gnRelatedResources',
-      function(gnRelatedResources) {
+    .directive('gnRecordLinkButton', ['gnRelatedResources', 'gnRelatedService',
+      function(gnRelatedResources, gnRelatedService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -655,7 +657,6 @@
             link: '=gnRecordLinkButton',
             btn: '=',
             btnClass: '=',
-            btnDisabled: '=',
             // none, only
             iconMode: '=',
             iconClass: '=',
@@ -673,6 +674,8 @@
               scope.isSibling = (scope.mainType == 'MDSIBLING'
                 && scope.link.associationType
                 && scope.link.associationType != '');
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.link);
             }
           }
         }

@@ -176,7 +176,7 @@ public class EsHTTPProxy {
         doc.putPOJO("related", related);
     }
 
-    private static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
+    public static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
 
