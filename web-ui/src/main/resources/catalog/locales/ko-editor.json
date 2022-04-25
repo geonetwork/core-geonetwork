@@ -79,7 +79,7 @@
     "noChangesToApply": "선택한 레코드를 갱신하려면 먼저 변경내용을 정의하십시오.",
     "selectRecordsToEdit": "편집할 하나 이상의 레코드를 선택하십시오.",
     "tooManyRecordInSelForSearch": "There are too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
-    "advancedBatchEditMode": "고급 모드 (XPath)",
+    "advancedBatchEditMode": "XPath mode",
     "cancel": "취소",
     "cancelChangesFromNow": "편집 세션 시작  {{timeAgo}} 이후 모든 변경 내용을 취소합니다.",
     "cancelling": "취소중...",
@@ -105,7 +105,7 @@
     "country": "국가",
     "createA": "생성",
     "createChildOf": "자식 레코드 생성",
-    "createCopyOf": "복사본 생성",
+    "createCopyOf": "Create copy",
     "createMetadata": "생성",
     "createMetadataError": "메타데이터 오류 생성",
     "createMetadataForGroup": "그룹 편집자를 위한 생성 및 게시",
@@ -300,7 +300,7 @@
     "suggestions": "제안",
     "removeThumbnail": "썸네일 제거",
     "thumbnailMaker": "썸네일 생성",
-    "thumbnailMaker-help": "메타 데이터 레코드에 등록 된 모든 WMS 레이어가 맵에 추가됩니다. 썸네일을 생성하기 위해 레이아웃(권장 썸네일), 축척 및 관심영역을 선택하십시오.",
+    "thumbnailMaker-help": "All WMS layers registered in the metadata record are added to the map. Choose a layout, a scale, zoom to the area of interest to generate the thumbnail.",
     "to-iso19139-keyword": "텍스트(권장)",
     "to-iso19139-keyword-as-xlink": "링크",
     "to-iso19139-keyword-as-xlink-help": "레코드와 동의어 사전 사이의 링크 생성에 유용합니다. xlink:href 속성은 gmd:descriptiveKeywords 엘리먼트에 추가됩니다.",
@@ -350,7 +350,6 @@
     "sourceRecord": "원본 레코드",
     "deleteField": "이 필드 삭제",
     "deleteFieldSet": "이 필드 셋 삭제",
-    "onlyMyRecord": "내 레코드만 사용",
     "toggleSection": "확장/축소 전환",
     "editorBoardInfo": "이 페이지에서 새로운 레코드는 만들거나 가져옵니다. 모든 메타데이터 레코드를 신속하게 액세스하고 관리할 수 있습니다.",
     "minorEditHelp": "저장할 때 타임스탬프 갱신하지 않기",
@@ -419,5 +418,6 @@
     "draft": "Working copy",
     "link": "링크",
     "link-text": "Link text",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
+    "allowEditGroupMembers": "Allow group editors to edit"
 }

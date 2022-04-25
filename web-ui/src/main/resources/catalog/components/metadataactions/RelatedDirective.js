@@ -77,39 +77,6 @@
       return (promise);
     };
 
-    this.parseFilters = function(filters) {
-      var separator = ':';
-      return filters
-        .split(' AND ')
-        .map(function(clause) {
-          var filter = clause.split(separator),
-            field = filter.shift(),
-            not = field && field.startsWith('-');
-          return {
-            field: not ? field.substr(1) : field,
-            regex: new RegExp(filter.join(separator)),
-            not: not
-          }
-        });
-    };
-
-    this.testFilters = function(filters, object) {
-      var results = [];
-      filters.forEach(function(filter, j) {
-        var prop = object[filter.field];
-        if (prop
-          && ((!filter.not && prop.match(filter.regex) != null)
-            || (filter.not && prop.match(filter.regex) == null))) {
-          results[j] = true;
-        } else {
-          results[j] = false;
-        }
-      });
-      return results.reduce(function(prev, curr) {
-        return prev && curr;
-      })
-    };
-
     this.getMdsRelated = function(mds, types) {
       var uuids = mds.map(function (md) {
         return md.uuid;
@@ -209,7 +176,7 @@
    *
    * Example configuration:
    *
-   * <div data-gn-record-links="md"
+   * <div data-gn-related-container="md"
    *      data-mode="tabset"
    *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
    *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
@@ -218,9 +185,9 @@
    * </div>
    */
   module
-    .directive('gnRecordLinks', [
-        'gnRelatedResources', 'gnRelatedService',
-      function (gnRelatedResources, gnRelatedService) {
+    .directive('gnRelatedContainer', [
+        'gnRelatedResources', 'gnConfigService',
+      function (gnRelatedResources, gnConfigService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -228,7 +195,7 @@
               '../../catalog/components/metadataactions/partials/relatedContainer.html';
           },
           scope: {
-            md: '=gnRecordLinks',
+            md: '=gnRelatedContainer',
             mode: '=',
             relatedConfig: '='
           },
@@ -255,11 +222,11 @@
                 if (scope.mode === 'tabset'
                   && config.filter
                   && angular.isArray(value)) {
-                  var filters = gnRelatedService.parseFilters(config.filter)
+                  var filters = gnConfigService.parseFilters(config.filter)
 
                   config.relations[type] = [];
                   for (var i = 0; i < value.length; i++) {
-                    gnRelatedService.testFilters(filters, value[i])
+                    gnConfigService.testFilters(filters, value[i])
                     && config.relations[type].push(value[i]);
                   }
                   config.relationFound = config.relations[type].length > 0;
@@ -282,9 +249,10 @@
         'gnSearchSettings',
         'gnRelatedResources',
         'gnExternalViewer',
+        'gnConfigService',
         function(gnRelatedService, gnGlobalSettings,
                  gnSearchSettings, gnRelatedResources,
-                 gnExternalViewer) {
+                 gnExternalViewer, gnConfigService) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -348,11 +316,11 @@
                     scope.sizeConfig[idx] = scope.size;
                   }
                   if (scope.filter && angular.isArray(value)) {
-                    var filters = gnRelatedService.parseFilters(scope.filter)
+                    var filters = gnConfigService.parseFilters(scope.filter)
 
                     scope.relations[idx] = [];
                     for (var i = 0; i < value.length; i++) {
-                      gnRelatedService.testFilters(filters, value[i])
+                      gnConfigService.testFilters(filters, value[i])
                         && scope.relations[idx].push(value[i]);
                     }
                   } else {
@@ -712,8 +680,8 @@
 
   module
     .directive('gnRecordsTable', [
-      'Metadata',
-      function(Metadata) {
+      'Metadata', 'gnRelatedService',
+      function(Metadata, gnRelatedService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -752,10 +720,13 @@
               scope.records.map(function(r) {
                 r = new Metadata(r);
                 var recordData = {};
+
                 scope.columnsConfig.map(function(c) {
-                  recordData[c] = c.startsWith('link/')
-                    ? r.getLinksByType(c.split('/')[1])
-                    : (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  if (c.startsWith('link/')) {
+                    recordData[c] = r.getLinksByFilter(c.split('/')[1]);
+                  } else {
+                    recordData[c] = (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  }
                 });
                 recordData.md = r;
                 scope.data.push(recordData);
@@ -811,5 +782,5 @@
             };
           }
         }
-    }]);
+      }]);
 })();

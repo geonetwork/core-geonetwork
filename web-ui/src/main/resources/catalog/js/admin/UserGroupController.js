@@ -107,6 +107,7 @@
       $scope.passwordMaxLength =
         Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
       $scope.usePattern = gnConfig['system.security.passwordEnforcement.usePattern'];
+      $scope.allowAdminReset = gnConfig['system.security.password.allowAdminReset'];
 
       if ($scope.usePattern) {
         $scope.passwordPattern = new RegExp(
@@ -339,13 +340,17 @@
        * @returns {boolean}
        */
       $scope.hideResetPassword = function() {
-        if ((!$scope.userSelected) ||
-            (!$scope.userSelected.security)) {
+        if ((!$scope.userSelected)
+            || (!$scope.userSelected.security)) {
+          return true;
+        } else if ($scope.userSelected.security.authType == 'LDAP') {
+          return true;
+        } else if ($scope.allowAdminReset && $scope.user.isAdministratorOrMore()) {
+          return false;
+        } else if ($scope.userSelected.username !== $scope.user.username) {
           return true;
         }
-
-        return (($scope.userSelected.security.authType == 'LDAP') ||
-            ($scope.userSelected.username !== $scope.user.username));
+        return false;
       };
 
       /**

@@ -1602,13 +1602,14 @@
             olLayer.set('name', name);
             olDecorateLayer(olLayer);
 
-            var feedMdPromise
-            if (md) {
-              feedMdPromise = $q.resolve();
-              olLayer.set('md', md);
-            } else {
-              feedMdPromise = this.feedLayerMd(olLayer);
-            }
+            var feedMdPromise =
+              md && typeof md === 'object' ?
+                $q.resolve(md).then(function(md) {
+                  olLayer.set('md', md);
+                }) : (
+                  typeof md === 'string'
+                    ? this.feedLayerMd(olLayer, md)
+                    : this.feedLayerMd(olLayer));
 
             // query layer info
             var layerInfoUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + 'f=json';

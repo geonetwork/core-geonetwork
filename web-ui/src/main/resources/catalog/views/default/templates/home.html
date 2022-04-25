@@ -30,6 +30,7 @@
 
       <div class="input-group gn-form-any">
         <input type="text"
+              role="combobox"
               class="form-control input-lg"
               autofocus=""
               autocomplete="off"
@@ -232,10 +233,8 @@
 
     <tabset id="info-tabset pull-left" type="pills" justified="false" role="tablist">
       <tab heading="{{'lastRecords' | translate}}"
-            role="tab"
-            active="infoTabs.lastRecords.active">
+           active="infoTabs.lastRecords.active">
         <form class="form-horizontal"
-              role="form"
               data-ng-controller="gnsSearchLatestController"
               data-ng-search-form=""
               data-runSearch="true"
@@ -246,8 +245,7 @@
         </form>
       </tab>
       <tab heading="{{'preferredRecords' | translate}}"
-            role="tab"
-            active="infoTabs.preferredRecords.active">
+           active="infoTabs.preferredRecords.active">
         <form class="form-horizontal"
               role="form"
               data-ng-controller="gnsSearchPopularController"
@@ -259,17 +257,15 @@
         </form>
       </tab>
       <tab heading="{{'featuredUserSearches' | translate}}"
-            data-ng-if="isUserSearchesEnabled && displayFeaturedSearchesPanel"
-            role="tab"
-            active="infoTabs.featuredSearches.active">
+           data-ng-if="isUserSearchesEnabled && displayFeaturedSearchesPanel"
+           active="infoTabs.featuredSearches.active">
         <form class="form-horizontal">
           <div data-gn-user-searches-list></div>
         </form>
       </tab>
       <tab heading="{{'Comments' | translate}}"
-            data-ng-if="isUserFeedbackEnabled"
-            active="infoTabs.commentsalt.active"
-            role="tab">
+           data-ng-if="isUserFeedbackEnabled"
+           active="infoTabs.commentsalt.active">
         <form class="form-horizontal">
           <div class="data-gn-userfeedbacklasthome"
                 data-nb-of-comments="10"></div>

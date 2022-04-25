@@ -79,7 +79,7 @@
     "noChangesToApply": "Nejprve definujte změny, chcete-li aktualizovat vybrané záznamy.",
     "selectRecordsToEdit": "Vyberte jeden nebo více záznamů, které chcete upravit.",
     "tooManyRecordInSelForSearch": "V aktuálním výběru je příliš mnoho (tj. {{Count}}) záznamů, aby se zde zobrazily jako úplný seznam. Proces však bude probíhat podle aktuálního výběru (viz první karta).",
-    "advancedBatchEditMode": "Pokročilý režim (XPath)",
+    "advancedBatchEditMode": "režim XPath",
     "cancel": "Zrušit",
     "cancelChangesFromNow": "Zrušit všechny změny od zahájení relace úprav {{timeAgo}}.",
     "cancelling": "Ruší se ...",
@@ -300,7 +300,7 @@
     "suggestions": "Návrhy",
     "removeThumbnail": "Odstranit náhled",
     "thumbnailMaker": "Vytvořit náhled",
-    "thumbnailMaker-help": "Všechny vrstvy WMS uvedené v metadatovém záznamu se přidávají do mapy. Vyberte rozvržení (doporučuje se náhled), měřítko, přiblížení oblasti zájmu, aby bylo možné vytvořit náhled.",
+    "thumbnailMaker-help": "Do mapy se přidají všechny vrstvy WMS registrované v záznamu metadat. Chcete-li vytvořit miniaturu, vyberte rozvržení, měřítko, přibližte oblast zájmu.",
     "to-iso19139-keyword": "text (doporučeno)",
     "to-iso19139-keyword-as-xlink": "odkaz",
     "to-iso19139-keyword-as-xlink-help": "Užitečné pro propojení záznamu a tezauru. Atribut xlink:href se přidává k prvku gmd:descriptiveKeywords.",
@@ -350,7 +350,6 @@
     "sourceRecord": "Záznam zdroje",
     "deleteField": "Vymazat toto pole",
     "deleteFieldSet": "Vymazat tento soubor polí",
-    "onlyMyRecord": "Jen mé záznamy",
     "toggleSection": "Přepínat mezi rozbalit / sbalit",
     "editorBoardInfo": "Vytvořit nebo importovat nový záznam z této strany. Rychle vstoupit a řídit všechny metadatové záznamy.",
     "minorEditHelp": "Při ukládání neprovádět aktualizaci časového razítka",
@@ -419,5 +418,6 @@
     "draft": "Pracovní kopie",
     "link": "Odkaz",
     "link-text": "Text odkazu",
-    "confirmCancelEdit": "Chcete zrušit všechny změny a zavřít editor?"
+    "confirmCancelEdit": "Chcete zrušit všechny změny a zavřít editor?",
+    "allowEditGroupMembers": "Povolit editorům skupin úpravy"
 }

@@ -14,7 +14,7 @@ jcs.default.elementattributes.IsEternal=false
 
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=jcs_caching
+jcs.auxiliary.DC.attributes.DiskPath=${java.io.tmpdir}/jcs_caching
 
 # XLink cache
 jcs.region.xlink=DC

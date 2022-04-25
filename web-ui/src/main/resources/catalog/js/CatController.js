@@ -101,7 +101,8 @@ goog.require('gn_alert');
           'fluidHeaderLayout': true,
           'showGNName': true,
           'isHeaderFixed': false,
-          'isMenubarAccessible': true
+          'isMenubarAccessible': true,
+          'showPortalSwitcher': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -148,13 +149,20 @@ goog.require('gn_alert');
           // 'queryBase': '${any}',
           // Full text but more boost on title match
           // * Search in languages depending on the strategy selected
-          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
+          'queryBase': 'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:(${any})^2 OR resourceTitleObject.\\*:\"${any}\"^6',
+          'queryBaseOptions': {
+            'default_operator': 'AND'
+          },
+          // TODO: Exact match should not even analyze
+          // so we could create an exact field not analyzed in the index maybe?
+          'queryExactMatch': 'any.${searchLang}:\"${any})\" OR any.common:\"${any}\" OR resourceTitleObject.\\*:\"${any}\"^2',
           // * Force UI language - in this case set languageStrategy to searchInUILanguage
           // and disable language options in searchOptions
           // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
           // * Search in French fields (with french analysis)
           // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
-          'queryTitle': 'resourceTitleObject.${searchLang}:(${any})',
+          'queryTitle': 'resourceTitleObject.\\*:(${any})',
+          'queryTitleExactMatch': 'resourceTitleObject.\\*:"${any}"',
           'searchOptions': {
             titleOnly: true,
             exactMatch: true,
@@ -215,9 +223,13 @@ goog.require('gn_alert');
                 "filter": { "exists": { "field": "parentUuid" } },
                 "weight": 0.3
               },
-              // Boost down obsolete records
+              // Boost down obsolete and superseded records
               {
                 "filter": { "match": { "cl_status.key": "obsolete" } },
+                "weight": 0.2
+              },
+              {
+                "filter": { "match": { "cl_status.key": "superseded" } },
                 "weight": 0.3
               },
               // {
@@ -245,8 +257,8 @@ goog.require('gn_alert');
                     "query": "",
                     "type": "bool_prefix",
                     "fields": [
-                      "resourceTitleObject.${searchLang}",
-                      "resourceAbstractObject.${searchLang}",
+                      "resourceTitleObject.${searchLang}^6",
+                      "resourceAbstractObject.${searchLang}^.5",
                       "tag",
                       "resourceIdentifier"
                       // "anytext",
@@ -553,6 +565,11 @@ goog.require('gn_alert');
               'search/resultsview/partials/viewtemplates/list.html',
             'tooltip': 'List',
             'icon': 'fa-bars'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/table.html',
+            'tooltip': 'Table',
+            'icon': 'fa-table'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
@@ -702,8 +719,8 @@ goog.require('gn_alert');
           'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
           'internalThesaurus': [],
           'collectionTableConfig': {
-            'labels': 'title,cl_status,format,Esri,view,download,file,atom',
-            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:ESRI:REST,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:WWW:DOWNLOAD,link/protocol:atom:feed'
+            'labels': 'title,cl_status,format,download,WMS,WFS,Atom,Links',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:WWW:DOWNLOAD.*,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:atom:feed,link/protocol:WWW:LINK.*'
           },
           'distributionConfig': {
             // 'layout': 'tabset',
@@ -757,21 +774,23 @@ goog.require('gn_alert');
           'editorIndentType': '',
           'allowRemoteRecordLink': true,
           'facetConfig': {
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key',
+                'field': 'resourceType'
+              }
+            },
+            'mdStatus': {
+              'terms': {
+                'field': 'statusWorkflow',
                 'size': 20
+              },
+              'meta': {
+                'field': 'statusWorkflow'
               }
             },
             'cl_status.key': {
               'terms': {
                 'field': 'cl_status.key',
-                'size': 15
-              }
-            },
-            'sourceCatalogue': {
-              'terms': {
-                'field': 'sourceCatalogue',
                 'size': 15
               }
             },
@@ -785,48 +804,91 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'valid_inspire',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'sourceCatalogue': {
+              'terms': {
+                'field': 'sourceCatalogue',
+                'size': 100,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'groupOwner': {
               'terms': {
                 'field': 'groupOwner',
-                'size': 10
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'recordOwner': {
               'terms': {
                 'field': 'recordOwner',
-                'size': 10
-              }
-            },
-            'groupPublishedId': {
-              'terms': {
-                'field': 'groupPublishedId',
-                'size': 10
-              }
-            },
-            'documentStandard': {
-              'terms': {
-                'field': 'documentStandard',
-                'size': 10
-              }
-            },
-            'isHarvested': {
-              'terms': {
-                'field': 'isHarvested',
-                'size': 2
-              }
-            },
-            'isTemplate': {
-              'terms': {
-                'field': 'isTemplate',
-                'size': 5
+                'size': 5,
+                'include': '.*'
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'isPublishedToAll': {
               'terms': {
                 'field': 'isPublishedToAll',
                 'size': 2
+              }
+            },
+            'groupPublishedId': {
+              'terms': {
+                'field': 'groupPublishedId',
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
+              }
+            },
+            'documentStandard': {
+              'terms': {
+                'field': 'documentStandard',
+                'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 2
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isTemplate': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 5
+              },
+              'meta': {
+                'collapsed': true
               }
             }
           }
@@ -902,6 +964,12 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
+        },
+        'workflowHelper': {
+          'enabled': false,
+          'workflowAssistApps': [
+            {'appUrl': '', 'appLabelKey': ''}
+          ]
         }
       }
     };
@@ -961,7 +1029,9 @@ goog.require('gn_alert');
         'internalThesaurus',
         'locationThesaurus',
         'distributionConfig',
-        'collectionTableConfig'
+        'collectionTableConfig',
+        'queryBaseOptions',
+        'workflowAssistApps'
       ],
       current: null,
       isDisableLoginForm: false,

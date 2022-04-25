@@ -116,12 +116,13 @@
     'gnGlobalSettings',
     'gnSearchSettings',
     'gnFeaturesTableManager',
+    'gnFeaturesTableService',
     'gnAlertService',
     'gnWfsService',
     'gnOwsCapabilities',
     function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, gnFeaturesTableManager,
+             gnSearchSettings, gnFeaturesTableManager, gnFeaturesTableService,
              gnAlertService, gnWfsService, gnOwsCapabilities) {
       return {
         restrict: 'A',
@@ -346,16 +347,6 @@
 
             scope.resetFacets(true).then(scope.restoreInitialFilters);
           }
-          function getDataModelLabel(fieldId) {
-            for (var j = 0; j < scope.md.attributeTable.length; j++) {
-              if (fieldId ==
-                scope.md.attributeTable[j].name) {
-                return scope.md.attributeTable[j].definition;
-              }
-            }
-            return null;
-          }
-
           scope.initIndexRequest = function() {
             var config = {
               wfsUrl: scope.url,
@@ -373,14 +364,21 @@
               docFields = indexObject.filteredDocTypeFieldsInfo;
               scope.countTotal = indexObject.totalCount;
 
-              if (scope.md && scope.md.attributeTable) {
-                for (var i = 0; i < docFields.length; i++) {
-                  var label = getDataModelLabel(docFields[i].label);
-                  if (label) {
-                    // TODO: Multilingual
-                    docFields[i].label = label;
-                  }
-                }
+              if (scope.md) {
+                gnFeaturesTableService.loadFeatureCatalogue(scope.md.uuid, scope.md)
+                  .then(function(catalogue) {
+                    if (Object.keys(catalogue).length) {
+                      for (var i = 0; i < docFields.length; i++) {
+                        var fieldSpec = catalogue[docFields[i].label];
+                        if (fieldSpec) {
+                          // TODO: Multilingual
+                          docFields[i].label = fieldSpec.name != ''
+                            ? fieldSpec.name : docFields[i].label;
+                          docFields[i].definition = fieldSpec.definition + '(' + fieldSpec.code + ')';
+                        }
+                      }
+                    }
+                  });
               }
               appProfilePromise.then(loadFields);
             }, function(error) {

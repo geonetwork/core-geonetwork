@@ -27,6 +27,8 @@
              ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
         </div>
 
+        <div data-gn-user-searches-panel="user"
+             data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
 
             <div data-ng-show="searchResults.records.length > 0"
                  data-es-facets="searchResults.facets"></div>

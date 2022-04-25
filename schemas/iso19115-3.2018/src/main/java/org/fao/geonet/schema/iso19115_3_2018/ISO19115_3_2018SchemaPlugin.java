@@ -544,8 +544,8 @@ public class ISO19115_3_2018SchemaPlugin
         return elementsToProcess.contains(el.getQualifiedName());
     }
 
-    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
-        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder, String excludePattern) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder, excludePattern);
         patternStreamer.setNamespaces(ISO19115_3_2018SchemaPlugin.allNamespaces.asList());
         // TODO: Add xlink:href ?
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'lan:LocalisedCharacterString']");

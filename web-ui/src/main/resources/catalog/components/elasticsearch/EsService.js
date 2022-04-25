@@ -154,12 +154,26 @@
           var queryStringParams = [];
           if (p.any) {
             p.any = p.any.toString();
-            var queryExpression = p.any.match(/^q\((.*)\)$/);
+
+            var defaultQuery = '${any}',
+              queryExpression = p.any.match(/^q\((.*)\)$/);
+
             if (queryExpression == null) {
               // var queryBase = '${any} resourceTitleObject.default:(${any})^2',
-              var queryBase = '(' +
-                  (p.queryBase || gnGlobalSettings.gnCfg.mods.search.queryBase) + ')',
-                defaultQuery = '${any}';
+              var queryBase = "";
+              if (p.queryBase) { // Force a query
+                queryBase = p.queryBase;
+              } else if (state.exactMatch === true && state.titleOnly === true) {
+                queryBase = gnGlobalSettings.gnCfg.mods.search.queryTitleExactMatch;
+              } else if (state.exactMatch === true) {
+                queryBase = gnGlobalSettings.gnCfg.mods.search.queryExactMatch;
+              } else if (state.titleOnly === true) {
+                queryBase = gnGlobalSettings.gnCfg.mods.search.queryTitle;
+              } else {
+                queryBase = gnGlobalSettings.gnCfg.mods.search.queryBase
+              }
+              queryBase = '(' + queryBase + ')';
+
               if (queryBase.indexOf(defaultQuery) === -1) {
                 console.warn('Check your configuration. Query base \'' +
                   queryBase + '\' MUST contains a \'${any}\' token ' +
@@ -171,13 +185,8 @@
 
               var languageConfig = getLanguageConfig(p.any, state),
                 searchString = escapeSpecialCharacters(p.any),
-                q = injectLanguage(state.titleOnly
-                  ? gnGlobalSettings.gnCfg.mods.search.queryTitle
-                  : queryBase, languageConfig, true)
-                  .replace(
-                  /\$\{any\}/g,
-                  state.exactMatch === true
-                              ? '\"' + searchString + '\"' : searchString);
+                q = injectLanguage(queryBase, languageConfig, true)
+                      .replace(/\$\{any\}/g, searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -188,11 +197,15 @@
             queryStringParams.push(luceneQueryString);
           }
 
-          queryHook.must.push({
+          var queryString = {
             query_string: {
               query: queryStringParams.join(' AND ').trim()
             }
-          });
+          };
+
+          angular.extend(queryString.query_string,
+            gnGlobalSettings.gnCfg.mods.search.queryBaseOptions || {});
+          queryHook.must.push(queryString);
         }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
@@ -431,6 +444,10 @@
           // Inject current search to contextualize suggestions
           var queryHook = params.query.function_score.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
+
+          if (angular.isArray(currentSearch.filters)) {
+            params.query.function_score.query.bool.filter = currentSearch.filters;
+          }
 
           this.buildQueryClauses(
             queryHook, currentSearch.params,

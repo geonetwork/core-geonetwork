@@ -43,16 +43,20 @@
       <xsl:for-each select="$authors">
         <author>
           <xsl:variable name="name"
-                        select="normalize-space(.//cit:individual/*/cit:name[1])"/>
+                        select=".//cit:individual/*/cit:name[1]"/>
 
-          <xsl:value-of select="$name"/>
-          <xsl:if test="$name != ''">(</xsl:if>
+          <xsl:for-each select="$name">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select="cit:party/*/cit:name">
             <xsl:call-template name="get-iso19115-3.2018-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="$name">)</xsl:if>
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
         </author>
       </xsl:for-each>
     </xsl:variable>
@@ -100,16 +104,20 @@
       <xsl:for-each select="$publishers">
         <author>
           <xsl:variable name="name"
-                        select="normalize-space(.//cit:individual/*/cit:name[1])"/>
+                        select=".//cit:individual/*/cit:name[1]"/>
 
-          <xsl:value-of select="$name"/>
-          <xsl:if test="$name != ''">(</xsl:if>
+          <xsl:for-each select="$name">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select="cit:party/*/cit:name">
             <xsl:call-template name="get-iso19115-3.2018-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="$name">)</xsl:if>
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
         </author>
       </xsl:for-each>
     </xsl:variable>

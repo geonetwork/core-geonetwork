@@ -970,26 +970,6 @@
     </xsl:choose>
   </xsl:template>
 
-
-
-  <xsl:template name="characterStringSubstitutions">
-    <xsl:param name="parentElement"/>
-    <!-- This template takes a parent of a gco:CharacterString element and writes out the child for several possible substitutions  -->
-    <xsl:for-each select="$parentElement/*">
-      <xsl:choose>
-        <xsl:when test="local-name(.)='CharacterString'">
-          <xsl:copy-of select="."/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:element name="{concat('gmx:',local-name(.))}">
-            <xsl:copy-of select="@*" copy-namespaces="no"/>
-            <xsl:value-of select="."/>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-  </xsl:template>
-
   <xsl:template name="writeDateTime">
     <xsl:for-each select="descendant::gco2:*">
       <xsl:element name="{concat('gco:',local-name(.))}">

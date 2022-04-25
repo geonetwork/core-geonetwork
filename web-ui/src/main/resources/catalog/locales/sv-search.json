@@ -18,8 +18,8 @@
     "archiveexcluded": "Exkludera arkiverade",
     "archiveonly": "Endast arkiverade",
     "What": "Vad?",
-    "downloadAllIn": "Ladda ned alla",
-    "downloadInCurrentMapExtent": "... eller bara i aktuell vy",
+    "downloadAllIn": "Ladda ned allt",
+    "downloadInCurrentMapExtent": "... eller bara för aktuell vy",
     "downloadFeature": "Ladda ned",
     "opacity": "Transparens",
     "filterData": "Filtrera data",
@@ -174,7 +174,7 @@
     "listOfCategories": "Kategorier",
     "formats": "Format",
     "addLayers": "Lägg till kartlager",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "URL för tjänst",
     "CurrentLayers": "Lager",
     "SearchLayer": "Sök",
@@ -532,5 +532,10 @@
     "displayMousePosition": "Visa musposition (använd genvägen &#39;c&#39; för att kopiera positionen till urklipp).",
     "copyMousePosition": "Kopiera musposition till Urklipp",
     "printUnsupportedLayerTypes": "Följande lagertyper finns men kan inte skrivas ut",
-    "rssFeed": "RSS-flöde"
+    "rssFeed": "RSS-flöde",
+    "esriCapabilitiesFailed": "Fel vid hämtning av ESRI Rest-kapacitetsdokumentet.",
+    "esriCapabilitiesNoValid": "Svaret är inte ett giltigt ESRI Rest-kapacitetsdokument.",
+    "seriesComposedOf": "Composed of",
+    "seriesCoveringPeriod": "Covering period",
+    "approve": "Godkänna"
 }
