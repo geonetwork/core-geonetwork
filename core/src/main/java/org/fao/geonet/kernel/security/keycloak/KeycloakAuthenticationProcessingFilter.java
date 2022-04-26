@@ -45,6 +45,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -144,7 +146,18 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
                             if (qsMap.containsKey("redirectUrl")) {
-                                response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                                String redirectUrl = qsMap.get("redirectUrl").get(0);
+                                // redirectUrl should only be relative to the current server so remove the host from the url so that we don't allow redirects to other hosts.
+                                if (redirectUrl != null && !redirectUrl.startsWith("/")) {
+                                    UriComponents redirectUri = UriComponentsBuilder.fromUriString(redirectUrl).build();
+                                    redirectUrl = redirectUri.getPath() + (redirectUri.getQuery() != null ? "?" + redirectUri.getQuery() : "");
+                                }
+                                if (redirectUrl != null) {
+                                    response.sendRedirect(redirectUrl);
+                                } else {
+                                    // If the redirect url ends up being null  then lets redirect back to the context home.
+                                    response.sendRedirect(request.getContextPath());
+                                }
                             } else {
                                 // If the redirect url did not exist then lets redirect back to the context home.
                                 response.sendRedirect(request.getContextPath());
