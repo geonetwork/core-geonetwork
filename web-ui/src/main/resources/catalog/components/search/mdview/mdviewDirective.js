@@ -42,7 +42,8 @@
           md: '=gnMetadataOpen',
           formatter: '=gnFormatter',
           records: '=gnRecords',
-          selector: '@gnMetadataOpenSelector'
+          selector: '@gnMetadataOpenSelector',
+          appUrl: '@?'
         },
         link: function(scope, element, attrs, controller) {
           scope.$watch('md', function(n, o) {
@@ -59,8 +60,8 @@
 
             var hyperlinkTagName = 'A';
             if (element.get(0).tagName === hyperlinkTagName) {
-             var url = window.location.pathname
-                + window.location.search
+             var url =
+                (scope.appUrl || (window.location.pathname + window.location.search))
                 + '#/'
                 + (scope.md.draft == 'y' ? 'metadraf' : 'metadata')
                 + '/' + scope.md.uuid

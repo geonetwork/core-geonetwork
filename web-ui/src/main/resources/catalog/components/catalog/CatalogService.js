@@ -660,6 +660,7 @@
           + '/catalog.search#/metadata/' + this._id;
       } else if (this.origin === 'remote') {
         this.remoteUrl = this.properties.url;
+        this.uuid = this._id;
       }
 
       // See below; probably not necessary

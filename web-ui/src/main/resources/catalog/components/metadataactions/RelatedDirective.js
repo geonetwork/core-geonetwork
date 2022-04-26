@@ -196,6 +196,43 @@
     }]);
 
   module
+    .directive('gnRelatedEditorList', [
+      'gnRelatedResources', '$rootScope',
+      function(gnRelatedResources, $rootScope) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedEditorList.html',
+          scope: {
+            related: '=gnRelatedEditorList',
+            type: '@',
+            readonly: '=?',
+            removeCb: '&?'
+          },
+          link: function(scope) {
+            scope.md = {
+              related: {}
+            };
+            scope.md.related[scope.type] = scope.related;
+            scope.remove = angular.isFunction(scope.removeCb)
+              ? function(md) {
+              scope.removeCb({record: md});
+            } : undefined;
+
+            scope.canRemoveLink = function (record) {
+              if (record.origin === 'remote') {
+                return true;
+              } else if (scope.remove) {
+                return true
+              }
+              return false;
+            }
+            scope.user = $rootScope.user;
+            scope.config = gnRelatedResources;
+          }
+        }
+    }]);
+
+  module
     .directive('gnRelatedDropdown', [
       'gnRelatedResources',
       function(gnRelatedResources) {
