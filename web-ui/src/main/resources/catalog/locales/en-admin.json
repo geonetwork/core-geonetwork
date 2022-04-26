@@ -866,6 +866,8 @@
     "system/harvesting/mail/templateWarning": "Warning template",
     "system/harvester/remoteHarvesterApiUrl": "Remote harvester API endpoint",
     "system/harvester/remoteHarvesterApiUrl-help": "Remote harvester API endpoint, to execute the harvesting in a external process. For the time being only CSW harvester is supported.",
+    "system/harvester/synch/toolsPath": "Database synchronisation tools path",
+    "system/harvester/synch/toolsPath-help": "Server path of the database synchronisation tools. These tools allow to push the metadata related to a harvester to another GeoNetwork catalogue server.",
     "system/hidewithheldelements": "Metadata / ISO19139 / Nil reason attribute withheld",
     "system/hidewithheldelements/enable": "Hide Withheld Elements",
     "system/hidewithheldelements/enableLogging": "Enable logging",
@@ -1542,6 +1544,7 @@
     "confirmRemoveLogo": "Are you sure you want to delete this logo?",
     "groupRemoved": "Group removed",
     "userRemoved": "User removed",
-    "confirmUiDelete":  "Are you sure you want to delete this UI configuration?"
+    "confirmUiDelete":  "Are you sure you want to delete this UI configuration?",
+    "pushHarvesterData": "Push data to external catalogue"
 }
 

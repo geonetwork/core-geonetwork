@@ -1349,6 +1349,7 @@
         <module>web-ui</module>
         <!--<module>web-ui-docs</module>-->
         <module>web</module>
+        <module>harvester-data-push</module>
       </modules>
     </profile>
     <profile>

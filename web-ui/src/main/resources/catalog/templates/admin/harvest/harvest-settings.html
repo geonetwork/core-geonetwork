@@ -214,6 +214,15 @@
             </span>
 
             <div id="gn-harvest-settings-buttons-row" class="btn-toolbar pull-right" data-ng-hide="isLoadingOneHarvester">
+              <button id="gn-harvest-settings-buttons-push-data"
+                      type="button"
+                      class="btn btn-success pull-right"
+                      data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true || harvesterSelected.info.lastRunSuccess.length == 0"
+                      data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                      data-gn-click-and-spin="pushHarvesterData(harvesterSelected['@id'])">
+                <span class="fa fa-database"></span>&nbsp;
+                <span data-translate="">pushHarvesterData</span>
+              </button>
               <button id="gn-harvest-settings-buttons-run"
                       type="button"
                       class="btn btn-success pull-right"
@@ -251,6 +260,8 @@
                 <span class="fa fa-times"></span>&nbsp;
                 <span data-translate="">deleteHarvester</span>
               </button>
+
+
             </div>
           </div>
           <div class="panel-body"

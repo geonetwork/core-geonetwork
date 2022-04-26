@@ -1141,6 +1141,17 @@
         </dependency>
       </dependencies>
     </profile>
+
+    <profile>
+      <id>harvester-data-push</id>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>harvester-data-push</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 
   <properties>

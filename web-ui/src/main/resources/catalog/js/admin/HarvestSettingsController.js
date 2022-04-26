@@ -387,6 +387,19 @@
             });
       };
 
+      $scope.pushHarvesterData = function() {
+        return $http.put('../api/harvesters/' + $scope.harvesterSelected.site.uuid +
+          '/push')
+          .success(function(data) {
+            $scope.harvesterSelected = {};
+            $scope.harvesterUpdated = false;
+            $scope.harvesterNew = false;
+            $scope.$parent.loadHarvesters();
+          }).error(function(data) {
+          console.log(data);
+        });
+      };
+
       $scope.deleteHarvesterRecord = function() {
         return $http.get('admin.harvester.clear?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
