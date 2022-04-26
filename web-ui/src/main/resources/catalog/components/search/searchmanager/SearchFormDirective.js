@@ -189,7 +189,8 @@
 
       // For now, only the list result template renders related records
       // based on UI config.
-      var template = $scope.resultTemplate.endsWith('list.html') ? 'grid' : '',
+      var template = $scope.resultTemplate && $scope.resultTemplate.endsWith('list.html')
+          ? 'grid' : '',
         templateConfig = gnGlobalSettings.gnCfg.mods.search[template],
         types = templateConfig && templateConfig.related ? templateConfig.related : [];
 

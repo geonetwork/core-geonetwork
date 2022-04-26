@@ -97,7 +97,7 @@
 
       return $http.post(ES_API_URL + service
         + (selectionBucket ? '?bucket=' + selectionBucket : '')
-        + (types.length > 0 ? types.join('&relatedType=') : ''),
+        + (types.length > 0 ? [''].concat(types).join('&relatedType=') : ''),
         params);
     }
 

@@ -153,14 +153,6 @@
               Object.keys(relatedRecords).map(function (k) {
                 relatedRecords[k] && relatedRecords[k].map(function (l, i) {
                   var md = recordsMap[l._id];
-                  // Open record not in current portal as a remote record
-                  if (!gnGlobalSettings.isDefaultNode && md.origin === 'catalog') {
-                    md.remoteUrl = '../../srv/'
-                      + gnGlobalSettings.iso3lang
-                      + '/catalog.search#/metadata/' + l._id;
-                  } else if (md.origin === 'remote') {
-                    md.remoteUrl = md.properties.url;
-                  }
                   relatedRecords[k][i] = md;
                 })
               });

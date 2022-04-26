@@ -281,12 +281,13 @@
                   : scope.size;
               }
               scope.loadRelations = function(relation) {
+                var relationCount = 0;
+                scope.relationFound = false;
                 angular.forEach(relation, function(value, idx) {
                   if (!value) { return; }
 
                   // init object if required
                   scope.relations = scope.relations || {};
-                  scope.relationFound = false;
                   scope.hasResults = true;
 
                   if (!scope.relations[idx]) {
@@ -318,8 +319,9 @@
                     scope.relations.associated = [];
                   }
 
-                  scope.relationFound = scope.relations[idx].length > 0;
+                  relationCount += scope.relations[idx].length;
                 });
+                scope.relationFound = relationCount > 0;
               };
 
               scope.updateRelations = function() {

@@ -609,8 +609,9 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', ['gnLangs', '$translate', 'gnConfigService',
-    function(gnLangs, $translate, gnConfigService) {
+  module.factory('Metadata', [
+    'gnLangs', '$translate', 'gnConfigService', 'gnGlobalSettings',
+    function(gnLangs, $translate, gnConfigService, gnGlobalSettings) {
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
@@ -650,6 +651,15 @@
             })
           }
         });
+      }
+
+      // Open record not in current portal as a remote record
+      if (!gnGlobalSettings.isDefaultNode && this.origin === 'catalog') {
+        this.remoteUrl = '../../srv/'
+          + gnGlobalSettings.iso3lang
+          + '/catalog.search#/metadata/' + this._id;
+      } else if (this.origin === 'remote') {
+        this.remoteUrl = this.properties.url;
       }
 
       // See below; probably not necessary
