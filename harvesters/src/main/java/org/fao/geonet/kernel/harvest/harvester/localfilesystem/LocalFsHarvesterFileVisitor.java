@@ -161,6 +161,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 processXml(file);
             }
         } catch (Throwable e) {
+            e.printStackTrace();
             LOGGER.error("An error occurred while harvesting file {}. Error is: {}.",
                 file.toAbsolutePath().normalize(), e.getMessage());
         }
