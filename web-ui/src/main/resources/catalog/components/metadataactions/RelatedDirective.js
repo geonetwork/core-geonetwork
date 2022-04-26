@@ -343,17 +343,26 @@
                     scope.relations[idx] = value;
                   }
 
-                  if (scope.relations.siblings && scope.relations.associated) {
+                  // siblings, children, parent can contain elements from
+                  // siblings or associated if linking is made in both direction
+                  // Priority:
+                  // * children, parent unchanged
+                  // * associated (exclude siblings, children and parent)
+                  if (idx === 'associated') {
+                    var indexToRemove = [];
                     for (var i = 0; i < scope.relations.associated.length; i++) {
-                      if (scope.relations.siblings.filter(function (e) {
-                        return e.id === scope.relations.associated[i].id;
+                      if ([].concat(scope.relations.siblings || [],
+                                    scope.relations.parent || [],
+                                    scope.relations.children || []).filter(function (e) {
+                        return e && e.id === scope.relations.associated[i].id;
                       }).length > 0) {
-                        /* siblings object contains associated element */
-                      } else {
-                        scope.relations.siblings.push(scope.relations.associated[i])
+                        // Exclude
+                        indexToRemove.push(i);
                       }
                     }
-                    scope.relations.associated = [];
+                    indexToRemove.forEach(function(value) {
+                      scope.relations.associated.splice(value, 1);
+                    });
                   }
 
                   relationCount += scope.relations[idx].length;
