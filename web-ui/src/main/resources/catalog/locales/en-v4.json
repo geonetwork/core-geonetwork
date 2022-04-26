@@ -313,6 +313,10 @@
   "recordCreationOptions": "Record creation options",
   "batchEditConfigIsNotValid": "Batch edit configuration is invalid. It must be a JSON <pre>{\"insertMode\": \"gn_add\", \"xpath\": \"...\", \"value\": \"...\"}</pre>",
   "batchEditConfigIsNotJson": "Batch edit configuration is not JSON.",
+  "testLink": "Test",
+  "metadata/link": "Link analysis",
+  "metadata/link/excludedUrlPattern": "Exclude URL from link analysis",
+  "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)",
   "portals": "Change Portals",
   "switchPortals": "Switch to another Portal"
 }
