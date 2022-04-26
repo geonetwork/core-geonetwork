@@ -1,9 +1,12 @@
 package org.fao.geonet.api.site;
 
+import jeeves.server.context.ServiceContext;
 import junit.framework.Assert;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.kernel.harvest.HarvestManagerImpl;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SiteApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
+    protected HarvestManagerImpl _harvestManager;
+
+    @Autowired
     private WebApplicationContext wac;
 
     @Autowired
@@ -35,6 +41,13 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
     private MockHttpSession mockHttpSession;
 
+    @Before
+    public void configureHarvesterBeans() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        _harvestManager.init(serviceContext, false);
+    }
 
     @Test
     public void getSite() throws Exception {
