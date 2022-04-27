@@ -209,7 +209,16 @@ public class FilesystemStore implements PersistentStore {
                 Files.copy(privatePath, publicPath);
             }
 
-            if(StringUtils.isNotEmpty(landingPageFormatter)) {
+            // Link as landing page if the current formatter called
+            // is the landing page one. Here we don't have access to parameters
+            // so the match is not 100% proof. In Sextant language = all
+            // so it should be fine most of the time as the landing page is built
+            // on each indexing. If a user manually call the formatter,
+            // the cached copy will be returned.
+            // TODO: Make perfect match with pom landingPage.formatter and URL params if needed?
+            if(StringUtils.isNotEmpty(landingPageFormatter)
+                && landingPageFormatter.startsWith(key.formatterId)
+                && "all". equals(key.lang)) {
                 final Path landingPageDir = getLandingPageCacheDir().resolve(key.mdUuid);
                 final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid).resolve("index.html");
                 Files.createDirectories(landingPageDir);
