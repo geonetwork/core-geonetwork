@@ -45,8 +45,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -54,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -146,16 +145,13 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
                             if (qsMap.containsKey("redirectUrl")) {
-                                String redirectUrl = qsMap.get("redirectUrl").get(0);
-                                // redirectUrl should only be relative to the current server so remove the host from the url so that we don't allow redirects to other hosts.
-                                if (redirectUrl != null && !redirectUrl.startsWith("/")) {
-                                    UriComponents redirectUri = UriComponentsBuilder.fromUriString(redirectUrl).build();
-                                    redirectUrl = redirectUri.getPath() + (redirectUri.getQuery() != null ? "?" + redirectUri.getQuery() : "");
-                                }
-                                if (redirectUrl != null) {
-                                    response.sendRedirect(redirectUrl);
+                                URI redirectUri = new URI(qsMap.get("redirectUrl").get(0));
+                                // redirectUrl should only be relative to the current server. So only redirect if it is not an absolute path
+                                if (redirectUri != null && !redirectUri.isAbsolute()) {
+                                    response.sendRedirect(redirectUri.toString());
                                 } else {
-                                    // If the redirect url ends up being null  then lets redirect back to the context home.
+                                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
+                                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + qsMap.get("redirectUrl").get(0) + "'. Redirected to context home");
                                     response.sendRedirect(request.getContextPath());
                                 }
                             } else {
