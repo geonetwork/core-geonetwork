@@ -26,14 +26,22 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.harvester.push.tasks.DatabaseTask;
 import org.fao.geonet.harvester.push.tasks.ElasticSearchTask;
 import org.fao.geonet.harvester.push.tasks.HarvesterDataTask;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +52,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @RequestMapping(value = {
@@ -75,7 +86,7 @@ public class HarvesterDataPushApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @PreAuthorize("hasAuthority('Administrator')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Harvester data pushed."),
         @ApiResponse(responseCode = "404", description = "Harvester not found."),
@@ -86,8 +97,13 @@ public class HarvesterDataPushApi {
             description = "Harvester uuid",
             required = true)
         @PathVariable
-            String harvesterUuid
+            String harvesterUuid,
+        @Parameter(hidden = true)
+            HttpSession httpSession
     ) throws Exception {
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile profile = session.getProfile();
+
         String synchToolsPath = settingManager.getValue(HarvesterDataTask.SYSTEM_HARVESTER_SYNCH_TOOLS_PATH);
 
         if (StringUtils.isEmpty(synchToolsPath)) {
@@ -97,6 +113,16 @@ public class HarvesterDataPushApi {
         AbstractHarvester harvester = harvestManager.getHarvester(harvesterUuid);
         if (harvester == null) {
             throw new ResourceNotFoundException(String.format("Harvester with uuid '%s' not found.", harvesterUuid));
+        }
+
+        if (profile == Profile.UserAdmin) {
+            String harvesterOwnerGroup = harvester.getParams().getOwnerIdGroup();
+
+            List<Integer> userAdminGroups = AccessManager.getGroups(session, Profile.UserAdmin);
+
+            if (!userAdminGroups.contains(Integer.parseInt(harvesterOwnerGroup))) {
+                throw new NotAllowedException("User can't publish the data of this harvester.");
+            }
         }
 
         databaseTask.synch(harvesterUuid);
