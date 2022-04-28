@@ -385,13 +385,21 @@
 
               self.loadContext(r.data, map, additionalLayers);
             }, function(r) {
-              var msg = $translate.instant('mapLoadError', {
-                url: url
-              });
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: msg,
-                timeout: 0,
-                type: 'danger'});
+              var contextUsingLanguage = (gnViewerSettings.defaultContext.indexOf('{lang}') > -1);
+
+              if ((r.status == 404) && contextUsingLanguage) {
+                // Check to load the context file for the default language
+                var newUrl = gnViewerSettings.defaultContext.replace('{lang}', 'eng');
+                self.loadContextFromUrl(newUrl, map, additionalLayers);
+              } else {
+                var msg = $translate.instant('mapLoadError', {
+                  url: url
+                });
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: msg,
+                  timeout: 0,
+                  type: 'danger'});
+              }
             });
       };
 
