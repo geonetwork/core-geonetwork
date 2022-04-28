@@ -52,7 +52,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasGroupIds;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
@@ -253,20 +255,12 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        checkUserAllowed(httpSession, userIdentifier);
+        Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
         if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
@@ -308,20 +302,12 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        checkUserAllowed(httpSession, userIdentifier);
+        Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
         if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
@@ -377,20 +363,12 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        checkUserAllowed(httpSession, userIdentifier);
+        Optional<User> user = checkUserAllowed(httpSession, userIdentifier);
 
         Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
         if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
-                selectionIdentifier
-            ));
-        }
-
-        Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
-            throw new ResourceNotFoundException(String.format(
-                "User with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
@@ -412,30 +390,40 @@ public class UserSelectionsApi {
     }
 
 
-    private void checkUserAllowed(HttpSession httpSession, Integer userIdentifier) {
+    private Optional<User> checkUserAllowed(HttpSession httpSession, Integer userIdentifier) throws ResourceNotFoundException {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-
         if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
             myUserId.equals(Integer.toString(userIdentifier))) {
+
+            Optional<User> user = userRepository.findById(userIdentifier);
+            if (!user.isPresent()) {
+                throw new ResourceNotFoundException(String.format(
+                    "User with id '%d' does not exist.",
+                    userIdentifier
+                ));
+            }
+
             if (!(myUserId.equals(Integer.toString(userIdentifier))) && myProfile == Profile.UserAdmin) {
 
                 //--- retrieve session user groups and check to see whether this user is
                 //--- allowed to get this info
-                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).or(hasUserId
+                List<Integer> myUserGroupsAsUserAdmin = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).
+                    and(hasProfile(Profile.UserAdmin)));
+                // Now check if the userIdentifier is part of one of those useradmin groups.
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasGroupIds(myUserGroupsAsUserAdmin)).and(hasUserId
                     (userIdentifier)));
+
                 if (adminlist.isEmpty()) {
                     throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
                 }
             }
 
-            return;
-
+            return user;
         } else {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
-
     }
 }
