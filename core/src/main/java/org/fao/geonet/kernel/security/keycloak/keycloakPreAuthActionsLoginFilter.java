@@ -83,12 +83,9 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
-            String returningUrl = servletRequest.getRequestURL().toString();
-
-            // Append query string
-            if (servletRequest.getQueryString() != null) {
-                returningUrl = returningUrl + "?" + servletRequest.getQueryString();
-            }
+            // Get request uri which is a relative path. Absolute paths will be ignored if they are received as returning url.
+            String returningUrl = servletRequest.getRequestURI() +
+                (servletRequest.getQueryString() == null ? "" : "?" + servletRequest.getQueryString());
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
                 servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
