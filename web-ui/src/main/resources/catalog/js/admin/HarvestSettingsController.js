@@ -647,6 +647,19 @@
         form: []
       };
 
+      $scope.addBatchEdits = function(e) {
+        var array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        if (angular.isArray(array)) {
+          e.value = '<' + e.insertMode + '>' +
+                    e.value +
+                    '</' + e.insertMode + '>';
+          delete e.insertMode;
+          delete e.field;
+          array.push(e);
+          $scope.harvesterSelected.content.batchEdits = angular.toJson(array, 2);
+        }
+      };
+
       $scope.$watchCollection('extent', function(n, o) {
         if (n !== o) {
           if (!$scope.harvesterSelected.bboxFilter) {
