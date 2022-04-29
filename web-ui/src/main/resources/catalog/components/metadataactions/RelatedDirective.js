@@ -265,7 +265,7 @@
           restrict: 'A',
           templateUrl: '../../catalog/components/metadataactions/partials/relatedReplacedBy.html',
           scope: {
-            uuid: '=gnRecordIsReplacedBy',
+            uuid: '=gnRecordIsReplacedBy'
           },
           link: function(scope) {
             $http.post('../api/search/records/_search', {"query": {
