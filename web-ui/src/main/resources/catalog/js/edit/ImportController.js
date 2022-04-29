@@ -46,8 +46,9 @@
     '$scope',
     '$rootScope',
     'gnMetadataManager',
+    'gnUtilityService',
     '$window',
-    function($scope,  $rootScope, gnMetadataManager, $window) {
+    function($scope,  $rootScope, gnMetadataManager, gnUtilityService, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -133,6 +134,11 @@
         }
         $scope.unsupportedFile = false;
       });
+
+      $scope.cancelImportRecords = function (){
+        gnUtilityService.goBack("/board");
+      };
+
       $scope.importRecords = function(formId) {
         $scope.reports = [];
         $scope.error = null;
