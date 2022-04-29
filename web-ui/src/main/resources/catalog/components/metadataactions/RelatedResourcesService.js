@@ -313,6 +313,11 @@
               label: 'openRecord',
               action: openMd
             },
+            'MDCHILDREN' : {
+              iconClass: 'fa-child',
+              label: 'openRecord',
+              action: openMd
+            },
             'MDSIBLING' : {
               iconClass: 'fa-puzzle-piece',
               label: 'openRecord',
@@ -491,9 +496,11 @@
 
             // Metadata records
             if (type &&
-                (type === 'parent' ||
-                 type === 'children')) {
+                (type === 'parent')) {
               return 'MDFAMILY';
+            } else if (type &&
+              (type === 'children')) {
+              return 'MDCHILDREN';
             } else if (type &&
                (type === 'siblings')) {
               return 'MDSIBLING';
