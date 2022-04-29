@@ -258,7 +258,7 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                  $http.post('../api/search/records/_search?bucket=s101&' + that.buildRelatedTypesQueryParameter(), {"query": {
+                  $http.post('../api/search/records/_search?' + that.buildRelatedTypesQueryParameter(), {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {
