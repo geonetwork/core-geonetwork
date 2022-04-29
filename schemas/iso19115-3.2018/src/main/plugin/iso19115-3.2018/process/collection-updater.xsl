@@ -32,7 +32,7 @@
              select="''"/>
 
   <!-- (optional) The association type. Default: crossReference. -->
-  <xsl:param name="associationType" select="'crossReference'"/>
+  <xsl:param name="associationType" select="'isComposedOf'"/>
 
   <!-- (optional) The initiative type. -->
   <xsl:param name="initiativeType" select="''"/>
