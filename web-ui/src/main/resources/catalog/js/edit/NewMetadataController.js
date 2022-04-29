@@ -220,6 +220,10 @@
         $scope.resourceTitle = 'createA';
       }
 
+      $scope.cancelCreateMetadata = function (){
+        gnUtilityService.goBack("/board");
+      };
+
       $scope.createNewMetadata = function(isPublic) {
         var metadataUuid = '';
 
