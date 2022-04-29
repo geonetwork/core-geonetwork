@@ -5,7 +5,7 @@
   <li data-ng-repeat="md in items | orderBy:getOrderBy">
     <a data-ng-hide="md.remoteUrl"
        href=""
-       title="{{md.resourceTitle}}"
+       title="{{('link-' + type) | translate}}"
        gn-metadata-open="md"
        gn-formatter="formatter.defaultUrl">
       <i class="fa {{icon}}"/>
