@@ -72,8 +72,8 @@
   }]);
 
   module.factory('gnUtilityService',
-      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout',
-        function(gnPopup, $translate, $location, $rootScope, $timeout) {
+      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout', '$window',
+        function(gnPopup, $translate, $location, $rootScope, $timeout, $window) {
         /**
        * Scroll page to element.
        */
@@ -376,6 +376,24 @@
             }
           };
 
+          var goBack = function (fallback) {
+            if ($window.history.length > 0) {
+              var referrer = $window.document.referrer;
+
+              // Check if previous page was not the login page
+              if ((!referrer) || (referrer.indexOf("catalog.signin") == -1)) {
+                $window.history.back();
+                return;
+              }
+            }
+
+            if (fallback) {
+              $location.path(fallback);
+            } else {
+              $window.history.back();
+            }
+          };
+
         return {
           scrollTo: scrollTo,
           isInView: isInView,
@@ -390,7 +408,8 @@
           getUrlParameter: getUrlParameter,
           randomUuid: randomUuid,
           getPermalink: getPermalink,
-          openModal: openModal
+          openModal: openModal,
+          goBack: goBack
         };
       }]);
 

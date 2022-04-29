@@ -48,10 +48,10 @@
     'gnMetadataManager',
     'gnConfigService',
     'gnConfig',
+    'gnUtilityService',
     '$window',
-    '$location',
     function($scope,  $rootScope, gnMetadataManager,
-             gnConfigService, gnConfig, $window, $location) {
+             gnConfigService, gnConfig, gnUtilityService, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -143,17 +143,7 @@
       });
 
       $scope.cancelImportRecords = function (){
-        if ($window.history.length > 0) {
-          var referrer = $window.document.referrer;
-
-          // Check if previous page was not the login page
-          if ((!referrer) || (referrer.indexOf("catalog.signin") == -1)) {
-            $window.history.back();
-            return;
-          }
-        }
-
-        $location.path("/board");
+        gnUtilityService.goBack("/board");
       };
 
       $scope.importRecords = function(formId) {

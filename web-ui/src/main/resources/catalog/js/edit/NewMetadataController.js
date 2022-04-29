@@ -40,15 +40,12 @@
     'gnConfigService',
     'gnConfig',
     'Metadata',
-    '$window',
-    '$location',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService,
             gnUtilityService,
             gnMetadataManager,
             gnConfigService,
-            gnConfig, Metadata,
-             $window, $location) {
+            gnConfig, Metadata) {
 
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
@@ -224,17 +221,7 @@
       }
 
       $scope.cancelCreateMetadata = function (){
-        if ($window.history.length > 0) {
-          var referrer = $window.document.referrer;
-
-          // Check if previous page was not the login page
-          if ((!referrer) || (referrer.indexOf("catalog.signin") == -1)) {
-            $window.history.back();
-            return;
-          }
-        }
-
-        $location.path("/board");
+        gnUtilityService.goBack("/board");
       };
 
       $scope.createNewMetadata = function(isPublic) {
