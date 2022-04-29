@@ -258,6 +258,30 @@
     }]);
 
   module
+    .directive('gnRecordIsReplacedBy', [
+      '$http', 'Metadata',
+      function($http, Metadata) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedReplacedBy.html',
+          scope: {
+            uuid: '=gnRecordIsReplacedBy',
+          },
+          link: function(scope) {
+            $http.post('../api/search/records/_search', {"query": {
+                "query_string" : {
+                  "query": "+agg_associated_revisionOf:\"" + scope.uuid + "\""
+                }
+              }}).then(function(r) {
+                scope.items = r.data.hits.hits.map(function(r) {
+                  return new Metadata(r);
+                });
+            });
+          }
+        }
+      }]);
+
+  module
       .directive('gnRelated', [
         'gnRelatedService',
         'gnGlobalSettings',

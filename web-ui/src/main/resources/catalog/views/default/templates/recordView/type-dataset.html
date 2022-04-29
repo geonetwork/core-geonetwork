@@ -6,6 +6,8 @@
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
   </div>
   <div class="col-md-4 gn-md-side">
+    <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
+
     <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
 
     <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/summary.html'"/>

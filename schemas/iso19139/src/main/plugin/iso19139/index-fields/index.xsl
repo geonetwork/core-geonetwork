@@ -1104,6 +1104,7 @@
           </xsl:variable>
           <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'siblings', $properties)"/>
           <agg_associated><xsl:value-of select="$code"/></agg_associated>
+          <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
 
