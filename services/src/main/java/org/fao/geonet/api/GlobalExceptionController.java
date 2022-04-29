@@ -160,6 +160,7 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
+        NumberFormatException.class,
         HttpMessageNotReadableException.class,
         Exception.class,
         RuntimeException.class
