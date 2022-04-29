@@ -181,15 +181,14 @@ public class MetadataUtils {
         //
         // * All of them could be remote records
         Arrays.stream(types).forEach(type -> {
-            if (type == RelatedItemType.children
-                || type == RelatedItemType.associated
+            if (type == RelatedItemType.associated
                 || type == RelatedItemType.hasfeaturecats
                 || type == RelatedItemType.services
                 || type == RelatedItemType.hassources) {
                 queries.put(type,
                     new RelatedTypeDetails(
-                        String.format("+%s:(%s)",
-                            relatedIndexFields.get(type.value()), "\"" + md.getUuid() + "\"")
+                        String.format("+%s:\"%s\"",
+                            relatedIndexFields.get(type.value()), md.getUuid())
                     ));
             } else if (schemaPlugin != null
                 && (type == RelatedItemType.siblings
@@ -212,7 +211,7 @@ public class MetadataUtils {
 
 
                 Set<String> remoteRecords = new HashSet<>();
-                if (listOfAssociatedResources.size() > 0) {
+                if (type == RelatedItemType.parent || listOfAssociatedResources.size() > 0) {
                     Set<String> listOfUUIDs = listOfAssociatedResources.stream()
                         .map(AssociatedResource::getUuid)
                         .collect(Collectors.toSet());
@@ -232,9 +231,12 @@ public class MetadataUtils {
                     };
                     queries.put(type,
                         new RelatedTypeDetails(
-                            String.format("+uuid:(%s)",
+                            String.format("uuid:(%s)%s",
                             listOfUUIDs.stream()
-                                .collect(Collectors.joining("\" OR \"", "\"", "\""))),
+                                .collect(Collectors.joining("\" OR \"", "\"", "\"")),
+                                type == RelatedItemType.parent
+                                    ? " OR childUuid:" + "\"" + md.getUuid() + "\""
+                                    : ""),
                             listOfUUIDs,
                             recordsProperties,
                             remoteRecords
@@ -255,6 +257,26 @@ public class MetadataUtils {
                         listOfUUIDs
                     ));
                 allSearchedUuids.addAll(listOfUUIDs);
+            } else if (schemaPlugin != null && type == RelatedItemType.children) {
+                // Get associated with isComposedOf
+                Set<AssociatedResource> listOfAssociated = schemaPlugin.getAssociatedResourcesUUIDs(xml);
+                Set<String> isComposedOfList = listOfAssociated.stream()
+                    .filter(e -> "isComposedOf".equals(e.getAssociationType()))
+                    .map(AssociatedResource::getUuid)
+                    .collect(Collectors.toSet());
+
+                // and search for records associated and records having parentUuid equal to current
+                queries.put(type,
+                    new RelatedTypeDetails(
+                        String.format("%s:\"%s\" OR uuid:(%s)",
+                            relatedIndexFields.get(type.value()),
+                            md.getUuid(),
+                            isComposedOfList.stream()
+                                .collect(Collectors.joining("\" OR \"", "\"", "\""))
+                            ),
+                        isComposedOfList
+                    ));
+                allSearchedUuids.addAll(isComposedOfList);
             }
         });
 

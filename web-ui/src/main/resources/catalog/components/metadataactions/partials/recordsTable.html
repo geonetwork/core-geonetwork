@@ -9,8 +9,16 @@
       <tr data-ng-repeat="r in displayedRecords track by $index">
         <td data-ng-repeat="c in columnsConfig track by $index">
           <span data-ng-if="$index === 0">
-            <a gn-metadata-open="r.md"
+            <a data-ng-hide="r.md.remoteUrl"
+               gn-metadata-open="r.md"
                gn-formatter="formatter.defaultUrl">{{r[c]}}</a>
+            <a data-ng-show="r.md.remoteUrl"
+               data-ng-href="{{r.md.remoteUrl}}"
+               rel="noopener noreferrer"
+               target="_blank"
+               title="{{r[c]}}">
+              {{r[c]}}
+            </a>
           </span>
 
           <span data-ng-if="$index > 0 && !isArray(r[c])">{{r[c]}}</span>

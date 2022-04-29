@@ -71,6 +71,7 @@
   <!-- Parent may be encoded using an associatedResource.
   Define which association type should be considered as parent. -->
   <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
+  <xsl:variable name="childrenAssociatedResourceType" select="'isComposedOf'"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -1084,6 +1085,13 @@
           <xsl:if test="$associationType = $parentAssociatedResourceType">
             <parentUuid><xsl:value-of select="$code"/></parentUuid>
             <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'parent')"/>
+          </xsl:if>
+          <xsl:if test="$associationType = $childrenAssociatedResourceType">
+            <childUuid><xsl:value-of select="$code"/></childUuid>
+            <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink,
+                                gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title,
+                                 'children')"/>
           </xsl:if>
 
           <xsl:variable name="initiativeType"

@@ -188,6 +188,7 @@
         <i data-ng-if="md.origin === 'remote'"
            class="fa fa-external-link"
            title="{{'remoteRecord' | translate}}"></i>
+        <span data-ng-if="md.properties && md.properties.associationType != ''">- {{md.properties.associationType | translate}}</span>
       </span>
     </gn-metadata-card>
     <button class="btn btn-link"

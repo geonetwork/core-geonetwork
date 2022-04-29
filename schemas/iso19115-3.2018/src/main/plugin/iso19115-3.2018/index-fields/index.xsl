@@ -96,6 +96,7 @@
   <!-- Parent may be encoded using an associatedResource.
   Define which association type should be considered as parent. -->
   <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
+  <xsl:variable name="childrenAssociatedResourceType" select="'isComposedOf'"/>
 
   <!-- To avoid Document contains at least one immense term
   in field="resourceAbstract" (whose UTF8 encoding is longer
@@ -1176,6 +1177,11 @@
             <parentUuid><xsl:value-of select="$code"/></parentUuid>
             <xsl:copy-of select="gn-fn-index:build-record-link(
                                 $code, $xlink, mri:metadataReference/@xlink:title, 'parent')"/>
+          </xsl:if>
+          <xsl:if test="$associationType = $childrenAssociatedResourceType">
+            <childUuid><xsl:value-of select="$code"/></childUuid>
+            <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink, mri:metadataReference/@xlink:title, 'children')"/>
           </xsl:if>
 
           <xsl:variable name="initiativeType"

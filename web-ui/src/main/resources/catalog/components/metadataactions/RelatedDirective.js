@@ -346,22 +346,25 @@
                   // siblings, children, parent can contain elements from
                   // siblings or associated if linking is made in both direction
                   // Priority:
-                  // * children, parent unchanged
-                  // * associated (exclude siblings, children and parent)
-                  if (idx === 'associated') {
+                  // * children (can also be associated with isComposedOf),
+                  // and parent (can also be associated with partOfSeamlessDatabase)
+                  // are preserved
+                  // * Exclude children and parent from associated and siblings,
+                  // and also filter siblings from associated to avoid duplicates
+                  if (idx === 'associated' || idx === 'siblings') {
                     var indexToRemove = [];
-                    for (var i = 0; i < scope.relations.associated.length; i++) {
-                      if ([].concat(scope.relations.siblings || [],
-                                    scope.relations.parent || [],
-                                    scope.relations.children || []).filter(function (e) {
-                        return e && e.id === scope.relations.associated[i].id;
+                    for (var i = 0; i < scope.relations[idx].length; i++) {
+                      if ([].concat(idx === 'associated' ? (scope.md.related.siblings || []) : [],
+                                    scope.md.related.parent || [],
+                                    scope.md.related.children || []).filter(function (e) {
+                        return e && e.id === scope.relations[idx][i].id;
                       }).length > 0) {
                         // Exclude
                         indexToRemove.push(i);
                       }
                     }
-                    indexToRemove.forEach(function(value) {
-                      scope.relations.associated.splice(value, 1);
+                    indexToRemove.reverse().forEach(function(value) {
+                      scope.relations[idx].splice(value, 1);
                     });
                   }
 
