@@ -51,7 +51,7 @@
           <span class="input-group-addon" id="sizing-addon3">
             <span class="fa fa-filter"></span>
           </span>
-          <input title="{{'facetIncludeFilter' | translate}}"
+          <input title="{{::('facetIncludeFilter' | translate)}}"
                 ng-model="facet.include"
                 ng-model-options="{debounce: 300}"
                 ng-change="ctrl.filterTerms(facet)"

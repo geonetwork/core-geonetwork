@@ -20,7 +20,7 @@
 
     <li data-ng-if="user.isReviewerOrMore()">
       <a data-gn-click-and-spin="mdService.deleteMd(md)"
-         data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}">
+         data-gn-confirm-click="{{::('deleteRecordConfirm' | translate:md)}}">
         <i class="fa fa-trash-o"></i>
         <span translate>delete</span>
       </a>
