@@ -160,7 +160,6 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
-        NumberFormatException.class,
         HttpMessageNotReadableException.class,
         Exception.class,
         RuntimeException.class
@@ -350,10 +349,13 @@ public class GlobalExceptionController {
         MultipartException.class,
         DoiClientException.class
     })
-    public ApiError unsatisfiedParameterHandler(final Exception exception) {
+    public ApiError unsatisfiedParameterHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
 
-        return new ApiError("unsatisfied_request_parameter", exception);
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("unsatisfied_request_parameter", exception);
+        }
+        return null;
     }
 
     @ResponseBody
