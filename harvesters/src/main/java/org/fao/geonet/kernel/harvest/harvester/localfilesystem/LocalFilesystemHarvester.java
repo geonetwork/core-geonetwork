@@ -212,16 +212,6 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         String id = String.valueOf(metadata.getId());
 
-        // Try to avoid the following in sextant env
-        // https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/419#note_85986
-        //        java.lang.IllegalArgumentException: null source
-        //        at java.util.EventObject.<init>(EventObject.java:56)
-        //        at org.springframework.context.ApplicationEvent.<init>(ApplicationEvent.java:45)
-        //        at org.fao.geonet.events.md.MetadataEvent.<init>(MetadataEvent.java:41)
-        //        at org.fao.geonet.events.md.MetadataPublished.<init>(MetadataPublished.java:38)
-        //        at org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations.forceSetOperation(BaseMetadataOperations.java:182)
-        metadataManager.flush();
-
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
