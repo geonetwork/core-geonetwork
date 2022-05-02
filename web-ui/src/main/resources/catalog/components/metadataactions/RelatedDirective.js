@@ -187,10 +187,17 @@
           templateUrl: '../../catalog/components/metadataactions/partials/relatedSimpleList.html',
           scope: {
             md: '=gnRelatedList',
-            user: '='
+            user: '=',
+            title: '@?'
           },
           link: function(scope, element, attrs, controller) {
             scope.config = gnRelatedResources;
+            var count = 0;
+            scope.md && scope.md.related
+              && Object.keys(scope.md.related).forEach(function(key) {
+              count += scope.md.related[key].length;
+            });
+            scope.relationsFound = count > 0;
           }
         }
     }]);

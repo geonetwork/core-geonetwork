@@ -1,3 +1,4 @@
+<strong data-ng-if="relationsFound && title != ''">{{title}}</strong>
 <ul class="gn-related-list"
     data-ng-repeat="(type, items) in md.related track by $index"
     data-ng-init="mainType = config.getType(md, type);
