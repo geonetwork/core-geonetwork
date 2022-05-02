@@ -120,6 +120,14 @@
 
 <div class="row">
   <div class="col-md-12 gn-record">
+    <div data-ng-if="mdView.current.record.related.uuids"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-types="children"
+         data-title="{{'seriesComposedOf' | translate}}">
+    </div>
+
     <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
   </div>
 </div>

@@ -22,82 +22,45 @@
  */
 package org.fao.geonet.api.records;
 
-import static org.apache.fop.fonts.type1.AdobeStandardEncoding.p;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
-
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.google.common.collect.Lists;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.common.collect.Lists;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 /**
@@ -118,7 +81,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     @PersistenceContext
     private EntityManager _entityManager;
 
-    @Autowired private MetadataRepository metadataRepository;
+    @Autowired
+    private MetadataRepository metadataRepository;
 
     private String uuid;
     private int id;
@@ -180,15 +144,15 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         );
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid)
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid)
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string("resource_not_found"));
@@ -196,8 +160,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         for (String contentTypeWithoutBody : contentTypeWithoutBodyList) {
             mockMvc.perform(get("/srv/api/records/" + nonExistentUuid)
-                .session(mockHttpSession)
-                .accept(contentTypeWithoutBody))
+                    .session(mockHttpSession)
+                    .accept(contentTypeWithoutBody))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(isEmptyOrNullString()));
         }
@@ -218,24 +182,24 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid)
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
             .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid)
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
             .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid)
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XHTML_XML_VALUE))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XHTML_XML_VALUE))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XHTML_XML_VALUE))
             .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
@@ -244,8 +208,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         for (String contentTypeWihoutBody : contentTypeWithoutBodyList) {
             mockMvc.perform(get("/srv/api/records/" + this.uuid)
-                .session(mockHttpSession)
-                .accept(contentTypeWihoutBody))
+                    .session(mockHttpSession)
+                    .accept(contentTypeWihoutBody))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string(isEmptyOrNullString()));
         }
@@ -266,10 +230,10 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         contentTypes.put(MEF_V1_ACCEPT_TYPE, this.uuid + "/formatters/zip");
         contentTypes.put(MEF_V2_ACCEPT_TYPE, this.uuid + "/formatters/zip");
 
-        for(Map.Entry<String, String> entry : contentTypes.entrySet()) {
+        for (Map.Entry<String, String> entry : contentTypes.entrySet()) {
             mockMvc.perform(get("/srv/api/records/" + this.uuid)
-                .session(mockHttpSession)
-                .accept(entry.getKey()))
+                    .session(mockHttpSession)
+                    .accept(entry.getKey()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl(entry.getValue()));
@@ -286,7 +250,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         Object resp = toTest.invoke("local://srv/api/records/" + uuid + "/formatters/xml");
 
-        assertEquals("MD_Metadata", ((Element)resp).getName());
+        assertEquals("MD_Metadata", ((Element) resp).getName());
     }
 
     @Test
@@ -295,8 +259,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
@@ -306,8 +270,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/json")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
@@ -324,8 +288,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         // Add Schema locations
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "true")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
@@ -336,8 +300,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "false")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
@@ -356,8 +320,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         // Add Schema locations
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "true")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
@@ -377,8 +341,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         popularity = newPopularity;
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "false")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
@@ -402,16 +366,16 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/json")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("forbidden")))
             .andExpect(jsonPath("$.message").value(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
@@ -425,15 +389,15 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         String nonExistentUuid = UUID.randomUUID().toString();
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/json")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_JSON))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/xml")
-            .session(mockHttpSession)
-            .accept(MediaType.APPLICATION_XML))
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string("resource_not_found"));
@@ -459,8 +423,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //            .andExpect(content().string(startsWith(zipMagicNumber)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V1_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V1_ACCEPT_TYPE))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
@@ -469,8 +433,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().string(startsWith(zipMagicNumber)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V1_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V1_ACCEPT_TYPE))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
@@ -486,18 +450,18 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept("application/zip"))
+                .session(mockHttpSession)
+                .accept("application/zip"))
             .andExpect(status().isForbidden());
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V1_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V1_ACCEPT_TYPE))
             .andExpect(status().isForbidden());
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V2_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V2_ACCEPT_TYPE))
             .andExpect(status().isForbidden());
     }
 
@@ -508,22 +472,22 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         String nonExistentUuid = UUID.randomUUID().toString();
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept("application/zip"))
+                .session(mockHttpSession)
+                .accept("application/zip"))
             .andExpect(status().isNotFound())
             .andExpect(header().doesNotExist(HttpHeaders.CONTENT_TYPE))
             .andExpect(content().string(isEmptyOrNullString()));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V1_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V1_ACCEPT_TYPE))
             .andExpect(status().isNotFound())
             .andExpect(header().doesNotExist(HttpHeaders.CONTENT_TYPE))
             .andExpect(content().string(isEmptyOrNullString()));
 
         mockMvc.perform(get("/srv/api/records/" + nonExistentUuid + "/formatters/zip")
-            .session(mockHttpSession)
-            .accept(MEF_V2_ACCEPT_TYPE))
+                .session(mockHttpSession)
+                .accept(MEF_V2_ACCEPT_TYPE))
             .andExpect(status().isNotFound())
             .andExpect(header().doesNotExist(HttpHeaders.CONTENT_TYPE))
             .andExpect(content().string(isEmptyOrNullString()));

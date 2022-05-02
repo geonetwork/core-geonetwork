@@ -178,7 +178,8 @@ public class ISO19139SchemaPlugin
                 associatedResources.add(elementAsAssociatedResource(anchor));
             }
         }
-        // TODO: There is no support of parent relation using aggregation see parentAssociatedResourceType in ISO19115-3
+        // Parent relation is also frequently encoded using
+        // aggregation. See parentAssociatedResourceType in ISO19115-3
         return associatedResources;
     }
 
@@ -245,6 +246,9 @@ public class ISO19139SchemaPlugin
 
     private AssociatedResource elementAsAssociatedResource(Element ref) {
         String sibUuid = ref.getAttributeValue("uuidref");
+        if (StringUtils.isEmpty(sibUuid)) {
+            sibUuid = ref.getTextNormalize();
+        }
         String title = ref.getAttributeValue("title", XLINK);
         String url = ref.getAttributeValue("href", XLINK);
         return new AssociatedResource(sibUuid, "", "", url, title);

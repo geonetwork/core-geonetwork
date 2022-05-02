@@ -234,7 +234,7 @@
 
             // Load thumbnail list.
             var loadRelations = function() {
-              gnOnlinesrc.getAllResources(['thumbnail'])
+              gnOnlinesrc.getAllResources(['thumbnails'])
                 .then(function(data) {
                   var res = gnOnlinesrc.formatResources(
                     data,
