@@ -145,7 +145,7 @@
               <div data-ng-repeat="endpoint in harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints">
                 <p data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints.length > 1">End-point: {{endpoint.expectedNumberOfRecords}}</p>
                 <p><span data-translate="">harvestStatusExpected</span>: {{endpoint.expectedNumberOfRecords}}</p>
-                <p><span data-translate="">harvestStatusReceived</span>Received: {{endpoint.numberOfRecordsReceived}}</p>
+                <p><span data-translate="">harvestStatusReceived</span>: {{endpoint.numberOfRecordsReceived}}</p>
               </div>
             </div>
           </div>
@@ -188,6 +188,8 @@
               <p><span data-translate="">ingestStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.ingestStatus.totalRecords}}</p>
               <p><span data-translate="">ingestStatusAdded</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIngested}}</p>
               <p><span data-translate="">ingestStatusIndexed</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIndexed}}</p>
+
+              <p><span data-translate="">ingestStatusInfo</span></p>
             </div>
           </div>
         </div>

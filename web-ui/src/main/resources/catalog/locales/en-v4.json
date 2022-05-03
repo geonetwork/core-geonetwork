@@ -217,8 +217,9 @@
   "linkCheckerStatusProcessed": "Processed:",
   "linkCheckerStatusTotal": "Total:",
   "ingestStatusTotal": "Total records to process:",
-  "ingestStatusAdded": "Added:",
+  "ingestStatusAdded": "Added / updated:",
   "ingestStatusIndexed": "Indexed:",
+  "ingestStatusInfo": "If the metadata to process is already in the catalogue it has no changes, the numbers for the metadata to be added / updated and indexed will be lower than the total records to process",
   "facet-th_INSPIRE-priority-data-set": "Priority dataset",
   "facet-th_INSPIRE-priority-data-setNumber": "Number of priority datasets"
 }
