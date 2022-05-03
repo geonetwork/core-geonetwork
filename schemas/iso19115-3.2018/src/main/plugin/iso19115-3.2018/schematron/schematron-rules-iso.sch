@@ -226,7 +226,7 @@
       <sch:let name="description" value="gex:description[text() != '']"/>
 
       <sch:let name="geographicId"
-               value="gex:geographicElement/gex:EX_GeographicDescription/                          gex:geographicIdentifier[normalize-space(*) != '']"/>
+               value="gex:geographicElement/gex:EX_GeographicDescription/                          gex:geographicIdentifier[normalize-space(mcc:*) != '']"/>
 
       <sch:let name="geographicBox"
                value="gex:geographicElement/                          gex:EX_GeographicBoundingBox[                          normalize-space(gex:westBoundLongitude/gco:Decimal) != '' and                          normalize-space(gex:eastBoundLongitude/gco:Decimal) != '' and                          normalize-space(gex:southBoundLatitude/gco:Decimal) != '' and                          normalize-space(gex:northBoundLatitude/gco:Decimal) != ''                          ]"/>
