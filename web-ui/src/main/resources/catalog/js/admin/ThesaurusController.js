@@ -67,6 +67,8 @@
         gnGlobalSettings) {
 
       $scope.gnConfig = gnConfig;
+      $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace'];
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       /**
@@ -254,7 +256,7 @@
           title: '',
           description: '',
           filename: '',
-          defaultNamespace: 'http://www.mysite.org/thesaurus',
+          defaultNamespace: '',
           dname: 'theme',
           type: 'local'
         };
@@ -282,14 +284,14 @@
       };
 
       /**
-       * Build a namespace based on page location, thesaurus type
-       * and filename. eg. http://localhost:8080/thesaurus/theme/commune
+       * Build a namespace based on the namespace defined in settings.
+       * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs =
-            location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname + '/' +
-            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '');
+        $scope.thesaurusSuggestedNs = $scope.thesaurusNamespace
+          .replace('{{type}}', $scope.thesaurusSelected.dname)
+          .replace('{{filename}}',
+            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''));
       };
 
       $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
