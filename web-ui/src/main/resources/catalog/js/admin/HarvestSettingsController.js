@@ -433,15 +433,27 @@
               });
             });
       };
-      $scope.runHarvester = function() {
-        return $http.get('admin.harvester.run?_content_type=json&id=' +
+      $scope.runHarvester = function(harvesterId, linkCheckerOnly) {
+        if (linkCheckerOnly === true) {
+          return $http.get('admin.harvester.run?_content_type=json&skipHarvesting=true&id=' +
             $scope.harvesterSelected['@id'])
             .success(function(data) {
               $scope.$parent.loadHarvesters().then(function() {
                 refreshSelectedHarvester();
               });
             });
+        } else {
+          return $http.get('admin.harvester.run?_content_type=json&id=' +
+            $scope.harvesterSelected['@id'])
+            .success(function(data) {
+              $scope.$parent.loadHarvesters().then(function() {
+                refreshSelectedHarvester();
+              });
+            });
+        }
+
       };
+
       $scope.stopping = false;
       $scope.stopHarvester = function() {
         var status = $scope.harvesterSelected.options.status;

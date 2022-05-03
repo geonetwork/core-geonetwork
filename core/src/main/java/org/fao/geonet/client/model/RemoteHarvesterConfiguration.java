@@ -65,6 +65,8 @@ public class RemoteHarvesterConfiguration {
 
     private boolean executeLinkChecker;
 
+    public boolean skipHarvesting;
+
     public String getUrl() {
         return url;
     }
@@ -161,16 +163,24 @@ public class RemoteHarvesterConfiguration {
         this.executeLinkChecker = executeLinkChecker;
     }
 
+    public boolean getSkipHarvesting() {
+        return skipHarvesting;
+    }
+
+    public void setSkipHarvesting(boolean skipHarvesting) {
+        this.skipHarvesting = skipHarvesting;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RemoteHarvesterConfiguration that = (RemoteHarvesterConfiguration) o;
-        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && executeLinkChecker == that.executeLinkChecker && url.equals(that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(filter, that.filter) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint);
+        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && executeLinkChecker == that.executeLinkChecker && skipHarvesting == that.skipHarvesting && url.equals(that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(filter, that.filter) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, longTermTag, filter, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort, executeLinkChecker);
+        return Objects.hash(url, longTermTag, filter, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort, executeLinkChecker, skipHarvesting);
     }
 }

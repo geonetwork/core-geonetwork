@@ -1545,6 +1545,9 @@
     "groupRemoved": "Group removed",
     "userRemoved": "User removed",
     "confirmUiDelete":  "Are you sure you want to delete this UI configuration?",
-    "pushHarvesterData": "Push data to external catalogue"
+    "pushHarvesterData": "Push metadata",
+    "pushHarvesterDataHelp": "Push the harvested metadata to an external Geonetwork catalogue to publish it.",
+    "runLinkChecker": "Execute link checker",
+    "runLinkCheckerHelp": "Execute link checker to check the metadata links, to report potential issues, related to correctly established MD linkages among MS resources (Data set, View and Download services)."
 }
 

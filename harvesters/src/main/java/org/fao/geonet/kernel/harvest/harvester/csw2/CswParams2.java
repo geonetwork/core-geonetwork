@@ -60,6 +60,8 @@ public class CswParams2 extends AbstractParams {
 
     public boolean executeLinkChecker = true;
 
+    public boolean skipHarvesting = false;
+
     public List<Element> eltFilters = new ArrayList<Element>();
 
     public Element bboxFilter;
@@ -180,6 +182,7 @@ public class CswParams2 extends AbstractParams {
         copy.processQueueType = processQueueType;
         copy.doNotSort = doNotSort;
         copy.executeLinkChecker = executeLinkChecker;
+        copy.skipHarvesting = skipHarvesting;
 
         copy.eltFilters = eltFilters;
         copy.bboxFilter = bboxFilter;

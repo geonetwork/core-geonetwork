@@ -219,10 +219,21 @@
                       class="btn btn-success pull-right"
                       data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true || harvesterSelected.info.lastRunSuccess.length == 0"
                       data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
-                      data-gn-click-and-spin="pushHarvesterData(harvesterSelected['@id'])">
+                      data-gn-click-and-spin="pushHarvesterData(harvesterSelected['@id'])"
+                      title="{{'pushHarvesterDataHelp' | translate}}">
                 <span class="fa fa-database"></span>&nbsp;
                 <span data-translate="">pushHarvesterData</span>
               </button>
+              <button id="gn-harvest-settings-buttons-run-linkchecker"
+                      type="button"
+                      class="btn btn-success pull-right"
+                      data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true || harvesterSelected.info.lastRunSuccess.length == 0"
+                      data-gn-click-and-spin="runHarvester(harvesterSelected['@id'], true)"
+                      data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                      title="{{'runLinkCheckerHelp' | translate}}">
+                <span class="fa fa-gear"></span>&nbsp;
+                <span data-translate="">runLinkChecker</span>
+
               <button id="gn-harvest-settings-buttons-run"
                       type="button"
                       class="btn btn-success pull-right"

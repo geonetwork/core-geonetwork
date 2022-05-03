@@ -92,6 +92,7 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         remoteHarvesterConfiguration.setErrorConfigTotalRecordsChanged(params.errorConfigTotalRecordsChanged);
         remoteHarvesterConfiguration.setErrorConfigMaxPercentTotalRecordsChangedAllowed(params.errorConfigMaxPercentTotalRecordsChangedAllowed);
         remoteHarvesterConfiguration.setGetRecordQueueHint(params.processQueueType);
+        remoteHarvesterConfiguration.setSkipHarvesting(params.skipHarvesting);
 
         String filterConstraint = getFilterConstraint(params.eltFilters, params.bboxFilter);
         remoteHarvesterConfiguration.setFilter(filterConstraint);

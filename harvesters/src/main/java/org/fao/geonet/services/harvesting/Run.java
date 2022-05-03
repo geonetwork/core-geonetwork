@@ -23,15 +23,22 @@
 
 package org.fao.geonet.services.harvesting;
 
+import com.google.common.primitives.Longs;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.csw2.CswHarvester2;
+import org.fao.geonet.kernel.harvest.harvester.csw2.CswParams2;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
+import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
 
 //=============================================================================
 
@@ -54,6 +61,16 @@ public class Run implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         return Util.exec(params, context, new Util.Job() {
             public OperResult execute(HarvestManager hm, String id) throws Exception {
+                HarvesterSettingsManager harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
+
+                String harvesterUuid =  harvesterSettingsManager.getValue("harvesting/id:" + id + "/site/uuid");
+
+                AbstractHarvester ah = hm.getHarvester(harvesterUuid);
+                if (ah instanceof CswHarvester2) {
+                    boolean skipHarvesting = org.fao.geonet.Util.getParam(params, "skipHarvesting", false);
+                    ((CswParams2) ah.getParams()).skipHarvesting = skipHarvesting;
+                }
+
                 return hm.run(id);
             }
         });

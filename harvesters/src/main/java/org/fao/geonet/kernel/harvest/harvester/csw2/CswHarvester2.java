@@ -198,6 +198,9 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/elapsedTime",
                                         elapsedTime);
 
+                                    // Reset to false the skipHarvesting parameter
+                                    thiz.getParams().skipHarvesting = false;
+
                                     check = false;
                                 }
                             }

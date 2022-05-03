@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.harvesting;
 
+import com.google.common.primitives.Longs;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 
@@ -55,13 +56,15 @@ public class Util {
 
         for (Element el : paramList) {
             String id = el.getText();
-            String res = job.execute(hm, id).toString();
+            if (Longs.tryParse(id) != null) {
+                String res = job.execute(hm, id).toString();
 
-            el = new Element("id")
-                .setText(id)
-                .setAttribute(new Attribute("status", res));
+                el = new Element("id")
+                    .setText(id)
+                    .setAttribute(new Attribute("status", res));
 
-            response.addContent(el);
+                response.addContent(el);
+            }
         }
 
         return response;
