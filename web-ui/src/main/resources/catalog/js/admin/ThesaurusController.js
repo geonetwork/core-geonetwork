@@ -53,6 +53,7 @@
     '$translate',
     '$q',
     'gnConfig',
+    'gnConfigService',
     'gnSearchManagerService',
     'gnUtilityService',
     'gnGlobalSettings',
@@ -62,12 +63,16 @@
         $translate,
         $q,
         gnConfig,
+        gnConfigService,
         gnSearchManagerService,
         gnUtilityService,
         gnGlobalSettings) {
 
       $scope.gnConfig = gnConfig;
-      $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace'];
+      $scope.thesaurusNamespace = '';
+      gnConfigService.load().then(function(c) {
+        $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace'];
+      });
 
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
@@ -204,11 +209,13 @@
               '&pLang=' + langsList.join(',')
           ).success(function(data) {
             $scope.keywords = data;
-            gnSearchManagerService.gnSearch({
-              summaryOnly: 'true',
-              thesaurusIdentifier: $scope.thesaurusSelected.key}).
-                then(function(results) {
-                  $scope.recordsRelatedToThesaurus = parseInt(results.count);
+            var idTokens = $scope.thesaurusSelected.key.split('.');
+            $http.post('../api/search/records/_search', {"query": {
+                "exists" : {
+                  "field": 'th_' + idTokens[idTokens.length - 1]
+                }
+              }, "from": 0, "size": 0}).then(function(r) {
+                  $scope.recordsRelatedToThesaurus = parseInt(r.data.hits.total.value );
                 });
           }).finally(function() {
             $scope.searching = false;
@@ -288,10 +295,12 @@
        * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs = $scope.thesaurusNamespace
+        $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
+          ? $scope.thesaurusNamespace
           .replace('{{type}}', $scope.thesaurusSelected.dname)
           .replace('{{filename}}',
-            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''));
+            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''))
+        : '';
       };
 
       $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
