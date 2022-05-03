@@ -676,7 +676,7 @@ public class Thesaurus {
 
 
     public void writeConceptScheme(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
-        writeConceptScheme(thesaurusTitle, null, namespace);
+        writeConceptScheme(thesaurusTitle, null, null, null, namespace);
     }
 
     /**
@@ -684,6 +684,8 @@ public class Thesaurus {
      */
     public void writeConceptScheme(String thesaurusTitle,
                                    String description,
+                                   String identifier,
+                                   String type,
                                    String namespace) throws IOException, AccessDeniedException, GraphException {
 
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
@@ -695,22 +697,26 @@ public class Thesaurus {
 
         URI mySubject = myFactory.createURI(namespace);
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
-        URI titleURI = myFactory.createURI(namespaceDC, "title");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
-
         mySubject.addProperty(rdfType, skosClass);
 
-        Value valueObj = myFactory.createLiteral(thesaurusTitle);
-        myGraph.add(mySubject, titleURI, valueObj);
-
-        if (StringUtils.isNotEmpty(description)) {
-            URI descriptionURI = myFactory.createURI(namespaceDC, "description");
-            Value descriptionObj = myFactory.createLiteral(description);
-            myGraph.add(mySubject, descriptionURI, descriptionObj);
-        }
+        addElement("title", thesaurusTitle, myGraph, myFactory, mySubject);
+        addElement("description", description, myGraph, myFactory, mySubject);
+        addElement("identifier", identifier, myGraph, myFactory, mySubject);
+        addElement("type", type, myGraph, myFactory, mySubject);
 
         repository.addGraph(myGraph);
     }
+
+    private void addElement(String name, String value, Graph myGraph, ValueFactory myFactory, URI mySubject) {
+        String namespaceDC = "http://purl.org/dc/elements/1.1/";
+        if (StringUtils.isNotEmpty(value)) {
+            URI uri = myFactory.createURI(namespaceDC, name);
+            Value object = myFactory.createLiteral(value);
+            myGraph.add(mySubject, uri, object);
+        }
+    }
+
     //   <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
     //      <dc:title>main title</dc:title>
     //      <dc:title xml:lang="en">title en</dc:title>

@@ -269,7 +269,9 @@ public class ThesaurusManager implements ThesaurusFinder {
     }
 
     /**
-     * @param writeConceptScheme TODO
+     * @param writeConceptScheme Write the concept scheme and details
+     *                           (title, description, ...) in the graph.
+     *                           Used when creating local thesaurus.
      */
     public void addThesaurus(Thesaurus gst, boolean writeConceptScheme) throws Exception {
 
@@ -287,8 +289,12 @@ public class ThesaurusManager implements ThesaurusFinder {
         thesauriMap.put(thesaurusName, gst);
 
         if (writeConceptScheme) {
-            gst.writeConceptScheme(gst.getTitle(),
-                gst.getDescription(), gst.getDefaultNamespace());
+            gst.writeConceptScheme(
+                gst.getTitle(),
+                gst.getDescription(),
+                gst.getFname(),
+                gst.getDname(),
+                gst.getDefaultNamespace());
         }
     }
 
