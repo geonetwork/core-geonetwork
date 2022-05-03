@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -90,6 +91,8 @@ public class Thesaurus {
 
     private String title;
 
+    private String description;
+
     private String date;
 
     private String defaultNamespace;
@@ -107,25 +110,6 @@ public class Thesaurus {
     // see #retrieveDublinCore() for example
     private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<String,Map<String,String>>();
 
-/*    @SuppressWarnings("unused")
-    private String version;
-
-	@SuppressWarnings("unused")
-	private String name;
-
-	@SuppressWarnings("unused")
-	private String description;
-
-	@SuppressWarnings("unused")
-	private String source;
-
-	@SuppressWarnings("unused")
-	private String langue;
-
-	@SuppressWarnings("unused")
-	private String authority;
-*/
-
     /**
      * Available for subclasses.
      */
@@ -141,6 +125,11 @@ public class Thesaurus {
     }
 
     public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+        this(isoLanguageMapper, fname, null, null, null, type, dname, thesaurusFile, siteUrl, false);
+    }
+
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname,
+                     String tname, String description, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
         super();
         this.isoLanguageMapper = isoLanguageMapper;
         this.fname = fname;
@@ -159,6 +148,10 @@ public class Thesaurus {
             this.title = tname;
         } else {
             retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
+        }
+
+        if (description != null) {
+            this.description = description;
         }
     }
 
@@ -213,6 +206,10 @@ public class Thesaurus {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getDate() {
@@ -678,10 +675,16 @@ public class Thesaurus {
     }
 
 
+    public void writeConceptScheme(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
+        writeConceptScheme(thesaurusTitle, null, namespace);
+    }
+
     /**
      * Set the title of the thesaurus and save the graph to the repository.
      */
-    public void addTitleElement(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
+    public void writeConceptScheme(String thesaurusTitle,
+                                   String description,
+                                   String namespace) throws IOException, AccessDeniedException, GraphException {
 
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
@@ -693,13 +696,18 @@ public class Thesaurus {
         URI mySubject = myFactory.createURI(namespace);
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
         URI titleURI = myFactory.createURI(namespaceDC, "title");
-
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
 
         mySubject.addProperty(rdfType, skosClass);
 
         Value valueObj = myFactory.createLiteral(thesaurusTitle);
         myGraph.add(mySubject, titleURI, valueObj);
+
+        if (StringUtils.isNotEmpty(description)) {
+            URI descriptionURI = myFactory.createURI(namespaceDC, "description");
+            Value descriptionObj = myFactory.createLiteral(description);
+            myGraph.add(mySubject, descriptionURI, descriptionObj);
+        }
 
         repository.addGraph(myGraph);
     }
@@ -827,6 +835,13 @@ public class Thesaurus {
                 this.title = defaultTitle;
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
+
+            Element description = Xml.selectElement(thesaurusEl,
+                "skos:ConceptScheme/dc:description|skos:ConceptScheme/dcterms:description|" +
+                    "skos:Collection/dc:description|skos:Collection/dcterms:description|" +
+                    "rdf:Description/dc:description|rdf:Description/dcterms:description", theNSs);
+
+            this.description = description != null ? description.getValue() : "";
 
             try {
                 new java.net.URI(this.defaultNamespace);

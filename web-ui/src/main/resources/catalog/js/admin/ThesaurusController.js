@@ -247,6 +247,7 @@
         $scope.importAs = type;
         $scope.thesaurusSelected = {
           title: '',
+          description: '',
           filename: '',
           defaultNamespace: 'http://www.mysite.org/thesaurus',
           dname: 'theme',
@@ -286,6 +287,9 @@
             $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '');
       };
 
+      $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
+      $scope.$watch('thesaurusSelected.dname',  $scope.computeThesaurusNs);
+
       /**
        * Use the suggested namespace for the new thesaurus
        */
@@ -300,6 +304,7 @@
       $scope.createThesaurus = function() {
         var xml = '<request>' +
             '<tname>' + $scope.thesaurusSelected.title + '</tname>' +
+            '<description>' + $scope.thesaurusSelected.description + '</description>' +
             '<fname>' + $scope.thesaurusSelected.filename + '</fname>' +
             '<tns>' + $scope.thesaurusSelected.defaultNamespace + '</tns>' +
             '<dname>' + $scope.thesaurusSelected.dname + '</dname>' +

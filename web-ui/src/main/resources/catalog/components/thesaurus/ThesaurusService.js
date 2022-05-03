@@ -84,6 +84,21 @@
         }
         return title;
       },
+      getDescription: function() {
+        var description = this.props.description;
+        if (this.props.dublinCoreMultilinguals && this.props.dublinCoreMultilinguals.length>0) {
+          var UILangs= this.UILangs;
+          var descriptionInUiLanguage = this.props.dublinCoreMultilinguals.filter(function(v) {
+            return v.tag === 'description';
+          }).filter(function(v) {
+            return v.lang === UILangs[1];
+          });
+          if (descriptionInUiLanguage.length > 0) {
+            description = descriptionInUiLanguage[0].value;
+          }
+        }
+        return description;
+      },
       get: function() {
         return this.props;
       }
