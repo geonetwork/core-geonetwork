@@ -311,7 +311,7 @@
   <xsl:template mode="getMetadataCitation" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']"/>
 
   <xsl:template mode="getMetadataCitation"
-                match="gmd:MD_Metadata[$view = 'sextant']">
+                match="gmd:MD_Metadata[$view = ('sextant', 'sdn')]">
     <xsl:variable name="displayCitation"
                   select="count(.//gmd:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]) > 0"/>
     <xsl:variable name="doiUrl"
@@ -683,6 +683,46 @@
       </div>
     </div>
   </xsl:template>
+
+
+  <xsl:template mode="render-view"
+                match="field[template
+                            and contains(@xpath, 'pointOfContact')
+                            and $view = 'sdn']"
+                priority="3">
+    <xsl:param name="base" select="$metadata"/>
+
+    <div class="entry name gn-field-template">
+      <xsl:if test="@name">
+        <xsl:variable name="title"
+                      select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
+
+        <h4>
+          <xsl:value-of select="$title"/>
+        </h4>
+      </xsl:if>
+
+      <xsl:variable name="fieldXpath"
+                    select="@xpath"/>
+      <xsl:variable name="elements">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in"
+                          select="concat('/../', $fieldXpath)"/>
+        </saxon:call-template>
+      </xsl:variable>
+
+      <ul>
+      <xsl:for-each select="$elements/*">
+        <li><xsl:apply-templates mode="render-field" select=".">
+          <xsl:with-param name="layout" select="'short'"/>
+        </xsl:apply-templates>
+        </li>
+      </xsl:for-each>
+      </ul>
+    </div>
+  </xsl:template>
+
 
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"

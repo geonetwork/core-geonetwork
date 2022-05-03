@@ -357,6 +357,31 @@
                   <xsl:copy-of select="$title"/>
                 </h1>
               </xsl:if>
+              <div class="gn-harvester-details pull-right">
+                <xsl:variable name="doiUrl"
+                              select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
+
+                <xsl:variable name="sourceName"
+                              select="utils:getNodeName(/root/info/record/sourceinfo/sourceid, $language, false())"/>
+
+                <xsl:variable name="div" as="node()*">
+                  <xsl:attribute name="title" select="$sourceName"/>
+                  <xsl:if test="/root/info/record/harvestinfo/harvested = 'true'">
+                    <i class="fa fa-fw fa-cloud-download pull-right"/>
+                  </xsl:if>
+                  <img src="../../images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
+                </xsl:variable>
+                <xsl:choose>
+                  <xsl:when test="$doiUrl != ''">
+                    <a href="{$doiUrl}" title="DOI">
+                      <xsl:copy-of select="$div"/>
+                    </a>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="$div"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </div>
             </header>
           </div>
           <div class="col-md-3">
@@ -866,7 +891,8 @@
   <xsl:template mode="render-field"
                 match="*[*/name() = $configuration/editor/tableFields/table/@for and
                          $isFlatMode = true() and
-                         $view != 'sextant']"
+                         $view != 'sextant' and
+                         $view != 'sdn']"
                 priority="2001">
     <xsl:variable name="isFirstOfItsKind"
                   select="count(preceding-sibling::*[name() = current()/name()]) = 0"/>
