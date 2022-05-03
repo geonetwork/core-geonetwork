@@ -71,7 +71,8 @@
       $scope.gnConfig = gnConfig;
       $scope.thesaurusNamespace = '';
       gnConfigService.load().then(function(c) {
-        $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace'];
+        $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace']
+          || 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}';
       });
 
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
