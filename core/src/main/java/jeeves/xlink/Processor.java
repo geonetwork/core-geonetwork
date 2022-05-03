@@ -186,6 +186,7 @@ public final class Processor {
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
                 SpringLocalServiceInvoker springLocalServiceInvoker = srvContext.getBean(SpringLocalServiceInvoker.class);
                 remoteFragment = (Element)springLocalServiceInvoker.invoke(uri);
+                srvContext.setAsThreadLocal();
             } else {
                 // Avoid references to filesystem
                 if (uri.toLowerCase().startsWith("file://")) {
