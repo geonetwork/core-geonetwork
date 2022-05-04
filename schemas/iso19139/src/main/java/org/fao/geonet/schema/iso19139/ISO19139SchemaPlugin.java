@@ -122,8 +122,13 @@ public class ISO19139SchemaPlugin
                         List children = getChild(agId, "code", GMD)
                             .getChildren();
                         String sibUuid = "";
+                        String title = "";
+                        String url = "";
                         if (children.size() == 1) {
-                            sibUuid = ((Element) children.get(0)).getText();
+                            Element charStringOrAnchor = ((Element) children.get(0));
+                            sibUuid = charStringOrAnchor.getText();
+                            title = charStringOrAnchor.getAttributeValue("title", XLINK);
+                            url = charStringOrAnchor.getAttributeValue("href", XLINK);
                         }
                         final Element associationTypeEl = getChild(sib, "associationType", GMD);
                         String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", GMD)
@@ -134,7 +139,9 @@ public class ISO19139SchemaPlugin
                             initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", GMD)
                                 .getAttributeValue("codeListValue");
                         }
-                        AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
+
+                        AssociatedResource resource = new AssociatedResource(
+                            sibUuid, initiativeType, associationType, url, title);
                         listOfResources.add(resource);
                     }
                 } catch (Exception e) {
