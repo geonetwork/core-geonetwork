@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -47,69 +48,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-/**
- * Override delete methods in {@link org.springframework.data.jpa.repository.support.SimpleJpaRepository}
- * so that full subtree is deleted and implement {@link HarvesterSettingRepositoryCustom}.
- * <p/>
- * This class is not a typical *Impl because it needs to override the delete methods in {@link
- * org.springframework.data.jpa.repository.support.SimpleJpaRepository}.  In order to do this you
- * have to create a subclass of {@link org.springframework.data.jpa.repository.support.SimpleJpaRepository}
- * (or {@link GeonetRepositoryImpl} which is subclass) and have {@link GeonetRepositoryFactoryBean}
- * return the custom implementation.
- * <p/>
- * An alternative would be to use aspectJ and the around cut-point to modify the behaviour of the
- * method. I decided on this way because it is more common and better understood techniques.
- * <p/>
- * <p/>
- * In addition to overriding the delete methods this class also implements the {@link
- * HarvesterSettingRepositoryCustom} interface.  These methods are not in a normal *Impl class
- * because the extra class is not needed and the delete methods call methods in that interface.
- * <p/>
- * User: Jesse Date: 10/25/13 Time: 7:53 AM
- */
-public class HarvesterSettingRepositoryOverridesImpl extends GeonetRepositoryImpl<HarvesterSetting,
-    Integer> implements HarvesterSettingRepositoryCustom {
-    protected HarvesterSettingRepositoryOverridesImpl(Class<HarvesterSetting> domainClass, EntityManager entityManager) {
-        super(domainClass, entityManager);
-    }
-
-
-    /**
-     * Overrides the implementation in {@link org.springframework.data.jpa.repository.support.SimpleJpaRepository}.
-     * This implementation deleted the thentity and all children.
-     *
-     * @param setting the entity to delete
-     */
-    public void delete(final HarvesterSetting setting) {
-        delete(setting.getId());
-    }
-
-    /**
-     * Overrides the implementation in {@link org.springframework.data.jpa.repository.support.SimpleJpaRepository}.
-     * This implementation deleted the thentity and all children.
-     *
-     * @param settingId the id of the entity to delete
-     */
-    @Transactional
-    @Modifying(clearAutomatically=true)
-    public void delete(final int settingId) {
-        final List<Integer> toRemove = Lists.newArrayList(settingId);
-        int i = 0;
-        while (i < toRemove.size()) {
-            final int nextParentId = toRemove.get(i);
-            toRemove.addAll(findAllChildIds(nextParentId));
-            i++;
-        }
-
-        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        final CriteriaDelete<HarvesterSetting> delete = cb.createCriteriaDelete(HarvesterSetting.class);
-        final Root<HarvesterSetting> root = delete.from(HarvesterSetting.class);
-
-        delete.where(root.get(HarvesterSetting_.id).in(toRemove));
-
-        _entityManager.createQuery(delete).executeUpdate();
-    }
-
+public class HarvesterSettingRepositoryImpl implements HarvesterSettingRepositoryCustom {
+    @PersistenceContext
+    private EntityManager _entityManager;
 
     @Override
     public List<HarvesterSetting> findAllByPath(String pathToSetting) {

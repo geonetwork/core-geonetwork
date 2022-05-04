@@ -69,8 +69,6 @@ public class GeonetRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
 
             if (isQueryDslExecutor(repositoryInterface)) {
                 return super.getTargetRepository(metadata);
-            } else if (metadata.getDomainType().equals(HarvesterSetting.class)) {
-                return new HarvesterSettingRepositoryOverridesImpl((Class<HarvesterSetting>) metadata.getDomainType(), entityManager);
             } else {
                 return new GeonetRepositoryImpl((Class<T>) metadata.getDomainType(), entityManager);
             }
@@ -80,8 +78,6 @@ public class GeonetRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
 
             if (isQueryDslExecutor(metadata.getRepositoryInterface())) {
                 return super.getRepositoryBaseClass(metadata);
-            } else if (metadata.getDomainType().equals(HarvesterSetting.class)) {
-                return HarvesterSettingRepositoryOverridesImpl.class;
             } else {
                 return GeonetRepositoryImpl.class;
             }
