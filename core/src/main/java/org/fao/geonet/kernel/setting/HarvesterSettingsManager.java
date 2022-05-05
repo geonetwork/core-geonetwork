@@ -254,11 +254,12 @@ public class HarvesterSettingsManager {
         HarvesterSetting s = settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
-        
+
         //First we have to remove all children
         removeChildren(s.getId());
 
         settingsRepo.delete(s);
+        settingsRepo.flush();
         return true;
     }
 
