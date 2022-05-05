@@ -42,6 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="protocol-mapping.xsl"></xsl:import>
@@ -52,22 +53,7 @@
   <xsl:template match="/record">
     <xsl:variable name="cataloglang" select="'fre'"></xsl:variable>
 
-    <mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
-                     xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-                     xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                     xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
-                     xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
-                     xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-                     xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
-                     xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
-                     xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                     xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
-                     xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
-                     xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
-                     xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-                     xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
-                     xmlns:gml="http://www.opengis.net/gml/3.2">
+    <mdb:MD_Metadata>
       <mdb:metadataIdentifier>
         <mcc:MD_Identifier>
           <mcc:code>
@@ -306,7 +292,7 @@
                   <cit:CI_OnlineResource>
                     <cit:linkage>
                       <gco:CharacterString>
-                        <xsl:value-of select="url"/> <!-- html elements are present in this field! remove them -->
+                        <xsl:value-of select="java-xsl-util:html2textNormalized(url)"></xsl:value-of>
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
@@ -321,7 +307,7 @@
                     </cit:name>
                     <cit:description>
                       <gco:CharacterString>
-                        <xsl:value-of select="description"/>
+                        <xsl:value-of select="java-xsl-util:html2textNormalized(description)"></xsl:value-of>
                       </gco:CharacterString>
                     </cit:description>
                   </cit:CI_OnlineResource>
@@ -335,7 +321,7 @@
                 <cit:CI_OnlineResource>
                   <cit:linkage>
                     <gco:CharacterString>
-                      <xsl:value-of select="url"/>
+                      <xsl:value-of select="java-xsl-util:html2textNormalized(url)"></xsl:value-of>
                     </gco:CharacterString>
                   </cit:linkage>
                   <cit:protocol>
