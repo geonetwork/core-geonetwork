@@ -162,11 +162,16 @@
 
           var esFacetName = Object.keys(esFacetTemplate)[0];
           var esFacet = angular.extend({}, esFacetTemplate);
+          var orderedAlphabetical = sxtFacet.orderBy === 'alphabetical';
           esFacet[esFacetName].meta = angular.extend({
             displayFilter: !!sxtFacet.filter,
             collapsed: !sxtFacet.opened,
             labels: sxtFacet.labels
           }, esFacetTemplate[esFacetName].meta);
+          if (orderedAlphabetical) {
+            esFacetTemplate[esFacetName].meta.orderByTranslation = true;
+            esFacetTemplate[esFacetName].terms.order = { "_key" : "asc" };
+          }
           angular.extend(esFacetConfig, esFacet);
         } catch(e) {
           console.warn('A legacy Sextant v6 facet could not be migrated to v7\n'+
