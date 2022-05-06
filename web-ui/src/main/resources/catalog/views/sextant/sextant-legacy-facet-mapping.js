@@ -31,7 +31,7 @@
       'th_sextant-theme_tree.key': {
         'terms': {
           'field': 'th_sextant-theme_tree.key',
-          'size': 100,
+          'size': 300,
           'order': {'_key': 'asc'}
         },
         'meta': {
