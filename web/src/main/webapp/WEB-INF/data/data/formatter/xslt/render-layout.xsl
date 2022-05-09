@@ -368,8 +368,8 @@
           <div class="col-md-9">
             <header>
               <xsl:if test="$view != 'sdn'">
-                <div>&#160;
-                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+                <div>
+                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>&#160;
                 </div>
               </xsl:if>
               <xsl:if test="$related != ''">
