@@ -53,6 +53,7 @@
     '$translate',
     '$q',
     'gnConfig',
+    'gnConfigService',
     'gnSearchManagerService',
     'gnUtilityService',
     'gnGlobalSettings',
@@ -62,11 +63,18 @@
         $translate,
         $q,
         gnConfig,
+        gnConfigService,
         gnSearchManagerService,
         gnUtilityService,
         gnGlobalSettings) {
 
       $scope.gnConfig = gnConfig;
+      $scope.thesaurusNamespace = '';
+      gnConfigService.load().then(function(c) {
+        $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace']
+          || 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}';
+      });
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       /**
@@ -197,11 +205,13 @@
               '&pLang=' + langsList.join(',')
           ).success(function(data) {
             $scope.keywords = data;
-            gnSearchManagerService.gnSearch({
-              summaryOnly: 'true',
-              thesaurusIdentifier: $scope.thesaurusSelected.key}).
-                then(function(results) {
-                  $scope.recordsRelatedToThesaurus = parseInt(results.count);
+            var idTokens = $scope.thesaurusSelected.key.split('.');
+            $http.post('../api/search/records/_search', {"query": {
+                "exists" : {
+                  "field": 'th_' + idTokens[idTokens.length - 1]
+                }
+              }, "from": 0, "size": 0}).then(function(r) {
+                  $scope.recordsRelatedToThesaurus = parseInt(r.data.hits.total.value );
                 });
           }).finally(function() {
             $scope.searching = false;
@@ -247,8 +257,9 @@
         $scope.importAs = type;
         $scope.thesaurusSelected = {
           title: '',
+          description: '',
           filename: '',
-          defaultNamespace: 'http://www.mysite.org/thesaurus',
+          defaultNamespace: '',
           dname: 'theme',
           type: 'local'
         };
@@ -276,15 +287,20 @@
       };
 
       /**
-       * Build a namespace based on page location, thesaurus type
-       * and filename. eg. http://localhost:8080/thesaurus/theme/commune
+       * Build a namespace based on the namespace defined in settings.
+       * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs =
-            location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname + '/' +
-            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '');
+        $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
+          ? $scope.thesaurusNamespace
+          .replace('{{type}}', $scope.thesaurusSelected.dname)
+          .replace('{{filename}}',
+            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''))
+        : '';
       };
+
+      $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
+      $scope.$watch('thesaurusSelected.dname',  $scope.computeThesaurusNs);
 
       /**
        * Use the suggested namespace for the new thesaurus
@@ -300,6 +316,7 @@
       $scope.createThesaurus = function() {
         var xml = '<request>' +
             '<tname>' + $scope.thesaurusSelected.title + '</tname>' +
+            '<description>' + $scope.thesaurusSelected.description + '</description>' +
             '<fname>' + $scope.thesaurusSelected.filename + '</fname>' +
             '<tns>' + $scope.thesaurusSelected.defaultNamespace + '</tns>' +
             '<dname>' + $scope.thesaurusSelected.dname + '</dname>' +

@@ -30,11 +30,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -271,9 +269,11 @@ public class ThesaurusManager implements ThesaurusFinder {
     }
 
     /**
-     * @param writeTitle TODO
+     * @param writeConceptScheme Write the concept scheme and details
+     *                           (title, description, ...) in the graph.
+     *                           Used when creating local thesaurus.
      */
-    public void addThesaurus(Thesaurus gst, boolean writeTitle) throws Exception {
+    public void addThesaurus(Thesaurus gst, boolean writeConceptScheme) throws Exception {
 
         String thesaurusName = gst.getKey();
 
@@ -288,8 +288,13 @@ public class ThesaurusManager implements ThesaurusFinder {
         createThesaurusRepository(gst);
         thesauriMap.put(thesaurusName, gst);
 
-        if (writeTitle) {
-            gst.addTitleElement(gst.getTitle(), gst.getDefaultNamespace());
+        if (writeConceptScheme) {
+            gst.writeConceptScheme(
+                gst.getTitle(),
+                gst.getDescription(),
+                gst.getFname(),
+                gst.getDname(),
+                gst.getDefaultNamespace());
         }
     }
 
@@ -439,6 +444,9 @@ public class ThesaurusManager implements ThesaurusFinder {
             String dname = currentTh.getDname();
             elDname.addContent(dname);
 
+            Element description = new Element("description");
+            description.addContent(currentTh.getDescription());
+
             Element elFname = new Element("filename");
             String fname = currentTh.getFname();
             elFname.addContent(fname);
@@ -523,6 +531,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
             elLoop.addContent(elKey);
             elLoop.addContent(elDname);
+            elLoop.addContent(description);
             elLoop.addContent(elFname);
             elLoop.addContent(elTitle);
             elLoop.addContent(elMultilingualTitles);
