@@ -357,31 +357,6 @@
                   <xsl:copy-of select="$title"/>
                 </h1>
               </xsl:if>
-              <div class="gn-harvester-details pull-right">
-                <xsl:variable name="doiUrl"
-                              select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
-
-                <xsl:variable name="sourceName"
-                              select="utils:getNodeName(/root/info/record/sourceinfo/sourceid, $language, false())"/>
-
-                <xsl:variable name="div" as="node()*">
-                  <xsl:attribute name="title" select="$sourceName"/>
-                  <xsl:if test="/root/info/record/harvestinfo/harvested = 'true'">
-                    <i class="fa fa-fw fa-cloud-download pull-right"/>
-                  </xsl:if>
-                  <img src="../../images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
-                </xsl:variable>
-                <xsl:choose>
-                  <xsl:when test="$doiUrl != ''">
-                    <a href="{$doiUrl}" title="DOI">
-                      <xsl:copy-of select="$div"/>
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:copy-of select="$div"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </div>
             </header>
           </div>
           <div class="col-md-3">
@@ -444,6 +419,36 @@
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
+
+            <xsl:if test="/root/info/record/harvestinfo/harvested = 'true'">
+              <section class="gn-md-side-harvested-from">
+                <xsl:variable name="doiUrl"
+                              select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
+
+                <xsl:variable name="sourceName"
+                              select="utils:getNodeName(/root/info/record/sourceinfo/sourceid, $language, false())"/>
+
+                <h3>
+                  <xsl:variable name="div" as="node()*">
+                    <xsl:value-of select="$schemaStrings/recordIsFromSource"/>
+                    <xsl:value-of select="$sourceName"/>
+                    <img src="../../images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
+                  </xsl:variable>
+                  <xsl:choose>
+                    <xsl:when test="$doiUrl != ''">
+                      <a href="{$doiUrl}" title="DOI">
+                        <xsl:copy-of select="$div"/>
+                      </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <span>
+                        <xsl:copy-of select="$div"/>
+                      </span>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </h3>
+              </section>
+            </xsl:if>
 
             <xsl:if test="$view != 'cersat'">
               <xsl:call-template name="render-portal-link"/>
