@@ -609,8 +609,9 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', ['gnLangs', '$translate', 'gnConfigService',
-    function(gnLangs, $translate, gnConfigService) {
+  module.factory('Metadata', [
+    'gnLangs', '$translate', 'gnConfigService', 'gnGlobalSettings',
+    function(gnLangs, $translate, gnConfigService, gnGlobalSettings) {
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
@@ -641,6 +642,26 @@
           record.translate(key, this);
         }
       });
+
+      if (this.related) {
+        $.each(Object.keys(this.related), function(value, key) {
+          if (angular.isArray(record.related[key])) {
+            record.related[key] = record.related[key].map(function(r) {
+              return new Metadata(r);
+            })
+          }
+        });
+      }
+
+      // Open record not in current portal as a remote record
+      if (!gnGlobalSettings.isDefaultNode && this.origin === 'catalog') {
+        this.remoteUrl = '../../srv/'
+          + gnGlobalSettings.iso3lang
+          + '/catalog.search#/metadata/' + this._id;
+      } else if (this.origin === 'remote') {
+        this.remoteUrl = this.properties.url;
+        this.uuid = this._id;
+      }
 
       // See below; probably not necessary
       this.linksCache = [];
@@ -803,6 +824,17 @@
         }
         this.linksCache[filter] = matches;
         return matches;
+      },
+      isLinkDisabled: function(link) {
+        // TODO: Should be more consistent with schema-ident.xml filter section
+        var p = link && link.protocol;
+        if (p.match(/OGC:WMS|ESRI:REST|OGC:WFS/i) != null) {
+          return this.dynamic === false;
+        }
+        if (p.match(/WWW:DOWNLOAD.*|ATOM.*|DB.*|FILE.*/i) != null) {
+          return this.download === false;
+        }
+        return false;
       },
       /**
        * Return an object containing metadata contacts

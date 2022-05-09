@@ -1,8 +1,6 @@
 <div data-ng-search-form=""
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
-  <div data-ng-if="resultTemplate.indexOf('grid.html') === -1"
-       gn-grid-related-query="searchResults.records"></div>
 
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">

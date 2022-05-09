@@ -1297,6 +1297,7 @@ goog.require('gn_alert');
       $scope.redirectUrlAfterSign = window.location.href;
 
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnGlobalSettings.isDefaultNode = $scope.isDefaultNode;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;

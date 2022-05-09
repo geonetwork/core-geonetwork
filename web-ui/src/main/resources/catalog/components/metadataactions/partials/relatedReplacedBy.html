@@ -1,0 +1,17 @@
+<div data-ng-if="items.length"
+     class="gn-info-list-blocks gn-margin-bottom flex-row">
+  <span class="badge badge-rounded">
+    <i class="fa fa-fw fa-refresh"></i>
+  </span>
+  <div>
+    <h3 data-translate="">isReplacedBy</h3>
+  </div>
+</div>
+<div data-ng-if="items.length"
+     class="gn-info-list-blocks">
+  <ul class="row list-group gn-info-list">
+    <gn-metadata-card data-ng-repeat="md in items"
+                      md="md">
+    </gn-metadata-card>
+  </ul>
+</div>

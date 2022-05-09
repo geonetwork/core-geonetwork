@@ -29,6 +29,7 @@
   goog.require('gn_utility');
   goog.require('gn_filestore');
   goog.require('gn_urlutils_service');
+  goog.require('gn_related_directive');
 
   /**
    * @ngdoc overview
@@ -48,7 +49,8 @@
     'gn_filestore',
     'blueimp.fileupload',
     'ga_print_directive',
-    'gn_urlutils_service'
+    'gn_urlutils_service',
+    'gn_related_directive'
   ])
     .directive('gnRemoteRecordSelector', ['$http', 'gnGlobalSettings',
       function($http, gnGlobalSettings) {
@@ -232,7 +234,7 @@
 
             // Load thumbnail list.
             var loadRelations = function() {
-              gnOnlinesrc.getAllResources(['thumbnail'])
+              gnOnlinesrc.getAllResources(['thumbnails'])
                 .then(function(data) {
                   var res = gnOnlinesrc.formatResources(
                     data,

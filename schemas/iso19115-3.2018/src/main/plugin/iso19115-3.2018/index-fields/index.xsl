@@ -96,6 +96,7 @@
   <!-- Parent may be encoded using an associatedResource.
   Define which association type should be considered as parent. -->
   <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
+  <xsl:variable name="childrenAssociatedResourceType" select="'isComposedOf'"/>
 
   <!-- To avoid Document contains at least one immense term
   in field="resourceAbstract" (whose UTF8 encoding is longer
@@ -998,6 +999,7 @@
         <xsl:variable name="xlink"
                       select="@xlink:href"/>
         <xsl:copy-of select="gn-fn-index:build-record-link(@uuidref, $xlink, @xlink:title, 'fcats')"/>
+        <hasfeaturecat><xsl:value-of select="@uuidref"/></hasfeaturecat>
       </xsl:for-each>
 
 
@@ -1176,6 +1178,11 @@
             <xsl:copy-of select="gn-fn-index:build-record-link(
                                 $code, $xlink, mri:metadataReference/@xlink:title, 'parent')"/>
           </xsl:if>
+          <xsl:if test="$associationType = $childrenAssociatedResourceType">
+            <childUuid><xsl:value-of select="$code"/></childUuid>
+            <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink, mri:metadataReference/@xlink:title, 'children')"/>
+          </xsl:if>
 
           <xsl:variable name="initiativeType"
                         select="mri:initiativeType/*/@codeListValue"/>
@@ -1189,6 +1196,7 @@
                                 $code, $xlink, mri:metadataReference/@xlink:title,
                                 'siblings', $properties)"/>
           <agg_associated><xsl:value-of select="$code"/></agg_associated>
+          <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
 
