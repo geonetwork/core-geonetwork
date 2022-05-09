@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records;
 
+import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -159,7 +160,7 @@ public class InspireValidationApi {
     @RequestMapping(value = "/{metadataUuid}/validate/inspire",
         method = RequestMethod.PUT,
         produces = {
-            MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
@@ -274,7 +275,10 @@ public class InspireValidationApi {
 
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 
-            return testId;
+            JsonObject testIdResponse = new JsonObject();
+            testIdResponse.addProperty("testId", testId);
+
+            return testIdResponse.toString();
         } finally {
             context.clearAsThreadLocal();
             // context clear is handled scheduled InspireValidationRunnable above
