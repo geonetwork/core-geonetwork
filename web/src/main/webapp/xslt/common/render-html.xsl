@@ -75,8 +75,19 @@
         <meta name="twitter:site" content="{/root/gui/systemConfig/settings/system/site/name}" />
 
         <xsl:if test="/root/info/record/uuid">
-          <link rel="canonical" href="{$nodeUrl}api/records/{/root/info/record/uuid}" />
+          <xsl:choose>
+            <xsl:when test="/root/info/record/harvestinfo/harvested = 'true'">
+              <xsl:variable name="doiUrl"
+                            select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
+
+              <link rel="canonical" href="{$doiUrl}"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <link rel="canonical" href="{$nodeUrl}api/records/{/root/info/record/uuid}" />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
+
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="{/root/gui/url}/images/logos/favicon.png"/>
         <link href="{$nodeUrl}eng/rss.search?sortBy=changeDate"

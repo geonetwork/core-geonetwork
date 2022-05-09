@@ -424,7 +424,6 @@
               <section class="gn-md-side-harvested-from">
                 <xsl:variable name="doiUrl"
                               select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
-
                 <xsl:variable name="sourceName"
                               select="utils:getNodeName(/root/info/record/sourceinfo/sourceid, $language, false())"/>
 
@@ -432,7 +431,8 @@
                   <xsl:variable name="div" as="node()*">
                     <xsl:value-of select="$schemaStrings/recordIsFromSource"/>
                     <xsl:value-of select="$sourceName"/>
-                    <img src="../../images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
+                    <br/>
+                    <img src="{/root/gui/url}/images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
                   </xsl:variable>
                   <xsl:choose>
                     <xsl:when test="$doiUrl != ''">
