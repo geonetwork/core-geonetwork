@@ -13,6 +13,10 @@
 
   <xsl:param name="createNewKey"
              select="true()"/>
+  <xsl:param name="type"
+             select="''"/>
+  <xsl:param name="filename"
+             select="''"/>
 
   <xsl:variable name="separator"
                 select="'/'"/>
@@ -24,22 +28,24 @@
         <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
       -->
       <xsl:variable name="conceptScheme"
-                    select=".//rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']"/>
+                    select=".//rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']|skos:ConceptScheme"/>
+      <xsl:variable name="bounds"
+                    select=".//rdf:Description[rdf:type/@rdf:resource = 'http://www.opengis.net/gml#Envelope']"
+                    as="node()*"/>
       <!-- https://sextant.ifremer.fr/-->
+      <xsl:variable name="prefix"
+                    select="'https://vocab.ifremer.fr/collection/'"/>
       <xsl:variable name="baseUri"
-                    select="if ($conceptScheme/@rdf:about != '')
-                            then replace(replace(replace(
-                              $conceptScheme/@rdf:about,
-                              'http://geonetwork-opensource.org/',
-                              'https://registry.sextant.ifremer.fr/'),
-                              'http://www.ifremer.fr/thesaurus/sextant/',
-                              'https://registry.sextant.ifremer.fr/'),
-                            ' ', '')
-                            else 'https://registry.sextant.ifremer.fr/'"/>
+                    select="concat($prefix, $filename)"/>
+
+      <xsl:message>============================</xsl:message>
+      <xsl:message>Processing <xsl:value-of select="$baseUri"/></xsl:message>
       <xsl:for-each select="$conceptScheme">
         <xsl:copy>
           <xsl:attribute name="rdf:about" select="$baseUri"/>
           <xsl:copy-of select="*"/>
+          <dc:type><xsl:value-of select="$type"/></dc:type>
+          <dc:identifier><xsl:value-of select="$filename"/></dc:identifier>
         </xsl:copy>
       </xsl:for-each>
 
@@ -50,11 +56,8 @@
                     select=".//rdf:Description[(
                   not(rdf:type/@rdf:resource)
                   or rdf:type/@rdf:resource != 'http://www.w3.org/2004/02/skos/core#ConceptScheme')
-                 and skos:prefLabel != '']"/>
-      <xsl:message><xsl:copy-of select=".//rdf:Description[(
-                  not(rdf:type/@rdf:resource)
-                  or rdf:type/@rdf:resource != 'http://www.w3.org/2004/02/skos/core#ConceptScheme')
-                 and skos:prefLabel != '']"/></xsl:message>
+                 and skos:prefLabel != '']|skos:Concept[skos:prefLabel != '']"/>
+      <xsl:message><xsl:copy-of select="$existingConcepts"/></xsl:message>
       <!-- Create one concept per level. -->
       <xsl:variable name="concepts">
         <xsl:for-each-group select="$existingConcepts"
@@ -64,9 +67,11 @@
           <xsl:variable name="id"
                         select="count(preceding-sibling::*)"/>
           <xsl:variable name="freLabel"
-                        select="$root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'fr' and . != ''][1]"/>
+                        select="$root/(skos:Concept|rdf:Description)[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'fr' and . != ''][1]"/>
           <xsl:variable name="engLabel"
-                        select="$root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'en' and . != ''][1]"/>
+                        select="$root/(skos:Concept|rdf:Description)[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'en' and . != ''][1]"/>
+          <xsl:variable name="notes"
+                        select="$root/(skos:Concept|rdf:Description)[@rdf:about = $about]/skos:scopeNote"/>
           <xsl:variable name="frePath"
                         select="tokenize($freLabel, $separator)"/>
           <xsl:variable name="engPath"
@@ -92,6 +97,7 @@
               <key><xsl:value-of select="if ($frLabel != '') then $frLabel else $enLabel"/></key>
               <fre><xsl:value-of select="$frLabel"/></fre>
               <eng><xsl:value-of select="$enLabel"/></eng>
+              <xsl:copy-of select="$notes"/>
             </keyword>
           </xsl:for-each>
         </xsl:for-each-group>
@@ -100,18 +106,32 @@
       <xsl:variable name="conceptsWithIds">
         <xsl:for-each select="distinct-values($concepts/keyword/key[. != ''])">
           <xsl:sort select="." order="ascending"/>
-
-          <xsl:variable name="concept"
-                        select="$concepts/keyword[key = current()][1]/*"/>
-
           <keyword>
             <!-- Preserve ids. -->
             <xsl:variable name="existingConceptId"
                           select="$existingConcepts[skos:prefLabel = current()]/@rdf:about"/>
-            <id><xsl:value-of select="if ($existingConceptId != '')
-                                      then $existingConceptId
-                                      else concat($baseUri, '#', util:toString(util:randomUUID()))"/></id>
+            <xsl:variable name="newId"
+                          select="if (starts-with($existingConceptId[1], $baseUri)
+            or starts-with($existingConceptId[1], 'https://creativecommons.org/licenses')
+            or starts-with($existingConceptId[1], 'https://www.etalab.gouv.fr')
+            or contains($existingConceptId[1], 'inspire.ec.europa.eu')
+            )
+            then $existingConceptId
+            else concat($baseUri, '/', util:toString(util:randomUUID()))"/>
+
+            <xsl:message>Keyword <xsl:value-of select="$existingConceptId"/> = <xsl:value-of select="$newId"/> </xsl:message>
+            <id><xsl:value-of select="$newId"/></id>
             <xsl:copy-of select="$concepts/keyword[key = current()][1]/*"/>
+
+            <xsl:variable name="boundsId"
+                          select="$existingConcepts[skos:prefLabel = current()]/gml:BoundedBy/@rdf:nodeID"/>
+            <xsl:for-each select="$bounds[@rdf:nodeID = $boundsId]">
+              <gml:BoundedBy xmlns:gml="http://www.opengis.net/gml#">
+                <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
+                  <xsl:copy-of select="./gml:*"/>
+                </gml:Envelope>
+              </gml:BoundedBy>
+            </xsl:for-each>
           </keyword>
         </xsl:for-each>
       </xsl:variable>
@@ -125,9 +145,10 @@
         <rdf:Description rdf:about="{$k/id}">
           <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
           <skos:prefLabel xml:lang="en"><xsl:value-of select="$k/eng"/></skos:prefLabel>
-          <skos:definition xml:lang="en"></skos:definition>
           <skos:prefLabel xml:lang="fr"><xsl:value-of select="$k/fre"/></skos:prefLabel>
-          <skos:definition xml:lang="fr"></skos:definition>
+
+          <xsl:copy-of select="$k/skos:scopeNote"/>
+          <xsl:copy-of select="$k/gml:*"/>
 
           <xsl:variable name="broaderPath"
                         select="tokenize($k/key, '/')"/>
@@ -149,7 +170,7 @@
                           select="position()"/>
 
             <xsl:if test="$broaderId != $k/id
-                           and $broaderId != concat($baseUri, '#')
+                           and $broaderId != concat($baseUri, '/')
                            and $levelOfBroader = ($levelOfCurrent - 1)">
               <skos:broader rdf:resource="{$broaderId}"/>
             </xsl:if>

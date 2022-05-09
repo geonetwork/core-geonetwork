@@ -8,5 +8,5 @@ do
   THESAURUSFILE=`cut -d "/" -f4 <<< "$thesaurus"`
   echo $THESAURUSFILE
   #cp ../../../web/src/main/webapp/WEB-INF/data/config/codelist/local/thesauri/thesauri/$thesaurus $THESAURUSFILE
-  java -jar ~/.m2/repository/net/sf/saxon/saxon/9.1.0.8b-patch/saxon-9.1.0.8b-patch.jar -s:$THESAURUSFILE -xsl:../../../web/src/main/webapp/xslt/services/thesaurus/build-hierarchy-from-label-with-separator.xsl -o:../../../web/src/main/webapp/WEB-INF/data/config/codelist/$thesaurus
+  java -jar ~/.m2/repository/net/sf/saxon/saxon/9.1.0.8b-patch/saxon-9.1.0.8b-patch.jar -s:$THESAURUSFILE -xsl:../../../web/src/main/webapp/xslt/services/thesaurus/sextant-formatter.xsl -o:../../../web/src/main/webapp/WEB-INF/data/config/codelist/$thesaurus
 done

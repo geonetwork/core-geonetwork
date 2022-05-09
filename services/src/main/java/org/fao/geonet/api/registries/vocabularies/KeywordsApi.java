@@ -1396,11 +1396,11 @@ public class KeywordsApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Create a hierarchy from / separated labels (Sextant only)",
+        summary = "Apply Sextant format to thesaurus (ie. biuld hierarchy from / separated labels, cleanup URIs, add identifier and e for scheme.",
         description = ""
     )
     @RequestMapping(
-        value = "/{thesaurus:.+}/buildHierarchy",
+        value = "/{thesaurus:.+}/actions/sextantFormat",
         method = RequestMethod.POST)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Thesaurus updated."),
@@ -1410,22 +1410,56 @@ public class KeywordsApi {
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void buildHierarchyFromLabel(
+    public void applySextantFormat(
         @Parameter(
             description = "Thesaurus to update.",
             required = true)
         @PathVariable(value = "thesaurus")
-            String thesaurus,
-        HttpServletRequest request
+            String thesaurus
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
         Thesaurus thesaurusToUpdate = thesaurusMan.getThesauriMap().get(thesaurus);
+        applySextantFormat(thesaurusToUpdate);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Apply Sextant format to thesaurus (ie. biuld hierarchy from / separated labels, cleanup URIs, add identifier and e for scheme.",
+        description = ""
+    )
+    @RequestMapping(
+        value = "/actions/sextantFormat",
+        method = RequestMethod.POST)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Thesaurus updated."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+    })
+    @PreAuthorize("hasAuthority('UserAdmin')")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void applySextantFormatToAll() {
+        Map<String, Thesaurus> thesauriMap = thesaurusMan.getThesauriMap();
+        thesauriMap.forEach((k, t) -> {
+            try {
+                if (t.getKey().startsWith("local")) {
+                    applySextantFormat(t);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void applySextantFormat(Thesaurus thesaurusToUpdate) throws Exception {
         Path thesaurusFile = thesaurusToUpdate.getFile();
 
         Path skosTransform = dataDirectory.getWebappDir().resolve(
-            "xslt/services/thesaurus/build-hierarchy-from-label-with-separator.xsl");
-        Element transform = Xml.transform(Xml.loadFile(thesaurusFile), skosTransform);
+            "xslt/services/thesaurus/sextant-formatter.xsl");
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", thesaurusToUpdate.getDname());
+        String[] tokens = thesaurusToUpdate.getKey().split("\\.");
+        params.put("filename", tokens[tokens.length -1]);
+        Element transform = Xml.transform(
+            Xml.loadFile(thesaurusFile), skosTransform, params);
 
         XMLOutputter xmlOutput = new XMLOutputter();
         xmlOutput.setFormat(Format.getCompactFormat());

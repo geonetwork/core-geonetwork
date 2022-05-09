@@ -426,7 +426,8 @@
 
       $scope.buildHierarchy = function(formId) {
         return $http.post('../api/registries/vocabularies/' +
-          $scope.thesaurusSelected.key + '/buildHierarchy')
+          // 'actions/sextantFormat')
+          $scope.thesaurusSelected.key + '/actions/sextantFormat')
             .then(function(r) {
               searchThesaurusKeyword();
             });

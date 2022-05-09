@@ -116,10 +116,10 @@ public class UpdateElement implements Service {
         }
 
         if (thesaType.equals("place")) {
-            bean.setCoordEast(Util.getParam(params, "east"))
-                .setCoordNorth(Util.getParam(params, "north"))
-                .setCoordSouth(Util.getParam(params, "south"))
-                .setCoordWest(Util.getParam(params, "west"));
+            bean.setCoordEast(Util.getParam(params, "east", "0"))
+                .setCoordNorth(Util.getParam(params, "north", "0"))
+                .setCoordSouth(Util.getParam(params, "south", "0"))
+                .setCoordWest(Util.getParam(params, "west", "0"));
         }
 
         thesaurus.updateElement(bean, false);
