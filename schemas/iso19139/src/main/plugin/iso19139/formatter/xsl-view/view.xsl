@@ -712,7 +712,7 @@
         </saxon:call-template>
       </xsl:variable>
 
-      <ul>
+      <ul class="sdn-contact sxt-field-collapse">
       <xsl:for-each select="$elements/*">
         <li><xsl:apply-templates mode="render-field" select=".">
           <xsl:with-param name="layout" select="'short'"/>
