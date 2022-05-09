@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+  <recordIsFromSource>Fiche issue du catalogue </recordIsFromSource>
+
   <!-- XSD error translation -->
   <invalidElement>Contenu invalide à l'élément </invalidElement>
   <onElementOf>Un des éléments suivants : </onElementOf>
