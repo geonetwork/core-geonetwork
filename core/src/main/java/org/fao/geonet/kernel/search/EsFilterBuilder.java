@@ -77,7 +77,7 @@ public class EsFilterBuilder {
 
         final String portalFilter = EsFilterBuilder.buildPortalFilter(node);
         if (!"".equals(portalFilter)) {
-            query.append(" ").append(portalFilter);
+            query.append(" AND ").append(portalFilter);
         }
         return query.toString();
     }
