@@ -652,6 +652,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         history.setParams(ah.getParams().getNodeElement());
 
         historyRepository.save(history);
+
+        HarvesterSettingsManager harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
+        harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRunSuccess", "");
+
         return OperResult.OK;
     }
 
