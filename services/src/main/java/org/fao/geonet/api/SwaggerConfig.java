@@ -68,7 +68,7 @@ public class SwaggerConfig {
     public Docket api() {
         this.doc = new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(new ApiInfo(
-                "GeoNetwork Api Documentation (beta)",
+                "GeoNetwork Api Documentation",
                 "Learn how to access the catalog using the GeoNetwork REST API.",
                 API.VERSION_0_1,
                 "urn:tos",
