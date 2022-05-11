@@ -12,6 +12,7 @@
   <xsl:include href="process/add-columns-from-csv.xsl"/>
   <xsl:include href="process/add-values-from-csv.xsl"/>
   <xsl:include href="process/create-featurecatalogue-from-wfs.xsl"/>
+  <xsl:include href="process/spatineo-registration.xsl"/>
   <!--<xsl:include href="process/inspire-add-conformity.xsl"/>-->
 
   <xsl:variable name="processes">
@@ -21,6 +22,7 @@
     <p>create-featurecatalogue-from-wfs</p>
     <p>add-columns-from-csv</p>
     <p>add-values-from-csv</p>
+    <p>spatineo-registration</p>
     <!--<p>inspire-add-conformity</p>-->
   </xsl:variable>
 
