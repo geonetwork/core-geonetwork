@@ -34,7 +34,7 @@
   </xsl:template>
 
 
-  <xsl:template match="atom:*">
+  <xsl:template match="atom:*|georss:*|geo:*|inspire_dls:*">
     <xsl:call-template name="correct_ns_prefix">
       <xsl:with-param name="element" select="."/>
       <xsl:with-param name="prefix" select="''"/>
