@@ -292,7 +292,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             gst.writeConceptScheme(
                 gst.getTitle(),
                 gst.getDescription(),
-                gst.getFname(),
+                gst.getFname().replace(".rdf", ""),
                 gst.getDname(),
                 gst.getDefaultNamespace());
         }

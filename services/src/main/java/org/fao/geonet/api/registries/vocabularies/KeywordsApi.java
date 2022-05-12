@@ -1457,7 +1457,9 @@ public class KeywordsApi {
         Map<String, Object> params = new HashMap<>();
         params.put("type", thesaurusToUpdate.getDname());
         String[] tokens = thesaurusToUpdate.getKey().split("\\.");
-        params.put("filename", tokens[tokens.length -1]);
+        String[] subarray = (String[]) ArrayUtils.subarray(tokens, 2, tokens.length);
+        params.put("filename",
+            Arrays.stream(subarray).collect(Collectors.joining(".")));
         Element transform = Xml.transform(
             Xml.loadFile(thesaurusFile), skosTransform, params);
 
