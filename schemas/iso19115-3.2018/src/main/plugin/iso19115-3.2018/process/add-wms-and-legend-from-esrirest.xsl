@@ -17,7 +17,7 @@
   <xsl:param name="esriRestServiceUrl" select="''"/>
 
   <xsl:variable name="wmsUrl"
-                select="concat($esriRestServiceUrl, '/WMSServer?request=GetCapabilities&amp;service=WMS')"/>
+                select="concat(replace($esriRestServiceUrl, '/rest/', ''), '/WMSServer?request=GetCapabilities&amp;service=WMS')"/>
   <xsl:variable name="isWmsDefined"
                 select="count(//mrd:online
                                 [cit:protocol/*/text() = 'OGC:WMS'
