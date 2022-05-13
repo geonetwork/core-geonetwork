@@ -866,12 +866,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
         final String icon = params.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, params.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         return id;
     }
@@ -894,9 +895,11 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         context.getBean(SourceRepository.class).save(source);
         final String icon = copy.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, copy.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         setParams(copy);
     }
