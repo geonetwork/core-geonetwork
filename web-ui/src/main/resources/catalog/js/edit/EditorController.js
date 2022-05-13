@@ -540,9 +540,9 @@
         window.onbeforeunload = null;
 
         // if there is no history, attempt to close tab
-        if ($scope.redirectUrl != null) {
+        if ($scope.redirectUrl != null && $scope.redirectUrl != 'close') {
           window.location.replace($scope.redirectUrl);
-        } else if (window.history.length == 1) {
+        } else if (window.history.length == 1 || $scope.redirectUrl == 'close') {
           window.close();
           // This last point may trigger
           // "Scripts may close only the windows that were opened by it."
