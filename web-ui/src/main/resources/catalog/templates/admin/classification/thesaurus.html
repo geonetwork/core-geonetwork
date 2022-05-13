@@ -423,18 +423,18 @@
             <div class="form-group" data-ng-class="gnCreateThesaurus.defaultNamespace.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusNamespace</label>
               <div class="input-group">
+                <span class="input-group-addon">
+                  <label>
+                    <input type="checkbox"
+                           data-ng-model="customNamespace"
+                           aria-label="{{'customizeNamespace' | translate}}"/>
+                    <span data-translate="">customizeNamespace</span>
+                  </label>
+                </span>
                 <input type="text" name="defaultNamespace" class="form-control"
-                       data-ng-disabled="!isNew()"
+                       data-ng-disabled="!isNew() || !customNamespace"
                        data-ng-model="thesaurusSelected.defaultNamespace"
                        data-ng-required="true"/>
-                <span class="input-group-btn">
-                  <button class="btn btn-default" type="button"
-                          data-ng-show="isNew() && thesaurusSuggestedNs != ''"
-                          data-ng-click="useSuggestedNs()">
-                    <i class="fa fa-chevron-left"></i>
-                    {{"use"|translate}} {{thesaurusSuggestedNs}}
-                  </button>
-                </span>
               </div>
             </div>
           </form>

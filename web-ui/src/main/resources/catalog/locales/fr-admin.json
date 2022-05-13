@@ -1001,6 +1001,7 @@
     "thesaurusPlaceHelp": "Les thésaurus de type \"place\" contiennent une étendue pour chaque concept.",
     "thesaurusTitle": "Titre",
     "thesaurusDescription": "Description",
+    "customizeNamespace": "Personnaliser l'espace de nommage",
     "thesaurusUploadHelp": "Les thésaurus au <a href=\"http://www.w3.org/2004/02/skos/\">format SKOS </a> sont supportés. Les fichiers peuvent avoir une extension XML ou RDF.",
     "thesaurusUrl": "URL",
     "recordsRemoved": "fiche(s) supprimée(s)",

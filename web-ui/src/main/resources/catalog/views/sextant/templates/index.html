@@ -17,7 +17,7 @@
             <a type="button" class="btn btn-default"
                ng-if="allowLogin && !authenticated" href="{{getSignInUrl()}}"
                title="{{'signIn'|translate}}">
-              <i class="fa fa-sign-in"></i>
+              <i class="fa fa-fw fa-sign-in"></i>
               <span data-translate="">signIn</span>
             </a>
           </div>
@@ -41,20 +41,20 @@
             </button>
             <ul class="dropdown-menu" role="menu">
               <li class="btn-static"><a>
-                <i class="fa fa-user"></i>&nbsp;
+                <i class="fa fa-fw fa-user"></i>&nbsp;
                 <span ng-if="user.name && user.surname">{{user.name}} {{user.surname}}</span>
                 <span ng-if="!user.name || !user.surname">{{user.username}}</span>
                 </a></li>
               <li role="separator" class="divider"></li>
               <li data-ng-if="user.isAdministrator()"><a href="{{gnUrl}}admin.console">
-                <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
-              <li><a title="{{'adminConsole' | translate}}" href="{{gnUrl}}catalog.edit#/create" target="_blank">
-                <i class="fa fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
+                <i class="fa fa-fw fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
+              <li><a title="{{'mdNew' | translate}}" href="{{gnUrl}}catalog.edit#/create?redirectUrl=close" target="_blank">
+                <i class="fa fa-fw fa-file-o"></i>&nbsp;<span translate>mdNew</span></a></li>
               <li><a href="{{gnUrl}}catalog.edit#/import" target="_blank">
-                <i class="fa fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
+                <i class="fa fa-fw fa-arrow-circle-o-up"></i>&nbsp;<span translate>mdImport</span></a></li>
               <li role="separator" class="divider"></li>
               <li><a href="{{getSignOutUrl()}}" title="{{'signout' | translate}}">
-                <i class="fa fa-sign-out"></i>&nbsp;{{'signout' | translate}}</a></li>
+                <i class="fa fa-fw fa-sign-out"></i>&nbsp;{{'signout' | translate}}</a></li>
             </ul>
           </div>
         </div>
