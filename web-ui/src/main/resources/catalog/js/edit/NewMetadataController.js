@@ -192,6 +192,9 @@
         }
         tpls.sort(compare);
 
+        $scope.tplFilter = {
+          resourceTitle: ''
+        };
         $scope.tpls = tpls;
 
         var selectedTpl = $scope.tpls[0];
