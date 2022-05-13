@@ -695,7 +695,7 @@ public class Thesaurus {
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceDC = "http://purl.org/dc/elements/1.1/";
 
-        URI mySubject = myFactory.createURI(namespace, thesaurusTitle);
+        URI mySubject = myFactory.createURI(namespace);
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
         mySubject.addProperty(rdfType, skosClass);
