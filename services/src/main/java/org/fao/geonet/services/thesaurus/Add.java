@@ -60,7 +60,7 @@ public class Add extends NotInReadOnlyModeService {
             .getHandlerContext(Geonet.CONTEXT_NAME);
 
         String fname = Util.getParam(params, "fname");
-        String description = Util.getParam(params, "description");
+        String description = Util.getParam(params, "description", "");
         String tname = Util.getParam(params, "tname");
         String tnamespace = Util.getParam(params, "tns");
         String dname = Util.getParam(params, "dname");
