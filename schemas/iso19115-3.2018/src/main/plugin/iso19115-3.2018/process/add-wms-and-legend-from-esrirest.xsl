@@ -105,7 +105,7 @@
         <cit:function>
           <cit:CI_OnLineFunctionCode
             codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-            codeListValue="information"/>
+            codeListValue="browsing"/>
         </cit:function>
       </cit:CI_OnlineResource>
     </mrd:onLine>
@@ -161,7 +161,7 @@
                   </cit:protocol>
                   <cit:function>
                     <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                                               codeListValue="information.portrayal"/>
+                                               codeListValue="information"/>
                   </cit:function>
                 </cit:CI_OnlineResource>
               </cit:onlineResource>
