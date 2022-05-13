@@ -43,7 +43,7 @@
       <xsl:for-each select="$conceptScheme">
         <xsl:copy>
           <xsl:attribute name="rdf:about" select="$baseUri"/>
-          <xsl:copy-of select="*[local-name() != 'type' and local-name() != 'identifier']"/>
+          <xsl:copy-of select="*[name() != 'dc:type' and name() != 'dc:identifier']"/>
           <dc:type><xsl:value-of select="$type"/></dc:type>
           <dc:identifier><xsl:value-of select="$filename"/></dc:identifier>
         </xsl:copy>
