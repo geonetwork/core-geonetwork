@@ -172,9 +172,10 @@
         'gnSearchSettings',
         'gnRelatedResources',
         'gnExternalViewer',
+        '$timeout',
         function(gnRelatedService, gnGlobalSettings,
                  gnSearchSettings, gnRelatedResources,
-                 gnExternalViewer) {
+                 gnExternalViewer, $timeout) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -269,6 +270,11 @@
                        if (controller) {
                          controller.finishRequest(elem, scope.relationFound);
                        }
+
+                       $timeout(function() {
+                         sxtFormatterUtils
+                         && sxtFormatterUtils.processCollapsableField('.sxt-field-collapse');
+                       }, 100);
                      } , function() {
                       if (controller) {
                         controller.finishRequest(elem, false);
