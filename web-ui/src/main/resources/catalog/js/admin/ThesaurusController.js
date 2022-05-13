@@ -297,6 +297,10 @@
        * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
+        if (!creatingThesaurus) {
+          return;
+        }
+
         $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
           ? $scope.thesaurusNamespace
           .replace('{{type}}', $scope.thesaurusSelected.dname)
