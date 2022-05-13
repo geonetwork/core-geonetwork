@@ -432,7 +432,7 @@
                     <xsl:value-of select="$schemaStrings/recordIsFromSource"/>
                     <xsl:value-of select="$sourceName"/>
                     <br/>
-                    <img src="{/root/gui/url}/images/logos/{/root/info/record/sourceinfo/sourceid}.png"/>
+                    <img src="{/root/gui/url}/images/logos/{utils:getNodeLogo(/root/info/record/sourceinfo/sourceid)}"/>
                   </xsl:variable>
                   <xsl:choose>
                     <xsl:when test="$doiUrl != ''">

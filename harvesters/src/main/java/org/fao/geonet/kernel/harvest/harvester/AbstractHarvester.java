@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import com.google.common.io.Files;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +84,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.file.FileSystem;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
@@ -866,12 +868,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
         final String icon = params.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, params.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         return id;
     }
@@ -888,12 +891,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         //--- we update a copy first because if there is an exception CswParams
         //--- could be half updated and so it could be in an inconsistent state
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
         final String icon = copy.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, copy.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         setParams(copy);
     }
