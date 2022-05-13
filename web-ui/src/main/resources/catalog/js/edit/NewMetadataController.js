@@ -201,6 +201,9 @@
         }
         tpls.sort(compare);
 
+        $scope.tplFilter = {
+          resourceTitle: ''
+        };
         $scope.tpls = tpls;
         $scope.activeType = type;
         $scope.setActiveTpl($scope.tpls[0]);

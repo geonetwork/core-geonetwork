@@ -42,7 +42,7 @@
       <div class="panel-default panel">
         <div class="panel-heading">
           <span data-translate="">fromTemplate</span>
-          <strong>{{(activeTpl.title || '...') | translate}}</strong>
+          <strong>{{(activeTpl.resourceTitle || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
           <input type="text"
@@ -50,7 +50,7 @@
                  placeholder="{{'filter' | translate}}"
                  class="form-control"
                  data-ng-show="tpls.length > 10"
-                 data-ng-model="tplFilter.title"
+                 data-ng-model="tplFilter.resourceTitle"
                  data-ng-model-options="{debounce: 200}"
           />
 
