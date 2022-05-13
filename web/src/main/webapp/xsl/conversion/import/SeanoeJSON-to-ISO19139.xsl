@@ -207,33 +207,6 @@
             </gmd:MD_Keywords>
           </gmd:descriptiveKeywords>
 
-          <xsl:if test="oceanographic_cruise">
-            <gmd:descriptiveKeywords>
-              <gmd:MD_Keywords>
-                <xsl:for-each select="oceanographic_cruise">
-                  <gmd:keyword>
-                    <xsl:choose>
-                      <xsl:when test="doi">
-                        <gmx:Anchor xlink:href="https://doi.org/{doi}">
-                          <xsl:value-of select="name"/>
-                        </gmx:Anchor>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <gco:CharacterString>
-                          <xsl:value-of select="name"/>
-                        </gco:CharacterString>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </gmd:keyword>
-                </xsl:for-each>
-                <gmd:type>
-                  <gmd:MD_KeywordTypeCode codeListValue="cruise"
-                                          codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode"/>
-                </gmd:type>
-              </gmd:MD_Keywords>
-            </gmd:descriptiveKeywords>
-          </xsl:if>
-
 
           <xsl:if test="european_project">
             <gmd:descriptiveKeywords>
@@ -391,6 +364,32 @@
               </gmd:MD_AggregateInformation>
             </gmd:aggregationInfo>
           </xsl:for-each>
+
+          <xsl:for-each select="oceanographic_cruise">
+            <gmd:aggregationInfo>
+              <gmd:MD_AggregateInformation>
+                <gmd:aggregateDataSetIdentifier>
+                  <gmd:MD_Identifier>
+                    <gmd:code>
+                      <gmx:Anchor xlink:href="https://doi.org/{doi}"
+                                  xlink:title="{name}">
+                        <xsl:value-of select="doi"/>
+                      </gmx:Anchor>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:aggregateDataSetIdentifier>
+                <gmd:associationType>
+                  <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
+                                              codeListValue="crossReference"/>
+                </gmd:associationType>
+                <gmd:initiativeType>
+                  <gmd:DS_InitiativeTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_InitiativeTypeCode"
+                                             codeListValue="platform"/>
+                </gmd:initiativeType>
+              </gmd:MD_AggregateInformation>
+            </gmd:aggregationInfo>
+          </xsl:for-each>
+
 
           <gmd:language>
             <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
@@ -552,7 +551,7 @@
                   </gmd:protocol>
                   <gmd:name>
                     <gco:CharacterString>
-                      Landing Page
+                      DOI of the product
                     </gco:CharacterString>
                   </gmd:name>
                 </gmd:CI_OnlineResource>
@@ -572,8 +571,10 @@
               </gmd:level>
             </gmd:DQ_Scope>
           </gmd:scope>
-          <gmd:statement gco:nilReason="missing">
-            <gco:CharacterString/>
+          <gmd:statement>
+            <gco:CharacterString>
+              <xsl:value-of select="sensor_metadata"/>
+            </gco:CharacterString>
           </gmd:statement>
         </gmd:LI_Lineage>
       </gmd:lineage>
