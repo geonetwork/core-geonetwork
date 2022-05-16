@@ -73,6 +73,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -115,6 +116,9 @@ public class MetadataEditingApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    MetadataDraftRepository metadataDraftRepository;
+
     @ApiOperation(value = "Edit a record", notes = "Return HTML form for editing.", nickname = "editor")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE })
@@ -136,6 +140,21 @@ public class MetadataEditingApi {
 
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        SettingManager sm = context.getBean(SettingManager.class);
+
+        // Code to handle the flag METADATA_EDITING_CREATED_DRAFT:
+        //   1) Editing an approved metadata, without a working copy creates the working copy and should set
+        //      METADATA_EDITING_CREATED_DRAFT = true, to remove the working copy if the user cancel the editor form.
+        //
+        //   2) Editing an approved metadata, with a working copy should NOT set
+        //      METADATA_EDITING_CREATED_DRAFT = true, in this case should NOT be removed the working copy
+        //      if the user cancel the editor form.
+        boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        boolean flagCreateDraftFromApprovedMetadata = false;
+        if (isEnabledWorkflow) {
+            flagCreateDraftFromApprovedMetadata = (metadataDraftRepository.findOneByUuid(metadata.getUuid()) == null);
+        }
 
         // Start editing session
         IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
@@ -164,7 +183,7 @@ public class MetadataEditingApi {
                 sb.append("redirectUrl=catalog.edit");
             }
 
-            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, true);
+            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, flagCreateDraftFromApprovedMetadata);
 
             Element el = new Element("script");
             el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
