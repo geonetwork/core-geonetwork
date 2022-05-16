@@ -336,7 +336,7 @@ public final class XslUtil {
                 }
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue '" + key + "' error: " + e.getMessage(), e);
         }
         return "";
     }
@@ -591,9 +591,9 @@ public final class XslUtil {
                 return fieldValue;
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
-            return "";
+            Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage(), e);
         }
+        return "";
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
@@ -730,13 +730,13 @@ public final class XslUtil {
                 }
 
         // Triggers when the language can't be matched to a code
-            if (iso2LangCode == null) {
-                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
-                return iso3LangCode.substring(0, 2);
-            } else {
-                return iso2LangCode;
-            }
+        if (iso2LangCode == null) {
+            Log.info(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
+            return iso3LangCode.substring(0, 2);
+        } else {
+            return iso2LangCode;
         }
+    }
 
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
@@ -895,7 +895,7 @@ public final class XslUtil {
                 return outputter.output(new Document(metadata));
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getRecord error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getRecord '" + uuid + "' error: " + e.getMessage(), e);
         }
         return null;
     }
@@ -924,7 +924,7 @@ public final class XslUtil {
 
             return e.evaluate();
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil evaluate error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil evaluate '" + formula + "' error: " + e.getMessage(), e);
             return null;
         }
     }
@@ -974,7 +974,7 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -1030,7 +1030,7 @@ public final class XslUtil {
         try {
             return java.net.URLDecoder.decode(str, "UTF-8");
         } catch (Exception ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
