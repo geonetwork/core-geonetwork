@@ -1,13 +1,9 @@
-
 @sxt-base-color-dark: #2F6383;
 @sxt-base-color: lighten(@sxt-base-color-dark, 20%);
 @sxt-base-color: #4BA2D9;
 @sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
 @sxt-base-color-light: #81BEE4;
 @sxt-font-color: black;
-
-
-
 
 .panel-body, div.row {
   & > div.row {
@@ -20,4 +16,8 @@
     border-bottom: 3px solid #005499;
     color: #005499;
   }
+}
+// overrides CSS from CMS where overflow is set to hidden
+.container {
+  overflow: visible !important;
 }
