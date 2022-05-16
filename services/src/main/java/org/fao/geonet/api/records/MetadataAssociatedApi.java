@@ -135,7 +135,6 @@ public class MetadataAssociatedApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext context = ApiUtils.createServiceContext(request);
 
         if (type.length == 0) {
