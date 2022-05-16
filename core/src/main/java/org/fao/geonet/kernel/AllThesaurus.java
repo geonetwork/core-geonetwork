@@ -276,7 +276,7 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @Override
-    public void addTitleElement(String thesaurusTitle) throws IOException, AccessDeniedException, GraphException {
+    public void writeConceptScheme(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
         throw new UnsupportedOperationException();
     }
 

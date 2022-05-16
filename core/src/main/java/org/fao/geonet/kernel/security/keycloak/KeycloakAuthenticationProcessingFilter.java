@@ -34,9 +34,9 @@ import org.keycloak.adapters.springsecurity.filter.QueryParamPresenceRequestMatc
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -52,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -94,7 +95,8 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
 
             String username = "UNIDENTIFIED";
             try {
-                UserDetails userDetails = keycloakUserUtils.setupUser(request, keycloakPrincipal);
+                // Get the user details from the token and also apply changes to the database if needed.
+                UserDetails userDetails = keycloakUserUtils.getUserDetails(keycloakPrincipal.getKeycloakSecurityContext().getToken(), true);
 
                 if (userDetails != null) {
                     username = userDetails.getUsername();
@@ -106,13 +108,12 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                                         + userDetails.getAuthorities());
                     }
 
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    auth.setDetails(keycloakPrincipal.getKeycloakSecurityContext());
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    context.setAuthentication(authResult);
+                    SecurityContextHolder.setContext(context);
 
                     Log.info(Geonet.SECURITY, "User '" + userDetails.getUsername()
-                            + "' properly authenticated via Keycloak");
+                            + "' authenticated via Keycloak");
 
 
                     if (((KeycloakAuthenticationToken) authResult).isInteractive()) {
@@ -144,7 +145,15 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
                             if (qsMap.containsKey("redirectUrl")) {
-                                response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                                URI redirectUri = new URI(qsMap.get("redirectUrl").get(0));
+                                // redirectUrl should only be relative to the current server. So only redirect if it is not an absolute path
+                                if (redirectUri != null && !redirectUri.isAbsolute()) {
+                                    response.sendRedirect(redirectUri.toString());
+                                } else {
+                                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
+                                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + qsMap.get("redirectUrl").get(0) + "'. Redirected to context home");
+                                    response.sendRedirect(request.getContextPath());
+                                }
                             } else {
                                 // If the redirect url did not exist then lets redirect back to the context home.
                                 response.sendRedirect(request.getContextPath());

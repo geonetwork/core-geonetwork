@@ -53,6 +53,7 @@
     '$translate',
     '$q',
     'gnConfig',
+    'gnConfigService',
     'gnSearchManagerService',
     'gnUtilityService',
     'gnGlobalSettings',
@@ -62,11 +63,18 @@
         $translate,
         $q,
         gnConfig,
+        gnConfigService,
         gnSearchManagerService,
         gnUtilityService,
         gnGlobalSettings) {
 
       $scope.gnConfig = gnConfig;
+      $scope.thesaurusNamespace = '';
+      gnConfigService.load().then(function(c) {
+        $scope.thesaurusNamespace = gnConfig['system.metadata.thesaurusNamespace']
+          || 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}';
+      });
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       /**
@@ -78,6 +86,7 @@
        * The list of thesaurus
        */
       $scope.thesaurus = [];
+      $scope.thesaurusTypes = ['external', 'local'];
       /**
        * The currently selected thesaurus
        */
@@ -91,6 +100,7 @@
        * on other thesaurus properties
        */
       $scope.thesaurusSuggestedNs = '';
+      $scope.customNamespace = false;
       /**
        * The thesaurus URL to upload
        */
@@ -196,11 +206,13 @@
               '&pLang=' + langsList.join(',')
           ).success(function(data) {
             $scope.keywords = data;
-            gnSearchManagerService.gnSearch({
-              summaryOnly: 'true',
-              thesaurusIdentifier: $scope.thesaurusSelected.key}).
-                then(function(results) {
-                  $scope.recordsRelatedToThesaurus = parseInt(results.count);
+            var idTokens = $scope.thesaurusSelected.key.split('.');
+            $http.post('../api/search/records/_search', {"query": {
+                "exists" : {
+                  "field": 'th_' + idTokens[idTokens.length - 1]
+                }
+              }, "from": 0, "size": 0}).then(function(r) {
+                  $scope.recordsRelatedToThesaurus = parseInt(r.data.hits.total.value );
                 });
           }).finally(function() {
             $scope.searching = false;
@@ -208,18 +220,47 @@
         }
       };
 
+      $scope.thesaurusTypeBySchema = [];
+      function loadKeywordTypeForSchema(schema) {
+        var url = '../api/standards/'
+          + schema.id + '/codelists/'
+          + schema.ns + ':MD_KeywordTypeCode';
+        $http.get(url, {cache: true}).then(function(r) {
+          angular.forEach(r.data, function(o, k) {
+            $scope.thesaurusTypeBySchema.push({
+              schema: schema.id,
+              key: k,
+              label: o
+            });
+          })
+        });
+      }
+      function loadKeywordTypeCodes() {
+        var schemas = [
+          {id: 'iso19139', ns: 'gmd'},
+          {id: 'iso19115-3.2018', ns: 'mri'}];
+        $scope.thesaurusTypeBySchema = [];
+        for (var i = 0; i < schemas.length; i ++) {
+          loadKeywordTypeForSchema(schemas[i]);
+        }
+      }
+
       /**
        * Add a new local thesaurus and open the modal
        */
       $scope.addThesaurus = function(type) {
         creatingThesaurus = true;
 
+        loadKeywordTypeCodes();
+
         $scope.thesaurusImportType = 'theme';
+        $scope.thesaurusImportOrigin = $scope.thesaurusTypes[0];
         $scope.importAs = type;
         $scope.thesaurusSelected = {
           title: '',
+          description: '',
           filename: '',
-          defaultNamespace: 'http://www.mysite.org/thesaurus',
+          defaultNamespace: '',
           dname: 'theme',
           type: 'local'
         };
@@ -247,15 +288,29 @@
       };
 
       /**
-       * Build a namespace based on page location, thesaurus type
-       * and filename. eg. http://localhost:8080/thesaurus/theme/commune
+       * Build a namespace based on the namespace defined in settings.
+       * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs =
-            location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname + '/' +
-            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, '');
+        if (!creatingThesaurus) {
+          return;
+        }
+        
+        $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
+          ? $scope.thesaurusNamespace
+            .replace('{{type}}', $scope.thesaurusSelected.dname)
+            .replace('{{filename}}',
+              $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''))
+          : '';
+
+        if (!$scope.customNamespace) {
+          $scope.useSuggestedNs();
+        }
       };
+
+      $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
+      $scope.$watch('thesaurusSelected.dname',  $scope.computeThesaurusNs);
+      $scope.$watch('customNamespace',  $scope.computeThesaurusNs);
 
       /**
        * Use the suggested namespace for the new thesaurus
@@ -271,6 +326,7 @@
       $scope.createThesaurus = function() {
         var xml = '<request>' +
             '<tname>' + $scope.thesaurusSelected.title + '</tname>' +
+            '<description>' + $scope.thesaurusSelected.description + '</description>' +
             '<fname>' + $scope.thesaurusSelected.filename + '</fname>' +
             '<tns>' + $scope.thesaurusSelected.defaultNamespace + '</tns>' +
             '<dname>' + $scope.thesaurusSelected.dname + '</dname>' +
@@ -442,11 +498,20 @@
         });
       };
 
+      function findKeywordByUri(uri) {
+        for (var i = 0; i < $scope.keywords.length; i ++) {
+          if ($scope.keywords[i].uri === uri) {
+            return $scope.keywords[i];
+          }
+        }
+        return undefined;
+      }
+
       /**
        * Edit an existing keyword, open the modal, search relations
        */
       $scope.editKeyword = function(k) {
-        $scope.keywordSelected = angular.copy(k);
+        $scope.keywordSelected = angular.copy(angular.isObject(k) ? k : findKeywordByUri(k));
         $scope.keywordSelected.oldId = $scope.keywordSelected.uri;
 
         // create geo object (if not already there)

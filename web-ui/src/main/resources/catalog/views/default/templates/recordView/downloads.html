@@ -1,0 +1,11 @@
+<div data-ng-if="md.related || md.link"
+     data-gn-related-container="md"
+     data-mode="::viewConfig.distributionConfig.layout || ''"
+     data-related-config="::viewConfig.distributionConfig.sections">
+</div>
+
+<div data-ng-if="mdView.current.record.orderingInstructions.length > 0">
+  <h2 data-translate="">orderingInstructions</h2>
+  <p data-ng-repeat="o in mdView.current.record.orderingInstructions"
+     data-ng-bind-html="o | linky | newlines"/>
+</div>

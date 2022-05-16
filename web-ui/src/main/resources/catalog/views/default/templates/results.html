@@ -1,16 +1,32 @@
 <div data-ng-search-form=""
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
-  <div gn-grid-related-query="searchResults.records"></div>
+
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
+        <div ng-if="showMapInFacet">
+          <div class="panel panel-default">
+            <div class="panel-heading"
+              data-gn-slide-toggle="">
+              <span translate="" class="ng-scope">map</span>
+            </div>
+            <div
+              data-gn-map-field="searchObj.searchMap"
+              data-gn-map-field-geom="searchObj.params.geometry"
+              data-gn-map-field-opt="searchObj.mapfieldOption"
+              class="gn-search-map gn-map-relative">
+            </div>
+          </div>
+        </div>
         <div data-search-filter-tags
              data-dimensions="searchResults.facets"
              data-use-location-parameters="true"
              ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
         </div>
 
+        <div data-gn-user-searches-panel="user"
+             data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
 
             <div data-ng-show="searchResults.records.length > 0"
                  data-es-facets="searchResults.facets"></div>
@@ -49,6 +65,11 @@
       <!-- /.gn-row-tools -->
 
       <div class="row">
+        <div data-ng-show="searchResults.records.length > 0"
+             data-es-facets="searchResults.facets"
+             data-tab-field="facetTabField"></div>
+      </div>
+      <div class="row">
         <div class="col-xs-12 gn-nopadding-left gn-nopadding-right">
           <span class="loading fa fa-spinner fa-spin"
                 data-ng-show="searching"></span>
@@ -76,16 +97,18 @@
     </div>
   </div>
 
-  <div data-gn-map-field="searchObj.searchMap"
-       data-gn-map-field-geom="searchObj.params.geometry"
-       data-gn-map-field-opt="searchObj.mapfieldOption"
-       class="gn-search-map hidden-xs">
-  </div>
+  <div ng-if="!showMapInFacet">
+    <div data-gn-map-field="searchObj.searchMap"
+      data-gn-map-field-geom="searchObj.params.geometry"
+      data-gn-map-field-opt="searchObj.mapfieldOption"
+      class="gn-search-map gn-map-fixed hidden-xs">
+    </div>
 
-  <button data-ng-click="toggleMap()"
+    <button data-ng-click="toggleMap()"
           title="{{'toggleMiniMap' | translate}}"
           class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs">
     <i class="fa fa-angle-double-right" ></i>
     <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
-  </button>
+    </button>
+  </div>
 </div>

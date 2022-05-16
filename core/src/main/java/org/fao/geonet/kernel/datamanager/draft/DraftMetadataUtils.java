@@ -540,6 +540,19 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 }
             }
 
+            // Copy validation status from original metadata
+            List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(templateMetadata.getId());
+            for (MetadataValidation mv : validations) {
+                MetadataValidation metadataValidation = new MetadataValidation()
+                    .setId(new MetadataValidationId(finalId, mv.getId().getValidationType()))
+                    .setStatus(mv.getStatus()).setRequired(mv.isRequired())
+                    .setValid(mv.isValid()).setValidationDate(mv.getValidationDate())
+                    .setNumTests(mv.getNumTests()).setNumFailures(mv.getNumFailures())
+                    .setReportUrl(mv.getReportUrl()).setReportContent(mv.getReportContent());
+
+                metadataValidationRepository.save(metadataValidation);
+            }
+
             // Enable workflow on draft and make sure original record has also the workflow
             // enabled
             Set<Integer> metadataIds = new HashSet<Integer>();
@@ -630,6 +643,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
                 searchManager.delete(id);
+
+                // Unset METADATA_EDITING_CREATED_DRAFT flag
+                context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }

@@ -4552,11 +4552,6 @@
       resource
     </description>
   </element>
-  <element name="mco:useLimitation" id="99.0"
-           context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:resourceConstraints/mco:MD_Constraints/mco:useLimitation">
-    <label>Challenge expert score</label>
-    <description>Assign an overall product quality score with respect to the objectives and explain why.</description>
-  </element>
   <element name="mco:useLimitation" id="99.0">
     <label>Use limitation</label>
     <description>Limitation affecting the fitness for use of the resource. Example, _not to be

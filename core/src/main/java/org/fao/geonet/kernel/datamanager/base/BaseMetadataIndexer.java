@@ -37,6 +37,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
+import org.fao.geonet.events.md.MetadataIndexStarted;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -79,7 +80,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
-    private MetadataStatusRepository statusRepository;
+    protected MetadataStatusRepository statusRepository;
 
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
@@ -526,6 +527,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 fields.putAll(addExtraFields(fullMd));
 
+                if (fullMd != null) {
+                    this.publisher.publishEvent(new MetadataIndexStarted(fullMd, fields));
+                }
+
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
             }
         } catch (Exception x) {
@@ -563,6 +568,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Optional<Group> g = groupRepository.findById(groupId);
                 if (g.isPresent()) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
+                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED + "Id", g.get().getId());
 
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {

@@ -216,9 +216,12 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
 
         // Try to load capabilities document
+        String serviceType = params.ogctype.substring(0, 3);
+        String version = params.ogctype.substring(3);
+        boolean isSos = "SOS".equals(serviceType);
         this.capabilitiesUrl = getBaseUrl(params.url) +
-            "SERVICE=" + params.ogctype.substring(0, 3) +
-            "&VERSION=" + params.ogctype.substring(3) +
+            "SERVICE=" +  serviceType +
+            (isSos ? "" : ("&VERSION=" + version)) +
             "&REQUEST=" + GETCAPABILITIES
         ;
 
@@ -458,7 +461,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         try {
             md = Xml.transform(capa, styleSheet, xsltParams);
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             String message = String.format(
                 "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
                 this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));

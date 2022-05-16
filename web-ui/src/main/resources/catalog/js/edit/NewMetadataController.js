@@ -50,6 +50,7 @@
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
       $scope.mdList = null;
+      $scope.ownerGroup = null;
 
       // Used for the metadata identifier fields
       $scope.mdIdentifierTemplateTokens = {};
@@ -57,8 +58,9 @@
 
       gnConfigService.load().then(function(c) {
         $scope.generateUuid = gnConfig['system.metadatacreate.generateUuid'];
+        $scope.ownerGroup = gnConfig['system.metadatacreate.preferredGroup'];
+        $scope.preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
       });
-
 
       // A map of icon to use for each types
       var icons = {
@@ -75,6 +77,8 @@
       var defaultType = 'dataset';
       var unknownType = 'unknownType';
       var fullPrivileges = true;
+
+      // $scope.mdList, md.resourceType
 
       $scope.getTypeIcon = function(type) {
         return icons[type] || 'fa-square-o';
@@ -116,26 +120,37 @@
                 // TODO: A faster option, could be to rely on facet type
                 // But it may not be available
                 for (var i = 0; i < $scope.mdList.length; i++) {
-                  var type = $scope.mdList[i].resourceType || unknownType;
-                  if (type instanceof Array) {
-                    for (var j = 0; j < type.length; j++) {
-                      if ($.inArray(type[j], dataTypesToExclude) === -1 &&
-                        $.inArray(type[j], types) === -1) {
-                        types.push(type[j]);
-                      }
+                  var type = $scope.mdList[i].resourceType || [unknownType];
+                  for (var j = 0; j < type.length; j++) {
+                    if ($.inArray(type[j], dataTypesToExclude) === -1 &&
+                      $.inArray(type[j], types) === -1) {
+                      types.push(type[j]);
                     }
-                  } else if ($.inArray(type, dataTypesToExclude) === -1 &&
-                    $.inArray(type, types) === -1) {
-                    types.push(type);
                   }
                 }
                 types.sort();
                 $scope.mdTypes = types;
 
+                // Get default template and calculate the template type
+                var mdDefaultTemplate = _.find($scope.mdList, function(n) {
+                  if (n._id == $scope.preferredTemplate) {
+                    return true;
+                  }
+                });
+
+                var templateToSelect = null;
+                if (mdDefaultTemplate) {
+                  defaultType = mdDefaultTemplate.resourceType
+                    .filter(function(i) {
+                      return dataTypesToExclude.indexOf(i) === -1}
+                    )[0] || unknownType;
+                  templateToSelect = mdDefaultTemplate;
+                }
+
                 // Select the default one or the first one
                 if (defaultType &&
                   $.inArray(defaultType, $scope.mdTypes) > -1) {
-                  $scope.getTemplateNamesByType(defaultType);
+                  $scope.getTemplateNamesByType(defaultType, templateToSelect);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
                 } else {
@@ -153,7 +168,7 @@
        * Get all the templates for a given type.
        * Will put this list into $scope.tpls variable.
        */
-      $scope.getTemplateNamesByType = function(type) {
+      $scope.getTemplateNamesByType = function(type, templateToSelect) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.length; i++) {
           var md = $scope.mdList[i];
@@ -178,8 +193,17 @@
         tpls.sort(compare);
 
         $scope.tpls = tpls;
+
+        var selectedTpl = $scope.tpls[0];
+        if (templateToSelect) {
+          selectedTpl = _.find($scope.tpls, function(tpl) {
+            if (tpl._id == templateToSelect._id) {
+              return true;
+            }
+          })
+        }
         $scope.activeType = type;
-        $scope.setActiveTpl($scope.tpls[0]);
+        $scope.setActiveTpl(selectedTpl);
         return false;
       };
 
@@ -189,12 +213,16 @@
 
 
       if ($routeParams.childOf) {
-        $scope.resourceTitle = $translate.instant('createChildOf');
+        $scope.resourceTitle = 'createChildOf';
       } else if ($routeParams.from) {
-        $scope.resourceTitle = $translate.instant('createCopyOf');
+        $scope.resourceTitle = 'createCopyOf';
       } else {
-        $scope.resourceTitle = $translate.instant('createA');
+        $scope.resourceTitle = 'createA';
       }
+
+      $scope.cancelCreateMetadata = function (){
+        gnUtilityService.goBack("/board");
+      };
 
       $scope.createNewMetadata = function(isPublic) {
         var metadataUuid = '';

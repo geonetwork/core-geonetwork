@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +90,17 @@ public class DraftUtilities {
         Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
         // Reassign metadata validations
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(draft.getId());
-        for (MetadataValidation mv : validations) {
-            mv.getId().setMetadataId(md.getId());
-            metadataValidationRepository.save(mv);
+        metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(md.getId()));
+        for (MetadataValidation draftValidation : validations) {
+            MetadataValidation metadataValidation = new MetadataValidation()
+                .setId(new MetadataValidationId(md.getId(), draftValidation.getId().getValidationType()))
+                .setStatus(draftValidation.getStatus()).setRequired(draftValidation.isRequired())
+                .setValid(draftValidation.isValid()).setValidationDate(draftValidation.getValidationDate())
+                .setNumTests(draftValidation.getNumTests()).setNumFailures(draftValidation.getNumFailures())
+                .setReportUrl(draftValidation.getReportUrl()).setReportContent(draftValidation.getReportContent());
+
+            metadataValidationRepository.save(metadataValidation);
+            metadataValidationRepository.delete(draftValidation);
         }
 
         // Reassign metadata workflow statuses

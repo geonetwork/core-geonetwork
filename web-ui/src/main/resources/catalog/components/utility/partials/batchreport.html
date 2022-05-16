@@ -1,67 +1,81 @@
-<div class="panel panel-default"
-     data-ng-show="processReport"
-     data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
-
-  <div class="panel-heading">
-    <span data-translate="">processReportFor</span>
-    {{processReport.processId | translate}}<br/>
-    <p> {{processReport.totalRecords}}
-      <span data-translate="">recordsProcessed</span>
-      ({{processReport.startIsoDateTime}}
-            <span data-ng-show="processReport.running"
-            >...</span>
-            <span data-ng-hide="processReport.running"> -
-              {{processReport.endIsoDateTime}}</span>) =
-      {{processReport.totalTimeInSeconds}}s</p>
-  </div>
-  <div class="panel-body">
-    <table class="table table-striped">
-      <tr>
-        <td>{{('processReportTotalRecords') | translate}}</td>
-        <td class="text-right">{{processReport.numberOfRecords}}</td>
-      </tr>
-      <tr>
-        <td>{{('processReportProcessedRecords') | translate}}</td>
-        <td class="text-right">{{processReport.numberOfRecordsProcessed}}</td>
-      </tr>
-      <tr>
-        <td>{{('processReportNullRecords') | translate}}</td>
-        <td class="text-right">{{processReport.numberOfNullRecords}}</td>
-      </tr>
-      <tr>
-        <td>{{('processReportErrors') | translate}}</td>
-        <td class="text-right">
-          {{processReport.numberOfRecordsWithErrors}}
-          <div data-ng-repeat="value in processReport.errors"
-               alt="{{value.stack}}">
-            {{value.message}}
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>{{('processReportNoProcessFound') | translate}}</td>
-        <td class="text-right">{{processReport.noProcessFoundCount}}</td>
-      </tr>
-      <tr>
-        <td>{{('processReportNotOwner') | translate}}</td>
-        <td class="text-right">{{processReport.numberOfRecordsNotEditable}}</td>
-      </tr>
-    </table>
-
-    <div data-ng-hide="processReport.numberOfRecordsWithErrors == 0">
-      <h2 data-translate="">metadataErrorReport</h2>
+<div data-ng-show="processReport">
+  <div class="panel panel-default"
+       data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
+    <div class="panel-heading gn-padding-left gn-padding-right">
+      <strong>
+        <span data-translate="">processReportFor</span>
+        {{processReport.processId | translate}}
+      </strong>
+    </div>
+    <div class="panel-body gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left">
       <table class="table table-striped">
         <tr>
-          <th data-translate="">identifier</th>
+          <td colspan="2">
+            {{processReport.numberOfRecords}}
+              <span data-translate="">recordsProcessed</span>
+              ({{processReport.startIsoDateTime}}
+              <span data-ng-show="processReport.running"
+              >...</span>
+              <span data-ng-hide="processReport.running"> -
+                  {{processReport.endIsoDateTime}}</span>) =
+              {{processReport.totalTimeInSeconds}}s
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportTotalRecords') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfRecords}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportProcessedRecords') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfRecordsProcessed}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportUnchangedRecords') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfRecordsUnchanged}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportNullRecords') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfNullRecords}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportErrors') | translate}}</td>
+          <td class="text-right gn-padding-right">
+            {{processReport.numberOfRecordsWithErrors}}
+            <div data-ng-repeat="value in processReport.errors"
+                 alt="{{value.stack}}">
+              {{value.message}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportNoProcessFound') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.noProcessFoundCount}}</td>
+        </tr>
+        <tr>
+          <td class="gn-padding-left">{{('processReportNotOwner') | translate}}</td>
+          <td class="text-right gn-padding-right">{{processReport.numberOfRecordsNotEditable}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default panel-danger" data-ng-hide="processReport.numberOfRecordsWithErrors == 0">
+    <div class="panel-heading gn-padding-left gn-padding-right">
+      <span data-translate="">metadataErrorReport</span>
+    </div>
+    <div class="panel-body gn-nopadding-top gn-nopadding-right gn-nopadding-bottom gn-nopadding-left">
+      <table class="table table-striped">
+        <tr>
+          <th class="gn-padding-left" data-translate="">identifier</th>
           <th data-translate="">error</th>
         </tr>
         <tr data-ng-repeat="(key, errors) in processReport.metadataErrors">
-          <td>#{{key}}</td>
+          <td class="gn-padding-left">#{{key}}</td>
           <td>
             <ul>
               <li data-ng-repeat="value in errors">
-                <h4>{{value.message}}</h4>
-                <pre>{{value.stack}}</pre>
+                <label>{{value.message}}</label>
+                <pre data-ng-if="value.stack != ''">{{value.stack}}</pre>
               </li>
             </ul>
           </td>

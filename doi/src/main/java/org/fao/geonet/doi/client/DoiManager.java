@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -66,6 +67,7 @@ public class DoiManager {
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
     public static final String DOI_PREFIX_PARAMETER = "doiPrefix";
+    public static final String DOI_DEFAULT_URL = "https://doi.org/";
 
     private DoiClient client;
     private String doiPrefix;
@@ -105,6 +107,10 @@ public class DoiManager {
         if (sm != null) {
 
             String serverUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIURL);
+            String doiPublicUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL);
+            if (StringUtils.isEmpty(doiPublicUrl)) {
+                doiPublicUrl = DOI_DEFAULT_URL;
+            }
             String username = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIUSERNAME);
             String password = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPASSWORD);
 
@@ -139,7 +145,7 @@ public class DoiManager {
                 Log.debug(DoiSettings.LOGGER_NAME,
                     "DOI configuration looks perfect.");
                 // TODO: Check connection ?
-                this.client = new DoiClient(serverUrl, username, password);
+                this.client = new DoiClient(serverUrl, username, password, doiPublicUrl);
                 initialised = true;
             }
         }
@@ -178,8 +184,15 @@ public class DoiManager {
                 convertXmlToDataCiteFormat(metadata.getDataInfo().getSchemaId(),
                     metadata.getXmlData(false));
 
+        try {
+            check(context, metadata, dataciteFormatMetadata);
+        } catch (ResourceAlreadyExistException ignore) {
+            // Update DOI
+            doiInfo.put("update", "true");
+        } catch (Exception e) {
+            throw e;
+        }
 
-        check(context, metadata, dataciteFormatMetadata);
         createDoi(context, metadata, doiInfo, dataciteFormatMetadata);
         checkDoiCreation(metadata, doiInfo);
 
@@ -195,7 +208,7 @@ public class DoiManager {
      * @throws IOException
      * @throws JDOMException
      */
-    private void checkPreConditions(AbstractMetadata metadata, String doi) throws DoiClientException, IOException, JDOMException {
+    private void checkPreConditions(AbstractMetadata metadata, String doi) throws DoiClientException, IOException, JDOMException, ResourceAlreadyExistException {
         // Record MUST be public
         AccessManager am = ApplicationContextHolder.get().getBean(AccessManager.class);
         boolean visibleToAll = false;
@@ -221,21 +234,22 @@ public class DoiManager {
             String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
-                if (!currentDoi.equals(client.createUrl("") + doi)) {
+                String newDoi = client.createPublicUrl(doi);
+                if (!currentDoi.equals(newDoi)) {
                     throw new DoiClientException(String.format(
-                        "Record '%s' already contains a DOI '%s' which is not equal " +
+                        "Record '%s' already contains a DOI <a href='%s'>%s</a> which is not equal " +
                             "to the DOI about to be created (ie. '%s'). " +
                             "Maybe current DOI does not correspond to that record? " +
                             "This may happen when creating a copy of a record having " +
                             "an existing DOI.",
-                        metadata.getUuid(), currentDoi, client.createUrl("") + doi));
+                        metadata.getUuid(), currentDoi, currentDoi, newDoi));
                 }
 
-                throw new DoiClientException(String.format(
-                    "Record '%s' already contains a DOI. The DOI is '%s'. " +
-                        "We cannot register it again. " +
+                throw new ResourceAlreadyExistException(String.format(
+                    "Record '%s' already contains a DOI. The DOI is <a href='%s'>%s</a>. " +
+                        "You've to update existing DOI. " +
                         "Remove the DOI reference if it does not apply to that record.",
-                    metadata.getUuid(), currentDoi));
+                    metadata.getUuid(), currentDoi, currentDoi));
             }
         } catch (ResourceNotFoundException e) {
             // Schema not supporting DOI extraction and needs to be configured
@@ -263,7 +277,7 @@ public class DoiManager {
      * @param dataciteMetadata
      * @param language
      */
-    private void checkPreConditionsOnDataCite(AbstractMetadata metadata, String doi, Element dataciteMetadata, String language) throws DoiClientException {
+    private void checkPreConditionsOnDataCite(AbstractMetadata metadata, String doi, Element dataciteMetadata, String language) throws DoiClientException, ResourceAlreadyExistException {
         // * DataCite API is up an running ?
 
 
@@ -326,7 +340,7 @@ public class DoiManager {
         // Return 404
         final String doiResponse = client.retrieveDoi(doi);
         if (doiResponse != null) {
-            throw new DoiClientException(String.format(
+            throw new ResourceAlreadyExistException(String.format(
                 "Record '%s' looks to be already published on DataCite with DOI <a href='%s'>'%s'</a>. DOI on Datacite point to: <a href='%s'>%s</a>. " +
                     "If the DOI is not correct, remove it from the record and ask for a new one.",
                 metadata.getUuid(),
@@ -364,12 +378,12 @@ public class DoiManager {
                         "{{uuid}}", metadata.getUuid());
         doiInfo.put("doiLandingPage", landingPage);
         doiInfo.put("doiUrl",
-            client.createUrl("doi") + "/" + doiInfo.get("doi"));
+            client.createPublicUrl(doiInfo.get("doi")));
         client.createDoi(doiInfo.get("doi"), landingPage);
 
 
         // Add the DOI in the record
-        Element recordWithDoi = setDOIValue(doiInfo.get("doiUrl"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
+        Element recordWithDoi = setDOIValue(doiInfo.get("doi"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
         // Update the published copy
         //--- needed to detach md from the document
 //        md.detach();
@@ -433,8 +447,11 @@ public class DoiManager {
                 schema, DOI_ADD_XSL_PROCESS));
         }
 
+        String doiPublicUrl = client.createPublicUrl("");
+
         Map<String, Object> params = new HashMap<>(1);
         params.put("doi", doi);
+        params.put("doiProxy", doiPublicUrl);
         return Xml.transform(md, styleSheet, params);
     }
 

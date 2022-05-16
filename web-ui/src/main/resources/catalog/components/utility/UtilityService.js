@@ -72,8 +72,8 @@
   }]);
 
   module.factory('gnUtilityService',
-      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout',
-        function(gnPopup, $translate, $location, $rootScope, $timeout) {
+      ['gnPopup', '$translate', '$location', '$rootScope', '$timeout', '$window',
+        function(gnPopup, $translate, $location, $rootScope, $timeout, $window) {
         /**
        * Scroll page to element.
        */
@@ -122,8 +122,6 @@
            replace(/=on$/, '=true') +
            (uc.length ? '&' + uc.join('&').replace(/%20/g, '+') : '');
         };
-
-
         /**
        * Parse boolean value in object
        */
@@ -322,7 +320,10 @@
         function getPermalink(title, url) {
           gnPopup.createModal({
             title: $translate.instant('permalinkTo', {title: title}),
-            content: '<div gn-permalink-input="' + url + '"></div>'
+            content: '<div class="input-group">' +
+              '<input class="form-control" value="' + url + '">' +
+              '<span class="input-group-addon" gn-copy-to-clipboard-button text="' + url + '"></span>' +
+              '</div>'
           });
         };
 
@@ -345,6 +346,54 @@
               });
           };
 
+          var getObjectValueByPath = function(obj, path){
+            for (var i = 0, path = path.split('.'), len = path.length; i < len; i++){
+              if (angular.isUndefined(obj)) {
+                return undefined;
+              }
+              obj = obj[path[i]];
+            };
+            return obj;
+          };
+
+          var checkConfigurationPropertyCondition = function (record, prop, cb) {
+            if (prop.if) {
+              for (var key in prop.if) {
+                if (prop.if.hasOwnProperty(key)) {
+                  var values = angular.isArray(prop.if[key])
+                    ? prop.if[key]
+                    : [prop.if[key]]
+
+                  var recordValue = this.getObjectValueByPath(record, key);
+                  if (values.includes(recordValue)) {
+                    cb();
+                  }
+                }
+              }
+            } else {
+              console.warn('A conditional config property MUST have a if property. ' +
+                'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
+            }
+          };
+
+          var goBack = function (fallback) {
+            if ($window.history.length > 0) {
+              var referrer = $window.document.referrer;
+
+              // Check if previous page was not the login page
+              if ((!referrer) || (referrer.indexOf("catalog.signin") == -1)) {
+                $window.history.back();
+                return;
+              }
+            }
+
+            if (fallback) {
+              $location.path(fallback);
+            } else {
+              $window.history.back();
+            }
+          };
+
         return {
           scrollTo: scrollTo,
           isInView: isInView,
@@ -352,12 +401,15 @@
           parseBoolean: parseBoolean,
           traverse: traverse,
           formatObjectPropertyAsArray: formatObjectPropertyAsArray,
+          getObjectValueByPath: getObjectValueByPath,
+          checkConfigurationPropertyCondition: checkConfigurationPropertyCondition,
           toCsv: toCsv,
           CSVToArray: CSVToArray,
           getUrlParameter: getUrlParameter,
           randomUuid: randomUuid,
           getPermalink: getPermalink,
-          openModal: openModal
+          openModal: openModal,
+          goBack: goBack
         };
       }]);
 
@@ -384,7 +436,7 @@
 
   module.filter('unique', function() {
     return function (arr, field) {
-      return _.uniq(arr, function(a) { return a[field]; });
+      return _.uniqBy(arr, function(a) { return a[field]; });
     };
   });
 
@@ -515,8 +567,8 @@
   }]);
 
   module.service('gnFacetTree', [
-    '$http', 'gnLangs', '$q', '$translate', '$timeout',
-    function($http, gnLangs, $q, $translate, $timeout) {
+    '$http', 'gnLangs', '$q', '$translate', '$timeout', 'gnUrlUtils',
+    function($http, gnLangs, $q, $translate, $timeout, gnUrlUtils) {
     var separator = '^';
     var translationsToLoad = [];
 
@@ -571,20 +623,21 @@
       }
     };
 
-    function loadTranslation(fieldId) {
+    function loadTranslation(fieldId, thesaurus) {
       var keys = Object.keys(translationsToLoad[fieldId]);
       var deferred = $q.defer();
       if (keys.length > 0) {
         var uris = [];
         angular.copy(keys, uris);
         translationsToLoad[fieldId] = {};
-        $http.get('../api/registries/vocabularies/keyword' +
-          '?thesaurus=' + fieldId.replace(/th_(.*)_tree.key/, '$1') +
-          '&id=' + encodeURIComponent(uris.join(',')) +
-          // Get Keyword in current UI language or fallback to any UI language
-          '&lang=' + gnLangs.getCurrent() + ',' + Object.keys(gnLangs.langs).join(','), {
+        $http.post('../api/registries/vocabularies/keyword', gnUrlUtils.toKeyValue({
+          thesaurus: thesaurus || fieldId.replace(/th_(.*)_tree.key/, '$1'),
+          id: encodeURIComponent(uris.join(',')),
+          lang: gnLangs.getCurrent() + ',' + Object.keys(gnLangs.langs).join(',')
+        }), {
           cache: true,
           headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
           }
         }).then(function(r) {
@@ -660,7 +713,7 @@
       buildTree(list, fieldId, tree, meta);
 
       if(Object.keys(translationsToLoad[fieldId]).length > 0) {
-        loadTranslation(fieldId, tree).then(function(translations) {
+        loadTranslation(fieldId, meta && meta.thesaurus).then(function(translations) {
           if (angular.isObject(translations)) {
             var t = {};
             t[gnLangs.current] = {};
@@ -758,7 +811,7 @@
       } else {
         node.key = e.key;
         node.count = e.doc_count;
-      }
+      }g
     };
 
     this.getTree = function(list) {

@@ -15,7 +15,7 @@
           data-translate-values="{layerName:'{{layerName}}'}">atomLayerNotAvailable</div>
   </div>-->
   <div class="row" data-ng-if="isAtomAvailable && atomDatasets">
-    <div class="col-md-8 gn-nopadding-left"><br/>
+    <div class="col-md-8 gn-nopadding-left">
       <select class="form-control"
               data-ng-model="layerSelected" data-ng-change="update(layerSelected)"
               data-ng-options="ilayer as ilayer.title for ilayer in atomDatasets | orderBy: 'title'">

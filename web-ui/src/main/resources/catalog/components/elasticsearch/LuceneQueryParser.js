@@ -104,15 +104,16 @@
         }
         if (chunks && chunks.length) {
           query_string += '('
-          query_string += chunks.join(' ')
+          query_string += chunks.join(' OR ')
           query_string += ')'
         }
       } else if (angular.isString(node)) {
         query_string += node
-      } else if (node === true) {
-        query_string += indexKey + ':"' + nodeName + '"'
-      } else if (node === false) {
-        query_string += '-' + indexKey + ':"' + nodeName + '"'
+      } else if (node === true || node === false) {
+        var value = nodeName.endsWith('*')
+          ? nodeName.replace(' ', '\\\\ ')
+          : '"' + nodeName + '"';
+        query_string += (node ? '' : '-') + indexKey + ':' + value;
       }
       return query_string
     }

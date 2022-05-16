@@ -69,12 +69,23 @@ html, body {
     }
     .btn {
       background-color: @gn-search-button-background-color;
-      border-color: darken(@gn-search-button-background-color, 5%);
+      border-color: @gn-search-button-border-color;
       color: @gn-search-button-color;
       &:hover {
         background-color: darken(@gn-search-button-background-color, 10%);
         border-color: darken(@gn-search-button-background-color, 15%);
       }
+    }
+    .dropdown-menu {
+      margin: 0;
+      border-radius: 0;
+    }
+    .dropdown-menu > li > a {
+      padding: 6px 16px;
+    }
+    .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
     }
   }
 }
@@ -89,4 +100,12 @@ html, body {
   .alert-info;
   position: absolute;
   z-index: 100;
+}
+
+// no padding for containers on small screens
+@media (max-width: @screen-xs-max) {
+  .container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }

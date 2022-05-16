@@ -28,6 +28,69 @@
 
   var module = angular.module('gn_mdactions_directive', []);
 
+  module.directive('gnMetadataBatchApprove', ['$translate', '$http',
+    'gnMetadataManager', 'gnUtilityService',
+    function($translate, $http, gnMetadataManager, gnUtilityService) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'batchapprove.html',
+        scope: {
+          selectionBucket: '@'
+        },
+        link: function(scope) {
+          var translations = null;
+          $translate(['metadataApproved']).then(function(t) {
+            translations = t;
+          });
+
+          scope.changeMessage = '';
+          scope.directApproval = false;
+
+          scope.approve = function() {
+            scope.$broadcast('operationOnSelectionStart');
+
+            return $http.put('../api/records/approve',
+              {
+                bucket: scope.selectionBucket,
+                message: scope.changeMessage,
+                directApproval: scope.directApproval
+              }).then(
+              function(response) {
+                scope.processReport = response.data;
+                var reportTemplate = '../../catalog/components/utility/' +
+                  'partials/batchreport-workflow.html'
+
+                scope.$broadcast('operationOnSelectionStop');
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: translations.metadataApproved,
+                  content: '<div gn-batch-report="processReport" template-url="' + reportTemplate + '"></div>',
+                  className: 'gn-status-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('StatusUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'StatusUpdated');
+              }, function(response) {
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('metadataStatusUpdated', false);
+
+                scope.$emit('StatusUpdated', {
+                  title: $translate.instant('metadataStatusUpdatedErrors'),
+                  error: response.data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+          };
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnMetadataStatusUpdater
@@ -63,7 +126,7 @@
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
           scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
-          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+          scope.newStatus = {status: scope.task ? scope.task.id : -1, owner: null, dueDate: null, changeMessage: ''};
 
 
           // Retrieve last status to set it in the form
@@ -97,6 +160,11 @@
                 '/status', scope.newStatus
             ).then(
                 function(response) {
+                  //After the new status is approved, the working copy will get deleted and will not get searched.
+                  //The search parameter will need to reset to draft=n
+                  if (angular.isDefined(scope.md.draft) && scope.newStatus.status === "2") {
+                    scope.md.draft = "n";
+                  }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
@@ -401,6 +469,83 @@
   );
 
 
+  module.directive('gnMetadataCitation', [
+    '$translate', '$http', 'gnAlertService',
+    function($translate, $http, gnAlertService) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'citation.html',
+        scope: {
+          md: '=gnMetadataCitation',
+          format: '@'
+        },
+        link: function(scope) {
+          scope.defaultFormat = 'html';
+          scope.currentFormat = null;
+          scope.formats = [];
+          scope.citationText = '';
+          scope.citationAvailable = false;
+          scope.isCode = false;
+
+          function buildUrl() {
+            return '../api/records/' + scope.md.uuid + '/formatters/citation?format=';
+          }
+
+          scope.getCitation = function(format) {
+            return $http.get(buildUrl() + format, {
+              cache: true,
+              headers: {'Accept': format === '?' ? 'application/json' : 'text/plain'}
+            })
+              .then(function(r) {
+                if(format === '?') {
+                  for (var i = 0; i < r.data.length; i ++) {
+                    var f = r.data[i],
+                      prefix = 'cite.format.',
+                      translation = $translate.instant(prefix + f),
+                      translationFound = translation.indexOf(prefix) === -1,
+                      help = $translate.instant(prefix + f + '.help'),
+                      helpFound = translation.indexOf(prefix) === -1;
+                    scope.formats.push({
+                      id: f,
+                      label: translationFound ? translation : f,
+                      help: helpFound ? help : ''
+                    })
+                  }
+                } else {
+                  scope.currentFormat = format;
+                  scope.isCode = ['ris', 'bibtex'].indexOf(format) != -1;
+                  scope.citationText = r.data;
+                  scope.citationAvailable = true;
+                }
+              }, function(r) {
+                scope.citationAvailable = false;
+              });
+          }
+
+          function loadCitation() {
+            scope.citationAvailable = false;
+            scope.formats = [];
+            scope.getCitation('?').then(function() {
+              scope.getCitation(scope.format || scope.defaultFormat);
+            });
+          }
+
+          if (scope.md) {
+            loadCitation();
+          }
+
+          scope.$watchCollection('md', function(n, o) {
+            if (n && n !== o) {
+              loadCitation();
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnTransferOwnership
@@ -438,21 +583,6 @@
           scope.userGroupDefined = false;
           scope.userGroups = null;
 
-          scope.selectUser = function(user) {
-            scope.selectedUser = user;
-            scope.editorSelectedId = user.id;
-            $http.get('../api/users/' + id + '/groups')
-                .success(function(data) {
-                  var uniqueGroup = {};
-                  angular.forEach(data, function(g) {
-                    if (!uniqueGroup[g.group.id]) {
-                      uniqueGroup[g.group.id] = g.group;
-                    }
-                  });
-                  $scope.editorGroups = uniqueGroup;
-                });
-          };
-
           scope.selectGroup = function(group) {
             scope.selectedGroup = group;
           };
@@ -468,7 +598,20 @@
                         $translate.instant('group-' + g.groupId);
                   }
                 });
-                scope.userGroups = uniqueUserGroups;
+
+                // Sort by group name and user name
+                var sortedKeys = Object.keys(uniqueUserGroups).sort(function (a, b) {
+                  var ka = uniqueUserGroups[a].groupNameTranslated + '|' + uniqueUserGroups[a].userName;
+                  var kb = uniqueUserGroups[b].groupNameTranslated + '|' + uniqueUserGroups[b].userName;
+
+                  return ka.localeCompare(kb);
+                })
+
+                scope.userGroups = {};
+                angular.forEach(sortedKeys, function(g) {
+                  scope.userGroups[g] = uniqueUserGroups[g];
+                });
+
                 if (scope.userGroups && Object.keys(scope.userGroups).length > 0) {
                   scope.userGroupDefined = true;
                 } else {

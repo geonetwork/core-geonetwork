@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -48,7 +47,7 @@ import java.util.HashMap;
 /**
  * Created by fgravin on 10/29/15.
  */
-@Controller
+@RestController
 @RequestMapping(value = {
         "/{portal}/api/workers/data/wfs/actions"
 })
@@ -82,7 +81,6 @@ public class WFSHarvesterApi {
 
     @Operation(summary = "Delete a WFS feature type")
     @RequestMapping(
-//    @RequestMapping(value = "/{serviceUrl:.*}/{typeName:.*}",
         consumes = MediaType.ALL_VALUE,
         produces = MediaType.ALL_VALUE,
         method = RequestMethod.DELETE)

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records.model;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 
 public class MetadataStatusResponse extends MetadataStatus {
@@ -35,6 +36,10 @@ public class MetadataStatusResponse extends MetadataStatus {
     private String ownerName;
     private String ownerEmail;
     private String ownerProfile;
+
+    private String dateDue;
+    private String dateClose;
+    private String dateChange;
 
     private String title;
     private String currentStatus;
@@ -180,5 +185,29 @@ public class MetadataStatusResponse extends MetadataStatus {
 
     public int getStatusId() {
         return getStatusValue().getId();
+    }
+
+    public void setDateDue(String dateDue) {
+        this.dateDue = dateDue;
+    }
+
+    public String getDateDue() {
+        return dateDue;
+    }
+
+    public String getDateClose() {
+        return dateClose;
+    }
+
+    public void setDateClose(String dateClose) {
+        this.dateClose = dateClose;
+    }
+
+    public String getDateChange() {
+        return dateChange;
+    }
+
+    public void setDateChange(String dateChange) {
+        this.dateChange = dateChange;
     }
 }

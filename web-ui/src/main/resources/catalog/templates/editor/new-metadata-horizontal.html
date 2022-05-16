@@ -1,7 +1,7 @@
 <div class="container" id="gn-new-metadata-container">
   <div class="row">
     <div class="col-md-12 gn-margin-bottom">
-      <h1 data-translate="">createNewMetadata</h1>
+      <h1>{{resourceTitle | translate}}</h1>
 
       <div class="alert alert-warning" data-ng-hide="hasTemplates"
           data-translate="">noTemplatesAvailable
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="row" data-ng-show="hasTemplates">
+  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
     <div class="col-sm-2">
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
@@ -130,7 +130,7 @@
             createMetadataForGroup</a></li>
         </ul>
       </div>
-      <a href="#/board" class="btn btn-default">
+      <a data-ng-click="cancelCreateMetadata()" class="btn btn-default">
         <i class="fa fa-close"/>&nbsp;
         <span data-translate="">cancel</span>
       </a>

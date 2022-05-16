@@ -46,12 +46,14 @@
   module.directive('gnResultsTplSwitcher',
     function() {
       return {
+        require: '^ngSearchForm',
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
         'templateswitcher.html',
         restrict: 'A',
-        link: function($scope) {
+        link: function($scope, element, attrs, searchFormCtrl) {
           $scope.setResultTemplate = function (t) {
             $scope.resultTemplate = t.tplUrl;
+            searchFormCtrl.triggerSearch(true);
           };
         }
       };
@@ -148,16 +150,11 @@
               if (!ol.extent.isEmpty(extent)) {
                 // fit extent in map
                 scope.map.getView().fit(extent, scope.map.getSize());
-
-                // save this extent for later use (for example if the map
-                // is not currently visible)
-                scope.map.set('lastExtent', extent);
               }
             }
           });
 
           scope.$watch('resultTemplate', function(templateUrl) {
-
             if (angular.isUndefined(templateUrl)) {
               return;
             }

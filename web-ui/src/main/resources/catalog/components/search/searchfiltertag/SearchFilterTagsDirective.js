@@ -20,6 +20,27 @@
 
   var module = angular.module('search_filter_tags_directive', ['pascalprecht.translate']);
 
+  module.filter('renderRangeExpression', [
+    'gnGlobalSettings', 'gnHumanizeTimeService',
+    function(gnGlobalSettings, gnHumanizeTimeService) {
+    return function(range) {
+      var tokens = range.split(/^[\[{](.*) TO (.*)[\]}]$/),
+        useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates,
+        format = gnGlobalSettings.gnCfg.mods.global.dateFormat;
+
+      return tokens.length === 4
+        ? gnHumanizeTimeService(
+          tokens[1],
+          format,
+          useFromNowSetting !== undefined).title + ' > '
+        + gnHumanizeTimeService(
+          tokens[2],
+          format,
+          useFromNowSetting !== undefined).title
+        : range;
+    }
+  }]);
+
   module.directive('searchFilterTags',
     ['$location',
       function($location) {
@@ -208,14 +229,20 @@
               }
             }, true);
 
-            scope.isSpecificParameter = function(filter) {
+            scope.isSpecificParameter = function(key) {
               // full text search and uuid on selection only
               // are not translated like facet.
-              return filter.key === 'any' || filter.key === 'uuid';
+              return key === 'any' || key === 'uuid';
             }
-            scope.isRange = function(filter) {
-              return filter.value && filter.value.match
-                  && filter.value.match(/\+\w+:[\[{].* TO .*[\]}]/);
+            scope.getFilterType = function(filter) {
+              if (filter.value && filter.value.match
+                  && filter.value.match(/\+\w+:[\[{].* TO .*[\]}]/)) {
+                return 'RANGE';
+              } else if (filter.key === 'geometry') {
+                return 'GEOMETRY'
+              } else {
+                return undefined;
+              }
             }
 
             scope.isNegative = function(value) {

@@ -4,18 +4,6 @@
 @gn-sidebar-width: 300px;
 @gn-col-main-width: 65px;
 
-//@keyframes fadein{
-//  0% { opacity:0; }
-//  66% { opacity:0; }
-//  100% { opacity:1; }
-//}
-//
-//@-webkit-keyframes fadein{
-//  0% { opacity:0; }
-//  66% { opacity:0; }
-//  100% { opacity:1; }
-//}
-
 ul.gn-resultview li.list-group-item {
   margin-bottom: 0;
 }
@@ -330,7 +318,12 @@ ul.gn-resultview li.list-group-item {
       }
       .panel {
         .panel-heading {
-          .clearfix();
+          line-height: 34px !important;
+          padding: 6px 15px;
+          height: auto !important;
+          p {
+            line-height: 1.5;
+          }
           .btn-toolbar {
             float: right;
           }
@@ -363,6 +356,39 @@ ul.gn-resultview li.list-group-item {
           width: 80%;
           @media (max-width: 360px) {
             width: 75%;
+          }
+        }
+        &.active {
+          background-color: lighten(@brand-primary, 46.7%);
+          border-color: lighten(@brand-primary, 46.7%);
+          color: @gray-base;
+          .table {
+            background-color: #fff;
+          }
+        }
+      }
+      #gn-harvest-container {
+        .timeline-panel {
+          box-shadow: none;
+        }
+        .timeline-title {
+          display: inline-block;
+        }
+        #gn-harvest-history-panel, #gn-harvest-settings-panel {
+          .panel-heading {
+            height: auto;
+            line-height: 3em;
+            .btn-toolbar {
+              margin: 5px 0;
+            }
+          }
+          legend {
+            padding-top: 15px;
+          }
+          fieldset[id^="gn-harvest-settings-"] {
+            .col-lg-8 {
+              margin-bottom: 8px;
+            }
           }
         }
       }

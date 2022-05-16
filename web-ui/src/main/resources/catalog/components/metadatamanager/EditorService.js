@@ -139,7 +139,9 @@
          return {
            buildEditUrlPrefix: function(service) {
              var params = ['../api/records/',
-               gnCurrentEdit.id, '/', service, '?'];
+               gnCurrentEdit.metadata
+                 ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id,
+               '/', service, '?'];
              gnCurrentEdit.tab ?
              params.push('&currTab=', gnCurrentEdit.tab) :
              params.push('&currTab=', 'default');
@@ -396,6 +398,10 @@
                tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
+               resourceContainerDescription:
+                 angular.fromJson(getInputValue('resourceContainerDescription')),
+               resourceManagementExternalProperties:
+                 angular.fromJson(getInputValue('resourceManagementExternalProperties')),
                extent: extent,
                dataFormats: dataFormats,
                isMinor: getInputValue('minor') === 'true',

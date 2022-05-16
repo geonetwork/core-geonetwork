@@ -122,9 +122,9 @@
                   gnViewerSettings.mapConfig.is3DModeAllowed || false;
               scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
 
-              // By default, synch only background layer
+              // By default, sync only background layer
               // between main map and search map
-              scope.synAllLayers = false;
+              scope.syncAllLayers = false;
 
               scope.map.getLayers().on('add', function() {
                 if (angular.isDefined(gnSearchSettings.searchMap))
@@ -138,12 +138,12 @@
               });
 
               scope.syncMod = function() {
-                scope.synAllLayers = !scope.synAllLayers;
+                scope.syncAllLayers = !scope.syncAllLayers;
                 scope.doSync();
               };
 
               scope.doSync = function() {
-                if (scope.synAllLayer) {
+                if (scope.syncAllLayers) {
                   var layers = gnSearchSettings.searchMap.getLayers();
                   layers.clear();
                   scope.map.getLayers().forEach(function(l) {
@@ -183,7 +183,7 @@
 
                   var loadLayerPromise = gnMap[
                       config.type === 'wmts' ? 'addWmtsFromScratch' :
-                        (config.type === 'esrirest' ? 'addEsriRestFromScratch' : 'addWmsFromScratch')
+                        (config.type === 'esrirest' ? 'addEsriRestLayer' : 'addWmsFromScratch')
                       ](
                       scope.map, config.url,
                       config.name, undefined, config.md);
@@ -208,7 +208,6 @@
                         type: 'success'
                       }, 5000);
                     }
-
 
                   }, function(error) {
                     console.log(error);
@@ -308,13 +307,12 @@
                       .replace();
                 }
 
-
                 if ($location.search()['extent']) {
                   scope.map.getView().fit(
                       $location.search()['extent'].split(',').map(Number),
                       scope.map.getSize());
                 }
-              };
+              }
 
               // Turn off 3D mode when not using it because
               // it slow down the application.
@@ -409,6 +407,8 @@
               if (ogcGraticule && ogcGraticule.layer && ogcGraticule.url) {
                 scope.graticuleOgcService = ogcGraticule;
               }
+
+              initFromLocation();
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
               //TODO: find another solution to render the map
@@ -584,7 +584,8 @@
         templateUrl: '../../catalog/components/viewer/' +
             'partials/layerindicator.html',
         link: function(scope, element, attrs) {
-          scope.layerQueue = gnWmsQueue;
+          scope.mapType = attrs['gnvLayerIndicator'] || 'viewer';
+          scope.layerQueue = gnWmsQueue.queue;
         }
       };
     }]);

@@ -37,9 +37,9 @@
       registryChooseLanguages
     </label>
     <div class="row">
-      <div class="col-md-6">
-        <ul>
-          <li data-ng-repeat="l in languages">
+      <div class="col-md-6 gn-nopadding-left">
+        <ul class="list-group gn-nopadding-right">
+          <li data-ng-repeat="l in languages" class="list-group-item">
             <label><input type="checkbox"
                           name="registryLanguage"
                           data-ng-model="selectedLanguages[l.key]"
@@ -60,7 +60,7 @@
     registryChooseType
     </label>
     <select class="form-control"
-            data-ng-options="t as t.label for t in itemClass | orderBy:'label' track by t.key"
+            data-ng-options="t as t.label group by t.group for t in itemClass | orderBy:'label' track by t.key"
             data-ng-model="selectedClassUrl">
       <!--<option data-ng-repeat="t in itemClass | orderBy:'label' track by t.key"
               value="{{t}}" title="{{t.description}}">{{t.label}}</option>-->

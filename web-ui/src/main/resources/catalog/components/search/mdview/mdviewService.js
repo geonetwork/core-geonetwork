@@ -45,10 +45,16 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    'gnESService',
+    'gnESClient',
+    'gnESFacet',
+    'gnGlobalSettings',
     '$http',
+    '$filter',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService, $http) {
+             gnUrlUtils, gnUtilityService, gnESService, gnESClient,
+             gnESFacet, gnGlobalSettings, $http, $filter) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -72,7 +78,6 @@
 
         // Set the route only if not same as before
         formatter = gnSearchLocation.getFormatter();
-        gnMdViewObj.usingFormatter = formatter !== undefined;
 
         gnUtilityService.scrollTo();
 
@@ -84,6 +89,84 @@
         });
 
         gnMdViewObj.current.record = md;
+
+        // Record with associations
+        if (md.resourceType && md.related) {
+          var relatedRecords = md.related;
+          var recordsMap = {};
+          // Collect stats using search service
+          if (relatedRecords) {
+            // Build metadata as the API response already contains an index document
+            Object.keys(relatedRecords).map(function (k) {
+              relatedRecords[k] && relatedRecords[k].map(function (l) {
+                recordsMap[l._id] = new Metadata(l);
+              })
+            });
+
+
+            // Configuration to retrieve the results for the aggregations
+            var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            Object.keys(relatedFacetConfig).map(function (k) {
+              relatedFacetConfig[k].aggs = {
+                'docs': {
+                  'top_hits': { // associated stats with UUIDs
+                    'size': 100
+                  }
+                }
+              }
+            });
+
+            // Build multiquery to get aggregations for each
+            // set of associated records
+            var body = '';
+            var relatedRecordKeysWithValues = []; // keep track of the relations with values
+
+            Object.keys(relatedRecords).forEach(function (k) {
+              if (relatedRecords[k]) {
+                relatedRecordKeysWithValues.push(k);
+
+                body += '{"index": "records"}\n';
+                body +=
+                  '{' +
+                  '  "query": {' +
+                  '    "bool": {' +
+                  '      "must": [' +
+                  '        { "terms": { "uuid": ["' +
+                  relatedRecords[k].map(function(md) {return md._id;}).join('","') +
+                  '"]} },' +
+                  '        { "terms": { "isTemplate": ["n"] } }' +
+                  '      ]' +
+                  '    }' +
+                  '  },' +
+                  '  "aggs":' + JSON.stringify(relatedFacetConfig) + ',' +
+                  '  "from": 0,' +
+                  '  "size": 100,' +
+                  '  "_source": ["uuid"]' +
+                  '}';
+              }
+            });
+
+            // Collect stats in main portal as some records may not be visible in subportal
+            $http.post('../../srv/api/search/records/_msearch', body).then(function (data) {
+              gnMdViewObj.current.record.related = [];
+
+              Object.keys(relatedRecords).map(function (k) {
+                relatedRecords[k] && relatedRecords[k].map(function (l, i) {
+                  var md = recordsMap[l._id];
+                  relatedRecords[k][i] = md;
+                })
+              });
+
+              gnMdViewObj.current.record.related = relatedRecords;
+              gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+              gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+              relatedRecordKeysWithValues.forEach(function (key, index) {
+                gnMdViewObj.current.record.related['aggregations_' + key] = data.data.responses[index].aggregations;
+              });
+            });
+          }
+        }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
@@ -129,6 +212,13 @@
         }
       };
 
+      this.buildRelatedTypesQueryParameter = function(types) {
+        types = types || ('parent|children|sources|hassources|' +
+            'brothersAndSisters|services|datasets|' +
+            'siblings|associated|fcats|related');
+        return 'relatedType=' + types.split('|').join('&relatedType=');
+      };
+
       /**
        * Init the mdview behavior linked on $location.
        * At start and $location change, the uuid is extracted
@@ -168,7 +258,7 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                  $http.post('../api/search/records/_search', {"query": {
+                  $http.post('../api/search/records/_search?' + that.buildRelatedTypesQueryParameter(), {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {
@@ -267,14 +357,61 @@
     'gnSearchSettings',
     '$q',
     'gnMetadataManager',
+    'gnUtilityService',
     function($rootScope, $http, $compile, $translate,
              $sce, gnAlertService,
-             gnSearchSettings, $q, gnMetadataManager) {
+             gnSearchSettings, $q, gnMetadataManager,
+             gnUtilityService) {
 
+      /**
+       * First matching view for each formatter is returned.
+       *
+       * @param record
+       * @returns {*[]}
+       */
+      this.getFormatterForRecord = function(record) {
+        var list = [];
+        if (record == null) {
+          return list;
+        }
+        for (var i = 0; i < gnSearchSettings.formatter.list.length; i ++) {
+          var f = gnSearchSettings.formatter.list[i];
+          if (f.views === undefined) {
+            list.push(f);
+          } else {
+            // Check conditional views
+            var isViewSet = false;
+
+            function addView(f, v) {
+              list.push({label: f.label, url: v.url});
+              isViewSet = true;
+            }
+            function evaluateView(v) {
+              gnUtilityService.checkConfigurationPropertyCondition(
+                record, v, function() {
+                  if (!isViewSet) {
+                    addView(f, v)
+                  }
+                  return;
+                });
+            }
+            for (var j = 0; j < f.views.length; j ++) {
+              var v = f.views[j];
+              evaluateView(v);
+            }
+
+            if (f.url !== undefined && !isViewSet) {
+              list.push(f);
+            }
+          }
+        }
+        return list;
+      }
 
       this.getFormatterUrl = function(fUrl, scope, uuid, opt_url) {
         var url;
         var promiseMd;
+        var gnMetadataFormatter = this;
         if (scope && scope.md) {
           var deferMd = $q.defer();
           deferMd.resolve(scope.md);
@@ -297,7 +434,9 @@
             scope.$parent.md = md;
             scope.md = md;
           }
-          return url;
+          return url ||
+            ('../api/records/' + uuid
+              + gnMetadataFormatter.getFormatterForRecord(md)[0].url);
         });
       };
 

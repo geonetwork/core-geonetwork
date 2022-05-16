@@ -1,36 +1,6 @@
 @import "../../../style/gn_bootstrap.less";
 @import "gn_variables_default.less";
 
-// status
-.gn-status, .gn-workflow-status {
-  position: relative;
-  float: left;
-  color: darken(@brand-info, 25%);
-}
-.gn-status-completed {
-  color: darken(@brand-success, 20%);
-}
-.gn-status-historicalArchive {
-  color: darken(@brand-warning, 20%);
-}
-.gn-status-obsolete {
-  color: darken(@brand-danger, 20%);
-}
-.gn-workflow-status {
-  background-color: rgba(255, 255, 255 , 0.7);
-  border-color: darken(@brand-success, 5%);
-  color: @brand-success;
-}
-/* Decide here which status should be displayed or not and with which colors */
-.gn-workingcopy-status {
-  margin-top: 0;
-  i {
-    height: 34px;
-    width: 34px;
-    margin-top: -1px;
-  }
-}
-
 // cards
 @gn-card-thumbnail-width: 140px;
 @gn-card-height: 24em;
@@ -344,6 +314,33 @@ ul.gn-resultview {
     }
   }
 }
+table.gn-resultview {
+  td {
+    vertical-align: middle !important;
+  }
+  h1 {
+    display: inline-block;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+  }
+  .gn-md-links {
+    display: flex;
+    gap: 3px;
+  }
+  .gn-status {
+    position: inherit;
+    border-width: 1px;
+    white-space: nowrap;
+    margin-top: 0;
+    font-size: 100%;
+    margin: auto;
+    border-radius: 3px;
+  }
+  .gn-record-selected {
+    background-color: #f5f5f5;
+  }
+}
 
 // all info lists (home, map, portal)
 .gn-info-list {
@@ -363,7 +360,7 @@ ul.gn-resultview {
     }
     .gn-img-thumbnail {
       width: 100%;
-      filter: grayscale(100%);
+      //filter: grayscale(100%);
     }
     &:hover {
       transition: all 200ms ease-in;
@@ -394,7 +391,7 @@ ul.gn-resultview {
 
 }
 // 5 types of info lists
-// 
+//
 // ----- small & large
 .gn-info-list-small, .gn-info-list-large {
   .gn-info-list {
@@ -451,6 +448,7 @@ ul.gn-resultview {
 .gn-info-list-blocks {
   .gn-info-list {
     .gn-card {
+      min-width: 150px;
       width: calc(~"(100% / 4) - 20px");
       @media (max-width: @screen-sm-min) {
         width: calc(~"(100% / 2) - 20px");

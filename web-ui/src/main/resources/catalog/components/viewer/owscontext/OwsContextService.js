@@ -109,7 +109,13 @@
         // broadcast context load
         $rootScope.$broadcast('owsContextLoaded');
 
+        var uiConfig = {};
+        var mapConfig = gnMap.getMapConfig();
         var context = unmarshaller.unmarshalString(text).value;
+        var mapType = map.get('type');
+        if (mapType && mapConfig) {
+          uiConfig = mapConfig['map-' + mapType];
+        }
         // first remove any existing layer
         var layersToRemove = [];
         map.getLayers().forEach(function(layer) {
@@ -123,31 +129,38 @@
           map.removeLayer(layersToRemove[i]);
         }
 
-        // -- set the Map view (extent/projection)
+        // Set the Map view (extent/projection) from the context
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        // -- check if projection is available in ol
-        if (!ol.proj.get(projection)){
-         console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
-         projection='EPSG:3857';
-         ll=[-10026376,-15048966];
-         ur=[10026376,15048966];
-       }
+        // Check if projection is available in ol
+        if (!ol.proj.get(projection)) {
+          console.warn('Projection ' + projection + ' is not available, map will be projected in a spherical mercator projection');
+          projection = 'EPSG:3857';
+          ll = [-10026376, -15048966];
+          ur = [10026376, 15048966];
+        }
 
         if (projection == 'EPSG:4326') {
+          // WGS84 expects lat-lon (y,x) not lon-lat (x,y)
           ll.reverse();
           ur.reverse();
         }
 
         var extent = ll.concat(ur);
-        gnViewerSettings.initialExtent = extent;
 
-        // save this extent for later use (for example if the map
-        // is not currently visible)
-        map.set('lastExtent', extent);
+        // Apply extent override from UI settings, if any
+        if (uiConfig && uiConfig.extent &&
+          ol.extent.getWidth(uiConfig.extent) && ol.extent.getHeight(uiConfig.extent)) {
+          extent = uiConfig.extent;
+          // Extent should be specified in the default map projection:
+          // reproject to context projection, if this is not the case already
+          if (mapConfig.projection !== projection) {
+            extent = ol.proj.transformExtent(extent, mapConfig.projection, projection, 8);
+          }
+        }
 
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
@@ -159,7 +172,7 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            map.getView().fit(extent, map.getSize(), { nearest: true });
+            map.getView().fit(extent, map.getSize());
           })
         }
         else {
@@ -372,13 +385,21 @@
 
               self.loadContext(r.data, map, additionalLayers);
             }, function(r) {
-              var msg = $translate.instant('mapLoadError', {
-                url: url
-              });
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: msg,
-                timeout: 0,
-                type: 'danger'});
+              var contextUsingLanguage = (gnViewerSettings.defaultContext.indexOf('{lang}') > -1);
+
+              if ((r.status == 404) && contextUsingLanguage) {
+                // Check to load the context file for the default language
+                var newUrl = gnViewerSettings.defaultContext.replace('{lang}', 'eng');
+                self.loadContextFromUrl(newUrl, map, additionalLayers);
+              } else {
+                var msg = $translate.instant('mapLoadError', {
+                  url: url
+                });
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: msg,
+                  timeout: 0,
+                  type: 'danger'});
+              }
             });
       };
 
@@ -442,6 +463,14 @@
             params.server = [{
               onlineResource: [{
                 href: layer.get('urlCap')
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }];
+          } else if (source instanceof ol.source.ImageArcGISRest) {
+            name = '{type=arcgis,name=' + layer.getSource().getParams().LAYERS.replace('show:', '') + '}';
+            params.server = [{
+              onlineResource: [{
+                href: layer.get('url')
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
@@ -634,15 +663,15 @@
           var promise;
 
           if (type === 'wmts') {
-            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           } else if (type === 'arcgis') {
-            promise = gnMap.addEsriRestFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           // if it's not WMTS, let's assume it is wms
           // (so as to be sure to return something)
           else {
-            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           return promise.then(function(olL) {
@@ -654,7 +683,9 @@
               olL.set('title', layer.title);
               olL.set('label', layer.title);
             }
-            olL.set('metadataUuid', layer.metadataUuid || '');
+            if (layer.metadataUuid) {
+              olL.set('metadataUuid', layer.metadataUuid);
+            }
             if (bgIdx) {
               olL.set('bgIdx', bgIdx);
             } else if (index) {

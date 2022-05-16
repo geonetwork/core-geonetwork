@@ -29,6 +29,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
+import com.neovisionaries.i18n.LanguageCode;
+
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
+import org.jsoup.Jsoup;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -56,7 +64,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
-import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
@@ -96,6 +103,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -115,6 +123,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -425,7 +434,7 @@ public final class XslUtil {
      * If the main one, then get the name on the source table with the site id.
      * If a sub portal, use the sub portal key.
      *
-     * @param key   Sub portal key
+     * @param key   Sub portal key or UUID
      * @return
      */
     public static String getNodeName(String key, String lang, boolean withOrganization) {
@@ -438,6 +447,10 @@ public final class XslUtil {
         }
         SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
         Optional<Source> source = sourceRepository.findById(key);
+
+        if (!source.isPresent()) {
+            source = Optional.ofNullable(sourceRepository.findOneByUuid(key));
+        }
 
         return source.isPresent() ? source.get().getLabel(lang) : settingsMan.getSiteName()
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
@@ -520,6 +533,29 @@ public final class XslUtil {
         return false;
     }
 
+    /**
+     * Check if user profile update is enabled.
+     */
+    public static boolean isUserProfileUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserProfileUpdateEnabled();
+        }
+        return true;
+    }
+
+    /**
+     * Check if user group update is enabled.
+     */
+    public static boolean isUserGroupUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserGroupUpdateEnabled();
+        }
+        return true;
+    }
 
     /**
      * get security provider
@@ -532,6 +568,43 @@ public final class XslUtil {
         }
         // If we cannot find SecurityProviderConfiguration then default to empty string.
         return "";
+    }
+
+    /**
+     * get external manager url for resource.
+     *
+     * @param metadataUuid uuid of the record
+     * @param approved is metadata approved
+     * @return url to access the resource. Or null if not supported
+     */
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+
+        if (store != null) {
+            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                ServiceContext context = ServiceContext.get();
+                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+            } else {
+                // Return an empty object which should not be used because the folder is not enabled.
+                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            }
+        }
+        Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
+        return null;
+    }
+
+    /**
+     * get resource management external properties.
+     *
+     * @return the windows parameters to be used.
+     */
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+        if (store != null) {
+            return store.getResourceManagementExternalProperties();
+        }
+        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceManagementExternalProperties");
+        return null;
     }
 
     /**
@@ -575,6 +648,27 @@ public final class XslUtil {
             Log.error(Geonet.GEONETWORK, "XMLtoJSON conversion I/O error. Error is " + e.getMessage() + ". XML is " + xml.toString());
         }
         return "";
+    }
+
+    /**
+     * Try to preserve some HTML layout to text layout.
+     *
+     * Replace br tag by new line, li by new line with leading *.
+     */
+    public static String htmlElement2textReplacer(String html) {
+        return html
+            .replaceAll("<br */?>", System.getProperty("line.separator"))
+            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    }
+    public static String html2text(String html) {
+        return Jsoup.parse(html).wholeText();
+    }
+    public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
+        return html2text(
+            substituteHtmlToTextLayoutElement ? htmlElement2textReplacer(html) : html);
+    }
+    public static String html2textNormalized(String html) {
+        return Jsoup.parse(html).text();
     }
 
     /**
@@ -736,6 +830,30 @@ public final class XslUtil {
     }
 
     /**
+     * Convert the iso639_2B to iso639_2T
+     *
+     * @param iso639_2B The 3 iso lang code B
+     * @return The iso639_2T lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2B_to_iso639_2T(String iso639_2B) {
+        return IsoLanguagesMapper.iso639_2B_to_iso639_2T(iso639_2B);
+    }
+
+    /**
+     * Convert the iso639_2T to iso639_2B
+     *
+     * @param iso639_2T The 3 iso lang code T
+     * @return The iso639_2B lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2T_to_iso639_2B(String iso639_2T) {
+        return IsoLanguagesMapper.iso639_2T_to_iso639_2B(iso639_2T);
+    }
+
+    /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *
      * @param iso3LangCode The 2 iso lang code
@@ -748,7 +866,7 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 char iso lang code from a 3 iso lang code.
      *
      * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
@@ -760,49 +878,29 @@ public final class XslUtil {
             if (defaultValue != null) {
                 return defaultValue;
             } else {
-                return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+                iso3LangCode = Geonet.DEFAULT_LANGUAGE;
             }
+        }
+        String iso2LangCode = null;
+
+        // Catch language entries longer than 3 characters with a semicolon
+        if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
+            //This will extract text similar to the following "fr;CAN", "fra;CAN", "fr ;CAN"
+            //In the case of "fr;CAN",  fr would be extracted even though it is not a 3 char code - but that is ok because LanguageCode.getByCode supports 2 and 3 char codes.
+            iso3LangCode = iso3LangCode.split(";")[0].trim();
+        }
+
+        LanguageCode languageCode = LanguageCode.getByCode(iso3LangCode.toLowerCase());
+        if (languageCode != null) {
+            iso2LangCode = languageCode.name();
+        }
+
+        // Triggers when the language can't be matched to a code
+        if (iso2LangCode == null) {
+            Log.info(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
+            return iso3LangCode.substring(0, 2);
         } else {
-            if (iso3LangCode.equalsIgnoreCase("FRA")) {
-                return "FR";
-            }
-
-            if (iso3LangCode.equalsIgnoreCase("DEU")) {
-                return "DE";
-            }
-
-            if (iso3LangCode.equalsIgnoreCase("NLD")) {
-                return "NL";
-            }
-
-            String iso2LangCode = null;
-
-            try {
-                final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
-                /*if the language  is 2 characters long...*/
-                if (iso3LangCode.length() == 2) {
-                    iso2LangCode = iso3LangCode;
-                    /*Catch language entries longer than 3 characters with a semicolon*/
-                } else if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode.substring(0, 3));
-                    /** This final else works properly for languages with exactly three characters, so
-                     * an exception will occur if gmd:language has more than 3 characters but
-                     * does not have a semicolon.
-                     */
-                } else {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
-                }
-            } catch (Exception ex) {
-                Log.info(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
-
-            }
-            /* Triggers when the language can't be matched to a code */
-            if (iso2LangCode == null) {
-                Log.info(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code");
-                return iso3LangCode.substring(0, 2);
-            } else {
-                return iso2LangCode;
-            }
+            return iso2LangCode;
         }
     }
 
@@ -958,13 +1056,31 @@ public final class XslUtil {
      * does not make any security checks.
      */
     public static Node getRecord(String uuid) {
+        return getRecord(uuid, null);
+    }
+    public static Node getRecord(String uuid, String schema) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         try {
             String id = dataManager.getMetadataId(uuid);
             if (id != null) {
                 Element metadata = dataManager.getMetadata(id);
+                String metadataSchema = dataManager.getMetadataSchema(id);
 
+                if (StringUtils.isNotEmpty(schema)
+                    && !metadataSchema.equals(schema)) {
+                    final Path styleSheet = dataManager
+                        .getSchemaDir(metadataSchema)
+                        .resolve(String.format( "formatter/%s/view.xsl", schema));
+                    final boolean exists = java.nio.file.Files.exists(styleSheet);
+                    if (!exists) {
+                        Log.warning(Geonet.GEONETWORK,String.format(
+                            "XslUtil getRecord warning: Can't retrieve record %s (schema %s) in schema %s. A formatter is required for this conversion.",
+                            uuid, metadataSchema, schema));
+
+                    };
+                    metadata = Xml.transform(metadata, styleSheet);
+                }
                 DOMOutputter outputter = new DOMOutputter();
                 return outputter.output(new Document(metadata));
             }
@@ -1012,12 +1128,23 @@ public final class XslUtil {
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
+    /**
+     * Return default iso lang code.
+     *
+     * @return The default 3 char iso lang code
+     */
+    public static
+    @Nonnull
+    String getDefaultLangCode() {
+        return Geonet.DEFAULT_LANGUAGE;
+    }
+
     public static String getLanguage() {
         ServiceContext context = ServiceContext.get();
         if (context != null) {
             return context.getLanguage();
         } else {
-            return "eng";
+            return Geonet.DEFAULT_LANGUAGE;
         }
     }
 

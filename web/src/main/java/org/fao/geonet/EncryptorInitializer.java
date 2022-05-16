@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -64,6 +65,20 @@ public class EncryptorInitializer {
 
     @Autowired
     DataSource dataSource;
+
+    private boolean firstInitialSetupFlag;
+
+    /**
+     * Set flag to indicate that a encrypt should be done during initialization
+     * This will cause all fields flag as encrypted to be encrypted.
+     * This should generally only be set during initial setup or migration script.
+     *
+     * @param firstInitialSetupFlag indicate that a encrypt should be done during initialization - default false
+     */
+    public void setFirstInitialSetupFlag(boolean firstInitialSetupFlag) {
+        this.firstInitialSetupFlag = firstInitialSetupFlag;
+    }
+
 
     public void init(GeonetworkDataDirectory dataDirectory) throws Exception {
         PropertiesConfiguration conf = getEncryptorPropertiesFile(dataDirectory);
@@ -101,7 +116,15 @@ public class EncryptorInitializer {
             encryptorPasswordPropFile = getPropertyFromEnv(PASSWORD_KEY, "");
             // Creates a random encryptor password if the password is empty
             if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
-                Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
+                if (!firstInitialSetupFlag) {
+                    Log.error(LOG_MODULE, String.format(
+                        "Password database encryptor initialization error - could not locate encryptor password via encryption " +
+                        "file %s or supplied properties/environment variable (%s). " +
+                        "GeoNetwork can not decrypt passwords already stored in the database. " +
+                        "Either recover the previous password and restart the application or manually null all existing encrypted " +
+                        "passwords in the database and re-enter passwords via the application", conf.getPath(), PASSWORD_KEY));
+                }
+                Log.info(LOG_MODULE, "Generating a new random password for the database password encryptor");
                 encryptorPasswordPropFile = RandomStringUtils.randomAlphanumeric(10);
             }
             encryptorPassword = encryptorPasswordPropFile;
@@ -162,12 +185,12 @@ public class EncryptorInitializer {
             // Save the encryptor.properties file
             conf.save();
 
-            Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
-
             // Encryptor configuration change: should be unencrypted the passwords with the previous configuration
             // and encrypted with the new one.
             if (!encryptorPassword.equals(encryptorPasswordPropFile) ||
                 !encryptorAlgorithm.equals(encryptorAlgorithmPropFile)) {
+
+                Log.info(LOG_MODULE, "Password database encryptor - re-encrypting passwords stored in the database");
 
                 StandardPBEStringEncryptor previousEncryptor = new StandardPBEStringEncryptor();
                 previousEncryptor.setAlgorithm(encryptorAlgorithmPropFile);
@@ -175,7 +198,10 @@ public class EncryptorInitializer {
                 previousEncryptor.initialize();
                 updateDb(previousEncryptor);
             } else {
-                updateDb(null);
+                if (firstInitialSetupFlag) {
+                    Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
+                    updateDb(null);
+                }
             }
         }
 
@@ -192,11 +218,11 @@ public class EncryptorInitializer {
              Statement statement = connection.createStatement()) {
             final String encryptedSettings = "SELECT name, value FROM Settings WHERE encrypted = 'y'";
 
-
             Map<String, String> updates = new HashMap<>();
 
             try (ResultSet settingsResultSet = statement.executeQuery(encryptedSettings)) {
                 int numberOfSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, settingsResultSet);
+
                 Log.debug(LOG_MODULE, "  Number of settings of type password to update: " + numberOfSettings);
             } catch (Exception ex) {
                 Log.error(LOG_MODULE, "Error getting the settings' passwords for encrypting them");
@@ -205,12 +231,15 @@ public class EncryptorInitializer {
             }
 
             for (String key : updates.keySet()) {
-                statement.execute("UPDATE Settings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE Settings SET value=? WHERE name=?");
+                pstmt.setString(1, updates.get(key));
+                pstmt.setString(2, key);
+                pstmt.executeUpdate();
             }
 
             final String encryptedHarvesterSettings = "SELECT name, value FROM HarvesterSettings WHERE name = 'password'";
+            updates = new HashMap<>();
             try (ResultSet harvesterSettingsResultSet = statement.executeQuery(encryptedHarvesterSettings)) {
-                updates = new HashMap<>();
                 int numberOfHarvesterSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, harvesterSettingsResultSet);
 
                 Log.debug(LOG_MODULE, "  Number of harvester settings of type password to update: " + numberOfHarvesterSettings);
@@ -221,7 +250,10 @@ public class EncryptorInitializer {
             }
 
             for (String key : updates.keySet()) {
-                statement.execute("UPDATE HarvesterSettings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE HarvesterSettings SET value=? WHERE name=?");
+                pstmt.setString(1, updates.get(key));
+                pstmt.setString(2, key);
+                pstmt.executeUpdate();
             }
 
 
@@ -239,7 +271,10 @@ public class EncryptorInitializer {
             }
 
             for (Integer key : updatesMapServers.keySet()) {
-                statement.execute("UPDATE Mapservers SET password='" + updatesMapServers.get(key) + "' WHERE id='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE Mapservers SET password=? WHERE id=?");
+                pstmt.setString(1, updatesMapServers.get(key));
+                pstmt.setInt(2, key);
+                pstmt.executeUpdate();
             }
 
             connection.commit();
@@ -318,7 +353,7 @@ public class EncryptorInitializer {
 
         if (StringUtils.isEmpty(propertyValue)) {
             // System environment variable
-            propertyValue = System.getenv(propertyName.replace('.', '_'));
+            propertyValue = System.getenv(propertyName.toUpperCase().replace('.', '_'));
         }
 
         if (StringUtils.isEmpty(propertyValue)) {

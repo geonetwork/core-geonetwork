@@ -25,7 +25,6 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -74,12 +73,4 @@ public interface OperationAllowedRepositoryCustom {
     List<Integer> findAllIds(@Nonnull Specification<OperationAllowed> spec, @Nonnull SingularAttribute<OperationAllowedId,
         Integer> idAttribute);
 
-    /**
-     * Delete all OperationsAllowed entities with the give metadata and group ids.
-     *
-     * @param metadataId the metadata id
-     * @param groupId    the group id
-     */
-    @Nonnegative
-    int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId);
 }

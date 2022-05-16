@@ -2,7 +2,12 @@
   <div data-ng-show="lastCommentsList.length">
     <div class="gn-userfeedback-card"
       data-ng-repeat="row in lastCommentsList">
-      <div class="gn-userfeedback-pre-title" data-translate="">GUFfeedbackOn</div>
+      <div class="gn-userfeedback-pre-title">
+        <span data-translate="">GUFfeedbackOn</span>
+        <span data-ng-hide="row.published"> -
+          <strong data-translate="">GUFwaitingForApproval</strong>
+        </span>
+      </div>
       <a data-ng-href="#/metadata/{{row.metadataUUID}}">{{row.metadataTitle}}</a>
       <q class="gn-quote" data-ng-show="row.comment">{{row.comment}}</q>
       <div class="clearfix">
@@ -19,6 +24,10 @@
         </div>
       </div>
     </div>
+    <button class="btn btn-link"
+            data-ng-hide="allCommentsLoaded"
+            data-ng-click="loadMore()"
+            data-translate="">more</button>
   </div>
 
   <div data-ng-hide="lastCommentsList.length" data-translate="">GUFnoComments</div>

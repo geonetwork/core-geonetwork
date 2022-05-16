@@ -16,6 +16,8 @@
 
   <xsl:param name="doi"
              select="''"/>
+  <xsl:param name="doiProxy"
+             select="'https://www.doi.org/'"/>
   <xsl:variable name="doiProtocol"
                 select="'DOI'"/>
   <xsl:variable name="doiName"
@@ -26,7 +28,8 @@
   <xsl:variable name="isDoiAlreadySet"
                 select="count(//mdb:identificationInfo/*/mri:citation/*/
                               cit:identifier/*/mcc:code[
-                                contains(*/text(), 'doi.org')
+                                contains(*/text(), 'datacite.org/doi/')
+                                or contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]) > 0"/>
 
 <!--  <xsl:variable name="isDoiAlreadySet"-->
@@ -48,7 +51,7 @@
       <cit:identifier>
         <mcc:MD_Identifier>
           <mcc:code>
-            <gcx:Anchor xlink:href="{$doi}">
+            <gcx:Anchor xlink:href="{concat($doiProxy, $doi)}">
               <xsl:value-of select="$doi"/>
             </gcx:Anchor>
           </mcc:code>
@@ -75,7 +78,7 @@
   </xsl:template>
 
 
-  <!--<xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
+  <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <mrd:MD_Distribution>
@@ -88,7 +91,7 @@
             <mrd:onLine>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <gco:CharacterString><xsl:value-of select="$doi"/></gco:CharacterString>
+                  <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
                 </cit:linkage>
                 <cit:protocol>
                   <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
@@ -102,7 +105,7 @@
         </mrd:transferOptions>
       </mrd:MD_Distribution>
     </xsl:copy>
-  </xsl:template>-->
+  </xsl:template>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

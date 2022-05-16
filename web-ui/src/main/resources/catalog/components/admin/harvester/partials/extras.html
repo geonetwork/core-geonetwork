@@ -1,6 +1,10 @@
-<div>
-  <div data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw'
-    || harvester['@type'] == 'oaipmh' || harvester['@type'] == 'filesystem'">
+<fieldset>
+  <legend data-translate="">uuidMergePolicy</legend>
+  <div data-ng-show="harvester['@type'] == 'webdav'
+                     || harvester['@type'] == 'geonetwork'
+                     || harvester['@type'] == 'csw'
+                     || harvester['@type'] == 'oaipmh'
+                     || harvester['@type'] == 'filesystem'">
     <label class="control-label">
       <span data-translate="">{{"harvesterOverrideUUID" | translate}}</span>
     </label>
@@ -12,4 +16,4 @@
     </select>
     <span class="help-block ng-scope" data-translate="">harvesterOverrideUUIDHelp</span>
   </div>
-</div>
+</fieldset>

@@ -250,15 +250,6 @@
         return parseInt(scale.value);
       });
 
-      // encode url to remove accents
-      encLegends.map(function(url) {
-        try {
-          return new URL(url).toString();
-        } catch (e) {
-          return url;
-        }
-      });
-
       var spec = {
         layout: $scope.config.layout.name,
         srs: proj.getCode(),

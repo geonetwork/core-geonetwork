@@ -60,6 +60,7 @@
               permalink: false,
               hitsperpageValues: gnSearchSettings.hitsperpageValues,
               sortbyValues: gnSearchSettings.sortbyValues,
+              filters: gnSearchSettings.filters,
               params: {
                 sortBy: sortConfig[0] || 'relevance',
                 sortOrder: sortConfig[1] || ''

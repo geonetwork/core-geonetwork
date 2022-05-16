@@ -30,8 +30,8 @@
 
 
   module.controller('GnSourcesController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+    '$scope', '$http', '$rootScope', '$translate', 'gnESClient', 'Metadata',
+    function($scope, $http, $rootScope, $translate, gnESClient, Metadata) {
       $scope.sources = [];
       $scope.uiConfigurations = [];
       $scope.source = null;
@@ -39,9 +39,23 @@
       $scope.filter = {
         types: {'portal': true, 'subportal': true, 'externalportal': true, 'harvester': true}
       };
+
+      $scope.serviceRecordSearchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          type: 'service',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+
       $scope.selectSource = function(source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
-        source.groupOwner = source.groupOwner != null ? source.groupOwner + '' : null;
+        source.groupOwner = source.groupOwner || null;
         $scope.source = source;
       };
 
@@ -104,10 +118,22 @@
       };
       function loadServiceRecords() {
         var id = $scope.source.serviceRecord;
+
         if (angular.isDefined(id) && id != -1){
-          $http.get('qi?_content_type=json&fast=index&_uuid=' + id,
-            {cache: true}).then(function(r) {
-            $scope.cswServiceRecord = r.data.metadata;
+          var query =
+            {"query": {
+                "term": {
+                  "uuid": {
+                    "value": id
+                  }
+                }
+            }, "from": 0, "size": 1};
+
+          gnESClient.search(query).then(function(data) {
+            angular.forEach(data.hits.hits, function(record) {
+              var md = new Metadata(record);
+              $scope.cswServiceRecord = md;
+            });
           });
         }
       }

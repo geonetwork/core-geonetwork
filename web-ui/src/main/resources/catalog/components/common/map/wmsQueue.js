@@ -27,22 +27,32 @@
   var module = angular.module('gn_map_wmsqueue', []);
 
   /**
-   * Manage a queuing service for wms/wmts layer that are added to map.
+   * Manage a queuing service for wms/wmts/esri layer that are added to the maps.
    * Usually, a layer adding call a getCapabilities, and then add the layer
    * to map.
-   * This service have a queue array for pending layers, and errors array
-   * for layer for which the getCapabilities failed
+   * This service has a queue object composed of one prop per maps
+   * which is an array for pending layers, and an error object with one array
+   * per maps for layer for which the getCapabilities failed
    */
   module.service('gnWmsQueue', [function() {
 
     // wms pending layers list
-    var queue = [];
+    var queue = {};
 
     // wms for which getCapabilities failed
-    var errors = [];
+    var errors = {};
 
     this.queue = queue;
     this.errors = errors;
+
+    var getMapType = function (map) {
+      var type = (map && map.get && map.get('type')) || 'viewer';
+      if (queue[type] === undefined) {
+        queue[type] = [];
+        errors[type] = [];
+      }
+      return type;
+    }
 
     var getLayerIndex = function(a, layer) {
       var idx = -1;
@@ -67,7 +77,7 @@
      * @param {ol.Map} map
      */
     this.add = function(url, name, style, map) {
-      queue.push({
+      queue[getMapType(map)].push({
         url: url,
         name: name,
         map: map,
@@ -75,8 +85,8 @@
       });
     };
 
-    this.removeFromQueue = function(layer) {
-      removeFromArray(queue, layer);
+    this.removeFromQueue = function(layer, map) {
+      removeFromArray(queue[getMapType(map)], layer);
     };
 
     /**
@@ -85,15 +95,15 @@
      * @param {Object} layer contains
      *  url - name - msg
      */
-    this.error = function(layer) {
-      this.removeFromQueue(layer);
+    this.error = function(layer, map) {
+      this.removeFromQueue(layer, map);
       if (getLayerIndex(errors, layer) < 0) {
-        errors.push(layer);
+        errors[getMapType(map)].push(layer);
       }
     };
 
-    this.removeFromError = function(layer) {
-      removeFromArray(errors, layer);
+    this.removeFromError = function(layer, map) {
+      removeFromArray(errors[getMapType(map)], layer);
     };
 
     /**
@@ -109,7 +119,7 @@
         map: map,
         style: style
       };
-      return getLayerIndex(queue, layer) >= 0;
+      return getLayerIndex(queue[getMapType(map)], layer) >= 0;
     };
 
   }]);

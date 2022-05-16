@@ -88,22 +88,12 @@
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
 
-      $scope.$watch('onlyMyRecord.is', function(n, o) {
-        if (n !== o) {
-          n ? setOwner() : unsetOwner();
-        }
-      });
-
       var setOwner = function() {
         $scope.searchObj.params['owner'] = $scope.user.id;
       };
 
-      var unsetOwner = function() {
-        delete $scope.searchObj.params['owner'];
-      };
-
       $scope.$watch('user.id', function(newId, o) {
-        if (newId !== o && angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+        if (newId !== o && angular.isDefined(newId) && $scope.onlyMyRecord) {
           setOwner();
         }
       });
@@ -129,7 +119,7 @@
               deferred.resolve(data);
             }, function(reason) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: reason.data.description,
+                title: reason.data.description, //returned error JSON obj
                 timeout: 0,
                 type: 'danger'
               });
@@ -158,14 +148,6 @@
           $route.current = lastRoute; //Does the actual prevention of routing
         }
       });
-
-      $scope.setOnlyMyRecord = function() {
-        $scope.onlyMyRecord = {
-          is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
-        };
-      };
-      $scope.setOnlyMyRecord();
-
 
       // Refresh list when privileges are updated
       $scope.$on('PrivilegesUpdated', function(event, data) {

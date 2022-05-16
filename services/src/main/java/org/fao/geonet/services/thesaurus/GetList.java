@@ -32,8 +32,6 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
-//=============================================================================
-
 /**
  * Retrieve Thesauri list.
  *
@@ -42,12 +40,6 @@ import java.nio.file.Path;
 public class GetList implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context)
         throws Exception {
@@ -60,6 +52,3 @@ public class GetList implements Service {
     }
 
 }
-
-// =============================================================================
-

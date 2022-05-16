@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -648,7 +648,7 @@ public final class Geonet {
         public static final String GROUP_WEBSITE = "_groupWebsite";
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
-        public static final String GROUP_PUBLISHED = "_groupPublished";
+        public static final String GROUP_PUBLISHED = "groupPublished";
         public static final String CAT = "_cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
@@ -657,7 +657,7 @@ public final class Geonet {
         public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
-        public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
         public static final String RESOURCETITLE = "resourceTitle";
@@ -676,9 +676,21 @@ public final class Geonet {
         }
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+        public static final String STATUS_WORKFLOW = "statusWorkflow";
     }
 
     public static class SearchConfig {
         public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
     }
+
+    public static final class HttpProtocol {
+        public static final String HTTP = "http";
+        public static final String HTTPS = "https";
+    }
+
+    public static final class DefaultHttpPort {
+        public static final int HTTP = 80;
+        public static final int HTTPS = 443;
+    }
+
 }

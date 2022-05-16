@@ -1,4 +1,5 @@
-<div class="row" data-ng-controller="GnUserGroupController">
+<div class="row" data-ng-controller="GnUserGroupController"
+     id="gn-group-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -6,11 +7,16 @@
         <i data-ng-show="isLoadingGroups" class="fa fa-spinner fa-spin"></i>
       </div>
       <div class="panel-body">
-        <input class="form-control"
-               data-ng-show="groups.length > 1"
-               data-ng-model="groupSearch.$" autofocus=""
-               placeholder="{{'filter' | translate}}"/>
+        <div class="pos-relative width-100">
+          <input class="form-control"
+                 data-ng-show="groups.length > 1"
+                 data-ng-model="groupSearch.$" autofocus=""
+                 placeholder="{{'filter' | translate}}"/>
+          <span class="fa fa-times gn-input-clear"
+                ng-click="groupSearch.$ = ''" ng-show="groupSearch.$"></span>
+        </div>
         <input type="hidden" data-ng-model="groupSelected.id"/>
+        <div class="flex-spacer"></div>
         <div class="list-group">
           <a href="" class="list-group-item"
              data-ng-repeat="g in pageItems()"
@@ -58,11 +64,9 @@
             <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
-                  data-ng-hide="!user.isAdministratorOrMore()"
+                  data-ng-hide="!user.isAdministratorOrMore() || !groupSelected.id || groupSelected.id<0"
                   data-ng-disabled="searchResults.count > 0"
-                  data-ng-hide="!groupSelected.id || groupSelected.id<0"
-                  data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
-                  data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
+                  data-ng-click="removeGroup()" id="gn-btn-group-delete">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">deleteGroup</span>
           </button>
@@ -250,5 +254,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div gn-modal class="gn-confirm-delete"
+       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveGroup}"
+       id="gn-confirm-remove-group">
+    <p translate>groupDeleteConfirm</p>
   </div>
 </div>

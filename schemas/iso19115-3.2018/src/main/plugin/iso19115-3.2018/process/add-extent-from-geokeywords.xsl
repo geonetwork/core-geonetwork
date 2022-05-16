@@ -3,7 +3,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
@@ -30,10 +30,14 @@
 
   <!-- Replace or not existing extent -->
   <xsl:param name="replace" select="'0'"/>
+  <xsl:param name="boundingAll" select="'0'"/>
+  <xsl:param name="addExtentFor" select="''"/>
 
 
   <xsl:variable name="replaceMode"
                 select="geonet:parseBoolean($replace)"/>
+  <xsl:variable name="boundingAllMode"
+                select="geonet:parseBoolean($boundingAll)"/>
   <xsl:variable name="serviceUrl"
                 select="concat(substring($gurl, 1, string-length($gurl)-4), 'api/registries/vocabularies/search?_content_type=xml&amp;q=')"/>
 
@@ -54,19 +58,22 @@
                   select="string-join($root//gex:EX_Extent/gex:description/gco:CharacterString, ' ')"/>
 
     <xsl:variable name="geoKeywords"
-                  select="$root//mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword[
+                  select="$root//mri:descriptiveKeywords/*/mri:keyword[
                       not(gco:CharacterString/@gco:nilReason)
                       and (not(contains($extentDescription, gco:CharacterString))
-                      or not(contains($extentDescription, gmx:Anchor)))
-                      and ../mri:type/mri:MD_KeywordTypeCode/@codeListValue='place']"/>
+                      or not(contains($extentDescription, gcx:Anchor)))
+                      and ../mri:type/*/@codeListValue='place']"/>
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
-        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/gco:CharacterString, ', ')"/>
+        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/(gco:CharacterString|gcx:Anchor), ', ')"/>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/></name>
         <operational>true</operational>
         <params>{"gurl":{"type":"string", "defaultValue":"<xsl:value-of select="$gurl"/>"},
           "lang":{"type":"string", "defaultValue":"<xsl:value-of select="$lang"/>"},
-          "replace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$replace"/>"}}</params>
+          "addExtentFor":{"type":"string", "defaultValue":""},
+          "boundingAll":{"type":"boolean", "defaultValue":"<xsl:value-of select="$boundingAll"/>"},
+          "replace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$replace"/>"}}
+        </params>
       </suggestion>
     </xsl:if>
 
@@ -168,15 +175,37 @@
   <xsl:template name="add-extent">
     <!-- Only check keyword in main metadata language
      TODO: support multilingual keyword -->
-    <xsl:for-each
-            select="mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword[
-        normalize-space(gco:CharacterString) != '' and
-        not(gco:CharacterString/@gco:nilReason)]">
-      <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="gco:CharacterString"/>
-      </xsl:call-template>
+    <xsl:variable name="extentList">
+      <xsl:for-each
+              select="if ($addExtentFor = '')
+                      then mri:descriptiveKeywords/*/mri:keyword[
+                          normalize-space((gco:CharacterString|gcx:Anchor)) != ''
+                          and not(gco:CharacterString/@gco:nilReason)
+                          and ../mri:type/*/@codeListValue='place']
+                      else  mri:descriptiveKeywords/*/mri:keyword[
+                          normalize-space((gco:CharacterString|gcx:Anchor)) = $addExtentFor]">
+        <xsl:call-template name="get-bbox">
+          <xsl:with-param name="word" select="gco:CharacterString"/>
+        </xsl:call-template>
+      </xsl:for-each>
+    </xsl:variable>
 
-    </xsl:for-each>
+    <xsl:choose>
+      <xsl:when test="$boundingAllMode">
+        <mri:extent>
+          <xsl:copy-of
+            select="geonet:make-iso-extent(
+              string(min($extentList//gex:westBoundLongitude)),
+              string(min($extentList//gex:southBoundLatitude)),
+              string(max($extentList//gex:eastBoundLongitude)),
+              string(max($extentList//gex:northBoundLatitude)),
+              string-join($extentList//gex:description, ', '))"/>
+        </mri:extent>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="$extentList"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -191,7 +220,7 @@
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
       <xsl:for-each select="$keyword/response/keyword">
-        <xsl:if test="geo and geo/west != '' and geo/south != '' and geo/east != '' and geo/north != ''">
+        <xsl:if test="geo and geo/west != '' and geo/south != '' and geo/east != '' and geo/north != '' and count(value[text() = $word]) = 1">
           <mri:extent>
             <xsl:copy-of select="geonet:make-iso19115-3-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
           </mri:extent>

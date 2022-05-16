@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>4.0.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -126,7 +126,7 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>
-      <version>4.8.3.Final</version>
+      <version>16.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -344,6 +344,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-all</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.chemistry.opencmis</groupId>
       <artifactId>chemistry-opencmis-client-api</artifactId>
       <version>1.1.0</version>
@@ -485,6 +491,10 @@
       <version>4.3.23</version>
     </dependency>
     <dependency>
+      <groupId>com.neovisionaries</groupId>
+      <artifactId>nv-i18n</artifactId>
+    </dependency>
+    <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
       <version>2.1</version>
@@ -492,7 +502,6 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>0.2.2</version>
     </dependency>
     <dependency>
       <groupId>org.owasp.esapi</groupId>

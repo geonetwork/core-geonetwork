@@ -253,8 +253,8 @@
             appProfile.fields.filter(function(field) {
               return field.name === fieldName;
             })[0];
-          var tokenSeparator = appProfile && appProfile.tokenizedFields &&
-            appProfile.tokenizedFields[fieldName];
+          var tokenSeparator = (appProfile && appProfile.tokenizedFields &&
+            appProfile.tokenizedFields[fieldName]) || '';
 
           var values = attrValue.values && Object.keys(attrValue.values).length ?
             attrValue.values : attrValue.value;
@@ -346,6 +346,7 @@
             if (newField.label) {
               field.label = newField.label[gnGlobalSettings.lang];
             }
+            field.definition = newField.definition;
             field.aggs = newField.aggs;
             field.display = newField.display;
             // add a flag for tokenized fields

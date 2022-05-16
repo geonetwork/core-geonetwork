@@ -1,0 +1,52 @@
+<div class="gn-info-list-blocks" data-ng-if="children"
+     data-ng-class="{
+      'gn-info-list-blocks': type === 'blocks' || type === undefined,
+      'gn-info-list-large': type === 'large',
+      'gn-info-list-small': type === 'small'}">
+
+  <div class="">
+    <div id="info-toggle-buttons"
+         class="btn-group pull-right"
+         data-toggle="buttons"
+         data-ng-if="showTypes">
+      <button id="btn-toggle-blocks" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('blocks')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'blocks' || type === undefined}"
+              aria-label="{{'listTypeBlocks' | translate}}">
+        <i class="fa fa-th-large" aria-hidden="true"></i>
+      </button>
+      <button id="btn-toggle-large" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('large')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'large'}"
+              aria-label="{{'listTypeLarge' | translate}}">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </button>
+      <button id="btn-toggle-small" type="button" class="btn btn-default"
+              data-ng-click="toggleListType('small')"
+              data-ng-model="type"
+              data-ng-class="{'active': type === 'small'}"
+              aria-label="{{'listTypeSmall' | translate}}">
+        <i class="fa fa-align-justify" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <ul class="row list-group gn-info-list">
+    <gn-metadata-card data-ng-repeat="md in displayedRecords"
+                      md="md"
+                      formatter-url="formatter.defaultUrl">
+      <span class="label label-default gn-card-badge"
+            title="{{md.resourceType[0] | translate}}"
+            data-ng-class="{
+            'gn-card-series': md.resourceType[0] === 'series',
+            'gn-card-nonGeographicDataset': md.resourceType[0] === 'nonGeographicDataset',
+            'gn-card-service': md.resourceType[0] === 'services' || md.resourceType[0] === 'application',
+            'gn-card-dataset': md.resourceType[0] !== 'series' && md.resourceType[0] !== 'services' && md.resourceType[0] !== 'application' && md.resourceType[0] !== 'nonGeographicDataset'
+            }">
+         <i class="fa gn-icon-{{md.resourceType[0]}}"/>
+      </span>
+    </gn-metadata-card>
+  </ul>
+</div>

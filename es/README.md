@@ -1,35 +1,69 @@
-## Install, configure and start Elasticsearch
+# Install, configure and start Elasticsearch
 
-### Manual installation
+## Manual installation
 
-Download Elasticsearch (at least 7.6.2 for Geonetwork 3.8.x) from https://www.elastic.co/fr/downloads/elasticsearch
-and copy it to the ES module. eg. es/elasticsearch-7.6.2
+1. Download Elasticsearch (at least 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module. eg. es/elasticsearch-7.6.2
  
-Start ES using:
+2. Start ES using:
 
-```shell script
-./bin/elasticsearch
-```
+   ```shell script
+   ./bin/elasticsearch
+   ```
 
+3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
-### Maven installation
+## Maven installation
 
-Maven can take care of the installation steps:
-* download
-* initialize collection
-* start
+1. Maven can take care of the installation steps:
 
-Use the following commands:
+   * download
+   * initialize collection
+   * start
 
-```shell script
-cd es
-mvn install -Pes-download
-mvn exec:exec -Des-start
-```
+2. Use the following commands:
+
+   ```shell script
+   cd es
+   mvn install -Pes-download
+   mvn exec:exec -Des-start
+   ```
+3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+
+## Docker installation
+
+1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
+
+   ```
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   ```
+
+2. Use docker run, leacing 9200 available:
+
+   ```
+   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   ```
+
+3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+
+## Docker compose installation
+
+1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
+
+   ```
+   cd es
+   docker-compose up
+   ```
+
+3. Check that it is running using your browser:
+   
+   * Elasticsearch: http://localhost:9200
+   * Kabana: http://localhost:5601
+
+# Configuration
 
 Optionally you can manually create index but they will be created by the catalogue when 
 the Elastic instance is available and if index does not exist.
-
 
 ```shell script
 IDX_PREFIX=gn
@@ -47,39 +81,37 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
 
- Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+## Multilingual configuration
 
-### Multilingual configuration (beta)
+Default index is configured with analyzer for the following languages:
+* English
+* French
+* German
+* Italian
+  
+To add a new language, update the index schema in `datadir/config/index/records.json` and update the containing fields starting with `lang`.
 
+First create a full text search field for the new language in the `any` object field eg. `any.langfre` and define the proper analyzer.
 
-* Stop Elasticsearch
-* Define which analyzer to use https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html depending on the language(s) used in your catalogue
-* Build the application with the default analyzer to use (or configure it in `data/index/records.json`)
+Then add the new language like the others.
 
-```shell script
-mvn clean install -Des.default.analyzer=french_heavy
-```
+From the admin console > tools, Delete index and reindex.
 
-* Install ICU plugin (if needed)
-
-```shell script
-elasticsearch-plugin install analysis-icu
-```
-
-* Start Elasticsearch
-* Drop and rebuild your index
+Don't hesitate to propose a Pull Request with the new language.
 
 
-### Production use
+# Production use
 
-Configure ES to start on server startup. It is recommended to protect `gn-records` index from the Internet access.
+1. Configure ES to start on server startup. It is recommended to protect `gn-records` index from the Internet access.
 
- * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
+   * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 
 
-## Errors
+# Troubleshoot
 
-* Max number of fields: As we are using dynamic fields, when having a large number of records, the system may reach the maximum number of fields in Elasticsearch. In this situation, Elasticsearch is reporting: 
+## Max number of fields
+
+Max number of fields: As we are using dynamic fields, when having a large number of records, the system may reach the maximum number of fields in Elasticsearch. In this situation, Elasticsearch is reporting: 
 
 ```
 java.lang.IllegalArgumentException: Limit of total fields [1000] in index [gn-records] has been exceeded
@@ -102,9 +134,9 @@ curl -s -XGET localhost:9200/gn-records/_mapping?pretty | grep type | wc -l
 
 See https://www.elastic.co/guide/en/elasticsearch/reference/master/mapping.html#mapping
 
+## Field expansion limit
 
-
-* Field expansion limit: The client application will report "Query returned an error. Check the console for details" and the error contains the following:
+The client application will report "Query returned an error. Check the console for details" and the error contains the following:
 
 ```
 field expansion for [*] matches too many fields, limit: 1024

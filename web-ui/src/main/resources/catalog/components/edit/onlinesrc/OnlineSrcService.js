@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
@@ -49,12 +49,16 @@
     'gnCurrentEdit',
     '$q',
     '$http',
+    '$window',
     '$rootScope',
     '$translate',
     '$filter',
     'Metadata',
+    'gnUrlUtils',
+    'gnGlobalSettings',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $rootScope, $translate, $filter, Metadata) {
+             $q, $http, $window, $rootScope, $translate, $filter, Metadata,
+             gnUrlUtils, gnGlobalSettings) {
 
       var reload = false;
       var openCb = {};
@@ -111,20 +115,32 @@
         if (angular.isArray(params.selectedLayers) &&
             params.selectedLayers.length > 0) {
           var names = [],
-              descs = [];
+            descs = [];
 
           angular.forEach(params.selectedLayers, function(layer) {
             names.push(layer.Name || layer.name);
             descs.push(layer.Title || layer.title);
           });
 
-          angular.extend(params, {
-            name: names.join(','),
-            desc: descs.join(',')
-          });
+          var addLayersInUrl = params.addLayersInUrl;
+
+          if ((addLayersInUrl != '') && (params.protocol.indexOf('OGC:WMS') >= 0)) {
+            params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
+            params.url = gnUrlUtils.append(params.url, addLayersInUrl + '=' + names.join(','));
+          }
+
+          if (params.wmsResources.addLayerNamesMode == "resourcename") {
+            angular.extend(params, {
+              name: names.join(','),
+              desc: descs.join(',')
+            });
+          }
         }
+
         delete params.layers;
         delete params.selectedLayers;
+        delete params.wmsResources;
+        delete params.addLayersInUrl;
         return params;
       };
 
@@ -212,19 +228,53 @@
          * @return {HttpPromise} Future object
          */
         getAllResources: function(types) {
+          var linksAndRelatedPromises = [],
+            apiPrefix = '../api/records/' + gnCurrentEdit.uuid,
+            isArray = angular.isArray(types),
+            defaultRelatedTypes = ['thumbnails', 'onlines'],
+            relatedTypes = [],
+            associatedTypes = [];
 
-          var defer = $q.defer();
-          var url = '../api/records/' + gnCurrentEdit.uuid + '/related' +
-                      (angular.isArray(types) ? '?' + types.join('&type=') : '');
-          $http.get(url, {
+          if (isArray) {
+            var relatedTypeFilterFn = function(t) {
+              return defaultRelatedTypes.indexOf(t) !== -1;
+            };
+            relatedTypes = types.filter(relatedTypeFilterFn);
+            associatedTypes = types.filter(function(t) {
+              return !relatedTypeFilterFn(t);
+            });
+          } else {
+            relatedTypes = defaultRelatedTypes;
+          }
+
+          linksAndRelatedPromises.push($http.get(apiPrefix + '/related?type=' + relatedTypes.join('&type='), {
             headers: {
               'Accept': 'application/json'
             }
-          })
-              .success(function(data) {
-                defer.resolve(data);
-              });
-          return defer.promise;
+          }));
+          linksAndRelatedPromises.push($http.get(apiPrefix + '/associated?type=' + associatedTypes.join('&type='), {
+            headers: {
+              'Accept': 'application/json'
+            }
+          }));
+
+          var all = $q.all(linksAndRelatedPromises).then(function(result){
+            var relations = {};
+            for (var i = 0; i < result.length; i++){
+              angular.extend(relations, result[i].data);
+            }
+            Object.keys(relations).forEach(function(key) {
+              if (defaultRelatedTypes.indexOf(key) === -1) {
+                if (angular.isArray(relations[key])) {
+                  relations[key] = relations[key].map(function(r) {
+                    return new Metadata(r);
+                  })
+                }
+              }
+            });
+            return relations;
+          });
+          return all;
         },
 
         /**
@@ -285,6 +335,50 @@
           } else {
             console.warn('No callback functions available for \'' + type +
                 '\'. Check the type value.');
+          }
+        },
+
+        /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#openExternalResourceManagement
+         *
+         * @description
+         * Open open external resource management popup
+         * function (from the directive).
+         *
+         * @param {r} MetadataResource
+         * @param {$window} window object
+         */
+        openExternalResourceManagement: function(r, $window) {
+          try {
+            var url = r.metadataResourceExternalManagementProperties.url;
+          } catch (e) {
+            console.log("external management url not defined")
+            return
+          }
+
+          var modal = gnCurrentEdit.resourceManagementExternalProperties.modal;
+          var externalManagementWindowsParameters = gnCurrentEdit.resourceManagementExternalProperties.windowParameters;
+
+          var win = window.open(url, "_blank", externalManagementWindowsParameters)
+
+          if (modal) {
+            var ZIndex = $('.modal').css("z-index");
+            $('.modal').css("z-index", 0);
+            var timer = setInterval(function () {
+              if (win.closed) {
+                clearInterval(timer);
+                $('.modal').css("z-index", ZIndex);
+                $rootScope.$broadcast('gnFileStoreUploadDone');
+              } else {
+                // whenever user comes back to the browser window give them focus on the popup.
+                // This will simulat a modal
+                if (document.hasFocus()) {
+                  win.focus()
+                }
+              }
+            }, 250);
           }
         },
 
@@ -628,11 +722,11 @@
          * @description
          * The `removeService` removes a service from a metadata.
          *
-         * @param {Object} onlinesrc the online resource to remove
+         * @param {Object} record the metadata to remove
          */
-        removeService: function(onlinesrc) {
+        removeService: function(record) {
           var params = {
-            uuid: onlinesrc.id,
+            uuid: record.uuid,
             uuidref: gnCurrentEdit.uuid
           }, service = this;
 
@@ -662,12 +756,12 @@
          * The `removeDataset` removes a dataset from a metadata of
          * service.
          *
-         * @param {Object} onlinesrc the online resource to remove
+         * @param {Object} record the record resource to remove
          */
-        removeDataset: function(onlinesrc) {
+        removeDataset: function(record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.id
+            uuidref: record.uuid
           };
           runProcess(this,
               setParams('datasets-remove', params));
@@ -682,11 +776,11 @@
          * The `removeMdLink` removes a linked metadata by calling a process.
          *
          * @param {string} mode can be 'source', 'parent'
-         * @param {Object} onlinesrc the online resource to remove
+         * @param {Object} record the record to remove
          */
-        removeMdLink: function(mode, onlinesrc) {
+        removeMdLink: function(mode, record) {
           var params = {};
-          params[mode + 'Uuid'] = onlinesrc.id;
+          params[mode + 'Uuid'] = record.uuid;
           runProcess(this,
               setParams(mode + '-remove', params));
         },
@@ -700,13 +794,13 @@
          * The `removeFeatureCatalog` removes a feature catalog link from the
          * current metadata.
          *
-         * @param {Object} onlinesrc the online resource to remove
+         * @param {Object} record the record to remove
          */
-        removeFeatureCatalog: function(onlinesrc) {
+        removeFeatureCatalog: function(record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc['@subtype'] ? onlinesrc.url :
-                onlinesrc.id
+            uuidref: record['@subtype'] ? record.url :
+              record.uuid
           };
           runProcess(this,
               setParams('fcats-remove', params));
@@ -721,12 +815,12 @@
          * The `removeSibling` removes a sibling link from the
          * current metadata.
          *
-         * @param {Object} onlinesrc the online resource to remove
+         * @param {Object} record the record to remove
          */
-        removeSibling: function(onlinesrc) {
+        removeSibling: function(record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.id
+            uuidref: record.uuid
           };
           runProcess(this,
               setParams('sibling-remove', params));

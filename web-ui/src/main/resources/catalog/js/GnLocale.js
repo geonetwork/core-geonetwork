@@ -96,7 +96,28 @@
         var allPromises = [];
 
         angular.forEach(options.locales, function(value, index) {
-          var langUrl = value.startsWith('../') ?
+          /* Check value for:
+              1) Relative url to the translation file: use that url.
+                  Configured with:
+
+                  module.config(['$LOCALES', function($LOCALES) {
+                    $LOCALES.push('../../catalog/locales/en-data.json');
+                  }]);
+
+              2) Relative url with locate type (usually loaded from a custom view):
+                  use buildUrl to create the url. Configured with:
+
+                  module.config(['$LOCALES', function($LOCALES) {
+                    $LOCALES.push('../../catalog/views/myview/locales/|core'');
+                  }]);
+
+              3) Non relative url, usually for language packs:
+                  use buildUrl to create the url.
+
+                  /../api/i18n/packages/search
+
+          */
+          var langUrl = (value.startsWith('../') && (value.indexOf("|") == -1)) ?
                           value :
                           buildUrl(options.prefix, options.key,
               value, options.suffix);
@@ -152,8 +173,9 @@
       gnLangs.provider = $translateProvider;
 
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
-      // $translateProvider.useSanitizeValueStrategy('escape');
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+      //$translateProvider.useSanitizeValueStrategy('escape');
+      $translateProvider.useSanitizeValueStrategy('escapeParameters');
+      // $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
       moment.locale(gnGlobalSettings.lang);
     }]);

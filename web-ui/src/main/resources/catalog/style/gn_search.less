@@ -37,13 +37,13 @@
       display: block;
     }
   }
-  .gn-facet-root-container {
-    input.gn-facet-filter {
-      margin-left: 18px;
-      width: calc(~"100% - 18px");
-      border-color: @panel-default-border;
-    }
-  }
+  //.gn-facet-root-container {
+  //  input.gn-facet-filter {
+  //    margin-left: 18px;
+  //    width: calc(~"100% - 18px");
+  //    border-color: @panel-default-border;
+  //  }
+  //}
   .gn-facet-container {
     margin-left: 15px;
     margin-top: 5px;
@@ -54,7 +54,7 @@
         margin-right: 3px;
       }
       * {
-        color: lighten(@gray-light, 10%);
+        color: @gray-dark;
         transition: color 0.1s;
       }
       &:hover * {
@@ -118,33 +118,18 @@
   .gn-facet-more {
     margin-left: 15px;
   }
-  .gn-facet-filter {
-    position: relative;
-    &:before {
-      font-family: FontAwesome;
-      content: "\f0b0";
-      float: right;
-      margin: 0.5em 0.4em 0 0;
-      font-size: 16px;
-      color: #d3d3d3;
-    }
-    .clear {
-      right: 2em;
-      position: absolute;
-      top: .75em;
-      color: #666;
-      &:hover {
-        cursor: pointer;
-        color: #222;
-      }
-    }
-
-    input {
+  .gn-facet-input-group {
+    margin-left: 18px;
+    input, .input-group-addon, .btn {
+      background: none;
       border: none;
       border-bottom: 1px solid #d3d3d3;
       border-radius: 0;
       box-shadow: none;
-      width: 90%;
+    }
+    .input-group-addon {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
   .input-daterange {
@@ -193,7 +178,7 @@
 }
 .gn-form-any {
   input.input-lg {
-    height:45px;
+    height: 46px;
     border-radius: 3px;
   }
   .input-group-btn a {
@@ -206,6 +191,9 @@
     li a {
       .text-overflow();
     }
+  }
+  .dropdown-menu.dropdown-auto {
+    width: auto;
   }
   [data-gn-user-searches-list] .dropdown-menu {
     width: auto;
@@ -449,10 +437,7 @@
     font-style: italic;
   }
   .gn-md-links, .gn-md-related {
-    background: rgba(0,0,0,.02);
-    line-height: 3em;
-    font-size: 90%;
-    margin: 0;
+    margin: 4px 0 0 0;
     .dropdown-menu {
       max-width: 500px;
       li a {
@@ -475,9 +460,9 @@
     color: #666;
   }
   li:hover {
-    background: lighten(spin(@state-info-bg, -10), 7%);
+    background-color: #f5f5f5;
+    transition: background-color ease 0.5s;
     cursor: pointer;
-    background-color:  #428bca;
   }
   .invisible {
     display: none;
@@ -647,6 +632,8 @@ button.active [role=tooltip] {
     max-width: 400px;
   }
   .gn-share-grid {
+    overflow: auto;
+    margin-bottom: 5px;
     tbody {
       max-height: 400px;
       overflow-y: auto;

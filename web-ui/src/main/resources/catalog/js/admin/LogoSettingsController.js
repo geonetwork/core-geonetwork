@@ -103,10 +103,18 @@
       };
 
       /**
-       * Remove the logo and refresh the list when done.
+       * Ask for confirmation to delete a logo
        */
       $scope.removeLogo = function(logoName) {
-        $http.delete('../api/logos/' + logoName)
+        $scope.remLogoName = logoName;
+        $('#gn-confirm-remove-logo').modal('show');
+      }
+
+      /**
+       * Remove the logo and refresh the list when done.
+       */
+      $scope.confirmRemoveLogo = function(logoName) {
+        $http.delete('../api/logos/' + $scope.remLogoName)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('logoRemoved'),
@@ -122,6 +130,42 @@
                 type: 'danger'});
               loadLogo();
             });
+      };
+
+      $scope.filterLogoList = function(e,formId) {
+
+        var filterValue = e.target.value.toLowerCase();
+
+        $(formId + " .list-group-item").filter(function() {
+
+          var filterText = $(this).find('label').text().toLowerCase();
+          var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
+
+          if (matchStart > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      };
+
+      $scope.resetFilter = function(formId) {
+
+        $(formId + " .list-group-item").each(function() {
+          // clear filter
+          $('#filter-settings').val('');
+          // show the element
+          $(this).show();
+        });
+
+      };
+
+      /**
+       * Toggle the logo height
+       * @param  {String} type Type of logo height selected
+       */
+      $scope.toggleLogoHeight = function(type) {
+        $scope.logoheightType = type;
       };
 
       loadLogo();

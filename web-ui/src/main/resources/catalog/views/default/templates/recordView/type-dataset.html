@@ -1,0 +1,152 @@
+<!-- title & summary -->
+<div class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-top gn-margin-bottom gn-padding-top gn-padding-bottom">
+  <div ng-include="'../../catalog/views/default/templates/recordView/status.html'"/>
+
+  <div class="col-md-8 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/title.html'"/>
+  </div>
+  <div class="col-md-4 gn-md-side">
+    <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
+
+    <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"/>
+
+    <div class="gn-margin-top" ng-include="'../../catalog/views/default/templates/recordView/summary.html'"/>
+  </div>
+</div>
+
+<!-- map & extent -->
+<div class="row gn-section gn-padding-top">
+  <div class="col-md-8 gn-record">
+    <h2 data-translate="">spatialExtent</h2>
+    <div data-gn-data-preview="mdView.current.record"/>
+
+    <br/>
+    <div data-gn-keyword-badges="mdView.current.record"
+         data-thesaurus="viewConfig.locationThesaurus"/>
+  </div>
+  <!-- /.col-md-8 gn-record -->
+  <div class="col-md-4 gn-md-side gn-nopadding-top">
+    <div ng-include="'../../catalog/views/default/templates/recordView/spatial.html'"/>
+  </div>
+  <!-- /.col-md-4 gn-md-side -->
+</div>
+
+<!-- links (Download, API, Others) -->
+<div class="row gn-section">
+  <div class="col-md-8 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
+    <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
+  </div>
+  <!-- /.col-md-8 gn-record -->
+  <div class="gn-md-side"
+       data-ng-class="[].concat(mdView.current.record.related.datasets, mdView.current.record.related.services).length > 3 ? 'col-md-12' : 'col-md-4'">
+    <!-- format -->
+    <div data-ng-if="mdView.current.record.format"
+         class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded">
+        <i class="fa fa-fw fa-globe"></i>
+      </span>
+      <div>
+        <h3 data-translate="">format</h3>
+        <ul class="gn-label-list">
+          <li data-ng-repeat="f in mdView.current.record.format track by $index"
+            <a data-gn-search-filter-popup-link="format"
+               data-filter="f">{{f}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div data-ng-if="mdView.current.record.related.uuids"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-types="services"
+         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw gn-icon-service\'></i></span><strong>' + ('openRecordservices' | translate) + '</strong>'}}">
+    </div>
+    <div data-ng-if="mdView.current.record.related.uuids"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-size="4"
+         data-types="datasets"
+         data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw gn-icon-dataset\'></i></span><strong>' + ('openRecorddatasets' | translate) + '</strong>'}}">
+    </div>
+  </div>
+</div>
+
+<div class="row gn-section">
+  <div class="col-md-12 gn-record">
+    <h2 data-translate="">technicalInformation</h2>
+  </div>
+  <div class="col-md-12 gn-md-side gn-nopadding-top">
+    <div class="col-3 gn-padding-bottom-lg" ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
+  </div>
+</div>
+
+<div class="row gn-section"
+     data-ng-if="mdView.current.record.featureTypes.length
+                 || mdView.current.record.related.fcats.length > 0">
+  <div class="col-md-12 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/featurecatalogue.html'"/>
+  </div>
+</div>
+
+<div class="row"
+     data-ng-if="mdView.current.record.lineage
+                 || mdView.current.record.sourceDescription
+                 || mdView.current.record.supplementalInformation">
+  <div class="col-md-8 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"/>
+  </div>
+  <!-- /.col-md-8 gn-record -->
+  <div class="gn-md-side">
+    <div ng-include="'../../catalog/views/default/templates/recordView/sources.html'"/>
+  </div>
+</div>
+
+<div class="row gn-section gn-padding-bottom-lg"
+     data-ng-if="mdView.current.record.specificationConformance">
+  <div class="col-md-8 gn-record">
+    <div ng-include="'../../catalog/views/default/templates/recordView/quality.html'"/>
+  </div>
+</div>
+
+<div class="row gn-section">
+  <div class="col-md-8 gn-record gn-break">
+    <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'"/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 gn-record">
+    <div data-ng-if="mdView.current.record.related.uuids"
+         data-gn-related="mdView.current.record"
+         data-user="user"
+         data-layout="card"
+         data-types="children"
+         data-title="{{'seriesComposedOf' | translate}}">
+    </div>
+
+    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'"/>
+  </div>
+</div>
+
+<!-- metadata -->
+<div class="gn-section row">
+  <h2 class="col-md-12" data-translate="">metadataInformation</h2>
+  <div class="col-md-8">
+    <div ng-include="'../../catalog/views/default/templates/recordView/metadatacontact.html'"/>
+  </div>
+  <div class="col-md-4 gn-md-side">
+    <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div ng-include="'../../catalog/views/default/templates/recordView/share.html'"/>
+  </div>
+</div>
+
+<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>

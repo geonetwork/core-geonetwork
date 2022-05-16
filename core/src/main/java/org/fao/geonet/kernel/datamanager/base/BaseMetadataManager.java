@@ -238,7 +238,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
                 new BatchOpsMetadataReindexer(
                     context.getBean(DataManager.class),
-                    integerList).process(false);
+                    integerList).process(settingManager.getSiteId(), false);
             } else {
                 metadataIndexer.batchIndexInThreadPool(context, toIndex);
             }
@@ -726,15 +726,17 @@ public class BaseMetadataManager implements IMetadataManager {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
+        
+        String uuidBeforeUfo = null;
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
 
             final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
-            String uuid = findUuid(metadataXml, schema, metadata);
+            uuidBeforeUfo = findUuid(metadataXml, schema, metadata);
 
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid,
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuidBeforeUfo, metadataXml, parentUuid,
                 (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
@@ -758,7 +760,10 @@ public class BaseMetadataManager implements IMetadataManager {
             }
         } finally {
             if (index) {
-                // --- update search criteria
+                // Delete old record if UUID changed
+                if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
+                    getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
+                }
                 metadataIndexer.indexMetadata(metadataId, true);
             }
         }
@@ -1276,5 +1281,20 @@ public class BaseMetadataManager implements IMetadataManager {
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
         }
+    }
+
+    @Override
+    public boolean isValid(Integer id) {
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            return false;
+        }
+        for (Object elem : validationInfo) {
+            MetadataValidation vi = (MetadataValidation) elem;
+            if (!vi.isValid() && vi.isRequired()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

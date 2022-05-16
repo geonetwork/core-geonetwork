@@ -1,0 +1,42 @@
+<div data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
+                     || mdView.current.record.MD_LegalConstraintsOtherConstraints"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded" title="{{'legalConstraints' | translate}}">
+        <i class="fa fa-fw fa-gavel"></i>
+      </span>
+  <div>
+    <h2 data-translate="">accessAndUseConstraints</h2>
+
+    <p data-gn-metadata-object-field="MD_LegalConstraintsOtherConstraints"
+       data-record="mdView.current.record"/>
+
+    <p data-gn-metadata-object-field="MD_LegalConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded" title="{{'securityConstraints' | translate}}">
+        <i class="fa fa-fw fa-lock"></i>
+      </span>
+  <div>
+    <h2 data-translate="">securityConstraints</h2>
+
+    <p data-gn-metadata-object-field="MD_SecurityConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation"
+     class="flex-row gn-margin-bottom">
+      <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
+        <i class="fa fa-fw fa-lock"></i>
+      </span>
+  <div>
+    <h2 data-translate="">resourceConstraints</h2>
+
+    <p data-gn-metadata-object-field="MD_ConstraintsUseLimitation"
+       data-record="mdView.current.record"/>
+  </div>
+</div>

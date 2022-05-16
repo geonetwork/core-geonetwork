@@ -33,10 +33,11 @@
    * All facet panel
    * @constructor
    */
-  var FacetsController = function ($scope) {
+  var FacetsController = function ($scope, $filter) {
     this.fLvlCollapse = {}
     this.currentFacet
     this.$scope = $scope
+    this.$filter = $filter
 
     $scope.$watch(
       function () {
@@ -54,7 +55,7 @@
 
         var lastFacet = this.lastUpdatedFacet
 
-        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
+        if (this._isNotNestedFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
           this.list.forEach(function (f) {
             if (f.key === lastFacet.key) {
               f.items = lastFacet.items
@@ -97,10 +98,29 @@
   }
 
   FacetsController.prototype.filterTerms = function (facet) {
-    this.searchCtrl.filterTerms(facet).then(function (terms) {
-      angular.merge(facet, terms);
-      facet.items = terms.items;
-    });
+    if (facet.meta && facet.meta.filterByTranslation) {
+      var match = [];
+      if (!facet.originalItems) {
+        facet.originalItems = facet.items;
+      }
+      if (facet.include === '') {
+        facet.items = facet.originalItems;
+        return;
+      }
+      for (var i = 0; i < facet.originalItems.length; i ++) {
+        var bucket = facet.originalItems[i],
+            t = this.$filter('facetTranslator')(bucket.value, facet.key);
+        if (t.match(new RegExp(facet.include, 'i')) != null) {
+          match.push(bucket);
+        }
+      }
+      facet.items = match;
+    } else {
+      this.searchCtrl.filterTerms(facet).then(function (terms) {
+        angular.merge(facet, terms);
+        facet.items = terms.items;
+      });
+    }
   }
 
   FacetsController.prototype.filter = function (facet, item) {
@@ -128,20 +148,34 @@
   };
 
 
-  FacetsController.prototype._isFlatTermsFacet = function (facet) {
-    return facet && (facet.type === 'terms') && !facet.aggs
+  FacetsController.prototype._isNotNestedFacet = function (facet) {
+    return facet && (facet.type === 'terms' || facet.type === 'tree') && !facet.aggs
   }
 
   FacetsController.$inject = [
-    '$scope'
+    '$scope', '$filter'
   ]
 
   // Define the translation group key matching the facet key
   var facetKeyToTranslationGroupMap = new Map([
     ['isTemplate', 'recordType'],
     ['groupOwner', 'group'],
+    ['groupPublishedId', 'group'],
     ['sourceCatalogue', 'source']
   ]);
+
+  module.service('gnFacetSorter', ['$filter', function($filter) {
+    this.sortByTranslation = function(agg, bucket) {
+      if (agg && agg.meta && agg.meta.orderByTranslation) {
+        return function(facet) {
+          return $filter('facetTranslator')(facet.value || facet.key, bucket);
+        }
+      } else {
+        return function(facet) {return facet.key};
+      }
+    }
+  }]);
+
 
   module.filter('facetTranslator', ['$translate', function($translate) {
 
@@ -183,15 +217,16 @@
   }]);
 
   module.directive('esFacets', [
-   'gnLangs',
-    function (gnLangs) {
+   'gnFacetSorter', 'gnSearchSettings',
+    function (gnFacetSorter, gnSearchSettings) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
         controller: FacetsController,
         bindToController: true,
         scope: {
-          list: '<esFacets'
+          list: '<esFacets',
+          tabField: '='
         },
         require: {
           searchCtrl: '^^ngSearchForm'
@@ -201,6 +236,11 @@
             'partials/facets.html'
         },
         link: function (scope, element, attrs) {
+          // Applicaton tab field configured
+          scope.appTabField = gnSearchSettings.facetTabField;
+          // Directive tab field property
+          scope.isTabMode = scope.ctrl.tabField !== undefined;
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
         }
       }
     }])
@@ -238,6 +278,7 @@
         value = '-('+value+')';
       }
     } else if (facet.type === 'tree') {
+      this.facetsCtrl.lastUpdatedFacet = facet;
     }
     this.searchCtrl.updateState(item.path, value);
   }
@@ -265,6 +306,7 @@
     function (gnLangs) {
       return {
         restrict: 'A',
+        replace: true,
         controllerAs: 'ctrl',
         controller: FacetController,
         bindToController: true,

@@ -1,0 +1,45 @@
+<div data-ng-repeat="featureType in mdView.current.record.featureTypes">
+
+  <h3 data-translate="">featureAttributeTable</h3>
+
+  <table class="table table-striped">
+    <tbody>
+    <tr data-ng-if="featureType.typeName">
+      <th></th>
+      <td>{{featureType.typeName}}</td>
+    </tr>
+    <tr data-ng-if="featureType.definition">
+      <th data-translate="">featureDefinition</th>
+      <td>{{featureType.definition}}</td>
+    </tr>
+    <tr data-ng-if="featureType.code">
+      <th data-translate="">featureCode</th>
+      <td>{{featureType.code}}</td>
+    </tr>
+    <tr data-ng-if="featureType.isAbstract">
+      <th data-translate="">featureIsAbstract</th>
+      <td>{{featureType.isAbstract}}</td>
+    </tr>
+    <tr data-ng-if="featureType.aliases">
+      <th data-translate="">featureAliases</th>
+      <td>{{featureType.aliases}}</td>
+    </tr>
+    <tr data-ng-if="featureType.attributeTable">
+      <td colspan="2" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
+    </tr>
+    <tr data-ng-if="featureType.attributeTable">
+      <td colspan="2" class="gn-noborder-top gn-table-attribute">
+        <div data-ng-if="featureType.attributeTable"
+             data-gn-attribute-table-renderer="featureType.attributeTable">
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div data-ng-if="mdView.current.record.related.uuids"
+     data-gn-related="mdView.current.record"
+     data-user="user"
+     data-types="fcats|related"
+     data-title="{{'featureCatalog' | translate}}">
+</div>

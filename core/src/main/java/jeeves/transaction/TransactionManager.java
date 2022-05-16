@@ -30,6 +30,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Collection;
 
@@ -72,6 +74,8 @@ public class TransactionManager {
 
             result = action.doInTransaction(transaction);
 
+
+
         } catch (Throwable e) {
             Log.error(Log.JEEVES, "Error occurred within a transaction", e);
             if (exception[0] == null) {
@@ -81,10 +85,24 @@ public class TransactionManager {
             doRollback(context, transactionManager, transaction);
         } finally {
             try {
-                if (readOnly) {
+                // GlobalExceptionManager stores the exception in a request attribute, to be processed to rollback the transaction
+                // as otherwise GlobalExceptionManager processes the exception and the code doesn't enter in the catch block
+                // to rollback the transaction
+                Throwable requestException = null;
+                try {
+                    requestException = (Throwable) RequestContextHolder.currentRequestAttributes().getAttribute("exception", RequestAttributes.SCOPE_REQUEST);
+                } catch (IllegalStateException ex) {
+                    // Ignore: transaction non-related to a web request
+                }
+
+                if (requestException != null) {
                     doRollback(context, transactionManager, transaction);
-                } else if (!rolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    doCommit(context, transactionManager, transaction);
+                } else {
+                    if (readOnly) {
+                        doRollback(context, transactionManager, transaction);
+                    } else if (!rolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
+                        doCommit(context, transactionManager, transaction);
+                    }
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {

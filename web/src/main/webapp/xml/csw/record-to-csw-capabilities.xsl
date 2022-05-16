@@ -11,11 +11,14 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:srv19115="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco139="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <xsl:param name="outputLanguage" select="''"/>
@@ -31,6 +34,15 @@
                 select="if ($outputLanguage != '' and ($outputLanguage = $mainLanguage or count($otherLanguages[*/@codeListValue = $outputLanguage]) > 0))
                                 then concat('#', $otherLanguages[*/@codeListValue = $outputLanguage]/../@id)
                                 else ''"/>
+
+  <xsl:variable name="endPoint"
+                select="//srv19115:containsOperations/srv19115:SV_OperationMetadata/srv19115:connectPoint/(cit:CI_OnlineResource[cit:protocol/gco:CharacterString='OGC:CSW']/cit:linkage/gco:CharacterString|gmd:CI_OnlineResource[gmd:protocol/*/text()='OGC:CSW']/gmd:linkage/gmd:URL)" />
+
+  <xsl:variable name="endPointValue"
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT'" />
+
+  <xsl:variable name="endPointValuePublication"
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT/csw-publication'" />
 
   <xsl:template mode="localised" match="*">
     <xsl:variable name="translation"
@@ -205,8 +217,8 @@
         <ows:Operation name="GetCapabilities">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="sections">
@@ -223,8 +235,8 @@
         <ows:Operation name="DescribeRecord">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputFormat">
@@ -242,16 +254,16 @@
         <ows:Operation name="GetDomain">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
         </ows:Operation>
         <ows:Operation name="GetRecords">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="resultType">
@@ -276,8 +288,8 @@
         <ows:Operation name="GetRecordById">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="${$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputSchema"/>
@@ -302,16 +314,16 @@
         <ows:Operation name="Transaction">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
+              <ows:Get xlink:href="{$endPointValuePublication}"/>
+              <ows:Post xlink:href="{$endPointValuePublication}"/>
             </ows:HTTP>
           </ows:DCP>
         </ows:Operation>
         <ows:Operation name="Harvest">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
+              <ows:Get xlink:href="{$endPointValuePublication}"/>
+              <ows:Post xlink:href="{$endPointValuePublication}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="ResourceType">
@@ -335,7 +347,7 @@
 
           <inspire_ds:ExtendedCapabilities>
             <inspire_com:ResourceLocator>
-              <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+              <inspire_com:URL>{$endPointValue}?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
               <inspire_com:MediaType>application/xml</inspire_com:MediaType>
             </inspire_com:ResourceLocator>
 
@@ -357,6 +369,8 @@
               </inspire_com:TemporalReference>
             </xsl:for-each>
 
+            <xsl:variable name="iso2lang" select="util:twoCharLangCode($mainLanguage)" />
+
             <xsl:for-each select="//mdb:dataQualityInfo/*/mdq:report/*/mdq:result/*[contains(
                                     string-join(mdq:specification/*/cit:title/*/text(), ''), '1089/2010')]|
                                     //gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*[contains(
@@ -369,10 +383,41 @@
                                          select="mdq:specification/*/cit:title|gmd:specification/*/gmd:title"/>
                   </inspire_com:Title>
                   <inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
-                  <inspire_com:URI>OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case(substring($mainLanguage, 1, 2))"/>:PDF</inspire_com:URI>
+                  <inspire_com:URI>OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case($iso2lang)"/>:PDF</inspire_com:URI>
                   <inspire_com:ResourceLocator>
                     <inspire_com:URL>
-                      http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case(substring($mainLanguage, 1, 2))"/>:PDF
+                      http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case($iso2lang)"/>:PDF
+                    </inspire_com:URL>
+                    <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
+                  </inspire_com:ResourceLocator>
+                </inspire_com:Specification>
+
+                <inspire_com:Degree>
+                  <xsl:choose>
+                    <xsl:when test="mdq:pass/gco:Boolean = 'true' or gmd:pass/gco139:Boolean = 'true'">conformant</xsl:when>
+                    <xsl:when test="mdq:pass/gco:Boolean = 'false' or gmd:pass/gco139:Boolean = 'false'">notConformant</xsl:when>
+                    <xsl:otherwise>notEvaluated</xsl:otherwise>
+                  </xsl:choose>
+                </inspire_com:Degree>
+              </inspire_com:Conformity>
+            </xsl:for-each>
+
+            <xsl:for-each select="//mdb:dataQualityInfo/*/mdq:report/*/mdq:result/*[contains(
+                                    string-join(mdq:specification/*/cit:title/*/text(), ''), '976/2009')]|
+                                    //gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*[contains(
+                                    string-join(gmd:specification/*/gmd:title/*/text(), ''), '976/2009')]">
+              <inspire_com:Conformity>
+                <inspire_com:Specification
+                  xsi:type="inspire_com:citationInspireInteroperabilityRegulation_{$mainLanguage}">
+                  <inspire_com:Title>
+                    <xsl:apply-templates mode="localised"
+                                         select="mdq:specification/*/cit:title|gmd:specification/*/gmd:title"/>
+                  </inspire_com:Title>
+                  <inspire_com:DateOfPublication>2009-10-20</inspire_com:DateOfPublication>
+                  <inspire_com:URI>CONSLEG:2009R0976:20101228:<xsl:value-of select="upper-case($iso2lang)"/>:PDF</inspire_com:URI>
+                  <inspire_com:ResourceLocator>
+                    <inspire_com:URL>
+                      https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:2009R0976:20101228:<xsl:value-of select="upper-case($iso2lang)"/>:PDF
                     </inspire_com:URL>
                     <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
                   </inspire_com:ResourceLocator>
@@ -405,7 +450,7 @@
 
             <inspire_com:MetadataDate>
               <xsl:value-of
-                select="substring-before(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp, 'T')"/>
+                select="tokenize(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp/*/text(), 'T')[1]"/>
             </inspire_com:MetadataDate>
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 

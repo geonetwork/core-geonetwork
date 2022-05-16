@@ -44,12 +44,12 @@
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
         'gnCurrentEdit', 'gnConfigService', 'gnPopup',
-        'gnGlobalSettings', 'gnUrlUtils',
+        'gnGlobalSettings', 'gnSearchSettings', 'gnUrlUtils',
         function($rootScope, $timeout, $q, $http, $translate,
                  gnEditor, gnSchemaManagerService,
                  gnEditorXMLService, gnHttp, gnConfig,
                  gnCurrentEdit, gnConfigService, gnPopup,
-       gnGlobalSettings, gnUrlUtils) {
+       gnGlobalSettings, gnSearchSettings, gnUrlUtils) {
 
           return {
             restrict: 'A',
@@ -98,6 +98,8 @@
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
+                  var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
+
                   scope.searchObj = {
                     any: '',
                     internal: true,
@@ -108,9 +110,12 @@
                       from: 1,
                       to: 20,
                       root: 'gmd:CI_ResponsibleParty',
-                      sortBy: 'resourceTitleObject.default.keyword',
+                      sortBy: directorySearchSettings.sortBy
+                        || gnSearchSettings.sortBy,
                       sortOrder: '',
-                      resultType: 'subtemplates'
+                      resultType: 'subtemplates',
+                      queryBase: directorySearchSettings.queryBase
+                        || gnSearchSettings.queryBase
                     }
                   };
 
@@ -522,8 +527,8 @@
         }]);
 
   module.directive('gnDirectoryEntryListSelector',
-      ['gnGlobalSettings',
-       function(gnGlobalSettings) {
+      ['gnGlobalSettings', 'gnSearchSettings',
+       function(gnGlobalSettings, gnSearchSettings) {
          return {
            restrict: 'A',
            templateUrl: '../../catalog/components/edit/' +
@@ -533,6 +538,8 @@
            compile: function compile(tElement, tAttrs, transclude) {
              return {
                pre: function preLink(scope) {
+                 var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
+
                  scope.searchObj = {
                    internal: true,
                    configId: 'directoryInEditor',
@@ -542,8 +549,9 @@
                      from: 1,
                      to: 10,
                      root: 'gmd:CI_ResponsibleParty',
-                     sortBy: 'resourceTitleObject.default.keyword',
-                     sortOrder: ''
+                     sortBy: directorySearchSettings.sortBy || gnSearchSettings.sortBy,
+                     queryBase: directorySearchSettings.queryBase
+                       || gnSearchSettings.queryBase
                    }
                  };
                  if(scope.$eval(tAttrs['showValidOnly'])) {

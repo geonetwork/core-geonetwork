@@ -68,6 +68,12 @@
     <xsl:apply-templates select="mdb:MD_Metadata"/>
   </xsl:template>
 
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="mdb:MD_Metadata">
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*"/>
@@ -294,27 +300,23 @@
   </xsl:template>
 
   <!-- Add required gml attributes if missing -->
-  <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]|
+  <xsl:template match="gml:TimePeriod[not(@gml:id)]|
+                       gml:Polygon[not(@gml:id) and not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) and not(@srsName)]|
                        gml:LineString[not(@gml:id) and not(@srsName)]">
     <xsl:copy>
       <xsl:attribute name="gml:id">
         <xsl:value-of select="generate-id(.)"/>
       </xsl:attribute>
-      <xsl:attribute name="srsName">
-        <xsl:text>urn:ogc:def:crs:EPSG:6.6:4326</xsl:text>
-      </xsl:attribute>
+      <xsl:if test="local-name(.) != 'TimePeriod'">
+        <xsl:attribute name="srsName">
+          <xsl:text>urn:ogc:def:crs:EPSG:6.6:4326</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="*"/>
     </xsl:copy>
   </xsl:template>
-
-
-  <!-- The topic category directive may create empty topic. -->
-  <xsl:template
-    match="mri:topicCategory[not(mri:MD_TopicCategoryCode)]"
-    priority="10" />
-
 
   <xsl:template match="*[gco:CharacterString|gcx:Anchor|lan:PT_FreeText]">
     <xsl:copy>

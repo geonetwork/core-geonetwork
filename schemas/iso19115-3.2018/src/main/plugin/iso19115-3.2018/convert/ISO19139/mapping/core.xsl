@@ -222,7 +222,7 @@
             <xsl:call-template name="writeCodelistElement">
               <xsl:with-param name="elementName" select="'cit:dateType'"/>
               <xsl:with-param name="codeListName" select="'cit:CI_DateTypeCode'"/>
-              <xsl:with-param name="codeListValue" select="'creation'"/>
+              <xsl:with-param name="codeListValue" select="'revision'"/>
             </xsl:call-template>
           </cit:CI_Date>
         </mdb:dateInfo>
@@ -486,10 +486,10 @@
       </gml:TimeInstant>
     </mri:usageDateTime>
   </xsl:template>
-	
-	
-	
-	
+
+
+
+
 
   <xsl:variable name="associatedResourceAsMetadataReferenceOnly"
                 select="true()"/>
@@ -551,13 +551,18 @@
         </xsl:call-template>
 
         <xsl:if test="$associatedResourceAsMetadataReferenceOnly">
-          <mri:metadataReference uuidref="{gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()}"/>
+          <xsl:variable name="uuidref"
+                        select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/@uuidref"/>
+          <mri:metadataReference>
+            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:href"/>
+            <xsl:copy-of select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+          </mri:metadataReference>
         </xsl:if>
 
       </xsl:element>
     </mri:associatedResource>
   </xsl:template>
-	
+
   <xsl:template match="gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:citedResponsibleParty" mode="from19139to19115-3.2018">
     <xsl:if test="not(preceding-sibling::gmd:citedResponsibleParty) and ancestor::gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier">
       <!-- **********************************************************************

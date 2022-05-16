@@ -9,10 +9,12 @@
 
 
   <fieldset id="gn-harvest-settings-csw-basic-row">
-    <legend id="gn-harvest-settings-csw-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-csw-basic-title">
+      <i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-    <div id="gn-harvest-settings-csw-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+    <div id="gn-harvest-settings-csw-basic-service-row"
+         data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
       <label id="gn-harvest-settings-csw-basic-service-label" class="control-label" data-translate="">serviceUrl</label>
       <input id="gn-harvest-settings-csw-basic-service-input"
              type="text"
@@ -20,6 +22,11 @@
              data-ng-model="harvesterSelected.site.capabilitiesUrl"/>
       <p class="help-block" data-translate="">csw-capabilitiesUrlHelp</p>
     </div>
+
+
+    <div id="gn-harvest-settings-csw-advanced-authentication-row"
+         data-gn-harvester-account="harvesterSelected"/>
+
 
     <fieldset id="gn-harvest-settings-csw-basic-service-criteria-row" class="form-horizontal cswCriteriaInfo">
       <legend id="gn-harvest-settings-csw-basic-service-criteria-title" data-translate="">harvesterFilter</legend>
@@ -73,119 +80,143 @@
       </div>
     </fieldset>
 
+    <fieldset id="gn-harvest-settings-csw-basic-service-search-option-row"
+              class="form-horizontal cswCriteriaInfo">
+      <legend id="gn-harvest-settings-csw-basic-service-search-option-title" data-translate="">searchOptions</legend>
 
-    <hr/>
-    <div id="gn-harvest-settings-csw-xpath-filter-title-row">
-      <label id="gn-harvest-settings-csw-xpath-filter-title-label" class="control-label col-lg-4" data-translate="">xpathFilter</label>
-      <div class="col-lg-8">
-        <input id="gn-harvest-settings-csw-xpath-filter-title-input"
+      <div id="gn-harvest-settings-csw-advanced-sortBy-row">
+        <label id="gn-harvest-settings-csw-advanced-sortBy-label"
+               class="control-label"
+               data-translate="">sortBy</label>
+        <input id="gn-harvest-settings-csw-advanced-sortBy-input"
                type="text"
-               class="form-control"
-               data-ng-model="harvesterSelected.site.xpathFilter"/>
+               class="form-control gn-csw-criteria"
+               data-ng-model="harvesterSelected.site.sortBy"/>
+        <p class="help-block" data-translate="">csw-sortByHelp</p>
       </div>
-      <p class="help-block" data-translate="">xpathFilter-help</p>
-    </div>
 
+      <div id="gn-harvest-settings-csw-advanced-scheme-row">
+        <div class="row">
+          <div id="gn-harvest-settings-csw-advanced-scheme-output-row"
+               class="col-lg-8 col-md-8 col-sm-8 gn-nopadding-left gn-nopadding-right">
+            <label id="gn-harvest-settings-csw-advanced-scheme-output-label" class="control-label" data-translate="">csw-outputSchema</label>
+            <input id="gn-harvest-settings-csw-advanced-scheme-output-input" type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
+                   data-ng-model="harvesterSelected.site.outputSchema"/>
+          </div>
+          <div id="gn-harvest-settings-csw-advanced-scheme-recommended-row"
+               class="col-lg-4 col-md-4 col-sm-4 hidden-xs gn-nopadding-right">
+            <label id="gn-harvest-settings-csw-advanced-scheme-recommended-label" class="control-label" data-translate="">csw-outputSchemaOptions</label>
+            <select id="gn-harvest-settings-csw-advanced-scheme-recommended-list"
+                    data-ng-model="harvesterSelected.site.outputSchema"
+                    class="form-control gn-csw-criteria"
+                    id="csw-outputSchemaOptionsSelect">
+              <option value="" disabled="" data-translate="">csw-recommendedValues</option>
+              <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore</option>
+              <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
+              <option value="http://standards.iso.org/iso/19115/-3/mdb/2.0">ISO 19115-3</option>
+            </select>
+          </div>
+        </div>
+        <p class="help-block" data-translate="">csw-outputSchemaHelp</p>
+      </div>
+
+      <div>
+        <label class="control-label">
+          <input id="gn-harvest-settings-gn-advanced-distributedsearch-checkbox"
+                 type="checkbox" data-ng-true-value="'distributed'" data-ng-false-value="'local'"
+                 data-ng-model="harvesterSelected.site.queryScope"/>
+          <span id="gn-harvest-settings-gn-advanced-distributedsearch-label" data-translate="">distributedSearch</span>
+        </label>
+
+        <fieldset data-ng-show="harvesterSelected.site.queryScope == 'distributed'">
+          <div class="well">
+            <div id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-row">
+              <label id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-label" class="control-label" data-translate="">hopCount</label>
+              <input id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-input"
+                     type="number" data-gn-string-to-number
+                     class="form-control"
+                     data-ng-model="harvesterSelected.site.hopCount"/>
+
+              <p class="help-block" data-translate="">hopCountHelp</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <p class="help-block" data-translate="">distributedSearchHelp</p>
+      </div>
+    </fieldset>
   </fieldset>
 
 
   <fieldset id="gn-harvest-settings-csw-advanced-row">
-    <legend id="gn-harvest-settings-csw-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend id="gn-harvest-settings-csw-advanced-title">
+      <i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div id="gn-harvest-settings-csw-advanced-authentication-row" data-gn-harvester-account="harvesterSelected"/>
+    <div data-gn-harvester-extras="harvesterSelected"></div>
 
-    <div id="gn-harvest-settings-csw-advanced-duplicate-row">
-      <label class="control-label">
-        <input id="gn-harvest-settings-csw-advanced-duplicate-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.site.rejectDuplicateResource"/>
-        <span id="gn-harvest-settings-csw-advanced-duplicate-label" data-translate="">csw-rejectDuplicateResource</span>
-      </label>
-      <p class="help-block" data-translate="">csw-rejectDuplicateResourceHelp</p>
-    </div>
+    <fieldset>
+      <legend data-translate="">filteringAndProcessing</legend>
+      <div id="gn-harvest-settings-csw-xpath-filter-title-row">
 
-    <div id="gn-harvest-settings-csw-advanced-category-row" data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
-         data-label="csw-category"/>
-
-
-    <div id="gn-harvest-settings-csw-advanced-validate-row">
-      <label id="gn-harvest-settings-csw-advanced-validate-label" class="control-label">
-        <span data-translate="">harvesterValidate</span>
-      </label>
-      <div id="gn-harvest-settings-csw-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
-      <p class="help-block" data-translate="">harvesterValidateHelp</p>
-    </div>
-
-    <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
-      <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
-        <span data-translate="">harvesterBatchEdits</span>
-      </label>
-      <div id="gn-harvest-settings-csw-advanced-validate-list"
-           style="height: 300px"
-           ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
-           data-ng-model="harvesterSelected.content.batchEdits"/>
-      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
-    </div>
-
-    <div id="gn-harvest-settings-csw-advanced-xsl-row">
-      <label id="gn-harvest-settings-csw-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
-      <div id="gn-harvest-settings-csw-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.site.xslfilter"/>
-
-      <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
-    </div>
-    <div id="gn-harvest-settings-csw-advanced-scheme-row">
-      <div class="row">
-        <div id="gn-harvest-settings-csw-advanced-scheme-output-row"
-             class="col-lg-8 col-md-8 col-sm-8 gn-nopadding-left gn-nopadding-right">
-          <label id="gn-harvest-settings-csw-advanced-scheme-output-label" class="control-label" data-translate="">csw-outputSchema</label>
-          <input id="gn-harvest-settings-csw-advanced-scheme-output-input" type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
-                 data-ng-model="harvesterSelected.site.outputSchema"/>
+        <div id="gn-harvest-settings-csw-advanced-validate-row">
+          <label id="gn-harvest-settings-csw-advanced-validate-label" class="control-label">
+            <span data-translate="">harvesterValidate</span>
+          </label>
+          <div id="gn-harvest-settings-csw-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
+          <p class="help-block" data-translate="">harvesterValidateHelp</p>
         </div>
-        <div id="gn-harvest-settings-csw-advanced-scheme-recommended-row"
-             class="col-lg-4 col-md-4 col-sm-4 hidden-xs gn-nopadding-right">
-          <label id="gn-harvest-settings-csw-advanced-scheme-recommended-label" class="control-label" data-translate="">csw-outputSchemaOptions</label>
-          <select id="gn-harvest-settings-csw-advanced-scheme-recommended-list"
-                  data-ng-model="harvesterSelected.site.outputSchema"
-                  class="form-control gn-csw-criteria"
-                  id="csw-outputSchemaOptionsSelect">
-            <option value="" disabled="" data-translate="">csw-recommendedValues</option>
-            <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore</option>
-            <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
-          </select>
+
+        <div id="gn-harvest-settings-csw-advanced-duplicate-row">
+          <label class="control-label">
+            <input id="gn-harvest-settings-csw-advanced-duplicate-checkbox"
+                   type="checkbox"
+                   data-ng-model="harvesterSelected.site.rejectDuplicateResource"/>
+            <span id="gn-harvest-settings-csw-advanced-duplicate-label" data-translate="">csw-rejectDuplicateResource</span>
+          </label>
+          <p class="help-block" data-translate="">csw-rejectDuplicateResourceHelp</p>
         </div>
-      </div>
-      <p class="help-block" data-translate="">csw-outputSchemaHelp</p>
-    </div>
-  </fieldset>
 
-
-  <div>
-    <label class="control-label">
-      <input id="gn-harvest-settings-gn-advanced-distributedsearch-checkbox"
-             type="checkbox" data-ng-true-value="'distributed'" data-ng-false-value="'local'"
-             data-ng-model="harvesterSelected.site.queryScope"/>
-      <span id="gn-harvest-settings-gn-advanced-distributedsearch-label" data-translate="">distributedSearch</span>
-    </label>
-
-    <fieldset data-ng-show="harvesterSelected.site.queryScope == 'distributed'">
-      <div class="well">
-        <div id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-row">
-          <label id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-label" class="control-label" data-translate="">hopCount</label>
-          <input id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-input"
-                 type="number" data-gn-string-to-number
+        <label id="gn-harvest-settings-csw-xpath-filter-title-label" class="control-label col-lg-4" data-translate="">xpathFilter</label>
+        <div class="col-lg-8">
+          <input id="gn-harvest-settings-csw-xpath-filter-title-input"
+                 type="text"
                  class="form-control"
-                 data-ng-model="harvesterSelected.site.hopCount"/>
-
-          <p class="help-block" data-translate="">hopCountHelp</p>
+                 data-ng-model="harvesterSelected.site.xpathFilter"/>
         </div>
+        <p class="help-block" data-translate="">xpathFilter-help</p>
+      </div>
+
+      <div id="gn-harvest-settings-csw-advanced-xsl-row">
+        <label id="gn-harvest-settings-csw-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
+        <div id="gn-harvest-settings-csw-advanced-xsl-list"
+             data-gn-import-xsl="harvesterSelected.site.xslfilter"
+             data-mode="btn-group"/>
+
+        <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+      </div>
+
+      <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
+        <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
+          <span data-translate="">harvesterBatchEdits</span>
+        </label>
+
+        <div gn-batch-edit-examples-selector="addBatchEdits"/>
+
+        <div id="gn-harvest-settings-csw-advanced-batchEdits-list"
+             style="height: 300px"
+             ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+             data-ng-model="harvesterSelected.content.batchEdits"/>
+        <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
       </div>
     </fieldset>
 
-    <p class="help-block" data-translate="">distributedSearchHelp</p>
-  </div>
+    <div id="gn-harvest-settings-csw-advanced-category-row" data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+         data-label="csw-category"/>
+  </fieldset>
 
-
-  <div id="gn-harvest-settings-csw-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-csw-privileges-row"
+       data-gn-harvester-privileges="harvesterSelected"
+       data-lang="{{lang}}"/>
 </form>

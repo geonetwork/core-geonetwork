@@ -47,11 +47,12 @@
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
-    'gnGlobalSettings', 'gnConfigService', '$rootScope',
+    'gnGlobalSettings', 'gnConfigService', '$rootScope', '$filter',
+    'gnUtilityService',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
              gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
-             gnGlobalSettings, gnConfigService, $rootScope) {
+             gnGlobalSettings, gnConfigService, $rootScope, $filter, gnUtilityService) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -60,7 +61,15 @@
       $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
+      $scope.showCitation = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.viewConfig = gnGlobalSettings.gnCfg.mods.recordview;
+      $scope.highlightedThesaurus = [].concat(
+        gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus,
+        gnGlobalSettings.gnCfg.mods.recordview.internalThesaurus,
+        gnGlobalSettings.gnCfg.mods.recordview.locationThesaurus);
+      $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
+      $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
@@ -76,6 +85,59 @@
           $scope.isRatingEnabled = true;
         }
       });
+
+      /**
+       * First matching view for each formatter is returned.
+       *
+       * @param record
+       * @returns {*[]}
+       */
+      function getFormatterForRecord(record) {
+        var list = [];
+        if (record == null) {
+          return list;
+        }
+        for (var i = 0; i < gnSearchSettings.formatter.list.length; i ++) {
+          var f = gnSearchSettings.formatter.list[i];
+          if (f.views === undefined) {
+            list.push(f);
+          } else {
+            // Check conditional views
+            var isViewSet = false;
+
+            viewLoop:
+            for (var j = 0; j < f.views.length; j ++) {
+              var v = f.views[j];
+
+              if (v.if) {
+                for (var key in v.if) {
+                  if (v.if.hasOwnProperty(key)) {
+                    var values = angular.isArray(v.if[key])
+                      ? v.if[key]
+                      : [v.if[key]]
+
+                    if (values.includes(record[key])) {
+                      list.push({label: f.label, url: v.url});
+                      isViewSet = true;
+                      break viewLoop;
+                    }
+                  }
+                }
+              } else {
+                console.warn('A conditional view MUST have a if property. ' +
+                  'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
+              }
+            }
+            if (f.url !== undefined && !isViewSet) {
+              list.push(f);
+            }
+          }
+        }
+        return list;
+      }
+
+      $scope.recordFormatterList =
+        gnMdFormatter.getFormatterForRecord($scope.mdView.current.record);
 
       $scope.search = function(params) {
         $location.path('/search');
@@ -177,12 +239,32 @@
           });
       };
 
+      function checkIfCitationIsDisplayed(record) {
+        $scope.showCitation = false;
+        if (gnGlobalSettings.gnCfg.mods.recordview.showCitation.if) {
+          gnUtilityService.checkConfigurationPropertyCondition(
+            record, gnGlobalSettings.gnCfg.mods.recordview.showCitation, function() {
+            $scope.showCitation = true;
+          });
+        } else {
+          $scope.showCitation = gnGlobalSettings.gnCfg.mods.recordview.showCitation.enabled;
+        }
+      }
+
       // Reset current formatter to open the next record
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          var f = gnSearchLocation.getFormatterPath();
+          $scope.recordFormatterList =
+            gnMdFormatter.getFormatterForRecord($scope.mdView.current.record);
+
+          checkIfCitationIsDisplayed($scope.mdView.current.record);
+
+          var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
           $scope.currentFormatter = '';
+
+          gnMdViewObj.usingFormatter = f !== undefined;
+
           if (f != undefined) {
             $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
             $scope.loadFormatter(f);
@@ -191,18 +273,15 @@
       }
       $scope.$watch('mdView.recordsLoaded', loadFormatter);
 
+      $scope.sortByCategory = function(cat) {
+        return $filter('translate')('cat-' + cat);
+      };
+
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
 
-      if ($scope.gnMdViewObj.current.record
-        && $scope.gnMdViewObj.current.record.groupOwner) {
-        $http.get('../api/groups/' + $scope.gnMdViewObj.current.record.groupOwner,
-          {cache: true}).success(function(data) {
-          $scope.recordGroup = data;
-        });
-      }
     }]);
 })();

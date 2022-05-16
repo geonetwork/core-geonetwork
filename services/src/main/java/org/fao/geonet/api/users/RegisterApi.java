@@ -32,6 +32,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -68,6 +69,9 @@ public class RegisterApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired(required=false)
+    SecurityProviderConfiguration securityProviderConfiguration;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Create user account",
         description = "User is created with a registered user profile. username field is ignored and the email is used as " +
             "username. Password is sent by email. Catalog administrator is also notified.")
@@ -90,6 +94,10 @@ public class RegisterApi {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -148,6 +156,7 @@ public class RegisterApi {
 
         // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
+        user.setSurname(userRegisterDto.getSurname());
         user.setOrganisation(userRegisterDto.getOrganisation());
         user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
         user.getAddresses().add(userRegisterDto.getAddress());

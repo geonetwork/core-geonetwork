@@ -91,8 +91,9 @@
     '$rootScope',
     '$location',
     'gnSearchLocation',
+    'gnLangs',
     function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope,
-             $location, gnSearchLocation) {
+             $location, gnSearchLocation, gnLangs) {
 
       var mapParams = {};
       if (gnSearchLocation.isMap()) {
@@ -166,6 +167,9 @@
             ]
           });
 
+          // Store map type name property
+          map.set('type', type);
+
           var defer = $q.defer();
           var sizeLoadPromise = defer.promise;
           map.set('sizePromise', sizeLoadPromise);
@@ -209,6 +213,7 @@
                 var params = $location.search();
                 var newContext = params.owscontext || params.map;
                 if (newContext && newContext !== urlContext) {
+                  newContext = newContext.replace('{lang}', gnLangs.current);
                   urlContext = newContext;
                   gnOwsContextService.loadContextFromUrl(
                       urlContext, map);
@@ -234,25 +239,23 @@
               }
             }
           }
-          if (!mapReady) {
-            if (config.context) {
+
+          if (!mapReady && config.context) {
+              var contextFile = config.context.replace('{lang}', gnLangs.current);
+
               mapReady = gnOwsContextService.loadContextFromUrl(
-                  config.context, map);
-            }
+                contextFile, map);
           }
+
           var creationPromise = $q.when(mapReady).then(function() {
 
-            // extent
-            if (config.extent && ol.extent.getWidth(config.extent) &&
-                ol.extent.getHeight(config.extent)) {
-              if (type !== this.SEARCH_MAP) {
-                // Because search map is fit by result md bbox
+            // Override context extent from UI settings for non-search maps
+            if (type !== this.SEARCH_MAP && config.extent &&
+              ol.extent.getWidth(config.extent) && ol.extent.getHeight(config.extent)) {
                 var newPromise = map.get('sizePromise').then(function () {
-                  map.getView().fit(config.extent, map.getSize(), {nearest: true});
+                  map.getView().fit(config.extent, map.getSize());
                 });
-
                 map.set('sizePromise', newPromise);
-              }
             }
 
             // layers: if defined a context file ignore layers

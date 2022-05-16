@@ -23,14 +23,40 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:template mode="relation" match="metadata[simpledc]" priority="99">
     <xsl:variable name="links"
-                  select="*/descendant::*
-                        [name(.) = 'dct:references' or name(.) = 'dc:relation']
-                        [starts-with(., 'http') or contains(. , 'resources.get') or contains(., 'file.disclaimer')]"/>
+                  select="*/(dct:references|dc:relation)[not(matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i'))]"/>
+    <xsl:variable name="overviews"
+                  select="*/(dct:references|dc:relation)[matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]"/>
+
+    <xsl:if test="$overviews">
+      <thumbnails>
+        <xsl:for-each select="$overviews[matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]">
+          <xsl:variable name="name" select="tokenize(., '/')[last()]"/>
+          <item>
+            <id>
+              <xsl:value-of select="."/>
+            </id>
+            <url>
+              <value lang="{$lang}">
+                <xsl:value-of select="."/>
+              </value>
+            </url>
+            <title>
+              <value lang="{$lang}">
+                <xsl:value-of select="$name"/>
+              </value>
+            </title>
+            <type>thumbnail</type>
+          </item>
+        </xsl:for-each>
+      </thumbnails>
+    </xsl:if>
 
     <xsl:if test="$links">
       <onlines>
@@ -51,9 +77,9 @@
               </value>
             </title>
             <xsl:choose>
-              <xsl:when test="contains(. , 'resources.get') or contains(., 'file.disclaimer')">
+              <xsl:when test="matches(. , '/api/records/.*/attachments/')">
                 <protocol>
-                  <xsl:value-of select="'WWW:DOWNLOAD-1.0-http--download'"/>
+                  <xsl:value-of select="'WWW:DOWNLOAD'"/>
                 </protocol>
               </xsl:when>
               <xsl:otherwise>

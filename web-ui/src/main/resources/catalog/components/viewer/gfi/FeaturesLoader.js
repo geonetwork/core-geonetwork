@@ -50,6 +50,7 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.urlUtils = this.$injector.get('gnUrlUtils');
+    this.featureService = this.$injector.get('gnFeaturesTableService');
 
     this.layer = config.layer;
     this.map = config.map;
@@ -105,10 +106,7 @@
         // using plain standard EMACS Javascript
         var friendlyFormats = layer.get('capRequest').GetFeatureInfo.Format
             .filter(function (el) {
-              return el.toLowerCase().localeCompare('application/json') == 0
-              || el.toLowerCase().localeCompare('application/geojson') == 0
-              || el.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0
-              || el.toLowerCase().localeCompare('text/xml') == 0;
+              return el.match(/application\/(geojson|json|geo\+json|vnd.ogc.gml)|text\/xml/i) != null;
             });
 
         if(friendlyFormats.length > 0) {
@@ -148,8 +146,7 @@
     }).then(function(response) {
 
       if(infoFormat &&
-        (infoFormat.toLowerCase().localeCompare('application/json') == 0 ||
-          infoFormat.toLowerCase().localeCompare('application/geojson') == 0 )) {
+         infoFormat.match(/application\/(geo|geo\+)json/i) != null) {
         var jsonf = new ol.format.GeoJSON();
         var features = [];
         response.data.features.forEach(function(f) {
@@ -157,8 +154,7 @@
         });
         this.features = features;
       } else if(infoFormat &&
-        (infoFormat.toLowerCase().localeCompare('text/xml') == 0
-        || infoFormat.toLowerCase().localeCompare('application/vnd.ogc.gml') == 0 )) {
+        infoFormat.match(/application\/vnd.ogc.gml|text\/xml/i) != null) {
         var format = new ol.format.WMSGetFeatureInfo();
         this.features = format.readFeatures(response.data, {
           featureProjection: map.getView().getProjection()
@@ -176,29 +172,18 @@
 
       this.loading = false;
       return this.features;
-
     }.bind(this), function() {
-
       this.loading = false;
       this.error = true;
-
     }.bind(this));
 
-        this.dictionary = null;
-
-        if(uuid) {
-          this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
-          .then(function(response) {
-            if(response.data['decodeMap']!=null) {
-              return response.data['decodeMap'];
-            } else {
-              return null;
-        	}
-          }.bind(this), function(err) {
-        	return null;
-          }.bind(this));
-        }
-
+    this.dictionary = null;
+    if(uuid) {
+      this.dictionary = this.featureService.loadFeatureCatalogue(uuid, layer.get('md'))
+        .then(function(catalogue) {
+          return catalogue;
+        });
+    }
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.formatUrlValues_ = function(url) {
@@ -247,6 +232,7 @@
                 obj[key] = obj[key].replace(/>(.)*</, ' ' +
                     'target="_blank">' + linkTpl + '<');
               }
+              // TODO: if a dictionary is provided, translate keys by label ? eg. F = Forest
             } else {
               // Exclude objects which will not be displayed properly
               exclude.push(key);
@@ -268,11 +254,10 @@
 
       if(dictionary  != null) {
         for (var i = 0; i < columns.length; i++) {
-          if(!angular.isUndefined(dictionary[columns[i]['field']])) {
-            var title = dictionary[columns[i]['field']][0];
-            var desc = dictionary[columns[i]['field']][1];
-            columns[i]['title']  = title;
-            columns[i]['titleTooltip']  = desc;
+          var fieldSpec = dictionary[columns[i]['field']];
+          if(angular.isDefined(fieldSpec)) {
+            columns[i]['title']  = fieldSpec.name;
+            columns[i]['titleTooltip']  = fieldSpec.definition || fieldSpec.code;
           }
         }
       }
@@ -353,6 +338,23 @@
     return link;
   };
 
+  geonetwork.GnFeaturesINDEXLoader.prototype.loadAll = function() {
+    var layer = this.layer, uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').uuid;
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
+    this.dictionary = null;
+    if(uuid) {
+      this.dictionary = this.featureService.loadFeatureCatalogue(uuid, layer.get('md'))
+        .then(function(catalogue) {
+          return catalogue;
+        });
+    }
+  };
+
   /**
    * Substitutes predefined filter value in urls.
    * http://www.emso-fr.org?${filtre_param_liste}${filtre_param_group_liste} is
@@ -401,82 +403,88 @@
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
-    var pageList = [5, 10, 50, 100],
+    return this.dictionary.then(function(dictionary) {
+
+      var pageList = [5, 10, 50, 100],
         columns = [],
         index = this.indexObject,
         map = this.map,
         fields = index.indexFields || index.filteredDocTypeFieldsInfo;
 
-    fields.forEach(function(field) {
-      if ($.inArray(field.idxName, this.excludeCols) === -1) {
-        columns.push({
-          field: field.idxName,
-          title: field.label,
-          titleTooltip: field.label,
-          sortable: true,
-          formatter: function(val, row, index) {
-            var outputValue = val;
-            if (this.urlUtils.isValid(val)) {
-              outputValue = this.formatUrlValues_(val);
-            }
-            return outputValue;
-          }.bind(this)
-        });
-      }
-    }.bind(this));
+      fields.forEach(function(field) {
+        if ($.inArray(field.idxName, this.excludeCols) === -1) {
+          var fieldSpec = dictionary[field.name] || {};
+          columns.push({
+            field: field.idxName,
+            title: fieldSpec.name || field.label,
+            titleTooltip: fieldSpec.definition
+              ? (fieldSpec.definition + ' (' + field.name + ')')
+              : field.label,
+            sortable: true,
+            formatter: function(val, row, index) {
+              var outputValue = val;
+              if (this.urlUtils.isValid(val)) {
+                outputValue = this.formatUrlValues_(val);
+              }
+              return outputValue;
+            }.bind(this)
+          });
+        }
+      }.bind(this));
 
-    // get an update index request url with geometry filter based on a point
-    var url = this.indexObject.baseUrl;
-    var state = angular.extend({}, this.indexObject.getState());
-    state.params = state.qParams;
-    var coordinates = this.coordinates;
+      // get an update index request url with geometry filter based on a point
+      var url = this.indexObject.baseUrl;
+      var state = angular.extend({}, this.indexObject.getState());
+      state.params = state.qParams;
+      var coordinates = this.coordinates;
 
-    this.loading = true;
-    defer.resolve({
-      url: url,
-      contentType: 'application/json',
-      method: 'POST',
-      queryParams: function(p) {
-        var queryObject = this.indexObject.buildESParams(state, {},
+      this.loading = true;
+      defer.resolve({
+        url: url,
+        contentType: 'application/json',
+        method: 'POST',
+        queryParams: function(p) {
+          var queryObject = this.indexObject.buildESParams(state, {},
             p.offset || 0, p.limit || 10000);
-        if (p.sort) {
-          queryObject.sort = [];
-          var sort = {};
-          sort[p.sort] = {'order' : p.order};
-          queryObject.sort.push(sort);
-        }
-        return JSON.stringify(queryObject);
-      }.bind(this),
-      responseHandler: function(res) {
-        this.count = res.hits.total.value;
-        var rows = [];
-        for (var i = 0; i < res.hits.hits.length; i++) {
-          rows.push(res.hits.hits[i]._source);
-        }
-        return {
-          total: res.hits.total.value,
-          rows: rows
-        };
-      }.bind(this),
-      onSort: function() {
-        this.loading = true;
-      }.bind(this),
-      onLoadSuccess: function() {
-        this.loading = false;
-        this.error = false;
-      }.bind(this),
-      onLoadError: function() {
-        this.loading = false;
-        this.error = true;
-      }.bind(this),
-      columns: columns,
-      pagination: true,
-      sidePagination: 'server',
-      totalRows: this.indexObject.totalCount,
-      pageSize: pageList[1],
-      pageList: pageList
-    });
-    return defer.promise;
+          if (p.sort) {
+            queryObject.sort = [];
+            var sort = {};
+            sort[p.sort] = {'order' : p.order};
+            queryObject.sort.push(sort);
+          }
+          return JSON.stringify(queryObject);
+        }.bind(this),
+        responseHandler: function(res) {
+          this.count = res.hits.total.value;
+          var rows = [];
+          for (var i = 0; i < res.hits.hits.length; i++) {
+            rows.push(res.hits.hits[i]._source);
+          }
+          return {
+            total: res.hits.total.value,
+            rows: rows
+          };
+        }.bind(this),
+        onSort: function() {
+          this.loading = true;
+        }.bind(this),
+        onLoadSuccess: function() {
+          this.loading = false;
+          this.error = false;
+        }.bind(this),
+        onLoadError: function() {
+          this.loading = false;
+          this.error = true;
+        }.bind(this),
+        columns: columns,
+        pagination: true,
+        sidePagination: 'server',
+        totalRows: this.indexObject.totalCount,
+        pageSize: pageList[1],
+        pageList: pageList
+      });
+      return defer.promise;
+    }.bind(this));
   };
 
   geonetwork.GnFeaturesINDEXLoader.prototype.getCount = function() {
@@ -549,20 +557,13 @@
       });
       return this.features;
     }.bind(this));
-
     this.dictionary = null;
-
     if(uuid) {
-      this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
-        .then(function(response) {
-          if(response.data['decodeMap']!=null) {
-            return response.data['decodeMap'];
-          }
-        }, function () {
-          return null;
+      this.dictionary = this.featureService.loadFeatureCatalogue(uuid, layer.get('md'))
+        .then(function(catalogue) {
+          return catalogue;
         });
     }
-
   };
 
   /**

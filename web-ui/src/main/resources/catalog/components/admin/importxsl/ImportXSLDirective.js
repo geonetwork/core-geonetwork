@@ -38,7 +38,8 @@
         replace: true,
         transclude: true,
         scope: {
-          element: '=gnImportXsl'
+          element: '=gnImportXsl',
+          mode: '@'
         },
         templateUrl: '../../catalog/components/admin/importxsl/partials/' +
             'importxsl.html',
@@ -51,6 +52,9 @@
                   scope.element = scope.stylesheets[0];
                 }
               });
+          scope.setValue = function(c) {
+            scope.element = c;
+          }
         }
       };
     }]);

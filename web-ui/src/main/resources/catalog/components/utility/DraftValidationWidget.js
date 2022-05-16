@@ -26,29 +26,40 @@
 
   var module = angular.module('gn_draftvalidationwidget', []);
 
-  module.directive('gnDraftValidationWidget', ['gnSearchManagerService',
-    function(gnSearchManagerService) {
+  module.directive('gnDraftValidationWidget', ['gnSearchManagerService', 'Metadata', '$http',
+    function(gnSearchManagerService, Metadata, $http) {
       return {
         restrict: 'E',
         scope: {
           metadata: '='
         },
         link: function(scope) {
-          gnSearchManagerService.gnSearch({
-            uuid: scope.metadata.uuid,
-            isTemplate: 'y or n',
-            draft: 'y'
-          }).then(function(data) {
-            var i = 0;
-            data.metadata.forEach(function (md, index) {
-              if(md.draft == 'y') {
-                // This will only happen if the draft exists
-                // and the user can see it
-                scope.draft = data.metadata[i];   
-              }
+
+          var query = {
+            "_source": {
+              "include": ['id',
+                'uuid',
+                'draft',
+                'isTemplate',
+                'valid'
+              ]
+            },
+            "size": 10,
+            "query": {
+              "bool": {
+                "must": [
+                  {"terms": {"uuid": [scope.metadata.uuid]}},
+                  {"terms": {"isTemplate": ["y", "n"]}},
+                  {"terms": {"draft": ["y"]}}
+                ]}
+            }
+          };
+
+          $http.post('../api/search/records/_search', query).then(function (r) {
+            r.data.hits.hits.forEach(function(r) {
+              scope.draft = new Metadata(r);
             });
-          });
-          
+          })
         },
         templateUrl: '../../catalog/components/utility/' +
             'partials/draftvalidationwidget.html'

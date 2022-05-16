@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.0.5-SNAPSHOT</version>
+  <version>4.0.7-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -387,9 +387,15 @@
       </dependency>
 
       <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>1.14.3</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
-        <version>2.3.11</version>
+        <version>2.4.21</version>
       </dependency>
 
       <!-- universal character set detector -->
@@ -556,7 +562,7 @@
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.12.0</version>
+        <version>2.12.2</version>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
@@ -619,8 +625,23 @@
 
       <!-- GeoTools and spatial search stuff -->
       <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-opengis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-fes</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-core</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -658,11 +679,6 @@
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-wfs</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.geotools.xsd</groupId>
-        <artifactId>gt-xsd-fes</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -804,7 +820,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>29.0-jre</version>
+        <version>30.0-jre</version>
       </dependency>
       <dependency>
         <groupId>com.yammer.metrics</groupId>
@@ -832,6 +848,12 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.13.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${jupiter.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -913,6 +935,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.neovisionaries</groupId>
+        <artifactId>nv-i18n</artifactId>
+        <version>1.29</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
@@ -1030,17 +1057,17 @@
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>5.4.17.Final</version>
+        <version>${hibernate.version}</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-ehcache</artifactId>
-        <version>5.4.17.Final</version>
+        <version>${hibernate.version}</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
-        <version>5.4.17.Final</version>
+        <version>${hibernate.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.data</groupId>
@@ -1110,6 +1137,11 @@
         <version>${es.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${es.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>1.5</version>
@@ -1117,7 +1149,7 @@
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
-        <version>2.0.19</version>
+        <version>2.0.24</version>
       </dependency>
       <dependency>
         <groupId>org.jasypt</groupId>
@@ -1128,6 +1160,11 @@
         <groupId>org.jasypt</groupId>
         <artifactId>jasypt-hibernate5</artifactId>
         <version>${jasypt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>diff_match_patch</groupId>
+        <artifactId>diff_match_patch</artifactId>
+        <version>current</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1167,6 +1204,10 @@
       <id>osgeo</id>
       <name>OSGeo repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+    <repository>
+      <id>redhat</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
     </repository>
 
     <!-- managed by repo.osgeo.org k-int-cache -->
@@ -1315,7 +1356,6 @@
         <module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
-        <!--<module>web-ui-docs</module>-->
         <module>web</module>
       </modules>
     </profile>
@@ -1444,7 +1484,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.11.1</es.version>
+    <es.version>7.15.1</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1495,7 +1535,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.27.v20200227</jetty.version>
+    <jetty.version>9.4.44.v20210927</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1508,7 +1548,7 @@
     <spring.security.version>5.2.5.RELEASE</spring.security.version>
     <spring.jpa.version>2.2.8.RELEASE</spring.jpa.version>
     <springboot.version>2.2.2.RELEASE</springboot.version>
-    <springdoc.version>1.3.9</springdoc.version>
+    <springdoc.version>1.5.9</springdoc.version>
 
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1524,12 +1564,14 @@
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j.version>1.2.17</log4j.version>
-    <log4j2.version>2.7</log4j2.version>
+    <log4j2.version>2.17.1</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
+    <jupiter.version>5.7.0</jupiter.version>
+    <hibernate.version>5.4.33.Final</hibernate.version>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>

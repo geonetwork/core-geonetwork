@@ -1,0 +1,25 @@
+<li data-ng-class='::!isParentNode ? "leaf" : ""' style="margin-left: 0px;">
+  <div class="flex-col">
+    <div class="flex-row width-100 flex-align-stretch">
+      <div class="flex-col flex-grow">
+        <a href=""
+           class="truncate"
+           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+           title="{{member.Title || member.title}}">
+          <i class='fa fa-fw'
+             data-ng-class='::isParentNode ? "fa-folder-open-o" : "fa-map-o"'></i>
+          {{member.Title || member.title}} <span data-ng-if="member.Name || member.name">({{member.Name || member.name}})</span>
+        </a>
+      </div>
+      <div class="gn-layer-toolbar btn-group btn-group-xs">
+        <a href=""
+          class="btn btn-link btn-xs"
+          data-ng-click="addLayer(null, $event)"
+          data-ng-if="member.Name || member.name"
+          class="btn btn-default btn-xs">
+          <i class="fa fa-fw" data-ng-class="isSelected(member)?'fa-minus':'fa-plus'"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</li>

@@ -107,6 +107,7 @@
       $scope.passwordMaxLength =
         Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
       $scope.usePattern = gnConfig['system.security.passwordEnforcement.usePattern'];
+      $scope.allowAdminReset = gnConfig['system.security.password.allowAdminReset'];
 
       if ($scope.usePattern) {
         $scope.passwordPattern = new RegExp(
@@ -339,13 +340,17 @@
        * @returns {boolean}
        */
       $scope.hideResetPassword = function() {
-        if ((!$scope.userSelected) ||
-            (!$scope.userSelected.security)) {
+        if ((!$scope.userSelected)
+            || (!$scope.userSelected.security)) {
+          return true;
+        } else if ($scope.userSelected.security.authType == 'LDAP') {
+          return true;
+        } else if ($scope.allowAdminReset && $scope.user.isAdministratorOrMore()) {
           return false;
+        } else if ($scope.userSelected.username !== $scope.user.username) {
+          return true;
         }
-
-        return (($scope.userSelected.security.authtype == 'LDAP') ||
-            ($scope.userSelected.username !== $scope.user.username));
+        return false;
       };
 
       /**
@@ -566,12 +571,24 @@
       };
 
       /**
-       * Delete a user.
+       * Ask for confirmation to delete an user.
        */
-      $scope.deleteUser = function(formId) {
+      $scope.removeUser = function(logoName) {
+        $('#gn-confirm-remove-user').modal('show');
+      }
+
+      /**
+       * Remove the user and refresh the list when done.
+       */
+      $scope.confirmRemoveUser = function() {
         $http.delete('../api/users/' +
             $scope.userSelected.id)
             .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('userRemoved'),
+                timeout: 2,
+                type: 'success'});
+
               $scope.unselectUser();
               loadUsers();
             })
@@ -698,10 +715,25 @@
         }
       };
 
-      $scope.deleteGroup = function(formId) {
+      /**
+       * Ask for confirmation to delete a group.
+       */
+      $scope.removeGroup = function(logoName) {
+        $('#gn-confirm-remove-group').modal('show');
+      }
+
+      /**
+       * Remove the group and refresh the list when done.
+       */
+      $scope.confirmRemoveGroup = function() {
         $http.delete('../api/groups/' +
                 $scope.groupSelected.id + '?force=true')
             .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('groupRemoved'),
+                timeout: 2,
+                type: 'success'});
+
               $scope.unselectGroup();
               loadGroups();
             })

@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="col-md-12 gn-margin-bottom">
-      <h1 data-translate="">createNewMetadata</h1>
+      <h1>{{resourceTitle | translate}}</h1>
 
       <div class="alert alert-warning" data-ng-hide="hasTemplates"
           data-translate="">noTemplatesAvailable
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="row" data-ng-show="hasTemplates">
+  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
     <div class="col-sm-4">
       <span data-translate="">createA</span>
           <strong>{{(activeType || '...') | translate}}</strong>
@@ -39,7 +39,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
     <div class="col-sm-4">
       <span data-translate="">fromTemplate</span>
       <strong>{{(activeTpl.title || '...') | translate}}</strong>
@@ -76,7 +76,7 @@
          data-exclude-special-groups="true"/>
     </div>
   </div>
-  <div class="row" data-ng-show="hasTemplates && !generateUuid">
+  <div class="row"  data-ng-show="hasTemplates && groups.length > 0 && !generateUuid">
     <div class="col-sm-4">
       <span data-translate="">createMetadataUniformResourceName</span>
     </div>
@@ -106,7 +106,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
     <div class="col-sm-8 col-sm-offset-4">
       <div class="dropup gn-margin-top">
         <div class="btn-group">
@@ -130,7 +130,7 @@
               createMetadataForGroup</a></li>
           </ul>
         </div>
-        <a href="#/board" class="btn btn-default">
+        <a data-ng-click="cancelCreateMetadata()" class="btn btn-default">
           <i class="fa fa-close"/>&nbsp;
           <span data-translate="">cancel</span>
         </a>

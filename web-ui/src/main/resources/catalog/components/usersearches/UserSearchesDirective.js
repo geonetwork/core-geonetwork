@@ -27,6 +27,31 @@
   var module = angular.module('gn_usersearches_directive', []);
 
 
+  module.directive('gnPortalSwitcher', ['$http', 'gnGlobalSettings',
+    function($http, gnGlobalSettings) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/usersearches/partials/portalswitcher.html',
+        link: function postLink(scope, element, attrs) {
+          scope.showPortalSwitcher = gnGlobalSettings.gnCfg.mods.header.showPortalSwitcher;
+
+          function getPortals() {
+            var url = '../api/sources/subportal';
+            $http.get(url)
+              .success(function(data) {
+                scope.portals = data.filter(function(p) {
+                  return p.uuid != scope.nodeId;
+                });
+              });
+          }
+          if (scope.showPortalSwitcher) {
+            getPortals();
+          }
+        }
+      }
+  }]);
+
   /**
    * Directive to display featured user searches in the home page.
    *
@@ -75,10 +100,10 @@
   module.directive('gnUserSearchesPanel', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig',
     'gnUtilityService', 'gnAlertService', 'gnLangs', 'gnGlobalSettings',
-    '$http', '$translate', '$location', '$filter',
+    '$http', '$translate', '$location', '$filter', '$route',
     function(gnUserSearchesService, gnConfigService, gnConfig,
              gnUtilityService, gnAlertService, gnLangs, gnGlobalSettings,
-             $http, $translate, $location, $filter) {
+             $http, $translate, $location, $filter, $route) {
       return {
         restrict: 'A',
         replace: true,
@@ -89,6 +114,12 @@
           '../../catalog/components/usersearches/partials/usersearchespanel.html',
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
+          // Configure the base url to launch the user search selected (search or board page)
+          if ($route && $route.current && $route.current.$$route.originalPath === '/board') {
+            scope.routeSearch = 'board';
+          } else {
+            scope.routeSearch = 'search';
+          }
           scope.isUserSearchesEnabled =
             gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 

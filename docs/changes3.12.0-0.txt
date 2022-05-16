@@ -1,0 +1,193 @@
+================================================================================
+===
+=== GeoNetwork 3.12.0: List of changes
+===
+================================================================================
+- Update manual link (#5668)
+- Update transifex translations (#5667)
+- Fix typo in download-from-transifex.sh (#5666)
+- Add a new directive for combining add online resource fields (#5559)
+- Align jaxb versions for jaxb-api and jaxb-impl, to avoid unmarshall error in metadata validation in the metadata editor: Handler dispatch failed; nested exception is java.lang.NoSuchFieldError: REFLECTION (#5653)
+- Update download transifex script with Swedish
+- Harvester / Localfile / Disable script option. (#5651)
+- Move encryptor configuration file to the data directory config folder
+- Fix typos in `Development` document (#5621)
+- Some documentation on GeoNetwork Development (#5597)
+- [BP] Encrypt passwords stored in the database (#5476)
+- [BP] Password enforcement
+- [BP] Insecure password change function. Fixes #5538 (#5550)
+- Review and document use of ServiceContext (#5540)
+- [5590] Fix for too small privileges popup (#5591)
+- Jcloud implementation of the filestore. (#4570)
+- [BP] Generic error  message in 'Upload a file from URL'. Fixes #5535 (#5553)
+- add security policy so github picks it up (#5489)
+- CSW / Bbox is always WGS84. Adapt & fix coordinate order.
+- Rely on jdom xml outputter to interpret jdom default namespace and attributes behaviour (#4974)
+- Build / Fix path for web.xml for maven Jetty plugin (#5068)
+- #4156 fix ops for public metadata inserted with CSW-T
+- Remove "autoApply = true" option as it is not required. This is related to #5182
+- Add logout option for a logged-in user
+- ISO19110 / Improvements fc editor (#5267)
+- fixes resource links if multilingual fixes feature-catalog indexing in iso19115-3
+- Support for non-editable settings (#5565)
+- Use long instead of int to retrieve file size in Jeeves ServiceManager
+- ISO19115-3 / Link to the PR which allow to use contact directory
+- feat: add option to set map filter collapsed (#5582)
+- Fix escaped "+" in keyword identifier
+- Restrict username / group name characters (#5505)
+- Bump junit from 4.12 to 4.13.1
+- Bump junit from 4.12 to 4.13.1 in /integration-test
+- ISO19110 / View / Display feature cat in associated resources
+- Thesaurus / Use API path for default namespace. (#5010)
+- Remove secure port setting (#5569)
+- Batch report / Only display stack trace if set (#5581)
+- Add support to retrieve online resource protocol from a vocabulary in the metadata editor online resources panel (#5567)
+- Improved Modal dialog for batch reports (#5573)
+- Improve the recover password functions
+- Add `register` and `lost password` option to accessible login menu
+- Styling and multiple columns for the language list in the `Create Thesaurus Window`
+- Avoid loading Recaptcha API by angular-recaptcha if Recaptcha is disabled in the settings
+- Fix issue with localized exception where with* functions were returning LocalizedException instead of the class. i.e. ResourceNotFoundException (#5531)
+- Update check for INSPIRE registry valid items to create the RDF file. Seem the 'registry' part is different in some resgistries, like https://registry.gdi-de.org/codelist that uses 'codelist'. Fixes #4836
+- Metadata workflow - Bulk metadata approval (#5430)
+- Check for redirect parameter (#5491)
+- Manage url redirects with URL.openConnection (#5512)
+- Add a new accessible menubar (clickable and keyboard accessible): (#5518)
+- Keep service context independent to address user session null pointer exceptions (#5507)
+- Update README.md
+- missing space
+- Use the configured CSW Service metadata to fill the meta headers for description / keywords for the html content (#5447)
+- Remove `btn-success` from all buttons in the editor toolbar
+- Change the `btn-success` class to the more used 'save & close' button
+- fix typo (#5504)
+- Revert "Updated schema pom file to get parent version from variable. (#5453)"
+- Updated schema pom file to get parent version from variable. (#5453)
+- Review ServiceContext resource leak (#5260)
+- Adding Swedish to the webb-ui (#5459)
+- User $translateProvider.useSanitizeValueStrategy('escapeParameters') for encoding sanitizing (#5461)
+- CMIS - Add button to go to the main folder. (#5448)
+- Add statusIds list to MetadataWorkflowApi.getStatusByType API (#5394)
+- Min width to avoid table data wrapping. (#5416)
+- Encode metadata title and decode in the translate function. (#5423)
+- Changed delete icon to an trashcan icon and cancel to X when editing. (#5330)
+- Formatter / Improve rendering of line breaks, hyperlinks and email links
+- remove space as suggested by josegar74
+- include . in string inclusion as suggested by @ianwallen
+- remove unsafe characters from thesaurus identifier / filename
+- funding links for github repository (#5424)
+- Add support for authentication in WAF harvesters
+- Update jsoup dependency to 1.13.1
+- Bulk publish cancels working copy. Fixes #5419
+- Fix for validation result gets lost when approving record and copy validation results when creating a draft. Fixes #5209
+- Fix git submodule options order
+- Ignore .bak files
+- quick update from testing add-schema.sh on 3.10.x branch
+- Add localizedException logic so that errors can be displayed in multiple languages (#5323)
+- resolve comment by jose, for title element, there can only be one
+- Fix tabs for useradmin which were sometimes showing all options when reloading the page.
+- Improve the visibility of the server logs for the admin user (#5382)
+- Add Point draw interaction, fix enlarged extent for point features, set Modify interaction to always on (when not readOnly)
+- Fix GML output for Point features, prevent errors when feature has no geometry
+- Removed Modify button (now always active) and added Point draw button
+- fix typo
+- add capabilitiy to add point as boundingpolygon
+- Change to 3.11-SNAPSHOT (#5095)
+- Log forcing geometry into multi-polygon for catalog searcher
+- Change to buffering points and lines
+- Add test cases and clean up geometry transform
+- Use GeometryTransform to convert to multi-polgon.
+- Fix isCommitted state, use distinct log messages
+- no need for return when rethrow
+- can stay primitive indeed
+- entering the catch will set isRolledBack to true, avoid further commit or rollback, and rethrowing directly lead to finally end with final log
+- rewriting condition 6
+- use helper at this point
+- at this point exception is null and returned Boolean is true
+- exception do not need to be final
+- rewriting condition 1
+- when no catch, there is no need for a finally in order to set a boolean
+- temporarly introduce helper
+- seems original exception type  make no difference
+- Log failed commit, or failed rollback
+- [BP] Events / Do not fails on subtemplate deletion (#5364)
+- Cmis spring placeholders and some refactoring. (#5361)
+- CMIS: Performance improvements. (#5359)
+- Make version state configurable. (#5357)
+- Import metadata samples and templates - set the same uuid in the xml and in the database for templates (#5290)
+- Add ability to set metadataid in the resource properties. (#5241)
+- Move release build properties to separate file (#5348)
+- Remove unused file server.prop (#5327)
+- Update installer zip package name to geonetwork-bundle-VERSION.zip
+- release cleanup (#5325)
+- Add clean:clean@reset target for web module (#5317)
+- Fix working copy resource display (#5299)
+- Use mvn [options] [<goal(s)>] [<phase(s)>]  format
+- Upgrade to GeoTools 24.0 and JTS 1.17.1 (#5007)
+- Use ImageAssert comparison, as MetadataExtentApiTests checksums differ based on font engine (#5302)
+- Modify spring security so that it can be set at runtime by setting -Dgeonetwork.security.type or via env as GEONETWORK_SECURITY_TYPE
+- local m2 cleanup
+- Event handling improvements (#5194)
+- recursive checkout
+- Fix some working copy merge issues (#5279)
+- Install resources during QA job for use in testing
+- proposed linux build
+- [a11y] Accessibility improvements for the footer (#5073)
+- [#4865] Add option setting for changing the background color of the search block (#4870)
+- Add new feature for supporting CMIS as an external file store (#5118)
+- [a11y] Change language picker into dropdown (#5136)
+- Add a security logger to geonetwork (#5268)
+- Translation improvement / French (#5269)
+- Fixed some keycloak issues when calling API's  (#5207)
+- Fixed ES5 compatibility
+- Fix dimensions for geometry created by ol.format.GML
+- Draw bounds after map creation, apply 10% buffer to fit extent
+- Moved drawing of bbox after map was created (fixes #5153)
+- Use stops in extent transformations (more accurate)
+- Removed trailing comma, improved parsing of missing bbox or proj4 def
+- Added/updated translations for projection fields
+- Integrated ProjectionService into UiConfig
+- Added service to query EPSG.io for proj4 defs
+- Fix bug related to canceling working copy removes approved resource (#5214) (#5219)
+- Small improvements to the MiniMap: (#5195)
+- Security enhancement - support for Keycloak (#4931)
+- Allow to restore a metadata record from deleted records (Part 3) (#4817)
+- Configuration option to retrict the map services supported in map extent API's (region.getmap and {metadatauuid}/extents.png) the usage of non-predefined map services (#5166)
+- Moved transform functionality to GeometryService
+- Applied formatting
+- Moved geometry functions to new MapFieldService
+- Add missing migration script for older versions. (#5085)
+- Use datum line, fix longitudinal ordering
+- Fix for polar extents (issue #4810)
+- Fix for polar extents (issue #4810)
+- update readme, to remove installation instrucitons and fix links (#5036)
+- API / Extent / Add records/uuid/extent.json to list record extents and add extent/0.png for returning only one (#4930)
+- Map / Improve support for ESRI ArcGIS REST layers (#5044)
+- Duration / Keep view mode simple
+- Replace broken JAR installer for ZIP distribution (#4984)
+- UserSearch / 255 char is too small for URLs (#4883)
+- Identicon config (#4939)
+- Preserve lastmodified during copy-schemas-ant target (#4948)
+- Merge latest changes made in metadata101 which were not part of https://github.com/geonetwork/core-geonetwork/pull/4701.
+- Fix for add-schema services snippet
+- Use unpack to support use of schema plugins as artifacts (#4701)
+- Reformat code
+- Use constant for the setting name
+- Code formatting
+- Improve import schema not allowed exception message
+- shorten index names for oracle 30 char limit (#4776)
+- restrict template creation as well based on METADATA_IMPORT_RESTRICT (#4783)
+- Update software instructions, standard license and contributing files (#4697)
+- Portal page improvement
+- Shift to new maven repositories (OSGeo) (#4700)
+- Fix dependency issue #4661.  xml-commons-resolver (1.2) conflicts with xml-resolver-patched (1.2.1) - same jar different version. (#4706)
+-  Extent API / Add color parameters (#4704)
+- Migrate to GeoTools 23.0 (#4488)
+- Fix typo in closing XML tag (#4647)
+- Search / CSV export / Trigger download in browser (#4641)
+- Fix broken Software Development links from 3.8.x to trunk (#4609)
+- Harvester timezone setting (#4576)
+- Fix typo in opening XML tag
+- Update portuguese strings.xml file. Fixes #4510
+- SQL / Backport migration for 3.10.2.
+- Icrease length of Validation.valType column
+- Update version to 3.11.0-SNAPSHOT

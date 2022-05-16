@@ -4,15 +4,13 @@
   <!--ANY full text search input-->
   <div class="row gn-top-search">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-      <div class="col-md-3 gn-search-facet">
-        <div data-gn-user-searches-panel="user"
-             data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
-      </div>
-      <div class="col-md-6">
+      <div class="col-md-offset-3 col-md-6">
         <div class="input-group gn-form-any">
-          <button data-gn-user-searches-list=""
-                  data-ng-cloak=""
-                  data-mode="button"/>
+          <div data-gn-user-searches-list=""
+               data-ng-cloak=""
+               data-mode="button"
+               class="input-group-btn btn-favorites">
+          </div>
               <input type="text"
                     class="form-control input-lg"
                     id="gn-any-field"
@@ -30,59 +28,38 @@
                     data-typeahead-wait-ms="600">
 
           <div class="input-group-btn">
-
-            <button type="button"
-                    data-ng-click="triggerSearch()"
-                    title="{{'search' | translate}}"
-                    class="btn btn-primary btn-lg">
-              <i class="fa fa-fw fa-search"></i>
-              <span class="sr-only" data-translate="">search</span>
-            </button>
-
             <button type="button"
                     data-ng-click="resetSearch(searchObj.defaultParams);"
                     title="{{'ClearTitle' | translate}}"
-                    data-ng-if="::!isFilterTagsDisplayedInSearch"
-                    class="btn btn-default btn-lg">
-              <i class="fa fa-times text-danger"></i>
+                    class="btn btn-default btn-lg btn-reset">
+              <i class="fa fa-times"></i>
               <span class="sr-only" data-translate="">ClearTitle</span>
             </button>
             <button type="button"
-                    class="btn btn-default btn-lg dropdown-toggle"
-                    data-ng-if="::exactMatchToggle"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
+                    data-ng-click="triggerSearch()"
+                    title="{{'search' | translate}}"
+                    class="btn btn-default btn-lg btn-search">
+              <i class="fa fa-search"></i>
+              <span class="sr-only" data-translate="">search</span>
             </button>
-            <ul class="dropdown-menu"
-                data-ng-if="::exactMatchToggle">
-              <li class="dropdown-header"
-                  title="{{'exactMatch-help' | translate}}">
-                <label>
-                  <input type="checkbox"
-                         data-ng-model="searchObj.state.exactMatch"
-                         aria-label="{{'exactMatch' | translate}}">
-                  <span data-translate="">exactMatch</span>
-                </label>
-              </li>
-            </ul>
             <button type="button"
-                    class="btn btn-default btn-lg"
-                    title="{{'advanced' | translate}}"
+                    class="btn btn-default btn-lg btn-advanced"
+                    title="{{'searchOptions' | translate}}"
                     data-ng-model="searchObj.advancedMode"
                     btn-checkbox=""
                     btn-checkbox-true="1"
                     btn-checkbox-false="0">
-              <i class="fa fa-ellipsis-v"></i>
-              <span class="sr-only" data-translate="">advanced</span>
+              <i class="fa fa-fw fa-sliders"></i>
+              <span class="sr-only" data-translate="">searchOptions</span>
             </button>
           </div>
         </div>
+        <div data-ng-show="searchObj.advancedMode">
+          <!--Advanced search form-->
+          <div data-ng-include="advancedSearchTemplate"></div>
+        </div>
       </div>
-      <div data-ng-show="searchObj.advancedMode">
-        <!--Advanced search form-->
-        <div data-ng-include="advancedSearchTemplate"></div>
-      </div>
+
     </div>
   </div>
   <!-- /.gn-top-search -->

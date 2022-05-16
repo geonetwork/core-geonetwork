@@ -59,6 +59,7 @@
         ```
         <request>
          <tname>title</tname>
+         <description>description</description>
          <fname>filename</fname>
          <tns>http://www.mysite.org/thesaurus</tns>
          <dname>theme</dname>
