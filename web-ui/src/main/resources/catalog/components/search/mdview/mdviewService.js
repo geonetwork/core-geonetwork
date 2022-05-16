@@ -98,7 +98,8 @@
           if (relatedRecords) {
             // Build metadata as the API response already contains an index document
             Object.keys(relatedRecords).map(function (k) {
-              relatedRecords[k] && relatedRecords[k].map(function (l) {
+              relatedRecords[k] && relatedRecords[k].map
+              && relatedRecords[k].map(function (l) {
                 recordsMap[l._id] = new Metadata(l);
               })
             });
@@ -122,7 +123,7 @@
             var relatedRecordKeysWithValues = []; // keep track of the relations with values
 
             Object.keys(relatedRecords).forEach(function (k) {
-              if (relatedRecords[k]) {
+              if (relatedRecords[k] && relatedRecords[k].map) {
                 relatedRecordKeysWithValues.push(k);
 
                 body += '{"index": "records"}\n';
