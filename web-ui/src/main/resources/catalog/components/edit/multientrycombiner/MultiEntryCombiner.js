@@ -61,6 +61,7 @@
  * 2. thesaurus
  *      This represents a Thesaurus KeyWord Picker.
  *           + thesaurus is the name of the thesaurus
+ *           + numberOfSuggestions is the number of suggestions to display (if not set, defaults to 20)
  *
  * 3. freeText
  *      This represents a field the user can type into.
@@ -110,7 +111,8 @@
      *           "eng": "Government of Canada Organization",
      *           "fra": "Organisation du Gouvernement du Canada"
      *         },
-     *         "thesaurus": "external.theme.EC_Government_Titles"
+     *         "thesaurus": "external.theme.EC_Government_Titles",
+     *         "numberOfSuggestions: 200,
      *       },
      *       {
      *         "type": "freeText",
