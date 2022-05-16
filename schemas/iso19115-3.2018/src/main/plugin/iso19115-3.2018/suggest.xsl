@@ -7,6 +7,7 @@
 
   <!-- Register here the list of process for the schema-->
   <xsl:include href="process/add-extent-from-geokeywords.xsl"/>
+  <xsl:include href="process/add-wms-and-legend-from-esrirest.xsl"/>
   <xsl:include href="process/add-resource-id.xsl"/>
   <xsl:include href="process/add-contact.xsl"/>
   <xsl:include href="process/add-columns-from-csv.xsl"/>
@@ -19,6 +20,7 @@
     <p>add-resource-id</p>
     <p>add-contact</p>
     <p>create-featurecatalogue-from-wfs</p>
+    <p>add-wms-and-legend-from-esrirest</p>
     <p>add-columns-from-csv</p>
     <p>add-values-from-csv</p>
     <!--<p>inspire-add-conformity</p>-->

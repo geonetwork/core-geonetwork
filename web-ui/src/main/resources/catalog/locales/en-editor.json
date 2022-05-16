@@ -129,6 +129,7 @@
     "file": "File",
     "fileType": "Type of file",
     "fromTemplate": "From ",
+    "esriRestServiceUrl": "ESRI REST URL",
     "generateUUID": "Generate UUID for inserted metadata",
     "geopublisher": "Publish as WMS, WFS, WCS",
     "gmd:CI_ResponsibleParty": "Organizations & contacts",
