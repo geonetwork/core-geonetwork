@@ -45,6 +45,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
@@ -52,6 +53,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -93,8 +95,15 @@ public class MetadataEditingApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
     @Autowired
     SchemaManager schemaManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
 
     @Autowired
     MetadataDraftRepository metadataDraftRepository;
@@ -424,6 +433,16 @@ public class MetadataEditingApi {
             if (reindex) {
                 Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
                 dataMan.indexMetadata(id, true);
+            }
+
+            // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+            // status of the published and draft versions
+            if (metadata instanceof MetadataDraft) {
+                Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+                if (metadataApproved != null) {
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true);
+                }
             }
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);
