@@ -643,6 +643,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
                 searchManager.delete(id);
+
+                // Unset METADATA_EDITING_CREATED_DRAFT flag
+                context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }
