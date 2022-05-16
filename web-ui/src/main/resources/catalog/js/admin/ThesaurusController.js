@@ -100,6 +100,7 @@
        * on other thesaurus properties
        */
       $scope.thesaurusSuggestedNs = '';
+      $scope.customNamespace = false;
       /**
        * The thesaurus URL to upload
        */
@@ -291,16 +292,25 @@
        * eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
+        if (!creatingThesaurus) {
+          return;
+        }
+        
         $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
           ? $scope.thesaurusNamespace
-          .replace('{{type}}', $scope.thesaurusSelected.dname)
-          .replace('{{filename}}',
-            $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''))
-        : '';
+            .replace('{{type}}', $scope.thesaurusSelected.dname)
+            .replace('{{filename}}',
+              $scope.thesaurusSelected.filename.replace(/[^\d\w]/gi, ''))
+          : '';
+
+        if (!$scope.customNamespace) {
+          $scope.useSuggestedNs();
+        }
       };
 
       $scope.$watch('thesaurusSelected.filename',  $scope.computeThesaurusNs);
       $scope.$watch('thesaurusSelected.dname',  $scope.computeThesaurusNs);
+      $scope.$watch('customNamespace',  $scope.computeThesaurusNs);
 
       /**
        * Use the suggested namespace for the new thesaurus
