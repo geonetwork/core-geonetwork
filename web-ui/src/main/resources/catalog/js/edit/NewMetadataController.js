@@ -73,7 +73,7 @@
 
       // List of record type to not take into account
       // Could be avoided if a new index field is created FIXME ?
-      var dataTypesToExclude = ['staticMap', 'theme', 'place'];
+      var dataTypesToExclude = ['map/static', 'theme', 'place'];
       var defaultType = 'dataset';
       var unknownType = 'unknownType';
       var fullPrivileges = true;
