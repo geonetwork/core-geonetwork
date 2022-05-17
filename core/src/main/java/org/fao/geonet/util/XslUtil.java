@@ -34,6 +34,7 @@ import com.neovisionaries.i18n.LanguageCode;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MetadataResourceContainer;
+import org.jdom.input.SAXBuilder;
 import org.jsoup.Jsoup;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.MultiPolygon;
@@ -1241,11 +1242,13 @@ public final class XslUtil {
             URL url = new URL(surl);
             URLConnection conn = Lib.net.setupProxy(context, url);
 
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
             is = conn.getInputStream();
-            res = db.parse(is);
+
+            SAXBuilder builder = Xml.getSAXBuilder(false);
+            Document jdoc = builder.build(is);
+
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(jdoc);
 
         } catch (Throwable e) {
             Log.error(Geonet.GEONETWORK, "Failed fetching url: " + surl, e);
