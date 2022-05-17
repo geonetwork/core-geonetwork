@@ -201,6 +201,13 @@
           <h2 data-translate="">aboutThisResource</h2>
           <table class="table table-striped">
             <tbody>
+            <tr data-ng-if="mdView.current.record.metadataLinkage">
+              <th data-translate="">metadataLinkage</th>
+              <td>
+                <a href="" data-ng-href="{{mdView.current.record.metadataLinkage}}">{{'pointOfTruth' | translate}}</a>&nbsp;
+              </td>
+            </tr>
+
             <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                             mdView.current.record.inspirethemewithac.length > 0">
                 <th data-translate="">inspireThemes</th>
