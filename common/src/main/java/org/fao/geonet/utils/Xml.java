@@ -130,6 +130,13 @@ public final class Xml {
 
     //--------------------------------------------------------------------------
 
+    public static SAXBuilder getSAXBuilder(boolean validate) {
+        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
+        Resolver resolver = ResolverWrapper.getInstance();
+        builder.setEntityResolver(resolver.getXmlResolver());
+        return builder;
+    }
+
     /**
      *
      * @param validate
