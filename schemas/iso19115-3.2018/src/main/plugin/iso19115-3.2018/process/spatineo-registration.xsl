@@ -77,7 +77,7 @@
       <xsl:variable name="isRegistered"
                     select="count($root//mdb:dataQualityInfo/*/
                               mdq:standaloneQualityReport[
-                                contains(*/mdq:abstract/*/text(), $url)]) > 0"
+                                contains(*/mdq:abstract/*[1]/text(), $url)]) > 0"
                     as="xs:boolean"/>
       <xsl:if test="not($isRegistered)">
         <suggestion process="spatineo-registration"

@@ -56,6 +56,8 @@
   <xsl:param name="setDynamicGraphicOverview" select="'0'"/>
   <xsl:param name="wmsServiceUrl"/>
 
+  <xsl:variable name="maxSrs" select="21"/>
+
   <xsl:variable name="setExtentMode" select="geonet:parseBoolean($setExtent)"/>
   <xsl:variable name="setAndReplaceExtentMode" select="geonet:parseBoolean($setAndReplaceExtent)"/>
   <xsl:variable name="setCRSMode" select="geonet:parseBoolean($setCRS)"/>
@@ -299,17 +301,23 @@
         "/>
 
       <!-- Set spatial ref-->
-      <xsl:if test="$setCRSMode and $capabilitiesDoc//SRS">
-        <xsl:for-each-group select="$capabilitiesDoc//SRS" group-by=".">
-          <gmd:referenceSystemInfo>
-            <gmd:MD_ReferenceSystem>
-              <xsl:call-template name="RefSystemTypes">
-                <xsl:with-param name="srs" select="current-grouping-key()"/>
-              </xsl:call-template>
-            </gmd:MD_ReferenceSystem>
-          </gmd:referenceSystemInfo>
-        </xsl:for-each-group>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$setCRSMode">
+          <xsl:for-each select="distinct-values($capabilitiesDoc//SRS)[position() &lt; $maxSrs]">
+            <gmd:referenceSystemInfo>
+              <gmd:MD_ReferenceSystem>
+                <xsl:call-template name="RefSystemTypes">
+                  <xsl:with-param name="srs" select="."/>
+                </xsl:call-template>
+              </gmd:MD_ReferenceSystem>
+            </gmd:referenceSystemInfo>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="gmd:referenceSystemInfo"/>
+        </xsl:otherwise>
+      </xsl:choose>
+
 
       <xsl:copy-of select="gmd:metadataExtensionInfo
         "/>
