@@ -53,10 +53,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -77,9 +74,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.*;
@@ -107,6 +102,9 @@ public class MetadataEditingApi {
 
     @Autowired
     MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
+    private StatusValueRepository statusValueRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Edit a record", description = "Return HTML form for editing.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
@@ -381,8 +379,20 @@ public class MetadataEditingApi {
                     // Only editors can submit a record
                     if (isEditor || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
+                        StatusValue statusValue = statusValueRepository.findById(changeToStatus).get();
+
+                        MetadataStatus metadataStatus = new MetadataStatus();
+
+                        metadataStatus.setMetadataId(metadata.getId());
+                        metadataStatus.setUuid(metadata.getUuid());
+                        metadataStatus.setChangeDate(new ISODate());
+                        metadataStatus.setUserId(session.getUserIdAsInt());
+                        metadataStatus.setStatusValue(statusValue);
+                        metadataStatus.setChangeMessage("Save and submit metadata");
+
+                        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                        listOfStatusChange.add(metadataStatus);
+                        sa.onStatusChange(listOfStatusChange);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -391,8 +401,20 @@ public class MetadataEditingApi {
                     // Only reviewers can approve
                     if (isReviewer || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
+                        StatusValue statusValue = statusValueRepository.findById(changeToStatus).get();
+
+                        MetadataStatus metadataStatus = new MetadataStatus();
+
+                        metadataStatus.setMetadataId(metadata.getId());
+                        metadataStatus.setUuid(metadata.getUuid());
+                        metadataStatus.setChangeDate(new ISODate());
+                        metadataStatus.setUserId(session.getUserIdAsInt());
+                        metadataStatus.setStatusValue(statusValue);
+                        metadataStatus.setChangeMessage("Save and approve metadata");
+
+                        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                        listOfStatusChange.add(metadataStatus);
+                        sa.onStatusChange(listOfStatusChange);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
