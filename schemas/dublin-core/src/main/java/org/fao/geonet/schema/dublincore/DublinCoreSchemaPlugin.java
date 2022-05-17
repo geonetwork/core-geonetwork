@@ -70,7 +70,7 @@ public class DublinCoreSchemaPlugin
      * Always return null. Not implemented for dublin core records.
      */
     public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata) {
-        return null;
+        return new HashSet<>();
     }
 
     @Override
@@ -82,19 +82,19 @@ public class DublinCoreSchemaPlugin
     }
 
     public Set<String> getAssociatedDatasetUUIDs(Element metadata) {
-        return null;
+        return new HashSet<>();
     }
 
     ;
 
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
-        return null;
+        return new HashSet<>();
     }
 
     ;
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
-        return null;
+        return new HashSet<>();
     }
 
     @Override
