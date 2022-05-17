@@ -76,7 +76,9 @@
                 <a href="#/create" class="btn btn-primary btn-truncate" title="{{'addRecord' | translate}}">
                   <i class="fa fa-fw fa-plus"/><span class=" hidden-sm" data-translate="">addRecord</span>
                 </a>
-                <a href="#/import" class="btn btn-default btn-truncate" title="{{'ImportRecord' | translate}}">
+                <a href="#/import"
+                   data-ng-if="user.canImportMetadata()"
+                   class="btn btn-default btn-truncate" title="{{'ImportRecord' | translate}}">
                   <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
                 </a>
                 <a href="#/directory" class="btn btn-default btn-truncate" title="{{'directoryManager' | translate}}"
