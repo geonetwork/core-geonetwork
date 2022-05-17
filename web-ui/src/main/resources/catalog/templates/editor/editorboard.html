@@ -140,7 +140,10 @@
             <a href="#/create" class="btn btn-primary btn-block gn-margin-bottom" title="{{'addRecord' | translate}}">
               <i class="fa fa-fw fa-plus"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">addRecord</span>
             </a>
-            <a href="#/import" class="btn btn-default btn-block gn-margin-bottom" title="{{'ImportRecord' | translate}}">
+            <a href="#/import"
+               data-ng-if="user.canImportMetadata()"
+               class="btn btn-default btn-block gn-margin-bottom"
+               title="{{'ImportRecord' | translate}}">
               <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">ImportRecord</span>
             </a>
             <a href="#/directory" class="btn btn-default btn-block gn-margin-bottom" title="{{'directoryManager' | translate}}"
