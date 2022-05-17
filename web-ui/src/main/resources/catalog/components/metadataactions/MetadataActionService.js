@@ -259,7 +259,14 @@
         return deferred.promise;
       };
 
+      this.getMetadataIdToEdit = function(md) {
+        if (md.draftId) {
+          return md.draftId;
+        } else {
+          return md.id;
+        }
 
+      };
       this.openPrivilegesPanel = function(md, scope) {
         gnUtilityService.openModal({
           title: $translate.instant('privileges') + ' - ' +

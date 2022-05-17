@@ -281,17 +281,23 @@
 
                       //If returned more than one, maybe we are looking for the draft
                       var i = 0;
+                      var idToEdit;
+
                       r.data.hits.hits.forEach(function (md, index) {
                         if(getDraft
                             && md._source.draft == 'y') {
                           //This will only happen if the draft exists
                           //and the user can see it
                           i = index;
+                        } else if(md._source.draft == 'y') {
+                          idToEdit = md._source.id;
                         }
                       });
 
                       var metadata = [];
                       metadata.push(new Metadata(r.data.hits.hits[i]));
+                      metadata[0].idToEdit = (idToEdit ? idToEdit: metadata[0].id) ;
+
                       data = {metadata: metadata};
                       //Keep the search results (gnMdViewObj.records)
                       // that.feedMd(0, undefined, data.metadata);

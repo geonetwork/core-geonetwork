@@ -95,7 +95,7 @@
             'creat*',
             'group*',
             'resource*',
-            'draft',
+            'draft*',
             'owner*',
             'recordOwner',
             'status*',

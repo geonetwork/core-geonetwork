@@ -61,7 +61,7 @@
             <a class="btn btn-default"
                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)"
-               data-ng-href="#/metadata/{{md.id}}?redirectUrl=catalog.edit"
+               data-ng-href="#/metadata/{{mdService.getMetadataIdToEdit(md)}}?redirectUrl=catalog.edit"
                title="{{'edit' | translate}}">
               <i class="fa fa-pencil"></i>
             </a>
