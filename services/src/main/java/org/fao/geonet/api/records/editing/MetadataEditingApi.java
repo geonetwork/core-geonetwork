@@ -469,6 +469,12 @@ public class MetadataEditingApi {
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataMan.endEditingSession(id, session);
+
+            if (isEnabledWorkflow) {
+                // After saving & close remove the information to remove the draft copy if the user cancels the editor
+                context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+            }
+
             if (isUnpublished) {
                 throw new IllegalStateException(String.format("Record saved but as it was invalid at the end of "
                     + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));
