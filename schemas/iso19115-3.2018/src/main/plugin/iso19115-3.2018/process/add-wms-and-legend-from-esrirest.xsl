@@ -17,11 +17,11 @@
   <xsl:param name="esriRestServiceUrl" select="''"/>
 
   <xsl:variable name="wmsUrl"
-                select="concat(replace($esriRestServiceUrl, '/rest/', ''), '/WMSServer?request=GetCapabilities&amp;service=WMS')"/>
+                select="concat(replace($esriRestServiceUrl, '/rest/', '/'), '/WMSServer?request=GetCapabilities&amp;service=WMS')"/>
   <xsl:variable name="isWmsDefined"
-                select="count(//mrd:online
+                select="count(//mrd:onLine/*
                                 [cit:protocol/*/text() = 'OGC:WMS'
-                                and */cit:linkage/*/text() = $wmsUrl]) > 0"/>
+                                and cit:linkage/*/text() = $wmsUrl]) > 0"/>
 
 
   <xsl:variable name="legendUrl"
@@ -29,8 +29,7 @@
   <xsl:variable name="isLegendDefined"
                 select="count(//mdb:portrayalCatalogueInfo/*/
                                 mpc:portrayalCatalogueCitation/*/cit:onlineResource/*
-                                  [cit:protocol/*/text() = 'WWW:LINK'
-                                  and cit:linkage/*/text() = $legendUrl]) > 0"/>
+                                  [cit:linkage/*/text() = $legendUrl]) > 0"/>
 
 
 
@@ -54,17 +53,35 @@
                   select="$root//mrd:onLine/*[cit:protocol/*/text() = 'ESRI:REST']/cit:linkage/*"/>
 
     <xsl:for-each select="$esriRestUrls">
-      <suggestion process="add-wms-and-legend-from-esrirest"
-                  id="{generate-id()}"
-                  category="online" target="onLine">
-        <name>
-          <xsl:value-of select="geonet:i18n($add-wms-and-legend-from-esrirest-loc, 'a', $guiLang)"/><xsl:value-of
-          select="."/>
-        </name>
-        <operational>true</operational>
-        <params>{"esriRestServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of select="."/>"}}
-        </params>
-      </suggestion>
+
+      <xsl:variable name="wmsUrl"
+                    select="concat(replace(., '/rest/', '/'), '/WMSServer?request=GetCapabilities&amp;service=WMS')"/>
+      <xsl:variable name="isWmsDefined"
+                    select="count($root//mrd:onLine/*
+                                [cit:protocol/*/text() = 'OGC:WMS'
+                                and cit:linkage/*/text() = $wmsUrl]) > 0"/>
+
+
+      <xsl:variable name="legendUrl"
+                    select="concat(., '/legend')"/>
+      <xsl:variable name="isLegendDefined"
+                    select="count($root//mdb:portrayalCatalogueInfo/*/
+                                mpc:portrayalCatalogueCitation/*/cit:onlineResource/*
+                                  [cit:linkage/*/text() = $legendUrl]) > 0"/>
+
+      <xsl:if test="not($isWmsDefined) or not($isLegendDefined)">
+        <suggestion process="add-wms-and-legend-from-esrirest"
+                    id="{generate-id()}"
+                    category="online" target="onLine">
+          <name>
+            <xsl:value-of select="geonet:i18n($add-wms-and-legend-from-esrirest-loc, 'a', $guiLang)"/><xsl:value-of
+            select="."/>
+          </name>
+          <operational>true</operational>
+          <params>{"esriRestServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of select="."/>"}}
+          </params>
+        </suggestion>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -156,13 +173,6 @@
                       <xsl:value-of select="$legendUrl"/>
                     </gco:CharacterString>
                   </cit:linkage>
-                  <cit:protocol>
-                    <gco:CharacterString>WWW:LINK</gco:CharacterString>
-                  </cit:protocol>
-                  <cit:function>
-                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                                               codeListValue="information"/>
-                  </cit:function>
                 </cit:CI_OnlineResource>
               </cit:onlineResource>
             </cit:CI_Citation>
