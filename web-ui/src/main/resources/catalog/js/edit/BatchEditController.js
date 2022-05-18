@@ -182,11 +182,15 @@
     'gnCurrentEdit',
     'gnSchemaManagerService',
     'gnPopup', '$translate',
+    'gnClipboard', '$rootScope',
     function($scope, $location, $http, $compile, $httpParamSerializer,
-        gnSearchSettings, gnGlobalSettings,
-        gnCurrentEdit, gnSchemaManagerService, gnPopup, $translate) {
+             gnSearchSettings, gnGlobalSettings,
+             gnCurrentEdit, gnSchemaManagerService,
+             gnPopup, $translate, gnClipboard, $rootScope) {
 
-      $scope.editTypes = ['searchAndReplace', 'xpathEdits', 'batchEdits'];
+      $scope.editTypes = [{id: 'searchAndReplace', icon: 'fa-refresh fa-rotate-90'},
+        {id: 'xpathEdits', icon: 'fa-code'},
+        {id: 'batchEdits', icon: 'fa-wpforms'}];
 
       // Simple tab handling.
       $scope.selectedStep = 1;
@@ -247,13 +251,13 @@
         regexpFlags: ''
       };
       $scope.searchAndReplaceChanges = [];
-      $scope.searchAndReplaceChanges.push($scope.searchAndReplaceField);
+      $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
       $scope.regexpFlags = ['i', 'c', 'n', 'm'];
 
       $scope.setType = function(type) {
         $scope.editType = type;
         if (type === 'searchAndReplace') {
-          $scope.searchAndReplaceChanges.push($scope.searchAndReplaceField);
+          $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
         } else {
           $scope.searchAndReplaceChanges.length = 0;
         }
@@ -413,6 +417,29 @@
         $scope.removeChange(c.xpath, c.value);
         xpathCounter--;
       };
+      $scope.pasteFromClipboard = function() {
+        gnClipboard.paste().then(function(text) {
+          try {
+            var config = JSON.parse(text);
+            if (config['insertMode']) {
+              $scope.currentXpath = config;
+            } else {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('batchEditConfigIsNotValid'),
+                timeout: 2,
+                type: 'danger'
+              });
+            }
+          } catch (e) {
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('batchEditConfigIsNotJson'),
+              error: e,
+              timeout: 2,
+              type: 'danger'
+            });
+          }
+        });
+      };
       $scope.editXpathChange = function(c) {
         $scope.removeChange(c.xpath, c.value);
         $scope.currentXpath = c;
@@ -527,12 +554,16 @@
         });
       };
 
+      $scope.setExample = function(e) {
+        $scope.currentXpath = e;
+      };
+
       function init() {
         $http.get('../api/standards/batchconfiguration').
             success(function(data) {
               $scope.fieldConfig = data;
               gnSchemaManagerService.getNamespaces();
-              $scope.setType($scope.editTypes[0]);
+              $scope.setType($scope.editTypes[0].id);
             }).error(function(response) {
               console.warn(response);
             });

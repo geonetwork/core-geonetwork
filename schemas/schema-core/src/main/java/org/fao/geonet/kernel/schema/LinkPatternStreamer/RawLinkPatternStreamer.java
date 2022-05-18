@@ -26,6 +26,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,14 +37,18 @@ public class RawLinkPatternStreamer <L, M> {
     private static final Pattern SEARCH_URL_IN_STRING_REGEX = Pattern.compile("(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])?", Pattern.CASE_INSENSITIVE);
 
     private Pattern pattern;
+    private Pattern excludePattern;
     private ILinkBuilder<L, M> linkBuilder;
     private List<Namespace> namespaces;
     private String rawTextXPath;
 
-    public RawLinkPatternStreamer(ILinkBuilder linkBuilder)
+    public RawLinkPatternStreamer(ILinkBuilder linkBuilder, String excludePattern)
     {
         this.pattern = SEARCH_URL_IN_STRING_REGEX;
         this.linkBuilder = linkBuilder;
+        if (!StringUtils.isEmpty(excludePattern)) {
+            this.excludePattern = Pattern.compile(excludePattern);
+        }
     }
 
     public void setRawTextXPath(String rawTextXPath) {
@@ -61,8 +66,12 @@ public class RawLinkPatternStreamer <L, M> {
 
     private void processOneRawText(Element rawTextElem, M ref) {
         for (Matcher m = this.pattern.matcher(rawTextElem.getValue()); m.find(); ) {
-            L link = linkBuilder.found(m.toMatchResult().group());
-            linkBuilder.persist(link, ref);
+            String url = m.toMatchResult().group();
+            if (this.excludePattern == null
+                || !this.excludePattern.matcher(url).find()) {
+                L link = linkBuilder.found(url);
+                linkBuilder.persist(link, ref);
+            }
         }
     }
 }

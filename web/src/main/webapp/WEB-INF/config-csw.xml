@@ -289,7 +289,7 @@
         <!-- Other additional queryable properties   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - -->
 
-        <parameter name="OnlineResourceType" field="protocol" type="AdditionalQueryables"/>
+        <parameter name="OnlineResourceType" field="linkProtocol" type="AdditionalQueryables"/>
         <parameter name="OnlineResourceMimeType" field="mimetype" type="AdditionalQueryables"/>
 
         <parameter name="Date" field="createDate" type="AdditionalQueryables"/>

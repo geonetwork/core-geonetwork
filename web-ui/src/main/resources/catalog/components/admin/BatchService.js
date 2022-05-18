@@ -100,6 +100,8 @@
                     {headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}
                   ).then(function(data) {
                     defer.resolve(data);
+                  }, function(error) {
+                    defer.reject(error);
                   });
                 }
 

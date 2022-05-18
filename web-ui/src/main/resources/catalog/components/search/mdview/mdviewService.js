@@ -90,44 +90,40 @@
 
         gnMdViewObj.current.record = md;
 
-        // TODO: Should be used a promise?
-        // How affects gnMdViewObj.recordsLoaded?
+        // Record with associations
         if (md.resourceType && md.related) {
           var relatedRecords = md.related;
-          var uuids = {};
-          // And collect details using search service
+          var recordsMap = {};
+          // Collect stats using search service
           if (relatedRecords) {
+            // Build metadata as the API response already contains an index document
             Object.keys(relatedRecords).map(function (k) {
               relatedRecords[k] && relatedRecords[k].map(function (l) {
-                uuids[l.id] = [];
+                recordsMap[l._id] = new Metadata(l);
               })
             });
 
-            var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
 
             // Configuration to retrieve the results for the aggregations
+            var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
             Object.keys(relatedFacetConfig).map(function (k) {
               relatedFacetConfig[k].aggs = {
                 'docs': {
-                  'top_hits': {
+                  'top_hits': { // associated stats with UUIDs
                     'size': 100
                   }
                 }
               }
             });
 
-            // Build multiquery to get aggregations for each relation
+            // Build multiquery to get aggregations for each
+            // set of associated records
             var body = '';
             var relatedRecordKeysWithValues = []; // keep track of the relations with values
 
             Object.keys(relatedRecords).forEach(function (k) {
-              var uuids = {};
               if (relatedRecords[k]) {
                 relatedRecordKeysWithValues.push(k);
-
-                relatedRecords[k].forEach(function (r) {
-                  uuids[r.id] = [];
-                });
 
                 body += '{"index": "records"}\n';
                 body +=
@@ -135,7 +131,9 @@
                   '  "query": {' +
                   '    "bool": {' +
                   '      "must": [' +
-                  '        { "terms": { "uuid": ["' + Object.keys(uuids).join('","') + '"]} },' +
+                  '        { "terms": { "uuid": ["' +
+                  relatedRecords[k].map(function(md) {return md._id;}).join('","') +
+                  '"]} },' +
                   '        { "terms": { "isTemplate": ["n"] } }' +
                   '      ]' +
                   '    }' +
@@ -143,43 +141,28 @@
                   '  "aggs":' + JSON.stringify(relatedFacetConfig) + ',' +
                   '  "from": 0,' +
                   '  "size": 100,' +
-                  '  "_source": ["' + gnESFacet.configs.simplelist.source.includes.join('","') + '"]' +
+                  '  "_source": ["uuid"]' +
                   '}';
               }
             });
 
+            // Collect stats in main portal as some records may not be visible in subportal
             $http.post('../../srv/api/search/records/_msearch', body).then(function (data) {
-              gnMdViewObj.current.record.relatedRecords = [];
-
-              var recordMap = {};
-              angular.forEach(data.data.responses, function (response) {
-                angular.forEach(response.hits.hits, function (record) {
-                  recordMap[record._id] = new Metadata(record);
-                });
-              });
+              gnMdViewObj.current.record.related = [];
 
               Object.keys(relatedRecords).map(function (k) {
-                relatedRecords[k] && relatedRecords[k].map(function (l) {
-                  var isRemote = recordMap[l.id] === undefined && l.origin === 'remote';
-                  l.record = isRemote ? new Metadata({
-                    resourceTitle: $filter('gnLocalized')(l.title),
-                    remoteUrl: $filter('gnLocalized')(l.url)
-                  }) : recordMap[l.id];
-
-                  // Open record not in current portal as a remote record
-                  if (l.origin === 'catalog') {
-                    l.record.remoteUrl = '../../srv/'
-                      + gnGlobalSettings.iso3lang
-                      + '/catalog.search#/metadata/' + l.id;
-                  }
+                relatedRecords[k] && relatedRecords[k].map(function (l, i) {
+                  var md = recordsMap[l._id];
+                  relatedRecords[k][i] = md;
                 })
               });
 
-              gnMdViewObj.current.record.relatedRecords = relatedRecords;
-              gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
+              gnMdViewObj.current.record.related = relatedRecords;
+              gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+              gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
 
               relatedRecordKeysWithValues.forEach(function (key, index) {
-                gnMdViewObj.current.record.relatedRecords['aggregations_' + key] = data.data.responses[index].aggregations;
+                gnMdViewObj.current.record.related['aggregations_' + key] = data.data.responses[index].aggregations;
               });
             });
           }
@@ -230,7 +213,7 @@
       };
 
       this.buildRelatedTypesQueryParameter = function(types) {
-        types = types || ('onlines|parent|children|sources|hassources|' +
+        types = types || ('parent|children|sources|hassources|' +
             'brothersAndSisters|services|datasets|' +
             'siblings|associated|fcats|related');
         return 'relatedType=' + types.split('|').join('&relatedType=');
@@ -275,7 +258,7 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                  $http.post('../api/search/records/_search?bucket=s101&' + that.buildRelatedTypesQueryParameter(), {"query": {
+                  $http.post('../api/search/records/_search?' + that.buildRelatedTypesQueryParameter(), {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {

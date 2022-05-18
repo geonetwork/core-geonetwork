@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -85,7 +86,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(5)))
+            .andExpect(jsonPath("$", hasSize(6)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -450,7 +451,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .content(json)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("The old password is not valid")))
+            .andExpect(jsonPath("$.description", is("The old password is not valid.")))
             .andExpect(status().is(400));
     }
 

@@ -1,0 +1,18 @@
+<div data-ng-class="[].concat(mdView.current.record.related.sources, mdView.current.record.related.hassources).length > 3 ? 'col-md-12' : 'col-md-4'">
+  <div data-ng-if="mdView.current.record.related.uuids"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="sources"
+       data-layout="card"
+       data-has-results="hasRelations.sources"
+       data-title="{{'sourceDatasets' | translate}}">
+  </div>
+  <div data-ng-if="mdView.current.record.related.uuids"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="hassources"
+       data-layout="card"
+       data-has-results="hasRelations.hassources"
+       data-title="{{'isSourceOfDatasets' | translate}}">
+  </div>
+</div>

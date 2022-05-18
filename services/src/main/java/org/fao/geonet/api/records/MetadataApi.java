@@ -561,9 +561,7 @@ public class MetadataApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
-        description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
-            "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+        description = "")
     @RequestMapping(value = "/{metadataUuid}/featureCatalog",
         method = RequestMethod.GET,
         produces = {
@@ -595,6 +593,7 @@ public class MetadataApi {
                 metadataUuid, type, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
+                // TODO: Make consistent with document in index? and add codelists
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
                     if (StringUtils.isNotBlank(element.getCode())) {
                         if (!decodeMap.containsKey(element.getCode())) {

@@ -1,5 +1,6 @@
 <a type="button"
    data-ng-show="hasAction"
+   data-ng-disabled="::btnDisabled"
    data-ng-class="{'btn btn-default btn-sm': !isDropDown || iconMode === 'only'}"
    class="text-wrap {{btnClass}}"
    data-ng-click="service.doAction(mainType, link, record)">
@@ -10,7 +11,7 @@
   <span class="visible-lg-*" data-ng-if="iconMode !== 'only'">
     {{::isDropDown
     ? link.desc || link.name || link.url
-    : (service.getLabel(mainType, type)) | translate}}
+    : (service.getLabel(mainType, type) | translate)}}
   </span>
 
   <br data-ng-if="isSibling"/>
@@ -26,6 +27,7 @@
      title="{{'remoteRecord' | translate}}"></i>
 </a>
 <a data-ng-show="!hasAction"
+   data-ng-disabled="::btnDisabled"
    data-ng-class="{'btn btn-default btn-sm': !isDropDown || iconMode === 'only'}"
    class="{{btnClass}}"
    data-ng-href="{{link.url}}">

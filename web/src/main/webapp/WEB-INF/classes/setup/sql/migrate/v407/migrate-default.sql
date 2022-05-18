@@ -16,8 +16,12 @@ INSERT INTO UserAddress (userid, addressid) VALUES  (0, 0);
 -- if you don't have access to the database.
 -- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/password/allowAdminReset', 'false', 2, 12004, 'n');
 
-UPDATE Settings SET value='4.0.7' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/link/excludedUrlPattern', '', 0, 12010, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/thesaurusNamespace', 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}', 0, 9161, 'n');
 
 UPDATE Settings SET editable = 'n' WHERE name = 'system/userFeedback/lastNotificationDate';
 UPDATE Settings SET editable = 'n' WHERE name = 'system/security/passwordEnforcement/pattern';
+
+UPDATE Settings SET value='4.0.7' WHERE name='system/platform/version';
+UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';

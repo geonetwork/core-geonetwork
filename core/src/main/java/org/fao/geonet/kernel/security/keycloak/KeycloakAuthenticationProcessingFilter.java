@@ -52,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -144,7 +145,15 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
                             if (qsMap.containsKey("redirectUrl")) {
-                                response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                                URI redirectUri = new URI(qsMap.get("redirectUrl").get(0));
+                                // redirectUrl should only be relative to the current server. So only redirect if it is not an absolute path
+                                if (redirectUri != null && !redirectUri.isAbsolute()) {
+                                    response.sendRedirect(redirectUri.toString());
+                                } else {
+                                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
+                                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + qsMap.get("redirectUrl").get(0) + "'. Redirected to context home");
+                                    response.sendRedirect(request.getContextPath());
+                                }
                             } else {
                                 // If the redirect url did not exist then lets redirect back to the context home.
                                 response.sendRedirect(request.getContextPath());

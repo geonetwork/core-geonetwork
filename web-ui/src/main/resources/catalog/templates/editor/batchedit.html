@@ -37,8 +37,7 @@
         </ul>
         <br/>
 
-        <div class="panel panel-default"
-            data-ng-class="{'hidden' : selectedStep !== 1}">
+        <div data-ng-class="{'hidden' : selectedStep !== 1}">
           <div class="panel-body">
             <p class="alert alert-info"
               data-translate="">chooseASetOfRecordHelp</p>
@@ -168,8 +167,7 @@
         </div>
 
 
-        <div class="panel panel-default"
-            data-ng-class="{'hidden' : selectedStep !== 2}">
+        <div data-ng-class="{'hidden' : selectedStep !== 2}">
           <div class="panel-body">
             <div class="row">
               <div class="col-md-12">
@@ -177,9 +175,12 @@
                        data-ng-repeat="t in editTypes">
                   <input type="radio"
                          data-ng-model="$parent.editType"
-                         data-ng-click="setType(t)"
-                         value="{{t}}" name="editType"/>
-                  <span>{{t | translate}}</span>
+                         data-ng-click="setType(t.id)"
+                         value="{{t.id}}" name="editType"/>
+                  <strong>
+                    <i class="fa fa-fw {{t.icon}}"></i>
+                    {{t.id | translate}}
+                  </strong>
                 </label>
               </div>
             </div>
@@ -263,10 +264,13 @@
                          data-ng-show="currentXpath.value != ''"></i>
                     </li>
                   </ul>
+
+                  <div gn-batch-edit-examples-selector="setExample"/>
                 </div>
 
                 <form class="form-horizontal" id="gn-batch-changes">
                   <div data-ng-show="editType === 'xpathEdits'">
+
                     <form class="form-horizontal"
                           name="xpathConfigForm"
                           novalidate="">
@@ -307,10 +311,17 @@
                                   type="submit">
                             <i class="fa fa-plus"></i>
                           </button>
+
+                          <button class="btn btn-default"
+                                  data-ng-click="pasteFromClipboard()">
+                            <i class="fa fa-paste"></i>
+                          </button>
                         </div>
                         </p>
                       </div>
                     </form>
+
+
 
                     <ul class="list-group">
                       <li data-ng-repeat="c in changes | filter:isXpath"
@@ -328,6 +339,9 @@
                                 data-ng-click="removeXpathChange(c)">
                           <i class="fa fa-times text-danger"></i>
                         </button>
+                        <button gn-copy-to-clipboard-button=""
+                                data-btn-class="btn btn-default"
+                                data-text="{{c}}"/>
                       </li>
                     </ul>
                   </div>
@@ -448,8 +462,7 @@
           </div>
         </div>
 
-        <div class="panel panel-default"
-            data-ng-class="{'hidden' : selectedStep !== 3}">
+        <div data-ng-class="{'hidden' : selectedStep !== 3}">
 
           <div class="panel-body">
             <div class="container">
