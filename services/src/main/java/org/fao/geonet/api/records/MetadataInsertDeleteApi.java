@@ -42,6 +42,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.attachments.Store;
@@ -98,7 +99,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -189,6 +193,9 @@ public class MetadataInsertDeleteApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     @ApiOperation(value = "Delete a record", notes = "User MUST be able to edit the record to delete it. "
             + "By default, a backup is made in ZIP format. After that, "
@@ -330,6 +337,9 @@ public class MetadataInsertDeleteApi {
                 messages.getString("api.metadata.import.errorMissingXMLFragmentOrUrl"));
         }
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        checkUserProfileToImportMetadata(userSession);
 
         if (xml != null) {
             Element element = null;
@@ -588,6 +598,8 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
           try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            checkUserProfileToImportMetadata(context.getUserSession());
+
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
@@ -970,5 +982,44 @@ public class MetadataInsertDeleteApi {
         dataManager.indexMetadata(id.get(0), true, null);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
       }
+    }
+
+    /**
+     * Checks if the user profile is allowed to import metadata.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToImportMetadata(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+                throw new NotAllowedException("The user has no permissions to import metadata.");
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the current user has a role using the role hierarchy.
+     *
+     * @param role  Role to check.
+     * @param roleHierarchy  Role hierarchy.
+     * @return true if the current user has a role using the role hierarchy, otherwise false.
+     */
+    private boolean hasHierarchyRole(String role, RoleHierarchy roleHierarchy) {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        Collection<? extends GrantedAuthority> hierarchyAuthorities = roleHierarchy.getReachableGrantedAuthorities(authorities);
+
+        for (GrantedAuthority authority : hierarchyAuthorities) {
+            if (authority.getAuthority().equals(role)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

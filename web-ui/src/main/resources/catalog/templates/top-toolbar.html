@@ -27,7 +27,7 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
       <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
-        <a class="pull-left gn-logo-link" 
+        <a class="pull-left gn-logo-link"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
@@ -78,7 +78,7 @@
               <i class="fa fa-fw fa-plus"></i>&nbsp;<span translate>addRecord</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <i class="fa fa-fw fa-upload"></i>&nbsp;<span translate>ImportRecord</span>
             </a>
