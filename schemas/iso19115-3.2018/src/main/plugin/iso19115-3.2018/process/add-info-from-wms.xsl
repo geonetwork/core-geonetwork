@@ -113,7 +113,6 @@
     for that process -->
   <xsl:template name="analyze-add-info-from-wms">
     <xsl:param name="root"/>
-
     <xsl:variable name="onlineResources"
                   select="$root//mrd:onLine/*[
                                   contains(cit:protocol/gco:CharacterString, 'OGC:WMS')
