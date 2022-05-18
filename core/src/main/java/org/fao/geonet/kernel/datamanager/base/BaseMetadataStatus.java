@@ -210,7 +210,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         metatatStatus.setChangeMessage("");
         metatatStatus.setStatusValue(statusValueRepository.findOne(newStatus));
         metatatStatus.setMetadataId(metadataId);
-        metatatStatus.setChangeDate(new ISODate(System.currentTimeMillis()));
+        metatatStatus.setChangeDate(new ISODate());
         metatatStatus.setUserId(userId);
         metatatStatus.setUuid(metadataUtils.getMetadataUuid(Integer.toString(metadataId)));
         metatatStatus.setTitles(metadataUtils.extractTitles(Integer.toString(metadataId)));
