@@ -6,6 +6,10 @@
      title="{{'edit' | translate}}"
      aria-label="{{'edit' | translate}}">
     <i class="fa fa-pencil"></i>
+
+    <span data-ng-if="(md.draft == 'e')" data-translate="">
+      workingCopy
+    </span>
   </a>
 
   <div class="btn-group"
