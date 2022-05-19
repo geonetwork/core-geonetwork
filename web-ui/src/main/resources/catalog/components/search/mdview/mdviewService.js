@@ -49,12 +49,13 @@
     'gnESClient',
     'gnESFacet',
     'gnGlobalSettings',
+    'gnMetadataActions',
     '$http',
     '$filter',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils, gnUtilityService, gnESService, gnESClient,
-             gnESFacet, gnGlobalSettings, $http, $filter) {
+             gnESFacet, gnGlobalSettings, gnMetadataActions, $http, $filter) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -282,17 +283,24 @@
 
                       //If returned more than one, maybe we are looking for the draft
                       var i = 0;
+
                       r.data.hits.hits.forEach(function (md, index) {
-                        if(getDraft
+                        if (getDraft
                             && md._source.draft == 'y') {
                           //This will only happen if the draft exists
                           //and the user can see it
+                          i = index;
+                        } else if (!getDraft
+                          && md._source.draft != 'y') {
+                          // This use the non-draft version when the  results include the
+                          // approved and the working copy (draft) versions
                           i = index;
                         }
                       });
 
                       var metadata = [];
                       metadata.push(new Metadata(r.data.hits.hits[i]));
+
                       data = {metadata: metadata};
                       //Keep the search results (gnMdViewObj.records)
                       // that.feedMd(0, undefined, data.metadata);
