@@ -440,21 +440,31 @@ public final class XslUtil {
      */
     public static String getNodeName(String key, String lang, boolean withOrganization) {
         SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
-        if (StringUtils.isEmpty(key)) {
-            key =  ApplicationContextHolder.get().getBean(NodeInfo.class).getId();
-        }
-        if (NodeInfo.DEFAULT_NODE.equals(key)) {
-            key = settingsMan.getSiteId();
-        }
-        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
-        Optional<Source> source = sourceRepository.findById(key);
-
-        if (!source.isPresent()) {
-            source = Optional.ofNullable(sourceRepository.findOneByUuid(key));
-        }
-
+        Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLabel(lang) : settingsMan.getSiteName()
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
+    }
+
+    public static String getNodeLogo(String key) {
+        Optional<Source> source = getSource(key);
+        return source.isPresent() ? source.get().getLogo() : "";
+    }
+
+    private static Optional<Source> getSource(String idOrUuid) {
+        SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (StringUtils.isEmpty(idOrUuid)) {
+            idOrUuid =  ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
+        }
+        if (org.fao.geonet.NodeInfo.DEFAULT_NODE.equals(idOrUuid)) {
+            idOrUuid = settingsMan.getSiteId();
+        }
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        Optional<Source> source = sourceRepository.findById(idOrUuid);
+
+        if (!source.isPresent()) {
+            source = Optional.ofNullable(sourceRepository.findOneByUuid(idOrUuid));
+        }
+        return source;
     }
 
 
