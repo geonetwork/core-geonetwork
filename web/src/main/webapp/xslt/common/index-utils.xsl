@@ -385,31 +385,17 @@
       </xsl:element>
 
 
-      <xsl:variable name="thesaurusId"
-                    select="info/@id"/>
-      <xsl:variable name="expansionConfig"
-                    select="$keywordExpansion[ends-with($thesaurusId, @id)]"/>
-      <xsl:if test="$expansionConfig">
-        <xsl:variable name="narrowerKeywords" as="xs:string*">
-          <xsl:for-each select="keywords/keyword">
-            <xsl:copy-of select="util:getNarrowerKeywords(
-                                                 tree/defaults/value,
-                                                 $thesaurusId,
-                                                 'eng',
-                                                 $expansionConfig/@depth)"/>
-          </xsl:for-each>
-        </xsl:variable>
-        <xsl:if test="count($narrowerKeywords) > 0">
-          <xsl:element name="{info/@field}_expanded">
-            <xsl:attribute name="type" select="'object'"/>
-            [<xsl:for-each select="$narrowerKeywords">
-            {
-              "default": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
-            }
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>]
-          </xsl:element>
-        </xsl:if>
+      <xsl:message>$$<xsl:copy-of select="count(keywords//narrowers/*) > 0"/></xsl:message>
+      <xsl:if test="count(keywords//narrowers/*) > 0">
+        <xsl:element name="{info/@field}_expanded">
+          <xsl:attribute name="type" select="'object'"/>
+          [<xsl:for-each select="keywords//narrowers/*">
+          {
+            "default": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>]
+        </xsl:element>
       </xsl:if>
     </xsl:for-each>
 
