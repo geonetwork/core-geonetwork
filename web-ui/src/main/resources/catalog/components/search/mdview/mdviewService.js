@@ -284,10 +284,15 @@
                       var i = 0;
 
                       r.data.hits.hits.forEach(function (md, index) {
-                        if(getDraft
+                        if (getDraft
                             && md._source.draft == 'y') {
                           //This will only happen if the draft exists
                           //and the user can see it
+                          i = index;
+                        } else if (!getDraft
+                          && md._source.draft != 'y') {
+                          // This use the non-draft version when the  results include the
+                          // approved and the working copy (draft) versions
                           i = index;
                         }
                       });
