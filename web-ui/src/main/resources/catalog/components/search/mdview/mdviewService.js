@@ -198,6 +198,11 @@
                           //This will only happen if the draft exists
                           //and the user can see it
                           i = index;
+                        } else if (!getDraft
+                          &&  md.draft != 'y') {
+                          // This use the non-draft version when the results include the
+                          // approved and the working copy (draft) versions
+                          i = index;
                         }
                       });
 
