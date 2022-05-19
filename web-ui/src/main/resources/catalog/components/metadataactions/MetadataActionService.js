@@ -260,6 +260,8 @@
       };
 
       this.getMetadataIdToEdit = function(md) {
+        if (!md) return;
+
         if (md.draftId) {
           return md.draftId;
         } else {

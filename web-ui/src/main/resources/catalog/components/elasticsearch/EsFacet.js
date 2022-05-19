@@ -42,7 +42,7 @@
       'topic*',
       'inspire*',
       'resource*',
-      'draft',
+      'draft*',
       'overview.*',
       'owner*',
       'link*',
