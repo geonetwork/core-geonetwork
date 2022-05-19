@@ -498,4 +498,16 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(1, hierarchy.size());
         assertEquals("140_testValue_eng", hierarchy.get(0));
     }
+
+    @Test
+    public void getNarrowerKeywords() {
+        List<String> list = thesaurus.getNarrowerKeywords("20_testValue_eng", "eng", 1);
+        assertEquals(1, list.size());
+        assertEquals("15_testValue_eng", list.get(0));
+
+        list = thesaurus.getNarrowerKeywords("20_testValue_eng", "eng", 2);
+        assertEquals(2, list.size());
+        assertTrue(list.contains("15_testValue_eng"));
+        assertTrue(list.contains("150_testValue_eng"));
+    }
 }

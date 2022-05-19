@@ -796,9 +796,9 @@ public class Thesaurus {
                 "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]", theNSs);
             multilingualTitles.clear();
             for (Element el: multiLingualTitles) {
-                     String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
-                     String title = el.getTextTrim();
-                     multilingualTitles.put(lang,title);
+                String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                String title = el.getTextTrim();
+                multilingualTitles.put(lang,title);
             }
         } catch (Exception e) {
             Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
@@ -1059,9 +1059,11 @@ public class Thesaurus {
      * @param uri the keyword whose broader terms should be retrieved
      * @return keywords
      */
-
     public List<KeywordBean> getBroader(String uri, String... languages) {
         return getRelated(uri, KeywordRelation.NARROWER, languages);
+    }
+    public List<KeywordBean> getNarrower(String uri, String... languages) {
+        return getRelated(uri, KeywordRelation.BROADER, languages);
     }
 
     /**
@@ -1070,9 +1072,11 @@ public class Thesaurus {
      * @param uri the keyword to check for broader terms
      * @return keywords
      */
-
     public boolean hasBroader(String uri) {
         return getRelated(uri, KeywordRelation.NARROWER).size() > 0;
+    }
+    public boolean hasNarrower(String uri) {
+        return getRelated(uri, KeywordRelation.BROADER).size() > 0;
     }
 
     /**
@@ -1222,8 +1226,8 @@ public class Thesaurus {
         boolean isUri = keywordLabel.startsWith("http");
         KeywordBean term =
             isUri
-            ? this.getKeyword(keywordLabel, langCode)
-            : this.getKeywordWithLabel(keywordLabel, langCode);
+                ? this.getKeyword(keywordLabel, langCode)
+                : this.getKeywordWithLabel(keywordLabel, langCode);
 
         List<ArrayList <KeywordBean>> result = this.classify(term, langCode);
 
@@ -1235,6 +1239,39 @@ public class Thesaurus {
             hierarchies.add(path);
         }
         return hierarchies;
+    }
+
+    public List <String> getNarrowerKeywords(String keywordLabel, String langCode, int depth) {
+        boolean isUri = keywordLabel.startsWith("http");
+        KeywordBean term =
+            isUri
+                ? this.getKeyword(keywordLabel, langCode)
+                : this.getKeywordWithLabel(keywordLabel, langCode);
+        List<KeywordBean> list = new ArrayList<>();
+        this.getNarrowerKeywords(list, term, langCode, 1, depth);
+
+        return list.stream()
+            .map(k -> isUri ? k.getUriCode() : k.getPreferredLabel(langCode))
+            .collect(Collectors.toList());
+    }
+
+    private void getNarrowerKeywords(List<KeywordBean> result,
+                                     KeywordBean term, String langCode,
+                                     int depth, int maxDepth) {
+        if (depth > maxDepth) {
+            return;
+        }
+        if (this.hasNarrower(term.getUriCode())) {
+            List<KeywordBean> narrowers = getNarrower(term.getUriCode(), langCode);
+            List<KeywordBean> keywordsNotAlreadyFound = narrowers.stream()
+                .filter(n -> !result.contains(n)).collect(Collectors.toList());
+            result.addAll(keywordsNotAlreadyFound);
+
+            int finalDepth = depth + 1;
+            keywordsNotAlreadyFound.forEach(k -> {
+                getNarrowerKeywords(result, k, langCode, finalDepth, maxDepth);
+            });
+        }
     }
 
     public List<ArrayList <KeywordBean>> classify(KeywordBean term, String langCode) {

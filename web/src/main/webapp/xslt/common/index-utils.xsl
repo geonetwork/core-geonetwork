@@ -56,6 +56,10 @@
 
   <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
 
+  <xsl:variable name="keywordExpansion" as="node()*">
+    <thesaurus id="external.place.regions" depth="1"/>
+<!--    <thesaurus id="external.theme.gemet" depth="1"/>-->
+  </xsl:variable>
 
   <!-- A date, dateTime, Year or Year and Month
   Valid with regards to index date supported types:
@@ -379,7 +383,36 @@
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
       </xsl:element>
+
+
+      <xsl:variable name="thesaurusId"
+                    select="info/@id"/>
+      <xsl:variable name="expansionConfig"
+                    select="$keywordExpansion[ends-with($thesaurusId, @id)]"/>
+      <xsl:if test="$expansionConfig">
+        <xsl:variable name="narrowerKeywords" as="xs:string*">
+          <xsl:for-each select="keywords/keyword">
+            <xsl:copy-of select="util:getNarrowerKeywords(
+                                                 tree/defaults/value,
+                                                 $thesaurusId,
+                                                 'eng',
+                                                 $expansionConfig/@depth)"/>
+          </xsl:for-each>
+        </xsl:variable>
+        <xsl:if test="count($narrowerKeywords) > 0">
+          <xsl:element name="{info/@field}_expanded">
+            <xsl:attribute name="type" select="'object'"/>
+            [<xsl:for-each select="$narrowerKeywords">
+            {
+              "default": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
+            }
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
+          </xsl:element>
+        </xsl:if>
+      </xsl:if>
     </xsl:for-each>
+
 
     <!-- Object field with all thesaurus and all keywords. -->
     <allKeywords type="object">{
