@@ -68,8 +68,8 @@
     "atomDatasetsInFeed": "Datasets beschikbaar",
     "atomLinkDetails": "Deze dataset is gepubliceerd in de Atom Feed {{url}} met de naam {{layer}}.",
     "otherLinkDetails": "Andere bronnen",
-    "qualityLinkDetails": "Quality report",
-    "featurecatalogueLinkDetails": "Feature catalogue",
+    "qualityLinkDetails": "Kwaliteitsrapport",
+    "featurecatalogueLinkDetails": "Feature catalogus",
     "legendLinkDetails": "Legenda",
     "wmsCapabilitiesNotAvailable": "Het GetCapabilities antwoord is niet beschikbaar",
     "wmsLayerNotAvailable": "(Een van) de laag (lagen) {{layerName}} is niet beschikbaar in de WMS service. U kunt in plaats daarvan één van de beschikbare lagen bekijken.\",\n ",
@@ -538,7 +538,7 @@
     "rssFeed": "RSS-feed",
     "esriCapabilitiesFailed": "Fout bij het ophalen van het ESRI Rest capabilities document.",
     "esriCapabilitiesNoValid": "Het antwoord is geen geldig ESRI Rest capabilities document.",
-    "seriesComposedOf": "Composed of",
-    "seriesCoveringPeriod": "Covering period",
+    "seriesComposedOf": "Bestaande uit",
+    "seriesCoveringPeriod": "Dekkingsperiode",
     "approve": "Goedkeuren"
 }
