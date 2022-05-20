@@ -1,0 +1,32 @@
+================================================================================
+===
+=== GeoNetwork 3.12.5: List of changes
+===
+================================================================================
+- Fix the metadata detail page code to display the non-draft version when the results include the approved and the working copy (draft) versions, and it is requested the non-draft version (#6324)
+- [BP] Fix ESAPI Logger configuration (#6322)
+- [BP] Use SAXBuilder in XslUtil method to retrieve the xml content from an URL
+- [BP] Configuration of the user profile authorized to import metadata. Backport of b43cff2465beecff16ea53f33f033f070cbc19c1, related to #6200 (#6320)
+- [BP] Make consistent the date set in metadata status change date.
+- [BP] Metadata workflow: cancelling the metadata editor when editing a working copy always removes the working copy - related issue when the working copy was saved clicking 'Save & close' only. Related to #6295 (#6317)
+- [BP] Metadata workflow: fix save and approve action in the metadata editor, that wasn't replacing the approved version with the working copy changes
+- Bump esapi from 2.1.0 to 2.3.0.0 in /core (#6312)
+- [BP] Update multicombiner directive to allow to configure the number of suggestions for the elements that use the thesaurus keyWord picker component (#6297)
+- [BP] Metadata workflow: metadata save and submit was displaying the metadata in a wrong status. (#6299)
+- [BP] Metadata workflow: cancelling the metadata editor when editing a working copy always removes the working copy. Fixes #6294 (#6295)
+- [BP] Remote ATOM feeds: fix atom describe output to remove a wrong empty namespace in some elements - handle additional namespaces. Related to #6288 (#6300)
+- Remove beta label from Swagger API page (#6296)
+- [BP] Replace 'Replace by Selected' with 'Update'
+- [BP] Cancelling from import or add new record results in a blank editor board (#6274)
+- Update the harvester setting repository to remove the hierarchical delete of the harvester settings. (#6286)
+- Update INSPIRE Validation API to return JSON format. (#6290)
+- [BP] Remote ATOM feeds: fix atom describe output to remove a wrong empty namespace in some elements. (#6288)
+- [BP] NumberFormatException handling (#6279)
+- [BP] Check userIdentifier with userSession before the transactions in User… (#6257)
+- [BP] check content type for runtime exception (#6267)
+- [BP] Ensure that keycloak login redirects only go the the current server. (#6270)
+- Fix tests that started failing on passwords BP (#6266)
+- Fix search suggestions output when a suggestion contains the character '\' (#6264)
+- Add Heritrix to the list of bot that shouldn't create a session (#6263)
+- [BP] Metadata editor / Fix initialise the default configuration to handle WMS resources, when it's not defined in the schema configuration. Related to #6195
+- [BP] Admin / Password reset by admin.
