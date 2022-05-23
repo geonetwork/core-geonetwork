@@ -682,7 +682,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                         // todo check (was: processwithfastindexing)
                         h.process();
-                        logger.info("Ended harvesting from node : " + nodeName);
+                        if (!(this instanceof CswHarvester2)) {
+                            logger.info("Ended harvesting from node : " + nodeName);
+                        }
 
                         if (!(this instanceof CswHarvester2)) {
                             harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRunSuccess", lastRun);
