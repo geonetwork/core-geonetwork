@@ -385,7 +385,6 @@
       </xsl:element>
 
 
-      <xsl:message>$$<xsl:copy-of select="count(keywords//narrowers/*) > 0"/></xsl:message>
       <xsl:if test="count(keywords//narrowers/*) > 0">
         <xsl:element name="{info/@field}_expanded">
           <xsl:attribute name="type" select="'object'"/>
