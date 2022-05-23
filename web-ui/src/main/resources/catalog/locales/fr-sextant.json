@@ -127,5 +127,12 @@
   "facet-availableInServices": "Services associés",
   "facet-OrgForResource": "Contact pour la ressource",
   "facet-sourceCatalogue": "Fourni par",
+  "onlineDownloadWWWHTTPs": "HTTPS",
+  "localFilePath": "Local path",
+  "ftp": "FTP",
+  "thredds": "THREDDS",
+  "services": "Services",
+  "Opendap": "OPeNDAP",
+  "ProcessingAndValidation": "Processing and validation",
   "buildThesaurusHierarchy": "Build hierarchy"
 }
