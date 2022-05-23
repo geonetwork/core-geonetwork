@@ -188,7 +188,6 @@
       },{
         "group": "services",
         "label": "OpenSearch",
-        "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
         "process": "onlinesrc-add",
         "fields": {
@@ -203,7 +202,8 @@
           },
           "name": {},
           "desc": {
-            "hidden": true
+            "hidden": false,
+            "isMultilingual": false
           },
           "function": {
             "value": "browsing",
