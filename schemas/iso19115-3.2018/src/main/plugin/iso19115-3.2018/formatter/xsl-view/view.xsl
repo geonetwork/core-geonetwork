@@ -320,7 +320,7 @@
               <xsl:when test="count($forcedCitation) > 0">
                 <xsl:variable name="txt">
                   <xsl:for-each select="$forcedCitation">
-                    <xsl:call-template name="localised">
+                    <xsl:call-template name="get-iso19115-3.2018-localised">
                       <xsl:with-param name="langId" select="$langId"/>
                     </xsl:call-template>
                   </xsl:for-each>
