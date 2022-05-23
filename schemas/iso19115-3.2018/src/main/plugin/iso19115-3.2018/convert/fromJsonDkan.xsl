@@ -222,7 +222,7 @@
               <xsl:for-each select="tags">
                 <mri:keyword>
                   <gco:CharacterString>
-                    <xsl:value-of select="name"/>
+                    <xsl:value-of select="name" disable-output-escaping="yes"/> <!-- this can contain HTML entities -->
                   </gco:CharacterString>
                 </mri:keyword>
               </xsl:for-each>
@@ -344,8 +344,6 @@
           </mrd:transferOptions>
         </mrd:MD_Distribution>
       </mdb:distributionInfo>
-
-
 
       <mdb:resourceLineage>
         <mrl:LI_Lineage>
