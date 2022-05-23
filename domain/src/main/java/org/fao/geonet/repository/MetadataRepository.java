@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.fao.geonet.domain.Metadata;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -74,4 +75,13 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
+
+    /**
+     * Find all metadata harvested by the identified harvester.
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nonnull
+    List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid, Pageable p);
 }

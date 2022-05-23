@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.csw2;
 
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
 import org.fao.geonet.client.model.DocumentTypeStatus;
@@ -33,9 +34,12 @@ import org.fao.geonet.client.model.LinkCheckStatus;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.client.model.StatusType;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -205,6 +209,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
 
                                     check = false;
+
+                                    thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
                                 }
                             }
 
@@ -358,6 +364,33 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         }
 
         return element;
+    }
+
+    private void indexHarvestedMetadata(String harvesterUuid) throws Exception {
+        EsSearchManager esSearchManager = context.getBean(EsSearchManager.class);
+
+        // Delete the harvested metadata from the index
+        esSearchManager.delete(Geonet.IndexFieldNames.HARVESTUUID + ": \"" + harvesterUuid + "\"");
+
+        // Index the harvested metadata
+        List<Integer> metadataIds = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(harvesterUuid));
+
+        List<String> metadataIdsToIndex = new ArrayList<>();
+        int i = 1;
+
+        Iterator<Integer> it = metadataIds.listIterator();
+        while (it.hasNext()) {
+            metadataIdsToIndex.add(it.next() + "");
+
+            i++;
+
+            if ((i == 100) || (!it.hasNext())) {
+                metadataIndexer.indexMetadata(metadataIdsToIndex);
+
+                i = 1;
+                metadataIdsToIndex.clear();
+            }
+        }
     }
 
     public String getID() {
