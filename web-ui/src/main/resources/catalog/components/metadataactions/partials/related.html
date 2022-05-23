@@ -5,7 +5,7 @@
   <div class="sxt-field-collapse"
        data-line-number="10"
        data-ng-repeat="(type, items) in relations track by $index"
-       data-ng-if="type && type !== 'thumbnails'">
+       data-ng-if="type && type !== 'thumbnails' && items.length > 0">
     <div data-ng-init="mainType = config.getType(r, type);
                        badge = getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
@@ -54,7 +54,8 @@
            href="{{r.url | gnLocalized: lang}}">
           {{::(r.title | gnLocalized: lang)}}
 
-          <strong data-ng-show="r.initiativeType"> ({{r.initiativeType | translate}})</strong>
+          <strong data-ng-show="r.initiativeType
+                                && siblingsByType != true"> ({{r.initiativeType | translate}})</strong>
         </a>
         <!-- Display description if available -->
         <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
@@ -222,7 +223,8 @@
           </span>
           <br/>
           <span class="visible-lg-*"
-                data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
+                data-ng-if="mainType == 'MDSIBLING'
+                            && r.associationType != ''">
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
         </button>

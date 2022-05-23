@@ -262,8 +262,8 @@
                            scope.relations.associated = [];
                          }
 
-                         var siblingsByType = true;
-                         if (scope.relations.siblings && siblingsByType) {
+                         scope.siblingsByType = true;
+                         if (scope.relations.siblings && scope.siblingsByType) {
                            scope.relations.siblings.map(function(r) {
                              return r.initiativeType;
                            }).filter(function(value, index, self) {
