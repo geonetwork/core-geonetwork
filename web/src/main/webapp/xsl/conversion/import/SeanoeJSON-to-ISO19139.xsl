@@ -561,8 +561,8 @@
         </gmd:MD_Distribution>
       </gmd:distributionInfo>
 
-      <gmd:lineage>
-        <gmd:LI_Lineage>
+      <gmd:dataQualityInfo>
+        <gmd:DQ_DataQuality>
           <gmd:scope>
             <gmd:DQ_Scope>
               <gmd:level>
@@ -571,13 +571,17 @@
               </gmd:level>
             </gmd:DQ_Scope>
           </gmd:scope>
-          <gmd:statement>
-            <gco:CharacterString>
-              <xsl:value-of select="sensor_metadata"/>
-            </gco:CharacterString>
-          </gmd:statement>
-        </gmd:LI_Lineage>
-      </gmd:lineage>
+          <gmd:lineage>
+            <gmd:LI_Lineage>
+              <gmd:statement>
+                <gco:CharacterString>
+                  <xsl:value-of select="sensor_metadata"/>
+                </gco:CharacterString>
+              </gmd:statement>
+            </gmd:LI_Lineage>
+          </gmd:lineage>
+        </gmd:DQ_DataQuality>
+      </gmd:dataQualityInfo>
     </gmd:MD_Metadata>
   </xsl:template>
 
