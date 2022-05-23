@@ -259,7 +259,21 @@
                                scope.relations.siblings.push(scope.relations.associated[i])
                              }
                            }
-                           scope.relations.associated = {};
+                           scope.relations.associated = [];
+                         }
+
+                         var siblingsByType = true;
+                         if (scope.relations.siblings && siblingsByType) {
+                           scope.relations.siblings.map(function(r) {
+                             return r.initiativeType;
+                           }).filter(function(value, index, self) {
+                             return self.indexOf(value) === index;
+                           }).forEach(function(type) {
+                             scope.relations['siblings' + type] = scope.relations.siblings.filter(function (e) {
+                               return e.initiativeType === type;
+                             });
+                           });
+                           scope.relations.siblings = [];
                          }
                        });
 

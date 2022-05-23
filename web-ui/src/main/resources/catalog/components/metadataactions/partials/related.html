@@ -21,7 +21,9 @@
                             ? 'fa-exchange' : icon"/>
 
           <span data-ng-show="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
-                  data-translate="">references</span>
+                title="{{'references' | translate}}">
+            {{r.initiativeType | translate}}
+          </span>
           <span data-ng-hide="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
                   data-ng-if="(mainType !== 'WMS')
                             && (mainType !== 'WMSSERVICE')
