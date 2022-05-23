@@ -210,6 +210,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
                                     check = false;
 
+                                    thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
+
                                     thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
                                 }
                             }
@@ -369,11 +371,14 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
     private void indexHarvestedMetadata(String harvesterUuid) throws Exception {
         EsSearchManager esSearchManager = context.getBean(EsSearchManager.class);
 
+        this.log.info("Deleting indexed records for harvester uuid: " +harvesterUuid);
+
         // Delete the harvested metadata from the index
         esSearchManager.delete(Geonet.IndexFieldNames.HARVESTUUID + ": \"" + harvesterUuid + "\"");
 
         // Index the harvested metadata
         List<Integer> metadataIds = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(harvesterUuid));
+        this.log.info("Total records to index for harvester uuid: " + harvesterUuid + ": " + metadataIds.size());
 
         List<String> metadataIdsToIndex = new ArrayList<>();
         int i = 1;
@@ -385,6 +390,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             i++;
 
             if ((i == 100) || (!it.hasNext())) {
+                this.log.info("Indexing " + i + " records ");
                 metadataIndexer.indexMetadata(metadataIdsToIndex);
 
                 i = 1;
