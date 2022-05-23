@@ -415,7 +415,7 @@
                       });
                       scope.relations.siblings = [];
                     } else {
-                      siblingsCount = scope.relations.siblings.length;
+                      siblingsCount = scope.relations[idx].length;
                     }
                   }
 
