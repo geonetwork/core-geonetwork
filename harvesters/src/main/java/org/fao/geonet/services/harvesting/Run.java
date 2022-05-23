@@ -28,6 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -59,6 +61,22 @@ public class Run implements Service {
     //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        HarvestManager hm = gc.getBean(HarvestManager.class);
+        HarvesterSettingsManager settingMan = context.getBean(HarvesterSettingsManager.class);
+
+        String id = params.getChildText("id");
+
+        String harvestUuid = settingMan.getValue("harvesting/id:" + id + "/site/uuid");
+        AbstractHarvester ah = hm.getHarvester(harvestUuid);
+
+        if ((ah != null) && (ah instanceof CswHarvester2)) {
+            String paramValueSkipHarvesting = params.getChildText("skipHarvesting");
+            boolean skipHarvesting = ((paramValueSkipHarvesting != null) && (paramValueSkipHarvesting.equals("true")))?true:false;
+
+            settingMan.setValue("harvesting/id:" + id + "/options/skipHarvesting", skipHarvesting);
+        }
+
         return Util.exec(params, context, new Util.Job() {
             public OperResult execute(HarvestManager hm, String id) throws Exception {
                 HarvesterSettingsManager harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);

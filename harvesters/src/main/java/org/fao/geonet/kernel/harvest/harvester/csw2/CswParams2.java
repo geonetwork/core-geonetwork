@@ -104,6 +104,7 @@ public class CswParams2 extends AbstractParams {
         doNotSort = Util.getParam(options, "doNotSort", false);
 
         executeLinkChecker = Util.getParam(options, "executeLinkChecker", true);
+        skipHarvesting = Util.getParam(options, "skipHarvesting", false);
 
         if (filters != null) {
             @SuppressWarnings("unchecked")
@@ -144,6 +145,7 @@ public class CswParams2 extends AbstractParams {
         doNotSort = Util.getParam(options, "doNotSort", doNotSort);
 
         executeLinkChecker = Util.getParam(options, "executeLinkChecker", executeLinkChecker);
+        skipHarvesting = Util.getParam(options, "skipHarvesting", skipHarvesting);
 
         icon = Util.getParam(site, "icon", icon);
 

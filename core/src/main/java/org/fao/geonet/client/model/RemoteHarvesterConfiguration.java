@@ -65,7 +65,7 @@ public class RemoteHarvesterConfiguration {
 
     private boolean executeLinkChecker;
 
-    public boolean skipHarvesting;
+    private boolean skipHarvesting;
 
     public String getUrl() {
         return url;
@@ -163,12 +163,16 @@ public class RemoteHarvesterConfiguration {
         this.executeLinkChecker = executeLinkChecker;
     }
 
-    public boolean getSkipHarvesting() {
+    public Boolean getSkipHarvesting() {
         return skipHarvesting;
     }
 
-    public void setSkipHarvesting(boolean skipHarvesting) {
+    public void setSkipHarvesting(Boolean skipHarvesting) {
         this.skipHarvesting = skipHarvesting;
+
+        if (this.skipHarvesting) {
+            setExecuteLinkChecker(true);
+        }
     }
 
     @Override

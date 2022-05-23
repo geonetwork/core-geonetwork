@@ -130,7 +130,8 @@
       </div>
       <div class="panel-body">
         <!--        <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">-->
-        <div id="gn-harvest-harvester-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningHarvest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningHarvest === true">-->
+        <div id="gn-harvest-harvester-running" class="gn-harvester-running" data-ng-if="harvesterSelected.options.skipHarvesting !== 'true'"
+             data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningHarvest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningHarvest === true">-->
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest === true">harvesterIsRunning</h2>
           <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest !== true">harvester</h2>
 
@@ -226,16 +227,6 @@
                 <span class="fa fa-database"></span>&nbsp;
                 <span data-translate="">pushHarvesterData</span>
               </button>
-              <button id="gn-harvest-settings-buttons-run-linkchecker"
-                      type="button"
-                      class="btn btn-success pull-right"
-                      data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true || harvesterSelected.info.lastRunSuccess.length == 0"
-                      data-gn-click-and-spin="runHarvester(harvesterSelected['@id'], true)"
-                      data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
-                      title="{{'runLinkCheckerHelp' | translate}}">
-                <span class="fa fa-gear"></span>&nbsp;
-                <span data-translate="">runLinkChecker</span>
-
               <button id="gn-harvest-settings-buttons-run"
                       type="button"
                       class="btn btn-success pull-right"
@@ -244,6 +235,15 @@
                       data-gn-click-and-spin="runHarvester(harvesterSelected['@id'])">
                 <span class="fa fa-play"></span>&nbsp;
                 <span data-translate="">runHarvester</span>
+              </button>
+              <button id="gn-harvest-settings-buttons-run-linkchecker"
+                      type="button"
+                      class="btn btn-default pull-right"
+                      data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected['@type'] != 'csw2' || harvesterSelected.info.running === true || harvesterSelected.info.lastRunSuccess.length == 0"
+                      data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1 || harvesterSelected.info.lastRun.length == 0"
+                      data-gn-click-and-spin="runHarvesterLinkChecker(harvesterSelected['@id'])">
+                <span class="fa fa-play"></span>&nbsp;
+                <span data-translate="">runHarvesterLinkChecker</span>
               </button>
               <button id="gn-harvest-settings-buttons-stop"
                       type="button"

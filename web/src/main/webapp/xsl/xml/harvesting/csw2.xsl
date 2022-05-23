@@ -54,6 +54,9 @@
     <executeLinkChecker>
       <xsl:value-of select="executeLinkChecker/value"/>
     </executeLinkChecker>
+    <skipHarvesting>
+      <xsl:value-of select="skipHarvesting/value"/>
+    </skipHarvesting>
   </xsl:template>
 
   <xsl:template match="*" mode="searches">

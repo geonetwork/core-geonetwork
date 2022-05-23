@@ -83,7 +83,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         harvesterSettingsManager.add("id:" + optionsId, "doNotSort", params.doNotSort);
         harvesterSettingsManager.add("id:" + optionsId, "executeLinkChecker", params.executeLinkChecker);
         harvesterSettingsManager.add("id:" + optionsId, "processID", "");
-
+        harvesterSettingsManager.add("id:" + optionsId, "skipHarvesting",  params.skipHarvesting);
 
         //--- store dynamic filter nodes
         String filtersID = harvesterSettingsManager.add(path, "filters", "");
@@ -159,6 +159,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                             if (thiz.cancelMonitor.get()) {
                                 remoteHarvesterApiClient.abortHarvest(harvesterProcessId, log);
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
+                                thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
                                 check = false;
                                 thiz.stop(Common.Status.INACTIVE);
                                 thiz.running = false;
@@ -200,6 +201,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
                                     // Reset to false the skipHarvesting parameter
                                     thiz.getParams().skipHarvesting = false;
+
+                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
 
                                     check = false;
                                 }

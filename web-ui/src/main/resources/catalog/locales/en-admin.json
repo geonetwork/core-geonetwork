@@ -746,6 +746,7 @@
     "rss.search": "RSS",
     "runCSWRequest": "Send CSW request",
     "runHarvester": "Harvest",
+    "runHarvesterLinkChecker": "Link checker",
     "runProcess": "Run",
     "saveCategory": "Save",
     "saveFile": "Save file",
