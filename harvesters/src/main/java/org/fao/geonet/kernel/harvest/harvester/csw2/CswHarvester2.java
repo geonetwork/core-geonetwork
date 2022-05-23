@@ -193,11 +193,20 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
 
+                                    thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
+
+                                    thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
+
                                     thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
-                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/lastRunSuccess",
-                                        thiz.harvesterSettingsManager.getValue("harvesting/id:" + thiz.getID() + "/info/lastRun"));
+
+                                    // If finished successfully update lastRunSuccess
+                                    if (state.equals(OrchestratedHarvestProcessState.COMPLETE)) {
+                                        thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/lastRunSuccess",
+                                            thiz.harvesterSettingsManager.getValue("harvesting/id:" + thiz.getID() + "/info/lastRun"));
+                                    }
+
                                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/elapsedTime",
@@ -209,10 +218,6 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
 
                                     check = false;
-
-                                    thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
-
-                                    thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
                                 }
                             }
 

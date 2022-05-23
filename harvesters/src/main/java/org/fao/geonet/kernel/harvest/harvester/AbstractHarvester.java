@@ -188,6 +188,10 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
+    public boolean isRunning() {
+        return running;
+    }
+
     private String initializeLog() {
 
         // configure personalized logger
