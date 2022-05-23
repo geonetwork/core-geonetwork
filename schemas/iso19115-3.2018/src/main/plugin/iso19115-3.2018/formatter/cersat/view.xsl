@@ -723,9 +723,17 @@
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
             <div>
-              <xsl:value-of select="if (cit:*[local-name() = $listLabel]/*/text() != '')
+              <xsl:choose>
+                <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
+                  <xsl:value-of select="cit:description/*/text()"/>:
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="if (cit:*[local-name() = $listLabel]/*/text() != '')
                                   then concat(cit:*[local-name() = $listLabel]/*/text(), ': ')
                                   else ''"/>
+                </xsl:otherwise>
+              </xsl:choose>
+
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = ('Local', 'NETWORK:LINK')"><xsl:text> </xsl:text>
                   <xsl:value-of select="cit:linkage/*/text()"/>

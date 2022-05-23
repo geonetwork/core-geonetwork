@@ -617,6 +617,27 @@
   </xsl:template>
 
 
+  <!-- CERSAT / Hardcoded description
+   (cf. https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/523)
+  -->
+  <xsl:template match="mrd:onLine/*[
+                          cit:protocol/*/text() = 'WWW:OPENSEARCH'
+                          and normalize-space(cit:description/gco:CharacterString) = ''
+                          and cit:linkage/*/text() = 'https://opensearch.ifremer.fr/']/cit:description" priority="100">
+    <xsl:copy>
+      <gco:CharacterString>OSISAF</gco:CharacterString>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="mrd:onLine/*[
+                          cit:protocol/*/text() = 'WWW:OPENSEARCH'
+                          and normalize-space(cit:description/gco:CharacterString) = ''
+                          and cit:linkage/*/text() = 'https://cmr.earthdata.nasa.gov/opensearch/']/cit:description/gco:CharacterString" priority="100">
+    <xsl:copy>
+      <gco:CharacterString>NASA</gco:CharacterString>
+    </xsl:copy>
+  </xsl:template>
+
+
   <xsl:template match="mri:descriptiveKeywords[not(*/mri:thesaurusName)]" priority="10">
     <xsl:variable name="name" select="name()"/>
     <xsl:variable name="freeTextKeywordBlockType"

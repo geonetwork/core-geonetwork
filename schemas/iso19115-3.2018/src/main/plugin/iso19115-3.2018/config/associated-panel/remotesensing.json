@@ -202,8 +202,7 @@
           },
           "name": {},
           "desc": {
-            "hidden": false,
-            "isMultilingual": false
+            "hidden": true
           },
           "function": {
             "value": "browsing",
