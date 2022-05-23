@@ -28,6 +28,7 @@
         </entry>
         <entry>
             <format>shapefile</format>
+            <format>shp</format>
             <protocol>WWW:DOWNLOAD:x-gis/x-shapefile</protocol>
         </entry>
         <entry>
@@ -35,12 +36,39 @@
             <protocol>WWW:DOWNLOAD:application/json</protocol>
         </entry>
         <entry>
+            <format>pdf</format>
+            <protocol>WWW:DOWNLOAD:application/pdf</protocol>
+        </entry>
+        <entry>
+            <format>xls</format>
+            <protocol>WWW:DOWNLOAD:application/vnd.ms-excel</protocol>
+        </entry>
+        <entry>
+            <format>xlsx</format>
+            <format>excel</format>
+            <protocol>WWW:DOWNLOAD:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</protocol>
+        </entry>
+        <entry>
+            <format>rtf</format>
+            <protocol>WWW:DOWNLOAD:application/rtf</protocol>
+        </entry>
+        <entry>
             <format>web page</format>
+            <format>html</format>
+            <format>arcgis</format>
             <protocol>WWW:LINK-1.0-http--link</protocol>
         </entry>
         <entry>
             <format>arcgis geoservices rest api</format>
             <protocol>ESRI:REST</protocol>
+        </entry>
+        <entry>
+            <format>wms</format>
+            <protocol>OGC:WMS</protocol>
+        </entry>
+        <entry>
+            <format>wfs</format>
+            <protocol>OGC:WFS</protocol>
         </entry>
     </xsl:variable>
 
