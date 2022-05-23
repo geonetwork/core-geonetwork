@@ -140,7 +140,7 @@
   </xsl:template>
 
     <!-- Updating the link matching the update key. -->
-  <xsl:template match="mrd:onLine[
+  <xsl:template match="mrd:onLine[$updateKey != '' and
                       normalize-space($updateKey) = concat(
                       cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
                       cit:CI_OnlineResource/cit:protocol/gco:CharacterString,
