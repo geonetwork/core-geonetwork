@@ -100,10 +100,13 @@
       document.querySelectorAll(selector).forEach(function (element) {
         var elHeightPx = measureInnerHeight(element);
         var lineHeightPx = measureLineHeight(element);
-        if (elHeightPx < lineHeightPx * (MAX_HEIGHT_LINE + 1)) {
+        var lineNumbers = element.getAttribute('data-line-number') != null
+          ? parseInt(element.getAttribute('data-line-number'), 10)
+          : MAX_HEIGHT_LINE;
+        if (elHeightPx < lineHeightPx * (lineNumbers + 1)) {
           return;
         }
-        var maxHeightPx = lineHeightPx * MAX_HEIGHT_LINE;
+        var maxHeightPx = lineHeightPx * lineNumbers;
 
         // put the element content in a child div
         var contentChild = document.createElement('div');

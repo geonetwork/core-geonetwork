@@ -3,6 +3,7 @@
   <h2>{{::title}}</h2>
 
   <div class="sxt-field-collapse"
+       data-line-number="10"
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
@@ -17,14 +18,14 @@
            Display specific icon and label as we can't make distinction in all siblings
            that are groups together. -->
           <i class="fa fa-fw"
-             data-ng-class="r.initiativeType == 'document' || r.initiativeType == 'dataset'
+             data-ng-class="r.initiativeType == 'document' || r.initiativeType == 'dataset' || r.initiativeType == 'platform'
                             ? 'fa-exchange' : icon"/>
 
-          <span data-ng-show="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
+          <span data-ng-show="r.initiativeType == 'document' || r.initiativeType == 'dataset' || r.initiativeType == 'platform'"
                 title="{{'references' | translate}}">
             {{r.initiativeType | translate}}
           </span>
-          <span data-ng-hide="r.initiativeType == 'document' || r.initiativeType == 'dataset'"
+          <span data-ng-hide="r.initiativeType == 'document' || r.initiativeType == 'dataset' || r.initiativeType == 'platform'"
                   data-ng-if="(mainType !== 'WMS')
                             && (mainType !== 'WMSSERVICE')
                             && (mainType !== 'WMTS')
