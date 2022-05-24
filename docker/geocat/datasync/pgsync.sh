@@ -11,4 +11,4 @@ fi
 
 
 
-pgsync --config /etc/datasync/pgsync.yml metadata:"${1}"
+pgsync --defer-constraints --config /etc/datasync/pgsync.yml metadata:"${1}"

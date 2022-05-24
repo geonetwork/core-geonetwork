@@ -13,12 +13,17 @@ from: postgres://{{ env("PGSYNC_SOURCE_USER", "") }}:{{ env("PGSYNC_SOURCE_PASSW
 
 # destination database URL
 to: postgres://{{ env("PGSYNC_TARGET_USER", "") }}:{{ env("PGSYNC_TARGET_PASSWORD", "") }}@{{ env("PGSYNC_TARGET_HOST", "") }}:{{ env("PGSYNC_TARGET_PORT", "5432") }}/{{ env("PGSYNC_TARGET_DBNAME", "") }}
+to_safe: true
 
 groups:
   metadata:
-    metadata: "where uuid = '{1}'"
-    operationallowed: "where metadataid in (select id from metadata where uuid = '{1}')"
-    metadataindicator:  "where metadata_id in (select id from metadata where uuid = '{1}')"
+    metadata: "where harvestuuid = '{1}'"
+    operationallowed: "where metadataid in (select id from metadata where harvestuuid = '{1}')"
+    metadataindicator:  "where metadata_id in (select id from metadata where harvestuuid = '{1}')"
+    sources: "where uuid in (select harvestuuid from metadata where harvestuuid = '{1}')"
+    sourcesdes: "where iddes in (select harvestuuid from metadata where harvestuuid = '{1}')"
+    groups: "where id in (select groupowner from metadata where harvestuuid = '{1}')"
+    groupsdes: "where iddes in (select groupowner from metadata where harvestuuid = '{1}')"
 
 # exclude tables
 # exclude:
