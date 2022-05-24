@@ -42,6 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="protocol-mapping.xsl"></xsl:import>
@@ -80,7 +81,7 @@
         <mdb:defaultLocale>
           <lan:PT_Locale>
             <lan:language>
-              <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{metas/language}"/>
+              <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{java-xsl-util:threeCharLangCode(metas/language)}"/>
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
@@ -378,7 +379,7 @@
             <mri:defaultLocale>
               <lan:PT_Locale>
                 <lan:language>
-                  <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{metas/language}"/>
+                  <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{java-xsl-util:threeCharLangCode(metas/language)}"/>
                 </lan:language>
                 <lan:characterEncoding>
                   <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
