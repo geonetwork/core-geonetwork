@@ -17,57 +17,10 @@ EOF
 fi
 
 PGSYNC_CONFIG_FILE=/etc/datasync/pgsync.yml
-if [[ ! -f "${PGSYNC_}" ]]; then
+if [[ ! -f "${PGSYNC_CONFIG_FILE}" ]]; then
   mkdir -p /etc/datasync
   CURRENT_DATE_TIME=$(date -u -Is)
-  cat << EOF > ${PGSYNC_CONFIG_FILE}
-# This file has been generated automatically at ${CURRENT_DATE_TIME}
-
-# source database URL
-# database URLs take the format of:
-#   postgres://user:password@host:port/dbname
-#
-# we recommend a command which outputs a database URL
-# so sensitive information is not included in this file
-#
-# we *highly recommend* you use sslmode=verify-full when possible
-# see https://ankane.org/postgres-sslmode-explained for more info
-from: postgres://${PGSYNC_SOURCE_USER}:${PGSYNC_SOURCE_PASSWORD}@${PGSYNC_SOURCE_HOST}:${PGSYNC_SOURCE_PORT}/${PGSYNC_SOURCE_DBNAME}
-
-# destination database URL
-to: postgres://${PGSYNC_TARGET_USER}:${PGSYNC_TARGET_PASSWORD}@${PGSYNC_TARGET_HOST}:${PGSYNC_TARGET_PORT}/${PGSYNC_TARGET_DBNAME}
-
-groups:
-  metadata:
-    metadata: "where uuid = '{1}'"
-    operationallowed: "where metadataid in (select id from metadata where uuid = '{1}')"
-    metadataindicator:  "where metadata_id in (select id from metadata where uuid = '{1}')"
-
-# exclude tables
-# exclude:
-#   - table1
-#   - table2
-
-# define groups
-# groups:
-#   group1:
-#     - table1
-#     - table2
-
-# sync specific schemas
-# schemas:
-#   - public
-
-# protect sensitive information
-#data_rules:
-#  email: unique_email
-#  phone: unique_phone
-#  last_name: random_letter
-#  birthday: random_date
-#  encrypted_*: null
-
-EOF
-
+  j2 /opt/datasync/pgsync.yml.j2 -o ${PGSYNC_CONFIG_FILE}
 fi
 
 

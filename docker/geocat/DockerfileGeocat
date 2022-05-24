@@ -84,6 +84,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
       ruby-dev \
       libpq-dev \
       build-essential\
+      python3-pip \
+    && pip3 install --no-cache-dir j2cli \
     && gem install pgsync \
     && pgsync --version \
     && apt-get autoremove -y ruby-dev libpq-dev build-essential
@@ -95,7 +97,6 @@ RUN cp "${CATALINA_HOME}"/webapps/geonetwork/WEB-INF/lib/postgresql-*.jar "${CAT
     && mkdir -p ${DATA_DIR}
 
 COPY ./datasync/ /opt/datasync/
-RUN ls -lah /opt/datasync
 
 COPY ./entrypoint.sh  /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
