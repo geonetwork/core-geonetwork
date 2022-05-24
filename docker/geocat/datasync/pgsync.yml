@@ -14,10 +14,14 @@ to: postgres://postgres:postgres@localhost:5432/JRC-ECAS2
 
 groups:
   metadata:
-    metadata: "where uuid = '{1}'"
-    operationallowed: "where metadataid in (select id from metadata where uuid = '{1}')"
-    metadataindicator:  "where metadata_id in (select id from metadata where uuid = '{1}')"
-    
+    metadata: "where harvestuuid = '{1}'"
+    operationallowed: "where metadataid in (select id from metadata where harvestuuid = '{1}')"
+    metadataindicator:  "where metadata_id in (select id from metadata where harvestuuid = '{1}')"
+    sources: "where uuid in (select harvestuuid from metadata where harvestuuid = '{1}')"
+    sourcesdes: "where iddes in (select harvestuuid from metadata where harvestuuid = '{1}')"
+    groups: "where id in (select groupowner from metadata where harvestuuid = '{1}')"
+    groupsdes: "where iddes in (select groupowner from metadata where harvestuuid = '{1}')"
+
 # exclude tables
 # exclude:
 #   - table1
