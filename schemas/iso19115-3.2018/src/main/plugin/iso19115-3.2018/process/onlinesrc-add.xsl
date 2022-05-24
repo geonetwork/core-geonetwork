@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
+<xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
@@ -69,8 +69,8 @@
       <xsl:apply-templates select="mdb:metadataExtensionInfo"/>
       <xsl:apply-templates select="mdb:identificationInfo"/>
       <xsl:apply-templates select="mdb:contentInfo"/>
-      
-      
+
+
       <xsl:choose>
         <xsl:when
           test="count(mdb:distributionInfo) = 0">
@@ -105,13 +105,13 @@
                         <xsl:if test="$updateKey = ''">
                           <xsl:call-template name="createOnlineSrc"/>
                         </xsl:if>
-                        
+
                         <xsl:apply-templates select="mrd:MD_Distribution/mrd:transferOptions[1]/mrd:MD_DigitalTransferOptions/mrd:offLine"/>
                         <xsl:apply-templates select="mrd:MD_Distribution/mrd:transferOptions[1]/mrd:MD_DigitalTransferOptions/mrd:transferFrequency"/>
                         <xsl:apply-templates select="mrd:MD_Distribution/mrd:transferOptions[1]/mrd:MD_DigitalTransferOptions/mrd:distributionFormat"/>
                       </mrd:MD_DigitalTransferOptions>
                    </mrd:transferOptions>
-                   
+
                    <xsl:apply-templates
                      select="mrd:MD_Distribution/mrd:transferOptions[position() > 1]"/>
                  </xsl:when>
@@ -124,7 +124,7 @@
           </xsl:for-each>
         </xsl:otherwise>
       </xsl:choose>
-      
+
       <xsl:apply-templates select="mdb:dataQualityInfo"/>
       <xsl:apply-templates select="mdb:resourceLineage"/>
       <xsl:apply-templates select="mdb:portrayalCatalogueInfo"/>
@@ -132,12 +132,12 @@
       <xsl:apply-templates select="mdb:applicationSchemaInfo"/>
       <xsl:apply-templates select="mdb:metadataMaintenance"/>
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
-      
+
     </xsl:copy>
   </xsl:template>
 
     <!-- Updating the link matching the update key. -->
-  <xsl:template match="mrd:onLine[
+  <xsl:template match="mrd:onLine[$updateKey != '' and
                       normalize-space($updateKey) = concat(
                       cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
                       cit:CI_OnlineResource/cit:protocol/gco:CharacterString,
@@ -160,7 +160,7 @@
         </mrd:onLine>
       </xsl:for-each>
     </xsl:if>
-    
+
     <!-- Add online source from URL -->
     <xsl:if test="$url">
       <!-- If a name is provided loop on all languages -->
