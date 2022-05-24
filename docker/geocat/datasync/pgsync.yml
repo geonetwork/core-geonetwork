@@ -12,6 +12,8 @@ from: postgres://postgres:postgres@localhost:5432/JRC-ECAS
 # destination database URL
 to: postgres://postgres:postgres@localhost:5432/JRC-ECAS2
 
+to_safe: true
+
 groups:
   metadata:
     metadata: "where harvestuuid = '{1}'"
