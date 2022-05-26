@@ -422,5 +422,7 @@
     "draft": "Arbeitskopie",
     "link": "Verknüpfung",
     "link-text": "Link-Beschriftung",
-	  "confirmCancelEdit": "Möchtest du alle Änderungen abbrechen und den Editor schließen?"
+    "confirmCancelEdit": "Möchtest du alle Änderungen abbrechen und den Editor schließen?",
+    "wmsSelectedLayers": "Selected layers",
+    "wmsSelectedLayersNone": "No layers selected"
 }
