@@ -82,7 +82,7 @@
     "advancedBatchEditMode": "Mode avancé (XPath)",
     "cancel": "Annuler",
     "cancelChangesFromNow": "Annuler les modifications faites depuis le début, {{timeAgo}}.",
-    "cancelling": "Cancelling ...",
+    "cancelling": "Annulation en cours ...",
     "chooseZeroOrMoreLayer": "Vous pouvez également choisir une ou plusieurs couches diffusées par le service :",
     "chooseZeroOrMoreLayerFromService": "Choisir la couche dans le service correspondant à la fiche sélectionnée :",
     "serviceContainsManyUrl": "Choisir <strong>une</strong> URL parmi <strong>{{count}}</strong> fournie(s)",
@@ -302,7 +302,7 @@
     "suggestions": "Suggestions",
     "removeThumbnail": "Supprimer l'aperçu",
     "thumbnailMaker": "Générer un aperçu",
-    "thumbnailMaker-help": "Toutes les couches WMS renseignées dans la fiche ont été ajoutées à la carte. Sélectionner une mise en page (Thumbnail est recommandé), une échelle puis zoomer vers une zone d'intérêt afin de générer l'aperçu.",
+    "thumbnailMaker-help": "Toutes les couches WMS définies dans la fiche sont ajoutées à la carte. Choisir une mise en page, une échelle et une zone afin de générer un aperçu.",
     "to-iso19139-keyword": "texte (recommandé)",
     "to-iso19139-keyword-as-xlink": "lien",
     "to-iso19139-keyword-as-xlink-help": "Useful for creating a link between the record and the thesaurus. An xlink:href attribute is added to the gmd:descriptiveKeywords element.",
@@ -422,5 +422,7 @@
     "draft": "Brouillon",
     "link": "Lien",
     "link-text": "Libellé du lien",
-	  "confirmCancelEdit": "Voulez-vous annuler tous les changements et fermer l'éditeur ?"
+    "confirmCancelEdit": "Voulez-vous annuler tous les changements et fermer l'éditeur ?",
+    "wmsSelectedLayers": "Couches sélectionnées",
+    "wmsSelectedLayersNone": "Aucune couche sélectionnée"
 }
