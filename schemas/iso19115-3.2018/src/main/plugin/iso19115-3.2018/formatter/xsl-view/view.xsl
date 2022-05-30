@@ -221,14 +221,14 @@
       </h2>
 
       <xsl:choose>
-        <xsl:when test=".//gex:EX_BoundingPolygon">
+        <xsl:when test=".//mdb:identificationInfo/*/mri:extent//gex:EX_BoundingPolygon">
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
           <!--<xsl:apply-templates mode="render-field"
                                select=".//gex:EX_GeographicBoundingBox"/>-->
           <!-- Some views want custom rendering in main form and in side bar. -->
-          <xsl:for-each select=".//gex:EX_GeographicBoundingBox">
+          <xsl:for-each select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
             <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gex:westBoundLongitude/gco:Decimal),
                             xs:double(gex:southBoundLatitude/gco:Decimal),
