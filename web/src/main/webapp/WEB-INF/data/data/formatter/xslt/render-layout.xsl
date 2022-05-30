@@ -428,8 +428,9 @@
                               select="utils:getNodeName(/root/info/record/sourceinfo/sourceid, $language, false())"/>
 
                 <h3>
+                  <xsl:value-of select="$schemaStrings/recordIsFromSource"/>
+
                   <xsl:variable name="div" as="node()*">
-                    <xsl:value-of select="$schemaStrings/recordIsFromSource"/>
                     <xsl:value-of select="$sourceName"/>
                     <br/>
                     <img src="{/root/gui/url}/images/logos/{utils:getNodeLogo(/root/info/record/sourceinfo/sourceid)}"/>

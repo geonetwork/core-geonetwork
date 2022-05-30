@@ -32,9 +32,6 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:variable name="dateFormatRegex"
-                select="'(\d{4}-[01]\d-[0-3]\d.*)'"/>
-
   <xsl:template mode="getLicense" match="gmd:MD_Metadata[$view = 'sextant']">
     <xsl:apply-templates mode="render-value"
                          select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation/gmx:Anchor"/>
@@ -87,7 +84,9 @@
 
           <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
             <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-            <xsl:value-of select="if (matches(gml:beginPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:beginPosition"/>
+            <xsl:value-of select="if (gml:beginPosition castable as xs:date)
+                                  then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
+                                  else gml:beginPosition"/>
             <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
             <i class="fa fa-fw fa-arrow-right">&#160;</i>
           </xsl:if>
@@ -98,7 +97,9 @@
           </xsl:variable>
           <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
             <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-            <xsl:value-of select="if (matches(gml:endPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:endPosition"/>
+            <xsl:value-of select="if (gml:endPosition castable as xs:date)
+                                  then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
+                                  else gml:endPosition"/>
             <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
           </xsl:if>
 
@@ -136,7 +137,9 @@
 
 
               <dd>
-                <xsl:value-of select="if (matches(gmd:date/*, $dateFormatRegex)) then format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]') else gmd:date/*"/>
+                <xsl:value-of select="if (gmd:date/* castable as xs:date)
+                                      then format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]')
+                                      else gmd:date/*"/>
                 <xsl:text>&#10;(</xsl:text>
                 <xsl:copy-of select="if (count($dateType/element()) = 0) then concat(' ', $dateType, ' ') else  $dateType/element()"/>
                 <xsl:text>)</xsl:text>
@@ -170,7 +173,7 @@
               <xsl:with-param name="key" select="'sxt-view-author'"/>
             </xsl:call-template>
           </td>
-          <td>
+          <td class="sxt-field-collapse" data-line-number="10">
             <xsl:for-each select="$authors">
               <xsl:apply-templates mode="render-field"
                                    select=".">
@@ -192,7 +195,7 @@
               <xsl:with-param name="key" select="'sxt-view-contact'"/>
             </xsl:call-template>
           </td>
-          <td>
+          <td class="sxt-field-collapse" data-line-number="10">
             <xsl:for-each select="$contacts">
 <!--            <xsl:for-each select="$contacts" group-by="">-->
               <xsl:apply-templates mode="render-field"

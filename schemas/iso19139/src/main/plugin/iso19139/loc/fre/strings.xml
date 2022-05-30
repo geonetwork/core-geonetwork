@@ -23,7 +23,7 @@
   -->
 
 <strings>
-  <recordIsFromSource>Fiche issue du catalogue </recordIsFromSource>
+  <recordIsFromSource>Catalogue de provenance </recordIsFromSource>
   <understandResource>Comprendre la ressource</understandResource>
   <relatedResources>Service disponible et données associées</relatedResources>
   <techInfo>Les informations techniques</techInfo>

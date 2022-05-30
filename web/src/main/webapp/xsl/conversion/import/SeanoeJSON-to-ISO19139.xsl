@@ -43,16 +43,27 @@
           codeListValue="{lower-case(type)}"/>
       </gmd:hierarchyLevel>
 
-      <xsl:for-each select="publisher">
+      <xsl:for-each select="contact">
         <gmd:contact>
           <gmd:CI_ResponsibleParty>
-            <gmd:organisationName>
+            <gmd:individualName>
               <gco:CharacterString>
-                <xsl:value-of select="name"/>
+                <xsl:value-of select="Name"/>
               </gco:CharacterString>
-            </gmd:organisationName>
+            </gmd:individualName>
             <gmd:contactInfo>
               <gmd:CI_Contact>
+                <xsl:for-each select="Email">
+                  <gmd:address>
+                    <gmd:CI_Address>
+                      <gmd:electronicMailAddress>
+                        <gco:CharacterString>
+                          <xsl:value-of select="."/>
+                        </gco:CharacterString>
+                      </gmd:electronicMailAddress>
+                    </gmd:CI_Address>
+                  </gmd:address>
+                </xsl:for-each>
                 <xsl:for-each select="url">
                   <gmd:onlineResource>
                     <gmd:CI_OnlineResource>
@@ -67,7 +78,7 @@
               </gmd:CI_Contact>
             </gmd:contactInfo>
             <gmd:role>
-              <gmd:CI_RoleCode codeListValue="publisher"
+              <gmd:CI_RoleCode codeListValue="pointOfContact"
                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
               />
             </gmd:role>
@@ -170,6 +181,13 @@
               <xsl:with-param name="org" select="$authorOrg/Name"/>
             </xsl:call-template>
           </xsl:for-each>
+
+          <xsl:for-each select="publisher">
+            <xsl:call-template name="build-contact">
+              <xsl:with-param name="role" select="'publisher'"/>
+            </xsl:call-template>
+          </xsl:for-each>
+
 
 
           <xsl:for-each select="illustration_image_URL[. != '']">
@@ -595,7 +613,8 @@
           <xsl:attribute name="uuid" select="Orcid"/>
         </xsl:if>
         <xsl:variable name="name"
-                      select="if (collectivity_author) then collectivity_author
+                      select="if (name) then name
+                              else if (collectivity_author) then collectivity_author
                               else concat(LastName, ' ', FirstName)"/>
         <xsl:if test="$name != ''">
           <gmd:individualName>
