@@ -44,7 +44,8 @@
       <a ng-href=""
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
         class="fa fa-key"></i><span translate>privileges</span></a></li>
-    <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href="">
+    <li data-ng-if="!user.canManagePrivileges(md)"
+        class="disabled"><a ng-href="">
       <i class="fa fa-key"></i><span
       translate>privileges</span></a></li>
     <!--
