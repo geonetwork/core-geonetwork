@@ -280,6 +280,7 @@
     } else if (facet.type === 'tree') {
       this.facetsCtrl.lastUpdatedFacet = facet;
     }
+
     this.searchCtrl.updateState(item.path, value);
   }
 
@@ -322,6 +323,27 @@
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
             'partials/facet.html'
+        },
+        link: function (scope, element, attrs) {
+        }
+      }
+    }])
+
+
+  module.directive('esFacetCard', [
+    function () {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          facet: '=esFacetCard',
+          key: '=facetKey',
+          aggResponse: '=aggResponse',
+          missingValue: '=missingValue'
+        },
+        templateUrl: function (elem, attrs) {
+          return attrs.template || '../../catalog/components/elasticsearch/directives/' +
+            'partials/facet-card.html'
         },
         link: function (scope, element, attrs) {
         }

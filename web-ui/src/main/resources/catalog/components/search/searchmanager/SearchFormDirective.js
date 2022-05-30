@@ -523,6 +523,18 @@
       }
     }
 
+    this.getMissingLabel = function(key) {
+      if(!key) return;
+      var facet = $scope.searchResults.facets.filter(function(facet) {
+        return facet.key === key;
+      });
+      return (facet.length
+          && facet[0].config
+          && facet[0].config.terms
+          && facet[0].config.terms.missing)
+        || 'missing';
+    }
+
     this.hasFiltersForKey = function(key) {
       return !!$scope.searchObj.state.filters[key];
     }
