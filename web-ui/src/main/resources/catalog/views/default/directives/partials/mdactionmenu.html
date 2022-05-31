@@ -189,7 +189,7 @@
 
       <li data-ng-repeat="t in tasks"
           data-ng-show="taskConfiguration[t.name] && taskConfiguration[t.name].isVisible && taskConfiguration[t.name].isVisible(md)"
-          data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
+          data-ng-class="{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
         <a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
           <span class="fa fa-fw"></span>&nbsp;
           <span>{{t.label | gnLocalized}}</span>
