@@ -70,6 +70,9 @@
 
 
           scope.onlyUserGroup = gnConfig['system.metadataprivs.usergrouponly'];
+          scope.publicationbyrevieweringroupowneronly =
+            gnConfig['system.metadataprivs.publicationbyrevieweringroupowneronly'] === false
+              ? false : true;
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
           scope.icons = gnShareConstants.icons;

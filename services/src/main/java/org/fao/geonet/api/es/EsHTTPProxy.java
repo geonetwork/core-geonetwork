@@ -179,6 +179,7 @@ public class EsHTTPProxy {
     public static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+        final String id = getSourceString(doc, Geonet.IndexFieldNames.ID);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -224,6 +225,7 @@ public class EsHTTPProxy {
             }
         }
         doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+        doc.put(Edit.Info.Elem.REVIEW, accessManager.hasReviewPermission(context, id));
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);

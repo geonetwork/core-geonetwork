@@ -876,6 +876,8 @@
     "system/metadata/allThesaurus-help": "If true then a virtual thesaurus will be created that contains all keywords in all other thesauri.  This is useful in editor when the name of the thesaurus is unimportant and only the keyword is important.  In order to ensure that the correct keyword blocks are maintained (with correct thesaurus name) enabling this will also enable a transform in update-fixed-info that will assign the keyword in the 'all' thesaurus to keyword blocks with the correct thesaurus for the keyword",
     "system/metadataprivs": "Metadata privileges",
     "system/metadataprivs/usergrouponly": "Only set privileges to user's groups",
+    "system/metadataprivs/publicationbyrevieweringroupowneronly": "Publication by users reviewer in record group only",
+    "system/metadataprivs/publicationbyrevieweringroupowneronly-help": "Allow publication by administrator and reviewer member of record group. If false, then also all users reviewer in group with editing rights can publish/unpublish a record.",
     "system/metadatacreate" : "Metadata create",
     "system/metadatacreate/generateUuid" : "Generate UUID",
     "system/metadatacreate/generateUuid-help" : "GeoNetwork assigns a random metadata UUID to the metadata created by a user (default). To assign the metadata UUID manually disable this option and fill the metadata UUID prefix.",
