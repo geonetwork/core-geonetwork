@@ -102,7 +102,8 @@
 
       // an array of group indices, e.g. [0, 1, 2]
       var linkGroups = md.link ? md.link.map(function(link) { return link.group; })
-        .filter(function(link, i, arr) { return arr.indexOf(link) === i}) : [];
+        .filter(function(link, i, arr) {
+          return link != undefined && arr.indexOf(link) === i}) : [];
 
       angular.forEach(linkGroups, function(group) {
 
