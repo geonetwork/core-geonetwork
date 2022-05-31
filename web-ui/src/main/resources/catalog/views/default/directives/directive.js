@@ -238,12 +238,12 @@
                     {"terms": {"draft": ["n", "y", "e"]}}
                   ]
                 }},
-                "_source": ["dq*", "documentStandard"]
+                "_source": ["dq*", "standardNameObject.default"]
               }, {cache: true}).then(
               function (r) {
-                scope.isUd = r.data.hits.hits[0]._source.documentStandard
+                scope.isUd = r.data.hits.hits[0]._source.standardNameObject.default
                               .indexOf('Upstream Data') !== -1;
-                scope.isTdp = r.data.hits.hits[0]._source.documentStandard
+                scope.isTdp = r.data.hits.hits[0]._source.standardNameObject.default
                               .indexOf('Targeted Data Product') !== -1;
                 scope.qm = r.data.hits.hits[0]._source.dqValues;
                 angular.forEach(scope.qm, function (value, idx) {
