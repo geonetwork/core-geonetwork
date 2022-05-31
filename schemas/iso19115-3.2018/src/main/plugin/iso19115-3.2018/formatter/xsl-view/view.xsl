@@ -303,11 +303,12 @@
 
     <xsl:if test="$displayCitation">
       <blockquote>
-        <div class="row">
-          <div class="col-md-3">
-            <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+        <div class="row" style="margin: 0px;">
+          <div class="col-md-1">
+            <i class="fa fa-quote-left pull-right"
+               style="font-size: 75px;"><xsl:comment select="'icon'"/></i>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-11">
             <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
               <xsl:value-of select="$schemaStrings/citationProposal"/>
             </h2>
@@ -478,7 +479,7 @@
 
         <xsl:if test="$isCovered">
           <div data-gn-data-quality-measure-renderer="{$metadataId}"
-               data-cpt-id="{$cptId}">&#160;</div>
+               data-cpt-id="{$cptId}"><xsl:comment>DQ</xsl:comment>&#160;</div>
         </xsl:if>
       </div>
     </xsl:if>
