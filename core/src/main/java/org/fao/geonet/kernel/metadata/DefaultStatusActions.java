@@ -211,13 +211,13 @@ public class DefaultStatusActions implements StatusActions {
     private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
         String statusId = status.getStatusValue().getId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
+            //            AccessManager accessManager = context.getBean(AccessManager.class);
+            //            if (!accessManager.hasReviewPermission(context, String.valueOf(status.getMetadataId()))) {
+            //                throw new SecurityException(String.format(
+            //                    "You can't edit record with ID %s",
+            //                    String.valueOf(status.getMetadataId())));
+            //            }
             // setAllOperations(mid); - this is a short cut that could be enabled
-            AccessManager accessManager = context.getBean(AccessManager.class);
-            if (!accessManager.canReview(context, String.valueOf(status.getMetadataId()))) {
-                throw new SecurityException(String.format(
-                    "You can't edit record with ID %s",
-                    String.valueOf(status.getMetadataId())));
-            }
         } else if (statusId.equals(StatusValue.Status.DRAFT)) {
             unsetAllOperations(status.getMetadataId());
         }

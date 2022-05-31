@@ -56,7 +56,10 @@
       </thead>
       <tbody>
       <tr class="info"
-          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true">
+          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true"
+          title="{{!isAdminOrReviewer ?
+            (('privilegesNeededForPublicationRecordGroupOnly-' + publicationbyrevieweringroupowneronly) | translate)
+            : ''}}">
         <td><strong>{{('group-' + g.group) | translate}}</strong></td>
         <td data-ng-repeat="key in ::operations" class="text-center">
           <input type="checkbox"
