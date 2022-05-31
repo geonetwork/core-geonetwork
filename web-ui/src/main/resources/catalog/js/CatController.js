@@ -610,13 +610,13 @@ goog.require('gn_alert');
               // formatter to use depending on metadata properties.
               'views': [ {
                 'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data'},
-                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=medsea'
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=siblings|associated&header=false&view=medsea'
               }, {
                 'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
-                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=checkpoint-tdp'
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=siblings|associated&header=false&view=checkpoint-tdp'
               }, {
                 'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification'},
-                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=checkpoint-dps'
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=siblings|associated&header=false&view=checkpoint-dps'
               }, {
                 'if': {
                   'standardName': [

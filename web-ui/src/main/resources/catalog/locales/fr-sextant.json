@@ -1,5 +1,8 @@
 {
   "references": "Références",
+  "link-siblingsspecification": "Specification",
+  "link-siblingsupstreamData": "Upstream data",
+  "link-associated": "Associated resources",
   "layerSource": "Sources",
   "facet-th_sextant-theme_tree": "Thèmes Sextant",
   "wfsIssueWhileLoadingSLD": "Le filtre n'a pas pu être appliqué sur la couche. Le fichier SLD généré n'est pas accessible.",
