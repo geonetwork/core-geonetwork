@@ -41,7 +41,8 @@
         <th data-ng-if="::!disableAllCol">
           <span translate>setall</span>
         </th>
-        <th><a href="" ng-click="setSorter('p')" data-ng-if="::displayProfile">
+        <th data-ng-if="displayProfile">
+          <a href="" ng-click="setSorter('p')">
           <span translate>profile</span>&nbsp;
           <i data-ng-if="sorter.predicate == 'p'" class="fa"
              ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
@@ -51,7 +52,10 @@
       </thead>
       <tbody>
       <tr class="info"
-          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true">
+          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true"
+          title="{{!isAdminOrReviewer ?
+            (('privilegesNeededForPublicationRecordGroupOnly-' + publicationbyrevieweringroupowneronly) | translate)
+            : ''}}">
         <td><strong>{{('group-' + g.group) | translate}}</strong></td>
         <td data-ng-repeat="key in ::operations" class="text-center">
           <input type="checkbox"
@@ -67,7 +71,8 @@
                  data-ng-click="checkAll(g)"
                  data-ng-model="g.isCheckedAll"/>
         </td>
-        <td class="text-center">
+        <td class="text-center"
+            data-ng-if="displayProfile">
 
         </td>
       </tr>
@@ -87,8 +92,9 @@
                  data-ng-click="checkAll(g)"
                  data-ng-model="g.isCheckedAll"/>
         </td>
-        <td class="text-center">
-          <span data-ng-if="displayProfile">
+        <td data-ng-if="displayProfile"
+            class="text-center">
+          <span>
             {{::g.profiles}}
           </span>
         </td>

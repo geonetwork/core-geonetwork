@@ -101,17 +101,19 @@
             scope.privileges = data.privileges;
             // Define profile label
             if (scope.displayProfile) {
-              var admin = scope.user.isAdministrator();
+              var admin = scope.user.isAdministrator(),
+                userProfileDefined = true;
               scope.privileges.forEach(function(p) {
                 if (admin) {
                   p.profiles = $translate.instant('Administrator');
-                }
-                else {
+                } else if (p.userProfiles) {
                   p.profiles = '' + p.userProfiles.map(function(up) {
                     return $translate.instant(up);
                   }).join(' ');
                 }
+                userProfileDefined = angular.isArray(p.userProfiles);
               });
+              scope.displayProfile = userProfileDefined; // Working on a selection
             }
             scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
