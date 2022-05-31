@@ -45,44 +45,13 @@
 
       <xsl:for-each select="contact">
         <gmd:contact>
-          <gmd:CI_ResponsibleParty>
-            <gmd:individualName>
-              <gco:CharacterString>
-                <xsl:value-of select="Name"/>
-              </gco:CharacterString>
-            </gmd:individualName>
-            <gmd:contactInfo>
-              <gmd:CI_Contact>
-                <xsl:for-each select="Email">
-                  <gmd:address>
-                    <gmd:CI_Address>
-                      <gmd:electronicMailAddress>
-                        <gco:CharacterString>
-                          <xsl:value-of select="."/>
-                        </gco:CharacterString>
-                      </gmd:electronicMailAddress>
-                    </gmd:CI_Address>
-                  </gmd:address>
-                </xsl:for-each>
-                <xsl:for-each select="url">
-                  <gmd:onlineResource>
-                    <gmd:CI_OnlineResource>
-                      <gmd:linkage>
-                        <gmd:URL>
-                          <xsl:value-of select="."/>
-                        </gmd:URL>
-                      </gmd:linkage>
-                    </gmd:CI_OnlineResource>
-                  </gmd:onlineResource>
-                </xsl:for-each>
-              </gmd:CI_Contact>
-            </gmd:contactInfo>
-            <gmd:role>
-              <gmd:CI_RoleCode codeListValue="pointOfContact"
-                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-              />
-            </gmd:role>
-          </gmd:CI_ResponsibleParty>
+          <xsl:variable name="orgIndex" select="Indice_organisme"/>
+          <xsl:variable name="authorOrg" select="/record/organismes[./Indice = $orgIndex]"/>
+
+          <xsl:call-template name="build-contact">
+            <xsl:with-param name="role" select="'pointOfContact'"/>
+            <xsl:with-param name="org" select="$authorOrg/Name"/>
+          </xsl:call-template>
         </gmd:contact>
       </xsl:for-each>
 
@@ -167,25 +136,31 @@
           </xsl:for-each>
 
           <xsl:for-each select="contributors">
-            <xsl:call-template name="build-contact">
-              <xsl:with-param name="role" select="'custodian'"/>
-            </xsl:call-template>
+            <gmd:pointOfContact>
+              <xsl:call-template name="build-contact">
+                <xsl:with-param name="role" select="'custodian'"/>
+              </xsl:call-template>
+            </gmd:pointOfContact>
           </xsl:for-each>
 
           <xsl:for-each select="authors">
             <xsl:variable name="orgIndex" select="Indice_organisme"/>
             <xsl:variable name="authorOrg" select="/record/organismes[./Indice = $orgIndex]"/>
 
-            <xsl:call-template name="build-contact">
-              <xsl:with-param name="role" select="'author'"/>
-              <xsl:with-param name="org" select="$authorOrg/Name"/>
-            </xsl:call-template>
+            <gmd:pointOfContact>
+              <xsl:call-template name="build-contact">
+                <xsl:with-param name="role" select="'author'"/>
+                <xsl:with-param name="org" select="$authorOrg/Name"/>
+              </xsl:call-template>
+            </gmd:pointOfContact>
           </xsl:for-each>
 
           <xsl:for-each select="publisher">
-            <xsl:call-template name="build-contact">
-              <xsl:with-param name="role" select="'publisher'"/>
-            </xsl:call-template>
+            <gmd:pointOfContact>
+              <xsl:call-template name="build-contact">
+                <xsl:with-param name="role" select="'publisher'"/>
+              </xsl:call-template>
+            </gmd:pointOfContact>
           </xsl:for-each>
 
 
@@ -607,51 +582,48 @@
     <xsl:param name="role" select="'pointOfContact'"/>
     <xsl:param name="org" select="''"/>
 
-    <gmd:pointOfContact>
-      <gmd:CI_ResponsibleParty>
-        <xsl:if test="Orcid">
-          <xsl:attribute name="uuid" select="Orcid"/>
-        </xsl:if>
-        <xsl:variable name="name"
-                      select="if (name) then name
-                              else if (collectivity_author) then collectivity_author
-                              else concat(LastName, ' ', FirstName)"/>
-        <xsl:if test="$name != ''">
-          <gmd:individualName>
-            <gco:CharacterString>
-              <xsl:value-of select="$name"/>
-            </gco:CharacterString>
-          </gmd:individualName>
-        </xsl:if>
-        <xsl:if test="$org != ''">
-          <gmd:organisationName>
-            <gco:CharacterString>
-              <xsl:value-of select="$org"/>
-            </gco:CharacterString>
-          </gmd:organisationName>
-        </xsl:if>
-        <xsl:if test="Email">
-          <gmd:contactInfo>
-            <gmd:CI_Contact>
-              <gmd:address>
-                <gmd:CI_Address>
-                  <gmd:electronicMailAddress>
-                    <gco:CharacterString>
-                      <xsl:value-of select="Email"/>
-                    </gco:CharacterString>
-                  </gmd:electronicMailAddress>
-                </gmd:CI_Address>
-              </gmd:address>
-            </gmd:CI_Contact>
-          </gmd:contactInfo>
-        </xsl:if>
-        <gmd:role>
-          <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-                           codeListValue="{$role}">
-          </gmd:CI_RoleCode>
-        </gmd:role>
-      </gmd:CI_ResponsibleParty>
-    </gmd:pointOfContact>
+    <gmd:CI_ResponsibleParty>
+      <xsl:if test="Orcid">
+        <xsl:attribute name="uuid" select="Orcid"/>
+      </xsl:if>
+      <xsl:variable name="name"
+                    select="if (collectivity_author) then collectivity_author
+                            else concat(LastName, ' ', FirstName)"/>
+      <xsl:if test="$name != ''">
+        <gmd:individualName>
+          <gco:CharacterString>
+            <xsl:value-of select="$name"/>
+          </gco:CharacterString>
+        </gmd:individualName>
+      </xsl:if>
+      <xsl:if test="$org != ''">
+        <gmd:organisationName>
+          <gco:CharacterString>
+            <xsl:value-of select="$org"/>
+          </gco:CharacterString>
+        </gmd:organisationName>
+      </xsl:if>
+      <xsl:if test="Email">
+        <gmd:contactInfo>
+          <gmd:CI_Contact>
+            <gmd:address>
+              <gmd:CI_Address>
+                <gmd:electronicMailAddress>
+                  <gco:CharacterString>
+                    <xsl:value-of select="Email"/>
+                  </gco:CharacterString>
+                </gmd:electronicMailAddress>
+              </gmd:CI_Address>
+            </gmd:address>
+          </gmd:CI_Contact>
+        </gmd:contactInfo>
+      </xsl:if>
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
+                         codeListValue="{$role}">
+        </gmd:CI_RoleCode>
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
   </xsl:template>
 
 </xsl:stylesheet>
