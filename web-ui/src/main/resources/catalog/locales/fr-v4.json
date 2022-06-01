@@ -63,6 +63,7 @@
   "facet-topic": "Thèmes",
   "facet-inspireThemeUri": "Thèmes INSPIRE",
   "facet-cl_hierarchyLevel": "Type de ressource",
+  "facet-resourceType": "Type de ressource",
   "facet-cl_resourceScope": "Type de ressource",
   "facet-cl_spatialRepresentationType": "Types de représentation",
   "facet-availableInServices": "Disponible via",

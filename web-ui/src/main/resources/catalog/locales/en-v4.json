@@ -73,6 +73,7 @@
   "facet-inspireThemeUri": "INSPIRE themes",
   "facet-cl_hierarchyLevel": "Type of resources",
   "facet-cl_resourceScope": "Type of resources",
+  "facet-resourceType": "Type of resources",
   "facet-cl_spatialRepresentationType": "Spatial representation type",
   "facet-availableInServices": "Available in",
   "availableInServices-availableInDownloadService": "Download service",

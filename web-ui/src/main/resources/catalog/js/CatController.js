@@ -522,10 +522,11 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
-            "cl_hierarchyLevel.key": {
+            "resourceType": {
               "terms": {
-                "field": "cl_hierarchyLevel.key",
-                "size": 10
+                "field": "resourceType",
+                "size": 10,
+                "exclude": "map/.*"
               },
               'meta': {
                 'collapsed': true

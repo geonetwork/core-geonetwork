@@ -159,10 +159,10 @@
         }
     },
     'type': {
-      'cl_hierarchyLevel.key':
+      'resourceType':
         {
           'terms': {
-            'field': 'cl_hierarchyLevel.key',
+            'field': 'resourceType',
             'size': 10
           }
         }
