@@ -1606,7 +1606,7 @@ goog.require('gn_alert');
                   list: keys,
                   key: selectedFacet,
                   lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
-		  config: gnGlobalSettings.gnCfg.mods.home.facetConfig
+		              config: gnGlobalSettings.gnCfg.mods.home.facetConfig
                 };
               });
             }
