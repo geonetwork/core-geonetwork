@@ -502,12 +502,17 @@ goog.require('gn_alert');
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:WMS.*/'
+                      'query': '+linkProtocol:/OGC:(WMT?S.*|OWS-C)/'
                     }
                   },
                   'availableInDownloadService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:WFS.*/'
+                      'query': '+linkProtocol:/(OGC:(WFS.*|WCS)|FILE|DB|COPYFILE)/'
+                    }
+                  },
+                  'availableForFileDownload': {
+                    'query_string': {
+                      'query': '+linkProtocol:/(WWW:DOWNLOAD|WWW:FTP|WWW:OPENDAP|MYO:MOTU-SUB)/'
                     }
                   },
                   'availableInProcessingService': {

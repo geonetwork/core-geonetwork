@@ -77,6 +77,7 @@
   "facet-cl_spatialRepresentationType": "Spatial representation type",
   "facet-availableInServices": "Available in",
   "availableInServices-availableInDownloadService": "Download service",
+  "availableInServices-availableForFileDownload": "File download",
   "availableInServices-availableInViewService": "View service",
   "availableInServices-availableInProcessingService": "Processing service",
   "facet-th_gemet_tree": "Environmental tags",

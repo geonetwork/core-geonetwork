@@ -69,6 +69,7 @@
   "facet-availableInServices": "Disponible via",
   "availableInServices-availableInProcessingService": "Service de traitement",
   "availableInServices-availableInDownloadService": "Service de téléchargement",
+  "availableInServices-availableForFileDownload": "Téléchargement direct",
   "availableInServices-availableInViewService": "Service de visualisation",
   "facet-th_gemet_tree": "Mots-clés thématiques (GEMET)",
   "facet-th_regions_tree": "Territoires",
