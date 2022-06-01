@@ -945,9 +945,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'meta': {
                 'vega': 'arc'

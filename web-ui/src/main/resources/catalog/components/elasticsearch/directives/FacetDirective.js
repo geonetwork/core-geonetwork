@@ -330,22 +330,45 @@
     }])
 
 
-  module.directive('esFacetCard', [
-    function () {
+  module.filter('facetCssClassCode', [function() {
+    return function(key, isInspire) {
+      return isInspire
+        ? key.slice(key.lastIndexOf('/') + 1)
+        : key.replace('/', '').replace(' ', '')
+    }
+  }]);
+
+  module.directive('esFacetCards', ['gnLangs',
+    function (gnLangs) {
       return {
         restrict: 'A',
-        replace: true,
         scope: {
-          facet: '=esFacetCard',
-          key: '=facetKey',
+          key: '=esFacetCards',
+          homeFacet: '=homeFacet',
+          searchInfo: '=searchInfo',
           aggResponse: '=aggResponse',
-          missingValue: '=missingValue'
+          aggConfig: '=aggConfig'
         },
         templateUrl: function (elem, attrs) {
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
-            'partials/facet-card.html'
+            'partials/facet-cards.html'
         },
         link: function (scope, element, attrs) {
+          scope.iso2lang = gnLangs.getIso2Lang();
+
+          function init() {
+            scope.missingValue = scope.homeFacet.config[scope.key].terms
+              && scope.homeFacet.config[scope.key].terms.missing;
+            scope.isInspire = scope.key.indexOf('th_httpinspireeceuropaeutheme') === 0;
+          }
+
+          init();
+
+          scope.$watch('key', function(n, o) {
+            if (n && n !== o) {
+              init();
+            }
+          });
         }
       }
     }])
