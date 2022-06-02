@@ -389,7 +389,7 @@
     "filterGroup": "Filtrer les groupes ...",
     "wpsLoadingProcessDescription": "Chargement de la description du processus ...",
     "wpsDescribeProcessFailed": "Oops ! Erreur lors de la récupération de la description du processus.",
-    "wpsExecute": "Éxécuter",
+    "wpsExecute": "Exécuter",
     "wpsExecuteFailed": "Erreur lors du traitement",
     "wpsErrorCodeReturned": "Le serveur a retourné le code ",
     "time": "Temps",
