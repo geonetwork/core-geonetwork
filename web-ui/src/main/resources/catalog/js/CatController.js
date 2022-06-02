@@ -129,6 +129,14 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
+            // 'OrgForResource': {
+            //   'terms': {
+            //     'field': 'OrgForResource',
+            //     'include': '.*',
+            //     'missing': '- No org -',
+            //     'size': 15
+            //   }
+            // },
             'resourceType': {
               'terms': {
                 'field': 'resourceType',
@@ -937,9 +945,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'meta': {
                 'vega': 'arc'
@@ -1597,7 +1605,8 @@ goog.require('gn_alert');
                 $scope.homeFacet = {
                   list: keys,
                   key: selectedFacet,
-                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined
+                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
+		              config: gnGlobalSettings.gnCfg.mods.home.facetConfig
                 };
               });
             }

@@ -27,7 +27,11 @@
       <span ng-if="::type === 'RANGE'">
         {{::filter.value.replace('+' + filter.key + ':', '') | renderRangeExpression}}
       </span>
-      <span ng-if="::!specific && type === undefined"
+      <span ng-if="::filter.label"
+            ng-class="{'gn-filter-negative': isNegative(filter.value['#MISSING#'])}">
+        {{::filter.label | translate}}
+      </span>
+      <span ng-if="::!specific && filter.label === undefined && type === undefined"
             ng-repeat="(key, value) in filter.value track by $index"
             ng-class="{'gn-filter-negative': isNegative(value)}"
             translate>{{::key | facetTranslator: filter.key | capitalize}}</span>
