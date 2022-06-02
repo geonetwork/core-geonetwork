@@ -63,6 +63,15 @@
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
+
+          var failureMsg = gnUtilityService.getUrlParameter('failureMsg');
+
+          if (failureMsg) {
+            $translate([failureMsg]).then(function(t) {
+              $scope.signinFailureMsg = t[failureMsg];
+            });
+          }
+
           $scope.gnConfig = gnConfig;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;

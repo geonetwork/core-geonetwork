@@ -23,6 +23,7 @@
 
 package jeeves.config.springutil;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.NodeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -53,7 +54,8 @@ public class JeevesNodeAwareRedirectStrategy extends DefaultRedirectStrategy imp
 
         NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
 
-        String newUrl = url.replace("@@nodeId@@", nodeInfo.getId());
+        String failureMsg = StringUtils.defaultString((String) request.getSession().getAttribute("failureMsg"));
+        String newUrl = url.replace("@@nodeId@@", nodeInfo.getId()).replace("@@failureMsg@@", failureMsg);
 
         super.sendRedirect(request, response, newUrl);
     }

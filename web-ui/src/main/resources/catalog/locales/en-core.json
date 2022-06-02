@@ -577,5 +577,7 @@
     "batchApproveTitle": "Batch metadata approval",
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
-    "facet-mdStatus": "Workflow progress"
+    "facet-mdStatus": "Workflow progress",
+    "auth.message.ip.blocked": "Too many failed login attempts. This ip is blocked.",
+    "auth.message.badCredentials": "Incorrect username or password."
 }

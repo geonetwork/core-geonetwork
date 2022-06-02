@@ -118,6 +118,9 @@
         <ref bean="geonetworkAuthenticationProvider"/>
       </list>
     </constructor-arg>
+    <property name="authenticationEventPublisher">
+      <bean id="defaultAuthenticationEventPublisher" class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+    </property>
   </bean>
 
   <bean id="securityContextRepository"
@@ -149,7 +152,7 @@
     </property>
     <property name="authenticationFailureHandler">
       <bean
-        class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+        class="org.fao.geonet.kernel.security.GeoNetworkAuthenticationFailureHandler">
         <constructor-arg value="${loginErrorForm}"></constructor-arg>
         <property name="redirectStrategy">
           <bean class="jeeves.config.springutil.JeevesNodeAwareRedirectStrategy"/>
@@ -378,4 +381,25 @@
   </bean>
 
   <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+
+  <!-- Enable to limit the number of failed logins -->
+  <bean id="loginAttemptService" class="org.fao.geonet.kernel.security.LoginAttemptService">
+    <!-- Number of failed login attempts to block an IP (default 5) -->
+    <constructor-arg name="maxAttempt" value="2" />
+    <!-- Number of minutes to block an IP (default 60) -->
+    <constructor-arg name="blockTimeMinutes" value="1" />
+  </bean>
+
+  <!-- Listener for authentication failures -->
+  <bean class="org.fao.geonet.kernel.security.listener.AuthenticationFailureListener"
+        id="authenticationFailureListener">
+    <property name="loginAttemptService" ref="loginAttemptService" />
+  </bean>
+
+  <!-- Listener for authentication success -->
+  <bean class="org.fao.geonet.kernel.security.listener.AuthenticationSuccessListener"
+        id="authenticationSucessListener">
+    <property name="loginAttemptService" ref="loginAttemptService" />
+  </bean>
+
 </beans>

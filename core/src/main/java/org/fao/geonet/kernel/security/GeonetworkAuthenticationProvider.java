@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.security;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.exception.IpBlockedException;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.utils.Log;
@@ -37,6 +38,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider
     implements UserDetailsService {
@@ -76,8 +81,17 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
     protected UserDetails retrieveUser(String username,
                                        UsernamePasswordAuthenticationToken authentication)
         throws AuthenticationException {
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        LoginAttemptService loginAttemptService = applicationContext.getBean(LoginAttemptService.class);
+        if (loginAttemptService != null) {
+            String ip = getClientIP();
+            if (loginAttemptService.isBlocked(ip)) {
+                throw new IpBlockedException("IP is blocked");
+            }
+        }
+
         try {
-            final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
             PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
             UserRepository userRepository = applicationContext.getBean(UserRepository.class);
 
@@ -110,4 +124,15 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
         return retrieveUser(username, null);
     }
 
+    private String getClientIP() {
+        HttpServletRequest request =
+            ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
+
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null){
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
+    }
 }
