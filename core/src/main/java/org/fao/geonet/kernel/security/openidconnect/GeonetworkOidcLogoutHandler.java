@@ -39,9 +39,8 @@ import java.net.URISyntaxException;
 /**
  * this is a very simple class.  Since its difficult to determine the GN host/port,
  * we look at the incoming request to create the post-logout URL.
- *
+ * <p>
  * This should be the base geonetwork url - i.e. http://localhost:8080/geonetwork
- *
  */
 public class GeonetworkOidcLogoutHandler implements LogoutSuccessHandler {
 
@@ -53,24 +52,23 @@ public class GeonetworkOidcLogoutHandler implements LogoutSuccessHandler {
 
     public GeonetworkOidcLogoutHandler(OidcClientInitiatedLogoutSuccessHandler oidcClientInitiatedLogoutSuccessHandler) throws URISyntaxException {
         this.oidcClientInitiatedLogoutSuccessHandler = oidcClientInitiatedLogoutSuccessHandler;
-     }
-
+    }
 
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        this.oidcClientInitiatedLogoutSuccessHandler.setPostLogoutRedirectUri( createPostLogoutRedirectUri(request));
+        this.oidcClientInitiatedLogoutSuccessHandler.setPostLogoutRedirectUri(createPostLogoutRedirectUri(request));
 
-        oidcClientInitiatedLogoutSuccessHandler.onLogoutSuccess(request,response,authentication);
+        oidcClientInitiatedLogoutSuccessHandler.onLogoutSuccess(request, response, authentication);
     }
 
     private URI createPostLogoutRedirectUri(HttpServletRequest request) {
-         try {
+        try {
             String protocol = request.getScheme();
             String host = request.getServerName();
             int port = request.getServerPort();
             String path = servletContext.getContextPath();
-            return new URI(protocol+"://"+host+":"+port+path);
+            return new URI(protocol + "://" + host + ":" + port + path);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

@@ -49,17 +49,17 @@ public class OIDCRoleProcessor {
 
 
     public Map<Profile, List<String>> getProfileGroups(OidcIdToken accessToken) {
-        List<String> oidcOriginalRoleNames =  getTokenRoles(accessToken);
+        List<String> oidcOriginalRoleNames = getTokenRoles(accessToken);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-        List<String> roleNames =  simpleConvertRoles(oidcOriginalRoleNames);
+        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
     }
 
-    public Map<Profile, List<String>> getProfileGroups( OAuth2User user) {
-        List<String> oidcOriginalRoleNames =  getTokenRoles(user);
+    public Map<Profile, List<String>> getProfileGroups(OAuth2User user) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(user);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
-        List<String> roleNames =  simpleConvertRoles(oidcOriginalRoleNames);
+        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
     }
@@ -69,53 +69,53 @@ public class OIDCRoleProcessor {
         return getProfile(accessToken.getClaims());
     }
 
-    public Profile getProfile( OAuth2User user) {
+    public Profile getProfile(OAuth2User user) {
         return getProfile(user.getAttributes());
     }
 
 
     public List<String> getTokenRoles(OidcIdToken accessToken) {
-            return getTokenRoles(accessToken.getClaims());
+        return getTokenRoles(accessToken.getClaims());
     }
 
 
-    public List<String> getTokenRoles( OAuth2User user) {
+    public List<String> getTokenRoles(OAuth2User user) {
         return getTokenRoles(user.getAttributes());
     }
 
     //---
 
-    public  List<String> simpleConvertRoles(List<String> originalRoleNames) {
+    public List<String> simpleConvertRoles(List<String> originalRoleNames) {
         return originalRoleNames.stream()
-            .map(x->oidcConfiguration.roleConverter.get(x) == null ? x : oidcConfiguration.roleConverter.get(x))
+            .map(x -> oidcConfiguration.roleConverter.get(x) == null ? x : oidcConfiguration.roleConverter.get(x))
             .distinct()
             .collect(Collectors.toList());
     }
 
 
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, OAuth2User user) {
-        return createAuthorities(roleHierarchy,user.getAttributes());
+        return createAuthorities(roleHierarchy, user.getAttributes());
     }
 
-    public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy,Map<String, Object> claims) {
-        List<String> oidcOriginalRoleNames =  getTokenRoles(claims);
+    public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, Map<String, Object> claims) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(claims);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
 
-        List<String> roleNames =  simpleConvertRoles(oidcOriginalRoleNames);
+        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
         Map<Profile, List<String>> profileGroups = getProfileGroups(roleNames);
 
         List<SimpleGrantedAuthority> authorities = profileGroups.keySet().stream()
-            .map(x-> new SimpleGrantedAuthority(x.toString()))
+            .map(x -> new SimpleGrantedAuthority(x.toString()))
             .collect(Collectors.toList());
 
         return roleHierarchy.getReachableGrantedAuthorities(authorities);
     }
 
     public Profile getProfile(Map<String, Object> attributes) {
-        List<String> oidcOriginalRoleNames =  getTokenRoles(attributes);
+        List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
 
-        List<String> roleNames =  simpleConvertRoles(oidcOriginalRoleNames);
+        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         Map<Profile, List<String>> profileGroups = getProfileGroups(roleNames);
         Profile profile = getMaxProfile(profileGroups);
@@ -124,10 +124,11 @@ public class OIDCRoleProcessor {
 
     /**
      * Assign the best profile for the user based on the profileGroups available.
+     *
      * @param profileGroups profile to scan for best profile.
      */
     //from keycloak
-    public   Profile getMaxProfile(  Map<Profile, List<String>> profileGroups) {
+    public Profile getMaxProfile(Map<Profile, List<String>> profileGroups) {
         Profile maxProfile = null;
 
         for (Profile p : profileGroups.keySet()) {
@@ -147,10 +148,11 @@ public class OIDCRoleProcessor {
 
     /**
      * Get the profiles, and the list of groups for that profile, from the access token.
-      * @return map object with the profile and related groups.
+     *
+     * @return map object with the profile and related groups.
      */
     //from keycloak
-    public   Map<Profile, List<String>> getProfileGroups(List<String> rolesInToken) {
+    public Map<Profile, List<String>> getProfileGroups(List<String> rolesInToken) {
 
         String roleGroupSeparator = oidcConfiguration.groupPermissionSeparator;
         Map<Profile, List<String>> profileGroups = new HashMap<>();
@@ -193,7 +195,7 @@ public class OIDCRoleProcessor {
             if (profileGroups.containsKey(p)) {
                 groups = profileGroups.get(p);
             } else {
-                groups =  new ArrayList<>();
+                groups = new ArrayList<>();
             }
             if (rg_role_groups.length > 1) {
                 groups.add(rg_role_groups[0]);
@@ -214,32 +216,32 @@ public class OIDCRoleProcessor {
      */
     public List<String> getTokenRoles(Map<String, Object> attributes) {
         String pathToRoles = oidcConfiguration.getIdTokenRoleLocation();
-        if ( (pathToRoles == null) || (pathToRoles.trim().isEmpty()) ) {
-            Log.debug(Geonet.SECURITY,"oidc: pathToRoles is null/empty - cannot process");
+        if ((pathToRoles == null) || (pathToRoles.trim().isEmpty())) {
+            Log.debug(Geonet.SECURITY, "oidc: pathToRoles is null/empty - cannot process");
             return new ArrayList<>();
         }
 
         String[] paths = pathToRoles.trim().split("\\.");
-        Map<String,Object> info = attributes;
+        Map<String, Object> info = attributes;
 
-        for(int t=0;t<paths.length;t++) {
+        for (int t = 0; t < paths.length; t++) {
             String path = paths[t];
             Object o = info.get(path);
             if (o == null) {
-                Log.debug(Geonet.SECURITY,"oidc: pathToRoles - cannot find path component named: "+path);
+                Log.debug(Geonet.SECURITY, "oidc: pathToRoles - cannot find path component named: " + path);
                 return new ArrayList<>();
             }
             if (o instanceof Map) {
                 info = (Map<String, Object>) o;
             }
             if (o instanceof List) {
-                if (t == paths.length-1)
+                if (t == paths.length - 1)
                     return new ArrayList<>((List<String>) o);
-                Log.debug(Geonet.SECURITY,"oidc: pathToRoles - found a list instead of item at "+path);
+                Log.debug(Geonet.SECURITY, "oidc: pathToRoles - found a list instead of item at " + path);
                 return new ArrayList<>(); // not expecting to see this
             }
         }
-        Log.debug(Geonet.SECURITY,"oidc: pathToRoles - couldnt find role list - "+pathToRoles);
+        Log.debug(Geonet.SECURITY, "oidc: pathToRoles - couldnt find role list - " + pathToRoles);
         return new ArrayList<>(); // unexpected...
     }
 

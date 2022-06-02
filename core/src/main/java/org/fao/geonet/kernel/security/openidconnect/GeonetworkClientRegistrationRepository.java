@@ -28,19 +28,19 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 
 
 /**
- *  trivial implementation of ClientRegistrationRepository.
- *  We have EXACTLY one - so we can just hardcode it.
+ * trivial implementation of ClientRegistrationRepository.
+ * We have EXACTLY one - so we can just hardcode it.
  */
 public class GeonetworkClientRegistrationRepository implements ClientRegistrationRepository {
 
-     ClientRegistration clientRegistration;
+    ClientRegistration clientRegistration;
 
 
-     public GeonetworkClientRegistrationRepository(GeonetworkClientRegistrationProvider clientRegistrationProvider) throws Exception {
-         if (clientRegistrationProvider == null)
-             throw new Exception("clientRegistration must not be null!");
-         clientRegistration = clientRegistrationProvider.getClientRegistration();
-     }
+    public GeonetworkClientRegistrationRepository(GeonetworkClientRegistrationProvider clientRegistrationProvider) throws Exception {
+        if (clientRegistrationProvider == null)
+            throw new Exception("clientRegistration must not be null!");
+        clientRegistration = clientRegistrationProvider.getClientRegistration();
+    }
 
 
     @Override

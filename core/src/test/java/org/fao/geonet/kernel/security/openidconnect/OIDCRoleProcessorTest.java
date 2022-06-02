@@ -45,7 +45,7 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor result = new OIDCRoleProcessor();
 
         result.oidcConfiguration = new OIDCConfiguration();
-        result.oidcConfiguration.roleConverter =  new HashMap<String, String>() {{
+        result.oidcConfiguration.roleConverter = new HashMap<String, String>() {{
             put("CHANGEME", "CHANGED");
         }};
         result.oidcConfiguration.idTokenRoleLocation = "resource_access.gn-key.roles";
@@ -56,13 +56,13 @@ public class OIDCRoleProcessorTest {
 
     //simple test - just make sure the change map works
     @Test
-    public void testSimpleConvert(){
+    public void testSimpleConvert() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         List<String> roles = Arrays.asList("DO-NOT-CHANGE", "CHANGEME", "DO-NOT-CHANGE2");
         List<String> xformedRoles = oidcRoleProcessor.simpleConvertRoles(roles);
 
-        assertSame(3,xformedRoles.size());
+        assertSame(3, xformedRoles.size());
         assertSame("DO-NOT-CHANGE", xformedRoles.get(0));
         assertSame("CHANGED", xformedRoles.get(1));
         assertSame("DO-NOT-CHANGE2", xformedRoles.get(2));
@@ -70,107 +70,108 @@ public class OIDCRoleProcessorTest {
 
     //change map should remove redundant roles
     @Test
-    public void testSimpleConvertUnique(){
+    public void testSimpleConvertUnique() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //after xform there will be 2 "CHANGED" -- remove one
-        List<String> roles = Arrays.asList("DO-NOT-CHANGE", "CHANGEME", "DO-NOT-CHANGE2","CHANGED");
+        List<String> roles = Arrays.asList("DO-NOT-CHANGE", "CHANGEME", "DO-NOT-CHANGE2", "CHANGED");
         List<String> xformedRoles = oidcRoleProcessor.simpleConvertRoles(roles);
 
-        assertSame(3,xformedRoles.size());
+        assertSame(3, xformedRoles.size());
         assertSame("DO-NOT-CHANGE", xformedRoles.get(0));
         assertSame("CHANGED", xformedRoles.get(1));
         assertSame("DO-NOT-CHANGE2", xformedRoles.get(2));
     }
 
     //no "roles" component
-    public  Map<String, Object> createBadSimpleClaims1(){
+    public Map<String, Object> createBadSimpleClaims1() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
 
 
-        resource_access.put("gn-key",gn_key);
-        claims.put("resource_access",resource_access);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
     //roles isn't a list - its a map
-    public  Map<String, Object> createBadSimpleClaims2(){
+    public Map<String, Object> createBadSimpleClaims2() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, Map> gn_key = new HashMap<>();
 
-        gn_key.put("roles",new HashMap<String,Object>());
+        gn_key.put("roles", new HashMap<String, Object>());
 
-        resource_access.put("gn-key",gn_key);
-        claims.put("resource_access",resource_access);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
     //no gn-key
-    public  Map<String, Object> createBadSimpleClaims3(){
+    public Map<String, Object> createBadSimpleClaims3() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
         Map<String, Map> resource_access = new HashMap<>();
 
 
-        claims.put("resource_access",resource_access);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
     //no resource_access
-    public  Map<String, Object> createBadSimpleClaims4(){
+    public Map<String, Object> createBadSimpleClaims4() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         return claims;
     }
 
     //no resource_access is empty
-    public  Map<String, Object> createBadSimpleClaims5(){
+    public Map<String, Object> createBadSimpleClaims5() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
         Map<String, List> resource_access = new HashMap<>();
 
 
-        claims.put("resource_access",resource_access);
+        claims.put("resource_access", resource_access);
         return claims;
     }
+
     //no resource_access is list
-    public  Map<String, Object> createBadSimpleClaims6(){
+    public Map<String, Object> createBadSimpleClaims6() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
-        List<String> resource_access   = new ArrayList();
+        claims.put("abc", "ABC");
+        List<String> resource_access = new ArrayList();
         resource_access.add("Reviewer");
         resource_access.add("blah");
         resource_access.add("GROUP1:UserAdmin");
         resource_access.add("GROUP2:Editor");
 
 
-        claims.put("resource_access",resource_access);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
 
-    public  Map<String, Object> createSimpleClaims(){
+    public Map<String, Object> createSimpleClaims() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
         Map<String, Map> resource_access = new HashMap<>();
@@ -179,32 +180,32 @@ public class OIDCRoleProcessorTest {
         roles.add("Reviewer");
         roles.add("Administrator");
         roles.add("blah");
-        gn_key.put("roles",roles);
-        resource_access.put("gn-key",gn_key);
-        claims.put("resource_access",resource_access);
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
-    public  Map<String, Object> createSimpleClaims(List<String> roles){
+    public Map<String, Object> createSimpleClaims(List<String> roles) {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","Administrator","blah"]
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
 
-        gn_key.put("roles",roles);
-        resource_access.put("gn-key",gn_key);
-        claims.put("resource_access",resource_access);
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
 
-    public  Map<String, Object> createComplexClaims(){
+    public Map<String, Object> createComplexClaims() {
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("abc","ABC");
+        claims.put("abc", "ABC");
 
         //resource_access.gn-key.roles -> ["Reviewer","blah","GROUP1:UserAdmin","GROUP2:Editor"]
         Map<String, Map> resource_access = new HashMap<>();
@@ -214,9 +215,9 @@ public class OIDCRoleProcessorTest {
         roles.add("blah");
         roles.add("GROUP1:UserAdmin");
         roles.add("GROUP2:Editor");
-        gn_key.put("roles",roles);
-        resource_access.put("gn-key",gn_key);
-        claims.put("resource_access",resource_access);
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
+        claims.put("resource_access", resource_access);
         return claims;
     }
 
@@ -237,8 +238,6 @@ public class OIDCRoleProcessorTest {
         assertEquals("Administrator", roles.get(1));
         assertEquals("blah", roles.get(2));
     }
-
-
 
 
     //all should produce no roles (and not throw)
@@ -291,10 +290,10 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer","blah","Administrator");
+        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        assertEquals(2,profileGroups.size());
+        assertEquals(2, profileGroups.size());
         assertEquals(0, profileGroups.get(Profile.Reviewer).size());
         assertEquals(0, profileGroups.get(Profile.Administrator).size());
     }
@@ -304,10 +303,10 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer","blah","Administrator","GROUP1:UserAdmin","GROUP2:Editor","GROUP1:Editor");
+        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        assertEquals(4,profileGroups.size());
+        assertEquals(4, profileGroups.size());
         assertEquals(0, profileGroups.get(Profile.Reviewer).size());
         assertEquals(0, profileGroups.get(Profile.Administrator).size());
         assertEquals(1, profileGroups.get(Profile.UserAdmin).size());
@@ -323,10 +322,10 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer","blah","Administrator","GROUP1:UserAdmin","GROUP2:Editor","GROUP1:Editor");
+        List<String> roles = Arrays.asList("Reviewer", "blah", "Administrator", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        Profile profile= oidcRoleProcessor.getMaxProfile(profileGroups);
+        Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
         assertEquals(Profile.Administrator, profile);
     }
 
@@ -335,10 +334,10 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList("Reviewer","blah", "GROUP1:UserAdmin","GROUP2:Editor","GROUP1:Editor");
+        List<String> roles = Arrays.asList("Reviewer", "blah", "GROUP1:UserAdmin", "GROUP2:Editor", "GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        Profile profile= oidcRoleProcessor.getMaxProfile(profileGroups);
+        Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
         assertEquals(Profile.UserAdmin, profile);
     }
 
@@ -346,10 +345,10 @@ public class OIDCRoleProcessorTest {
     public void testMaxProfile3() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        List<String> roles = Arrays.asList("Reviewer"  );
+        List<String> roles = Arrays.asList("Reviewer");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        Profile profile= oidcRoleProcessor.getMaxProfile(profileGroups);
+        Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
         assertEquals(Profile.Reviewer, profile);
     }
 
@@ -357,10 +356,10 @@ public class OIDCRoleProcessorTest {
     public void testMaxProfile4() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
-        List<String> roles = Arrays.asList( "GROUP1:Editor");
+        List<String> roles = Arrays.asList("GROUP1:Editor");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        Profile profile= oidcRoleProcessor.getMaxProfile(profileGroups);
+        Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
         assertEquals(Profile.Editor, profile);
     }
 
@@ -369,10 +368,10 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
 
         //blah will be removed (its not a profile)
-        List<String> roles = Arrays.asList( "blah");
+        List<String> roles = Arrays.asList("blah");
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(roles);
 
-        Profile profile= oidcRoleProcessor.getMaxProfile(profileGroups);
+        Profile profile = oidcRoleProcessor.getMaxProfile(profileGroups);
         assertEquals(Profile.Guest, profile); // min
     }
 
@@ -381,16 +380,14 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
         Map<String, Object> claims = createSimpleClaims();
 
-        Profile profile= oidcRoleProcessor.getProfile(claims);
-        assertEquals(Profile.Administrator,profile);
+        Profile profile = oidcRoleProcessor.getProfile(claims);
+        assertEquals(Profile.Administrator, profile);
 
         claims = new HashMap<>();
 
-        profile= oidcRoleProcessor.getProfile(claims);
-        assertEquals(Profile.RegisteredUser,profile); // no claims -> get minimum
+        profile = oidcRoleProcessor.getProfile(claims);
+        assertEquals(Profile.RegisteredUser, profile); // no claims -> get minimum
     }
-
-
 
 
     private RoleHierarchyImpl getRoleHierarchy() {
@@ -408,15 +405,15 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
         RoleHierarchyImpl roleHierarchy = getRoleHierarchy();
 
-        Map<String, Object> claims =  createSimpleClaims(Arrays.asList("Editor"));
+        Map<String, Object> claims = createSimpleClaims(Arrays.asList("Editor"));
 
-        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy,claims);
+        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy, claims);
 
-        assertEquals(3,authorities.size());
+        assertEquals(3, authorities.size());
 
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
     }
 
     @Test
@@ -425,13 +422,13 @@ public class OIDCRoleProcessorTest {
         RoleHierarchyImpl roleHierarchy = getRoleHierarchy();
 
         //no roles -> get min (RegisterdUser)
-        Map<String, Object> claims =  createSimpleClaims(Arrays.asList( ));
+        Map<String, Object> claims = createSimpleClaims(Arrays.asList());
 
-        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy,claims);
+        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy, claims);
 
-        assertEquals(2,authorities.size());
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
+        assertEquals(2, authorities.size());
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
     }
 
     @Test
@@ -439,13 +436,13 @@ public class OIDCRoleProcessorTest {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
         RoleHierarchyImpl roleHierarchy = getRoleHierarchy();
 
-        Map<String, Object> claims =  createSimpleClaims(Arrays.asList( "group1:Editor"));
+        Map<String, Object> claims = createSimpleClaims(Arrays.asList("group1:Editor"));
 
-        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy,claims);
+        Collection<? extends GrantedAuthority> authorities = oidcRoleProcessor.createAuthorities(roleHierarchy, claims);
 
-        assertEquals(3,authorities.size());
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
-        assertTrue( authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
+        assertEquals(3, authorities.size());
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Editor.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.RegisteredUser.toString())));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
     }
 }

@@ -33,7 +33,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String organizationProperty = "";
     public String groupPermissionSeparator = ":";
     public String idTokenRoleLocation = "groups";
-    public Map<String,String> roleConverter= new HashMap<>();
+    public Map<String, String> roleConverter = new HashMap<>();
     public String minimumProfile = "Guest";
     public boolean userProfileUpdateEnabled = true;
     public boolean userGroupUpdateEnabled = true;
@@ -41,25 +41,44 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String roleConverterString = null;
 
 
-
     public String getOrganizationProperty() {
         return organizationProperty;
+    }
+
+    public void setOrganizationProperty(String organizationProperty) {
+        this.organizationProperty = organizationProperty;
     }
 
     public String getGroupPermissionSeparator() {
         return groupPermissionSeparator;
     }
 
+    public void setGroupPermissionSeparator(String groupPermissionSeparator) {
+        this.groupPermissionSeparator = groupPermissionSeparator;
+    }
+
     public String getIdTokenRoleLocation() {
         return idTokenRoleLocation;
+    }
+
+    public void setIdTokenRoleLocation(String idTokenRoleLocation) {
+        this.idTokenRoleLocation = idTokenRoleLocation;
     }
 
     public Map<String, String> getRoleConverter() {
         return roleConverter;
     }
 
-    public Profile getMinimumProfile(){
-       return Profile.findProfileIgnoreCase(minimumProfile);
+    public void setRoleConverter(Map<String, String> roleConverter) {
+        this.roleConverter = roleConverter;
+    }
+
+    public Profile getMinimumProfile() {
+        return Profile.findProfileIgnoreCase(minimumProfile);
+    }
+
+    public void setMinimumProfile(String minimumProfile) {
+        this.minimumProfile = minimumProfile;
     }
 
     @Override
@@ -77,25 +96,17 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         return userProfileUpdateEnabled;
     }
 
+    public void setUserProfileUpdateEnabled(boolean userProfileUpdateEnabled) {
+        this.userProfileUpdateEnabled = userProfileUpdateEnabled;
+    }
+
     @Override
     public boolean isUserGroupUpdateEnabled() {
         return userGroupUpdateEnabled;
     }
 
-    public void setOrganizationProperty(String organizationProperty) {
-        this.organizationProperty = organizationProperty;
-    }
-
-    public void setGroupPermissionSeparator(String groupPermissionSeparator) {
-        this.groupPermissionSeparator = groupPermissionSeparator;
-    }
-
-    public void setIdTokenRoleLocation(String idTokenRoleLocation) {
-        this.idTokenRoleLocation = idTokenRoleLocation;
-    }
-
-    public void setRoleConverter(Map<String, String> roleConverter) {
-        this.roleConverter = roleConverter;
+    public void setUserGroupUpdateEnabled(boolean userGroupUpdateEnabled) {
+        this.userGroupUpdateEnabled = userGroupUpdateEnabled;
     }
 
     // "group1:role1,group2:role2,..."
@@ -107,23 +118,11 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         }
         serialized = serialized.trim();
         String[] items = serialized.split(",");
-        for(String item:items) {
+        for (String item : items) {
             String[] keyValue = item.split(":");
-            result.put(keyValue[0].trim(),keyValue[1].trim());
+            result.put(keyValue[0].trim(), keyValue[1].trim());
         }
-        this.roleConverter=result;
-    }
-
-    public void setMinimumProfile(String minimumProfile) {
-        this.minimumProfile = minimumProfile;
-    }
-
-    public void setUserProfileUpdateEnabled(boolean userProfileUpdateEnabled) {
-        this.userProfileUpdateEnabled = userProfileUpdateEnabled;
-    }
-
-    public void setUserGroupUpdateEnabled(boolean userGroupUpdateEnabled) {
-        this.userGroupUpdateEnabled = userGroupUpdateEnabled;
+        this.roleConverter = result;
     }
 
     //provided to make it easier to set the roleConverter based on a environment variables (string)

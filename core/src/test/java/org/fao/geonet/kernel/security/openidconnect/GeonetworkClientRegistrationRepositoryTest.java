@@ -22,8 +22,7 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
- import org.junit.Test;
-
+import org.junit.Test;
 
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProviderTest.keycloakConfig;
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProviderTest.string2InputStream;
@@ -32,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 public class GeonetworkClientRegistrationRepositoryTest {
 
     @Test
-    public void testRepo() throws  Exception {
+    public void testRepo() throws Exception {
         GeonetworkClientRegistrationProvider clientRegistrationProvider = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             "clientid",

@@ -44,7 +44,7 @@ class SimpleOidcUser {
     private Address address;
 
 
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration,OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken) {
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken) {
         username = idToken.getPreferredUsername();
         if (username == null) {
             username = idToken.getFullName();
@@ -84,7 +84,7 @@ class SimpleOidcUser {
         }
     }
 
-    public void updateUser(User user){
+    public void updateUser(User user) {
         if (!StringUtils.isEmpty(this.getSurname())) {
             user.setSurname(this.getSurname());
         }

@@ -22,8 +22,8 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
- import org.fao.geonet.constants.Geonet;
- import org.fao.geonet.domain.Group;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -46,33 +46,25 @@ import java.util.Map;
 public class OidcUser2GeonetworkUser {
 
     @Autowired
+    OIDCConfiguration oidcConfiguration;
+    @Autowired
+    OIDCRoleProcessor oidcRoleProcessor;
+    @Autowired
+    SimpleOidcUserFactory simpleOidcUserFactory;
+    @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private GroupRepository groupRepository;
-
     @Autowired
     private LanguageRepository langRepository;
-
     @Autowired
     private UserGroupRepository userGroupRepository;
-
     @Autowired
     private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
-    @Autowired
-    OIDCConfiguration oidcConfiguration;
-
-    @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
-
-    @Autowired
-    SimpleOidcUserFactory simpleOidcUserFactory;
-
-
     public UserDetails getUserDetails(OidcIdToken idToken, boolean withDbUpdate) {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken);
-        if ( (simpleUser.getUsername()== null) || simpleUser.getUsername().isEmpty())
+        if ((simpleUser.getUsername() == null) || simpleUser.getUsername().isEmpty())
             return null;
 
         User user;
@@ -106,8 +98,9 @@ public class OidcUser2GeonetworkUser {
 
     /**
      * Update users group information in the database.
+     *
      * @param profileGroups object containing the profile and related groups.
-     * @param user to apply the changes to.
+     * @param user          to apply the changes to.
      */
     //from keycloak
     private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {

@@ -28,9 +28,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.as.AuthorizationServerMetadata;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -39,7 +36,6 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.util.FileCopyUtils;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,11 +48,11 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- *   Reads from the configuration and creates a spring-security ClientRegistration.
- *   This defines how to communicate with the remote oauth2 open id connect server.
- *
- *   This is based on the Spring ClientRegistration and ClientRegistrations code.
- *   However, most of that code is private, so its brought here for use.
+ * Reads from the configuration and creates a spring-security ClientRegistration.
+ * This defines how to communicate with the remote oauth2 open id connect server.
+ * <p>
+ * This is based on the Spring ClientRegistration and ClientRegistrations code.
+ * However, most of that code is private, so its brought here for use.
  */
 public class GeonetworkClientRegistrationProvider {
 
@@ -68,17 +64,13 @@ public class GeonetworkClientRegistrationProvider {
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
-        clientRegistration = createClientRegistration(metadataResource, clientId,clientSecret);
+        clientRegistration = createClientRegistration(metadataResource, clientId, clientSecret);
     }
 
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
-        clientRegistration = createClientRegistration(inputStream, clientId,clientSecret);
-    }
-
-    public ClientRegistration getClientRegistration() {
-        return clientRegistration;
+        clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
     }
 
     /**
@@ -94,12 +86,10 @@ public class GeonetworkClientRegistrationProvider {
     public static String inputStreamToString(InputStream inputStream) throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
             return FileCopyUtils.copyToString(reader);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
-
 
     //taken from spring's ClientRegistrations#getClientAuthenticationMethod
     private static ClientAuthenticationMethod getClientAuthenticationMethod(String issuer,
@@ -129,21 +119,26 @@ public class GeonetworkClientRegistrationProvider {
         }
     }
 
+    public ClientRegistration getClientRegistration() {
+        return clientRegistration;
+    }
+
     ClientRegistration createClientRegistration(InputStream inputStream,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
-        return createClientRegistration(inputStreamToString(inputStream),"inputstream",clientId,clientSecret);
+        return createClientRegistration(inputStreamToString(inputStream), "inputstream", clientId, clientSecret);
     }
 
     ClientRegistration createClientRegistration(Resource metadataResource,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
-        return createClientRegistration(resourceToString(metadataResource),metadataResource.getFilename(),clientId,clientSecret);
+        return createClientRegistration(resourceToString(metadataResource), metadataResource.getFilename(), clientId, clientSecret);
     }
+
     /**
      * creates a ClientRegistration by reading the standard configuration json (from the IDP server).
      * Also requires the client ID (from server) and client secret (from server).
-     *
+     * <p>
      * Most of this code is from Spring.
      *
      * @param clientId
@@ -153,12 +148,12 @@ public class GeonetworkClientRegistrationProvider {
      * @throws ParseException
      */
     ClientRegistration createClientRegistration(String jsonServerConfig,
-                                                  String fname,
-                                                  String clientId,
-                                                  String clientSecret) throws IOException, ParseException {
+                                                String fname,
+                                                String clientId,
+                                                String clientSecret) throws IOException, ParseException {
 
         String json = jsonServerConfig;
-        String issuer = "issuer: file:"+fname;
+        String issuer = "issuer: file:" + fname;
 
 
         //from ClientRegistrations#withProviderConfiguration
@@ -173,12 +168,12 @@ public class GeonetworkClientRegistrationProvider {
         List<String> scopes = getScopes(oidcMetadata);
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
-        ClientRegistration.Builder builder= ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)
+        ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)
             .userNameAttributeName(IdTokenClaimNames.SUB)
             .scope(scopes)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .clientAuthenticationMethod(method)
-           .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
+            .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
             //.redirectUriTemplate("{baseUrl}/signin")
             .authorizationUri(oidcMetadata.getAuthorizationEndpointURI().toASCIIString())
             .providerConfigurationMetadata(configurationMetadata)

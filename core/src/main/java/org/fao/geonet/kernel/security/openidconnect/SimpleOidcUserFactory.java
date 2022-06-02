@@ -35,6 +35,6 @@ public class SimpleOidcUserFactory {
 
 
     public SimpleOidcUser create(OidcIdToken idToken) {
-        return new SimpleOidcUser(oidcConfiguration,oidcRoleProcessor,idToken);
+        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken);
     }
 }

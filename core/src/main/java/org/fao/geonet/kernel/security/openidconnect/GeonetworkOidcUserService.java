@@ -25,10 +25,8 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -37,15 +35,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 
 
 public class GeonetworkOidcUserService extends OidcUserService {
-
 
 
     @Autowired
@@ -76,7 +68,7 @@ public class GeonetworkOidcUserService extends OidcUserService {
         return user;
     }
 
-    public   Collection<? extends GrantedAuthority> createAuthorities( OAuth2User user) {
-        return oidcRoleProcessor.createAuthorities(roleHierarchy,user);
+    public Collection<? extends GrantedAuthority> createAuthorities(OAuth2User user) {
+        return oidcRoleProcessor.createAuthorities(roleHierarchy, user);
     }
 }

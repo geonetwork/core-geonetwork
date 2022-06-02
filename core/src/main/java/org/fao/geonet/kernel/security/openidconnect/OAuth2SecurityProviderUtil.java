@@ -23,15 +23,12 @@
 package org.fao.geonet.kernel.security.openidconnect;
 
 import org.fao.geonet.kernel.security.SecurityProviderUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-
-import javax.transaction.Transactional;
 
 public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
 
@@ -55,10 +52,10 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
     public UserDetails getUserDetails(Authentication auth, boolean withDbUpdate) {
         if (auth != null && auth.getPrincipal() instanceof OidcUser) {
             OidcUser user = (OidcUser) auth.getPrincipal();
-            OidcIdToken idToken= user.getIdToken();
-            return oidcUser2GeonetworkUser.getUserDetails(idToken,withDbUpdate);
+            OidcIdToken idToken = user.getIdToken();
+            return oidcUser2GeonetworkUser.getUserDetails(idToken, withDbUpdate);
 
-           // return keycloakUserUtils.getUserDetails(((KeycloakPrincipal) auth.getPrincipal()).getKeycloakSecurityContext().getToken(), false);
+            // return keycloakUserUtils.getUserDetails(((KeycloakPrincipal) auth.getPrincipal()).getKeycloakSecurityContext().getToken(), false);
         } else {
             // If unknown auth class then return null.
             // This will occur when it is an anonymous user.

@@ -44,7 +44,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -61,8 +60,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response, AuthenticationException failed)
         throws IOException, ServletException {
-        super.unsuccessfulAuthentication(request,response,failed);
+        super.unsuccessfulAuthentication(request, response, failed);
     }
+
     @Override
 
     protected void successfulAuthentication(HttpServletRequest request,
@@ -77,7 +77,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authResult;
 
-        if ( (oAuth2AuthenticationToken.getPrincipal() == null) || (!(oAuth2AuthenticationToken.getPrincipal() instanceof OidcUser)) )
+        if ((oAuth2AuthenticationToken.getPrincipal() == null) || (!(oAuth2AuthenticationToken.getPrincipal() instanceof OidcUser)))
             throw new IOException("problem with principle - null or incorrect type"); // this shouldn't happen
 
         OidcUser oidcUser = (OidcUser) oAuth2AuthenticationToken.getPrincipal();
@@ -102,8 +102,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             } catch (URISyntaxException e) {
                 response.sendRedirect(request.getContextPath());
             }
-        }
-        else {
+        } else {
             response.sendRedirect(request.getContextPath());
         }
 
@@ -112,7 +111,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             try {
                 response.setLocale(LocaleUtils.toLocale(oidcUser.getLocale()));
             } catch (IllegalArgumentException e) {
-                Log.warning(Geonet.SECURITY, "Unable to parse oidc locale " + oidcUser.getLocale() +  ": " + e.getMessage());
+                Log.warning(Geonet.SECURITY, "Unable to parse oidc locale " + oidcUser.getLocale() + ": " + e.getMessage());
             }
         }
 
@@ -125,25 +124,24 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
 
 
-
     }
 
 
     public String findQueryParameter(HttpServletRequest request, String parmName) {
-       if (request.getQueryString() == null)
-           return null;
+        if (request.getQueryString() == null)
+            return null;
         try {
-            String uri = request.getContextPath()+"?"+request.getQueryString();
+            String uri = request.getContextPath() + "?" + request.getQueryString();
             MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
             if (!parameters.containsKey(parmName))
                 return null;
-            String result =  parameters.getFirst(parmName);
+            String result = parameters.getFirst(parmName);
             return result;
-        } catch ( Exception e) {
-           return null;
+        } catch (Exception e) {
+            return null;
         }
     }
 
-    }
+}

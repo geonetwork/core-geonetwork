@@ -22,10 +22,9 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
- import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.junit.Test;
-
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 
 import java.time.Instant;
@@ -34,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
- import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class SimpleOidcUserFactoryTest {
@@ -51,35 +50,35 @@ public class SimpleOidcUserFactoryTest {
     @Test
     public void testCreation() throws Exception {
         SimpleOidcUserFactory factory = createFactory();
-        OidcIdToken idToken =   createToken();
+        OidcIdToken idToken = createToken();
         SimpleOidcUser user = factory.create(idToken);
 
         assertNotNull(user);
-        assertEquals("user@example.com",user.getUsername());
-        assertEquals("ngiven",user.getFirstname());
-        assertEquals("nfamily",user.getSurname());
-        assertEquals("user@example.com",user.getEmail());
-        assertEquals("geocat",user.getOrganisation());
+        assertEquals("user@example.com", user.getUsername());
+        assertEquals("ngiven", user.getFirstname());
+        assertEquals("nfamily", user.getSurname());
+        assertEquals("user@example.com", user.getEmail());
+        assertEquals("geocat", user.getOrganisation());
 
         assertEquals(Profile.Administrator.toString(), user.getProfile());
     }
 
-    public OidcIdToken createToken( ) throws  Exception {
+    public OidcIdToken createToken() throws Exception {
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("preferred_username","user@example.com");
-        claims.put("family_name","nfamily");
-        claims.put("given_name","ngiven");
-        claims.put("email","user@example.com");
-        claims.put("organization","geocat");
+        claims.put("preferred_username", "user@example.com");
+        claims.put("family_name", "nfamily");
+        claims.put("given_name", "ngiven");
+        claims.put("email", "user@example.com");
+        claims.put("organization", "geocat");
         Map<String, Map> resource_access = new HashMap<>();
         Map<String, List> gn_key = new HashMap<>();
         List roles = new ArrayList();
         roles.add("Administrator");
-        gn_key.put("roles",roles);
-        resource_access.put("gn-key",gn_key);
+        gn_key.put("roles", roles);
+        resource_access.put("gn-key", gn_key);
 
-        claims.put("resource_access",resource_access);
+        claims.put("resource_access", resource_access);
 
 
         OidcIdToken idToken = new OidcIdToken("d", Instant.now(), Instant.now().plusSeconds(3600), claims);
@@ -89,18 +88,18 @@ public class SimpleOidcUserFactoryTest {
     @Test
     public void testUpdateUser() throws Exception {
         SimpleOidcUserFactory factory = createFactory();
-        OidcIdToken idToken =   createToken();
+        OidcIdToken idToken = createToken();
         SimpleOidcUser user = factory.create(idToken);
         User userGN = new User();
         userGN.setUsername(user.getUsername());
         user.updateUser(userGN);
 
-        assertEquals("user@example.com",userGN.getUsername());
-        assertEquals("ngiven",userGN.getName());
-        assertEquals("nfamily",userGN.getSurname());
-        assertEquals("user@example.com",userGN.getEmail());
-        assertEquals("geocat",userGN.getOrganisation());
+        assertEquals("user@example.com", userGN.getUsername());
+        assertEquals("ngiven", userGN.getName());
+        assertEquals("nfamily", userGN.getSurname());
+        assertEquals("user@example.com", userGN.getEmail());
+        assertEquals("geocat", userGN.getOrganisation());
 
-        assertEquals(Profile.Administrator , userGN.getProfile());
+        assertEquals(Profile.Administrator, userGN.getProfile());
     }
 }

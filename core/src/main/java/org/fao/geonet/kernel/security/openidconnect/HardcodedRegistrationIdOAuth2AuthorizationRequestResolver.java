@@ -48,7 +48,7 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
         this.clientRegistrationRepository = clientRegistrationRepository;
         this.authorizationRequestBaseUri = authorizationRequestBaseUri;
         this.authorizationRequestMatcher = new AntPathRequestMatcher(authorizationRequestBaseUri);
-        wrappedResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository,authorizationRequestBaseUri);
+        wrappedResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, authorizationRequestBaseUri);
     }
 
     @Override
@@ -58,20 +58,20 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
             return null;
         }
 
-         HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
+        HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
             @Override
             public String getParameter(String name) {
                 if (!name.equals("action"))
                     return super.getParameter(name);
                 String value = super.getParameter(name);
-                if (value ==null)
+                if (value == null)
                     return "login";
                 return value;
             }
 
         };
 
-        return wrappedResolver.resolve(wrappedRequest,CLIENTREGISTRATION_NAME);
+        return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
     }
 
     @Override
@@ -82,14 +82,14 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                 if (!name.equals("action"))
                     return super.getParameter(name);
                 String value = super.getParameter(name);
-                if (value ==null)
+                if (value == null)
                     return "authorize";
                 return value;
             }
 
         };
 
-        return wrappedResolver.resolve(wrappedRequest,CLIENTREGISTRATION_NAME);
+        return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
     }
 
 }
