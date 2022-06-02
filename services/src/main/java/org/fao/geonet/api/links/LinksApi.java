@@ -75,8 +75,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
@@ -185,7 +187,7 @@ public class LinksApi {
         if (filter != null) {
             Integer stateToMatch = null;
             String url = null;
-            String associatedRecord = null;
+            List<String> associatedRecords = null;
             if (filter.has("lastState")) {
                 stateToMatch = 0;
                 if (filter.getString("lastState").equalsIgnoreCase("ok")) {
@@ -200,10 +202,12 @@ public class LinksApi {
             }
 
             if (filter.has("records")) {
-                associatedRecord = filter.getString("records");
+                associatedRecords = Arrays.stream(
+                    filter.getString("records").split(" ")
+                ).collect(Collectors.toList());
             }
 
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
