@@ -37,8 +37,25 @@
              gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
       $scope.filter = {};
+      $scope.selections = [];
+      $scope.selectedSelection = {};
+      $scope.selectionFilter = '';
       $scope.groupLinkFilter = null;
       $scope.groupOwnerIdFilter = null;
+
+      $http.get('../api/selections').then(function(r) {
+        Object.keys(r.data).map(function(k) {
+          $scope.selections.push({
+            id: k,
+            count: r.data[k],
+            label: $translate.instant(k) + (r.data[k] ? ' (' + r.data[k] + ')' : '')
+          });
+        });
+        $scope.selections = $scope.selections.filter(function(s) {
+          return s.count > 0;
+        });
+        $scope.selections.push({id: '', label: ''});
+      });
 
       $scope.triggerSearch = function() {
         $('#bstable').bootstrapTable('refresh');
@@ -72,6 +89,18 @@
 
       $scope.$watch('groupIdFilter', $scope.triggerSearch);
       $scope.$watch('groupOwnerIdFilter', $scope.triggerSearch);
+      $scope.$watch('selectionFilter', $scope.triggerSearch);
+      $scope.$watch('selectedSelection.id', function(n,o) {
+        if (angular.isDefined(n) && n !== o) {
+          if (n != '') {
+            $http.get('../api/selections/' + n).then(function(r) {
+              $scope.selectionFilter = r.data.join(' ');
+            });
+          } else {
+            $scope.selectionFilter = '';
+          }
+        }
+      });
 
       $element.on('post-body.bs.table', function() {
         $element.find('a[data-job-key]').click(function(event) {
@@ -114,6 +143,14 @@
           },
 
           queryParams: function(params) {
+            if ($scope.selectionFilter != '') {
+              var filter = {};
+              if (params.filter) {
+                filter = angular.fromJson(params.filter);
+              }
+              filter.records = $scope.selectionFilter;
+              params.filter = angular.toJson(filter);
+            }
             $scope.filter = {
               groupIdFilter: $scope.groupIdFilter == 'undefined' ? '' : $scope.groupIdFilter,
               groupOwnerIdFilter: $scope.groupOwnerIdFilter == 'undefined' ? '' : $scope.groupOwnerIdFilter,
