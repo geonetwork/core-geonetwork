@@ -587,7 +587,8 @@
         <xsl:attribute name="uuid" select="Orcid"/>
       </xsl:if>
       <xsl:variable name="name"
-                    select="if (collectivity_author) then collectivity_author
+                    select="if (name) then name
+                            else if (collectivity_author) then collectivity_author
                             else concat(LastName, ' ', FirstName)"/>
       <xsl:if test="$name != ''">
         <gmd:individualName>
