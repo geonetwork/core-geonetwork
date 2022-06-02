@@ -282,9 +282,17 @@
 
     <!-- Print service: MapFish -->
     <dependency>
+      <groupId>com.github.librepdf</groupId>
+      <artifactId>openpdf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <exclusions>
+        <exclusion>
+          <groupId>com.lowagie</groupId>
+          <artifactId>itext</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>

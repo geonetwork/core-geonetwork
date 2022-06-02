@@ -428,11 +428,11 @@
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
-      <!--dependency>
-        <groupId>com.lowagie</groupId>
-        <artifactId>itext</artifactId>
-        <version>2.0.6</version>
-      </dependency-->
+      <dependency>
+        <groupId>com.github.librepdf</groupId>
+        <artifactId>openpdf</artifactId>
+        <version>1.3.26</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
@@ -912,19 +912,11 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.20</version>
       </dependency>
-      <!-- Not permitted under oracle licensing rules
-      <dependency>
-        <groupId>ojdbc</groupId>
-        <artifactId>ojdbc</artifactId>
-        <version>14</version>
-      </dependency>
-      -->
-      <!-- Oracle changed policy, this is from maven central -->
-      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
       <dependency>
          <groupId>com.oracle.database.jdbc</groupId>
          <artifactId>ojdbc8</artifactId>
          <version>19.6.0.0</version>
+         <!-- Oracle Free Use Terms and Conditions (FUTC) -->
        </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
@@ -1108,14 +1100,8 @@
       </dependency>
       <dependency>
         <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf-itext5</artifactId>
+        <artifactId>flying-saucer-pdf-openpdf</artifactId>
         <version>${flying-saucer}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -1573,7 +1559,7 @@
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
     <jackson.version>2.10.4</jackson.version>
-    <flying-saucer>9.0.7</flying-saucer>
+    <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
     <log4j2.version>2.17.2</log4j2.version>
