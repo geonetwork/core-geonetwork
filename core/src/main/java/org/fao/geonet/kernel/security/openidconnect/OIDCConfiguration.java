@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class OIDCConfiguration implements SecurityProviderConfiguration {
 
-    public String organizationProperty = "";
+    public String organizationProperty = "organization";
     public String groupPermissionSeparator = ":";
     public String idTokenRoleLocation = "groups";
     public Map<String, String> roleConverter = new HashMap<>();

@@ -42,6 +42,7 @@ public class SimpleOidcUserFactoryTest {
     public SimpleOidcUserFactory createFactory() {
         SimpleOidcUserFactory factory = new SimpleOidcUserFactory();
         factory.oidcConfiguration = new OIDCConfiguration();
+        factory.oidcConfiguration.setIdTokenRoleLocation("resource_access.gn-key.roles");
         factory.oidcRoleProcessor = new OIDCRoleProcessor();
         factory.oidcRoleProcessor.oidcConfiguration = factory.oidcConfiguration;
         return factory;
