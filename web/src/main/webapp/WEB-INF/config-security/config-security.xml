@@ -56,6 +56,7 @@
 
   <import resource="config-security-${geonetwork.security.type:default}.xml"/>
   <!--<import resource="config-security-keycloak.xml"/> -->
+  <!--<import resource="config-security-openidconnect.xml"/> -->
   <!--<import resource="config-security-ldap.xml"/>-->
   <!--<import resource="config-security-ldap-recursive.xml"/>-->
   <!-- <import resource="config-security-ecas.xml"/> -->

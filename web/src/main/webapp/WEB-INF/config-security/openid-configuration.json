@@ -1,0 +1,7 @@
+# IDP server metadata configuration is available from your IDP server;
+#     keycloak: http://localhost:8080/realms/{realm}/.well-known/openid-configuration
+#     azure AD: https://login.microsoftonline.com/00000000-0000-0000-0000-000000000000/v2.0/.well-known/openid-configuration
+#               where 00000000-0000-0000-0000-000000000000 is the directory (tenant) ID
+#
+#
+# download that file and put it here!

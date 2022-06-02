@@ -35,6 +35,7 @@ import org.springframework.security.authentication.event.AbstractAuthenticationE
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.switchuser.AuthenticationSwitchUserEvent;
 
 /**
@@ -70,7 +71,11 @@ public class UpdateTimestampListener implements
                 } else {
                     if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
                         username = ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
-                    } else {
+                    }
+                    else if (principal instanceof OidcUser) {
+                        username =  ((OidcUser)principal).getPreferredUsername();
+                    }
+                    else {
                         username = principal.toString();
                     }
                 }
