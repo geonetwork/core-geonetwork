@@ -623,16 +623,19 @@
   <xsl:template match="mrd:onLine/*[
                           cit:protocol/*/text() = 'WWW:OPENSEARCH'
                           and normalize-space(cit:description/gco:CharacterString) = ''
-                          and cit:linkage/*/text() = ('https://opensearch.ifremer.fr/', 'https://cmr.earthdata.nasa.gov/opensearch/')]" priority="100">
+                          and cit:linkage/*/text() = ('https://opensearch.ifremer.fr',
+                            'https://opensearch.ifremer.fr/',
+                            'https://cmr.earthdata.nasa.gov/opensearch',
+                            'https://cmr.earthdata.nasa.gov/opensearch/')]" priority="100">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates select="cit:linkage|cit:protocol|cit:applicationProfile|cit:name"/>
       <cit:description>
         <gco:CharacterString>
           <xsl:variable name="url" select="cit:linkage/*/text()"/>
-          <xsl:value-of select="if ($url = 'https://opensearch.ifremer.fr/')
+          <xsl:value-of select="if (starts-with($url, 'https://opensearch.ifremer.fr'))
                                 then 'OSISAF'
-                                else if ($url = 'https://cmr.earthdata.nasa.gov/opensearch/')
+                                else if (starts-with($url, 'https://cmr.earthdata.nasa.gov/opensearch'))
                                 then 'NASA' else ''"/></gco:CharacterString>
       </cit:description>
       <xsl:apply-templates select="cit:function|cit:protocolRequest"/>
