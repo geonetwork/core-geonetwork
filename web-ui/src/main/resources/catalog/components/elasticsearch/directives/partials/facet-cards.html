@@ -1,0 +1,38 @@
+<div data-ng-repeat="(k, facet) in searchInfo.aggregations[key].buckets"
+     data-ng-show="facet.key"
+     data-ng-class="isInspire ? ('bg-iti-' + (facet.key | facetCssClassCode: isInspire)) : ''"
+     class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
+  <div class="panel panel-default gn-facet-{{key}}">
+    <div class="panel-body">
+      <a class="clearfix"
+         title="{{facet.key}}"
+         role="link"
+         data-ng-init="field = (aggResponse.meta && aggResponse.meta.field)
+                              || key;
+                      value = aggResponse.meta && aggResponse.meta.wildcard
+                              ? (facet.key + '*') : facet.key"
+         data-ng-href='#/search?query_string={"{{field}}": {"{{value === missingValue ? "%23MISSING%23" : value}}": true} }'>
+        <!-- TODOES Link label to icons? -->
+        <i data-ng-class="isInspire
+                        ? 'gn-icon iti-' + (facet.key | facetCssClassCode: isInspire)
+                        : 'gn-icon-' + (facet.key | facetCssClassCode: isInspire)"
+           class="fa fa-2x pull-left"
+           data-ng-show="isInspire
+                        || field === 'cl_topic.key'
+                        || field === 'resourceType'
+                        || field === 'cl_hierarchyLevel.key'">
+        </i>
+        <h2 data-ng-show="isInspire"
+            class="inspire-{{(facet.key | facetCssClassCode: isInspire)}}-{{iso2lang}}">
+          <span class="inspire-label clamp-2"></span>
+        </h2>
+        <h2 data-ng-hide="isInspire">
+          <span class="clamp-2">{{facet.key | facetTranslator: key | capitalize}}</span>
+        </h2>
+      </a>
+    </div>
+    <div class="panel-footer">
+      <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
+    </div>
+  </div>
+</div>

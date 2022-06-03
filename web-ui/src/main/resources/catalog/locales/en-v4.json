@@ -190,6 +190,8 @@
   "replaceByThoseCategories-help": "Remove record categories and then add (checked with +) or remove (checkbox with -) selected categories.",
   "clearValidationStatus": "Clear validation status",
   "addThoseOperations-help": "Append (checked with +) or remove (checkbox with -) selected privileges.",
+  "privilegesNeededForPublicationRecordGroupOnly-true": "To publish a record, you need to be administrator or reviewer of record group",
+  "privilegesNeededForPublicationRecordGroupOnly-false": "To publish a record, you need to be administrator or reviewer of record group or reviewer of a group with editing rights.",
   "replaceByThoseOperations-help": "Remove record priviliges and then add (checked with +) or remove (checkbox with -) selected privileges.",
   "ui-dateFormat": "Date format",
   "ui-dateFormat-help": "Format of the dates in record default view.",

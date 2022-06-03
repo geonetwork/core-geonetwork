@@ -196,32 +196,6 @@ public class DefaultStatusActions implements StatusActions {
         return unchanged;
     }
 
-    /**
-     * This apply specific rules depending on status change.
-     * The default rules are:
-     * <ul>
-     * <li>DISABLED When approved, the record is automatically published.</li>
-     * <li>When draft or rejected, unpublish the record.</li>
-     * </ul>
-     *
-     * @param status
-     * @throws Exception
-     */
-    private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
-        String statusId = status.getStatusValue().getId() + "";
-        if (statusId.equals(StatusValue.Status.APPROVED)) {
-            // setAllOperations(mid); - this is a short cut that could be enabled
-            AccessManager accessManager = context.getBean(AccessManager.class);
-            if (!accessManager.canReview(context, String.valueOf(status.getMetadataId()))) {
-                throw new SecurityException(String.format(
-                    "You can't edit record with ID %s",
-                    String.valueOf(status.getMetadataId())));
-            }
-        } else if (statusId.equals(StatusValue.Status.DRAFT)) {
-            unsetAllOperations(status.getMetadataId());
-        }
-    }
-
 
     /**
      * Send email to a list of users. The list of users is defined based on the

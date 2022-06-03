@@ -120,51 +120,13 @@
         </div>
       </div>
       <div class="row">
-        <span data-ng-show="homeFacet.key.indexOf('th_httpinspireeceuropaeutheme') !== 0"
-              data-ng-init="aggResponse = searchInfo.aggregations[homeFacet.key]"
-              data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets
-                                | orderBy:facetSorter(searchInfo.aggregations[homeFacet.key], homeFacet.key) track by facet.key"
-              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default gn-facet-{{homeFacet.key}}">
-            <div class="panel-body">
-              <a class="clearfix"
-                title="{{facet.key}}"
-                role="link"
-                data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key; value = aggResponse.meta && aggResponse.meta.wildcard ? (facet.key + '*') : facet.key"
-                data-ng-href='#/search?query_string={"{{field}}": {"{{value}}": true} }'>
-                <!-- TODOES Link label to icons? -->
-                <i class="fa fa-2x gn-icon-{{facet.key.replace('/', '').replace(' ', '')}} pull-left"
-                   data-ng-show="homeFacet.key === 'cl_topic.key' || homeFacet.key === 'cl_hierarchyLevel.key'">
-                </i>
-                <h2>
-                  <span class="clamp-2">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
-            </div>
-          </div>
-        </span>
-        <!-- TODOES Sort alpha -->
-        <span data-ng-repeat="(key, facet) in searchInfo.aggregations['th_httpinspireeceuropaeutheme-theme_tree.key'].buckets"
-              data-ng-show="homeFacet.key.indexOf('th_httpinspireeceuropaeutheme') === 0"
-              data-ng-init="code = facet.key.slice(facet.key.lastIndexOf('/')+1)"
-              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic bg-iti-{{::code}}">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <a class=" clearfix"
-                 data-ng-href='#/search?query_string={"th_httpinspireeceuropaeutheme-theme_tree.key": {"{{facet.key}}": true} }'>
-                <i class="fa fa-2x gn-icon iti-{{::code}} pull-left"></i>
-                <h2 class="inspire-{{::code}}-{{iso2lang}}">
-                  <span class="inspire-label clamp-2"></span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}</div>
-          </div>
-        </span>
+        <div data-ng-if="homeFacet"
+             es-facet-cards="homeFacet.key"
+             data-home-facet="homeFacet"
+             data-search-info="searchInfo"
+             data-agg-response="aggResponse"
+             data-agg-config="aggConfig"
+        />
       </div>
     </div>
     <div data-ng-show="searchInfo.aggregations[homeFacet.lastKey].buckets.length > 0">
@@ -172,27 +134,13 @@
         <h1 class="col-md-12" data-translate="">{{('facet-' + homeFacet.lastKey) | facetKeyTranslator}}</h1>
       </div>
       <div class="row">
-        <div data-ng-repeat="(key, facet) in searchInfo.aggregations[homeFacet.lastKey].buckets"
-             data-ng-show="facet.key"
-             class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default gn-facet-{{homeFacet.lastKey}}">
-            <div class="panel-body">
-              <a title="{{facet.key}}"
-                 class="clearfix"
-                 data-ng-href='#/search?query_string={"{{homeFacet.lastKey}}": {"{{facet.key}}": true} }'>
-                <i class="fa fa-2x gn-icon-{{facet.key.replace('/', '').replace(' ', '')}} pull-left"
-                   data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'cl_hierarchyLevel.key'">
-                </i>
-                <h2>
-                  <span class="clamp-2">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
-            </div>
-          </div>
-        </div>
+        <div data-ng-if="homeFacet.lastKey"
+             es-facet-cards="homeFacet.lastKey"
+             data-home-facet="homeFacet"
+             data-search-info="searchInfo"
+             data-agg-response="aggResponse"
+             data-agg-config="aggConfig"
+        />
       </div>
     </div>
   </div>

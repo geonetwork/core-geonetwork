@@ -42,7 +42,8 @@
      * {
      *   'tag': {
      *     'world': true,
-     *     'vector': true
+     *     'vector': true,
+     *     '#MISSING#': true
      *   },
      *   'availableInService' : {
      *     'availableInViewService': '+linkProtocol:\/OGC:WMS.*\/'
@@ -113,7 +114,11 @@
         var value = nodeName.endsWith('*')
           ? nodeName.replace(' ', '\\\\ ')
           : '"' + nodeName + '"';
-        query_string += (node ? '' : '-') + indexKey + ':' + value;
+        if (nodeName === '#MISSING#') {
+          query_string += '(' + (node ? '-' : '') + '_exists_:' + indexKey + ')';
+        } else {
+          query_string += (node ? '' : '-') + indexKey + ':' + value;
+        }
       }
       return query_string
     }

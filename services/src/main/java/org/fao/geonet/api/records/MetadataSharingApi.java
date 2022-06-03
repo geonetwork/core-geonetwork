@@ -266,9 +266,7 @@ public class MetadataSharingApi {
 
         //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
         //--- and are not sent to the server. So we cannot remove them
-        UserSession us = ApiUtils.getUserSession(session);
-        boolean isAdmin = Profile.Administrator == us.getProfile();
-        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+        if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             skipAllReservedGroup = true;
         }
 
@@ -1002,21 +1000,13 @@ public class MetadataSharingApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-
-        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
-        //--- and are not sent to the server. So we cannot remove them
-        UserSession us = ApiUtils.getUserSession(session);
-        boolean isAdmin = Profile.Administrator == us.getProfile();
-        boolean isMdGroupReviewer = accessManager.getReviewerGroups(us).contains(metadata.getSourceInfo().getGroupOwner());
-        boolean isReviewOperationAllowedOnMdForUser = accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
-        boolean isPublishForbiden = !isMdGroupReviewer && !isAdmin && !isReviewOperationAllowedOnMdForUser;
-        if (isPublishForbiden) {
+        if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
-                    metadataUuid));
+                metadataUuid, accessManager.getReviewerRule()));
+
         }
 
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -1062,9 +1052,6 @@ public class MetadataSharingApi {
             final AccessManager accessMan = appContext.getBean(AccessManager.class);
             final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
 
-            UserSession us = ApiUtils.getUserSession(session);
-            boolean isAdmin = Profile.Administrator == us.getProfile();
-
             ServiceContext context = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
@@ -1077,7 +1064,7 @@ public class MetadataSharingApi {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
                     boolean skipAllReservedGroup = false;
-                    if (!isAdmin && accessMan.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+                    if (!accessMan.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
                         skipAllReservedGroup = true;
                     }
 

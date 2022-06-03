@@ -56,7 +56,10 @@
       </thead>
       <tbody>
       <tr class="info"
-          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true">
+          data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true"
+          title="{{!isAdminOrReviewer ?
+            (('privilegesNeededForPublicationRecordGroupOnly-' + publicationbyrevieweringroupowneronly) | translate)
+            : ''}}">
         <td><strong>{{('group-' + g.group) | translate}}</strong></td>
         <td data-ng-repeat="key in operations" class="text-center">
           <input type="checkbox"
@@ -108,7 +111,7 @@
 
 <div class="btn-toolbar pull-right">
   <div data-gn-need-help="user-guide/publishing/index.html"
-       data-icon-only="true"></div> 
+       data-icon-only="true"></div>
   <button type="button" class="btn btn-primary"
           id="gn-share-btn-replace"
           title="{{'replaceByThoseOperations-help' | translate}}"

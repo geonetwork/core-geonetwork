@@ -200,14 +200,18 @@
                 }
 
                 // general case
-                if (filterKey==="query_string"){
+                if (filterKey === "query_string"){
                   angular.forEach(JSON.parse(value), function(facetValues, facetKey) {
                     if (typeof facetValues === 'object') {
                       angular.forEach(facetValues, function (values, facetValuesKey) {
-                        var elem = {};
-                        elem[facetValuesKey]=values;
+                        var elem = {}, label = undefined;
+                        if (facetValuesKey === '#MISSING#') {
+                          label = ngSearchFormCtrl.getMissingLabel(facetKey);
+                        }
+                        elem[facetValuesKey] = values;
                         scope.currentFilters.push({
                           key: facetKey,
+                          label: label,
                           value: elem
                         })
                       })
