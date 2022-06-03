@@ -527,7 +527,139 @@
 <script src="https://sextant.ifremer.fr/public/js/603b060a8dff628b5098ac9fa7932c44.js">
 </script>
 <script>
-  var sxtSettings = {"langDetector":{"fromHtmlTag":true,"regexp":"^\/([a-z]+)\/","lang":"fre"},"tabOverflow":{"search":true,"map":true,"panier":true},"defaultContext":"https:\/\/www.ifremer.fr\/sextant_doc\/sextant\/contexte\/defaultContext.xml","sortBy":["changeDate","popularity","-title"],"servicesUrl":{"wms":[{"name":"Ifremer - Oc\u00e9anographie physique","url":"http:\/\/www.ifremer.fr\/services\/wms\/oceanographie_physique?"},{"name":"Ifremer - Biologie","url":"http:\/\/www.ifremer.fr\/services\/wms\/biologie?"},{"name":"Ifremer - G\u00e9ologie","url":"http:\/\/www.ifremer.fr\/services\/wms\/geologie?"},{"name":"Ifremer - Bathym\u00e9trie","url":"http:\/\/www.ifremer.fr\/services\/wms\/bathymetrie?"},{"name":"Ifremer - Imagerie acoustique","url":"http:\/\/www.ifremer.fr\/services\/wms\/imagerie_acoustique?"},{"name":"Ifremer - Granulats marins","url":"http:\/\/www.ifremer.fr\/services\/wms\/granulats_marins?"},{"name":"Ifremer - Surveillance littorale","url":"http:\/\/www.ifremer.fr\/services\/wms\/surveillance_littorale?"},{"name":"Ifremer - SISMER - Donn\u00e9es des navires","url":"http:\/\/www.ifremer.fr\/services\/wms\/sismer?"},{"name":"Ifremer - Photos anciennes","url":"http:\/\/www.ifremer.fr\/services\/photos_anciennes?"},{"name":"Ifremer - Scan littoral","url":"http:\/\/www.ifremer.fr\/ifremerWS\/WS\/wms\/scan-littoral?"},{"name":"Agence des aires marines prot\u00e9g\u00e9es","url":"http:\/\/cartographie.aires-marines.fr\/wms"},{"name":"BRGM G\u00e9ologie","url":"http:\/\/geoservices.brgm.fr\/geologie"},{"name":"BRGM Risques naturels et industriels","url":"http:\/\/geoservices.brgm.fr\/risques"},{"name":"BRGM Observatoire des mat\u00e9riaux","url":"http:\/\/geoservices.brgm.fr\/odmgm?"},{"name":"Cartorisque","url":"http:\/\/cartorisque.prim.net\/wms\/france?"},{"name":"Geolittoral","url":"http:\/\/geolittoral.din.developpement-durable.gouv.fr\/wxs?"},{"name":"Geosignal","url":"http:\/\/www.geosignal.org\/cgi-bin\/wmsmap?"},{"name":"MNHN-INPN","url":"http:\/\/ws.carmencarto.fr\/WMS\/119\/fxx_inpn?"},{"name":"Marine Regions","url":"http:\/\/geo.vliz.be\/geoserver\/MarineRegions\/wms?Request=getCapabilities"},{"name":"SHOM","url":"http:\/\/services.data.shom.fr\/INSPIRE\/wms\/r?version=1.3.0"}],"wmts":[{"name":"Ifremer Photos anciennes et Hyperspectrales","url":"http:\/\/sextant.ifremer.fr\/geowebcache\/service\/wmts?"},{"name":"Emodnet bathymetry","url":"https:\/\/tiles.emodnet-bathymetry.eu\/wmts\/1.0.0\/WMTSCapabilities.xml"},{"name":"IGN - Geoportail Publics","url":"http:\/\/wxs.ign.fr\/gjnr6jsgpv25s148amnxgfsk\/geoportail\/wmts"}]},"localisations":[{"name":"Monde","extent":[-37159402,-13051775,37159402,13051775]}],"layerFilter":false,"graticule":{"type":"wms","url":"http:\/\/www.ifremer.fr\/services\/wms1","layer":"graticule_4326"},"facetConfig":[{"key":"publishedForGroup","index":"_groupPublished","filter":true,"opened":false},{"key":"sextantTheme","tree":true,"filter":true,"opened":false},{"langs":{"eng":"inspireTheme_en","fre":"inspireTheme_fr"}},{"key":"keyword"},{"key":"orgName"},{"key":"createDateYear"},{"key":"mdActions"}],"panier":{"projs":[{"value":"4326","label":"Geographique - Datum WGS84"},{"value":"2154","label":"Lambert - 93"},{"value":"27571","label":"Lambert Zone I - Datum NTF"},{"value":"27572","label":"Lambert Zone II - Datum NTF"},{"value":"27573","label":"Lambert Zone III - Datum NTF"},{"value":"27574","label":"Lambert Zone IV - Datum NTF"},{"value":"27561","label":"Lambert Nord France - Datum NTF"},{"value":"27562","label":"Lambert Centre France - Datum NTF"},{"value":"27563","label":"Lambert Sud France - Datum NTF"},{"value":"27564","label":"Lambert Corse - Datum NTF"},{"value":"2984","label":"Lambert Nouvelle-Cal\u00e9donie - RGNC 91"},{"value":"3163","label":"Lambert Nouvelle-Cal\u00e9donie - RGNC 91-93"},{"value":"2975","label":"La R\u00e9union : RGR92 \/ UTM 40S (m\u00e9trique)"},{"value":"32740","label":"La R\u00e9union : WGS84 \/ UTM 40S (m\u00e9trique)"},{"value":"4471","label":"Mayotte : RGM04 \/ UTM 38S (m\u00e9trique)"},{"value":"32738","label":"Mayotte : WGS84 \/ UTM 38S (m\u00e9trique)"},{"value":"32620","label":"Antilles : WGS84 \/ UTM 20N (m\u00e9trique)"},{"value":"2973","label":"Martinique Fort Desaix"},{"value":"2970","label":"Guadeloupe Saint-Anne"},{"value":"4230","label":"Geographique - Datum ED50"},{"value":"4258","label":"European Terrestrial Reference System 1989 (ETRS89)"},{"value":"3395","label":"Mercator - Datum WGS84 (m\u00e9trique)"},{"value":"3857","label":"Pseudo Mercator - Datum WGS84 (Google, degr\u00e9s)"}],"formats":{"vector":[{"value":"ESRI Shapefile","label":"Shapefile"},{"value":"MapInfo File","label":"MapInfo"},{"value":"GML","label":"GML"},{"value":"KML","label":"KML"},{"value":"GeoJSON","label":"GeoJSON"}],"raster":[{"value":"GTiff","label":"GeoTiff"},{"value":"ECW","label":"ECW"},{"value":"JPEG2000","label":"JPEG2000"}]},"defaults":{"format":"ESRI Shapefile","proj":"4326"}},"theme":"sextant-catalogue","allowLogin":true};
+  var sxtSettings = {
+    'langDetector': {'fromHtmlTag': true, 'regexp': '^\/([a-z]+)\/', 'lang': 'fre'},
+    'tabOverflow': {'search': true, 'map': true, 'panier': true},
+    'defaultContext': 'https:\/\/www.ifremer.fr\/sextant_doc\/sextant\/contexte\/defaultContext.xml',
+    'sortBy': ['changeDate', 'popularity', '-title'],
+    'servicesUrl': {
+      'wms': [{
+        'name': 'Ifremer - Oc\u00e9anographie physique',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/oceanographie_physique?'
+      }, {
+        'name': 'Ifremer - Biologie',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/biologie?'
+      }, {
+        'name': 'Ifremer - G\u00e9ologie',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/geologie?'
+      }, {
+        'name': 'Ifremer - Bathym\u00e9trie',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/bathymetrie?'
+      }, {
+        'name': 'Ifremer - Imagerie acoustique',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/imagerie_acoustique?'
+      }, {
+        'name': 'Ifremer - Granulats marins',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/granulats_marins?'
+      }, {
+        'name': 'Ifremer - Surveillance littorale',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/surveillance_littorale?'
+      }, {
+        'name': 'Ifremer - SISMER - Donn\u00e9es des navires',
+        'url': 'http:\/\/www.ifremer.fr\/services\/wms\/sismer?'
+      }, {
+        'name': 'Ifremer - Photos anciennes',
+        'url': 'http:\/\/www.ifremer.fr\/services\/photos_anciennes?'
+      }, {
+        'name': 'Ifremer - Scan littoral',
+        'url': 'http:\/\/www.ifremer.fr\/ifremerWS\/WS\/wms\/scan-littoral?'
+      }, {
+        'name': 'Agence des aires marines prot\u00e9g\u00e9es',
+        'url': 'http:\/\/cartographie.aires-marines.fr\/wms'
+      }, {
+        'name': 'BRGM G\u00e9ologie',
+        'url': 'http:\/\/geoservices.brgm.fr\/geologie'
+      }, {
+        'name': 'BRGM Risques naturels et industriels',
+        'url': 'http:\/\/geoservices.brgm.fr\/risques'
+      }, {
+        'name': 'BRGM Observatoire des mat\u00e9riaux',
+        'url': 'http:\/\/geoservices.brgm.fr\/odmgm?'
+      }, {'name': 'Cartorisque', 'url': 'http:\/\/cartorisque.prim.net\/wms\/france?'}, {
+        'name': 'Geolittoral',
+        'url': 'http:\/\/geolittoral.din.developpement-durable.gouv.fr\/wxs?'
+      }, {'name': 'Geosignal', 'url': 'http:\/\/www.geosignal.org\/cgi-bin\/wmsmap?'}, {
+        'name': 'MNHN-INPN',
+        'url': 'http:\/\/ws.carmencarto.fr\/WMS\/119\/fxx_inpn?'
+      }, {
+        'name': 'Marine Regions',
+        'url': 'http:\/\/geo.vliz.be\/geoserver\/MarineRegions\/wms?Request=getCapabilities'
+      }, {'name': 'SHOM', 'url': 'http:\/\/services.data.shom.fr\/INSPIRE\/wms\/r?version=1.3.0'}],
+      'wmts': [{
+        'name': 'Ifremer Photos anciennes et Hyperspectrales',
+        'url': 'http:\/\/sextant.ifremer.fr\/geowebcache\/service\/wmts?'
+      }, {
+        'name': 'Emodnet bathymetry',
+        'url': 'https:\/\/tiles.emodnet-bathymetry.eu\/wmts\/1.0.0\/WMTSCapabilities.xml'
+      }, {'name': 'IGN - Geoportail Publics', 'url': 'http:\/\/wxs.ign.fr\/gjnr6jsgpv25s148amnxgfsk\/geoportail\/wmts'}]
+    },
+    'localisations': [{'name': 'Monde', 'extent': [-37159402, -13051775, 37159402, 13051775]}],
+    'layerFilter': false,
+    'graticule': {'type': 'wms', 'url': 'http:\/\/www.ifremer.fr\/services\/wms1', 'layer': 'graticule_4326'},
+    'facetConfig': [{
+      'key': 'publishedForGroup',
+      'index': '_groupPublished',
+      'filter': true,
+      'opened': false
+    }, {'key': 'sextantTheme', 'tree': true, 'filter': true, 'opened': false}, {
+      'langs': {
+        'eng': 'inspireTheme_en',
+        'fre': 'inspireTheme_fr'
+      }
+    }, {'key': 'keyword'}, {'key': 'orgName'}, {'key': 'createDateYear'}, {'key': 'mdActions'}],
+    'panier': {
+      'projs': [{'value': '4326', 'label': 'Geographique - Datum WGS84'}, {
+        'value': '2154',
+        'label': 'Lambert - 93'
+      }, {'value': '27571', 'label': 'Lambert Zone I - Datum NTF'}, {
+        'value': '27572',
+        'label': 'Lambert Zone II - Datum NTF'
+      }, {'value': '27573', 'label': 'Lambert Zone III - Datum NTF'}, {
+        'value': '27574',
+        'label': 'Lambert Zone IV - Datum NTF'
+      }, {'value': '27561', 'label': 'Lambert Nord France - Datum NTF'}, {
+        'value': '27562',
+        'label': 'Lambert Centre France - Datum NTF'
+      }, {'value': '27563', 'label': 'Lambert Sud France - Datum NTF'}, {
+        'value': '27564',
+        'label': 'Lambert Corse - Datum NTF'
+      }, {'value': '2984', 'label': 'Lambert Nouvelle-Cal\u00e9donie - RGNC 91'}, {
+        'value': '3163',
+        'label': 'Lambert Nouvelle-Cal\u00e9donie - RGNC 91-93'
+      }, {'value': '2975', 'label': 'La R\u00e9union : RGR92 \/ UTM 40S (m\u00e9trique)'}, {
+        'value': '32740',
+        'label': 'La R\u00e9union : WGS84 \/ UTM 40S (m\u00e9trique)'
+      }, {'value': '4471', 'label': 'Mayotte : RGM04 \/ UTM 38S (m\u00e9trique)'}, {
+        'value': '32738',
+        'label': 'Mayotte : WGS84 \/ UTM 38S (m\u00e9trique)'
+      }, {'value': '32620', 'label': 'Antilles : WGS84 \/ UTM 20N (m\u00e9trique)'}, {
+        'value': '2973',
+        'label': 'Martinique Fort Desaix'
+      }, {'value': '2970', 'label': 'Guadeloupe Saint-Anne'}, {
+        'value': '4230',
+        'label': 'Geographique - Datum ED50'
+      }, {'value': '4258', 'label': 'European Terrestrial Reference System 1989 (ETRS89)'}, {
+        'value': '3395',
+        'label': 'Mercator - Datum WGS84 (m\u00e9trique)'
+      }, {'value': '3857', 'label': 'Pseudo Mercator - Datum WGS84 (Google, degr\u00e9s)'}],
+      'formats': {
+        'vector': [{'value': 'ESRI Shapefile', 'label': 'Shapefile'}, {
+          'value': 'MapInfo File',
+          'label': 'MapInfo'
+        }, {'value': 'GML', 'label': 'GML'}, {'value': 'KML', 'label': 'KML'}, {
+          'value': 'GeoJSON',
+          'label': 'GeoJSON'
+        }],
+        'raster': [{'value': 'GTiff', 'label': 'GeoTiff'}, {'value': 'ECW', 'label': 'ECW'}, {
+          'value': 'JPEG2000',
+          'label': 'JPEG2000'
+        }]
+      },
+      'defaults': {'format': 'ESRI Shapefile', 'proj': '4326'}
+    },
+    'theme': 'sextant-catalogue',
+    'allowLogin': true
+  }
 </script>
 <script src="https://sextant.ifremer.fr/public/js/99c2e4d623f7969dab5eba214f2a362f.js">
 </script>
