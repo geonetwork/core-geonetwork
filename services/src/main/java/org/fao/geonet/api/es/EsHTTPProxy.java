@@ -179,6 +179,7 @@ public class EsHTTPProxy {
     public static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+        final String id = getSourceString(doc, Geonet.IndexFieldNames.ID);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -224,6 +225,8 @@ public class EsHTTPProxy {
             }
         }
         doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+        doc.put(Edit.Info.Elem.REVIEW,
+            id != null ? accessManager.hasReviewPermission(context, id) : false);
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);
@@ -390,9 +393,13 @@ public class EsHTTPProxy {
                     }
                     final JsonNode sourceNode = node.get("_source");
                     if (sourceNode != null) {
-                        final JsonNode sourceIncludes = sourceNode.get("includes");
-                        if (sourceIncludes != null && sourceIncludes.isArray()) {
-                            ((ArrayNode) sourceIncludes).add("op*");
+                        if (sourceNode.isArray()) {
+                            addRequiredField((ArrayNode) sourceNode);
+                        } else {
+                            final JsonNode sourceIncludes = sourceNode.get("includes");
+                            if (sourceIncludes != null && sourceIncludes.isArray()) {
+                                addRequiredField((ArrayNode) sourceIncludes);
+                            }
                         }
                     }
                 }
@@ -404,6 +411,17 @@ public class EsHTTPProxy {
             handleRequest(context, httpSession, request, response, url, endPoint,
                 body, true, selectionBucket, relatedTypes);
         }
+    }
+
+    /**
+     * {@link #addUserInfo(ObjectNode, ServiceContext)}
+     * rely on fields from the index. Add them to the source.
+     */
+    private void addRequiredField(ArrayNode source) {
+        source.add("op*");
+        source.add(Geonet.IndexFieldNames.GROUP_OWNER);
+        source.add(Geonet.IndexFieldNames.OWNER);
+        source.add(Geonet.IndexFieldNames.ID);
     }
 
     private void addFilterToQuery(ServiceContext context,
