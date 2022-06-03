@@ -30,14 +30,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasG
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -422,6 +415,9 @@ public class MetadataSharingApi {
         Integer userId, MetadataProcessingReport report, HttpServletRequest request) throws Exception {
         if (privileges != null) {
 
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
             boolean sharingChanges = false;
 
             boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
@@ -469,8 +465,8 @@ public class MetadataSharingApi {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
                         if ((p.getGroup() == ReservedGroup.all.getId())) {
                             try {
-                                checkCanPublishToAllGroup(context, dataMan, metadata,
-                                    allowPublishInvalidMd, allowPublishNonApprovedMd);
+                                    checkCanPublishToAllGroup(context, dataMan, messages, metadata,
+                                        allowPublishInvalidMd, allowPublishNonApprovedMd);
                             } catch (Exception ex) {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception
@@ -1013,7 +1009,7 @@ public class MetadataSharingApi {
      * @return
      * @throws Exception
      */
-    private void checkCanPublishToAllGroup(ServiceContext context, DataManager dm, AbstractMetadata metadata,
+    private void checkCanPublishToAllGroup(ServiceContext context, DataManager dm, ResourceBundle messages, AbstractMetadata metadata,
                                            boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
         MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
         IMetadataValidator validator = context.getBean(IMetadataValidator.class);
@@ -1032,7 +1028,7 @@ public class MetadataSharingApi {
                 (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
 
             if (isInvalid) {
-                throw new Exception("The metadata " + metadata.getUuid() + " it's not valid, can't be published.");
+                throw new Exception(String.format(messages.getString("api.metadata.share.errorMetadataNotValid"), metadata.getUuid()));
             }
         }
 
@@ -1043,7 +1039,7 @@ public class MetadataSharingApi {
                 boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
 
                 if (!isApproved) {
-                    throw new Exception("The metadata " + metadata.getUuid() + " it's not approved, can't be published.");
+                    throw new Exception(String.format(messages.getString("api.metadata.share.errorMetadataNotApproved"), metadata.getUuid()));
                 }
             }
         }
@@ -1077,6 +1073,13 @@ public class MetadataSharingApi {
 
             throw new Exception(String.format("User not allowed to publish the metadata %s. You need to be administrator, or reviewer of the metadata group or reviewer with edit privilege on the metadata.",
                     metadataUuid));
+
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+            throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
+                metadataUuid, messages.getString(accessManager.getReviewerRule()) ));
+
 
         }
 
