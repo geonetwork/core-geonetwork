@@ -1005,7 +1005,7 @@ public class MetadataSharingApi {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
-                metadataUuid, accessManager.getReviewerRule()));
+                metadataUuid, messages.getString(accessManager.getReviewerRule()) ));
 
         }
 

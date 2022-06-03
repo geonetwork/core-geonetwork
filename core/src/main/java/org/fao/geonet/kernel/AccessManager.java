@@ -450,10 +450,9 @@ public class AccessManager {
     }
 
     private String GROUPOWNERONLY_STRATEGY =
-        "You need to be administrator, or reviewer of the metadata group.";
+        "api.metadata.share.strategy.groupOwnerOnly";
     private String REVIEWERINGROUP_STRATEGY =
-        "You need to be administrator, or reviewer of the metadata group " +
-            "or reviewer with edit privilege on the metadata.";
+        "api.metadata.share.strategy.reviewerInGroup";
 
     public String getReviewerRule() {
         return settingManager.getValueAsBool(
