@@ -41,6 +41,7 @@
   <!-- Reads from the .json file and creates a ClientRegistration -->
   <bean id="openidconnect_ClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
     <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_FNAME}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT}"/>
     <constructor-arg value="${OPENIDCONNECT_CLIENTID}"/>
     <constructor-arg value="${OPENIDCONNECT_CLIENTSECRET}"/>
   </bean>

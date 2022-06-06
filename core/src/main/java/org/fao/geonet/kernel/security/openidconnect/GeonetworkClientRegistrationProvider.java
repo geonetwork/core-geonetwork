@@ -28,6 +28,8 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.as.AuthorizationServerMetadata;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -36,6 +38,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.util.FileCopyUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,9 +65,18 @@ public class GeonetworkClientRegistrationProvider {
 
 
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
+                                                String serverMetadataJsonText,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
-        clientRegistration = createClientRegistration(metadataResource, clientId, clientSecret);
+        //10 is just to check if there's some text in the string
+        if ((serverMetadataJsonText != null) && (serverMetadataJsonText.trim().length() > 10)) {
+            Log.debug(Geonet.SECURITY,"OpenID Connect - using IDP server metadata config from text");
+            clientRegistration = createClientRegistration(new ByteArrayInputStream(serverMetadataJsonText.getBytes()), clientId, clientSecret);
+        }
+        else {
+            Log.debug(Geonet.SECURITY,"OpenID Connect - using IDP server metadata config from resource file");
+            clientRegistration = createClientRegistration(metadataResource, clientId, clientSecret);
+        }
     }
 
     public GeonetworkClientRegistrationProvider(InputStream inputStream,

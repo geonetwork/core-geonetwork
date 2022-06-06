@@ -5,3 +5,10 @@
 #
 #
 # download that file and put it here!
+#
+#
+#
+# Alternatively, you can put the actual text of the .json file in the environment variable;
+#  OPENIDCONNECT_SERVERMETADATA_JSON_TEXT
+#  NOTE: if you specify both OPENIDCONNECT_SERVERMETADATA_FNAME and OPENIDCONNECT_SERVERMETADATA_JSON_TEXT
+
