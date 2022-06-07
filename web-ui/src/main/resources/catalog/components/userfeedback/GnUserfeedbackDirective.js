@@ -29,7 +29,7 @@
   goog.require('gn_catalog_service');
   goog.require('gn_search_location');
 
-  var module = angular.module('gn_userfeedback_directive', ['vcRecaptcha']);
+  var module = angular.module('gn_userfeedback_directive', ['vcRecaptcha', 'ngMessages']);
 
   module.service('gnUserfeedbackService', [
     '$http', '$q',
@@ -359,50 +359,6 @@
 
                 scope.resolveRecaptcha = false;
                 scope.uf.captcha = vcRecaptchaService.getResponse();
-              }
-
-
-              if (!scope.loggedIn) {
-
-                scope.authorNameError = false;
-                scope.authorEmailError = false;
-                scope.authorOrganizationError = false;
-
-                if (!data.authorName) {
-                  scope.authorNameError = $translate.instant('GUFrequired');
-
-                  return false;
-                }
-                if (!data.authorEmail) {
-                  scope.authorEmailError = $translate.instant('GUFrequired');
-
-                  return false;
-                }
-                if (scope.uf.authorName.length > 64) {
-                  scope.authorNameError = $translate.instant('GUFtooLong');
-
-                  return false;
-                }
-                if (scope.uf.authorEmail.length > 64) {
-                  scope.authorEmailError = $translate.instant('GUFtooLong');
-
-                  return false;
-                }
-
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                if (!re.test(scope.uf.authorEmail)) {
-                  scope.authorEmailError =
-                    $translate.instant('GUFnotValidFormat');
-
-                  return false;
-                }
-                if (scope.uf.authorOrganization && scope.uf.authorOrganization.length > 64) {
-                  scope.authorOrganizationError =
-                    $translate.instant('GUFtooLong');
-
-                  return false;
-                }
               }
 
               scope.uf.metadataUUID = scope.metatdataUUID;
