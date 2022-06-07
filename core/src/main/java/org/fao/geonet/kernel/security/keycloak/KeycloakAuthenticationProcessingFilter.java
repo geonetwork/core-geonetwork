@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.LocaleUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
@@ -54,9 +55,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.IllformedLocaleException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter {
@@ -170,12 +173,20 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                     }
 
                     // Set users preferred locale if it exists.
-                    if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() != null) {
+                    String localeString = keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale();
+                    if (!StringUtils.isEmpty(localeString)) {
                         try {
-                            response.setLocale(LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale()));
+                            try {
+                                //Try to parse the locale as a languageTag i.e. en-CA
+                                response.setLocale(new Locale.Builder().setLanguageTag(localeString).build());
+                            } catch (IllformedLocaleException e) {
+                                // If there are any exceptions try a different approach as it may be in the format of en_CA or simply en
+                                response.setLocale(LocaleUtils.toLocale(localeString));
+                            }
                         } catch (IllegalArgumentException e) {
-                            Log.warning(Geonet.SECURITY, "Unable to parse keycloak locale " + LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() +
-                                    " for use " + username + ": " + e.getMessage()));
+
+                            Log.warning(Geonet.SECURITY, "Unable to parse keycloak locale " + localeString +
+                                    " for user " + username + ": " + e.getMessage());
                         }
                     }
                 }
