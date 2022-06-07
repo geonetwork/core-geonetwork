@@ -266,6 +266,18 @@ q, blockquote {
       }
     }
   }
+  // errors
+  input, textarea {
+    &.ng-invalid {
+      border-color: @brand-danger;
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+  .help-block {
+    color: @brand-danger;
+  }
   // panels
   .panel {
     border: 0;
