@@ -50,10 +50,7 @@ class SimpleOidcUser {
             username = idToken.getFullName();
         }
         if (username != null) {
-            // FIXME: needed? only accept the first 256 chars
-            if (username.length() > 256) {
-                username = username.substring(0, 256);
-            }
+            username =  org.apache.commons.lang.StringUtils.left(username,256); //first max 256 chars
         }
 
         if (username != null && username.length() > 0) {

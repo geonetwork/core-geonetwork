@@ -216,7 +216,7 @@ public class OIDCRoleProcessor {
      */
     public List<String> getTokenRoles(Map<String, Object> attributes) {
         String pathToRoles = oidcConfiguration.getIdTokenRoleLocation();
-        if ((pathToRoles == null) || (pathToRoles.trim().isEmpty())) {
+        if (!StringUtils.hasText(pathToRoles)) {
             Log.debug(Geonet.SECURITY, "oidc: pathToRoles is null/empty - cannot process");
             return new ArrayList<>();
         }
@@ -235,8 +235,9 @@ public class OIDCRoleProcessor {
                 info = (Map<String, Object>) o;
             }
             if (o instanceof List) {
-                if (t == paths.length - 1)
+                if (t == paths.length - 1) {
                     return new ArrayList<>((List<String>) o);
+                }
                 Log.debug(Geonet.SECURITY, "oidc: pathToRoles - found a list instead of item at " + path);
                 return new ArrayList<>(); // not expecting to see this
             }

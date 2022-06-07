@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.security.openidconnect;
 
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     }
 
     public List<String> getScopeSet() {
-        if ((scopes == null) || scopes.trim().isEmpty())
+        if (!StringUtils.hasText(scopes))
            return null;
         return Arrays.asList(scopes.split(","));
     }
@@ -134,8 +135,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     // "group1:role1,group2:role2,..."
     public void updateRoleConverterString(String serialized) {
         Map<String, String> result = new HashMap<>();
-        if ((serialized == null) || serialized.trim().isEmpty()) {
-            //this.roleConverter=result;
+        if (!StringUtils.hasText(serialized)) {
             return;
         }
         serialized = serialized.trim();

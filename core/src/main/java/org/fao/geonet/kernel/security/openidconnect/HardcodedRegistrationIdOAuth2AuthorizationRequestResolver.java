@@ -76,6 +76,10 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
 
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
+        if (!this.authorizationRequestMatcher.matches(request)) {
+            return null;
+        }
+
         HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
             @Override
             public String getParameter(String name) {
@@ -86,7 +90,6 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                     return "authorize";
                 return value;
             }
-
         };
 
         return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);

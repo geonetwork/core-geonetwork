@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class OidcUser2GeonetworkUser {
 
     public UserDetails getUserDetails(OidcIdToken idToken, boolean withDbUpdate) {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken);
-        if ((simpleUser.getUsername() == null) || simpleUser.getUsername().isEmpty())
+        if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
         User user;

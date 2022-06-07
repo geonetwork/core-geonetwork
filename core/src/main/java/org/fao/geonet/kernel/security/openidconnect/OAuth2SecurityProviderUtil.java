@@ -54,8 +54,6 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
             OidcUser user = (OidcUser) auth.getPrincipal();
             OidcIdToken idToken = user.getIdToken();
             return oidcUser2GeonetworkUser.getUserDetails(idToken, withDbUpdate);
-
-            // return keycloakUserUtils.getUserDetails(((KeycloakPrincipal) auth.getPrincipal()).getKeycloakSecurityContext().getToken(), false);
         } else {
             // If unknown auth class then return null.
             // This will occur when it is an anonymous user.
