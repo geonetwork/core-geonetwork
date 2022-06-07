@@ -39,6 +39,8 @@ import java.util.Collection;
 
 public class GeonetworkOidcUserService extends OidcUserService {
 
+    @Autowired
+    OIDCConfiguration oidcConfiguration;
 
     @Autowired
     OIDCRoleProcessor oidcRoleProcessor;
@@ -52,8 +54,10 @@ public class GeonetworkOidcUserService extends OidcUserService {
         OidcUser user = super.loadUser(userRequest);
 
 
+
         OidcUserInfo userInfo = user.getUserInfo();
         Collection<? extends GrantedAuthority> authorities = createAuthorities(user);
+
 
 
         String userNameAttributeName = userRequest.getClientRegistration()

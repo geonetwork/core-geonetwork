@@ -25,8 +25,13 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class OIDCConfiguration implements SecurityProviderConfiguration {
 
@@ -37,6 +42,23 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String minimumProfile = "Guest";
     public boolean userProfileUpdateEnabled = true;
     public boolean userGroupUpdateEnabled = true;
+    public boolean addAccessTokenClaimsToUser = false;  //usually false - take the Access Token claims and put in the user
+
+    public String getScopes() {
+        return scopes;
+    }
+
+    public void setScopes(String scopes) {
+        this.scopes = scopes;
+    }
+
+    public List<String> getScopeSet() {
+        if ((scopes == null) || scopes.trim().isEmpty())
+           return null;
+        return Arrays.asList(scopes.split(","));
+    }
+
+    public String  scopes = null; //null or empty -> all
 
     public String roleConverterString = null;
 
@@ -130,5 +152,13 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public void setRoleConverterString(String roleConverterString) {
         this.roleConverterString = roleConverterString;
         updateRoleConverterString(roleConverterString);
+    }
+
+    public boolean isAddAccessTokenClaimsToUser() {
+        return addAccessTokenClaimsToUser;
+    }
+
+    public void setAddAccessTokenClaimsToUser(boolean addAccessTokenClaimsToUser) {
+        this.addAccessTokenClaimsToUser = addAccessTokenClaimsToUser;
     }
 }

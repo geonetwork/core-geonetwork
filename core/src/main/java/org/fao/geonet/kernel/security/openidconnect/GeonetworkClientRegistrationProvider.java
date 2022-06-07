@@ -30,6 +30,7 @@ import com.nimbusds.oauth2.sdk.as.AuthorizationServerMetadata;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -63,11 +64,15 @@ public class GeonetworkClientRegistrationProvider {
 
     ClientRegistration clientRegistration;
 
+    OIDCConfiguration oidcConfiguration;
+
 
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
                                                 String serverMetadataJsonText,
                                                 String clientId,
-                                                String clientSecret) throws IOException, ParseException {
+                                                String clientSecret,
+                                                OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
+        this.oidcConfiguration = oidcConfiguration;
         //10 is just to check if there's some text in the string
         if ((serverMetadataJsonText != null) && (serverMetadataJsonText.trim().length() > 10)) {
             Log.debug(Geonet.SECURITY,"OpenID Connect - using IDP server metadata config from text");
@@ -81,7 +86,9 @@ public class GeonetworkClientRegistrationProvider {
 
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 String clientId,
-                                                String clientSecret) throws IOException, ParseException {
+                                                String clientSecret,
+                                                OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
+        this.oidcConfiguration = oidcConfiguration;
         clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
     }
 
@@ -178,6 +185,16 @@ public class GeonetworkClientRegistrationProvider {
                 "\" returned a configuration of " + grantTypes);
         }
         List<String> scopes = getScopes(oidcMetadata);
+
+        //allow the user to limit the scopes.
+        // we are "intersecting" the two lists and ensure that "openid" is in the result.
+        if (oidcConfiguration.getScopeSet() != null){
+            List<String> configuredScopes = oidcConfiguration.getScopeSet();
+            scopes.retainAll(configuredScopes);
+            if (!scopes.contains(OidcScopes.OPENID))
+                scopes.add(OidcScopes.OPENID);
+        }
+
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
         ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)

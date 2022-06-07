@@ -32,10 +32,13 @@ public class GeonetworkClientRegistrationRepositoryTest {
 
     @Test
     public void testRepo() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider clientRegistrationProvider = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             "clientid",
-            "clientsecret"
+            "clientsecret",
+            configuration
         );
 
         GeonetworkClientRegistrationRepository out = new GeonetworkClientRegistrationRepository(clientRegistrationProvider);

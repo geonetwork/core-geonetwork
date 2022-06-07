@@ -112,11 +112,45 @@ public class GeonetworkClientRegistrationProviderTest {
     }
 
     @Test
-    public void testParsingKeycloakConfigurationMetadataJson() throws Exception {
+    public void testScopes_all() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             "clientid",
-            "clientsecret"
+            "clientsecret",
+            configuration
+        );
+
+        assertNotNull(out.getClientRegistration());
+        assertEquals(9,out.getClientRegistration().getScopes().size());
+    }
+
+    @Test
+    public void testScopes_limited() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setScopes("openid,email");//use 2 scopes
+        GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
+            string2InputStream(keycloakConfig),
+            "clientid",
+            "clientsecret",
+            configuration
+        );
+
+        assertNotNull(out.getClientRegistration());
+        assertEquals(2,out.getClientRegistration().getScopes().size());
+        assertTrue(out.getClientRegistration().getScopes().contains("openid"));
+        assertTrue(out.getClientRegistration().getScopes().contains("email"));
+    }
+        @Test
+    public void testParsingKeycloakConfigurationMetadataJson() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setScopes("");//use all scopes
+        GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
+            string2InputStream(keycloakConfig),
+            "clientid",
+            "clientsecret",
+            configuration
         );
 
         assertNotNull(out.getClientRegistration());
@@ -138,10 +172,13 @@ public class GeonetworkClientRegistrationProviderTest {
 
     @Test
     public void testParsingAzureADConfigurationMetadataJson() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(azureADConfig),
             "clientid",
-            "clientsecret"
+            "clientsecret",
+            configuration
         );
 
         assertNotNull(out.getClientRegistration());

@@ -37,6 +37,8 @@
     location="WEB-INF/config-security/config-security-openidconnect-overrides.properties"
     ignore-resource-not-found="true"/>
 
+  <bean id ="openidconnect_Configuration" class="org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration"/>
+
 
   <!-- Reads from the .json file and creates a ClientRegistration -->
   <bean id="openidconnect_ClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
@@ -44,6 +46,7 @@
     <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT}"/>
     <constructor-arg value="${OPENIDCONNECT_CLIENTID}"/>
     <constructor-arg value="${OPENIDCONNECT_CLIENTSECRET}"/>
+    <constructor-arg ref="openidconnect_Configuration"/>
   </bean>
 
 
@@ -76,19 +79,7 @@
     <property name="authenticationManager" ref="openidconnect_ProviderManager"/>
   </bean>
 
-  <bean id ="openidconnect_Configuration" class="org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration">
-<!--    <property name="groupPermissionSeparator" value="${openidconnect.groupPermissionSeparator}"/>-->
-<!--    <property name="organizationProperty" value="${openidconnect.organizationProperty}"/>-->
-<!--    <property name="idTokenRoleLocation" value="${openidconnect.idTokenRoleLocation}"/>-->
 
-<!--    <property name="roleConverter" value="${openidconnect.roleConverter}"/>-->
-<!--    <property name="minimumProfile" value="${openidconnect.minimumProfile}"/>-->
-
-<!--    <property name="userProfileUpdateEnabled" value="${openidconnect.userProfileUpdateEnabled}"/>-->
-<!--    <property name="userGroupUpdateEnabled" value="${openidconnect.userGroupUpdateEnabled}"/>-->
-
-
-  </bean>
 
   <bean id="openidconnect_DefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
 
