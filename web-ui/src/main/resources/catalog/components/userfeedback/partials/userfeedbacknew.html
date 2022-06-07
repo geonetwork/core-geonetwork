@@ -105,7 +105,7 @@
                     <p data-translate=""
                       data-translate-values="{authorNameValue:'{{authorNameValue}}'}">GUFyouAreLoggedInAs</p>
                   </div>
-                  <div class="gn-userfeedback-loggedout" data-ng-hide="loggedIn">
+                  <div class="gn-userfeedback-loggedout" data-ng-if="!loggedIn">
                     <div id="GUFcredentials" class="anonymous">
                       <p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
                       <input type="text"
