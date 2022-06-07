@@ -22,7 +22,7 @@ sudo chmod a+x /usr/local/bin/yq
 ### Utilisation
 
 ```bash
-bash apache_proxy_builder.sh sample_conf.yml
+bash apache-proxy-ows.sh sample_conf.yml
 ```
 
 Avec `sample_conf.yaml` la configuration.

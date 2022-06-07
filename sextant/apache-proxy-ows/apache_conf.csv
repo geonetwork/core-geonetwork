@@ -1,0 +1,10 @@
+url_publique, url_interne
+/premierTest/wms/site1-1_1, http://premierTest:9080/ows/p/wfs/site1-1_1
+/premierTest/wms/site1_1, http://premierTest:9080/ows/p/wfs/site1_1
+/premierTest/wms/site1_2, http://premierTest:9080/ows/p/wfs/site1_2
+/premierTest/wms/site2_1, http://premierTest:9080/ows/p/wfs/site2_1
+/premierTest/wms/site2_2, http://premierTest:9080/ows/p/wfs/site2_2
+/secondTestAbsolute/wms/site1-1_1, http://secondTestAbsolute/site1-1_1
+/secondTestAbsolute/wms/site1_1, http://secondTestAbsolute/site1_1
+/secondTestAbsolute/wms/site1_2, http://secondTestAbsolute/site1_2
+/services/wms/sansrien, http://sansrien

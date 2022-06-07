@@ -37,7 +37,7 @@ for identityMapping in "${identityMappings[@]}"; do
     then
       urlPublique=$(echo ${urlPubliques[$configCounter]} | sed -e 's/\r//g')
       urlInterne=$(echo ${urlInternes[$configCounter]} | sed -e 's/\r//g')
-      echo "$urlPublique, $urlInterne" >> apache_conf.csv
+      echo "$urlPublique, $urlInterne" >> temp.csv
       continue
     fi
 
@@ -61,10 +61,10 @@ for identityMapping in "${identityMappings[@]}"; do
       urlPublique=$(echo $urlPublique | sed -e "s/\$1/$value/g")
       urlInterne=$(echo $urlInterne | sed -e "s/\$1/$value/g")
       # echo "${urlPubliques[$configCounter]}/$value, ${urlInternes[$configCounter]}/$value"  >> apache_conf.csv
-      echo "$urlPublique, $urlInterne" >> apache_conf.csv
+      echo "$urlPublique, $urlInterne" >> temp.csv
     done
 
     ((configCounter++))
 
 done
-head -n1 temp.csv && tail -n+1  apache_conf.csv | sort > apache_conf.csv
+head temp.csv | sort >> apache_conf.csv
