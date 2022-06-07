@@ -235,10 +235,9 @@
     -->
     <mdb:metadataStandard>
       <cit:CI_Citation>
-        <xsl:call-template name="writeCharacterStringElement">
-          <xsl:with-param name="elementName" select="'cit:title'"/>
-          <xsl:with-param name="nodeWithStringToWrite" select="."/>
-        </xsl:call-template>
+        <cit:title>
+          <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
+        </cit:title>
         <xsl:call-template name="writeCharacterStringElement">
           <xsl:with-param name="elementName" select="'cit:edition'"/>
           <xsl:with-param name="nodeWithStringToWrite" select="../gmd:metadataStandardVersion"/>
