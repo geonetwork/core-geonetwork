@@ -18,7 +18,8 @@
   </div>
 
   <div class="row" data-ng-show="hasTemplates && groups.length > 0">
-    <div class="col-sm-2">
+    <div class="col-sm-2"
+         data-ng-if="filterField">
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
           <span data-translate="">createA</span>
@@ -26,12 +27,13 @@
         </div>
         <div class="panel-body">
           <div class="list-group gn-record-type">
-            <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
-               data-ng-click="getTemplateNamesByType(type)"
-               data-ng-class="{'active': type==activeType}">
-              <i class="fa {{getTypeIcon(type)}} fa-3x"></i>
+            <a data-ng-repeat="type in mdTypes | orderBy: 'label'"
+               href="" class="list-group-item"
+               data-ng-click="getTemplateNamesByType(type.key)"
+               data-ng-class="{'active': type.key == activeType}">
+              <i class="fa {{getTypeIcon(type.key)}} fa-3x"></i>
               <p>
-                {{type | translate}}
+                {{type.label}}
               </p>
             </a>
           </div>
@@ -112,13 +114,13 @@
       <div class="btn-group">
         <button type="button" class="btn btn-success"
                 data-gn-click-and-spin="createNewMetadata()"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
+                data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
         <button type="button"
                 class="btn btn-success dropdown-toggle"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
+                data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
                 data-toggle="dropdown">
           <span class="caret"></span>&nbsp;
         </button>

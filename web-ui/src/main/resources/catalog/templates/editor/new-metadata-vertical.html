@@ -19,7 +19,9 @@
     </div>
   </div>
 
-  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
+  <div class="row"
+       data-ng-if="filterField"
+       data-ng-show="hasTemplates && groups.length > 0">
     <div class="col-sm-4">
       <span data-translate="">createA</span>
           <strong>{{(activeType || '...') | translate}}</strong>
@@ -27,12 +29,12 @@
     <div class="col-sm-8">
       <div class="dynamic-list">
         <div class="list-group gn-record-type">
-          <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
-             data-ng-click="getTemplateNamesByType(type)"
-             data-ng-class="{'active': type==activeType}">
-            <i class="fa {{getTypeIcon(type)}}"></i>
+          <a data-ng-repeat="type in mdTypes | orderBy:'label'" href="" class="list-group-item"
+             data-ng-click="getTemplateNamesByType(type.key)"
+             data-ng-class="{'active': type.key == activeType}">
+            <i class="fa {{getTypeIcon(type.key)}}"></i>
             <span>
-              {{type | translate}}
+              {{type.label}}
             </span>
           </a>
         </div>
@@ -114,13 +116,13 @@
         <div class="btn-group">
           <button type="button" class="btn btn-primary"
                   data-gn-click-and-spin="createNewMetadata()"
-                  data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
+                  data-ng-class="{'disabled': (!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
             <i class="fa fa-plus"/>
             <span data-translate="">createMetadata</span>
           </button>
           <button type="button"
                   class="btn btn-primary dropdown-toggle"
-                  data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
+                  data-ng-class="{'disabled': (!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
                   data-toggle="dropdown">
             <span class="caret"></span>&nbsp;
           </button>
