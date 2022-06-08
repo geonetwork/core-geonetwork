@@ -143,16 +143,17 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         super.initTarget();
 
         // If targetUri is not set in web.xml try to resolve it from java properties or environment variables.
-        // The name is composed by the application base url,  servlet name, a point or an underscore and baseurl word.
+        // The name is composed by the application base url,  servlet name, a point or an underscore and targetUri word.
         if (StringUtils.isBlank(targetUriTemplate)) {
             targetUriTemplate = StringUtils.defaultString(getConfigValue(TARGET_URI_NAME), "");
         }
     }
 
     private String getConfigValue(String sufix) {
-        String result;
         // If targetUri is not set in web.xml try to resolve it from java properties or environment variables.
-        // The name is composed by the servlet name, a point or an underscore and baseurl word.
+        // The name is composed by the servlet name, a point or an underscore and targetUri word.
+        String result;
+
 
 
         // Property defined according to webapp name
