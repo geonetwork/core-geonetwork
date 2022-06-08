@@ -77,6 +77,7 @@
                               select="saxon:evaluate(
                                 concat('$p1[', $groupBy, ' = ''',
                                  replace($groupKey, '''', '''''') ,''']'), $match)"/>
+
                 <!--
                 <xsl:message>empty: <xsl:value-of select="$emptyKey"/> </xsl:message>
                 <xsl:message> Groups: <xsl:copy-of select="$groupValues"/></xsl:message>-->
@@ -111,7 +112,7 @@
                               <xsl:choose>
                                 <!-- Merge
                                 eg. gmd:keyword -->
-                                <xsl:when test="current() = $merge">
+                                <xsl:when test="current() = tokenize($merge, '\|')">
                                   <xsl:variable name="elementsToMerge"
                                                 select="$groupValues/*/*[name() = current()]"/>
                                   <xsl:variable name="isTextElement"

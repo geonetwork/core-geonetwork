@@ -68,11 +68,9 @@
     <tag name="gmd:descriptiveKeywords" context="gmd:MD_DataIdentification"
          groupBy="*/gmd:thesaurusName/*/gmd:title/*/text()"
          merge="gmd:keyword"/>
-    <!-- TODO: temporalElement is also part of gmd:extent.
-    How to group by both? -->
     <tag name="gmd:extent" context="gmd:MD_DataIdentification"
-         groupBy="*/gmd:geographicElement"
-         merge="gmd:geographicElement"/>
+         groupBy="*/(gmd:geographicElement|gmd:temporalElement)"
+         merge="gmd:geographicElement|gmd:temporalElement"/>
     <!-- TODO: gmd:language can be in various places. -->
     <tag name="gmd:language" context="gmd:MD_DataIdentification"
          groupBy="gmd:LanguageCode/@codeListValue"

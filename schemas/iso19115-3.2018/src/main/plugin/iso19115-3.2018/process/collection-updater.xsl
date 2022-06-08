@@ -72,11 +72,9 @@
     <tag name="mri:descriptiveKeywords" context="mri:MD_DataIdentification"
          groupBy="*/mri:thesaurusName/*/cit:title/*/text()"
          merge="mri:keyword"/>
-    <!-- TODO: temporalElement is also part of mri:extent.
-    How to group by both? -->
     <tag name="mri:extent" context="mri:MD_DataIdentification"
-         groupBy="*/gex:geographicElement"
-         merge="gex:geographicElement"/>
+         groupBy="*/(gex:geographicElement|gex:temporalElement)"
+         merge="gex:geographicElement|gex:temporalElement"/>
     <!-- TODO: mri:defaultLocale can be in various places. -->
     <tag name="mri:defaultLocale" context="mri:MD_DataIdentification"
          groupBy="mri:defaultLocaleCode/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
