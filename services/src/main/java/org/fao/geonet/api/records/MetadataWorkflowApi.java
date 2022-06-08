@@ -366,6 +366,14 @@ public class MetadataWorkflowApi {
                 "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."));
         }
 
+
+        // if the workflow is enabled in the metadata (set status 'draft') in a metadata created before enabling the workflow
+        // and the metadata is published, set the status 'approved'
+        if (metadataStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT) &&
+            accessManager.isVisibleToAll(String.valueOf(metadata.getId()))) {
+            metadataStatus.setStatusValue(statusValueRepository.findById(Integer.parseInt(StatusValue.Status.APPROVED)).get());
+        }
+
         boolean isAllowedSubmitApproveInvalidMd = settingManager
             .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
         if (((status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED))
