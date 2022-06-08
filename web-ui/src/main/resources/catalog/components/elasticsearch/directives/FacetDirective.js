@@ -224,7 +224,9 @@
     "$translate",
     function ($translate) {
       return function (input) {
-        return $translate.instant(input.replace(/(.key|.default|.lang{3}[a-z])$/, ""));
+        return $translate.instant(
+          input.replace(/(.key|.default|Object.lang[a-z]{3})$/, "")
+        );
       };
     }
   ]);

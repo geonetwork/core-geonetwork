@@ -270,11 +270,16 @@
             typeof type === "string" ? angular.copy(this.configs[type].facets, {}) : type;
 
         esParams.aggregations = {};
-        angular.forEach(aggs, function (config, facet) {
+        angular.forEach(aggs, function (config, facetName) {
           if (config.hasOwnProperty("gnBuildFilterForRange")) {
-            esParams.aggregations[facet] = esFacet.gnBuildFilterForRange(config);
+            esParams.aggregations[facetName] = esFacet.gnBuildFilterForRange(config);
           } else {
-            esParams.aggregations[facet] = config;
+            var searchLang = gnGlobalSettings.iso3lang;
+            if (config.terms && config.terms.field.endsWith("Object")) {
+              config.terms.field += ".lang" + searchLang;
+              facetName = config.terms.field;
+            }
+            esParams.aggregations[facetName] = config;
           }
         });
       };

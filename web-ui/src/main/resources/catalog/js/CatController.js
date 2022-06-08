@@ -144,7 +144,7 @@
               },
               // 'OrgForResource': {
               //   'terms': {
-              //     'field': 'OrgForResource',
+              //     'field': 'OrgForResourceObject',
               //     'include': '.*',
               //     'missing': '- No org -',
               //     'size': 15
@@ -533,7 +533,7 @@
               // },
               OrgForResource: {
                 terms: {
-                  field: "OrgForResource",
+                  field: "OrgForResourceObject",
                   include: ".*",
                   size: 15
                 },
