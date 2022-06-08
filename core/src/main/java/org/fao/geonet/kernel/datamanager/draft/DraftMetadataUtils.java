@@ -520,8 +520,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             Integer finalId = newMetadata.getId();
 
-            cloneFiles(templateMetadata, newMetadata);
-
             // Remove all default privileges:
             metadataOperations.deleteMetadataOper(String.valueOf(finalId), false);
 
@@ -539,6 +537,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                     Log.trace(Geonet.DATA_MANAGER, "Skipping operation: " + op);
                 }
             }
+
+            cloneFiles(templateMetadata, newMetadata);
 
             // Copy validation status from original metadata
             List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(templateMetadata.getId());
