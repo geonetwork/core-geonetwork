@@ -1007,6 +1007,7 @@ the mandatory section with no name and then the inner elements.
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
@@ -1043,6 +1044,7 @@ the mandatory section with no name and then the inner elements.
         <xs:element ref="field"/>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute ref="displayIfServiceInfo"/>
     </xs:complexType>
   </xs:element>
 
@@ -1118,6 +1120,7 @@ Activate the "flat" mode at the tab level to make the form display only existing
         <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="if">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -1353,6 +1356,7 @@ An XPath expression to evaluate. If true, the text is displayed.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="displayIfServiceInfo"/>
     </xs:complexType>
   </xs:element>
 
@@ -1613,6 +1617,7 @@ with the metadata identifier.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="class" type="xs:string">
         <xs:annotation>
           <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *.</xs:documentation>
@@ -2195,6 +2200,8 @@ Include any custom directive with required attributes.
       ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:attribute ref="displayIfServiceInfo"/>
+      <xs:attribute ref="displayIfRecord"/>
       <xs:anyAttribute/>
     </xs:complexType>
   </xs:element>

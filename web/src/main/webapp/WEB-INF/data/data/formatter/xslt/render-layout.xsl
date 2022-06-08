@@ -4,6 +4,7 @@
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:utils="java:org.fao.geonet.util.XslUtil"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -391,35 +392,48 @@
   -->
   <xsl:template mode="render-view"
                 match="section[@xpath]">
-    <div id="gn-view-{generate-id()}" class="gn-tab-content">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
-      <xsl:comment select="'icon'"/>
-    </div>
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
+
+    <xsl:if test="$isDisplayed">
+      <div id="gn-view-{generate-id()}" class="gn-tab-content">
+        <xsl:apply-templates mode="render-view" select="@xpath"/>
+        <xsl:comment select="'icon'"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 
   <xsl:template mode="render-view"
                 match="section[not(@xpath)]">
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
 
-    <xsl:variable name="content">
-      <xsl:apply-templates mode="render-view"
-                           select="section|field|xsl"/>&#160;
-    </xsl:variable>
+    <xsl:if test="$isDisplayed">
+      <xsl:variable name="content">
+        <xsl:apply-templates mode="render-view"
+                             select="section|field|xsl"/>&#160;
+      </xsl:variable>
 
-    <xsl:if test="count($content/*) > 0">
-      <div id="gn-section-{generate-id()}" class="gn-tab-content">
-        <xsl:if test="@name">
-          <xsl:variable name="title"
-                        select="
-                        if (contains( @name, ':'))
-                        then gn-fn-render:get-schema-labels($schemaLabels, @name)
-                        else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
-          <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
-            <xsl:value-of select="$title"/>
-          </xsl:element>
-        </xsl:if>
-        <xsl:copy-of select="$content"/>
-      </div>
+      <xsl:if test="count($content/*) > 0">
+        <div id="gn-section-{generate-id()}" class="gn-tab-content">
+          <xsl:if test="@name">
+            <xsl:variable name="title"
+                          select="
+                          if (contains( @name, ':'))
+                          then gn-fn-render:get-schema-labels($schemaLabels, @name)
+                          else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
+            <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
+              <xsl:value-of select="$title"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:copy-of select="$content"/>
+        </div>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
