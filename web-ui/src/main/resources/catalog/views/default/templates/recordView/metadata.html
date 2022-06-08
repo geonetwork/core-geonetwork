@@ -21,11 +21,9 @@
   ></span>
 </div>
 
-<div
-  data-ng-init="mdLanguages = [mdView.current.record.mainLanguage].concat(mdView.current.record.otherLanguage || [])"
-  data-aang-if="mdLanguages.length > 0"
-  class="gn-margin-bottom flex-row"
->
+<div data-ng-init="mdLanguages = getMdLanguages()"
+     data-aang-if="mdLanguages.length > 0"
+     class="gn-margin-bottom flex-row">
   <span class="badge badge-rounded" title="{{'language' | translate}}">
     <i class="fa fa-fw fa-language"></i>
   </span>
