@@ -41,7 +41,7 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Setup Java JDK
-      uses: actions/setup-java@v2.3.1
+      uses: actions/setup-java@v3.3.0
       with:
         java-version: 8
         # Java distribution. See the list of supported distributions in README file
@@ -49,14 +49,6 @@ jobs:
         # The package type (jdk, jre, jdk+fx, jre+fx)
         java-package: jdk
         cache: maven
-    
-    - name: Maven repository caching
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
 
 
     # Initializes the CodeQL tools for scanning.

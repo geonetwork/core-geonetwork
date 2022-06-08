@@ -21,20 +21,15 @@ jobs:
         fetch-depth: 500
         submodules: 'recursive'
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3.3.0
       with:
+        distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
+        cache: 'maven'
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
       with:
         maven-version: 3.6.3
-    - name: Maven repository caching
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
     - name: Build with Maven
       run: mvn -B -V install -DskipTests=true -Dmaven.javadoc.skip=true
     - name: Remove SNAPSHOT jars from repository
@@ -53,20 +48,15 @@ jobs:
         fetch-depth: 500
         submodules: 'recursive'
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3.3.0
       with:
+        distribution: 'temurin'
         java-version: 8
+        cache: 'maven'
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
       with:
         maven-version: 3.6.3
-    - name: Maven repository caching
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
     - name: Test with maven
       run: mvn -B -V -fae install
     - name: Remove SNAPSHOT jars from repository
