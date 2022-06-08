@@ -353,8 +353,8 @@
    *
    */
       .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
-        'gnConfigService', '$filter',
-        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter) {
+        'gnConfigService', '$filter', 'gnConfig',
+        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter, gnConfig) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -371,6 +371,8 @@
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
+              scope.isMdWorkflowEnableForMetadata = gnConfig['metadata.workflow.enable'] &&
+                angular.isDefined(scope.gnCurrentEdit.metadata.mdStatus);
 
               /**
                * Calls service 'relations.get' to load

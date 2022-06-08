@@ -175,7 +175,8 @@
                 {{resource.description | gnLocalized: lang}}
 
                 <div data-ng-if="resource.lUrl !== null
-                                 && resource.lUrl.match('doi.org') !== null"
+                                 && resource.lUrl.match('doi.org') !== null
+                                 && !isMdWorkflowEnableForMetadata"
                      data-gn-doi-wizard="gnCurrentEdit.uuid"
                      data-gn-doi-url="resource.lUrl"
                      data-xs-mode="true"></div>
