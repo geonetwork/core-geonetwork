@@ -80,7 +80,7 @@
 
                 <xsl:variable name="isViewDisplayed"
                               as="xs:boolean"
-                              select="gn-fn-metadata:check-viewtab-visibility(
+                              select="gn-fn-metadata:check-elementandsession-visibility(
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
                                         @displayIfServiceInfo)"/>
@@ -168,7 +168,7 @@
   <xsl:template mode="menu-builder" match="tab">
     <xsl:variable name="isTabDisplayed"
                   as="xs:boolean"
-                  select="gn-fn-metadata:check-viewtab-visibility(
+                  select="gn-fn-metadata:check-elementandsession-visibility(
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
                                         @displayIfServiceInfo)"/>
