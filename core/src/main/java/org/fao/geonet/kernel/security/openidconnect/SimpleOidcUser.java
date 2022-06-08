@@ -31,7 +31,15 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-//taken from BaselUser (keycloak)
+/**
+ * Contains information about the user (from the oidc ID Token).
+ *
+ * This class knows how to do two things;
+ * a) extra info from the OIDC ID Token
+ * b) move info to a GN user
+ *
+ * parts taken from BaselUser (GN keycloak plugin)
+ */
 class SimpleOidcUser {
 
 

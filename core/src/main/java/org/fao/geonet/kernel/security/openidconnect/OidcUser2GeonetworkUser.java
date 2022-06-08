@@ -44,6 +44,11 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for handling Oidc User and the Geonetwork User.
+ *
+ * Most of the work, here, is to save the user's profile-groups.  See SimpleOidcUser for other details.
+ */
 public class OidcUser2GeonetworkUser {
 
     @Autowired
@@ -63,6 +68,20 @@ public class OidcUser2GeonetworkUser {
     @Autowired
     private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
+    /**
+     * given an oidc ID token, get the spring user details for the user.
+     * If this is a new user, it will be saved to the GN database (as a GN user).
+     *
+     * If withDbUpdate is true, and  isUserProfileUpdateEnabled (oidc configuration),
+     *         then the user will be re-saved to the database (with info from the ID Token)
+     *
+     * If withDbUpdate is true, and  isUserGroupUpdateEnabled (oidc configuration),
+     *         then the user's profile-groups will be re-saved to the database (with info from the ID Token)
+     *
+     * @param idToken
+     * @param withDbUpdate
+     * @return
+     */
     public UserDetails getUserDetails(OidcIdToken idToken, boolean withDbUpdate) {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken);
         if (!StringUtils.hasText(simpleUser.getUsername()))

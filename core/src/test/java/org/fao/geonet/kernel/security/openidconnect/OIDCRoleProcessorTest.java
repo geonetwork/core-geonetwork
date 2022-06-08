@@ -39,8 +39,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * test the OIDCRoleProcessor
+ */
 public class OIDCRoleProcessorTest {
 
+    //creates the OIDCRoleProcessor
     public OIDCRoleProcessor getOIDCRoleProcessor() {
         OIDCRoleProcessor result = new OIDCRoleProcessor();
 
@@ -52,6 +56,21 @@ public class OIDCRoleProcessorTest {
         result.oidcConfiguration.minimumProfile = "RegisteredUser";
 
         return result;
+    }
+
+    //test that the setRoleConverterString properly parses the serialized form
+    @Test
+    public void testRoleConverterParser() {
+        OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
+        oidcRoleProcessor.oidcConfiguration.setRoleConverterString("A=B");
+        assertEquals(1,oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
+        assertEquals("A",oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
+        assertEquals("B",oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
+
+        oidcRoleProcessor.oidcConfiguration.setRoleConverterString("A=B:C");
+        assertEquals(1,oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
+        assertEquals("A",oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
+        assertEquals("B:C",oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
     }
 
     //simple test - just make sure the change map works
@@ -167,7 +186,7 @@ public class OIDCRoleProcessorTest {
         return claims;
     }
 
-
+    // utility - create a simple user claims for processing
     public Map<String, Object> createSimpleClaims() {
         Map<String, Object> claims = new HashMap<>();
 
@@ -186,6 +205,7 @@ public class OIDCRoleProcessorTest {
         return claims;
     }
 
+    // utility - create a simple user claims for processing (with a given set of roles)
     public Map<String, Object> createSimpleClaims(List<String> roles) {
         Map<String, Object> claims = new HashMap<>();
 
@@ -201,7 +221,7 @@ public class OIDCRoleProcessorTest {
         return claims;
     }
 
-
+    // utility - create a more complex user claims for processing (i.e. roles with GN-group:GN-profile format)
     public Map<String, Object> createComplexClaims() {
         Map<String, Object> claims = new HashMap<>();
 
@@ -221,11 +241,8 @@ public class OIDCRoleProcessorTest {
         return claims;
     }
 
-    @Test
-    public void testGetTokenRolesNoPath() {
 
-    }
-
+    // simple test - easiest example
     @Test
     public void testGetTokenRolesSimple() {
         Map<String, Object> claims = createSimpleClaims();
@@ -241,6 +258,7 @@ public class OIDCRoleProcessorTest {
 
 
     //all should produce no roles (and not throw)
+    // these are all, technically, errors but they should not throw
     @Test
     public void testGetTokenRolesBad() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -271,6 +289,7 @@ public class OIDCRoleProcessorTest {
 
     }
 
+    //test with profile-groups
     @Test
     public void testGetTokenRolesComplex() {
         Map<String, Object> claims = createComplexClaims();
@@ -285,6 +304,7 @@ public class OIDCRoleProcessorTest {
         assertEquals("GROUP2:Editor", roles.get(3));
     }
 
+    // there should be no groups associated with these profiles
     @Test
     public void testGetProfileGroupsNone() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -298,6 +318,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(0, profileGroups.get(Profile.Administrator).size());
     }
 
+    //these have simple profiles and profile-groups
     @Test
     public void testGetProfileGroups() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -317,6 +338,7 @@ public class OIDCRoleProcessorTest {
         assertTrue(profileGroups.get(Profile.Editor).contains("GROUP2"));
     }
 
+    //test that max-profile is working (with profiles and profile-groups)
     @Test
     public void testMaxProfile1() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -329,6 +351,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.Administrator, profile);
     }
 
+    //test that max-profile is working (with profiles and profile-groups)
     @Test
     public void testMaxProfile2() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -341,6 +364,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.UserAdmin, profile);
     }
 
+    //test that max-profile is working (with profile only)
     @Test
     public void testMaxProfile3() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -352,6 +376,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.Reviewer, profile);
     }
 
+    //test that max-profile is working (with profile-group only)
     @Test
     public void testMaxProfile4() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -363,6 +388,7 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.Editor, profile);
     }
 
+    //test that max-profile is working (no valid profiles - should be the minimumProfile)
     @Test
     public void testMaxProfile5() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -375,21 +401,23 @@ public class OIDCRoleProcessorTest {
         assertEquals(Profile.Guest, profile); // min
     }
 
+    //test that getProfile is working
     @Test
     public void testGetProfile() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
         Map<String, Object> claims = createSimpleClaims();
 
+        //claims contains Administrator profile
         Profile profile = oidcRoleProcessor.getProfile(claims);
         assertEquals(Profile.Administrator, profile);
 
-        claims = new HashMap<>();
+        claims = new HashMap<>(); //no claims
 
         profile = oidcRoleProcessor.getProfile(claims);
         assertEquals(Profile.RegisteredUser, profile); // no claims -> get minimum
     }
 
-
+    // from standard GN configuration
     private RoleHierarchyImpl getRoleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("  Administrator > UserAdmin\n" +
@@ -400,6 +428,7 @@ public class OIDCRoleProcessorTest {
         return roleHierarchy;
     }
 
+    //an editor profile has authorities Editor, RegisteredUser, and Guest
     @Test
     public void testCreateAuthorities1() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -416,6 +445,7 @@ public class OIDCRoleProcessorTest {
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
     }
 
+    //a user with no configured roles will default to RegisteredUser, their authorities will be RegisteredUser and Guest
     @Test
     public void testCreateAuthorities2() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
@@ -431,6 +461,8 @@ public class OIDCRoleProcessorTest {
         assertTrue(authorities.contains(new SimpleGrantedAuthority(Profile.Guest.toString())));
     }
 
+    //a user with a profile-group of "group1:Editor" is an Editor and will have authorities as
+    // Editor, RegisteredUser, Guest
     @Test
     public void testCreateAuthorities3() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();

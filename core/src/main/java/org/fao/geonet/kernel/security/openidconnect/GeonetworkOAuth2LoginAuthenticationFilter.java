@@ -47,6 +47,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ *   This is a OAuth2LoginAuthenticationFilter successfulAuthentication method.
+ *   See below for details.
+ */
 public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthenticationFilter {
 
     @Autowired
@@ -56,6 +60,7 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         super(clientRegistrationRepository, authorizedClientService);
     }
 
+    //this doesn't do anything - just calls the super class.  Can change in the future if needed.
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response, AuthenticationException failed)
@@ -63,10 +68,18 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         super.unsuccessfulAuthentication(request, response, failed);
     }
 
+    // called when a user successfully authenticates.
+    // 1. the user is save in GN (cf. OAuth2SecurityProviderUtil#getUserDetails) on login
+    // 2. redirected back to their original URL.
+    // 3. GN login even published
+    // 4. user's local set
+    //
+    // most of this taken from GN's keycloak security
     @Override
-
     protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response, FilterChain chain, Authentication authResult)
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult)
         throws IOException, ServletException {
 
         if (authResult == null)
@@ -82,7 +95,8 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
         OidcUser oidcUser = (OidcUser) oAuth2AuthenticationToken.getPrincipal();
 
-        UserDetails userDetails = oAuth2SecurityProviderUtil.getUserDetails(authResult, true); //save user
+        //save user
+        UserDetails userDetails = oAuth2SecurityProviderUtil.getUserDetails(authResult, true);
 
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
@@ -126,7 +140,8 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     }
 
-
+    // given a request and URL parameter name, find its value.
+    // returns null if not found.
     public String findQueryParameter(HttpServletRequest request, String parmName) {
         if (request.getQueryString() == null)
             return null;

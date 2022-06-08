@@ -37,8 +37,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * this is a very simple class.  Since its difficult to determine the GN host/port,
- * we look at the incoming request to create the post-logout URL.
+ * this is a very simple class that computes the FULL url for logout.
+ * Since it's difficult to determine the GN host/port, we look at the incoming request to create the post-logout URL.
  * <p>
  * This should be the base geonetwork url - i.e. http://localhost:8080/geonetwork
  */

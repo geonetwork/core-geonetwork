@@ -36,7 +36,14 @@ import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 
-
+/**
+ *  This class overrides OidcUserService#loadUser
+ *
+ *  This implementation uses the OIDCRoleProcessor to get the authorities
+ *  for the user (i.e. Administrator, Reviewer, etc...).
+ *      NOTE: this includes ALL the lower-level permissions - so an "Administrator" will also have
+ *            Reviewer, Editor, UserAdmin, RegisteredUser, Guest, etc...
+ */
 public class GeonetworkOidcUserService extends OidcUserService {
 
     @Autowired
@@ -53,13 +60,10 @@ public class GeonetworkOidcUserService extends OidcUserService {
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser user = super.loadUser(userRequest);
 
-
-
         OidcUserInfo userInfo = user.getUserInfo();
         Collection<? extends GrantedAuthority> authorities = createAuthorities(user);
 
-
-
+        //get the user name from a specific attribute (if specified) or use default.
         String userNameAttributeName = userRequest.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
@@ -72,7 +76,11 @@ public class GeonetworkOidcUserService extends OidcUserService {
         return user;
     }
 
-    public Collection<? extends GrantedAuthority> createAuthorities(OAuth2User user) {
+    //get the authorities
+    //  for the user (i.e. Administrator, Reviewer, etc...).
+    //      NOTE: this includes ALL the lower-level permissions - so an "Administrator" will also have
+    //            Reviewer, Editor, UserAdmin, RegisteredUser, Guest, etc...
+    Collection<? extends GrantedAuthority> createAuthorities(OAuth2User user) {
         return oidcRoleProcessor.createAuthorities(roleHierarchy, user);
     }
 }

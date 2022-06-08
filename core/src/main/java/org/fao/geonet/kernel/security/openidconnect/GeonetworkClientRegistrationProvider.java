@@ -30,7 +30,6 @@ import com.nimbusds.oauth2.sdk.as.AuthorizationServerMetadata;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -52,7 +51,7 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Reads from the configuration and creates a spring-security ClientRegistration.
+ * Reads from the Open ID server's JSON configuration and creates a spring-security ClientRegistration.
  * This defines how to communicate with the remote oauth2 open id connect server.
  * <p>
  * This is based on the Spring ClientRegistration and ClientRegistrations code.
@@ -66,7 +65,24 @@ public class GeonetworkClientRegistrationProvider {
 
     OIDCConfiguration oidcConfiguration;
 
-
+    /**
+     * Create a spring ClientRegistration from either a Resource (i.e. file containing the JSON) or from
+     * a string containing the JSON text.
+     *
+     * It also requires the server's clientid and clientsecret.
+     *
+     *
+     * NOTE: either set metadataResource OR serverMetadataJsonText.  If both are set then serverMetadataJsonText is used.
+     *       Allowing both makes the spring.xml configuration simpler.
+     *
+     * @param metadataResource         - reference to a file (spring will convert a fname to Resource for us)
+     * @param serverMetadataJsonText   - text of JSON file
+     * @param clientId                 - server's clientid
+     * @param clientSecret             - server's clientsecret
+     * @param oidcConfiguration        - GN's oidc configuration
+     * @throws IOException
+     * @throws ParseException
+     */
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
                                                 String serverMetadataJsonText,
                                                 String clientId,
@@ -84,6 +100,7 @@ public class GeonetworkClientRegistrationProvider {
         }
     }
 
+    //get the JSON from an inputstream (i.e. from a file, string, or resource)
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 String clientId,
                                                 String clientSecret,
@@ -91,6 +108,23 @@ public class GeonetworkClientRegistrationProvider {
         this.oidcConfiguration = oidcConfiguration;
         clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
     }
+
+    // create the ClientRegistration from the input stream. Use "inputstream" as issuer (not used anywhere).
+    // assumes oidcConfiguration is already set
+    ClientRegistration createClientRegistration(InputStream inputStream,
+                                                String clientId,
+                                                String clientSecret) throws IOException, ParseException {
+        return createClientRegistration(inputStreamToString(inputStream), "inputstream", clientId, clientSecret);
+    }
+
+    // create the ClientRegistration from the input stream. Uses the filename as issuer (not used anywhere).
+    // assumes oidcConfiguration is already set
+    ClientRegistration createClientRegistration(Resource metadataResource,
+                                                String clientId,
+                                                String clientSecret) throws IOException, ParseException {
+        return createClientRegistration(resourceToString(metadataResource), metadataResource.getFilename(), clientId, clientSecret);
+    }
+
 
     /**
      * given a resource, read its content and return it as a string
@@ -100,7 +134,7 @@ public class GeonetworkClientRegistrationProvider {
     }
 
     /**
-     * given a resource, read its content and return it as a string
+     * given an inputstream, read its content and return it as a string
      */
     public static String inputStreamToString(InputStream inputStream) throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
@@ -110,7 +144,8 @@ public class GeonetworkClientRegistrationProvider {
         }
     }
 
-    //taken from spring's ClientRegistrations#getClientAuthenticationMethod
+    // Finds the "best" authentication method (usually BASIC)
+    //taken from spring's ClientRegistrations#getClientAuthenticationMethod which is private
     private static ClientAuthenticationMethod getClientAuthenticationMethod(String issuer,
                                                                             List<com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod> metadataAuthMethods) {
         if (metadataAuthMethods == null || metadataAuthMethods.contains(com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod.CLIENT_SECRET_BASIC)) {
@@ -127,36 +162,44 @@ public class GeonetworkClientRegistrationProvider {
             + "ClientAuthenticationMethod.NONE are supported. The issuer \"" + issuer + "\" returned a configuration of " + metadataAuthMethods);
     }
 
-    //taken from spring's ClientRegistrations#getScopes
-    private static List<String> getScopes(AuthorizationServerMetadata metadata) {
+    // returns all the scopes in the server's configuration.
+    //taken from spring's ClientRegistrations#getScopes which is private
+    //Added: limit scopes using an allow-list (null = allow all).
+    private   List<String> getScopes(AuthorizationServerMetadata metadata) {
         Scope scope = metadata.getScopes();
+        List<String> scopes;
         if (scope == null) {
             // If null, default to "openid" which must be supported
-            return Collections.singletonList(OidcScopes.OPENID);
+            scopes= Collections.singletonList(OidcScopes.OPENID);
         } else {
-            return scope.toStringList();
+            scopes= scope.toStringList();
         }
+
+        //allow the user to limit the scopes.
+        // we are "intersecting" the two lists and ensure that "openid" is in the result.
+        if (oidcConfiguration.getScopeSet() != null){
+            List<String> configuredScopes = oidcConfiguration.getScopeSet();
+            scopes.retainAll(configuredScopes);
+            if (!scopes.contains(OidcScopes.OPENID))
+                scopes.add(OidcScopes.OPENID);
+        }
+        return scopes;
     }
 
+    /**
+     * @return the actual ClientRegistration
+     */
     public ClientRegistration getClientRegistration() {
         return clientRegistration;
     }
 
-    ClientRegistration createClientRegistration(InputStream inputStream,
-                                                String clientId,
-                                                String clientSecret) throws IOException, ParseException {
-        return createClientRegistration(inputStreamToString(inputStream), "inputstream", clientId, clientSecret);
-    }
 
-    ClientRegistration createClientRegistration(Resource metadataResource,
-                                                String clientId,
-                                                String clientSecret) throws IOException, ParseException {
-        return createClientRegistration(resourceToString(metadataResource), metadataResource.getFilename(), clientId, clientSecret);
-    }
 
     /**
      * creates a ClientRegistration by reading the standard configuration json (from the IDP server).
      * Also requires the client ID (from server) and client secret (from server).
+     * <p>
+     * this uses the oidcConfiguration to limit requested scopes.
      * <p>
      * Most of this code is from Spring.
      *
@@ -172,10 +215,10 @@ public class GeonetworkClientRegistrationProvider {
                                                 String clientSecret) throws IOException, ParseException {
 
         String json = jsonServerConfig;
-        String issuer = "issuer: file:" + fname;
+        String issuer = "issuer: " + fname;
 
 
-        //from ClientRegistrations#withProviderConfiguration
+        //from spring ClientRegistrations#withProviderConfiguration
         OIDCProviderMetadata oidcMetadata = OIDCProviderMetadata.parse(json);
         ClientAuthenticationMethod method = getClientAuthenticationMethod(issuer, oidcMetadata.getTokenEndpointAuthMethods());
         List<GrantType> grantTypes = oidcMetadata.getGrantTypes();
@@ -186,14 +229,7 @@ public class GeonetworkClientRegistrationProvider {
         }
         List<String> scopes = getScopes(oidcMetadata);
 
-        //allow the user to limit the scopes.
-        // we are "intersecting" the two lists and ensure that "openid" is in the result.
-        if (oidcConfiguration.getScopeSet() != null){
-            List<String> configuredScopes = oidcConfiguration.getScopeSet();
-            scopes.retainAll(configuredScopes);
-            if (!scopes.contains(OidcScopes.OPENID))
-                scopes.add(OidcScopes.OPENID);
-        }
+
 
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
@@ -203,7 +239,6 @@ public class GeonetworkClientRegistrationProvider {
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .clientAuthenticationMethod(method)
             .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
-            //.redirectUriTemplate("{baseUrl}/signin")
             .authorizationUri(oidcMetadata.getAuthorizationEndpointURI().toASCIIString())
             .providerConfigurationMetadata(configurationMetadata)
             .tokenUri(oidcMetadata.getTokenEndpointURI().toASCIIString())

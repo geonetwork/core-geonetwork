@@ -42,20 +42,48 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/**
+ * This the most complicated class - and deals with assigning things like GN-Profile and GN-Group/Profiles to a user.
+ *
+ * NOTE:
+ *   Profile - i.e. Reviewer, Administrator, etc...
+ *   ProfileGroup - this allows GN-group access.
+ *                  This is in the form of a map:  Profile (i.e. Reviewer) -> list of gn-group names
+ *                  NOTE: in the simplest case (i.e. just a Reviewer), the group list is empty.
+ *   Authorities - this includes ALL the lower-level permissions - so an "Administrator" will also have
+ *                 Reviewer, Editor, UserAdmin, RegisteredUser, Guest, etc...
+ *   MaxProfile  - the "highest" Profile (i.e. Administrator) the user has
+ *
+ *
+ *   This code is aware of (cf. OIDCConfiguration);
+ *   a. where in the ID Token the user's roles are stored
+ *   b. the user's minimumProfile
+ *   c. role converter (convert's OIDC roles to GN profiles OR to GN-group/GN-profile)
+ */
 public class OIDCRoleProcessor {
 
     @Autowired
     public OIDCConfiguration oidcConfiguration;
 
-
-    public Map<Profile, List<String>> getProfileGroups(OidcIdToken accessToken) {
-        List<String> oidcOriginalRoleNames = getTokenRoles(accessToken);
+    /**
+     * given an id Token, compute the profileGroups
+     * @param idToken - from OIDC for the user
+     * @return
+     */
+    public Map<Profile, List<String>> getProfileGroups(OidcIdToken idToken) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(idToken);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
 
         return getProfileGroups(roleNames);
     }
 
+    /**
+     * given an oauth2 user, compute the profileGroups (i.e. from the user's attributes)
+     * @param user - oauth2 user from OIDC
+     * @return
+     */
     public Map<Profile, List<String>> getProfileGroups(OAuth2User user) {
         List<String> oidcOriginalRoleNames = getTokenRoles(user);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
@@ -64,27 +92,52 @@ public class OIDCRoleProcessor {
         return getProfileGroups(roleNames);
     }
 
-
-    public Profile getProfile(OidcIdToken accessToken) {
-        return getProfile(accessToken.getClaims());
+    /**
+     * get the max profile from an idtoken
+     * @param idToken - from OIDC for the user
+     * @return
+     */
+    public Profile getProfile(OidcIdToken idToken) {
+        return getProfile(idToken.getClaims());
     }
 
+
+    /**
+     * get the max profile from an  oauth2 use's attributes
+     * @param user - oauth2 user from OIDC
+     * @return
+     */
     public Profile getProfile(OAuth2User user) {
         return getProfile(user.getAttributes());
     }
 
 
-    public List<String> getTokenRoles(OidcIdToken accessToken) {
-        return getTokenRoles(accessToken.getClaims());
+    /**
+     * Given an oidc idToken, get the roles that are in the token (only those)
+     * @param idToken from oidc server
+     * @return
+     */
+    public List<String> getTokenRoles(OidcIdToken idToken) {
+        return getTokenRoles(idToken.getClaims());
     }
 
-
+    /**
+     * Given an oidc user, get the roles that are in the token (only those)
+     * @param user  from oidc server
+     * @return
+     */
     public List<String> getTokenRoles(OAuth2User user) {
         return getTokenRoles(user.getAttributes());
     }
 
     //---
 
+    /**
+     * given a list of oidc roles, run through the roleConverter to convert them GN profile
+     * (or in the form of "GN-group:GN-profile")
+     * @param originalRoleNames
+     * @return
+     */
     public List<String> simpleConvertRoles(List<String> originalRoleNames) {
         return originalRoleNames.stream()
             .map(x -> oidcConfiguration.roleConverter.get(x) == null ? x : oidcConfiguration.roleConverter.get(x))
@@ -93,10 +146,22 @@ public class OIDCRoleProcessor {
     }
 
 
+    /**
+     * Given an OAuth2User user, create the hierarchy of profiles (GrantedAuthority) for the user.
+     * @param roleHierarchy configured in GN
+     * @param user from oidc
+     * @return
+     */
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, OAuth2User user) {
         return createAuthorities(roleHierarchy, user.getAttributes());
     }
 
+    /**
+     * Given set of user claims, create the hierarchy of profiles (GrantedAuthority) for the user.
+     * @param roleHierarchy configured in GN
+     * @param claims from oidc user
+     * @return
+     */
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, Map<String, Object> claims) {
         List<String> oidcOriginalRoleNames = getTokenRoles(claims);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
@@ -111,6 +176,11 @@ public class OIDCRoleProcessor {
         return roleHierarchy.getReachableGrantedAuthorities(authorities);
     }
 
+    /**
+     * Given a set of user attributes (i.e. claims), get the "highest" profile for the user.
+     * @param attributes from oidc
+     * @return
+     */
     public Profile getProfile(Map<String, Object> attributes) {
         List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
@@ -148,10 +218,10 @@ public class OIDCRoleProcessor {
 
     /**
      * Get the profiles, and the list of groups for that profile, from the access token.
-     *
+     * @param rolesInToken list of roles for the user
      * @return map object with the profile and related groups.
      */
-    //from keycloak
+    //from GN keycloak plugin
     public Map<Profile, List<String>> getProfileGroups(List<String> rolesInToken) {
 
         String roleGroupSeparator = oidcConfiguration.groupPermissionSeparator;

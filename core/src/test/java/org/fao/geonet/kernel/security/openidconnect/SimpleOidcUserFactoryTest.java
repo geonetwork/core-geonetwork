@@ -36,9 +36,13 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * tests the SimpleOidcUserFactory
+ */
 public class SimpleOidcUserFactoryTest {
 
 
+    //create the factory
     public SimpleOidcUserFactory createFactory() {
         SimpleOidcUserFactory factory = new SimpleOidcUserFactory();
         factory.oidcConfiguration = new OIDCConfiguration();
@@ -48,6 +52,7 @@ public class SimpleOidcUserFactoryTest {
         return factory;
     }
 
+    //make sure that user created has the correct information in it.
     @Test
     public void testCreation() throws Exception {
         SimpleOidcUserFactory factory = createFactory();
@@ -64,6 +69,7 @@ public class SimpleOidcUserFactoryTest {
         assertEquals(Profile.Administrator.toString(), user.getProfile());
     }
 
+    //example ID token
     public OidcIdToken createToken() throws Exception {
 
         Map<String, Object> claims = new HashMap<>();

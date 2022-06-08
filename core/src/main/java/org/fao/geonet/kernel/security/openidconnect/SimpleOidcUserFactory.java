@@ -25,6 +25,9 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 
+/**
+ * Trivial factory for making SimpleOidcUser.
+ */
 public class SimpleOidcUserFactory {
 
     @Autowired

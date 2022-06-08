@@ -34,7 +34,17 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
 
 /**
+ *  This is to make things work well in Geonetwork.
+ *  Spring's oauth allows for multiple oauth providers - and the /signin/... path would normally indicate which one
+ *  (by the name).
  *
+ *  We're only using one provider (called CLIENTREGISTRATION_NAME - "geonetwork-oicd") and it works better in GN if
+ *  you just use a simple "/signin" URL instead of a more complicated one.
+ *
+ *  This class bridges between the two methods (spring and GN's).
+ *
+ *  NOTE: this is MUCH more difficult that expected because spring's DefaultOAuth2AuthorizationRequestResolver
+ *  is a FINAL CLASS and most of its methods are private!
  */
 public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
 
@@ -51,13 +61,14 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
         wrappedResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, authorizationRequestBaseUri);
     }
 
+    //defaults the "action" to "login" and uses the GN default oidc provider name
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
 
         if (!this.authorizationRequestMatcher.matches(request)) {
             return null;
         }
-
+        // defaults the "action" to "login"
         HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
             @Override
             public String getParameter(String name) {
@@ -68,18 +79,17 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                     return "login";
                 return value;
             }
-
         };
-
         return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
     }
 
+    //defaults the "action" to "authorize" and uses the GN default oidc provider name
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
         if (!this.authorizationRequestMatcher.matches(request)) {
             return null;
         }
-
+        // defaults the "action" to "authorize"
         HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
             @Override
             public String getParameter(String name) {
@@ -91,7 +101,6 @@ public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implement
                 return value;
             }
         };
-
         return wrappedResolver.resolve(wrappedRequest, CLIENTREGISTRATION_NAME);
     }
 

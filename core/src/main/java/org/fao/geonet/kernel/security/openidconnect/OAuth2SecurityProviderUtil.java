@@ -30,12 +30,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
+/**
+ * This implements GN's SecurityProviderUtil.
+ *
+ * Based on GN's Keycloak security plugin.
+ */
 public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
 
     @Autowired
     OidcUser2GeonetworkUser oidcUser2GeonetworkUser;
 
 
+    // setup for BEARER authentication
     public String getSSOAuthenticationHeaderValue() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof OidcUser) {
             OidcUser user = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -49,6 +55,8 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         return getUserDetails(auth, false);
     }
 
+    // get the user's details (spring).  This might update the GN database with the user
+    // (see underlying  oidcUser2GeonetworkUser#getUserDetail for when).
     public UserDetails getUserDetails(Authentication auth, boolean withDbUpdate) {
         if (auth != null && auth.getPrincipal() instanceof OidcUser) {
             OidcUser user = (OidcUser) auth.getPrincipal();

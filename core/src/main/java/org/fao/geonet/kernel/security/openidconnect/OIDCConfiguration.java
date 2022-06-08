@@ -26,24 +26,59 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+/**
+ * This provides the configuration for the OIDC security.
+ * see the spring-security-openidconnect.xml and spring-security-openidconnect-overrides.properties files.
+ */
 public class OIDCConfiguration implements SecurityProviderConfiguration {
 
+    /**
+     * in the ID token, which property contain's the users organization?
+     */
     public String organizationProperty = "organization";
+
+    /**
+     *   For role/groups, we allow them to take the form of "GN-group:GN-profile".
+     *   this defines the ":" separator.
+     *   Shouldn't need to change this.
+     */
     public String groupPermissionSeparator = ":";
+
+    /**
+     * Where, in the id token are the groups/roles stored?
+     * This should be a list of group/role names.
+     * It can be in the form of "property1.property2"
+     */
     public String idTokenRoleLocation = "groups";
+
+    /**
+     * Converts roles from the OIOC server to GN profiles (or in the form of "GN-group:GN-profile").
+     * You can specify via setRoleConverterString in the form:
+     * "OIDCServerRole1=GNProfile,OIDCServerRole2=GROUP:PROFILE"
+     */
     public Map<String, String> roleConverter = new HashMap<>();
+
+    /**
+     * All users who login via the OIDC will have this profile (at a minimum).
+     * This is useful to allow ALL users in an org to login to GN without having to setup all users.
+     * Typically, this should be GUEST or REGISTEREDUSER.  But, you can make it higher (i.e. Editor).
+     */
     public String minimumProfile = "Guest";
+
+    /**
+     * if true, always update the GN user with information from OIDC.
+     */
     public boolean userProfileUpdateEnabled = true;
+
+    /**
+     * if true, always update the GN group-profile with information from the OIDC roles.
+     */
     public boolean userGroupUpdateEnabled = true;
-    public boolean addAccessTokenClaimsToUser = false;  //usually false - take the Access Token claims and put in the user
 
     public String getScopes() {
         return scopes;
@@ -132,7 +167,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         this.userGroupUpdateEnabled = userGroupUpdateEnabled;
     }
 
-    // "group1:role1,group2:role2,..."
+    // "group1=role1,group2=role2,..."
     public void updateRoleConverterString(String serialized) {
         Map<String, String> result = new HashMap<>();
         if (!StringUtils.hasText(serialized)) {
@@ -141,7 +176,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         serialized = serialized.trim();
         String[] items = serialized.split(",");
         for (String item : items) {
-            String[] keyValue = item.split(":");
+            String[] keyValue = item.split("=");
             result.put(keyValue[0].trim(), keyValue[1].trim());
         }
         this.roleConverter = result;
@@ -154,11 +189,4 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         updateRoleConverterString(roleConverterString);
     }
 
-    public boolean isAddAccessTokenClaimsToUser() {
-        return addAccessTokenClaimsToUser;
-    }
-
-    public void setAddAccessTokenClaimsToUser(boolean addAccessTokenClaimsToUser) {
-        this.addAccessTokenClaimsToUser = addAccessTokenClaimsToUser;
-    }
 }

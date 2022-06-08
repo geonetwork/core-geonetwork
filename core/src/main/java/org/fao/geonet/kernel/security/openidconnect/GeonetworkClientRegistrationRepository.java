@@ -29,7 +29,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 
 /**
  * trivial implementation of ClientRegistrationRepository.
- * We have EXACTLY one - so we can just hardcode it.
+ * We have EXACTLY one - so we can just hardcode it (always return it).
  */
 public class GeonetworkClientRegistrationRepository implements ClientRegistrationRepository {
 

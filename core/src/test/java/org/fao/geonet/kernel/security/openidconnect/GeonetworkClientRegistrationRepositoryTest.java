@@ -28,8 +28,12 @@ import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegis
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProviderTest.string2InputStream;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * tests the GeonetworkClientRegistrationRepository
+ */
 public class GeonetworkClientRegistrationRepositoryTest {
 
+    //tests that you can get the configured RegistrationProvider and it has the correct name
     @Test
     public void testRepo() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
