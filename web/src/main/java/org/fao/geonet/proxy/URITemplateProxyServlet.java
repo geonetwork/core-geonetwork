@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
@@ -118,6 +119,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         super.initTarget();
     }
 
+
     /**
      * Creates the HttpClient used to make the proxied requests.
      * It configures the client to use system properties like
@@ -125,14 +127,11 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      * <p>
      * Called from {@link #init(ServletConfig)}.
      *
-     * @param requestConfig the configuration used for the request made by the client.
+     * @param clientBuilder the httpClient builder used for creating the client.
      */
     @Override
-    protected HttpClient createHttpClient(RequestConfig requestConfig) {
-        return HttpClients.custom()
-            .setDefaultRequestConfig(requestConfig)
-            .useSystemProperties()
-            .build();
+    protected HttpClient buildHttpClient(HttpClientBuilder clientBuilder) {
+        return clientBuilder.useSystemProperties().build();
     }
 
     @Override
