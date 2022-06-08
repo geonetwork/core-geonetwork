@@ -271,6 +271,16 @@
       $scope.mdView = mdView;
       gnMdView.initMdView();
 
+      $scope.getMdLanguages = function() {
+        if (!mdView.current.record) {
+          return [];
+        }
+        return [mdView.current.record.mainLanguage].concat(
+          mdView.current.record.otherLanguage.filter(function(lang) {
+            return lang !== mdView.current.record.mainLanguage;
+          }) || []);
+      }
+
       $scope.goToSearch = function (any) {
         $location.path("/search").search({ any: any });
       };
