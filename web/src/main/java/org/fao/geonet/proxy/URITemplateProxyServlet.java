@@ -112,14 +112,15 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     }
 
     /**
-     * Init some properties from the servlet's init parameters. In the case of {@code targetUri } in case it's empty
-     * in web.xml it tries to be resolved the same way other GeoNetwork configuration properties are resolved:
+     * Init some properties from the servlet's init parameters. They try to be resolved the same way other GeoNetwork
+     * configuration properties are resolved. If after checking externally no configuration can be found it relies into
+     * the value of {@code targetUri} in web.xml
      * <ol>
      * <li> {@code ${GEONETWORK_APP_NAME}_${SERVLET_NAME}_TARGETURI}:
      *         Look for an environment variable, for example {@code MYWEBAPP_MICROSERVICESPROXY_TARGETURI}</li>
      * <li> {@code ${GEONETWORK_APP_NAME}.${SERVLET_NAME}.targetUri}: Look for a system property, for example
      *      {@code mywebapp.MicroservicesProxy.targetUri}</li>
-     * <li> {@code ${GEONETWORK_APP_NAME}.${SERVLET_NAME}.targetUri}: Look for a property in <pre>config.properties</pre>,
+     * <li> {@code ${GEONETWORK_APP_NAME}.${SERVLET_NAME}.targetUri}: Look for a property in {@code config.properties},
      *      for example {@code mywebapp.MicroservicesProxy.targetUri}</li>
      * <li> {@code GEONETWORK_${SERVLET_NAME}_TARGETURI}: Look for an environment variable starting by GEONETWORK, for example
      *      {@code GEONETWORK_MICROSERVICESPROXY_TARGETURI}</li>
@@ -128,33 +129,38 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      * <li> {@code geonetwork.${SERVLET_NAME}.targetUri}: Look for a property in {@code config.properties} starting by geonetwork,
      *      for example {@code geonetwork.MicroservicesProxy.targetUri}</li>
      * </ol>
+     * <p>
+     * Finally, it checks the value of {@code targetUri} in web.xml if no external config has been found.
      *
-     * @throws ServletException
+     * @throws ServletException if the targetUri is not defined externally and the parameter is not even in web.xml.
      */
     protected void initTarget() throws ServletException {
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
-        String doForwadHostString = getConfigParam(P_FORWARDEDHOST);
-        if (doForwadHostString != null) {
-            String doForwadHostPrefixPathString = getConfigParam(P_FORWARDEDHOSTPREFIXPATH);
-            this.doForwardHost = Boolean.parseBoolean(doForwadHostString);
+        String doForwardHostString = getConfigParam(P_FORWARDEDHOST);
+        if (doForwardHostString != null) {
+            String doForwardHostPrefixPathString = getConfigParam(P_FORWARDEDHOSTPREFIXPATH);
+            this.doForwardHost = Boolean.parseBoolean(doForwardHostString);
             this.doForwardHostPrefixPath =
-                doForwadHostPrefixPathString != null ? doForwadHostPrefixPathString : "";
+                doForwardHostPrefixPathString != null ? doForwardHostPrefixPathString : "";
         }
-        super.initTarget();
 
-        // If targetUri is not set in web.xml try to resolve it from java properties or environment variables.
+        // Try to resolve it from java properties or environment variables.
         // The name is composed by the application base url,  servlet name, a point or an underscore and targetUri word.
+        targetUriTemplate = getConfigValue(TARGET_URI_NAME);
+
+        // If not set externally try to use the value from web.xml
         if (StringUtils.isBlank(targetUriTemplate)) {
-            targetUriTemplate = StringUtils.defaultString(getConfigValue(TARGET_URI_NAME), "");
+            super.initTarget();
         }
+
+        if (targetUriTemplate == null) {
+            throw new ServletException(P_TARGET_URI + " is required in web.xml or set externally");
+        }
+
     }
 
     private String getConfigValue(String sufix) {
-        // If targetUri is not set in web.xml try to resolve it from java properties or environment variables.
-        // The name is composed by the servlet name, a point or an underscore and targetUri word.
         String result;
-
-
 
         // Property defined according to webapp name
         ServletPathFinder pathFinder = new ServletPathFinder(getServletContext());
@@ -163,14 +169,18 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         if (org.apache.commons.lang.StringUtils.isNotEmpty(baseUrl)) {
             webappName = baseUrl.substring(1);
         }
+        LOGGER.info(
+            "Looking for " + webappName + "." + getServletName() + "." + sufix + " in Environment variables, " +
+                "System properties and config.properties entries");
         result = resolveConfigValue(webappName + "." + getServletName() + "." + sufix);
 
 
         if (StringUtils.isBlank(result)) {
             // GEONETWORK is the default prefix
 
-            LOGGER.info("Property " + sufix + " of servlet " + getServletName() + " is not set in web.xml. " +
-                "Looking for its value in Environment variables, System properties and config.properties entries");
+            LOGGER.info(
+                "Looking for geonetwork." + getServletName() + "." + sufix +  "  in Environment variables, " +
+                    "System properties and config.properties entries");
             result = resolveConfigValue("geonetwork." + getServletName() + "." + sufix);
         }
         return result;
