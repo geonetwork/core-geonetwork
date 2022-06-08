@@ -231,17 +231,16 @@
   </xsl:template>
   <xsl:template match="gmd:metadataStandardName" priority="5" mode="from19139to19115-3.2018">
     <!--
-      metadataStandardName and gmd:metadataStandardVersion are combined into a CI_Citation
+      Output the converted record's new metadata standard name
     -->
     <mdb:metadataStandard>
       <cit:CI_Citation>
         <cit:title>
           <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
         </cit:title>
-        <xsl:call-template name="writeCharacterStringElement">
-          <xsl:with-param name="elementName" select="'cit:edition'"/>
-          <xsl:with-param name="nodeWithStringToWrite" select="../gmd:metadataStandardVersion"/>
-        </xsl:call-template>
+        <cit:edition>
+          <gco:CharacterString>1.0</gco:CharacterString>
+        </cit:edition>
       </cit:CI_Citation>
     </mdb:metadataStandard>
   </xsl:template>
