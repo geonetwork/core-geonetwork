@@ -168,7 +168,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         if (StringUtils.isBlank(result)) {
             // GEONETWORK is the default prefix
 
-            LOGGER.info("Property " + TARGET_URI_NAME + " of servlet " + getServletName() + " is not set in web.xml. " +
+            LOGGER.info("Property " + sufix + " of servlet " + getServletName() + " is not set in web.xml. " +
                 "Looking for its value in Environment variables, System properties and config.properties entries");
             result = resolveConfigValue("geonetwork." + getServletName() + "." + sufix);
         }
