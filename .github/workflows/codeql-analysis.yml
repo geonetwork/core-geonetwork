@@ -49,14 +49,6 @@ jobs:
         # The package type (jdk, jre, jdk+fx, jre+fx)
         java-package: jdk
         cache: maven
-    
-    - name: Maven repository caching
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
 
 
     # Initializes the CodeQL tools for scanning.
