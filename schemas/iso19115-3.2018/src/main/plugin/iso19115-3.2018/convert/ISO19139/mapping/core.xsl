@@ -235,7 +235,7 @@
       <cit:CI_Citation>
         <xsl:choose>
           <!-- Replace default standard name with fixed value ....-->
-          <xsl:when test="matches(upper-case(gcoold:CharacterString), 'ISO\s?191(15|39)((:|\.)2003/19139)?')">
+          <xsl:when test="matches(gcoold:CharacterString, '^ISO\s?191(15|39)((:|\.)2003/19139)?$', 'i')">
             <cit:title>
               <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
             </cit:title>
