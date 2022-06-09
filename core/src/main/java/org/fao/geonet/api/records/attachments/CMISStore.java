@@ -57,7 +57,6 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -158,7 +157,7 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("CMISStore does not support getResourceInternal.");
+        throw new UnsupportedOperationException("CMISStore does not support getResourceInternal.");
     }
 
     private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
