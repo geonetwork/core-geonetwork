@@ -36,7 +36,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.zone.ZoneRules;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import static java.util.Calendar.YEAR;
 import static org.junit.Assert.assertEquals;
@@ -288,13 +290,27 @@ public class ISODateTest {
 
         assertEquals(expectedDateTime, date.getDateAndTime());
         assertEquals("1990-12-05", date.getDateAsString());
-
+        
         date = new ISODate(cal.getTimeInMillis(), true);
 
-        assertEquals("1990-12-05", date.getDateAndTime());
-        assertEquals("1990-12-05", date.getDateAsString());
+        // The calendar entry of 23:02:03:00 has 3483 seconds left in the day
+        int SECONDS_REMAINING = (58*60)+3;
+        if( localOffset(cal.getTimeInMillis()).getTotalSeconds() > -SECONDS_REMAINING ) {
+            assertEquals("1990-12-05", date.getDateAndTime());
+            assertEquals("1990-12-05", date.getDateAsString());
+        }
+        else {
+            assertEquals("1990-12-06", date.getDateAndTime());
+            assertEquals("1990-12-06", date.getDateAsString());
+        }
     }
 
+    private ZoneOffset localOffset(final long timeInEpochMilli){
+        ZoneRules rules = ZoneId.systemDefault().getRules();
+        Instant instant = Instant.ofEpochMilli(timeInEpochMilli);
+        ZoneOffset offset = rules.getOffset(instant);
+        return offset;
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateISODateExceptionBecauseOfNull() throws Exception {
