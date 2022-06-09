@@ -371,8 +371,10 @@
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
+              scope.isDoiEnabled = gnConfig['system.publication.doi.doienabled'];
               scope.isMdWorkflowEnableForMetadata = gnConfig['metadata.workflow.enable'] &&
-                angular.isDefined(scope.gnCurrentEdit.metadata.mdStatus);
+                scope.gnCurrentEdit.metadata.draft === 'y';
+              scope.isMdPublished = scope.gnCurrentEdit.metadata.isPublishedToAll === 'true';
 
               /**
                * Calls service 'relations.get' to load
@@ -395,6 +397,22 @@
                 return angular.isUndefined(scope.types) ? true :
                         category.match(scope.types) !== null;
               };
+
+              /**
+               * Doi can be published for a resource if:
+               *   - Doi publication is enabled.
+               *   - The resource matches doi.org url
+               *   - The workflow is not enabled for the metadata and
+               *     the metadata is published.
+               *
+               */
+              scope.canPublishDoiForResource = function (resource){
+                return scope.isDoiEnabled
+                  && resource.lUrl !== null
+                  && resource.lUrl.match('doi.org') !== null
+                  && !scope.isMdWorkflowEnableForMetadata
+                  && scope.isMdPublished;
+              }
 
               /**
                * Builds metadata url checking if the resource points to internal or external url.
