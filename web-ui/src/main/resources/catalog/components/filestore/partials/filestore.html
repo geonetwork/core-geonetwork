@@ -6,6 +6,12 @@
     fileStoreNoFileMatching
   </div>
 
+  <a class="btn btn-default btn-xs pull-right"
+     data-ng-show="metadataResources.length > 0"
+     data-gn-click-and-spin="loadMetadataResources()">
+    <i class="fa fa-fw fa-refresh"/>
+  </a>
+
   <table class="table gn-data-store">
     <tbody>
     <tr data-ng-repeat="r in metadataResources">

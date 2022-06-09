@@ -3172,17 +3172,15 @@
     <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
     <view name="default">
       <sidePanel>
-        <!-- General online source manager
-        <directive data-gn-onlinesrc-list=""/>
-        -->
+        <directive data-gn-validation-report=""/>
 
         <!-- Simple overview manager + online source manger for other types
         Limit the max number of overviews with data-number-of-overviews="3" attribute.
         In the full view, editor can access and manage the file store and
         thumbnail name and description not supported by the overview manager.
         -->
-        <directive data-gn-validation-report=""/>
         <directive data-gn-overview-manager=""/>
+
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
 
@@ -3192,10 +3190,39 @@
                    data-lang="lang"/>
 
         <directive data-gn-suggestion-list=""/>
+
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
+
+        <!--
+        Example for file upload in the main form
+        <section>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo//gmd:title"/>
+
+          * Manage uploaded file with a WWW:DOWNLOAD protocol
+          <directive data-gn-file-uploader=""
+                     data-type="onlines"/>
+
+          * Same but with custom titles and icons
+          <directive data-gn-file-uploader=""
+                     data-title="Resource for download"
+                     data-btn-label="Drop a file here"
+                     data-icon="fa-cloud"
+                     data-type="onlines"/>
+
+          * Without the panel
+          <directive data-gn-file-uploader=""
+                     data-title=""
+                     data-type="onlines"/>
+
+          * With a custom protocol
+          <directive data-gn-file-uploader=""
+                     data-protocol="DIRECTDOWNLOAD"
+                     data-type="onlines"/>
+        </section>-->
+
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
