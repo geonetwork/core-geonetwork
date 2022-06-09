@@ -229,20 +229,41 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <xsl:template match="gmd:metadataStandardName" priority="5" mode="from19139to19115-3.2018">
-    <!--
-      Output the converted record's new metadata standard name
-    -->
-    <mdb:metadataStandard>
-      <cit:CI_Citation>
-        <cit:title>
-          <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
-        </cit:title>
-        <cit:edition>
-          <gco:CharacterString>1.0</gco:CharacterString>
-        </cit:edition>
-      </cit:CI_Citation>
-    </mdb:metadataStandard>
+  <xsl:template match="gmd:metadataStandardName" priority="5"
+                mode="from19139to19115-3.2018">
+    <xsl:choose>
+      <!-- Replace default standard name with fixed value ....-->
+      <xsl:when test="matches(upper-case(gcoold:CharacterString), 'ISO\s?191(15|39)((:|\.)2003/19139)?')">
+        <mdb:metadataStandard>
+          <cit:CI_Citation>
+            <cit:title>
+              <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
+            </cit:title>
+            <cit:edition>
+              <gco:CharacterString>1.0</gco:CharacterString>
+            </cit:edition>
+          </cit:CI_Citation>
+        </mdb:metadataStandard>
+      </xsl:when>
+      <!--
+        or combined custom ones metadataStandardName and gmd:metadataStandardVersion
+        into a CI_Citation
+      -->
+      <xsl:otherwise>
+        <mdb:metadataStandard>
+          <cit:CI_Citation>
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'cit:title'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
+            </xsl:call-template>
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'cit:edition'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="../gmd:metadataStandardVersion"/>
+            </xsl:call-template>
+          </cit:CI_Citation>
+        </mdb:metadataStandard>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   <!-- gmd:spatialRepresentationInfo uses default templates -->
   <xsl:template match="gmi:geographicCoordinates" mode="from19139to19115-3.2018">
