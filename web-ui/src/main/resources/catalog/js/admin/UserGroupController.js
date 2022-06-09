@@ -41,9 +41,9 @@
    */
   module.controller('GnUserGroupController', [
     '$scope', '$routeParams', '$http', '$rootScope',
-    '$translate', '$timeout', 'gnConfig',
+    '$translate', '$timeout', 'gnConfig', 'gnConfigService',
     function($scope, $routeParams, $http, $rootScope,
-        $translate, $timeout, gnConfig) {
+        $translate, $timeout, gnConfig, gnConfigService) {
 
       $scope.searchObj = {
         params: {
@@ -102,17 +102,18 @@
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
 
-      $scope.passwordMinLength =
-        Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
-      $scope.passwordMaxLength =
-        Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
-      $scope.usePattern = gnConfig['system.security.passwordEnforcement.usePattern'];
-      $scope.allowAdminReset = gnConfig['system.security.password.allowAdminReset'];
-
-      if ($scope.usePattern) {
-        $scope.passwordPattern = new RegExp(
-          gnConfig['system.security.passwordEnforcement.pattern']);
-      }
+      gnConfigService.load().then(function(c) {
+        $scope.passwordMinLength =
+          Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
+        $scope.passwordMaxLength =
+          Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
+        $scope.usePattern = gnConfig['system.security.passwordEnforcement.usePattern'];
+        $scope.allowAdminReset = gnConfig['system.security.password.allowAdminReset'];
+        if ($scope.usePattern) {
+          $scope.passwordPattern = new RegExp(
+            gnConfig['system.security.passwordEnforcement.pattern']);
+        }
+      });
 
       // This is to force IE11 NOT to cache json requests
       if (!$http.defaults.headers.get) {
