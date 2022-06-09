@@ -41,6 +41,7 @@ for identityMapping in "${identityMappings[@]}"; do
       urlPublique=$(echo ${urlPubliques[$configCounter]} | sed -e 's/\r//g')
       urlInterne=$(echo ${urlInternes[$configCounter]} | sed -e 's/\r//g')
       echo "$urlPublique, $urlInterne" >> temp.csv
+      ((configCounter++))
       continue
     fi
 
