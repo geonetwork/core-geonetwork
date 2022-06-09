@@ -181,7 +181,7 @@ public class MessageProducerControllerTest {
         ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2, false);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertTrue(message.startsWith("Unique index or primary key violation"));
+        assertTrue(message.contains("23505")); // H2 error code for duplicate unique or primary
         toTest.delete(messageProducerEntity.getId());
         toTest.delete(messageProducerEntity2.getId());
     }
