@@ -65,6 +65,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -367,11 +368,14 @@ public class MetadataWorkflowApi {
         }
 
 
-        // if the workflow is enabled in the metadata (set status 'draft') in a metadata created before enabling the workflow
-        // and the metadata is published, set the status 'approved'
-        if (metadataStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT) &&
-            accessManager.isVisibleToAll(String.valueOf(metadata.getId()))) {
-            metadataStatus.setStatusValue(statusValueRepository.findById(Integer.parseInt(StatusValue.Status.APPROVED)).get());
+        // When enabling the workflow in a  published metadata (has no previous statuses and setting the status to 'draft') created
+        // before activating the workflow in the settings --> set the status to 'approved'
+        if (metadataStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+            boolean enablingWorkflowInMetadata = metadataStatusRepository.count(MetadataStatusSpecs.hasMetadataId(metadata.getId())) == 0;
+
+            if (enablingWorkflowInMetadata && accessManager.isVisibleToAll(String.valueOf(metadata.getId()))) {
+                metadataStatus.setStatusValue(statusValueRepository.findById(Integer.parseInt(StatusValue.Status.APPROVED)).get());
+            }
         }
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
