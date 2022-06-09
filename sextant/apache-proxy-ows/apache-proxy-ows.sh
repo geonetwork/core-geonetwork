@@ -4,22 +4,25 @@
 if [ "$1" == "-h" ] ; then
     echo "Utilisation: ./ `basename $0` fichier_de_configuration.yaml"
     echo "This Help File: sh `basename $0` -h"
+    echo "Rajouter nom de colonne? `basename $0` -c"
     exit 0
 fi
 
 # Verifie que le fichier de conf est bien présent
 if [ ! -e "$1" ]; then
-    echo "Fichier $1, introuvable"
+    echo "Fichier de configuration introuvable ou non spécifié"
     exit 0
 fi
 
-# supprime le fichier csv existant.
-rm temp.csv
+
 rm apache_conf.csv
 
 shopt -s globstar
 echo 'Début de parcours de fichier...'
-echo "url_publique, url_interne" >> apache_conf.csv
+
+if [ "$2" == "-c" ] ; then
+  echo "url_publique, url_interne" >> apache_conf.csv
+fi
 
 # loop over yaml configuration
 readarray identityMappings < <(yq eval ".sites[].filename" $1)
@@ -67,4 +70,6 @@ for identityMapping in "${identityMappings[@]}"; do
     ((configCounter++))
 
 done
-head temp.csv | sort >> apache_conf.csv
+cat temp.csv | sort >> apache_conf.csv
+# supprime le fichier csv existant.
+rm temp.csv
