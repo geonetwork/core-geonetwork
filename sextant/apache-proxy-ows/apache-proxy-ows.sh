@@ -34,8 +34,11 @@ for identityMapping in "${identityMappings[@]}"; do
     arrVar=()
     echo "Travail sur : $identityMapping"
     extension=`echo $identityMapping | sed 's/^.*\.//'`
-    echo "Extension des fichiers qui seront récupérés: $extension"
 
+    if [[ $extension == *\) ]]
+    then
+      extension='no_extension'
+    fi
     if [ -z "$extension" ]
     then
       urlPublique=$(echo ${urlPubliques[$configCounter]} | sed -e 's/\r//g')
@@ -44,16 +47,17 @@ for identityMapping in "${identityMappings[@]}"; do
       ((configCounter++))
       continue
     fi
-
-
     identityMapping=${identityMapping%/*}
     for f in $identityMapping/** ; do
-      echo $f
+
       # Keep only file and filename
       currentFileExtension=`echo $f |  sed 's/^.*\.//'`
       if [[ -f "${f}" ]] && [ "${currentFileExtension}" = "${extension}" ]
       then
         arrVar+=("$(basename "${f%.*}")")
+      elif [[ -f "${f}" ]] && [ "${extension}" == "no_extension" ]
+        then
+         arrVar+=("$(basename "${f%.*}")")
       fi
     done
 

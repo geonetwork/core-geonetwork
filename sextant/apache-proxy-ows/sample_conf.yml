@@ -1,5 +1,5 @@
 sites:
-  - filename: ./tests/data/(*).yml
+  - filename: ./tests/data/(*)
     url_publique : /premierTest/wms/$1
     url_interne : http://premierTest:9080/ows/p/wfs/$1
   
