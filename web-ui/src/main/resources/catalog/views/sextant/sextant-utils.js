@@ -42,7 +42,7 @@
       return protocol !== '#OGC:WFS' && protocol !== '#OGC:WCS';
     });
 
-    var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map',
+    var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC Web Map Service', '#OGC:WMS-1.1.1-http-get-map',
       '#OGC:OWS-C'];
 
     this.feedMd = function(scope) {
