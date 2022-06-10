@@ -1568,7 +1568,7 @@
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.7.9</wro.version>
     <wro.debug>true</wro.debug>
-    <fop.version>2.4</fop.version>
+    <fop.version>2.7</fop.version>
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
