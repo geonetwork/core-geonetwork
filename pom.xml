@@ -1191,66 +1191,42 @@
 
   <!-- ================================================================== -->
   <!--     Repositories. This is where Maven looks for dependencies. The  -->
-  <!--     Maven repository is implicit and doesn't need to be specified. -->
+  <!--     Maven central repo is implicit and doesn't need to be listed.  -->
+  <!--                                                                    -->
+  <!--     Please do not add additional repositories as this increases    -->
+  <!--     build times, instead upload third-party dependencies to osgeo  -->
+  <!--     repo.osgeo.org geonetwork-cache repository, or configure osgeo -->
+  <!--     releases repository to cache additional repos of interest:     -->
+  <!--                                                                    -->
+  <!--     The following are cached for geonetwork:                       -->
+  <!--     http://maven.k-int.com/content/repositories/releases/          -->
+  <!--     repo.osgeo.org geonetwork-cache                                -->
+  <!--     https://raw.githubusercontent.com/geonetwork/core-maven-repo/  -->
+  <!--     http://maven.seasar.org/maven2                                 -->
   <!-- ================================================================== -->
   <repositories>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>osgeo</id>
-      <name>OSGeo repository</name>
+      <name>OSGeo Release repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
 
-    <!-- managed by repo.osgeo.org k-int-cache -->
-    <!-- /marcxml/marcxml/*                    -->
-    <!-- /marc4j/marc4j/*                      -->
-    <!--repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>k-int</id>
-      <name>Developer k-int repository</name>
-      <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository-->
-
-    <!-- managed by repo.osgeo.org geonetwork-cache     -->
-    <!-- third party jar upload                         -->
-    <!-- TODO: move this content to geonetwork-releases -->
-    <!--
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
       <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </releases>
-      <id>core-maven-repo</id>
-      <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>osgeo-snapshot</id>
+      <name>OSGeo Snapshot repository</name>
+      <url>https://repo.osgeo.org/repository/snapshot/</url>
     </repository>
-    -->
-    <!-- managed by repo.osgeo.org seasar-cache       -->
-    <!-- /net.arnx.jsonic/jsonic/*                    -->
-    <!-- seasar repo, has jsonic - used by langdetect -->
-    <!--
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-    -->
-    <!-- managed by repo.osgeo.org geonetwork-releases  -->
-    <!-- third party jar upload                        -->
-    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
-    <!--
-    <repository>
-      <id>georchestra-mfprint</id>
-      <name>build-releases</name>
-      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
-    </repository>
-    -->
+
   </repositories>
 
 
