@@ -107,12 +107,11 @@
     <xsl:variable name="contactInfo"
                   select="if ($name != '') then $name else $mail"/>
 
-
     <resourceTitleObject type="object">{
       "default": "<xsl:value-of select="gn-fn-index:json-escape(
                                           concat($org, if ($contactInfo != '')
-                                            then concat(., ' (', $contactInfo, ')')
-                                            else .))"/>"
+                                          then concat(' (', $contactInfo, ')')
+                                          else ''))"/>"
       <xsl:for-each
         select="cit:party/cit:CI_Organisation/cit:name/lan:PT_FreeText/*/lan:LocalisedCharacterString[. != '']">
         ,"lang<xsl:value-of select="$allLanguages/lang[
