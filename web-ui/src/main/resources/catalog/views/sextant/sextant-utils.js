@@ -33,6 +33,7 @@
       '#MYO:MOTU-SUB',
       '#WWW:FTP',
       '#OGC:WFS',
+      '#OGC Web Feature Service',
       '#OGC:WCS'
     ];
 

@@ -502,12 +502,12 @@ goog.require('gn_alert');
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:(WMT?S.*|OWS-C)/'
+                      'query': '+linkProtocol:/OGC:(WMT?S.*|OWS-C)|OGC Web Map Service/'
                     }
                   },
                   'availableInDownloadService': {
                     'query_string': {
-                      'query': '+linkProtocol:/(OGC:(WFS.*|WCS)|FILE|DB|COPYFILE)/'
+                      'query': '+linkProtocol:/(OGC:(WFS.*|WCS)|FILE|DB|COPYFILE)|OGC Web Feature Service/'
                     }
                   },
                   'availableForFileDownload': {
