@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -163,7 +162,7 @@ public class JCloudStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("JCloud does not support getResourceInternal.");
+        throw new UnsupportedOperationException("JCloud does not support getResourceInternal.");
     }
 
     private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {

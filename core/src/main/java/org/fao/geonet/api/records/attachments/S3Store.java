@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
+
 
 public class S3Store extends AbstractStore {
     @Autowired
@@ -119,7 +119,7 @@ public class S3Store extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("S3Store does not support getResourceInternal.");
+        throw new UnsupportedOperationException("S3Store does not support getResourceInternal.");
     }
 
     private String getKey(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws Exception {
