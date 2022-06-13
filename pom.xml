@@ -1582,7 +1582,7 @@
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
-    <jupiter.version>5.7.0</jupiter.version>
+    <jupiter.version>5.8.2</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
