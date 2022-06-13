@@ -91,15 +91,10 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd} forcing timezone to UTC.
      */
     public ISODate(final long timeInEpochMillis, final boolean shortDate) {
-        ZoneId zoneId;
-        if (shortDate) {
-            zoneId = ZoneOffset.UTC;
-        } else {
-            zoneId = ZoneId.systemDefault();
-        }
-        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
-        internalDateTime = ZonedDateTime.ofInstant(instantParam, zoneId).truncatedTo(ChronoUnit.MILLIS);
         _shortDate = shortDate;
+
+        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
+        internalDateTime = instantParam.atZone(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS);
     }
 
     /**

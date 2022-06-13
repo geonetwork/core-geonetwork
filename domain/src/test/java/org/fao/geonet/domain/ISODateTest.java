@@ -282,6 +282,8 @@ public class ISODateTest {
         cal.set(Calendar.MINUTE, 2);
         cal.set(Calendar.SECOND, 3);
         cal.set(Calendar.MILLISECOND, 0);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
 
         ISODate date = new ISODate(cal.getTimeInMillis(), false);
         Instant instant = Instant.ofEpochMilli(cal.getTimeInMillis());
@@ -290,18 +292,40 @@ public class ISODateTest {
 
         assertEquals(expectedDateTime, date.getDateAndTime());
         assertEquals("1990-12-05", date.getDateAsString());
-        
-        date = new ISODate(cal.getTimeInMillis(), true);
+
+        // the date is forced into UTC (so it is stable across timezones)
+        ISODate shortDate = new ISODate(cal.getTimeInMillis(), true);
 
         // The calendar entry of 23:02:03:00 has 3483 seconds left in the day
-        int SECONDS_REMAINING = (58*60)+3;
-        if( localOffset(cal.getTimeInMillis()).getTotalSeconds() > -SECONDS_REMAINING ) {
-            assertEquals("1990-12-05", date.getDateAndTime());
+        assertEquals("1990-12-05", shortDate.getDateAsString());
+
+        TimeZone timeZone = TimeZone.getDefault();
+        try {
+            TimeZone PDT = TimeZone.getTimeZone("Canada/Pacific");
+            TimeZone.setDefault(PDT);
+
+            ISODate west = new ISODate(cal.getTimeInMillis(), true);
             assertEquals("1990-12-05", date.getDateAsString());
+
+            // not really expected to call this methood on a shortDate
+            assertEquals("1990-12-05", west.getDateAndTime());
         }
-        else {
-            assertEquals("1990-12-06", date.getDateAndTime());
-            assertEquals("1990-12-06", date.getDateAsString());
+        finally {
+            TimeZone.setDefault(timeZone);
+        }
+
+        try {
+            TimeZone CEST = TimeZone.getTimeZone("CET");
+            TimeZone.setDefault(CEST);
+
+            ISODate west = new ISODate(cal.getTimeInMillis(), true);
+            assertEquals("1990-12-05", date.getDateAsString());
+
+            // not really expected to call this methood on a shortDate
+            assertEquals("1990-12-05", west.getDateAndTime());
+        }
+        finally {
+            TimeZone.setDefault(timeZone);
         }
     }
 
