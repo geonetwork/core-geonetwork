@@ -50,13 +50,13 @@
 
           scope.defaultType = 'thumbnails';
           scope.type = attrs['type'] || scope.defaultType;
-          scope.title = attrs['title'] || (scope.isOverview ? 'overview' : 'download');
           scope.panelMode = angular.isDefined(attrs['title'])
             && attrs['title'] === '' ? false : true;
-          scope.icon = attrs['icon'] || (scope.isOverview ? 'gn-icon-thumbnail' : 'fa-download');
-          scope.btnLabel = attrs['btnLabel'] || (scope.isOverview ? 'chooseImage': 'chooseFileToUpload');
           scope.protocol = attrs['protocol'] || 'WWW:DOWNLOAD';
           scope.isOverview = scope.type === scope.defaultType;
+          scope.title = attrs['title'] || (scope.isOverview ? 'overview' : 'download');
+          scope.icon = attrs['icon'] || (scope.isOverview ? 'gn-icon-thumbnail' : 'fa-download');
+          scope.btnLabel = attrs['btnLabel'] || (scope.isOverview ? 'chooseImage': 'chooseFileToUpload');
           scope.removeBtnConfirm = scope.isOverview ? 'removeThumbnailConfirm' : 'removeOnlinesrcConfirm';
           scope.removeBtnTitle = scope.isOverview ? 'removeThumbnail' : 'remove';
 
