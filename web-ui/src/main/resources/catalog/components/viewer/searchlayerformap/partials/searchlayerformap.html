@@ -70,10 +70,10 @@
           <div class="col-md-10">
             <ul>
                 <li data-ng-repeat="link in md.relevantLinks">
-                  <a data-ng-click="addToMap(link)">
+                  <a data-ng-click="addToMap(link, md)">
                     {{link.desc || link.name}}&nbsp;
                   </a>
-                  <a data-ng-click="addToMap(link)"
+                  <a data-ng-click="addToMap(link, md)"
                      href=""
                      class="btn btn-default btn-xs">
                     <span data-translate="">addToMap</span>

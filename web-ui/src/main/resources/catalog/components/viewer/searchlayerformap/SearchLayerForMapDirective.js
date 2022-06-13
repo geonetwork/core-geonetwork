@@ -86,8 +86,8 @@
           scope.loadMap = function(map, md) {
             gnRelatedResources.getAction('MAP')(map, md);
           };
-          scope.addToMap = function(link) {
-            gnRelatedResources.getAction('WMS')(link);
+          scope.addToMap = function(link, md) {
+            gnRelatedResources.getAction('WMS')(link, md);
           };
           scope.zoomToLayer = function(md) {
             var proj = scope.map.getView().getProjection();
