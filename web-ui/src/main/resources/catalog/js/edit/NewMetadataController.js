@@ -171,15 +171,23 @@
 
       // One template, one group, no custom UUID, move to the editor.
       var unregisterFn = $scope.$watch('ownerGroup', function (n, o) {
+        moveToEditorCheckFn(n);
+      });
+      var unregisterMdListFn = $scope.$watchCollection('mdList', function (n, o) {
+        moveToEditorCheckFn(n);
+      });
+      function moveToEditorCheckFn(n) {
         if (n !== null && $scope.mdList != null) {
-           if ($scope.mdList.length === 1
-              && $scope.groups.length === 1
-              && $scope.generateUuid === true) {
+          if ($scope.mdList.length === 1
+            && $scope.groups.length === 1
+            && $scope.generateUuid === true) {
             $scope.createNewMetadata(false);
           }
           unregisterFn();
+          unregisterMdListFn();
         }
-      });
+      };
+
 
       /**
        * Get all the templates for a given type.
