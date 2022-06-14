@@ -428,11 +428,11 @@
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
-      <!--dependency>
-        <groupId>com.lowagie</groupId>
-        <artifactId>itext</artifactId>
-        <version>2.0.6</version>
-      </dependency-->
+      <dependency>
+        <groupId>com.github.librepdf</groupId>
+        <artifactId>openpdf</artifactId>
+        <version>1.3.26</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
@@ -813,7 +813,7 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>2.1.6</version>
+        <version>2.2.0</version>
       </dependency>
 
       <!-- Lib utils -->
@@ -912,19 +912,11 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.20</version>
       </dependency>
-      <!-- Not permitted under oracle licensing rules
-      <dependency>
-        <groupId>ojdbc</groupId>
-        <artifactId>ojdbc</artifactId>
-        <version>14</version>
-      </dependency>
-      -->
-      <!-- Oracle changed policy, this is from maven central -->
-      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
       <dependency>
          <groupId>com.oracle.database.jdbc</groupId>
          <artifactId>ojdbc8</artifactId>
          <version>19.6.0.0</version>
+         <!-- Oracle Free Use Terms and Conditions (FUTC) -->
        </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
@@ -1097,14 +1089,8 @@
       </dependency>
       <dependency>
         <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf-itext5</artifactId>
+        <artifactId>flying-saucer-pdf-openpdf</artifactId>
         <version>${flying-saucer}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -1162,9 +1148,9 @@
         <version>${jasypt.version}</version>
       </dependency>
       <dependency>
-        <groupId>diff_match_patch</groupId>
-        <artifactId>diff_match_patch</artifactId>
-        <version>current</version>
+          <groupId>org.bitbucket.cowwoc</groupId>
+          <artifactId>diff-match-patch</artifactId>
+          <version>1.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1194,70 +1180,42 @@
 
   <!-- ================================================================== -->
   <!--     Repositories. This is where Maven looks for dependencies. The  -->
-  <!--     Maven repository is implicit and doesn't need to be specified. -->
+  <!--     Maven central repo is implicit and doesn't need to be listed.  -->
+  <!--                                                                    -->
+  <!--     Please do not add additional repositories as this increases    -->
+  <!--     build times, instead upload third-party dependencies to osgeo  -->
+  <!--     repo.osgeo.org geonetwork-cache repository, or configure osgeo -->
+  <!--     releases repository to cache additional repos of interest:     -->
+  <!--                                                                    -->
+  <!--     The following are cached for geonetwork:                       -->
+  <!--     http://maven.k-int.com/content/repositories/releases/          -->
+  <!--     repo.osgeo.org geonetwork-cache                                -->
+  <!--     https://raw.githubusercontent.com/geonetwork/core-maven-repo/  -->
+  <!--     http://maven.seasar.org/maven2                                 -->
   <!-- ================================================================== -->
   <repositories>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>osgeo</id>
-      <name>OSGeo repository</name>
+      <name>OSGeo Release repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <id>redhat</id>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
 
-    <!-- managed by repo.osgeo.org k-int-cache -->
-    <!-- /marcxml/marcxml/*                    -->
-    <!-- /marc4j/marc4j/*                      -->
-    <!--repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>k-int</id>
-      <name>Developer k-int repository</name>
-      <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository-->
-
-    <!-- managed by repo.osgeo.org geonetwork-cache     -->
-    <!-- third party jar upload                         -->
-    <!-- TODO: move this content to geonetwork-releases -->
-    <!--
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
       <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </releases>
-      <id>core-maven-repo</id>
-      <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>osgeo-snapshot</id>
+      <name>OSGeo Snapshot repository</name>
+      <url>https://repo.osgeo.org/repository/snapshot/</url>
     </repository>
-    -->
-    <!-- managed by repo.osgeo.org seasar-cache       -->
-    <!-- /net.arnx.jsonic/jsonic/*                    -->
-    <!-- seasar repo, has jsonic - used by langdetect -->
-    <!--
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-    -->
-    <!-- managed by repo.osgeo.org geonetwork-releases  -->
-    <!-- third party jar upload                        -->
-    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
-    <!--
-    <repository>
-      <id>georchestra-mfprint</id>
-      <name>build-releases</name>
-      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
-    </repository>
-    -->
+
   </repositories>
 
 
@@ -1542,7 +1500,7 @@
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>23.0</geotools.version>
-    <pg.version>42.2.5</pg.version>
+    <pg.version>42.3.3</pg.version>
 
     <spring.version>5.2.6.RELEASE</spring.version>
     <spring.security.version>5.2.5.RELEASE</spring.security.version>
@@ -1561,10 +1519,10 @@
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
     <jackson.version>2.10.4</jackson.version>
-    <flying-saucer>9.0.7</flying-saucer>
+    <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j.version>1.2.17</log4j.version>
-    <log4j2.version>2.17.1</log4j2.version>
+    <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
