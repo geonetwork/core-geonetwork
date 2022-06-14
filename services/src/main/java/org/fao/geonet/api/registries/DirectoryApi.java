@@ -477,7 +477,7 @@ public class DirectoryApi {
                                 context, "" + record.getId(),
                                 collectResults.getUpdatedRecord(),
                                 validate, ufo, index, context.getLanguage(),
-                                new ISODate().toString(), true);
+                                new ISODate().toString(), true, false);
                             listOfRecordInternalId.add(record.getId());
                             report.addMetadataInfos(record, "Metadata updated.");
                         } catch (Exception e) {

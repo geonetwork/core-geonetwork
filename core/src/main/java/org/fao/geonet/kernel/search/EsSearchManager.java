@@ -195,10 +195,15 @@ public class EsSearchManager implements ISearchManager {
         return xsltForIndexing;
     }
 
-    private void addMDFields(Element doc, Path schemaDir, Element metadata, MetadataType metadataType) {
+    private void addMDFields(Element doc, Path schemaDir,
+                             Element metadata, MetadataType metadataType,
+                             boolean fastIndexMode) {
         final Path styleSheet = getXSLTForIndexing(schemaDir, metadataType);
         try {
-            Element fields = Xml.transform(metadata, styleSheet);
+            Map<String, Object> indexParams = new HashMap<String, Object>();
+            indexParams.put("fastIndexMode", fastIndexMode);
+
+            Element fields = Xml.transform(metadata, styleSheet, indexParams);
             /* Generates something like that:
             <doc>
               <field name="toto">Contenu</field>
@@ -393,11 +398,12 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
-                      boolean forceRefreshReaders) throws Exception {
+                      boolean forceRefreshReaders,
+                      boolean fastIndexMode) throws Exception {
 
         Element docs = new Element("doc");
         if (schemaDir != null) {
-            addMDFields(docs, schemaDir, metadata, metadataType);
+            addMDFields(docs, schemaDir, metadata, metadataType, fastIndexMode);
         }
         addMoreFields(docs, dbFields);
 

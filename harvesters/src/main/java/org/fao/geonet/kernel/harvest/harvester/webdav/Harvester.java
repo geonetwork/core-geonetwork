@@ -483,7 +483,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             String language = context.getLanguage();
 
             final AbstractMetadata metadata = metadataManager.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                date, false);
+                date, false, false);
 
             if(force) {
                 //change ownership of metadata to new harvester

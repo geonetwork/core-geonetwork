@@ -44,7 +44,7 @@ public interface IMetadataIndexer {
 
     /**
      * This is a hopefully soon to be deprecated when no deps on context
-     * 
+     *
      * @param context
      * @throws Exception
      */
@@ -105,7 +105,10 @@ public interface IMetadataIndexer {
      * @param forceRefreshReaders
      * @throws Exception
      */
+    void indexMetadataFastMode(String metadataId, boolean forceRefreshReaders) throws Exception;
+
     void indexMetadata(String metadataId, boolean forceRefreshReaders) throws Exception;
+
     void indexMetadataPrivileges(String uuid, int id) throws Exception;
 
     /**

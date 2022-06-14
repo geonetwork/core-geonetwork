@@ -86,7 +86,7 @@ public class DirectoryUtils {
                         context, "" + dbSubTemplate.getId(),
                         (Element) entry.clone(),
                         validate, ufo, index, context.getLanguage(),
-                        new ISODate().toString(), false);
+                        new ISODate().toString(), false, false);
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
@@ -100,7 +100,7 @@ public class DirectoryUtils {
                 dataManager.updateMetadata(
                     context, "" + record.getId(), record.getXmlData(validate),
                     validate, ufo, index, context.getLanguage(),
-                    new ISODate().toString(), true);
+                    new ISODate().toString(), true, false);
             } catch (Exception e) {
                 Log.error(LOGGER, e.getMessage(), e);
             }

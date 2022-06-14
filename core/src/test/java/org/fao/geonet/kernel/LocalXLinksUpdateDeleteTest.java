@@ -81,6 +81,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             true,
             null,
             null,
+            false,
             false);
 
 //     TODOES   assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());

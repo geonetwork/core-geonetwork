@@ -715,7 +715,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
                                                         final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-                                                        final boolean updateDateStamp) throws Exception {
+                                                        final boolean updateDateStamp, final boolean fastIndexMode) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
         Element metadataXml = md;
@@ -726,7 +726,7 @@ public class BaseMetadataManager implements IMetadataManager {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
-        
+
         String uuidBeforeUfo = null;
         if (ufo) {
             String parentUuid = null;
@@ -764,7 +764,11 @@ public class BaseMetadataManager implements IMetadataManager {
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
-                metadataIndexer.indexMetadata(metadataId, true);
+                if (fastIndexMode) {
+                    metadataIndexer.indexMetadataFastMode(metadataId, true);
+                } else {
+                    metadataIndexer.indexMetadata(metadataId, true);
+                }
             }
         }
 

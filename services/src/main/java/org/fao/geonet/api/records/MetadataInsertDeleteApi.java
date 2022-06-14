@@ -728,7 +728,7 @@ public class MetadataInsertDeleteApi {
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+                null, true, false);
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
@@ -743,7 +743,7 @@ public class MetadataInsertDeleteApi {
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
             dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+                null, true, false);
         }
 
         int iId = Integer.parseInt(id.get(0));

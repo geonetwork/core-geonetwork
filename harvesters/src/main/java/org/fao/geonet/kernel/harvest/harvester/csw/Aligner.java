@@ -458,7 +458,7 @@ public class Aligner extends BaseAligner<CswParams> {
         boolean index = false;
         String language = context.getLanguage();
 
-        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true, false);
 
         if (force || updateSchema) {
             if (force) {

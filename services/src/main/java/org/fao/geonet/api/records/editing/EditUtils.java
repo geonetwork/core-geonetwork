@@ -139,13 +139,13 @@ class EditUtils {
      * Updates metadata content.
      */
     public void updateContent(Element params, boolean validate) throws Exception {
-        updateContent(params, validate, false);
+        updateContent(params, validate, false, false);
     }
 
     /**
      * TODO javadoc.
      */
-    public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
+    public void updateContent(Element params, boolean validate, boolean embedded, boolean fastIndexMode) throws Exception {
         String id = Util.getParam(params, Params.ID);
         String version = Util.getParam(params, Params.VERSION);
         String minor = Util.getParam(params, Params.MINOREDIT, "false");
@@ -180,12 +180,12 @@ class EditUtils {
         if (embedded) {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, version);
             if (updatedMetada != null) {
-                result = dataManager.updateMetadata(context, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp, fastIndexMode);
             }
         } else {
             Element updatedMetada = applyChanges(id, htChanges, version);
             if (updatedMetada != null) {
-                result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, fastIndexMode);
             }
         }
         if (result == null) {

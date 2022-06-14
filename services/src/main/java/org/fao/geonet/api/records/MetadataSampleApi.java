@@ -265,7 +265,7 @@ public class MetadataSampleApi {
                         }
                         if (dataManager.existsMetadataUuid(uuid)) {
                             String upid = dataManager.getMetadataId(uuid);
-                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
+                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true, false);
                             report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' updated.",

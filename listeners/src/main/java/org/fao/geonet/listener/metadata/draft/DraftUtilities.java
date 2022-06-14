@@ -152,7 +152,7 @@ public class DraftUtilities {
             Log.trace(Geonet.DATA_MANAGER, "Update record with id " + md.getId());
             md = metadataManager.updateMetadata(context, String.valueOf(md.getId()),
                 xmlData, false, false, true,
-                context.getLanguage(), changeDate, true);
+                context.getLanguage(), changeDate, true, false);
 
             Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
 

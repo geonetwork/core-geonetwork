@@ -310,6 +310,8 @@ public class MetadataEditingApi {
         sa.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
+        boolean fastIndexMode = !terminate;
+
         if (StringUtils.isNotEmpty(data)) {
             Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
@@ -317,8 +319,10 @@ public class MetadataEditingApi {
             boolean updateDateStamp = !minor;
             boolean ufo = true;
             boolean index = true;
+
+
             dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, index, context.getLanguage(), changeDate,
-                updateDateStamp);
+                updateDateStamp, fastIndexMode);
 
             if (terminate) {
                 XMLOutputter outp = new XMLOutputter();
@@ -329,7 +333,7 @@ public class MetadataEditingApi {
             }
         } else {
             Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
-            ajaxEditUtils.updateContent(params, false, true);
+            ajaxEditUtils.updateContent(params, false, true, fastIndexMode);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 

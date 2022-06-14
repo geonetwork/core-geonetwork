@@ -263,7 +263,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         String schema = dataMan.autodetectSchema(md, null);
         final String dateModified = dataMan.extractDateModified(schema, ri.getValue());
 
-        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, dateModified, true);
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, dateModified, true, false);
 
         if (force) {
             //change ownership of metadata to new harvester

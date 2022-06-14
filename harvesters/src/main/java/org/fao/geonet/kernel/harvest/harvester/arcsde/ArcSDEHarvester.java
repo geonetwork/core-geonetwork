@@ -334,7 +334,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         }
 
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
-            true);
+            true, false);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));

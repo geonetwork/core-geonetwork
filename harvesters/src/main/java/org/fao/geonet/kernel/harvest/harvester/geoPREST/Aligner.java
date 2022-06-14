@@ -230,7 +230,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByMetadataId(Integer.parseInt(id));

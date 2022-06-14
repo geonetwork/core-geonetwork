@@ -175,7 +175,7 @@ public class XslProcessUtils {
                         }
                     }
 
-                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp, false);
                     if (index) {
                         dataMan.indexMetadata(id, true);
                     }

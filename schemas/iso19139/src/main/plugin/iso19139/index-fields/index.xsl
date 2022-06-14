@@ -53,7 +53,7 @@
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-
+  <xsl:param name="fastIndexMode" select="false()"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -373,7 +373,7 @@
             <xsl:if test="$isStoringOverviewInIndex">
               <xsl:variable name="data"
                             select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
+              <xsl:if test="$data != '' and not($fastIndexMode)">,
                 "data": "<xsl:value-of select="$data"/>"
               </xsl:if>
             </xsl:if>
@@ -1221,6 +1221,7 @@
 
           <xsl:variable name="resolvedDoc">
             <xsl:if test="$processRemoteDocs
+                          and not($fastIndexMode)
                           and $xlink != ''
                           and not(@xlink:title)
                           and not(starts-with($xlink, $siteUrl))">

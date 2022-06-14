@@ -78,7 +78,7 @@ import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
     @Autowired
-	private EsSearchManager searchManager;
+    private EsSearchManager searchManager;
     @Autowired
     private SourceRepository sourceRepository;
     @Autowired
@@ -181,10 +181,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Log.warning(Geonet.DATA_MANAGER, String.format(
 
                     "Error during removal of metadata %s part of batch delete operation. " +
-                    "This error may create a ghost record (ie. not in the index " +
-                    "but still present in the database). " +
-                    "You can reindex the catalogue to see it again. " +
-                    "Error was: %s.", md.getUuid(), e.getMessage()));
+                        "This error may create a ghost record (ie. not in the index " +
+                        "but still present in the database). " +
+                        "You can reindex the catalogue to see it again. " +
+                        "Error was: %s.", md.getUuid(), e.getMessage()));
                 e.printStackTrace();
             }
         });
@@ -318,12 +318,29 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, true);
+            indexMetadata(metadataId, true, false);
         }
     }
 
     @Override
-    public void indexMetadata(final String metadataId, final boolean forceRefreshReaders)
+    public void indexMetadataFastMode(final String metadataId,
+                                      final boolean forceRefreshReaders)
+        throws Exception {
+        indexMetadata(metadataId, forceRefreshReaders, true);
+    }
+
+
+    @Override
+    public void indexMetadata(final String metadataId,
+                              final boolean forceRefreshReaders)
+        throws Exception {
+        indexMetadata(metadataId, forceRefreshReaders, false);
+    }
+
+
+    private void indexMetadata(final String metadataId,
+                              final boolean forceRefreshReaders,
+                              final boolean fastIndexMode)
         throws Exception {
         AbstractMetadata fullMd;
 
@@ -400,7 +417,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     "Schema '%s' is not registerd in this catalog. Install it or remove those records",
                     schema
                 ));
-                searchManager.index(null, md, indexKey, fields, metadataType, forceRefreshReaders);
+                searchManager.index(null, md, indexKey, fields, metadataType,
+                    forceRefreshReaders, fastIndexMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -537,7 +555,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     this.publisher.publishEvent(new MetadataIndexStarted(fullMd, fields));
                 }
 
-                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
+                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType,
+                    forceRefreshReaders, fastIndexMode);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
