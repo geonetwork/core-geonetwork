@@ -3,6 +3,7 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:utils="java:org.fao.geonet.util.XslUtil"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -13,6 +14,7 @@
   <xsl:import href="common/render-html.xsl"/>
   <xsl:import href="common/functions-core.xsl"/>
   <xsl:import href="common/utility-tpl.xsl"/>
+  <xsl:import href="common/menu-fn.xsl"/>
 
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
