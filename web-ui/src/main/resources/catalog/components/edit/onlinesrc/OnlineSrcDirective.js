@@ -31,6 +31,136 @@
   goog.require('gn_urlutils_service');
   goog.require('gn_related_directive');
 
+
+  var fileUploader = [
+    'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
+    function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/onlinesrc/' +
+          'partials/file-uploader.html',
+        scope: {},
+        link: function (scope, element, attrs) {
+          scope.relations = {};
+          scope.uuid = undefined;
+          scope.lang = scope.$parent.lang;
+          scope.readonly = false;
+          scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
+          scope.onlinesrcService = gnOnlinesrc;
+
+          scope.defaultType = 'thumbnails';
+          scope.type = attrs['type'] || scope.defaultType;
+          scope.panelMode = angular.isDefined(attrs['title'])
+            && attrs['title'] === '' ? false : true;
+          scope.protocol = attrs['protocol'] || 'WWW:DOWNLOAD';
+          scope.isOverview = scope.type === scope.defaultType;
+          scope.title = attrs['title'] || (scope.isOverview ? 'overview' : 'download');
+          scope.icon = attrs['icon'] || (scope.isOverview ? 'gn-icon-thumbnail' : 'fa-download');
+          scope.btnLabel = attrs['btnLabel'] || (scope.isOverview ? 'chooseImage': 'chooseFileToUpload');
+          scope.removeBtnConfirm = scope.isOverview ? 'removeThumbnailConfirm' : 'removeOnlinesrcConfirm';
+          scope.removeBtnTitle = scope.isOverview ? 'removeThumbnail' : 'remove';
+
+          var loadRelations = function() {
+            gnOnlinesrc.getAllResources([scope.type])
+              .then(function(data) {
+                var res = gnOnlinesrc.formatResources(
+                  data,
+                  scope.lang,
+                  gnCurrentEdit.mdLanguage);
+                scope.relations = scope.isOverview
+                  ? res.relations[scope.type]
+                  : res.relations[scope.type].filter(function(l) {
+                    return l.protocol === scope.protocol;
+                  });
+              });
+          };
+
+          var uploadFile = function() {
+            scope.queue = [];
+            scope.filestoreUploadOptions = {
+              autoUpload: true,
+              url: '../api/records/' + gnCurrentEdit.uuid +
+                '/attachments?visibility=public',
+              dropZone: $('#gn-overview-dropzone'),
+              singleUpload: true,
+              // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+              done: uploadResourceSuccess,
+              fail: uploadResourceFailed,
+              headers: {'X-XSRF-TOKEN': $rootScope.csrf}
+            };
+
+          };
+
+          var linkOverviewToRecord = function (link) {
+            var params = scope.isOverview ? {
+              thumbnail_url: link.url,
+              thumbnail_desc: link.name || '',
+              process: 'thumbnail-add',
+              id: gnCurrentEdit.id
+            } : {
+              url: link.url,
+              name: link.name || '',
+              protocol: scope.protocol,
+              process: 'onlinesrc-add',
+              id: gnCurrentEdit.id
+            };
+            gnOnlinesrc.add(params);
+          };
+
+          var uploadResourceSuccess = function(e, data) {
+            $rootScope.$broadcast('gnFileStoreUploadDone');
+            scope.clear(scope.queue);
+            linkOverviewToRecord(data.response().jqXHR.responseJSON);
+          };
+
+          scope.$on('gnFileStoreUploadDone', scope.loadRelations);
+
+          var uploadResourceFailed = function(e, data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('resourceUploadError'),
+              error: {
+                message: data.errorThrown +
+                angular.isDefined(
+                  data.response().jqXHR.responseJSON.message) ?
+                  data.response().jqXHR.responseJSON.message : ''
+              },
+              timeout: 0,
+              type: 'danger'});
+            scope.clear(scope.queue);
+          };
+
+          scope.removeFile = function(file) {
+            var url = file.url[gnCurrentEdit.mdLanguage];
+            if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
+              // An external URL
+              gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
+                loadRelations();
+              });
+            } else {
+              // A thumbnail from the filestore
+              gnFileStoreService.delete({url: url}).then(function () {
+                // then remove from record
+                gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
+                  loadRelations();
+                });
+              });
+            }
+
+          };
+          function init(n, o) {
+            if (angular.isUndefined(scope.uuid) ||
+              n != o) {
+              scope.uuid = n;
+              loadRelations();
+              uploadFile();
+            }
+          }
+          scope.$watch('gnCurrentEdit.uuid', init);
+          scope.$watch('$parent.gnCurrentEdit.uuid', init);
+        }
+      }
+    }];
+
   /**
    * @ngdoc overview
    * @name gn_onlinesrc
@@ -206,123 +336,18 @@
       }
     }])
   /**
-   * Simple interface to add or remove overview.
+   * Simple interface to add or remove file/overview.
    *
    * This directive handle in one step the add to filestore
    * action and the update metadata record steps. User
-   * can easily drag & drop thumbnails in here.
+   * can easily drag & drop file/overview in here.
    *
    * It does not provide the possibility to set
-   * overview name and description. See onlineSrcList directive
+   * name and description. See onlineSrcList directive
    * or full editor mode.
    */
-    .directive('gnOverviewManager', [
-      'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
-      function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
-        return {
-          restrict: 'A',
-          templateUrl: '../../catalog/components/edit/onlinesrc/' +
-          'partials/overview-manager.html',
-          scope: {},
-          link: function (scope, element, attrs) {
-            scope.relations = {};
-            scope.uuid = undefined;
-            scope.lang = scope.$parent.lang;
-            scope.readonly = false;
-            scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
-            scope.onlinesrcService = gnOnlinesrc;
-
-            // Load thumbnail list.
-            var loadRelations = function() {
-              gnOnlinesrc.getAllResources(['thumbnails'])
-                .then(function(data) {
-                  var res = gnOnlinesrc.formatResources(
-                    data,
-                    scope.lang,
-                    gnCurrentEdit.mdLanguage);
-                  scope.relations = res.relations;
-                });
-            };
-
-            // Upload overview once dropped or selected
-            var uploadOverview = function() {
-              scope.queue = [];
-              scope.filestoreUploadOptions = {
-                autoUpload: true,
-                url: '../api/records/' + gnCurrentEdit.uuid +
-                '/attachments?visibility=public',
-                dropZone: $('#gn-overview-dropzone'),
-                singleUpload: true,
-                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
-                done: uploadResourceSuccess,
-                fail: uploadResourceFailed,
-                headers: {'X-XSRF-TOKEN': $rootScope.csrf}
-              };
-            };
-
-            var linkOverviewToRecord = function (link) {
-              var params = {
-                thumbnail_url: link.url,
-                thumbnail_desc: link.name || '',
-                process: 'thumbnail-add',
-                id: gnCurrentEdit.id
-              };
-              gnOnlinesrc.add(params);
-            };
-
-            var uploadResourceSuccess = function(e, data) {
-              $rootScope.$broadcast('gnFileStoreUploadDone');
-              scope.clear(scope.queue);
-              linkOverviewToRecord(data.response().jqXHR.responseJSON);
-            };
-
-            scope.$on('gnFileStoreUploadDone', scope.loadRelations);
-
-            var uploadResourceFailed = function(e, data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('resourceUploadError'),
-                error: {
-                  message: data.errorThrown +
-                  angular.isDefined(
-                    data.response().jqXHR.responseJSON.message) ?
-                    data.response().jqXHR.responseJSON.message : ''
-                },
-                timeout: 0,
-                type: 'danger'});
-              scope.clear(scope.queue);
-            };
-
-            scope.removeOverview = function(thumbnail) {
-              var url = thumbnail.url[gnCurrentEdit.mdLanguage];
-              if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
-                // An external URL
-                gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
-                  // and update list.
-                  loadRelations();
-                });
-              } else {
-                // A thumbnail from the filestore
-                gnFileStoreService.delete({url: url}).then(function () {
-                  // then remove from record
-                  gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
-                    // and update list.
-                    loadRelations();
-                  })
-                });
-              }
-
-            };
-            scope.$watch('gnCurrentEdit.uuid', function(n, o) {
-              if (angular.isUndefined(scope.uuid) ||
-                n != o) {
-                scope.uuid = n;
-                loadRelations();
-                uploadOverview();
-              }
-            });
-          }
-        }
-      }])
+    .directive('gnFileUploader', fileUploader)
+    .directive('gnOverviewManager', fileUploader)
 
   /**
    * @ngdoc directive
@@ -369,7 +394,7 @@
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
-              scope.relations = {};
+              scope.relations = [];
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
