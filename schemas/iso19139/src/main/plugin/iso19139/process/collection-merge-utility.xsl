@@ -39,7 +39,7 @@
                   select="$elements[@name = $name]"/>
 
     <xsl:choose>
-      <xsl:when test="$current/@context = name(..)">
+      <xsl:when test="contains($current/@context, name(..))">
         <!-- Do the work once on the first element, others are ignored. -->
         <xsl:if test="count(preceding-sibling::*[name() = $name]) = 0">
           <xsl:choose>
