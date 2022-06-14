@@ -143,20 +143,32 @@ public class MAnalyseProcess implements SelfNaming {
                 e.printStackTrace();
             }
         }
-
-
         if (testLink) {
-            runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
-                @Override
-                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                    testLinkDate = System.currentTimeMillis();
-                    List<Link> all = linkRepository.findAll();
-                    urlToCheckCount = all.size();
-                    all.parallelStream().peek(urlAnalyser::testLink).forEach(x -> urlChecked.getAndIncrement());
-                    return null;
-                }
-            });
+            testLink(null);
         }
+    }
+
+
+    public void testLink(List<String> links) throws JDOMException, IOException {
+        List<Link> linkList;
+        if (links == null) {
+            linkList = linkRepository.findAll();
+        } else {
+            linkList = linkRepository.findAllByUrlIn(links);
+        }
+        urlToCheckCount = linkList.size();
+        runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                testLinkDate = System.currentTimeMillis();
+                urlToCheckCount = linkList.size();
+                linkList
+                    .parallelStream()
+                    .peek(urlAnalyser::testLink)
+                    .forEach(x -> urlChecked.getAndIncrement());
+                return null;
+            }
+        });
     }
 
     private final void runInNewTransaction(String name, TransactionTask<Object> transactionTask) {

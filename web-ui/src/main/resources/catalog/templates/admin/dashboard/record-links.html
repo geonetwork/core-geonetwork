@@ -1,7 +1,6 @@
 <div data-ng-controller="GnDashboardRecordLinksController">
   <div class="panel panel-default">
-    <div class="panel-heading"
-          data-gn-slide-toggle="">
+    <div class="panel-heading">
       <strong data-translate="">recordLinksDashboard</strong>
       <p data-translate="">
         recordLinksDashboardSubtitle
@@ -48,7 +47,7 @@
         <div class="form-group col-lg-3 gn-nopadding-left">
           <label class="control-label"
                 for="gn-link-group-owner"
-                data-translate="">_groupOwner</label>
+                data-translate="">groupOwner</label>
           <div id="gn-link-group-owner"
               data-groups-combo=""
               data-set-default-value="false"
@@ -61,7 +60,7 @@
         <div class="form-group col-lg-3 gn-nopadding-left">
           <label class="control-label"
                 for="gn-link-group"
-                data-translate="">_groupPublished</label>
+                data-translate="">groupPublished</label>
           <div id="gn-link-group"
               data-groups-combo=""
               data-set-default-value="false"
@@ -70,6 +69,18 @@
               groups="groups"
               data-exclude-special-groups="true">&nbsp;
           </div>
+        </div>
+        <div class="form-group col-lg-3 gn-nopadding-left"
+             data-ng-if="selections.length > 0">
+          <label class="control-label"
+                for="gn-link-selection"
+                data-translate="">chooseASelection</label>
+          <select id="gn-link-selection"
+                  class="form-control"
+                  data-ng-model="selectedSelection.id"
+                  data-ng-options="s.id as s.label
+                                   for s in selections | orderBy:'id'">
+          </select>
         </div>
       </div>
       <table id="bstable" bs-table-control="bsTableControl" ng-model="tc">

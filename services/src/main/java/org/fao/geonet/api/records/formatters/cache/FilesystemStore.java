@@ -67,7 +67,7 @@ public class FilesystemStore implements PersistentStore {
     private static final String STATS_TABLE = "stats";
     private static final String NAME = "name";
     private static final String CURRENT_SIZE = "currentsize";
-    private static final String VALUE = "value";
+    private static final String VALUE = "statvalue";
     public static final String QUERY_SETCURRENT_SIZE = "MERGE INTO " + STATS_TABLE + " (" + NAME + ", " + VALUE + ") VALUES ('" + CURRENT_SIZE + "', ?)";
     public static final String QUERY_GETCURRENT_SIZE = "SELECT " + VALUE + " FROM " + STATS_TABLE + " WHERE " + NAME + " = '" + CURRENT_SIZE + "'";
     private static final String QUERY_GET_INFO = "SELECT * FROM " + INFO_TABLE + " WHERE " + KEY + "=?";

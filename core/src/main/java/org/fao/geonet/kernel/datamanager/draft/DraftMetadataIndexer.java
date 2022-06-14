@@ -75,6 +75,7 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
                 Log.trace(Geonet.DATA_MANAGER,
                     "We are indexing a record with a draft associated with uuid " + fullMd.getUuid());
                 extraFields.put(Geonet.IndexFieldNames.DRAFT, "e");
+                extraFields.put(Geonet.IndexFieldNames.DRAFT_ID, metadataDraft.getId());
 
                 String status = "";
                 String statusDraft = "";

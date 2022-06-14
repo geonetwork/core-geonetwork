@@ -71,6 +71,7 @@
   <!-- Parent may be encoded using an associatedResource.
   Define which association type should be considered as parent. -->
   <xsl:variable name="parentAssociatedResourceType" select="'partOfSeamlessDatabase'"/>
+  <xsl:variable name="childrenAssociatedResourceType" select="'isComposedOf'"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -924,6 +925,7 @@
           "title": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:title)"/>",
           "url": "<xsl:value-of select="$xlink"/>"
           }</recordLink>
+        <hasfeaturecat><xsl:value-of select="@uuidref"/></hasfeaturecat>
       </xsl:for-each>
 
 
@@ -1084,6 +1086,13 @@
             <parentUuid><xsl:value-of select="$code"/></parentUuid>
             <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'parent')"/>
           </xsl:if>
+          <xsl:if test="$associationType = $childrenAssociatedResourceType">
+            <childUuid><xsl:value-of select="$code"/></childUuid>
+            <xsl:copy-of select="gn-fn-index:build-record-link(
+                                $code, $xlink,
+                                gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title,
+                                 'children')"/>
+          </xsl:if>
 
           <xsl:variable name="initiativeType"
                         select="gmd:initiativeType/*/@codeListValue"/>
@@ -1095,6 +1104,7 @@
           </xsl:variable>
           <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, gmd:aggregateDataSetIdentifier/*/gmd:code/*/@xlink:title, 'siblings', $properties)"/>
           <agg_associated><xsl:value-of select="$code"/></agg_associated>
+          <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
 

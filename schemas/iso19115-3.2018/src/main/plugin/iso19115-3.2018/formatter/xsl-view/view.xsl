@@ -203,12 +203,12 @@
       </h2>
 
       <xsl:choose>
-        <xsl:when test=".//gex:EX_BoundingPolygon">
+        <xsl:when test=".//mdb:identificationInfo/*/mri:extent//gex:EX_BoundingPolygon">
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates mode="render-field"
-                               select=".//gex:EX_GeographicBoundingBox">
+                               select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
@@ -431,12 +431,16 @@
 
     <xsl:variable name="name"
                   select="name()"/>
+
+    <xsl:variable name="context"
+                  select="name(..)"/>
+
     <xsl:choose>
       <!-- eg. for codelist, display label in all record languages -->
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -457,7 +461,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//mdb:otherLocale/*[@id = $id]/lan:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -465,7 +469,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, null)"/>
+                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"

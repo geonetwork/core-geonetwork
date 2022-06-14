@@ -41,6 +41,7 @@
           </span>
         </a>
       </li>
+      <li gn-portal-switcher=""/>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled" role="menuitem">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
@@ -83,7 +84,7 @@
               <span class="fa fa-fw fa-plus"></span>&nbsp;<span translate>addRecord</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <span class="fa fa-fw fa-upload"></span><span translate>ImportRecord</span>
             </a>
@@ -198,9 +199,20 @@
             </li>
           </ul>
         </li>
+        <li class="open signin-dropdown"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
+          <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+             title="{{'signIn'|translate}}"
+             class="gn-menuheader-xs"
+             data-ng-keypress="$event"
+             id="signinLink">
+            <span class="fa fa-fw fa-sign-in hidden-sm"></span>
+            {{'signIn' | translate}}
+          </a>
+        </li>
         <!-- not logged in -->
         <li class="dropdown signin-dropdown"
-          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))">
+          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
           <a href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
              title="{{'signIn'|translate}}"
              class="dropdown-toggle gn-menuheader-xs"
@@ -284,7 +296,7 @@
 
       <form class="navbar-form language-switcher pull-right">
         <span class="gn-menuheader-xs visible-xs"
-              data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))"
+              data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
               data-translate="">language</span>
         <div class="form-group"
             data-gn-language-switcher="lang"

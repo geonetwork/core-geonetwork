@@ -525,6 +525,39 @@
         },
         loadPromise: loadPromise,
 
+        parseFilters: function(filters) {
+          var separator = ':';
+          return filters
+            .split(' AND ')
+            .map(function(clause) {
+              var filter = clause.split(separator),
+                field = filter.shift(),
+                not = field && field.startsWith('-');
+              return {
+                field: not ? field.substr(1) : field,
+                regex: new RegExp(filter.join(separator)),
+                not: not
+              }
+            });
+        },
+
+        testFilters: function(filters, object) {
+          var results = [];
+          filters.forEach(function(filter, j) {
+            var prop = object[filter.field];
+            if (prop !== undefined
+              && ((!filter.not && prop.match(filter.regex) != null)
+                || (filter.not && prop.match(filter.regex) == null))) {
+              results[j] = true;
+            } else {
+              results[j] = false;
+            }
+          });
+          return results.reduce(function(prev, curr) {
+            return prev && curr;
+          })
+        },
+
         /**
          * @ngdoc method
          * @name gnConfigService#getServiceURL
@@ -576,8 +609,9 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', ['gnLangs', '$translate',
-    function(gnLangs, $translate) {
+  module.factory('Metadata', [
+    'gnLangs', '$translate', 'gnConfigService', 'gnGlobalSettings',
+    function(gnLangs, $translate, gnConfigService, gnGlobalSettings) {
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
@@ -608,6 +642,26 @@
           record.translate(key, this);
         }
       });
+
+      if (this.related) {
+        $.each(Object.keys(this.related), function(value, key) {
+          if (angular.isArray(record.related[key])) {
+            record.related[key] = record.related[key].map(function(r) {
+              return new Metadata(r);
+            })
+          }
+        });
+      }
+
+      // Open record not in current portal as a remote record
+      if (!gnGlobalSettings.isDefaultNode && this.origin === 'catalog') {
+        this.remoteUrl = '../../srv/'
+          + gnGlobalSettings.iso3lang
+          + '/catalog.search#/metadata/' + this._id;
+      } else if (this.origin === 'remote') {
+        this.remoteUrl = this.properties.url;
+        this.uuid = this._id;
+      }
 
       // See below; probably not necessary
       this.linksCache = [];
@@ -757,6 +811,30 @@
         });
         this.linksCache[key] = ret;
         return ret;
+      },
+      getLinksByFilter: function(filter) {
+        if (this.linksCache[filter]) {
+          return this.linksCache[filter];
+        }
+        var filters = gnConfigService.parseFilters(filter),
+          links = this.getLinks(), matches = [];
+        for (var i = 0; i < links.length; i++) {
+          gnConfigService.testFilters(filters, links[i])
+          && matches.push(links[i]);
+        }
+        this.linksCache[filter] = matches;
+        return matches;
+      },
+      isLinkDisabled: function(link) {
+        // TODO: Should be more consistent with schema-ident.xml filter section
+        var p = link && link.protocol;
+        if (p.match(/OGC:WMS|ESRI:REST|OGC:WFS/i) != null) {
+          return this.dynamic === false;
+        }
+        if (p.match(/WWW:DOWNLOAD.*|ATOM.*|DB.*|FILE.*/i) != null) {
+          return this.download === false;
+        }
+        return false;
       },
       /**
        * Return an object containing metadata contacts

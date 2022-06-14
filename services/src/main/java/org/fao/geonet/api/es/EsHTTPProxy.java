@@ -44,6 +44,8 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.MetadataApi;
+import org.fao.geonet.api.records.MetadataUtils;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.constants.Edit;
@@ -53,6 +55,7 @@ import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,10 +160,10 @@ public class EsHTTPProxy {
     private static void addRelatedTypes(ObjectNode doc,
                                         RelatedItemType[] relatedTypes,
                                         ServiceContext context) {
-        RelatedResponse related = null;
+        Map<RelatedItemType, List<AssociatedRecord>> related = null;
         try {
-            related = MetadataApi.getAssociatedResources(
-                context.getLanguage(), context,
+            related = MetadataUtils.getAssociated(
+                context,
                 context.getBean(IMetadataUtils.class)
                     .findOneByUuid(doc.get("_id").asText()),
                 relatedTypes, 0, 100);
@@ -173,9 +176,10 @@ public class EsHTTPProxy {
         doc.putPOJO("related", related);
     }
 
-    private static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
+    public static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+        final String id = getSourceString(doc, Geonet.IndexFieldNames.ID);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -221,6 +225,8 @@ public class EsHTTPProxy {
             }
         }
         doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+        doc.put(Edit.Info.Elem.REVIEW,
+            id != null ? accessManager.hasReviewPermission(context, id) : false);
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);
@@ -387,9 +393,13 @@ public class EsHTTPProxy {
                     }
                     final JsonNode sourceNode = node.get("_source");
                     if (sourceNode != null) {
-                        final JsonNode sourceIncludes = sourceNode.get("includes");
-                        if (sourceIncludes != null && sourceIncludes.isArray()) {
-                            ((ArrayNode) sourceIncludes).add("op*");
+                        if (sourceNode.isArray()) {
+                            addRequiredField((ArrayNode) sourceNode);
+                        } else {
+                            final JsonNode sourceIncludes = sourceNode.get("includes");
+                            if (sourceIncludes != null && sourceIncludes.isArray()) {
+                                addRequiredField((ArrayNode) sourceIncludes);
+                            }
                         }
                     }
                 }
@@ -401,6 +411,17 @@ public class EsHTTPProxy {
             handleRequest(context, httpSession, request, response, url, endPoint,
                 body, true, selectionBucket, relatedTypes);
         }
+    }
+
+    /**
+     * {@link #addUserInfo(ObjectNode, ServiceContext)}
+     * rely on fields from the index. Add them to the source.
+     */
+    private void addRequiredField(ArrayNode source) {
+        source.add("op*");
+        source.add(Geonet.IndexFieldNames.GROUP_OWNER);
+        source.add(Geonet.IndexFieldNames.OWNER);
+        source.add(Geonet.IndexFieldNames.ID);
     }
 
     private void addFilterToQuery(ServiceContext context,
@@ -455,67 +476,9 @@ public class EsHTTPProxy {
      * Add search privilege criteria to a query.
      */
     private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
-        StringBuilder query = new StringBuilder();
-        query.append(buildPermissionsFilter(context).trim());
+        return String.format(filterTemplate,
+            EsFilterBuilder.build(context, type, isSearchingForDraft, node));
 
-        if (type.equalsIgnoreCase("metadata")) {
-            query.append(" AND (isTemplate:n)");
-        } else if (type.equalsIgnoreCase("template")) {
-            query.append(" AND (isTemplate:y)");
-        } else if (type.equalsIgnoreCase("subtemplate")) {
-            query.append(" AND (isTemplate:s)");
-        }
-
-        if (!isSearchingForDraft) {
-            query.append(" AND (draft:n OR draft:e)");
-        }
-
-        final String portalFilter = buildPortalFilter();
-        if (!"".equals(portalFilter)) {
-            query.append(" ").append(portalFilter);
-        }
-        return String.format(filterTemplate, query);
-
-    }
-
-    private String buildPortalFilter() {
-        // If the requested portal define a filter
-        // Add it to the request.
-        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            final Optional<Source> portal = sourceRepository.findById(node.getId());
-            if (!portal.isPresent()) {
-                LOGGER.warn("Null portal " + node);
-            } else if (StringUtils.isNotEmpty(portal.get().getFilter())) {
-                LOGGER.debug("Applying portal filter: {}", portal.get().getFilter());
-                return portal.get().getFilter().replace("\"", "\\\"");
-            }
-        }
-        return "";
-    }
-
-    public String buildPermissionsFilter(ServiceContext context) throws Exception {
-        final UserSession userSession = context.getUserSession();
-
-        // If admin you can see all
-        if (Profile.Administrator.equals(userSession.getProfile())) {
-            return "*:*";
-        } else {
-            // op0 (ie. view operation) contains one of the ids of your groups
-            Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
-            final String ids = groups.stream().map(Object::toString).map(e -> e.replace("-", "\\\\-"))
-                .collect(Collectors.joining(" OR "));
-            String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
-
-
-            String ownerFilter = "";
-            if (userSession.getUserIdAsInt() > 0) {
-                // OR you are owner
-                ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
-                // OR member of groupOwner
-                // TODOES
-            }
-            return String.format("(%s %s)", operationFilter, ownerFilter).trim();
-        }
     }
 
     private String buildDocTypeFilter(String type) {

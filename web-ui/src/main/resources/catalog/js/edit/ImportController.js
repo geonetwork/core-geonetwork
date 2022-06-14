@@ -48,9 +48,10 @@
     'gnMetadataManager',
     'gnConfigService',
     'gnConfig',
+    'gnUtilityService',
     '$window',
     function($scope,  $rootScope, gnMetadataManager,
-             gnConfigService, gnConfig, $window) {
+             gnConfigService, gnConfig, gnUtilityService, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -92,7 +93,7 @@
         autoUpload: false,
         done: uploadImportMdDone,
         fail: uploadImportMdError,
-        headers: {'X-XSRF-TOKEN': $rootScope.csrf}
+        headers: {'X-XSRF-TOKEN': $rootScope.csrf, 'Accept-Language': $scope.lang}
       };
 
 
@@ -140,6 +141,11 @@
         }
         $scope.unsupportedFile = false;
       });
+
+      $scope.cancelImportRecords = function (){
+        gnUtilityService.goBack("/board");
+      };
+
       $scope.importRecords = function(formId) {
         $scope.reports = [];
         $scope.error = null;

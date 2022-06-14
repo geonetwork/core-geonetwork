@@ -1,0 +1,37 @@
+<div class="btn-group"
+     data-ng-if="hasRelations">
+  <button type="button"
+          class="btn dropdown-toggle btn-default"
+          data-toggle="dropdown"
+          title="{{'associatedRecords' | translate}}">
+    <span class="fa fa-code-fork"></span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li data-ng-repeat-start="(type, items) in md.related track by $index"
+        data-ng-init="mainType = config.getType(md, type);
+                icon = config.getClassIcon(mainType);"></li>
+    <li data-ng-repeat="md in items | orderBy:getOrderBy">
+      <a data-ng-hide="md.remoteUrl"
+         href=""
+         title="{{md.resourceTitle}}"
+         gn-metadata-open="md"
+         gn-formatter="formatter.defaultUrl">
+        <i class="fa {{icon}}" />
+        {{md.resourceTitle}}
+      </a>
+      <a data-ng-show="md.remoteUrl"
+         data-ng-href="{{md.remoteUrl}}"
+         rel="noopener noreferrer"
+         target="_blank"
+         title="{{md.resourceTitle}}">
+        <i class="fa {{icon}}" />
+        {{md.resourceTitle}}
+        <i data-ng-if="md.origin === 'remote'"
+           class="fa fa-external-link"
+           title="{{'remoteRecord' | translate}}"></i>
+      </a>
+    </li>
+    <li data-ng-repeat-end=""></li>
+  </ul>
+</div>

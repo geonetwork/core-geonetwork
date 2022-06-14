@@ -429,6 +429,9 @@ form.gn-editor {
       visibility: hidden;
       padding: 5px;
   }
+  .gn-file-uploader i.btn.fa-times.text-danger {
+      visibility: visible;
+  }
   .show {
       visibility: visible;
   }
@@ -622,6 +625,22 @@ form.gn-tab-inspire {
     }
   }
 
+}
+.onlinesrc-container {
+  .gn-layers-grid-container {
+    hr {
+      display: none;
+    }
+    .gn-layer-tree {
+      padding-left: 0;
+      .gn-layer-tree {
+        padding-left: 20px;
+        li {
+          padding: 5px 0;
+        }
+      }
+    }
+  }
 }
 
 table.gn-data-store {

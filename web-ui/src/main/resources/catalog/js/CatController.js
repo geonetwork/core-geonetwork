@@ -101,7 +101,8 @@ goog.require('gn_alert');
           'fluidHeaderLayout': true,
           'showGNName': true,
           'isHeaderFixed': false,
-          'isMenubarAccessible': true
+          'isMenubarAccessible': true,
+          'showPortalSwitcher': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -128,6 +129,14 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
+            // 'OrgForResource': {
+            //   'terms': {
+            //     'field': 'OrgForResource',
+            //     'include': '.*',
+            //     'missing': '- No org -',
+            //     'size': 15
+            //   }
+            // },
             'resourceType': {
               'terms': {
                 'field': 'resourceType',
@@ -564,6 +573,11 @@ goog.require('gn_alert');
               'search/resultsview/partials/viewtemplates/list.html',
             'tooltip': 'List',
             'icon': 'fa-bars'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/table.html',
+            'tooltip': 'Table',
+            'icon': 'fa-table'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
@@ -713,8 +727,8 @@ goog.require('gn_alert');
           'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
           'internalThesaurus': [],
           'collectionTableConfig': {
-            'labels': 'title,cl_status,format,Esri,view,download,file,atom',
-            'columns': 'resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed'
+            'labels': 'title,cl_status,format,download,WMS,WFS,Atom,Links',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:WWW:DOWNLOAD.*,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:atom:feed,link/protocol:WWW:LINK.*'
           },
           'distributionConfig': {
             // 'layout': 'tabset',
@@ -931,9 +945,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'meta': {
                 'vega': 'arc'
@@ -1291,6 +1305,7 @@ goog.require('gn_alert');
       $scope.redirectUrlAfterSign = window.location.href;
 
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnGlobalSettings.isDefaultNode = $scope.isDefaultNode;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;
@@ -1459,6 +1474,15 @@ goog.require('gn_alert');
                 '');
             return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
+          canImportMetadata: function () {
+            var profile = gnConfig['metadata.import.userprofile']
+                || 'Editor',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+
           // The md provide the information about
           // if the current user can edit records or not
           // based on record operation allowed. See edit property.
@@ -1581,7 +1605,8 @@ goog.require('gn_alert');
                 $scope.homeFacet = {
                   list: keys,
                   key: selectedFacet,
-                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined
+                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
+		              config: gnGlobalSettings.gnCfg.mods.home.facetConfig
                 };
               });
             }

@@ -105,6 +105,14 @@ public class MessageProducerFactory {
             id);
     }
 
+    public void shutdown() {
+        try {
+            quartzComponent.shutdown();
+        } catch (Exception e) {
+            LOGGER.error("Error while trying to shutdown quartz", e);
+        }
+    }
+
     private void writeRoute(MessageProducer messageProducer) throws Exception {
         RouteDefinition routeDefinition = routeBuilder
             .from(buildFrom(messageProducer.getId()))

@@ -25,6 +25,9 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
@@ -47,6 +50,10 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +66,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -128,8 +136,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
         boolean isMef = MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString());
         boolean isXml = file.getFileName().toString().endsWith(".xml");
+        boolean isJson = file.getFileName().toString().endsWith(".json");
 
-        if (!isMef && !isXml) {
+        if (!isMef && !isXml && !isJson) {
             return FileVisitResult.CONTINUE;
         }
 
@@ -146,13 +155,93 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             if(isMef) {
                 processMef(file);
+            } else if(isJson) {
+                processJson(file);
             } else {
                 processXml(file);
             }
         } catch (Throwable e) {
-            LOGGER.error("An error occurred while harvesting a local file:{}.", e.getMessage());
+            LOGGER.error("An error occurred while harvesting file {}. Error is: {}.",
+                file.toAbsolutePath().normalize(), e.getMessage());
         }
         return FileVisitResult.CONTINUE;
+    }
+
+
+    // Reads a JSON file, transform it to XML and use the same workflow as for XML files
+    // inspired by:
+    // https://github.com/geonetwork/core-geonetwork/blob/c57f5de06e5e456af1ee55178eca437235b1d499/harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/simpleUrl/Harvester.java#L239
+    private void processJson(Path file) throws Exception {
+        Path filePath = file.toAbsolutePath().normalize();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Element recordAsElement;
+        try {
+            LOGGER.debug("reading file: {}", filePath);
+            String uuid = com.google.common.io.Files.getNameWithoutExtension(file.getFileName().toString());
+            String recordAsJson = objectMapper.readTree(filePath.toFile()).toString();
+            JSONObject sanitizedJson = sanitize(new JSONObject(recordAsJson));
+            String recordAsXml = XML.toString(sanitizedJson,"record")
+                            .replace("<@", "<")
+                            .replace("</@", "</");
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
+            recordAsElement = Xml.loadString(recordAsXml, false);
+            recordAsElement.addContent(new Element("uuid").setText(uuid));
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error processing JSON from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.badFormat++;
+            return;
+        } catch (JDOMException e) {
+            LOGGER.error("Error transforming JSON into XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.badFormat++;
+            return;
+        } catch (Throwable e) {
+            LOGGER.error("Error retrieving JSON from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.unretrievable++;
+            return;
+        }
+
+        processXmlData(file, recordAsElement);
+    }
+
+    /**
+     * Replace whitespace in keys to underscore (mutates object)
+     */
+    public static JSONObject sanitize(JSONObject json) throws JSONException {
+        JSONArray names = json.names();
+        if (names != null) {
+            for (int i = 0; i < names.length(); i++) {
+                String key = names.getString(i);
+                if (key.contains(" ")) {
+                    String oldKey = key;
+                    key = key.replaceAll(" ", "_");
+                    json.put(key, json.get(oldKey));
+                    json.remove(oldKey);
+                }
+                Object value = json.opt(key);
+                if (value instanceof JSONObject) {
+                    sanitize((JSONObject) value);
+                } else if (value instanceof JSONArray) {
+                    sanitize((JSONArray) value);
+                }
+            }
+        }
+        return json;
+    }
+
+    public static JSONArray sanitize(JSONArray array) throws JSONException {
+        for (int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONObject) {
+                sanitize((JSONObject) value);
+            } else if (value instanceof JSONArray) {
+                sanitize((JSONArray) value);
+            }
+        }
+        return array;
     }
 
     private void processXml(Path file) throws Exception {
@@ -163,23 +252,29 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             LOGGER.debug("reading file: {}", filePath);
             xml = Xml.loadFile(file);
         } catch (JDOMException e) {
-            LOGGER.debug("Error loading XML from file {}, ignoring", filePath);
-            LOGGER.debug("full stack", e);
+            LOGGER.error("Error loading XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
             result.badFormat++;
             return;
         } catch (Throwable e) {
-            LOGGER.debug("Error retrieving XML from file {}, ignoring", filePath);
-            LOGGER.debug("full stack", e);
+            LOGGER.error("Error retrieving XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
             result.unretrievable++;
             return;
         }
 
-        // transform using importxslt if not none
+        processXmlData(file, xml);
+    }
+
+    private void processXmlData(Path file, Element rawXml) throws Exception {
+        Path filePath = file.toAbsolutePath().normalize();
+
+        Element xml = rawXml;
         if (transformIt) {
             try {
                 xml = Xml.transform(xml, thisXslt);
             } catch (Exception e) {
-                LOGGER.debug("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+                LOGGER.error("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
                 result.badFormat++;
                 return;
             }
@@ -201,7 +296,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             params.getValidate().validate(dataMan, context, xml, groupIdVal);
         } catch (Exception e) {
-            LOGGER.debug("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+            LOGGER.error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
             result.doesNotValidate++;
             return;
         }

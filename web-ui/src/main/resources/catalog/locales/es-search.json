@@ -68,6 +68,9 @@
     "atomDatasetsInFeed": "Conjuntos de datos disponibles",
     "atomLinkDetails": "El conjunto de datos está publicado en el Feed Atom disponible en <a href='{{url}}' target='_blank'>{{url}}</a> con nombre <strong>{{layer}}</strong>.",
     "otherLinkDetails": "Otros recursos:",
+    "qualityLinkDetails": "Quality report",
+    "featurecatalogueLinkDetails": "Feature catalogue",
+    "legendLinkDetails": "Leyenda",
     "wmsCapabilitiesNotAvailable": "No se pudo comprobar la respuesta de GetCapabilities",
     "wmsLayerNotAvailable": "La capa {{layerName}} no está disponible en el servicio WMS. Sin embargo, se puede visualizar alguna de las disponibles",
     "wmsChooseLayerToAdd": "Escoge una capa para añadir al mapa",
@@ -174,7 +177,7 @@
     "listOfCategories": "Categorías",
     "formats": "Formatos",
     "addLayers": "Añadir capas",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "URL del Servicio",
     "CurrentLayers": "Capas",
     "SearchLayer": "Buscar",
@@ -532,5 +535,10 @@
     "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
     "copyMousePosition": "Copy mouse position to clipboard",
     "printUnsupportedLayerTypes": "Los siguientes tipos de capas están presentes pero no se pueden imprimir ",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS feed",
+    "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
+    "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
+    "seriesComposedOf": "Composed of",
+    "seriesCoveringPeriod": "Covering period",
+    "approve": "Aprobar"
 }

@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.2.1-SNAPSHOT</version>
   </parent>
 
 
@@ -282,9 +282,17 @@
 
     <!-- Print service: MapFish -->
     <dependency>
+      <groupId>com.github.librepdf</groupId>
+      <artifactId>openpdf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <exclusions>
+        <exclusion>
+          <groupId>com.lowagie</groupId>
+          <artifactId>itext</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
@@ -436,7 +444,6 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.3.23</version>
     </dependency>
 
     <!-- Monitoring libraries -->
@@ -544,7 +551,7 @@
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
-      <version>1.9</version>
+      <version>1.12.1</version>
     </dependency>
 
     <!--Detect urls in String and transform to html format-->
@@ -705,6 +712,71 @@
             </fileset>
           </filesets>
         </configuration>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${user.home}</directory>
+                  <includes>
+                    <include>gn.mv.db</include>
+                    <include>gn.trace.db</include>
+                  </includes>
+                </fileset>
+                <!-- reset working files covered by .gitignore -->
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>*.db</include>
+                    <include>*.db.old</include>
+                    <include>images/**</include>
+                    <include>jcs_caching/**</include>
+                    <include>logs/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/</directory>
+                  <includes>
+                    <include>META-INF/MANIFEST.MF</include>
+                    <include>data/**</include>
+                    <include>doc/en/**</include>
+                    <include>doc/fr/**</include>
+                    <include>images/logos/*</include>
+                    <include>images/logos/statTmp</include>
+                    <include>scripts/lib/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/WEB-INF/</directory>
+                  <includes>
+                    <include>data/0*</include>
+                    <include>data/config/schema_plugins/**</include>
+                    <include>data/config/schemaplugin-uri-catalog.xml</include>
+                    <include>data/data/backup/**</include>
+                    <include>data/data/metadata_data/**</include>
+                    <include>data/data/metadata_subversion/**</include>
+                    <include>data/data/resources/htmlcache/**</include>
+                    <!--include>data/data/resources/images/**</include-->
+                    <include>data/data/schema_plugins/**</include>
+                    <include>data/data/resources/xml/**</include>
+                    <include>data/data/upload/**</include>
+                    <include>data/harvester_*</include>
+                    <include>data/index/**</include>
+                    <include>data/node_less_files/**</include>
+                    <include>data/removed/**</include>
+                    <include>data/wro4j*.db</include>
+                    <include>data/wro4j-cache*</include>
+                    <include>data/data_*</include>
+                    <include>data/lucene/**</include>
+                    <include>metadata_subversion/</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

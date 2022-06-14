@@ -660,6 +660,7 @@ public final class Geonet {
         public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
+        public static final String DRAFT_ID = "draftId";
         public static final String RESOURCETITLE = "resourceTitle";
         public static final String RESOURCEABSTRACT = "resourceAbstract";
         public static final String PARENTUUID = "parentUuid";

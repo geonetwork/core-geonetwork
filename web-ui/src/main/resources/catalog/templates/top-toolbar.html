@@ -42,6 +42,7 @@
           </span>
         </a>
       </li>
+      <li gn-portal-switcher=""/>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
@@ -79,7 +80,7 @@
               <i class="fa fa-fw fa-plus"></i>&nbsp;<span translate>addRecord</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <i class="fa fa-fw fa-upload"></i>&nbsp;<span translate>ImportRecord</span>
             </a>

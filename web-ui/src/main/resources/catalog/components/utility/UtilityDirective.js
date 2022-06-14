@@ -62,6 +62,39 @@
   ]);
 
 
+  module.directive('gnBatchEditExamplesSelector', [
+    '$http', 'gnGlobalSettings', 'gnLangs',
+    function($http, gnGlobalSettings, gnLangs) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          cb: '&gnBatchEditExamplesSelector'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/batchedit-example-selector.html',
+        link: function(scope, element, attrs) {
+          scope.batchExamples = [];
+          scope.click = function(e) {
+            var example = angular.copy(e, {});
+            example.field = example.name[gnLangs.getCurrent()];
+            delete example.schema;
+            delete example.name;
+            delete example.isXpath;
+            delete example.description;
+            scope.cb()(example);
+          }
+          $http.get(gnGlobalSettings.gnUrl +
+            '../catalog/config/batch-examples.json')
+            .success(function(data) {
+              scope.batchExamples = data;
+            });
+        }
+      };
+    }
+  ]);
+
+
   module.directive('gnRecordMosaic', ['$http',
     function($http) {
       return {
@@ -1547,6 +1580,13 @@
               // to use in ng-repeat
               scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
+                  // Reset pagination to the first page when the filtered results have less results
+                  // than the ones needed to be displayed in the current page
+                  if (scope.items().length < ((scope.paginator.currentPage *
+                    scope.paginator.pageSize)+1)) {
+                    scope.paginator.currentPage = 0;
+                  }
+
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;

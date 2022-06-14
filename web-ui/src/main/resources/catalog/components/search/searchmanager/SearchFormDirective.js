@@ -52,7 +52,7 @@
    */
   var searchFormController =
       function($scope, $location, $parse, $translate, gnSearchManagerService,
-               Metadata, gnSearchLocation, gnESClient,
+               Metadata, gnSearchLocation, gnESClient, gnGlobalSettings,
                gnESService, gnESFacet, gnAlertService, md5) {
     var defaultParams = {};
     var self = this;
@@ -187,7 +187,14 @@
       // console.log(dontComputeAggs, $scope.searchResults.searchKey, searchKey);
       $scope.searchResults.searchKey = searchKey;
 
-      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
+      // For now, only the list result template renders related records
+      // based on UI config.
+      var template = $scope.resultTemplate && $scope.resultTemplate.endsWith('list.html')
+          ? 'grid' : '',
+        templateConfig = gnGlobalSettings.gnCfg.mods.search[template],
+        types = templateConfig && templateConfig.related ? templateConfig.related : [];
+
+      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId, types)
         .then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
@@ -516,6 +523,18 @@
       }
     }
 
+    this.getMissingLabel = function(key) {
+      if(!key) return;
+      var facet = $scope.searchResults.facets.filter(function(facet) {
+        return facet.key === key;
+      });
+      return (facet.length
+          && facet[0].config
+          && facet[0].config.terms
+          && facet[0].config.terms.missing)
+        || 'missing';
+    }
+
     this.hasFiltersForKey = function(key) {
       return !!$scope.searchObj.state.filters[key];
     }
@@ -673,6 +692,7 @@
     'Metadata',
     'gnSearchLocation',
     'gnESClient',
+    'gnGlobalSettings',
     'gnESService',
     'gnESFacet',
     'gnAlertService',

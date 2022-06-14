@@ -46,12 +46,14 @@
   module.directive('gnResultsTplSwitcher',
     function() {
       return {
+        require: '^ngSearchForm',
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
         'templateswitcher.html',
         restrict: 'A',
-        link: function($scope) {
+        link: function($scope, element, attrs, searchFormCtrl) {
           $scope.setResultTemplate = function (t) {
             $scope.resultTemplate = t.tplUrl;
+            searchFormCtrl.triggerSearch(true);
           };
         }
       };
@@ -153,7 +155,6 @@
           });
 
           scope.$watch('resultTemplate', function(templateUrl) {
-
             if (angular.isUndefined(templateUrl)) {
               return;
             }

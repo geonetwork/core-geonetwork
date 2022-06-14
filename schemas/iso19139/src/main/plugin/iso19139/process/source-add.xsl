@@ -62,7 +62,7 @@ Stylesheet used to update metadata adding a reference to a source record.
             <gmd:DQ_DataQuality>
               <gmd:lineage>
                 <gmd:LI_Lineage>
-                  <gmd:source uuidref="{$sourceUuid}"/>
+                  <xsl:call-template name="make-source-link"/>
                 </gmd:LI_Lineage>
               </gmd:lineage>
             </gmd:DQ_DataQuality>

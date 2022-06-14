@@ -77,39 +77,6 @@
       return (promise);
     };
 
-    this.parseFilters = function(filters) {
-      var separator = ':';
-      return filters
-        .split(' AND ')
-        .map(function(clause) {
-          var filter = clause.split(separator),
-            field = filter.shift(),
-            not = field && field.startsWith('-');
-          return {
-            field: not ? field.substr(1) : field,
-            regex: new RegExp(filter.join(separator)),
-            not: not
-          }
-        });
-    };
-
-    this.testFilters = function(filters, object) {
-      var results = [];
-      filters.forEach(function(filter, j) {
-        var prop = object[filter.field];
-        if (prop
-          && ((!filter.not && prop.match(filter.regex) != null)
-            || (filter.not && prop.match(filter.regex) == null))) {
-          results[j] = true;
-        } else {
-          results[j] = false;
-        }
-      });
-      return results.reduce(function(prev, curr) {
-        return prev && curr;
-      })
-    };
-
     this.getMdsRelated = function(mds, types) {
       var uuids = mds.map(function (md) {
         return md.uuid;
@@ -121,70 +88,6 @@
           uuid: uuids
         }
       });
-    };
-    this.getMdsRelatedWithMultipleSearch = function(mds, types) {
-      var uuids = mds.map(function(md) {
-        return md.uuid;
-      });
-      // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
-      // Is a service: If record.operatesOn then uuid: record.operatesOn
-      // Is a sibling?: agg_associated: record.uuid
-
-      var promise = $q.defer();
-      var body = '';
-      var searchFields = {
-        'children': 'parentUuid',
-        'services': 'recordOperateOn',
-        'hassources': 'hassources',
-        'associated': 'agg_associated',
-        'hasfeaturecats': 'hasfeaturecats'
-      };
-      for (var j = 0; j < mds.length; j++) {
-        for (var i = 0; i < types.length; i++) {
-          body += '{"index": "records"}\n';
-          switch (types[i]) {
-            case 'services':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            case 'children':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            default:
-              body += '{"query": {"match_all": {}}, "from": 0, "size": 0}\n'
-          }
-        }
-      }
-      $http.post('../api/search/records/_msearch', body).then(function (r) {
-        var related = {};
-        for (var j = 0; j < mds.length; j++) {
-          var uuid = mds[j].uuid;
-          related[uuid] = {};
-          for (var i = 0; i < types.length; i++) {
-            var t = types[i];
-            var values = [];
-            var results = r.data.responses[i + j];
-            if (results.hits.total.value > 0) {
-              for (var k = 0; k < results.hits.hits.length; k ++) {
-                var record = results.hits.hits[k];
-                values.push({
-                  id: record._source.id,
-                  title: {eng: record._source.resourceTitleObject.default}
-                });
-              }
-            }
-            related[uuid][t] = values.length > 0 ? values : undefined;
-          }
-        }
-        promise.resolve({data: related});
-      });
-
-      return promise.promise;
     };
   }]);
 
@@ -219,8 +122,8 @@
    */
   module
     .directive('gnRelatedContainer', [
-        'gnRelatedResources', 'gnRelatedService',
-      function (gnRelatedResources, gnRelatedService) {
+        'gnRelatedResources', 'gnConfigService',
+      function (gnRelatedResources, gnConfigService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -244,7 +147,9 @@
               config.relations = {};
 
               t.forEach(function (type) {
-                config.relations[type] = scope.md.relatedRecords[type] || {};
+                config.relations[type] =
+                  (type === 'onlines' ? scope.md.link : scope.md.related[type])
+                  || {};
                 config.relationFound = config.relations[type].length > 0;
 
                 var value = config.relations[type];
@@ -253,11 +158,11 @@
                 if (scope.mode === 'tabset'
                   && config.filter
                   && angular.isArray(value)) {
-                  var filters = gnRelatedService.parseFilters(config.filter)
+                  var filters = gnConfigService.parseFilters(config.filter)
 
                   config.relations[type] = [];
                   for (var i = 0; i < value.length; i++) {
-                    gnRelatedService.testFilters(filters, value[i])
+                    gnConfigService.testFilters(filters, value[i])
                     && config.relations[type].push(value[i]);
                   }
                   config.relationFound = config.relations[type].length > 0;
@@ -274,15 +179,126 @@
     ]);
 
   module
+    .directive('gnRelatedList', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedSimpleList.html',
+          scope: {
+            md: '=gnRelatedList',
+            user: '=',
+            title: '@?'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+            var count = 0;
+            scope.md && scope.md.related
+              && Object.keys(scope.md.related).forEach(function(key) {
+              count += scope.md.related[key].length;
+            });
+            scope.relationsFound = count > 0;
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRelatedEditorList', [
+      'gnRelatedResources', '$rootScope',
+      function(gnRelatedResources, $rootScope) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedEditorList.html',
+          scope: {
+            related: '=gnRelatedEditorList',
+            type: '@',
+            readonly: '=?',
+            removeCb: '&?'
+          },
+          link: function(scope) {
+            scope.md = {
+              related: {}
+            };
+            scope.md.related[scope.type] = scope.related;
+            scope.remove = angular.isFunction(scope.removeCb)
+              ? function(md) {
+              scope.removeCb({record: md});
+            } : undefined;
+
+            scope.canRemoveLink = function (record) {
+              if (record.origin === 'remote') {
+                return true;
+              } else if (scope.remove) {
+                return true
+              }
+              return false;
+            }
+            scope.user = $rootScope.user;
+            scope.config = gnRelatedResources;
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRelatedDropdown', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedDropdown.html',
+          scope: {
+            md: '=gnRelatedDropdown',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+            scope.hasRelations = false;
+            if (scope.md && scope.md.related) {
+              var total = 0;
+              Object.keys(scope.md.related).map(function(t) {
+                total += scope.md.related[t].length;
+              });
+              scope.hasRelations = total > 0;
+            }
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRecordIsReplacedBy', [
+      '$http', 'Metadata',
+      function($http, Metadata) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedReplacedBy.html',
+          scope: {
+            uuid: '=gnRecordIsReplacedBy'
+          },
+          link: function(scope) {
+            $http.post('../api/search/records/_search', {"query": {
+                "query_string" : {
+                  "query": "+agg_associated_revisionOf:\"" + scope.uuid + "\""
+                }
+              }}).then(function(r) {
+                scope.items = r.data.hits.hits.map(function(r) {
+                  return new Metadata(r);
+                });
+            });
+          }
+        }
+      }]);
+
+  module
       .directive('gnRelated', [
         'gnRelatedService',
         'gnGlobalSettings',
         'gnSearchSettings',
         'gnRelatedResources',
         'gnExternalViewer',
+        'gnConfigService',
         function(gnRelatedService, gnGlobalSettings,
                  gnSearchSettings, gnRelatedResources,
-                 gnExternalViewer) {
+                 gnExternalViewer, gnConfigService) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -307,7 +323,8 @@
               hasResults: '=?',
               layout: '@',
               // Only apply to card layout
-              size: '@'
+              size: '@',
+              groupSiblingsByType: '=?'
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
@@ -333,12 +350,13 @@
                   : scope.size;
               }
               scope.loadRelations = function(relation) {
+                var relationCount = 0;
+                scope.relationFound = false;
                 angular.forEach(relation, function(value, idx) {
                   if (!value) { return; }
 
                   // init object if required
                   scope.relations = scope.relations || {};
-                  scope.relationFound = true;
                   scope.hasResults = true;
 
                   if (!scope.relations[idx]) {
@@ -346,31 +364,65 @@
                     scope.sizeConfig[idx] = scope.size;
                   }
                   if (scope.filter && angular.isArray(value)) {
-                    var filters = gnRelatedService.parseFilters(scope.filter)
+                    var filters = gnConfigService.parseFilters(scope.filter)
 
                     scope.relations[idx] = [];
                     for (var i = 0; i < value.length; i++) {
-                      gnRelatedService.testFilters(filters, value[i])
+                      gnConfigService.testFilters(filters, value[i])
                         && scope.relations[idx].push(value[i]);
                     }
-                    scope.relationFound = scope.relations[idx].length > 0;
                   } else {
                     scope.relations[idx] = value;
                   }
 
-                  if (scope.relations.siblings && scope.relations.associated) {
-                    for (var i = 0; i < scope.relations.associated.length; i++) {
-                      if (scope.relations.siblings.filter(function (e) {
-                        return e.id === scope.relations.associated[i].id;
+                  // siblings, children, parent can contain elements from
+                  // siblings or associated if linking is made in both direction
+                  // Priority:
+                  // * children (can also be associated with isComposedOf),
+                  // and parent (can also be associated with partOfSeamlessDatabase)
+                  // are preserved
+                  // * Exclude children and parent from associated and siblings,
+                  // and also filter siblings from associated to avoid duplicates
+                  var siblingsCount = 0;
+                  if (idx === 'associated' || idx === 'siblings') {
+                    var indexToRemove = [];
+                    for (var i = 0; i < scope.relations[idx].length; i++) {
+                      if ([].concat(idx === 'associated' ? (scope.md.related.siblings || []) : [],
+                                    scope.md.related.parent || [],
+                                    scope.md.related.children || []).filter(function (e) {
+                        return e && e.id === scope.relations[idx][i].id;
                       }).length > 0) {
-                        /* siblings object contains associated element */
-                      } else {
-                        scope.relations.siblings.push(scope.relations.associated[i])
+                        // Exclude
+                        indexToRemove.push(i);
                       }
                     }
-                    scope.relations.associated = [];
+                    indexToRemove.reverse().forEach(function(value) {
+                      scope.relations[idx].splice(value, 1);
+                    });
+
+                    if (scope.relations.siblings
+                      && scope.relations.siblings.map
+                      && scope.groupSiblingsByType) {
+                      scope.relations.siblings.map(function(r) {
+                        return r.properties && r.properties.initiativeType || '';
+                      }).filter(function(value, index, self) {
+                        return self.indexOf(value) === index;
+                      }).forEach(function(type) {
+                        scope.relations['siblings' + type] = scope.relations.siblings.filter(function (r) {
+                          return r.properties && r.properties.initiativeType === type;
+                        });
+                        siblingsCount += scope.relations['siblings' + type].length;
+                      });
+                      scope.relations.siblings = [];
+                    } else {
+                      siblingsCount = scope.relations[idx].length;
+                    }
                   }
+
+                  relationCount += idx === 'siblings'
+                    ? siblingsCount : scope.relations[idx].length;
                 });
+                scope.relationFound = relationCount > 0;
               };
 
               scope.updateRelations = function() {
@@ -404,8 +456,8 @@
               };
 
               scope.getOrderBy = function(link) {
-                return link.record && link.record.resourceTitle
-                        ? link.record.resourceTitle
+                return link && link.resourceTitle
+                        ? link.resourceTitle
                         : link.locTitle
               };
 
@@ -425,10 +477,11 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    if (scope.md.relatedRecords) {
+                    if (scope.md.related || scope.md.link) {
                       var relations = {};
                       scope.types.split('|').map(function(t) {
-                        relations[t] = scope.md.relatedRecords[t];
+                        relations[t] =
+                          (t === 'onlines' ? scope.md.link : scope.md.related[t]);
                       })
                       scope.loadRelations(relations);
                     } else {
@@ -546,7 +599,7 @@
                 if (k.key === value) {
                   k.docs.hits.hits.forEach(function (r) {
                     scope.displayedRecords =
-                      scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
+                      scope.displayedRecords.concat(_.filter(scope.children, {uuid: r._id}));
                   });
                   sort();
                 }
@@ -574,8 +627,8 @@
             function sort() {
               if (scope.sortBy) {
                 scope.displayedRecords.sort(function(a, b) {
-                  return a.record[scope.sortBy]
-                    && a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
+                  return a[scope.sortBy]
+                    && a[scope.sortBy].localeCompare(b[scope.sortBy])
                 });
               }
             }
@@ -644,7 +697,7 @@
             // empty or dropdown or dropdownOrButton (if one link)
             btn: '@',
             btnClass: '@',
-            btnDisabled: '=',
+            // btnDisabled: '=',
             type: '=',
             title: '@',
             altTitle: '@',
@@ -657,10 +710,13 @@
             if (scope.links && scope.links.length > 0) {
               scope.mainType = gnRelatedResources.getType(scope.links[0], scope.type || 'onlines');
               scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.links[0]);
             }
           }
         }
       }]);
+
 
   /**
    * Can support a link returned by the related API
@@ -670,8 +726,8 @@
    * user privileges. For metadata link, check download/dynamic properties.
    */
   module
-    .directive('gnRecordLinkButton', ['gnRelatedResources',
-      function(gnRelatedResources) {
+    .directive('gnRecordLinkButton', ['gnRelatedResources', 'gnRelatedService',
+      function(gnRelatedResources, gnRelatedService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -682,7 +738,6 @@
             link: '=gnRecordLinkButton',
             btn: '=',
             btnClass: '=',
-            btnDisabled: '=',
             // none, only
             iconMode: '=',
             iconClass: '=',
@@ -700,6 +755,8 @@
               scope.isSibling = (scope.mainType == 'MDSIBLING'
                 && scope.link.associationType
                 && scope.link.associationType != '');
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.link);
             }
           }
         }
@@ -707,8 +764,8 @@
 
   module
     .directive('gnRecordsTable', [
-      'Metadata',
-      function(Metadata) {
+      'Metadata', 'gnRelatedService',
+      function(Metadata, gnRelatedService) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
@@ -745,12 +802,15 @@
               scope.data = [];
               scope.displayedRecords = [];
               scope.records.map(function(r) {
-                r = new Metadata(r.record);
+                r = new Metadata(r);
                 var recordData = {};
+
                 scope.columnsConfig.map(function(c) {
-                  recordData[c] = c.startsWith('link/')
-                    ? r.getLinksByType(c.split('/')[1])
-                    : (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  if (c.startsWith('link/')) {
+                    recordData[c] = r.getLinksByFilter(c.split('/')[1]);
+                  } else {
+                    recordData[c] = (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  }
                 });
                 recordData.md = r;
                 scope.data.push(recordData);
@@ -806,5 +866,5 @@
             };
           }
         }
-    }]);
+      }]);
 })();

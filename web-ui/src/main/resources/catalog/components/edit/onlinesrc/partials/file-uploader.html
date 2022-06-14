@@ -1,0 +1,58 @@
+<div data-ng-class="{'panel panel-default': panelMode}"
+     class="gn-file-uploader">
+  <div data-ng-if="panelMode" class="panel-heading" data-gn-slide-toggle>
+    <i class="fa fa-fw {{icon}}"></i>
+    <span data-translate="">{{title}}</span>
+  </div>
+  <div data-ng-class="{'panel-body': panelMode}">
+    <ul class="list-inline">
+      <li class="gn-list-thumb thumbnail"
+          data-ng-repeat="f in relations">
+        <img data-ng-if="isOverview"
+             class="thumb-small"
+             title="{{f.title | gnLocalized: lang}}"
+             data-ng-src="{{onlinesrcService.getApprovedUrl(f.lUrl || f.id)}}"/>
+
+        <span data-ng-if="!isOverview">
+          <i class="fa fa-fw fa-2x fa-download"></i>
+          <strong>{{f.lUrl.split('/').pop()}}</strong>
+        </span>
+
+        <a href="" class="onlinesrc-remove"
+           data-ng-if="readonly !== true"
+           data-gn-confirm-click="{{removeBtnConfirm | translate:{url: f.lUrl} }}"
+           data-gn-click-and-spin="removeFile(f)"
+           title="{{removeBtnTitle | translate}}">
+          <i class="btn fa fa-times text-danger"></i>
+        </a>
+      </li>
+
+      <!-- The one currently uploaded -->
+      <li data-ng-repeat="file in queue"
+          class="gn-list-thumb thumbnail">
+        <i class="fa gn-icon-thumbnail fa-5x"></i>
+        {{file.name}}
+      </li>
+    </ul>
+
+    <div class="form-horizontal"
+         data-file-upload="filestoreUploadOptions">
+
+      <!-- The upload zone -->
+      <span class="btn btn-primary btn-block fileinput-button"
+            data-ng-class="{disabled: disabled}"
+            data-ng-hide="relations.thumbnails.length >= numberOfOverviews">
+       <i class="fa fa-fw fa-plus-circle"
+          data-ng-class="{hidden: active()}"/>
+       <i class="fa fa-fw fa-spinner fa-spin"
+          data-ng-class="{hidden: !active()}"
+          data-file-upload-progress="progress()"
+          data-file-upload-done="loadRelations()"/>
+        <span>{{btnLabel | translate}}</span>
+        <input type="file"
+               name="file"
+               data-ng-disabled="disabled"/>
+      </span>
+    </div>
+  </div>
+</div>

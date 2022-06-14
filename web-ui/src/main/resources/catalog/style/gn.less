@@ -469,6 +469,7 @@ div.thumb-small {
   width: 32%;
   padding: 0;
   border-radius: 2px;
+  text-align: center;
   a.onlinesrc-remove {
     position: absolute;
     z-index: 99;
@@ -870,6 +871,11 @@ i.fa-times.delete:hover {
   .gn-status-table {
     position: relative;
     bottom: unset;
+    border: unset;
+    padding: 0.2em 0.6em 0.3em;
+    border-radius: 0.25em;
+    line-height: 1;
+    font-weight: bold;
     margin-top: 0;
     margin-left: 0;
   }
@@ -883,7 +889,7 @@ i.fa-times.delete:hover {
 }
 
 // Language specific layout
-html[lang=eng] {
+html {
   .gn-scale,
   [data-facet=denominators] span.gn-facet-label,
   .gn-facet-denominators span.gn-facet-label {
@@ -892,7 +898,7 @@ html[lang=eng] {
     }
   }
 }
-html[lang=fre] {
+html[lang=fr] {
   .gn-scale,
   [data-facet=denominators] span.gn-facet-label,
   .gn-facet-denominators span.gn-facet-label {
@@ -1451,7 +1457,18 @@ gn-indexing-task-status {
 .width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
 .height-auto { height: auto !important; max-height: none !important; }
-
+.col-2 {
+  column-count: 2;
+  &>div {
+    break-inside: avoid;
+  }
+}
+.col-3 {
+  column-count: 3;
+  &>div {
+    break-inside: avoid;
+  }
+}
 
 html {
   // As a side-effect of setting the @viewport in bootstrap,

@@ -29,6 +29,137 @@
   goog.require('gn_utility');
   goog.require('gn_filestore');
   goog.require('gn_urlutils_service');
+  goog.require('gn_related_directive');
+
+
+  var fileUploader = [
+    'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
+    function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/onlinesrc/' +
+          'partials/file-uploader.html',
+        scope: {},
+        link: function (scope, element, attrs) {
+          scope.relations = {};
+          scope.uuid = undefined;
+          scope.lang = scope.$parent.lang;
+          scope.readonly = false;
+          scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
+          scope.onlinesrcService = gnOnlinesrc;
+
+          scope.defaultType = 'thumbnails';
+          scope.type = attrs['type'] || scope.defaultType;
+          scope.panelMode = angular.isDefined(attrs['title'])
+            && attrs['title'] === '' ? false : true;
+          scope.protocol = attrs['protocol'] || 'WWW:DOWNLOAD';
+          scope.isOverview = scope.type === scope.defaultType;
+          scope.title = attrs['title'] || (scope.isOverview ? 'overview' : 'download');
+          scope.icon = attrs['icon'] || (scope.isOverview ? 'gn-icon-thumbnail' : 'fa-download');
+          scope.btnLabel = attrs['btnLabel'] || (scope.isOverview ? 'chooseImage': 'chooseFileToUpload');
+          scope.removeBtnConfirm = scope.isOverview ? 'removeThumbnailConfirm' : 'removeOnlinesrcConfirm';
+          scope.removeBtnTitle = scope.isOverview ? 'removeThumbnail' : 'remove';
+
+          var loadRelations = function() {
+            gnOnlinesrc.getAllResources([scope.type])
+              .then(function(data) {
+                var res = gnOnlinesrc.formatResources(
+                  data,
+                  scope.lang,
+                  gnCurrentEdit.mdLanguage);
+                scope.relations = scope.isOverview
+                  ? res.relations[scope.type]
+                  : res.relations[scope.type].filter(function(l) {
+                    return l.protocol === scope.protocol;
+                  });
+              });
+          };
+
+          var uploadFile = function() {
+            scope.queue = [];
+            scope.filestoreUploadOptions = {
+              autoUpload: true,
+              url: '../api/records/' + gnCurrentEdit.uuid +
+                '/attachments?visibility=public',
+              dropZone: $('#gn-overview-dropzone'),
+              singleUpload: true,
+              // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+              done: uploadResourceSuccess,
+              fail: uploadResourceFailed,
+              headers: {'X-XSRF-TOKEN': $rootScope.csrf}
+            };
+
+          };
+
+          var linkOverviewToRecord = function (link) {
+            var params = scope.isOverview ? {
+              thumbnail_url: link.url,
+              thumbnail_desc: link.name || '',
+              process: 'thumbnail-add',
+              id: gnCurrentEdit.id
+            } : {
+              url: link.url,
+              name: link.name || '',
+              protocol: scope.protocol,
+              process: 'onlinesrc-add',
+              id: gnCurrentEdit.id
+            };
+            gnOnlinesrc.add(params);
+          };
+
+          var uploadResourceSuccess = function(e, data) {
+            $rootScope.$broadcast('gnFileStoreUploadDone');
+            scope.clear(scope.queue);
+            linkOverviewToRecord(data.response().jqXHR.responseJSON);
+          };
+
+          scope.$on('gnFileStoreUploadDone', scope.loadRelations);
+
+          var uploadResourceFailed = function(e, data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('resourceUploadError'),
+              error: {
+                message: data.errorThrown +
+                angular.isDefined(
+                  data.response().jqXHR.responseJSON.message) ?
+                  data.response().jqXHR.responseJSON.message : ''
+              },
+              timeout: 0,
+              type: 'danger'});
+            scope.clear(scope.queue);
+          };
+
+          scope.removeFile = function(file) {
+            var url = file.url[gnCurrentEdit.mdLanguage];
+            if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
+              // An external URL
+              gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
+                loadRelations();
+              });
+            } else {
+              // A thumbnail from the filestore
+              gnFileStoreService.delete({url: url}).then(function () {
+                // then remove from record
+                gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
+                  loadRelations();
+                });
+              });
+            }
+
+          };
+          function init(n, o) {
+            if (angular.isUndefined(scope.uuid) ||
+              n != o) {
+              scope.uuid = n;
+              loadRelations();
+              uploadFile();
+            }
+          }
+          scope.$watch('gnCurrentEdit.uuid', init);
+          scope.$watch('$parent.gnCurrentEdit.uuid', init);
+        }
+      }
+    }];
 
   /**
    * @ngdoc overview
@@ -48,7 +179,8 @@
     'gn_filestore',
     'blueimp.fileupload',
     'ga_print_directive',
-    'gn_urlutils_service'
+    'gn_urlutils_service',
+    'gn_related_directive'
   ])
     .directive('gnRemoteRecordSelector', ['$http', 'gnGlobalSettings',
       function($http, gnGlobalSettings) {
@@ -204,123 +336,18 @@
       }
     }])
   /**
-   * Simple interface to add or remove overview.
+   * Simple interface to add or remove file/overview.
    *
    * This directive handle in one step the add to filestore
    * action and the update metadata record steps. User
-   * can easily drag & drop thumbnails in here.
+   * can easily drag & drop file/overview in here.
    *
    * It does not provide the possibility to set
-   * overview name and description. See onlineSrcList directive
+   * name and description. See onlineSrcList directive
    * or full editor mode.
    */
-    .directive('gnOverviewManager', [
-      'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
-      function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
-        return {
-          restrict: 'A',
-          templateUrl: '../../catalog/components/edit/onlinesrc/' +
-          'partials/overview-manager.html',
-          scope: {},
-          link: function (scope, element, attrs) {
-            scope.relations = {};
-            scope.uuid = undefined;
-            scope.lang = scope.$parent.lang;
-            scope.readonly = false;
-            scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
-            scope.onlinesrcService = gnOnlinesrc;
-
-            // Load thumbnail list.
-            var loadRelations = function() {
-              gnOnlinesrc.getAllResources(['thumbnail'])
-                .then(function(data) {
-                  var res = gnOnlinesrc.formatResources(
-                    data,
-                    scope.lang,
-                    gnCurrentEdit.mdLanguage);
-                  scope.relations = res.relations;
-                });
-            };
-
-            // Upload overview once dropped or selected
-            var uploadOverview = function() {
-              scope.queue = [];
-              scope.filestoreUploadOptions = {
-                autoUpload: true,
-                url: '../api/records/' + gnCurrentEdit.uuid +
-                '/attachments?visibility=public',
-                dropZone: $('#gn-overview-dropzone'),
-                singleUpload: true,
-                // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
-                done: uploadResourceSuccess,
-                fail: uploadResourceFailed,
-                headers: {'X-XSRF-TOKEN': $rootScope.csrf}
-              };
-            };
-
-            var linkOverviewToRecord = function (link) {
-              var params = {
-                thumbnail_url: link.url,
-                thumbnail_desc: link.name || '',
-                process: 'thumbnail-add',
-                id: gnCurrentEdit.id
-              };
-              gnOnlinesrc.add(params);
-            };
-
-            var uploadResourceSuccess = function(e, data) {
-              $rootScope.$broadcast('gnFileStoreUploadDone');
-              scope.clear(scope.queue);
-              linkOverviewToRecord(data.response().jqXHR.responseJSON);
-            };
-
-            scope.$on('gnFileStoreUploadDone', scope.loadRelations);
-
-            var uploadResourceFailed = function(e, data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('resourceUploadError'),
-                error: {
-                  message: data.errorThrown +
-                  angular.isDefined(
-                    data.response().jqXHR.responseJSON.message) ?
-                    data.response().jqXHR.responseJSON.message : ''
-                },
-                timeout: 0,
-                type: 'danger'});
-              scope.clear(scope.queue);
-            };
-
-            scope.removeOverview = function(thumbnail) {
-              var url = thumbnail.url[gnCurrentEdit.mdLanguage];
-              if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
-                // An external URL
-                gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
-                  // and update list.
-                  loadRelations();
-                });
-              } else {
-                // A thumbnail from the filestore
-                gnFileStoreService.delete({url: url}).then(function () {
-                  // then remove from record
-                  gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
-                    // and update list.
-                    loadRelations();
-                  })
-                });
-              }
-
-            };
-            scope.$watch('gnCurrentEdit.uuid', function(n, o) {
-              if (angular.isUndefined(scope.uuid) ||
-                n != o) {
-                scope.uuid = n;
-                loadRelations();
-                uploadOverview();
-              }
-            });
-          }
-        }
-      }])
+    .directive('gnFileUploader', fileUploader)
+    .directive('gnOverviewManager', fileUploader)
 
   /**
    * @ngdoc directive
@@ -367,7 +394,7 @@
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
-              scope.relations = {};
+              scope.relations = [];
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
@@ -482,9 +509,10 @@
         '$http',
         '$filter',
         '$log',
+        '$q',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
             gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnUrlUtils, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http, $filter, $log) {
+            $rootScope, $translate, $timeout, $http, $filter, $log, $q) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -510,6 +538,7 @@
 
                 scope.loaded = false;
                 scope.layers = null;
+                scope.capabilitiesLayers = null;
                 scope.mapId = 'gn-thumbnail-maker-map';
                 scope.map = null;
                 scope.dataFormats = null;
@@ -527,7 +556,6 @@
                 // is contained by the directive
                 scope.stateObj = {};
                 var projectedExtent = null;
-
 
                 function loadLayers() {
                   scope.map.get('creationPromise').then(function() {
@@ -632,7 +660,7 @@
                       '/attachments/print-thumbnail', null, {
                         params: {
                           jsonConfig: angular.fromJson(jsonSpec),
-                          rotationAngle: ((jsonSpec.layout == 'landscape')? 90 : 0)
+                          rotationAngle: 0
                         }
                       }).then(function() {
                     $rootScope.$broadcast('gnFileStoreUploadDone');
@@ -896,6 +924,26 @@
                         }
                       }
 
+                      /**
+                       *  Default configuration to handle WMS resources:
+                       *
+                       *    - resourcename: Add layer names to the name and description fields of the online resources.
+                       *    - url: Add layer names to url parameter defined in gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam
+                       */
+                      if (!scope.config.wmsResources) {
+                        scope.config.wmsResources = {};
+                        scope.config.wmsResources.addLayerNamesMode = "resourcename";
+                      }
+
+                      if (scope.config.wmsResources.addLayerNamesMode == "url") {
+                        scope.addLayersInUrl = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam || '';
+                      } else {
+                        scope.addLayersInUrl = '';
+                      }
+
+                      if (scope.addLayersInUrl == '') {
+                        scope.config.wmsResources.addLayerNamesMode = "resourcename";
+                      }
 
                       if (withInit) {
                         init();
@@ -941,6 +989,7 @@
                 };
                 var resetProtocol = function() {
                   scope.layers = [];
+                  scope.capabilitiesLayers = null;
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
                     if (scope.clearFormOnProtocolChange) {
@@ -1035,10 +1084,22 @@
                     processParams.selectedLayers = scope.params.selectedLayers;
                   }
                   processParams.process = scope.params.linkType.process;
+
+                  processParams.wmsResources = scope.config.wmsResources;
+                  processParams.addLayersInUrl = scope.addLayersInUrl;
+
                   return scope.onlinesrcService.add(
                       processParams, scope.popupid).then(function() {
                     resetForm();
                   });
+                };
+
+                scope.isWMSProtocol = function () {
+                  return (scope.OGCProtocol == 'WMS');
+                };
+
+                scope.isWMSProtocolWithLayersInUrl = function () {
+                  return (scope.isWMSProtocol()  && (scope.addLayersInUrl != ''));
                 };
 
                 scope.onAddSuccess = function() {
@@ -1063,7 +1124,7 @@
                   }
 
                   if (!url) {
-                    return;
+                    return $q.reject( "" );
                   }
                   if (scope.OGCProtocol) {
                     scope.layers = [];
@@ -1077,6 +1138,7 @@
                                 scope.layers.push(l);
                               }
                             });
+                            scope.capabilitiesLayers = capabilities;
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
@@ -1084,6 +1146,7 @@
                       return gnOwsCapabilities.getWMTSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
+                            scope.capabilitiesLayers = null;
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.Layer, function(l) {
                               if (angular.isDefined(l.Identifier)) {
@@ -1100,6 +1163,7 @@
                       return gnWfsService.getCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
+                          scope.capabilitiesLayers = null;
                           scope.isUrlOk = true;
                           angular.forEach(
                            capabilities.featureTypeList.featureType,
@@ -1144,6 +1208,7 @@
                     });
                   } else {
                     scope.isUrlOk = true;
+                    return $q.reject( "" );
                   }
                 };
 
@@ -1167,6 +1232,37 @@
                   return null;
                 }
 
+                var processSelectedWMSLayers = function() {
+                  // Only in layer tree widget
+                  if (scope.isWMSProtocolWithLayersInUrl()) {
+                    // Get the selected layers
+                    var selectedLayersNames = [];
+
+                    var params = gnUrlUtils.parseKeyValue(scope.params.url.split('?')[1]);
+
+                    if (params[scope.addLayersInUrl]) {
+                      scope.params.selectedLayers = [];
+                      selectedLayersNames = params[scope.addLayersInUrl].split(',');
+                    }
+
+                    scope.layers.forEach(function(l) {
+                      if (selectedLayersNames.indexOf(l.Name) != -1) {
+                        scope.params.selectedLayers.push(l);
+                      }
+                    });
+
+                    scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
+                  } else {
+                    var selectedLayersNames = scope.params.name.split(',');
+                    scope.params.selectedLayers = [];
+                    scope.layers.forEach(function(l) {
+                      if (selectedLayersNames.indexOf(l.Name) != -1) {
+                        scope.params.selectedLayers.push(l);
+                      }
+                    });
+                  }
+                };
+
                 /**
                  * On protocol combo Change.
                  * Update OGCProtocol values to display or hide
@@ -1187,7 +1283,10 @@
                       && scope.params.protocol.indexOf('DOWNLOAD') !== -1) {
                       scope.params.function = 'download';
                     }
-                    scope.loadCurrentLink();
+
+                    scope.loadCurrentLink().then(function () {
+                      processSelectedWMSLayers();
+                    });
                   }
                 });
 
@@ -1202,7 +1301,10 @@
                       urls[scope.ctrl.urlCurLang] : urls;
 
                   if (curUrl) {
-                    scope.loadCurrentLink();
+                    scope.loadCurrentLink().then(function () {
+                      // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
+                      processSelectedWMSLayers();
+                    });
                     scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
                   }
 
@@ -1224,21 +1326,22 @@
                         descs = [];
 
                     angular.forEach(scope.params.selectedLayers,
-                        function(layer) {
-                          names.push(layer.Name || layer.name);
-                          descs.push(layer.Title || layer.title);
-                        });
-
-                    if (scope.isMdMultilingual) {
-                      var langCode = scope.mdLangs[scope.mdLang];
-                      scope.params.name[langCode] = names.join(',');
-                      scope.params.desc[langCode] = descs.join(',');
-                    }
-                    else {
-                      angular.extend(scope.params, {
-                        name: names.join(','),
-                        desc: descs.join(',')
+                      function (layer) {
+                        names.push(layer.Name || layer.name);
+                        descs.push(layer.Title || layer.title);
                       });
+
+                    if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                      if (scope.isMdMultilingual) {
+                        var langCode = scope.mdLangs[scope.mdLang];
+                        scope.params.name[langCode] = names.join(',');
+                        scope.params.desc[langCode] = descs.join(',');
+                      } else {
+                        angular.extend(scope.params, {
+                          name: names.join(','),
+                          desc: descs.join(',')
+                        });
+                      }
                     }
                   }
                 });

@@ -242,7 +242,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testAddTitleElement() throws Exception {
-        this.allThesaurus.addTitleElement("newTitle", this.allThesaurus.getDefaultNamespace());
+        this.allThesaurus.writeConceptScheme("newTitle", this.allThesaurus.getDefaultNamespace());
     }
 
     @Test

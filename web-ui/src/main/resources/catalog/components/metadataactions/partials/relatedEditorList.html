@@ -1,0 +1,47 @@
+<ul class="list-group"
+    data-ng-repeat="(type, items) in md.related track by $index"
+    data-ng-init="mainType = config.getType(md, type);
+                  icon = config.getClassIcon(mainType);">
+  <li class="list-group-item"
+      data-ng-repeat="record in items">
+    <div class="row">
+      <div class="col-md-11">
+        <a data-ng-hide="record.remoteUrl"
+           href=""
+           title="{{record.resourceTitle}}"
+           gn-metadata-open="record"
+           data-app-url="catalog.search">
+          <i class="fa {{icon}}" />
+          {{record.resourceTitle}}
+        </a>
+        <a data-ng-show="record.remoteUrl"
+           data-ng-href="{{record.remoteUrl}}"
+           rel="noopener noreferrer"
+           target="_blank"
+           title="{{record.resourceTitle}}">
+          <i class="fa {{icon}}" />
+          {{record.resourceTitle}}
+          <i data-ng-if="record.origin === 'remote'"
+             class="fa fa-external-link"
+             title="{{'remoteRecord' | translate}}"></i>
+        </a>
+        <span data-ng-if="record.properties && record.properties.associationType != ''">
+          - {{record.properties.associationType | translate}}
+        </span>
+        <span data-ng-if="record.properties && record.properties.initiativeType != ''">
+          ({{record.properties.initiativeType | translate}})
+        </span>
+      </div>
+      <div class="col-md-1 text-right">
+        <a href="" class="onlinesrc-remove"
+           data-ng-hide="readonly === true"
+           data-ng-if="::canRemoveLink(record)"
+           title="{{'remove' | translate}} {{record.resourceTitle}}"
+           aria-label="{{'remove' | translate}} {{record.resourceTitle}}"
+           data-ng-click="remove(record)">
+          <i class="fa fa-times text-danger"></i>
+        </a>
+      </div>
+    </div>
+  </li>
+</ul>

@@ -118,6 +118,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-messages.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-translate.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-filter.min.js?v={$buildNumber}"></script>

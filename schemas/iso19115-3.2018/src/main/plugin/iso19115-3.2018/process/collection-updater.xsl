@@ -31,8 +31,8 @@
   <xsl:param name="newProductMemberUuids"
              select="''"/>
 
-  <!-- (optional) The association type. Default: crossReference. -->
-  <xsl:param name="associationType" select="'crossReference'"/>
+  <!-- (optional) The association type. -->
+  <xsl:param name="associationType" select="'isComposedOf'"/>
 
   <!-- (optional) The initiative type. -->
   <xsl:param name="initiativeType" select="''"/>

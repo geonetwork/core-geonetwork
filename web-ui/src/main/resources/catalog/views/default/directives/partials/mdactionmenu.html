@@ -45,7 +45,9 @@
         </a></li>
       <!-- Retired metadata can't be published -->
       <li role="menuitem"
-          data-ng-if="user.canManagePrivileges(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
+          data-ng-if="md.canReview
+                      && md.draft != 'y'
+                      && md.mdStatus != 3"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -189,7 +191,7 @@
 
       <li data-ng-repeat="t in tasks"
           data-ng-show="taskConfiguration[t.name] && taskConfiguration[t.name].isVisible && taskConfiguration[t.name].isVisible(md)"
-          data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
+          data-ng-class="{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
         <a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
           <span class="fa fa-fw"></span>&nbsp;
           <span>{{t.label | gnLocalized}}</span>

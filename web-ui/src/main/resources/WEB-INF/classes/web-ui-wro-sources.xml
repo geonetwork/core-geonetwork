@@ -43,6 +43,7 @@
     <jsSource webappPath="/catalog/lib/angular/angular-route.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-sanitize.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/angular/angular-messages.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-translate.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-md5.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
@@ -110,6 +111,7 @@
     <jsSource webappPath="/catalog/lib/angular/angular-route.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-sanitize.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/angular/angular-messages.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/date.js"/>
     <jsSource webappPath="/catalog/lib/angular-translate.min.js" minimize="false"/>
