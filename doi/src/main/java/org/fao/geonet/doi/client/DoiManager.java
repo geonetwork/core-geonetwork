@@ -111,18 +111,17 @@ public class DoiManager {
         if (sm != null) {
 
             String serverUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIURL);
-            String doiPublicUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL);
-            if (StringUtils.isEmpty(doiPublicUrl)) {
-                doiPublicUrl = DOI_DEFAULT_URL;
-            }
+            String doiPublicUrl = StringUtils.defaultIfEmpty(
+                    sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL),
+                    DOI_DEFAULT_URL);
             String username = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIUSERNAME);
             String password = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPASSWORD);
 
             doiPrefix = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIKEY);
-            doiPattern = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPATTERN);
-            if (StringUtils.isEmpty(doiPattern)) {
-                doiPattern = DOI_DEFAULT_PATTERN;
-            }
+            doiPattern = StringUtils.defaultIfEmpty(
+                sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPATTERN),
+                DOI_DEFAULT_PATTERN
+            );
 
             landingPageTemplate = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE);
 
