@@ -28,7 +28,7 @@
   <parent>
     <artifactId>gn-es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.2.1-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>

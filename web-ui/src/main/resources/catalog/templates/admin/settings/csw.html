@@ -25,48 +25,19 @@
               <p class="help-block">{{'system/csw/enable-help' | translate}}</p>
             </div>
 
-            <div data-ng-search-form=""
-                 data-ng-show="cswSettings['system/csw/enable']"
-                 data-ng-controller="GnCSWSearchServiceRecordController">
+            <div>
               <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
 
-             <div class="input-group dropdown"
-                   id="serviceList">
-                <input class="form-control"
-                        data-ng-model="cswSettings['system/csw/capabilityRecordUuid']"
-                        name="system/csw/capabilityRecordUuid"/>
-                <span class="input-group-addon">
-                  {{cswServiceRecord.resourceTitleObject.default}}
-                </span>
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-default dropdown-toggle"
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                          data-ng-click="updateParams();triggerSearch();" type="text">
-                    <i class="fa fa-search"/>
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                      <input class="form-control"
-                             onClick="window.event.stopPropagation()"
-                             data-ng-change="updateParams();triggerSearch();" type="text"
-                             data-toggle="dropdown"
-                             data-ng-model="searchObj.any"
-                             data-ng-model-options="{debounce: 200}"
-                             placeholder="{{'search' | translate}}"/>
-                    </li>
-                    <li data-ng-repeat="md in searchResults.records">
-                      <a href=""
-                         data-ng-click="cswSettings['system/csw/capabilityRecordUuid'] = md.uuid">
-                        {{md.resourceTitleObject.default}}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-             </div>
+              <div data-gn-metadata-selector="cswSettings['system/csw/capabilityRecordUuid']"
+                   data-search-obj="serviceRecordSearchObj"
+                   data-md="cswServiceRecord"
+                   data-ng-show="cswSettings['system/csw/enable']"
+                   data-element-name="system/csw/capabilityRecordUuid"
+                   id="serviceList" />
 
-              <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
+               <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
             </div>
+
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>
                 <input type="checkbox" name="system/csw/metadataPublic"

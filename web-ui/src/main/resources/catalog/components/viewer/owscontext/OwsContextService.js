@@ -385,13 +385,21 @@
 
               self.loadContext(r.data, map, additionalLayers);
             }, function(r) {
-              var msg = $translate.instant('mapLoadError', {
-                url: url
-              });
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: msg,
-                timeout: 0,
-                type: 'danger'});
+              var contextUsingLanguage = (gnViewerSettings.defaultContext.indexOf('{lang}') > -1);
+
+              if ((r.status == 404) && contextUsingLanguage) {
+                // Check to load the context file for the default language
+                var newUrl = gnViewerSettings.defaultContext.replace('{lang}', 'eng');
+                self.loadContextFromUrl(newUrl, map, additionalLayers);
+              } else {
+                var msg = $translate.instant('mapLoadError', {
+                  url: url
+                });
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: msg,
+                  timeout: 0,
+                  type: 'danger'});
+              }
             });
       };
 
@@ -455,6 +463,14 @@
             params.server = [{
               onlineResource: [{
                 href: layer.get('urlCap')
+              }],
+              service: 'urn:ogc:serviceType:WMS'
+            }];
+          } else if (source instanceof ol.source.ImageArcGISRest) {
+            name = '{type=arcgis,name=' + layer.getSource().getParams().LAYERS.replace('show:', '') + '}';
+            params.server = [{
+              onlineResource: [{
+                href: layer.get('url')
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
@@ -647,15 +663,15 @@
           var promise;
 
           if (type === 'wmts') {
-            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           } else if (type === 'arcgis') {
-            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly);
+            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           // if it's not WMTS, let's assume it is wms
           // (so as to be sure to return something)
           else {
-            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly, layer.metadataUuid || null);
           }
 
           return promise.then(function(olL) {
@@ -667,7 +683,9 @@
               olL.set('title', layer.title);
               olL.set('label', layer.title);
             }
-            olL.set('metadataUuid', layer.metadataUuid || '');
+            if (layer.metadataUuid) {
+              olL.set('metadataUuid', layer.metadataUuid);
+            }
             if (bgIdx) {
               olL.set('bgIdx', bgIdx);
             } else if (index) {

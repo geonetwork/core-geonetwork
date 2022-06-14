@@ -1,0 +1,64 @@
+<div data-ng-show="data.length > 0">
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <td data-ng-repeat="c in headers track by $index">{{c | translate}}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="r in displayedRecords track by $index">
+        <td data-ng-repeat="c in columnsConfig track by $index">
+          <span data-ng-if="$index === 0">
+            <a data-ng-hide="r.md.remoteUrl"
+               gn-metadata-open="r.md"
+               gn-formatter="formatter.defaultUrl">{{r[c]}}</a>
+            <a data-ng-show="r.md.remoteUrl"
+               data-ng-href="{{r.md.remoteUrl}}"
+               rel="noopener noreferrer"
+               target="_blank"
+               title="{{r[c]}}">
+              {{r[c]}}
+            </a>
+          </span>
+
+          <span data-ng-if="$index > 0 && !isArray(r[c])">{{r[c]}}</span>
+
+          <span data-ng-if="isArray(r[c])">
+
+            <div data-ng-if="!c.startsWith('link')
+                              && !c.startsWith('cl')
+                              && !c.startsWith('format')"
+                data-ng-repeat="l in r[c]">
+              {l}}
+            </div>
+
+            <div data-ng-if="c.startsWith('cl_status[0].key')"
+                 data-ng-repeat="l in r[c]">
+              <span data-ng-if="l"
+                    class="gn-status gn-status-{{l}} gn-status-table">{{l | translate}}</span>
+            </div>
+
+            <div data-ng-if="c.startsWith('cl') && !c.startsWith('cl_status[0].key')"
+                 data-ng-repeat="l in r[c]">
+              {{l | translate}}
+            </div>
+
+            <div data-ng-if="c.startsWith('format') "
+                 class="clearfix"
+                 data-ng-repeat="l in r[c]">
+              <span class="label label-primary">{{l}}</span>
+            </div>
+
+            <div data-ng-if="c.startsWith('link')"
+                 data-gn-record-links-button="r[c]"
+                 data-btn="dropdownOrButton"
+                 data-icon-mode="dropdownOnly"
+                 data-record="r.md">
+            </div>
+
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

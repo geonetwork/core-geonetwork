@@ -62,10 +62,15 @@
    * (eg. view, download, edit) a group of user can do.
    */
   module.factory('gnShareService', [
-    '$q', '$http', 'gnShareConstants',
-    function($q, $http, gnShareConstants) {
+    '$q', '$http', 'gnShareConstants', 'gnConfig',
+    function($q, $http, gnShareConstants, gnConfig) {
       var isAdminOrReviewer = function(userProfile, groupOwner,
                                        privileges, batchMode) {
+
+        var publicationbyrevieweringroupowneronly =
+          gnConfig['system.metadataprivs.publicationbyrevieweringroupowneronly'] === false
+            ? false : true;
+
         if ($.inArray(userProfile,
                       gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
@@ -76,9 +81,13 @@
           // Check if user is member of groupOwner
           // or check if user is Reviewer and can edit record
           var ownerGroupInfo = $.grep(privileges, function(g) {
-            return g.group == groupOwner ||
-                   (g.operations.editing &&
-                    $.inArray('Reviewer', g.userProfiles) !== -1);
+            if (publicationbyrevieweringroupowneronly) {
+              return g.group == groupOwner;
+            } else {
+              return g.group == groupOwner ||
+                (g.operations.editing &&
+                  $.inArray('Reviewer', g.userProfiles) !== -1);
+            }
           });
 
           var profiles = [];

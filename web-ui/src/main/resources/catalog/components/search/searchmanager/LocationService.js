@@ -139,7 +139,7 @@
           $location.path(this.SEARCH);
         }
         var params = angular.copy(searchObjParam, {}), urlParams = {};
-        if (angular.isObject(params)) {
+        if (angular.isObject(searchObjParam)) {
           var keys = Object.keys(params);
           keys.map(function(k) {
             if (k != 'query_string' && angular.isObject(params[k])) {
@@ -221,18 +221,17 @@
         // query string is set.
         var isFilterFromRecordView =
           state.old.path.indexOf(that.METADATA) === 0
-          && state.current.params.query_string;
+          && !!state.current.params.query_string;
 
         if (state.old.path != '' &&
             state.old.path != that.SEARCH &&
             state.old.path != that.HOME &&
-            !isFilterFromRecordView &&
             state.current.path == that.SEARCH) {
           if (that.isMdView(state.old.path)) {
             $rootScope.$broadcast('locationBackToSearchFromMdview');
           }
           $rootScope.$broadcast('locationBackToSearch');
-          that.restoreSearch();
+          !isFilterFromRecordView && that.restoreSearch();
         }
         if (that.isSearch(state.old.path) &&
             !that.isSearch(state.current.path)) {

@@ -26,7 +26,7 @@
   </div>
   <div id="navbar" class="navbar-accessible navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
-      <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
+      <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled" role="menuitem">
         <a class="pull-left gn-logo-link"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
@@ -41,24 +41,26 @@
           </span>
         </a>
       </li>
-      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
+      <li gn-portal-switcher=""/>
+      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled" role="menuitem">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
           <span class="fa fa-fw fa-search hidden-sm"></span>
           <span translate>search</span>
         </a>
       </li>
-      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.map.enabled">
+      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.map.enabled" role="menuitem">
         <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
           title="{{'map' | translate}}">
           <span class="fa fa-fw fa-globe hidden-sm"></span>
           <span translate>makeYourMap</span>
-          <span data-gnv-layer-indicator=""/>
+          <span data-gnv-layer-indicator="viewer"/>
         </a>
       </li>
       <li class="dropdown gn-clear-xs" data-ng-if="gnCfg.mods.editor.enabled"
           data-ng-show="authenticated && user.isEditorOrMore()"
-          id="gn-login-dropdown">
+          id="gn-login-dropdown"
+          role="menuitem">
         <a title="{{'editorBoard' | translate}}"
            href
            class="dropdown-toggle gn-menuheader-xs"
@@ -70,7 +72,7 @@
           <span translate>contribute</span>
           <span class="caret hidden-xs"></span>
         </a>
-        <ul class="dropdown-menu gn-menu-xs clearfix" role="menu">
+        <ul class="dropdown-menu gn-menu-xs clearfix">
           <li class="gn-menuitem-xs" role="menuitem">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/board">
               <span class="fa fa-fw fa-bars"></span><span translate>editorHome</span>
@@ -82,7 +84,7 @@
               <span class="fa fa-fw fa-plus"></span>&nbsp;<span translate>addRecord</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canImportMetadata()">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <span class="fa fa-fw fa-upload"></span><span translate>ImportRecord</span>
             </a>
@@ -104,11 +106,10 @@
           </li>
         </ul>
       </li>
-      <li data-ng-if="gnCfg.mods.admin.enabled" class="dropdown" data-ng-show="user.isUserAdminOrMore()">
+      <li data-ng-if="gnCfg.mods.admin.enabled" class="dropdown" data-ng-show="user.isUserAdminOrMore()" role="menuitem">
         <a title="{{'adminConsole' | translate}}"
            href
            class="dropdown-toggle gn-menuheader-xs"
-           role="button"
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="false">
@@ -116,7 +117,7 @@
           <span translate>adminConsole</span>
           <span class="caret hidden-xs"></span>
         </a>
-        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs" role="menu">
+        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs">
           <li class="gn-menuitem-xs" role="menuitem">
             <a data-gn-active-tb-item="admin.console#/home">
               <span class="fa fa-fw fa-th"></span><span translate>adminHome</span>
@@ -129,7 +130,7 @@
             </a>
           </li>
         </ul>
-        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu gn-menu-xs" role="menu">
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu gn-menu-xs">
           <li class="gn-menuitem-xs" role="menuitem">
             <a data-gn-active-tb-item="admin.console#/home">
               <span class="fa fa-fw fa-th"></span><span translate>adminHome</span>
@@ -154,7 +155,6 @@
           <a title="{{'userDetails' | translate}}"
              href
              class="dropdown-toggle gn-menuitem-xs"
-             role="button"
              data-toggle="dropdown"
              aria-haspopup="true"
              aria-expanded="false">
@@ -174,7 +174,7 @@
               sessionWillExpireIn
             </span>
           </a>
-          <ul class="dropdown-menu gn-menuitem-xs" role="menu">
+          <ul class="dropdown-menu gn-menuitem-xs">
             <li class="text-center hidden-xs" role="menuitem">
               <img class="img-circle"
                   alt="{{'avatar' | translate}}"
@@ -199,9 +199,20 @@
             </li>
           </ul>
         </li>
+        <li class="open signin-dropdown"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
+          <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+             title="{{'signIn'|translate}}"
+             class="gn-menuheader-xs"
+             data-ng-keypress="$event"
+             id="signinLink">
+            <span class="fa fa-fw fa-sign-in hidden-sm"></span>
+            {{'signIn' | translate}}
+          </a>
+        </li>
         <!-- not logged in -->
         <li class="dropdown signin-dropdown"
-          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))">
+          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
           <a href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
              title="{{'signIn'|translate}}"
              class="dropdown-toggle gn-menuheader-xs"
@@ -213,7 +224,7 @@
             {{'signIn' | translate}}
             <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu" role="menu">
+          <ul class="dropdown-menu">
             <form name="gnSigninForm" class="navbar-form"
                   action="{{signInFormAction}}" method="post" role="form">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
@@ -285,7 +296,7 @@
 
       <form class="navbar-form language-switcher pull-right">
         <span class="gn-menuheader-xs visible-xs"
-              data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))"
+              data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
               data-translate="">language</span>
         <div class="form-group"
             data-gn-language-switcher="lang"

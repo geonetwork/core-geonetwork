@@ -67,12 +67,12 @@ public class GeonetworkH2TestEmbeddedDatabaseConfigurer implements EmbeddedDatab
 //        properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE", databaseName));
         if (_dbPathLocator.isPresent()) {
             try {
-                properties.setUrl(String.format("jdbc:h2:%s;DB_CLOSE_DELAY=-1%s", _dbPathLocator.get().call(), _mode));
+                properties.setUrl(String.format("jdbc:h2:%s;NON_KEYWORDS=VALUE;DB_CLOSE_DELAY=-1%s", _dbPathLocator.get().call(), _mode));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
-            properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1%s", databaseName, _mode));
+            properties.setUrl(String.format("jdbc:h2:mem:%s;NON_KEYWORDS=VALUE;DB_CLOSE_DELAY=-1%s", databaseName, _mode));
         }
         properties.setUsername(_username);
         properties.setPassword(_password);

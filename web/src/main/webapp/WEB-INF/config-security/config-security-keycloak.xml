@@ -72,7 +72,7 @@
   </bean>
   <bean id="keycloakUtil" class="org.fao.geonet.kernel.security.keycloak.KeycloakUtil" />
   <bean id="keycloakAuthenticationProvider" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProvider" />
-  <bean id="userSessionManagement" class="org.fao.geonet.kernel.security.keycloak.KeycloakHttpSessionManager" />
+  <bean id="userSessionManagement" class="org.keycloak.adapters.springsecurity.management.HttpSessionManager" />
   <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter">
     <constructor-arg ref="userSessionManagement" />
   </bean>

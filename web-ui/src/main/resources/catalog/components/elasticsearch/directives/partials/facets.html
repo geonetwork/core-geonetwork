@@ -1,12 +1,11 @@
-<div class="gn-facet-list panel panel-default">
-
-  <div class="panel-heading">
+<div data-ng-class="{'gn-facet-list panel panel-default': !isTabMode}">
+  <div class="panel-heading"
+       ng-if="!isTabMode">
     <i class="fa fa-filter">&nbsp;</i><span translate>filter</span>
     <!--Collapse all button for first panel-->
     <div class="pull-right">
       <div class="gn-facet-toggle btn-group"
-           role="group"
-           ng-hide="isTabMode || ctrl.searchCtrl.getSearchResults().count === 0">
+           role="group">
         <button type="button"
                 class="btn btn-default btn-xs gn-facet-toggle-btn"
                 ng-click="ctrl.collapseAll()"
@@ -23,17 +22,27 @@
     </div>
   </div>
 
-  <div class="panel-body">
+  <div data-ng-class="{'panel-body': !isTabMode}">
+    <ul class="nav nav-pills"
+        ng-repeat="facet in ctrl.list track by facet.key"
+        ng-if="isTabMode && facet.key === ctrl.tabField">
+      <li class="gn-facet-container"
+          es-facet="::facet"
+          es-facet-item="::item"
+          data-template="../../catalog/components/elasticsearch/directives/partials/facet-tab.html"
+          ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)">
+      </li>
+    </ul>
     <div ng-repeat="facet in ctrl.list track by facet.key"
-         ng-show="!isTabMode && ctrl.isVisibleForUser(facet) && (
+         ng-if="!isTabMode && facet.key !== appTabField"
+         ng-show="ctrl.isVisibleForUser(facet) && (
                   facet.items.length > 0 ||
                   facet.include.length > 0 ||
                   (facet.dates && facet.dates.length > 0))"
          class="gn-facet">
       <a href
-        title="::{{facet.key | translate}}"
         class="gn-facet-header flex-row width-100"
-        ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch([facet.key])}"
+        ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch(facet.path)}"
         gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
         <span class="flex-shrink text-ellipsis">{{('facet-' + facet.key) | facetKeyTranslator}}</span>
         <span class="fa fa-fw"
@@ -51,11 +60,12 @@
             <span class="fa fa-filter"></span>
           </span>
           <input title="{{'facetIncludeFilter' | translate}}"
+                aria-label="{{'facetIncludeFilter' | translate}}"
                 ng-model="facet.include"
                 ng-model-options="{debounce: 300}"
                 ng-change="ctrl.filterTerms(facet)"
                 placeholder="{{'filter' | translate}}"
-                autocomplete="nope"
+                autocomplete="false"
                 class="form-control input-sm"
                 type="text"
                 />

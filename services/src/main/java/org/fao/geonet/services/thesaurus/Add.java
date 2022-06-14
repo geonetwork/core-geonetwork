@@ -60,6 +60,7 @@ public class Add extends NotInReadOnlyModeService {
             .getHandlerContext(Geonet.CONTEXT_NAME);
 
         String fname = Util.getParam(params, "fname");
+        String description = Util.getParam(params, "description", "");
         String tname = Util.getParam(params, "tname");
         String tnamespace = Util.getParam(params, "tns");
         String dname = Util.getParam(params, "dname");
@@ -78,7 +79,7 @@ public class Add extends NotInReadOnlyModeService {
 
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
-        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
+        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, description, tnamespace, type, dname, rdfFile, siteURL, false);
         tm.addThesaurus(thesaurus, true);
 
         // Save activated status in the database

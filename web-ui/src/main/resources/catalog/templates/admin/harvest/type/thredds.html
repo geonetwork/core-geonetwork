@@ -10,7 +10,7 @@
 
 
   <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
@@ -23,7 +23,7 @@
 
 
   <fieldset>
-    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 

@@ -1,10 +1,12 @@
 <table class="table gn-results-editor">
   <tr data-ng-repeat="md in searchResults.records">
     <td>
-      <input data-gn-selection-md type="checkbox"
+      <input data-gn-selection-md="md"
+             data-bucket="searchResults.selectionBucket"
+             data-results="searchResults"
+             type="checkbox"
              data-ng-model="md.selected"
-             aria-label="{{'clickToSelect' | translate}}"
-             data-ng-change="change()"/>
+             aria-label="{{'clickToSelect' | translate}}"/>
     </td>
     <td>
       <gn-md-type-widget metadata="md"></gn-md-type-widget>
@@ -33,7 +35,7 @@
                   &centerdot;
                   <small class="text-muted gn-status"
                         data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                        data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</small>
+                         data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('mdStatus-' + md.statusWorkflow) | translate}}</small>
 
                   <small class="text-muted gn-status"
                         data-ng-class="text-warning"
@@ -49,7 +51,7 @@
           <div class="btn-group">
             <a class="btn btn-default"
                data-ng-href=""
-               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+               data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
                data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
                title="{{'privileges' | translate}}">
               <i class="fa text-muted"
@@ -59,7 +61,7 @@
             <a class="btn btn-default"
                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)"
-               data-ng-href="#/metadata/{{md.id}}?redirectUrl=catalog.edit"
+               data-ng-href="#/metadata/{{mdService.getMetadataIdToEdit(md)}}?redirectUrl=catalog.edit"
                title="{{'edit' | translate}}">
               <i class="fa fa-pencil"></i>
             </a>
@@ -68,7 +70,8 @@
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
                              && md.draft != 'e'"
                data-gn-click-and-spin="deleteRecord(md)"
-               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
+               data-ng-init="translateValues = {resourceTitle: (md.resourceTitle | json)}"
+               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:translateValues}}"
                title="{{'delete' | translate}}">
               <i class="fa fa-times text-danger"></i>
             </a>

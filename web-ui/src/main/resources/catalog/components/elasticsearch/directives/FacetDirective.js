@@ -55,7 +55,7 @@
 
         var lastFacet = this.lastUpdatedFacet
 
-        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
+        if (this._isNotNestedFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
           this.list.forEach(function (f) {
             if (f.key === lastFacet.key) {
               f.items = lastFacet.items
@@ -148,8 +148,8 @@
   };
 
 
-  FacetsController.prototype._isFlatTermsFacet = function (facet) {
-    return facet && (facet.type === 'terms') && !facet.aggs
+  FacetsController.prototype._isNotNestedFacet = function (facet) {
+    return facet && (facet.type === 'terms' || facet.type === 'tree') && !facet.aggs
   }
 
   FacetsController.$inject = [
@@ -160,6 +160,7 @@
   var facetKeyToTranslationGroupMap = new Map([
     ['isTemplate', 'recordType'],
     ['groupOwner', 'group'],
+    ['groupPublishedId', 'group'],
     ['sourceCatalogue', 'source']
   ]);
 
@@ -216,15 +217,16 @@
   }]);
 
   module.directive('esFacets', [
-   'gnFacetSorter',
-    function (gnFacetSorter) {
+   'gnFacetSorter', 'gnSearchSettings',
+    function (gnFacetSorter, gnSearchSettings) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
         controller: FacetsController,
         bindToController: true,
         scope: {
-          list: '<esFacets'
+          list: '<esFacets',
+          tabField: '='
         },
         require: {
           searchCtrl: '^^ngSearchForm'
@@ -234,6 +236,10 @@
             'partials/facets.html'
         },
         link: function (scope, element, attrs) {
+          // Applicaton tab field configured
+          scope.appTabField = gnSearchSettings.facetTabField;
+          // Directive tab field property
+          scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
         }
       }
@@ -272,7 +278,9 @@
         value = '-('+value+')';
       }
     } else if (facet.type === 'tree') {
+      this.facetsCtrl.lastUpdatedFacet = facet;
     }
+
     this.searchCtrl.updateState(item.path, value);
   }
 
@@ -299,6 +307,7 @@
     function (gnLangs) {
       return {
         restrict: 'A',
+        replace: true,
         controllerAs: 'ctrl',
         controller: FacetController,
         bindToController: true,
@@ -316,6 +325,50 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
+        }
+      }
+    }])
+
+
+  module.filter('facetCssClassCode', [function() {
+    return function(key, isInspire) {
+      return isInspire
+        ? key.slice(key.lastIndexOf('/') + 1)
+        : key.replace('/', '').replace(' ', '')
+    }
+  }]);
+
+  module.directive('esFacetCards', ['gnLangs',
+    function (gnLangs) {
+      return {
+        restrict: 'A',
+        scope: {
+          key: '=esFacetCards',
+          homeFacet: '=homeFacet',
+          searchInfo: '=searchInfo',
+          aggResponse: '=aggResponse',
+          aggConfig: '=aggConfig'
+        },
+        templateUrl: function (elem, attrs) {
+          return attrs.template || '../../catalog/components/elasticsearch/directives/' +
+            'partials/facet-cards.html'
+        },
+        link: function (scope, element, attrs) {
+          scope.iso2lang = gnLangs.getIso2Lang();
+
+          function init() {
+            scope.missingValue = scope.homeFacet.config[scope.key].terms
+              && scope.homeFacet.config[scope.key].terms.missing;
+            scope.isInspire = scope.key.indexOf('th_httpinspireeceuropaeutheme') === 0;
+          }
+
+          init();
+
+          scope.$watch('key', function(n, o) {
+            if (n && n !== o) {
+              init();
+            }
+          });
         }
       }
     }])

@@ -45,10 +45,17 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    'gnESService',
+    'gnESClient',
+    'gnESFacet',
+    'gnGlobalSettings',
+    'gnMetadataActions',
     '$http',
+    '$filter',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService, $http) {
+             gnUrlUtils, gnUtilityService, gnESService, gnESClient,
+             gnESFacet, gnGlobalSettings, gnMetadataActions, $http, $filter) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -83,6 +90,85 @@
         });
 
         gnMdViewObj.current.record = md;
+
+        // Record with associations
+        if (md.resourceType && md.related) {
+          var relatedRecords = md.related;
+          var recordsMap = {};
+          // Collect stats using search service
+          if (relatedRecords) {
+            // Build metadata as the API response already contains an index document
+            Object.keys(relatedRecords).map(function (k) {
+              relatedRecords[k] && relatedRecords[k].map
+              && relatedRecords[k].map(function (l) {
+                recordsMap[l._id] = new Metadata(l);
+              })
+            });
+
+
+            // Configuration to retrieve the results for the aggregations
+            var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            Object.keys(relatedFacetConfig).map(function (k) {
+              relatedFacetConfig[k].aggs = {
+                'docs': {
+                  'top_hits': { // associated stats with UUIDs
+                    'size': 100
+                  }
+                }
+              }
+            });
+
+            // Build multiquery to get aggregations for each
+            // set of associated records
+            var body = '';
+            var relatedRecordKeysWithValues = []; // keep track of the relations with values
+
+            Object.keys(relatedRecords).forEach(function (k) {
+              if (relatedRecords[k] && relatedRecords[k].map) {
+                relatedRecordKeysWithValues.push(k);
+
+                body += '{"index": "records"}\n';
+                body +=
+                  '{' +
+                  '  "query": {' +
+                  '    "bool": {' +
+                  '      "must": [' +
+                  '        { "terms": { "uuid": ["' +
+                  relatedRecords[k].map(function(md) {return md._id;}).join('","') +
+                  '"]} },' +
+                  '        { "terms": { "isTemplate": ["n"] } }' +
+                  '      ]' +
+                  '    }' +
+                  '  },' +
+                  '  "aggs":' + JSON.stringify(relatedFacetConfig) + ',' +
+                  '  "from": 0,' +
+                  '  "size": 100,' +
+                  '  "_source": ["uuid"]' +
+                  '}';
+              }
+            });
+
+            // Collect stats in main portal as some records may not be visible in subportal
+            $http.post('../../srv/api/search/records/_msearch', body).then(function (data) {
+              gnMdViewObj.current.record.related = [];
+
+              Object.keys(relatedRecords).map(function (k) {
+                relatedRecords[k] && relatedRecords[k].map(function (l, i) {
+                  var md = recordsMap[l._id];
+                  relatedRecords[k][i] = md;
+                })
+              });
+
+              gnMdViewObj.current.record.related = relatedRecords;
+              gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+              gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+              relatedRecordKeysWithValues.forEach(function (key, index) {
+                gnMdViewObj.current.record.related['aggregations_' + key] = data.data.responses[index].aggregations;
+              });
+            });
+          }
+        }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
@@ -128,6 +214,13 @@
         }
       };
 
+      this.buildRelatedTypesQueryParameter = function(types) {
+        types = types || ('parent|children|sources|hassources|' +
+            'brothersAndSisters|services|datasets|' +
+            'siblings|associated|fcats|related');
+        return 'relatedType=' + types.split('|').join('&relatedType=');
+      };
+
       /**
        * Init the mdview behavior linked on $location.
        * At start and $location change, the uuid is extracted
@@ -167,7 +260,7 @@
               if (!foundMd){
                   // get a new search to pick the md
                   gnMdViewObj.current.record = null;
-                  $http.post('../api/search/records/_search', {"query": {
+                  $http.post('../api/search/records/_search?' + that.buildRelatedTypesQueryParameter(), {"query": {
                     "bool" : {
                       "must": [
                         {"multi_match": {
@@ -190,17 +283,24 @@
 
                       //If returned more than one, maybe we are looking for the draft
                       var i = 0;
+
                       r.data.hits.hits.forEach(function (md, index) {
-                        if(getDraft
+                        if (getDraft
                             && md._source.draft == 'y') {
                           //This will only happen if the draft exists
                           //and the user can see it
+                          i = index;
+                        } else if (!getDraft
+                          && md._source.draft != 'y') {
+                          // This use the non-draft version when the  results include the
+                          // approved and the working copy (draft) versions
                           i = index;
                         }
                       });
 
                       var metadata = [];
                       metadata.push(new Metadata(r.data.hits.hits[i]));
+
                       data = {metadata: metadata};
                       //Keep the search results (gnMdViewObj.records)
                       // that.feedMd(0, undefined, data.metadata);
@@ -291,30 +391,24 @@
             // Check conditional views
             var isViewSet = false;
 
-            viewLoop:
-              for (var j = 0; j < f.views.length; j ++) {
-                var v = f.views[j];
-
-                if (v.if) {
-                  for (var key in v.if) {
-                    if (v.if.hasOwnProperty(key)) {
-                      var values = angular.isArray(v.if[key])
-                        ? v.if[key]
-                        : [v.if[key]]
-
-                      var recordValue = gnUtilityService.getObjectValueByPath(record, key);
-                      if (values.includes(recordValue)) {
-                        list.push({label: f.label, url: v.url});
-                        isViewSet = true;
-                        break viewLoop;
-                      }
-                    }
+            function addView(f, v) {
+              list.push({label: f.label, url: v.url});
+              isViewSet = true;
+            }
+            function evaluateView(v) {
+              gnUtilityService.checkConfigurationPropertyCondition(
+                record, v, function() {
+                  if (!isViewSet) {
+                    addView(f, v)
                   }
-                } else {
-                  console.warn('A conditional view MUST have a if property. ' +
-                    'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
-                }
-              }
+                  return;
+                });
+            }
+            for (var j = 0; j < f.views.length; j ++) {
+              var v = f.views[j];
+              evaluateView(v);
+            }
+
             if (f.url !== undefined && !isViewSet) {
               list.push(f);
             }

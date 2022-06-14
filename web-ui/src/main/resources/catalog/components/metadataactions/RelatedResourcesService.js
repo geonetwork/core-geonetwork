@@ -57,12 +57,34 @@
         'gnConfig',
         '$filter',
         'gnExternalViewer',
+        'gnGlobalSettings',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             olDecorateLayer, gnSearchLocation, gnOwsContextService, gnWfsService,
-            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer) {
+            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer,
+            gnGlobalSettings) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
+          };
+
+          this.getBadgeLabel = function(mainType, r) {
+            if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
+              return r.protocol.replace('WWW:DOWNLOAD:', '');
+            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
+              return mainType.replace('SERVICE', '');
+            } else {
+              return '';
+            }
+          };
+
+          this.hasAction = function(mainType) {
+            var fn = this.map[mainType || 'DEFAULT'].action;
+            // If function name ends with ToMap do not display the action
+            if (fn && fn.name && fn.name.match(/.*ToMap$/) &&
+              gnGlobalSettings.isMapViewerEnabled === false) {
+              return false;
+            }
+            return angular.isFunction(fn);
           };
 
           this.gnConfigService = gnConfigService;
@@ -74,17 +96,19 @@
            *
            * If not, then only service information is displayed.
            *
+           * TODO: Would be more precise with a check for the name in Capabilities.
+           *
            * @param {object} link
            * @return {boolean}
            */
           this.isLayerProtocol = function(link) {
-            return Object.keys(link.title).length > 0 &&
+            return Object.keys(link.title || link.name).length > 0 &&
                gnSearchSettings.mapProtocols.layers.
                indexOf(link.protocol) > -1;
           };
 
-          var addWMSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
-          var addEsriRestToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
+          var addWMSToMap = gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
+          var addEsriRestToMap = gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           var addWFSToMap = function(link, md) {
             var url = $filter('gnLocalized')(link.url) || link.url;
@@ -131,7 +155,7 @@
           };
 
 
-          var addWMTSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
+          var addWMTSToMap = gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           var addTMSToMap = function(link, md) {
             // Link is localized when using associated resource service
@@ -241,7 +265,8 @@
             },
             'ATOM' : {
               iconClass: 'fa-globe',
-              label: 'download'
+              label: 'download',
+              action: openLink
             },
             'WCS' : {
               iconClass: 'fa-globe',
@@ -288,13 +313,23 @@
               label: 'openRecord',
               action: openMd
             },
+            'MDCHILDREN' : {
+              iconClass: 'fa-child',
+              label: 'openRecord',
+              action: openMd
+            },
             'MDSIBLING' : {
-              iconClass: 'fa-sign-out',
+              iconClass: 'fa-puzzle-piece',
               label: 'openRecord',
               action: openMd
             },
             'MDSOURCE' : {
               iconClass: 'fa-sitemap fa-rotate-180',
+              label: 'openRecord',
+              action: openMd
+            },
+            'MDSERVICE' : {
+              iconClass: 'fa-cloud',
               label: 'openRecord',
               action: openMd
             },
@@ -333,8 +368,23 @@
               label: 'openPage',
               action: openLink
             },
+            'LEGEND' : {
+              iconClass: 'fa-tint',
+              label: 'openPage',
+              action: openLink
+            },
+            'FEATURECATALOGUE' : {
+              iconClass: 'fa-table',
+              label: 'openPage',
+              action: openLink
+            },
+            'QUALITY' : {
+              iconClass: 'fa-check',
+              label: 'openPage',
+              action: openLink
+            },
             'DEFAULT' : {
-              iconClass: 'fa-question-circle',
+              iconClass: 'fa-link',
               label: 'openPage',
               action: openLink
             }
@@ -375,12 +425,23 @@
           };
 
           this.getType = function(resource, type) {
-            resource.locTitle = $filter('gnLocalized')(resource.title);
-            resource.locDescription = $filter('gnLocalized')(resource.description);
-            resource.locUrl = $filter('gnLocalized')(resource.url);
-            var protocolOrType = resource.protocol + (resource.serviceType || '');
-            // Cas for links
+            resource.locTitle = $filter('gnLocalized')(resource.name) || resource.name;
+            resource.locDescription = $filter('gnLocalized')(resource.description) || resource.description;
+            resource.locUrl = $filter('gnLocalized')(resource.url) || resource.url;
+            var protocolOrType = angular.isDefined(resource.protocol)
+              ? (resource.protocol
+                + (angular.isDefined(resource.serviceType) ? resource.serviceType : ''))
+              : '';
+
+            // Case for links
             if (angular.isString(protocolOrType)) {
+              if (resource && resource.function === 'legend') {
+                return 'LEGEND';
+              } else if (resource && resource.function === 'featureCatalogue') {
+                return 'FEATURECATALOGUE';
+              } else if (resource && resource.function === 'dataQualityReport') {
+                return 'QUALITY';
+              }
               if (protocolOrType.match(/wms/i)) {
                 if (this.isLayerProtocol(resource)) {
                   return 'WMS';
@@ -388,7 +449,7 @@
                   return 'WMSSERVICE';
                 }
               } else if (protocolOrType.match(/download/i)) {
-                var url = $filter('gnLocalized')(resource.url) || resource.url;
+                var url = $filter('gnLocalized')(resource.url) || resource.url || '';
                 if (url.match(/zip/i)) {
                   return 'LINKDOWNLOAD-ZIP';
                 } else if (url.match(/pdf/i)) {
@@ -435,19 +496,23 @@
 
             // Metadata records
             if (type &&
-                (type === 'parent' ||
-                 type === 'children')) {
+                (type === 'parent')) {
               return 'MDFAMILY';
             } else if (type &&
-               (type === 'siblings')) {
+              (type === 'children')) {
+              return 'MDCHILDREN';
+            } else if (type &&
+               (type.indexOf('siblings') === 0)) {
               return 'MDSIBLING';
+            } else if (type &&
+               (type === 'services')) {
+              return 'MDSERVICE';
             } else if (type &&
                (type === 'sources' ||
                 type === 'hassources')) {
               return 'MDSOURCE';
             } else if (type &&
                (type === 'associated' ||
-               type === 'services' ||
                type === 'hasfeaturecats' ||
                type === 'datasets')) {
               return 'MD';

@@ -42,10 +42,12 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
-    'Metadata', 'gnMapsManager', 'gnGlobalSettings',
+    'Metadata', 'gnMapsManager', 'gnGlobalSettings', 'gnConfig',
+    'gnClipboard',
     function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
-             Metadata, gnMapsManager, gnGlobalSettings) {
+             Metadata, gnMapsManager, gnGlobalSettings, gnConfig,
+             gnClipboard) {
 
       $scope.searchObj = {
         internal: true,
@@ -215,7 +217,7 @@
 
       $scope.getTplForHarvester = function() {
         // TODO : return view by calling harvester ?
-        if ($scope.harvesterSelected) {
+        if ($scope.harvesterSelected && $scope.harvesterSelected.site) {
           if ($scope.harvesterSelected.site.ogctype && $scope.harvesterSelected.site.ogctype.match('^(WPS2)') != null){
             $scope.metadataTemplateType =$translate.instant('process');
           } else {
@@ -251,6 +253,34 @@
             }).error(function(data) {
               // TODO
             });
+      };
+
+      $scope.addFromClipboard = function() {
+        $scope.harvesterNew = true;
+        $scope.harvesterHistory = {};
+        gnClipboard.paste().then(function(text) {
+          try {
+            var config = JSON.parse(text);
+            if (config['@id']) {
+              // Looks like a valid harvester config
+              config['@id'] = '';
+              $scope.harvesterSelected = config;
+            } else {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('harvesterConfigIsNotValid'),
+                timeout: 2,
+                type: 'danger'
+              });
+            }
+          } catch (e) {
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('harvesterConfigIsNotJson'),
+              error: e,
+              timeout: 2,
+              type: 'danger'
+            });
+          }
+        });
       };
 
       $scope.buildResponseGroup = function(h) {
@@ -383,7 +413,7 @@
       };
       $scope.assignHarvestedRecordToLocalNode = function() {
         $http.post('../api/harvesters/' + $scope.harvesterSelected.site.uuid +
-                   '/assign?source=' + $scope.info['system/site/siteId'])
+                   '/assign?source=' + gnConfig['system.site.siteId'])
             .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
@@ -615,6 +645,19 @@
         md: null,
         map: [],
         form: []
+      };
+
+      $scope.addBatchEdits = function(e) {
+        var array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        if (angular.isArray(array)) {
+          e.value = '<' + e.insertMode + '>' +
+                    e.value +
+                    '</' + e.insertMode + '>';
+          delete e.insertMode;
+          delete e.field;
+          array.push(e);
+          $scope.harvesterSelected.content.batchEdits = angular.toJson(array, 2);
+        }
       };
 
       $scope.$watchCollection('extent', function(n, o) {
@@ -854,6 +897,7 @@
       $scope.getHarvesterTypes = function() {
         var array = [];
         angular.forEach($scope.harvesterTypes, function(h) {
+          h.label = $translate.instant(h.label);
           array.push(h);
         });
         return array;

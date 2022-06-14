@@ -33,6 +33,9 @@
   <logger name="geonetwork.encryptor">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.spatineo">
+    <level value="ERROR"/>
+  </logger>
   <logger name="geonetwork.databasemigration">
     <level value="DEBUG"/>
   </logger>

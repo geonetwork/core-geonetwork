@@ -46,8 +46,12 @@
     '$scope',
     '$rootScope',
     'gnMetadataManager',
+    'gnConfigService',
+    'gnConfig',
+    'gnUtilityService',
     '$window',
-    function($scope,  $rootScope, gnMetadataManager, $window) {
+    function($scope,  $rootScope, gnMetadataManager,
+             gnConfigService, gnConfig, gnUtilityService, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -68,6 +72,10 @@
       };
       $scope.importing = false;
 
+      gnConfigService.load().then(function(c) {
+        $scope.params.group = gnConfig['system.metadatacreate.preferredGroup'];
+      });
+
       /** Upload management */
       $scope.action = '../api/records';
       var uploadImportMdDone = function(evt, data) {
@@ -85,7 +93,7 @@
         autoUpload: false,
         done: uploadImportMdDone,
         fail: uploadImportMdError,
-        headers: {'X-XSRF-TOKEN': $rootScope.csrf}
+        headers: {'X-XSRF-TOKEN': $rootScope.csrf, 'Accept-Language': $scope.lang}
       };
 
 
@@ -133,6 +141,11 @@
         }
         $scope.unsupportedFile = false;
       });
+
+      $scope.cancelImportRecords = function (){
+        gnUtilityService.goBack("/board");
+      };
+
       $scope.importRecords = function(formId) {
         $scope.reports = [];
         $scope.error = null;

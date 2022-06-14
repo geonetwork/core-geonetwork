@@ -61,6 +61,7 @@
  * 2. thesaurus
  *      This represents a Thesaurus KeyWord Picker.
  *           + thesaurus is the name of the thesaurus
+ *           + numberOfSuggestions is the number of suggestions to display (if not set, defaults to 20)
  *
  * 3. freeText
  *      This represents a field the user can type into.
@@ -110,7 +111,8 @@
      *           "eng": "Government of Canada Organization",
      *           "fra": "Organisation du Gouvernement du Canada"
      *         },
-     *         "thesaurus": "external.theme.EC_Government_Titles"
+     *         "thesaurus": "external.theme.EC_Government_Titles",
+     *         "numberOfSuggestions: 200,
      *       },
      *       {
      *         "type": "freeText",
@@ -164,7 +166,7 @@
             var fix_values = function() {
               //first, make sure missing items are ''
               var nExpectedNumber = scope.config.config.length;
-              scope.individualValues =_.mapObject(scope.individualValues,function(val,key) {
+              scope.individualValues =_.mapValues(scope.individualValues,function(val,key) {
                  val.length = nExpectedNumber;//extend array
                  //set any undefined to ''
                  val=_.map(val,function(v){
@@ -202,7 +204,7 @@
             scope.combinerSimple = scope.config.combiner.trim(); //"; " -> ";"
 
             //values that the user has actually selected
-            scope.individualValues=_.mapObject(scope.config.values,function(val,key){
+            scope.individualValues=_.mapValues(scope.config.values,function(val,key){
                 return val.split(scope.combinerSimple); // split on simple one, then we will "fix up" trailing spaces
                 });
             fix_values();
@@ -216,7 +218,7 @@
             // hide all language-based inputs except the current language
             setTimeout(function () {
                   var inputs =  scope.element.find("input[lang='"+scope.currentLang+"']");
-                 _.each(inputs,function(input) { $(input).removeClass("hidden");} );
+                 _.forEach(inputs,function(input) { $(input).removeClass("hidden");} );
             },0);
 
 
@@ -227,19 +229,19 @@
             scope.$watch('currentLang', function(newValue,oldValue) {
                   //hide all inputs
                   var inputs =  scope.element.find("input[lang]"); // all lang inputs
-                  _.each(inputs,function(input) { $(input).addClass("hidden");} );
+                  _.forEach(inputs,function(input) { $(input).addClass("hidden");} );
 
                   //show language-appropriate inputs
                  if (newValue){
                      var inputs =  scope.element.find("input[lang='"+newValue+"']");
-                     _.each(inputs,function(input) { $(input).removeClass("hidden");} );
+                     _.forEach(inputs,function(input) { $(input).removeClass("hidden");} );
                  }
             });
 
             //deep watch a model change
             scope.$watch('individualValues',function(newval,oldval){
                 //build the master values...
-                _.each(_.keys(scope.config.values),function(lang){
+                _.forEach(_.keys(scope.config.values),function(lang){
                     //values for this lang
                     //filter out blank values -- or you'll get stuff like "org; ;" or "; abc;"
                     var vs = scope.individualValues[lang].slice();

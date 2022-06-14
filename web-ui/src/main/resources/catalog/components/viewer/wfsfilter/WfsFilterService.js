@@ -346,6 +346,7 @@
             if (newField.label) {
               field.label = newField.label[gnGlobalSettings.lang];
             }
+            field.definition = newField.definition;
             field.aggs = newField.aggs;
             field.display = newField.display;
             // add a flag for tokenized fields

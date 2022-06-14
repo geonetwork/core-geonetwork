@@ -1,0 +1,35 @@
+<li class="dropdown gn-clear-xs"
+    role="menuitem"
+    data-ng-if="showPortalSwitcher && portals.length > 0">
+  <a title="{{'portals' | translate}}"
+     href
+     class="dropdown-toggle gn-menuheader-xs"
+     role="button"
+     data-toggle="dropdown"
+     aria-haspopup="true"
+     aria-expanded="false">
+    <span translate class="sr-only">portals</span>
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu gn-menu-xs clearfix">
+    <li class="gn-menuitem-xs" role="menuitem"
+        data-ng-if="nodeId != 'srv'">
+      <a href="../../srv/{{lang}}/catalog.search#/home">
+        <img class="gn-source-logo"
+             data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png"/>
+        {{::info['system/site/name']}}
+      </a>
+    </li>
+    <li class="divider"
+        data-ng-if="nodeId != 'srv'"></li>
+    <li class="dropdown-header" translate="">switchPortals</li>
+    <li class="gn-menuitem-xs" role="menuitem"
+        data-ng-repeat="p in portals | orderBy:'name'">
+      <a href="../../{{p.uuid}}/{{lang}}/catalog.search">
+        <img class="gn-source-logo"
+             data-ng-src="{{'../../images/harvesting/' +  p.logo}}"/>
+        {{::p.label[lang]}}
+      </a>
+    </li>
+  </ul>
+</li>

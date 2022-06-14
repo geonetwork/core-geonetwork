@@ -57,7 +57,7 @@
         <ul class="dropdown-menu" role="menu">
           <!-- links -->
           <xsl:choose>
-            <xsl:when test="$isTemplate = 's'">
+            <xsl:when test="$isTemplate = ('s', 't')">
               <li role="menuitem">
                 <xsl:if test="'simple' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
@@ -80,7 +80,7 @@
 
                 <xsl:variable name="isViewDisplayed"
                               as="xs:boolean"
-                              select="gn-fn-metadata:check-viewtab-visibility(
+                              select="gn-fn-metadata:check-elementandsession-visibility(
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
                                         @displayIfServiceInfo)"/>
@@ -96,7 +96,7 @@
                     <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')"
                        href="">
                       <xsl:variable name="viewName" select="@name"/>
-                      <xsl:value-of select="$strings/*[name() = $viewName]"/>
+                      <xsl:value-of select="($strings/*[name() = $viewName]|$viewName)[1]"/>
                     </a>
                   </li>
                 </xsl:if>
@@ -151,7 +151,7 @@
                                      select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
                     </xsl:if>
                     <xsl:variable name="tabId" select="@id"/>
-                    <xsl:value-of select="$strings/*[name() = $tabId]"/>
+                    <xsl:value-of select="($strings/*[name() = $tabId]|$tabId)[1]"/>
                   </a>
                 </li>
               </xsl:for-each>
@@ -168,7 +168,7 @@
   <xsl:template mode="menu-builder" match="tab">
     <xsl:variable name="isTabDisplayed"
                   as="xs:boolean"
-                  select="gn-fn-metadata:check-viewtab-visibility(
+                  select="gn-fn-metadata:check-elementandsession-visibility(
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
                                         @displayIfServiceInfo)"/>
@@ -185,7 +185,8 @@
                          select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
         </xsl:if>
         <xsl:variable name="tabId" select="@id"/>
-        <xsl:value-of select="$strings/*[name() = $tabId]"/>
+        <xsl:variable name="tabLabel" select="$strings/*[name() = $tabId]"/>
+        <xsl:value-of select="($tabLabel|$tabId)[1]"/>
       </a>
     </li>
 

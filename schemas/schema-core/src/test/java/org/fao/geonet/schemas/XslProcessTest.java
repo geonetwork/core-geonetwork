@@ -90,7 +90,7 @@ public abstract class XslProcessTest {
     public Class testClass;
 
     @Rule
-    public TestWatcher watchman= new TestWatcher() {
+    public TestWatcher watchman = new TestWatcher() {
         @Override
         protected void starting(Description description) {
             testClass = description.getTestClass();

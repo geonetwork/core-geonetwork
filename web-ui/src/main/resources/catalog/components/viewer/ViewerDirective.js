@@ -584,7 +584,8 @@
         templateUrl: '../../catalog/components/viewer/' +
             'partials/layerindicator.html',
         link: function(scope, element, attrs) {
-          scope.layerQueue = gnWmsQueue;
+          scope.mapType = attrs['gnvLayerIndicator'] || 'viewer';
+          scope.layerQueue = gnWmsQueue.queue;
         }
       };
     }]);

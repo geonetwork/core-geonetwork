@@ -39,7 +39,7 @@
         <!-- - - - - - - - - - - - - - -->
         <!-- Core queryable properties -->
         <!-- - - - - - - - - - - - - - -->
-        <parameter name="Subject" field="tag" type="SupportedISOQueryables">
+        <parameter name="Subject" field="tag.default" type="SupportedISOQueryables">
           <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
         </parameter>
 
@@ -53,7 +53,7 @@
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="AnyText" field="any" type="SupportedISOQueryables"/>
+        <parameter name="AnyText" field="any.default" type="SupportedISOQueryables"/>
 
         <parameter name="Format" field="format" type="SupportedISOQueryables">
           <xpath schema="iso19139"
@@ -289,7 +289,7 @@
         <!-- Other additional queryable properties   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - -->
 
-        <parameter name="OnlineResourceType" field="protocol" type="AdditionalQueryables"/>
+        <parameter name="OnlineResourceType" field="linkProtocol" type="AdditionalQueryables"/>
         <parameter name="OnlineResourceMimeType" field="mimetype" type="AdditionalQueryables"/>
 
         <parameter name="Date" field="createDate" type="AdditionalQueryables"/>

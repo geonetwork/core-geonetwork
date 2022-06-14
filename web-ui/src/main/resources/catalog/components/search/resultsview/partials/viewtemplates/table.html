@@ -1,0 +1,73 @@
+<table class="gn-resultview table table-bordered table-hover gn-card-table">
+  <thead>
+  <tr>
+    <th></th>
+    <th data-translate="">title</th>
+    <th data-translate="">cl_status</th>
+    <th data-translate="">actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr data-ng-repeat="md in searchResults.records"
+      gn-displayextent-onhover=""
+      gn-zoomto-onclick=""
+      data-ng-class="{'gn-record-selected': md.selected}"
+      gn-fix-mdlinks="">
+
+    <td class="gn-md-select">
+      <input gn-selection-md type="checkbox"
+             ng-model="md.selected"
+             aria-label="{{'clickToSelect' | translate}}"
+             ng-change="change()"/>
+    </td>
+
+    <td class="gn-md-title">
+      <h1>
+        <a href=""
+           gn-metadata-open="md"
+           gn-index="$index"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl"
+           title="{{md.title || md.defaultTitle}}"
+           aria-label="{{md.resourceTitle}}">
+
+          {{md.resourceTitle}}</a>
+      </h1>
+    </td>
+    <td>
+      <div data-ng-if="md.cl_status.length > 0"
+           title="{{md.cl_status[0].key | translate}}"
+           class="gn-status gn-status-{{md.cl_status[0].key}}">{{md.cl_status[0].key | translate}}
+      </div>
+    </td>
+    <td>
+      <div class="gn-toolbar clearfix">
+        <div class="gn-md-category pull-left"
+             title="{{'listOfCategories' | translate}}"
+             data-ng-class="md.category.length > 0 ||
+                          md.topic.length > 0 ||
+                          md.inspireThemeUri.length > 0 ? '' : 'invisible'">
+          <i class="fa"
+             data-ng-repeat="cat in ::md.category"
+             title="{{('cat-' + cat) | translate}}"
+             aria-label="{{('cat-' + cat) | translate}}">
+            <span class="fa gn-icon-{{cat}}"></span>
+          </i>
+          <i  data-ng-repeat="t in md.inspireThemeUri track by $index"
+              data-ng-init="code = t.slice(t.lastIndexOf('/') + 1)"
+              class="fa" title="{{::(md.inspireTheme_syn && md.inspireTheme_syn[$index]) || code}}">
+            <span class="fa iti-{{::code}}"></span>
+          </i>
+          <i data-ng-repeat="t in md.topic"
+             title="{{t | translate}}"
+             aria-label="{{t | translate}}"
+             class="fa gn-icon-{{t}}">
+          </i>
+        </div>
+
+        <gn-links-btn class="pull-left"></gn-links-btn>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

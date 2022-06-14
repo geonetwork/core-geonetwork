@@ -270,15 +270,15 @@
   module.directive('gnHarvesterExtras',
       ['$http', '$translate', '$rootScope',
         function($http, $translate, $rootScope) {
-
           return {
             restrict: 'A',
             replace: false,
             templateUrl: '../../catalog/components/admin/harvester/partials/' +
                 'extras.html',
-
+            scope: {
+              harvester: '=gnHarvesterExtras'
+            },
             link: function(scope, element, attrs) {
-
               $http.get('../api/languages', {cache: true})
                   .success(function(data) {
                     scope.languages = data;

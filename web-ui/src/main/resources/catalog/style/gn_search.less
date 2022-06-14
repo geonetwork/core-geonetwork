@@ -54,7 +54,7 @@
         margin-right: 3px;
       }
       * {
-        color: lighten(@gray-light, 10%);
+        color: @gray-dark;
         transition: color 0.1s;
       }
       &:hover * {
@@ -437,10 +437,7 @@
     font-style: italic;
   }
   .gn-md-links, .gn-md-related {
-    background: rgba(0,0,0,.02);
-    line-height: 3em;
-    font-size: 90%;
-    margin: 0;
+    margin: 4px 0 0 0;
     .dropdown-menu {
       max-width: 500px;
       li a {
@@ -463,9 +460,9 @@
     color: #666;
   }
   li:hover {
-    background: lighten(spin(@state-info-bg, -10), 7%);
+    background-color: #f5f5f5;
+    transition: background-color ease 0.5s;
     cursor: pointer;
-    background-color:  #428bca;
   }
   .invisible {
     display: none;

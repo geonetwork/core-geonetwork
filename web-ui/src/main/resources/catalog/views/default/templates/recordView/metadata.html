@@ -1,0 +1,60 @@
+<div class="gn-margin-bottom">
+  <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
+    <i class="fa fa-fw fa-file-code-o"></i>
+  </span>
+  <a class="btn btn-default btn-sm"
+     data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml">
+    <span data-translate="">metadataInXML</span>
+  </a>
+</div>
+
+<div class="gn-md-side-calendar gn-margin-bottom">
+    <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
+      <i class="fa fa-fw fa-calendar"></i>
+    </span>
+  <h3 data-translate="">updatedOn</h3>
+  <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
+        data-from-now=""></span>
+</div>
+
+<div data-ng-init="mdLanguages = [mdView.current.record.mainLanguage].concat(mdView.current.record.otherLanguage || [])"
+     data-aang-if="mdLanguages.length > 0"
+     class="gn-margin-bottom flex-row">
+  <span class="badge badge-rounded" title="{{'language' | translate}}">
+    <i class="fa fa-fw fa-language"></i>
+  </span>
+  <div>
+    <h3 data-translate="">metadataLanguage</h3>
+    <ul class="gn-comma-list">
+      <li data-ng-repeat="l in mdLanguages">
+        {{l | translate}}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="gn-margin-bottom">
+  <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
+    <i class="fa fa-fw fa-cloud"></i>
+  </span>
+  <span data-translate="">sourceCatalog</span>:
+  <span data-gn-record-origin-logo="mdView.current.record"/>
+</div>
+
+<div data-ng-if="mdView.current.record.uuid"
+     class="gn-margin-bottom flex-row">
+  <span class="badge badge-rounded" title="{{'uuid' | translate}}">
+    <i class="fa fa-fw fa-info"></i>
+  </span>
+  <div>
+    <h3 data-translate="">uuid</h3>
+    <div class="input-group">
+      <input type="text" class="form-control"
+             value="{{::mdView.current.record.uuid}}">
+      <span gn-copy-to-clipboard-button=""
+            data-btn-class="input-group-addon"
+            data-text="{{::mdView.current.record.uuid}}">
+      </span>
+    </div>
+  </div>
+</div>

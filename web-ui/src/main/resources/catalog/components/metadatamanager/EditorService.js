@@ -139,7 +139,9 @@
          return {
            buildEditUrlPrefix: function(service) {
              var params = ['../api/records/',
-               gnCurrentEdit.metadata ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id, '/', service, '?'];
+               gnCurrentEdit.metadata
+                 ? gnCurrentEdit.metadata.uuid : gnCurrentEdit.id,
+               '/', service, '?'];
              gnCurrentEdit.tab ?
              params.push('&currTab=', gnCurrentEdit.tab) :
              params.push('&currTab=', 'default');
@@ -409,7 +411,7 @@
              });
 
              gnCurrentEdit.allLanguages = {code2iso: {}, iso2code: {}, iso: []};
-             if (gnCurrentEdit.mdOtherLanguages != '') {
+             if (gnCurrentEdit.mdOtherLanguages && gnCurrentEdit.mdOtherLanguages != '') {
                angular.forEach(JSON.parse(gnCurrentEdit.mdOtherLanguages), function(code, iso) {
                  gnCurrentEdit.allLanguages.code2iso[code] = iso;
                  gnCurrentEdit.allLanguages.iso2code[iso] = code;

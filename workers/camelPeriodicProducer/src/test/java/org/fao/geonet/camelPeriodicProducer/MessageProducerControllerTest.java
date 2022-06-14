@@ -52,7 +52,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/camel-test-config.xml", "/domain-repository-test-context.xml"})
+@ContextConfiguration(locations = {
+    "/camel-test-config.xml",
+    "/domain-repository-test-context.xml",
+    "/config-spring-geonetwork.xml"
+})
 public class MessageProducerControllerTest {
     private static final String EVERY_SECOND = "* * * ? * * *";
 
@@ -73,12 +77,12 @@ public class MessageProducerControllerTest {
 
     private QuartzComponent quartzComponent;
 
-    private MessageProducerFactory messageProducerFactory;
+    @Autowired
+    MessageProducerFactory messageProducerFactory;
 
     @Before
     public void init() throws Exception {
         testCamelNetwork.getContext().start();
-        messageProducerFactory = new MessageProducerFactory();
         messageProducerFactory.routeBuilder = testCamelNetwork;
         quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
         messageProducerFactory.quartzComponent = quartzComponent;
@@ -99,7 +103,7 @@ public class MessageProducerControllerTest {
 
         List<MessageProducerEntity> persisted = toTest.msgProducerRepository.findAll();
         assertEquals(1, persisted.size());
-        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://" + persisted.get(0).getId());
+        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://null-" + persisted.get(0).getId());
 
         toTest.delete(persisted.get(0).getId());
         testCamelNetwork.getWfsHarvesterParamConsumer().reset();
@@ -118,7 +122,7 @@ public class MessageProducerControllerTest {
         wfsHarvesterParamEntity.setTypeName("typeName-mod");
         wfsHarvesterParamEntity.setUrl("url-mod");
 
-        toTest.update(toTest.msgProducerRepository.findAll().get(0).getId(), messageProducerEntity);
+        toTest.update(toTest.msgProducerRepository.findAll().get(0).getId(), messageProducerEntity, false);
         testCamelNetwork.getWfsHarvesterParamConsumer().reset();
 
         List<WFSHarvesterParameter> received = testCamelNetwork.getWfsHarvesterParamConsumer().waitFiveMsg();
@@ -131,7 +135,7 @@ public class MessageProducerControllerTest {
         assertEquals("url-mod", persistedWfsHarvesterParam.getUrl());
         assertEquals("typeName-mod", persistedWfsHarvesterParam.getTypeName());
         assertEquals(1, toTest.msgProducerRepository.findAll().size());
-        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://" + persisted.getId());
+        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://null-" + persisted.getId());
 
         toTest.delete(persisted.getId());
     }
@@ -156,7 +160,7 @@ public class MessageProducerControllerTest {
         messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
-        ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity);
+        ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity, false);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
         assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
@@ -165,21 +169,7 @@ public class MessageProducerControllerTest {
     }
 
     @Test
-    public void unicityWhenCreate() throws Exception {
-        MessageProducerController toTest = createToTest();
-        MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
-        MessageProducerEntity messageProducerEntity2 = createMessageProducerEntity();
-        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
-
-        ResponseEntity<?> response = toTest.create(messageProducerEntity2);
-        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
-
-        assertTrue(message.startsWith("Unique index or primary key violation"));
-        toTest.delete(messageProducerEntity.getId());
-    }
-
-    @Test
-    public void unicityWhenUpdate() throws Exception {
+    public void uniqueKeyErrorOnUrlAndTypenameWhenUpdate() throws Exception {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
         messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
@@ -188,10 +178,10 @@ public class MessageProducerControllerTest {
         messageProducerEntity2 = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity2)).getBody();
         messageProducerEntity2.getWfsHarvesterParam().setUrl("url");
 
-        ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2);
+        ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2, false);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertTrue(message.startsWith("Unique index or primary key violation"));
+        assertTrue(message.contains("23505")); // H2 error code for duplicate unique or primary
         toTest.delete(messageProducerEntity.getId());
         toTest.delete(messageProducerEntity2.getId());
     }

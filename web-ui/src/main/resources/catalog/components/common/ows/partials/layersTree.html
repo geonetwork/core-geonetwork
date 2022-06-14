@@ -1,0 +1,23 @@
+<div class="table-content-container gn-layers-grid-container">
+
+  <h5 data-ng-if="selection.length > 0" data-translate="">wmsSelectedLayers</h5>
+  <h5 data-ng-if="selection.length == 0" data-translate="">wmsSelectedLayersNone</h5>
+
+  <ul data-ng-if="selection.length > 0">
+    <li data-ng-repeat="layer in selection">
+      {{layer.Title || layer.title}}
+      <span data-ng-if="layer.Name || layer.name">({{layer.Name || layer.name}})</span>
+
+      <a
+         class="btn btn-link btn-xs"
+         data-ng-click="removeLayer(layer)"
+         class="btn btn-default btn-xs">
+        <i class="fa fa-times text-danger"></i>
+      </a>
+    </li>
+  </ul>
+
+  <hr/>
+
+  <gn-cap-tree-col-editor collection='layers.Layer'></gn-cap-tree-col-editor>
+</div>

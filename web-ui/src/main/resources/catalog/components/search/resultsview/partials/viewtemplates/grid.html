@@ -9,11 +9,12 @@
          data-ng-class="{'gn-record-selected': md.selected}">
       <div class="gn-md-title">
         <div class="gn-md-select">
-          <input data-gn-selection-md
+          <input data-gn-selection-md="md"
+                 data-bucket="searchResults.selectionBucket"
+                 data-results="searchResults"
                  type="checkbox"
                  data-ng-model="md.selected"
-                 aria-label="{{'clickToSelect' | translate}}"
-                 data-ng-change="change()"/>
+                 aria-label="{{'clickToSelect' | translate}}"/>
         </div>
         <span class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"></span>
         <h1>
@@ -53,7 +54,8 @@
         </div>
       </div>
       <div class="gn-md-contact">
-        {{md.OrgForResource[0]}}
+        <!-- Handle string and array results -->
+        {{[].concat(md[searchResultContact || 'OrgForResource'])[0]}}
       </div>
     </div>
     <!-- /.gn-card-body -->
@@ -63,21 +65,13 @@
             'gn-status-bg': showStatusFooterFor && showStatusFooterFor.length > 0
           },
           showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1 ? 'gn-status-' + md.cl_status[0].key + '-bg' : '']">
-      <div data-ng-if="md.cl_status.length > 0"
-           title="{{md.cl_status[0].key | translate}}"
-           class="gn-status gn-status-{{md.cl_status[0].key}}">{{md.cl_status[0].key | translate}}
-      </div>
+      <div data-gn-status-badge="md"/>
       <div class="gn-toolbar">
         <gn-links-btn class="pull-right"></gn-links-btn>
-        <!--<div gn-grid-related gn-grid-related-uuid="::md.uuid"
-             class="pull-right"
-             template="../../catalog/views/default/templates/gridRelated.html"></div>-->
-        <div data-ng-if="(md.draft == 'e') && (md.edit == true)"
-             title="{{'workingCopy' | translate}}"
-             class="gn-workingcopy-status pull-right">
-          <i class="fa fa-pencil"></i>
-          <span>{{'workingCopy' | translate}}</span>
-        </div>
+
+        <!--<div data-gn-related-dropdown="md"
+             class="pull-right"></div>
+        </div>-->
       </div>
     </div>
     <!-- /.gn-card-footer -->

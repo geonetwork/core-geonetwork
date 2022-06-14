@@ -11,6 +11,8 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:srv19115="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco139="http://www.isotc211.org/2005/gco"
@@ -32,6 +34,15 @@
                 select="if ($outputLanguage != '' and ($outputLanguage = $mainLanguage or count($otherLanguages[*/@codeListValue = $outputLanguage]) > 0))
                                 then concat('#', $otherLanguages[*/@codeListValue = $outputLanguage]/../@id)
                                 else ''"/>
+
+  <xsl:variable name="endPoint"
+                select="//srv19115:containsOperations/srv19115:SV_OperationMetadata/srv19115:connectPoint/(cit:CI_OnlineResource[cit:protocol/gco:CharacterString='OGC:CSW']/cit:linkage/gco:CharacterString|gmd:CI_OnlineResource[gmd:protocol/*/text()='OGC:CSW']/gmd:linkage/gmd:URL)" />
+
+  <xsl:variable name="endPointValue"
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT'" />
+
+  <xsl:variable name="endPointValuePublication"
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT/csw-publication'" />
 
   <xsl:template mode="localised" match="*">
     <xsl:variable name="translation"
@@ -206,8 +217,8 @@
         <ows:Operation name="GetCapabilities">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="sections">
@@ -224,8 +235,8 @@
         <ows:Operation name="DescribeRecord">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputFormat">
@@ -243,16 +254,16 @@
         <ows:Operation name="GetDomain">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
         </ows:Operation>
         <ows:Operation name="GetRecords">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="resultType">
@@ -277,8 +288,8 @@
         <ows:Operation name="GetRecordById">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="${$endPointValue}"/>
+              <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputSchema"/>
@@ -303,16 +314,16 @@
         <ows:Operation name="Transaction">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
+              <ows:Get xlink:href="{$endPointValuePublication}"/>
+              <ows:Post xlink:href="{$endPointValuePublication}"/>
             </ows:HTTP>
           </ows:DCP>
         </ows:Operation>
         <ows:Operation name="Harvest">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication"/>
+              <ows:Get xlink:href="{$endPointValuePublication}"/>
+              <ows:Post xlink:href="{$endPointValuePublication}"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="ResourceType">
@@ -336,7 +347,7 @@
 
           <inspire_ds:ExtendedCapabilities>
             <inspire_com:ResourceLocator>
-              <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+              <inspire_com:URL>{$endPointValue}?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
               <inspire_com:MediaType>application/xml</inspire_com:MediaType>
             </inspire_com:ResourceLocator>
 
@@ -439,7 +450,7 @@
 
             <inspire_com:MetadataDate>
               <xsl:value-of
-                select="substring-before(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp, 'T')"/>
+                select="tokenize(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp/*/text(), 'T')[1]"/>
             </inspire_com:MetadataDate>
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 

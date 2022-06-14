@@ -1,5 +1,5 @@
 <div>
-  <button class="btn btn-link btn-xs"
+  <button class="btn btn-default btn-xs"
           data-toggle="modal"
           title="{{'GUFplusAddRating' | translate}}"
           data-target="#gn-userfeedback-addcomment"
@@ -7,6 +7,10 @@
     <i class="fa fa-plus"></i>&nbsp;
   </button>
   <!-- Add comment Modal -->
+  <form name="gnUserfeedbackAddcomment"
+        id="gn-userfeedback-addcomment-form"
+        class="form-horizontal"
+        role="form" novalidate>
   <div class="modal gn-userfeedback-modal"
        id="gn-userfeedback-addcomment"
        tabindex="-1"
@@ -65,9 +69,19 @@
                     <h2 data-translate="">GUFaddYourReview</h2>
                   </div>
                   <p class="text-muted" data-translate="">GUFaddYourReviewInfo</p>
-                  <textarea class="form-control" rows="5"
-                    data-ng-model="uf.comment" required></textarea>
-                  <!-- TODO: Add check on text length-->
+                  <textarea class="form-control"
+                            rows="5"
+                            name="comment"
+                            data-ng-model="uf.comment"
+                            data-ng-maxlength="255" required></textarea>
+                  <div class="help-block" data-ng-messages="gnUserfeedbackAddcomment.comment.$error" ng-if="gnUserfeedbackAddcomment.comment.$touched">
+                    <p data-ng-message="maxlength"
+                       data-translate=""
+                       data-translate-values="{maxChar: '255'}">
+                      fieldTooLongMax
+                    </p>
+                    <p data-ng-message="required" data-translate="">fieldRequired</p>
+                  </div>
                 </div>
                 <!-- /.panel-body -->
               </div>
@@ -91,7 +105,7 @@
                     <p data-translate=""
                       data-translate-values="{authorNameValue:'{{authorNameValue}}'}">GUFyouAreLoggedInAs</p>
                   </div>
-                  <div class="gn-userfeedback-loggedout" data-ng-hide="loggedIn">
+                  <div class="gn-userfeedback-loggedout" data-ng-if="!loggedIn">
                     <div id="GUFcredentials" class="anonymous">
                       <p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
                       <input type="text"
@@ -101,21 +115,32 @@
                         aria-label="{{'GUFname' | translate}}"
                         data-ng-model="uf.authorName"
                         data-ng-maxlength="64" required>
-                      <p data-ng-show="authorNameError" class="help-block">{{authorNameError}}</p>
+                      <div class="help-block" data-ng-messages="gnUserfeedbackAddcomment.authorName.$error" ng-if="gnUserfeedbackAddcomment.authorName.$touched">
+                        <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                        <p data-ng-message="required" data-translate="">fieldRequired</p>
+                      </div>
 
                       <input type="email" name="authorEmail" class="form-control"
                         placeholder="{{'GUFemail' | translate}}"
                         aria-label="{{'GUFemail' | translate}}"
                         data-ng-model="uf.authorEmail"
-                        data-ng-maxlength="64" required>
-                      <p data-ng-show="authorEmailError" class="help-block">{{authorEmailError}}</p>
+                        data-ng-pattern="/^[a-z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+)?$/"
+                        data-ng-maxlength="64" required/>
+                      <div class="help-block" data-ng-messages="gnUserfeedbackAddcomment.authorEmail.$error" ng-if="gnUserfeedbackAddcomment.authorEmail.$touched">
+                        <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                        <p data-ng-message="required" data-translate="">fieldRequired</p>
+                        <p data-ng-message="pattern" data-translate="">fieldEmailNotValid</p>
+                      </div>
 
                       <input type="text" name="authorOrganization"
                         class="form-control"
                         placeholder="{{'GUForganization' | translate}}"
                         aria-label="{{'GUForganization' | translate}}"
                         data-ng-model="uf.authorOrganization" data-ng-maxlength="64">
-                      <p data-ng-show="authorOrganizationError" class="help-block">{{authorOrganizationError}}</p>
+                      <div class="help-block" data-ng-messages="gnUserfeedbackAddcomment.authorOrganization.$error" ng-if="gnUserfeedbackAddcomment.authorOrganization.$touched">
+                        <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                        <p data-ng-message="required" data-translate="">fieldRequired</p>
+                      </div>
                     </div>
                     <p>
                       <div class="checkbox anonymous">
@@ -140,7 +165,7 @@
                  theme="'light'"
                  key="recaptchaKey"></div>
 
-            <span class="col-lg-8" style="color: red;" data-ng-show="resolveRecaptcha" data-translate="">
+            <span class="col-lg-8 help-block" data-ng-show="resolveRecaptcha" data-translate="">
               resolveCaptcha
             </span>
           </div>
@@ -149,9 +174,12 @@
           <button type="button" class="btn btn-default" data-dismiss="modal"
             data-translate="">GUFclose</button>
           <button type="button" class="btn btn-primary"
-            data-ng-click="submitForm(uf, modal)" data-translate="">GUFsave</button>
+                  data-ng-disabled="!gnUserfeedbackAddcomment.$valid && !gnUserfeedbackAddcomment.dirty"
+                  data-ng-click="submitForm(uf, modal)"
+                  data-translate="">GUFsave</button>
         </div>
       </div>
     </div>
   </div>
+  </form>
 </div>

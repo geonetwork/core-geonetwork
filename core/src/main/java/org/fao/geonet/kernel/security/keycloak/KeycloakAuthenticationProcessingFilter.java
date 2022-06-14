@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.LocaleUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
@@ -52,10 +53,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
+import java.util.IllformedLocaleException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter {
@@ -144,7 +148,15 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
                             if (qsMap.containsKey("redirectUrl")) {
-                                response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                                URI redirectUri = new URI(qsMap.get("redirectUrl").get(0));
+                                // redirectUrl should only be relative to the current server. So only redirect if it is not an absolute path
+                                if (redirectUri != null && !redirectUri.isAbsolute()) {
+                                    response.sendRedirect(redirectUri.toString());
+                                } else {
+                                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
+                                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + qsMap.get("redirectUrl").get(0) + "'. Redirected to context home");
+                                    response.sendRedirect(request.getContextPath());
+                                }
                             } else {
                                 // If the redirect url did not exist then lets redirect back to the context home.
                                 response.sendRedirect(request.getContextPath());
@@ -161,12 +173,20 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                     }
 
                     // Set users preferred locale if it exists.
-                    if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() != null) {
+                    String localeString = keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale();
+                    if (!StringUtils.isEmpty(localeString)) {
                         try {
-                            response.setLocale(LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale()));
+                            try {
+                                //Try to parse the locale as a languageTag i.e. en-CA
+                                response.setLocale(new Locale.Builder().setLanguageTag(localeString).build());
+                            } catch (IllformedLocaleException e) {
+                                // If there are any exceptions try a different approach as it may be in the format of en_CA or simply en
+                                response.setLocale(LocaleUtils.toLocale(localeString));
+                            }
                         } catch (IllegalArgumentException e) {
-                            Log.warning(Geonet.SECURITY, "Unable to parse keycloak locale " + LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() +
-                                    " for use " + username + ": " + e.getMessage()));
+
+                            Log.warning(Geonet.SECURITY, "Unable to parse keycloak locale " + localeString +
+                                    " for user " + username + ": " + e.getMessage());
                         }
                     }
                 }

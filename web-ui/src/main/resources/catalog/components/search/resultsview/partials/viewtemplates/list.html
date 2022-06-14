@@ -7,10 +7,12 @@
     <div class="panel-heading gn-card-heading"
          data-ng-class="{'gn-record-selected': md.selected}">
       <div class="gn-md-select">
-        <input gn-selection-md type="checkbox"
-               ng-model="md.selected"
-               aria-label="{{'clickToSelect' | translate}}"
-               ng-change="change()"/>
+        <input data-gn-selection-md="md"
+               data-bucket="searchResults.selectionBucket"
+               data-results="searchResults"
+               type="checkbox"
+               data-ng-model="md.selected"
+               aria-label="{{'clickToSelect' | translate}}"/>
       </div>
 
       <div class="gn-md-title">
@@ -44,18 +46,37 @@
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="gn-md-abstract text-muted">
             <p title="{{md.resourceAbstract}}">{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
-            <div gn-grid-related=""
-                 gn-grid-related-uuid="::md.uuid"
-                 template="../../catalog/views/default/templates/gridRelatedList.html"></div>
+
+            <div data-gn-related-list="md"
+                 data-user="user"
+                 data-title="{{::('associatedResources' | translate)}}">
+            </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3">
           <div class="gn-md-contact">
-            <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index">
+
+            <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForResource'">
               <img data-ng-if="::c.logo"
                     data-ng-src="{{::c.logo}}"
                     class="gn-source-logo"
                     title="{{::c.organisation}} ({{::c.role}})"/>
+              {{::c.organisation}} ({{::c.role | translate}})
+            </p>
+
+            <p data-ng-repeat="c in ::md.getAllContacts().distribution | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForDistribution'">
+              <img data-ng-if="::c.logo"
+                   data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
+                   title="{{::c.organisation}} ({{::c.role}})"/>
+              {{::c.organisation}} ({{::c.role | translate}})
+            </p>
+
+            <p data-ng-repeat="c in ::md.getAllContacts().metadata | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'Org'">
+              <img data-ng-if="::c.logo"
+                   data-ng-src="{{::c.logo}}"
+                   class="gn-source-logo"
+                   title="{{::c.organisation}} ({{::c.role}})"/>
               {{::c.organisation}} ({{::c.role | translate}})
             </p>
           </div>
@@ -98,12 +119,6 @@
         </div>
 
         <gn-links-btn class="pull-right"></gn-links-btn>
-        <div data-ng-if="(md.draft == 'e') && (md.edit == true)"
-             title="{{'workingCopy' | translate}}"
-             class="gn-workingcopy-status">
-          <i class="fa fa-pencil"></i>
-          <span>{{'workingCopy' | translate}}</span>
-        </div>
       </div>
     </div>
     <!-- /.gn-card-footer -->

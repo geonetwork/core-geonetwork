@@ -28,7 +28,6 @@ import com.google.common.collect.Maps;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.utils.IO;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,7 +40,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,7 +242,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testAddTitleElement() throws Exception {
-        this.allThesaurus.addTitleElement("newTitle");
+        this.allThesaurus.writeConceptScheme("newTitle", this.allThesaurus.getDefaultNamespace());
     }
 
     @Test

@@ -164,10 +164,15 @@ public class GlobalExceptionController {
         Exception.class,
         RuntimeException.class
     })
-    public ApiError runtimeExceptionHandler(final Exception exception) {
+    public ApiError runtimeExceptionHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
 
-        return new ApiError("runtime_exception", exception);
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("runtime_exception", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -344,10 +349,13 @@ public class GlobalExceptionController {
         MultipartException.class,
         DoiClientException.class
     })
-    public ApiError unsatisfiedParameterHandler(final Exception exception) {
+    public ApiError unsatisfiedParameterHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
 
-        return new ApiError("unsatisfied_request_parameter", exception);
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("unsatisfied_request_parameter", exception);
+        }
+        return null;
     }
 
     @ResponseBody

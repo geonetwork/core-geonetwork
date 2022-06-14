@@ -8,7 +8,7 @@
   </div>
 
   <fieldset id="gn-harvest-settings-ogc-basic-row">
-    <legend id="gn-harvest-settings-ogc-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-ogc-basic-title"><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
 
@@ -30,138 +30,153 @@
       </select>
       <p class="help-block" data-translate="">serviceTypeHelp</p>
     </div>
-  </fieldset>
-
-  <fieldset id="gn-harvest-settings-ogc-advanced-row">
-    <legend id="gn-harvest-settings-ogc-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
-      {{harvesterSelected['@type'] | translate}}
-    </legend>
 
     <div id="gn-harvest-settings-ogc-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
-    <!-- Service metadata record -->
-    <div id="gn-harvest-settings-ogc-advanced-template-row"
-         data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|CSW|SOS|WPS)') != null">
-      <label id="gn-harvest-settings-ogc-advanced-template-label" class="control-label">
-        <span data-translate="">ogcwxs-serviceTemplateUuid</span>
-      </label>
-      <select id="gn-harvest-settings-ogc-advanced-template-list"
-              class="form-control"
-              data-ng-model="harvesterSelected.options.serviceTemplateUuid"
-              data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsTemplates">
-      </select>
-      <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
-    </div>
+  </fieldset>
 
-    <div id="gn-harvest-settings-ogc-advanced-category-row"
-         data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
-         data-label="ogcwxs-serviceCategory"/>
+  <fieldset id="gn-harvest-settings-ogc-advanced-row">
+    <legend id="gn-harvest-settings-ogc-advanced-title"><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
 
-    <!-- Dataset metadata records -->
-    <div id="gn-harvest-settings-ogc-advanced-record-row">
-      <label class="control-label">
-        <input id="gn-harvest-settings-ogc-advanced-record-checkbox"
-               type="checkbox"
-               data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WMTS|WFS|WCS|SOS|WPS2)') == null"
-               data-ng-model="harvesterSelected.options.useLayer"/>
-        <span id="gn-harvest-settings-ogc-advanced-record-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayer</span>
-      </label>
-      <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">
-        ogcwxs-createMetadataForEachLayerHelp</span>
-    </div>
+    <fieldset>
+      <legend data-translate="">recordCreationOptions</legend>
 
-    <div id="gn-harvest-settings-ogc-advanced-records-row"
-         class="well"
-         data-ng-show="harvesterSelected.options.useLayer">
-      <div id="gn-harvest-settings-ogc-advanced-records-imports-row"
-           data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMTS') === 0">
-        <label class="control-label">
-          <input id="gn-harvest-settings-ogc-advanced-records-imports-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
-          <span id="gn-harvest-settings-ogc-advanced-records-imports-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
+      <!-- Service metadata record -->
+      <div id="gn-harvest-settings-ogc-advanced-template-row"
+           data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|CSW|SOS|WPS)') != null">
+        <label id="gn-harvest-settings-ogc-advanced-template-label" class="control-label">
+          <span data-translate="">ogcwxs-serviceTemplateUuid</span>
         </label>
-        <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}"
-        >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
-      </div>
-
-      <div id="gn-harvest-settings-ogc-advanced-records-template-row"
-           data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null">
-        <label id="gn-harvest-settings-ogc-advanced-records-template-label" class="control-label">
-          <span data-translate="">ogcwxs-datasetTemplateUuid</span>
-        </label>
-        <select id="gn-harvest-settings-ogc-advanced-records-template-list"
+        <select id="gn-harvest-settings-ogc-advanced-template-list"
                 class="form-control"
-                data-ng-model="harvesterSelected.options.datasetTemplateUuid"
-                data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsDatasetTemplates">
+                data-ng-model="harvesterSelected.options.serviceTemplateUuid"
+                data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsTemplates">
         </select>
-        <!--
-        TODO: This need more work as it requires changes in the XSL transformation
-        to inject process info in a serviceIdentification and not a dataIdentification.
-        <select id="gn-harvest-settings-ogc-advanced-records-template-list-wps2"
-                data-ng-show="harvesterSelected.site.ogctype.match('^(WPS2)') != null"
-                class="form-control"
-                data-ng-model="harvesterSelected.options.datasetTemplateUuid"
-                data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
-        </select>-->
-        <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
+        <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
       </div>
 
-      <div id="gn-harvest-settings-ogc-advanced-records-thumbnail-row"
-           data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMS') !== 0">
+
+      <div id="gn-harvest-settings-ogc-advanced-category-row"
+           data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+           data-label="ogcwxs-serviceCategory"/>
+
+      <!-- Dataset metadata records -->
+      <div id="gn-harvest-settings-ogc-advanced-record-row">
         <label class="control-label">
-          <input id="gn-harvest-settings-ogc-advanced-records-thumbnail-checkbox"
+          <input id="gn-harvest-settings-ogc-advanced-record-checkbox"
                  type="checkbox"
-                 data-ng-disabled="harvesterSelected.site.ogctype.indexOf('WMS') !== 0"
-                 data-ng-model="harvesterSelected.options.createThumbnails"/>
-          <span id="gn-harvest-settings-ogc-advanced-records-thumbnail-label" data-translate="">ogcwxs-createThumbnails</span>
+                 data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WMTS|WFS|WCS|SOS|WPS2)') == null"
+                 data-ng-model="harvesterSelected.options.useLayer"/>
+          <span id="gn-harvest-settings-ogc-advanced-record-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayer</span>
         </label>
-        <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
+        <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">
+          ogcwxs-createMetadataForEachLayerHelp</span>
       </div>
 
-      <div id="gn-harvest-settings-ogc-advanced-records-category-row"
-           data-gn-category="harvesterSelected.options.datasetCategory"
-           data-lang="{{lang}}"
-           data-label="ogcwxs-datasetCategory"/>
-    </div>
+      <div id="gn-harvest-settings-ogc-advanced-records-row"
+           class="well"
+           data-ng-show="harvesterSelected.options.useLayer">
+        <div id="gn-harvest-settings-ogc-advanced-records-imports-row"
+             data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMTS') === 0">
+          <label class="control-label">
+            <input id="gn-harvest-settings-ogc-advanced-records-imports-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
+            <span id="gn-harvest-settings-ogc-advanced-records-imports-label" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
+          </label>
+          <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}"
+          >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
+        </div>
 
-    <!-- Those properties are only required if a template is not used. -->
-    <div id="gn-harvest-settings-ogc-advanced-topic-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
-      <label id="gn-harvest-settings-ogc-advanced-topic-label" class="control-label" data-translate="">ogcwxs-topicCategory</label>
-      <div
-        id="gn-harvest-settings-ogc-advanced-topic-list"
-        data-schema-info-combo="codelist"
-        data-selected-info="harvesterSelected.options.topic"
-        data-gn-schema-info="gmd:MD_TopicCategoryCode"
-        lang="lang"></div>
-    </div>
+        <div id="gn-harvest-settings-ogc-advanced-records-template-row"
+             data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null">
+          <label id="gn-harvest-settings-ogc-advanced-records-template-label" class="control-label">
+            <span data-translate="">ogcwxs-datasetTemplateUuid</span>
+          </label>
+          <select id="gn-harvest-settings-ogc-advanced-records-template-list"
+                  class="form-control"
+                  data-ng-model="harvesterSelected.options.datasetTemplateUuid"
+                  data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsDatasetTemplates">
+          </select>
+          <!--
+          TODO: This need more work as it requires changes in the XSL transformation
+          to inject process info in a serviceIdentification and not a dataIdentification.
+          <select id="gn-harvest-settings-ogc-advanced-records-template-list-wps2"
+                  data-ng-show="harvesterSelected.site.ogctype.match('^(WPS2)') != null"
+                  class="form-control"
+                  data-ng-model="harvesterSelected.options.datasetTemplateUuid"
+                  data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
+          </select>-->
+          <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
+        </div>
 
-    <div id="gn-harvest-settings-ogc-advanced-lang-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
-      <label id="gn-harvest-settings-ogc-advanced-lang-label"class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
-      <input id="gn-harvest-settings-ogc-advanced-lang-input"
-             type="text"
-             class="form-control"
-             data-ng-model="harvesterSelected.options.lang"
-             data-gn-language-picker=""/>
-    </div>
+        <div id="gn-harvest-settings-ogc-advanced-records-thumbnail-row"
+             data-ng-hide="harvesterSelected.site.ogctype.indexOf('WMS') !== 0">
+          <label class="control-label">
+            <input id="gn-harvest-settings-ogc-advanced-records-thumbnail-checkbox"
+                   type="checkbox"
+                   data-ng-disabled="harvesterSelected.site.ogctype.indexOf('WMS') !== 0"
+                   data-ng-model="harvesterSelected.options.createThumbnails"/>
+            <span id="gn-harvest-settings-ogc-advanced-records-thumbnail-label" data-translate="">ogcwxs-createThumbnails</span>
+          </label>
+          <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
+        </div>
 
-    <div id="gn-harvest-settings-ogc-advanced-schema-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
-      <label id="gn-harvest-settings-ogc-advanced-schema-label" class="control-label" data-translate="">ogcwxs-outputSchema</label>
-      <input id="gn-harvest-settings-ogc-advanced-schema-input" type="text" class="form-control"
-             data-ng-model="harvesterSelected.options.outputSchema"/>
-    </div>
+        <div id="gn-harvest-settings-ogc-advanced-records-category-row"
+             data-gn-category="harvesterSelected.options.datasetCategory"
+             data-lang="{{lang}}"
+             data-label="ogcwxs-datasetCategory"/>
+      </div>
 
-    <div id="gn-harvest-settings-ogc-advanced-validate-row">
-      <label id="gn-harvest-settings-ogc-advanced-validate-label" class="control-label">
-        <span data-translate="">harvesterValidate</span>
-      </label>
-      <div id="gn-harvest-settings-ogc-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
-      <p class="help-block" data-translate="">harvesterValidateHelp</p>
-    </div>
+      <!-- Those properties are only required if a template is not used. -->
+      <div id="gn-harvest-settings-ogc-advanced-topic-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
+        <label id="gn-harvest-settings-ogc-advanced-topic-label" class="control-label" data-translate="">ogcwxs-topicCategory</label>
+        <div
+          id="gn-harvest-settings-ogc-advanced-topic-list"
+          data-schema-info-combo="codelist"
+          data-selected-info="harvesterSelected.options.topic"
+          data-gn-schema-info="gmd:MD_TopicCategoryCode"
+          lang="lang"></div>
+      </div>
 
-    <div id="gn-harvest-settings-ogc-advanced-xsl-row">
-      <label id="gn-harvest-settings-ogc-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
-      <div id="gn-harvest-settings-ogc-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.content.importxslt"/>
-      <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
-    </div>
+      <div id="gn-harvest-settings-ogc-advanced-lang-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
+        <label id="gn-harvest-settings-ogc-advanced-lang-label"class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
+        <input id="gn-harvest-settings-ogc-advanced-lang-input"
+               type="text"
+               class="form-control"
+               data-ng-model="harvesterSelected.options.lang"
+               data-gn-language-picker=""/>
+      </div>
+
+      <div id="gn-harvest-settings-ogc-advanced-schema-row" data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
+        <label id="gn-harvest-settings-ogc-advanced-schema-label" class="control-label" data-translate="">ogcwxs-outputSchema</label>
+        <input id="gn-harvest-settings-ogc-advanced-schema-input" type="text" class="form-control"
+               data-ng-model="harvesterSelected.options.outputSchema"/>
+      </div>
+
+
+    </fieldset>
+
+
+    <fieldset>
+      <legend data-translate="">filteringAndProcessing</legend>
+
+      <div id="gn-harvest-settings-ogc-advanced-validate-row">
+        <label id="gn-harvest-settings-ogc-advanced-validate-label" class="control-label">
+          <span data-translate="">harvesterValidate</span>
+        </label>
+        <div id="gn-harvest-settings-ogc-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
+        <p class="help-block" data-translate="">harvesterValidateHelp</p>
+      </div>
+
+      <div id="gn-harvest-settings-ogc-advanced-xsl-row">
+        <label id="gn-harvest-settings-ogc-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
+        <div id="gn-harvest-settings-ogc-advanced-xsl-list"
+             data-gn-import-xsl="harvesterSelected.content.importxslt"
+             data-mode="btn-group"/>
+        <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+      </div>
+    </fieldset>
   </fieldset>
 
   <div id="gn-harvest-settings-ogc-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>

@@ -83,7 +83,7 @@
                      class="pull-right"></div>
               </legend>
               <!-- According to data type -->
-              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
+              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkNonEditableSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
                   data-ng-if="s.name != ''">
 
@@ -111,6 +111,42 @@
                     translate}}</label>
                   <!-- According to entry -->
                   <div class="col-sm-8" data-ng-switch="s['name']">
+
+
+                    <select data-ng-switch-when="metadata/import/userprofile"
+                            class="form-control"
+                            name="{{s.name}}">
+                      <option value="Editor"
+                              ng-selected="'Editor' == s.value">{{'Editor' | translate}}
+                      </option>
+                      <option value="Reviewer"
+                              ng-selected="'Reviewer' == s.value">{{'Reviewer' | translate}}
+                      </option>
+                      <option value="Administrator"
+                              ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
+                      </option>
+                    </select>
+
+                    <div data-ng-switch-when="system/metadatacreate/preferredGroup">
+                      <input type="hidden"
+                             id="{{s.name}}"
+                             name="{{s.name}}"
+                             value="{{s.value}}" />
+
+                      <div data-groups-combo=""
+                           data-optional="true"
+                           data-owner-group="s.value"
+                           lang="lang"
+                           data-groups="groups"
+                           data-exclude-special-groups="true"/>
+                    </div>
+
+                    <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                      <div data-gn-metadata-selector="s.value"
+                           data-search-obj="metadataTemplateSearchObj"
+                           data-md="defaultMetadataTemplate"
+                           data-element-name="{{s.name}}" />
+                    </div>
 
                     <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
@@ -150,6 +186,7 @@
                       class="form-control" id="{{s['name']}}" name="{{s.name}}"
                     >{{s.value}}</textarea>
 
+
                     <select data-ng-switch-when="system/server/protocol"
                             class="form-control"
                             name="{{s.name}}">
@@ -164,6 +201,12 @@
                             name="{{s.name}}">
                       <option data-ng-repeat="log in logfiles" value="{{log.file}}"
                               ng-selected="log.file === s.value">{{log.name}}
+                      </option>
+                    </select>
+                    <select data-ng-switch-when="system/localrating/notificationLevel" class="form-control"
+                            name="{{s.name}}">
+                      <option data-ng-repeat="l in notificationLevels" value="{{l}}"
+                              ng-selected="l === s.value">{{l}}
                       </option>
                     </select>
                     <select data-ng-switch-when="system/oai/mdmode" class="form-control"

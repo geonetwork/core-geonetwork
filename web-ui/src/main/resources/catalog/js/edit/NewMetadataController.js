@@ -49,7 +49,9 @@
 
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
+      $scope.filterField = undefined;
       $scope.mdList = null;
+      $scope.ownerGroup = null;
 
       // Used for the metadata identifier fields
       $scope.mdIdentifierTemplateTokens = {};
@@ -57,8 +59,9 @@
 
       gnConfigService.load().then(function(c) {
         $scope.generateUuid = gnConfig['system.metadatacreate.generateUuid'];
+        $scope.ownerGroup = gnConfig['system.metadatacreate.preferredGroup'];
+        $scope.preferredTemplate = gnConfig['system.metadatacreate.preferredTemplate'];
       });
-
 
       // A map of icon to use for each types
       var icons = {
@@ -69,9 +72,6 @@
         dataset: 'fa-file'
       };
 
-      // List of record type to not take into account
-      // Could be avoided if a new index field is created FIXME ?
-      var dataTypesToExclude = ['staticMap', 'theme', 'place'];
       var defaultType = 'dataset';
       var unknownType = 'unknownType';
       var fullPrivileges = true;
@@ -101,7 +101,23 @@
             query.push({"terms": {"isTemplate": ["y"]}});
           }
 
-          $http.post('../api/search/records/_search', {"query": {
+          var facetConfig = {
+            "resourceType": {
+              "terms": {
+                "field": "resourceType",
+                "exclude": ['map/static', 'theme', 'place'],
+                "missing": "N/A"
+              }
+            }
+          };
+          if (Object.keys(facetConfig).length === 1) {
+            $scope.filterField = Object.keys(facetConfig)[0];
+            unknownType = facetConfig[Object.keys(facetConfig)[0]].terms.missing;
+          }
+
+          $http.post('../api/search/records/_search', {
+            "aggregations": facetConfig,
+            "query": {
               "bool" : {
                 "must": query
               }
@@ -113,34 +129,38 @@
                 $scope.mdList = r.data.hits.hits;
 
                 var types = [];
-                // TODO: A faster option, could be to rely on facet type
-                // But it may not be available
-                for (var i = 0; i < $scope.mdList.length; i++) {
-                  var type = $scope.mdList[i].resourceType || unknownType;
-                  if (type instanceof Array) {
-                    for (var j = 0; j < type.length; j++) {
-                      if ($.inArray(type[j], dataTypesToExclude) === -1 &&
-                        $.inArray(type[j], types) === -1) {
-                        types.push(type[j]);
-                      }
-                    }
-                  } else if ($.inArray(type, dataTypesToExclude) === -1 &&
-                    $.inArray(type, types) === -1) {
-                    types.push(type);
-                  }
+                if (Object.keys(facetConfig).length === 1
+                  && r.data.aggregations[$scope.filterField]) {
+                  types = r.data.aggregations[$scope.filterField].buckets.map(function(bucket) {
+                    return {key: bucket.key, label: $translate.instant(bucket.key)};
+                  });
                 }
-                types.sort();
                 $scope.mdTypes = types;
+
+                // Get default template and calculate the template type
+                var mdDefaultTemplate = _.find($scope.mdList, function(n) {
+                  if (n._id == $scope.preferredTemplate) {
+                    return true;
+                  }
+                });
+
+                var templateToSelect = null;
+                if (mdDefaultTemplate) {
+                  defaultType = (mdDefaultTemplate[$scope.filterField] && mdDefaultTemplate[$scope.filterField][0])
+                    || unknownType;
+                  templateToSelect = mdDefaultTemplate;
+                }
 
                 // Select the default one or the first one
                 if (defaultType &&
-                  $.inArray(defaultType, $scope.mdTypes) > -1) {
-                  $scope.getTemplateNamesByType(defaultType);
-                } else if ($scope.mdTypes[0]) {
-                  $scope.getTemplateNamesByType($scope.mdTypes[0]);
-                } else {
-                  // No templates available ?
+                  $scope.mdTypes.filter(function(v) {return v.key === defaultType}).length === 1) {
+                  $scope.getTemplateNamesByType(defaultType, templateToSelect);
+                } else if ($scope.mdTypes[0] && $scope.mdTypes[0].key) {
+                  $scope.getTemplateNamesByType($scope.mdTypes[0].key);
+                } else if ($scope.mdList.length > 0) {
+                  $scope.getTemplateNamesByType(undefined, templateToSelect);
                 }
+
                 $scope.hasTemplates = true;
               } else {
                 $scope.hasTemplates = false;
@@ -149,22 +169,46 @@
         }
       };
 
+      // One template, one group, no custom UUID, move to the editor.
+      var unregisterFn = $scope.$watch('ownerGroup', function (n, o) {
+        moveToEditorCheckFn(n);
+      });
+      var unregisterMdListFn = $scope.$watchCollection('mdList', function (n, o) {
+        moveToEditorCheckFn(n);
+      });
+      function moveToEditorCheckFn(n) {
+        if (n !== null && $scope.mdList != null) {
+          if ($scope.mdList.length === 1
+            && $scope.groups.length === 1
+            && $scope.generateUuid === true) {
+            $scope.createNewMetadata(false);
+          }
+          unregisterFn();
+          unregisterMdListFn();
+        }
+      };
+
+
       /**
        * Get all the templates for a given type.
        * Will put this list into $scope.tpls variable.
        */
-      $scope.getTemplateNamesByType = function(type) {
+      $scope.getTemplateNamesByType = function(type, templateToSelect) {
         var tpls = [];
-        for (var i = 0; i < $scope.mdList.length; i++) {
-          var md = $scope.mdList[i];
-          var mdType = md.resourceType || unknownType;
-          if (mdType instanceof Array) {
-            if (mdType.indexOf(type) >= 0) {
+        if (type) {
+          for (var i = 0; i < $scope.mdList.length; i++) {
+            var md = $scope.mdList[i];
+            var mdType = md[$scope.filterField] || unknownType;
+            if (mdType instanceof Array) {
+              if (mdType.indexOf(type) >= 0) {
+                tpls.push(md);
+              }
+            } else if (mdType == type) {
               tpls.push(md);
             }
-          } else if (mdType == type) {
-            tpls.push(md);
           }
+        } else {
+          tpls = $scope.mdList;
         }
 
         // Sort template list
@@ -177,9 +221,21 @@
         }
         tpls.sort(compare);
 
+        $scope.tplFilter = {
+          resourceTitle: ''
+        };
         $scope.tpls = tpls;
+
+        var selectedTpl = $scope.tpls[0];
+        if (templateToSelect) {
+          selectedTpl = _.find($scope.tpls, function(tpl) {
+            if (tpl._id == templateToSelect._id) {
+              return true;
+            }
+          })
+        }
         $scope.activeType = type;
-        $scope.setActiveTpl($scope.tpls[0]);
+        $scope.setActiveTpl(selectedTpl);
         return false;
       };
 
@@ -189,12 +245,16 @@
 
 
       if ($routeParams.childOf) {
-        $scope.resourceTitle = $translate.instant('createChildOf');
+        $scope.resourceTitle = 'createChildOf';
       } else if ($routeParams.from) {
-        $scope.resourceTitle = $translate.instant('createCopyOf');
+        $scope.resourceTitle = 'createCopyOf';
       } else {
-        $scope.resourceTitle = $translate.instant('createA');
+        $scope.resourceTitle = 'createA';
       }
+
+      $scope.cancelCreateMetadata = function (){
+        gnUtilityService.goBack("/board");
+      };
 
       $scope.createNewMetadata = function(isPublic) {
         var metadataUuid = '';

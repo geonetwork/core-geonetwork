@@ -93,22 +93,50 @@
           method: 'GET',
           cache: true
         }).then(function (r) {
-          if (type === 'ldRegistry' && r.data['@graph']) {
-            angular.forEach(r.data['@graph'], function (value, key) {
+          function getLabel(labels) {
+            return angular.isArray(labels) ? labels[0]['@value']
+              : (angular.isObject(labels) ? labels['@value'] : labels)
+          }
+          function loadRegisterLabel(register) {
+            $http({
+              url: register.key + '?_format=jsonld',
+              method: 'GET',
+              cache: true,
+              headers: {'Accept': 'application/ld+json'}
+            }).then(function(r) {
+              angular.forEach(r.data['@graph'], function (r) {
+                if (r['@id'] === register.key) {
+                  register.label = getLabel(r['rdfs:label']);
+                }
+              });
+            });
+          }
+          function collectLdRegistryRegister(values, group) {
+            angular.forEach(values, function (value) {
               var labels = value['rdfs:label'],
                 descriptions = value['dct:description'],
-                label = angular.isArray(labels) ? labels[0]['@value']
-                  : (angular.isObject(labels) ? labels['@value'] : labels),
+                label = getLabel(labels),
                 description = angular.isArray(descriptions) ? descriptions[0]['@value']
                   : (angular.isObject(descriptions) ? descriptions['@value'] : descriptions);
               if (label !== 'root') {
-                itemClass.push({
+                var register = {
                   key: value['@id'],
                   label: label,
-                  description: description
-                });
+                  description: description,
+                  group: group || ''
+                };
+                if (!label) {
+                  loadRegisterLabel(register);
+                }
+                itemClass.push(register);
+                if (value['reg:subregister']) {
+                  collectLdRegistryRegister(value['reg:subregister'], label)
+                }
               }
             });
+          }
+          if (type === 'ldRegistry' && r.data['@graph']) {
+            collectLdRegistryRegister(r.data['@graph']);
             deferred.resolve(itemClass);
           } else if (type === 're3gistry' && r.data.registry) {
             angular.forEach(r.data.registry.registers, function (value, key) {

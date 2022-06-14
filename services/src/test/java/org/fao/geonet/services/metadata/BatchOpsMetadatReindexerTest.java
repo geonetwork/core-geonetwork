@@ -39,7 +39,7 @@ public class BatchOpsMetadatReindexerTest {
         Set<Integer> toIndex = createMetadataToIndex();
 
         BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process(false);
+        toTest.process("siteId", false);
 
         ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
         assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().collect(Collectors.joining("-")));
@@ -56,7 +56,7 @@ public class BatchOpsMetadatReindexerTest {
         Set<Integer> toIndex = createMetadataToIndex();
 
         BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process(false);
+        toTest.process("siteId", false);
 
         ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
         assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
@@ -72,7 +72,7 @@ public class BatchOpsMetadatReindexerTest {
         Set<Integer> toIndex = createMetadataToIndex();
 
         BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, toIndex);
-        toTest.process(true);
+        toTest.process("siteId", true);
 
         ArgumentCaptor<String> metadataIdCaptor = captureIndexationLaunched(mockDataMan);
         assertEquals("1-2-3-4", metadataIdCaptor.getAllValues().stream().sorted().collect(Collectors.joining("-")));
@@ -93,7 +93,7 @@ public class BatchOpsMetadatReindexerTest {
         assertEquals(0, toTest.getProcessed());
         assertEquals(4, toTest.getToProcessCount());
 
-        toTest.wrapAsyncProcess(false);
+        toTest.wrapAsyncProcess("siteId", false);
 
         latch.countDown();
         Thread.sleep(500);
@@ -118,7 +118,7 @@ public class BatchOpsMetadatReindexerTest {
 
         assertEquals(0, toTest.getProcessed());
         assertEquals(4, toTest.getToProcessCount());
-        toTest.wrapAsyncProcess(false);
+        toTest.wrapAsyncProcess("siteId",false);
 
         latch.countDown();
         Thread.sleep(500);
@@ -143,7 +143,7 @@ public class BatchOpsMetadatReindexerTest {
             @Override
             public void run() {
                 try {
-                    toTest.wrapAsyncProcess(true);
+                    toTest.wrapAsyncProcess("siteId",true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

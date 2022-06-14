@@ -24,8 +24,8 @@
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.log4j.Logger;
-import org.geotools.data.ows.HTTPClient;
-import org.geotools.data.ows.HTTPResponse;
+import org.geotools.http.HTTPClient;
+import org.geotools.http.HTTPResponse;
 import org.geotools.data.wfs.internal.WFSClient;
 import org.geotools.data.wfs.internal.WFSConfig;
 import org.geotools.data.wfs.internal.WFSGetCapabilities;

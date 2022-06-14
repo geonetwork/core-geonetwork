@@ -1,0 +1,58 @@
+<div data-ng-if="mdView.current.record.cl_spatialRepresentationType.length > 0"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded">
+        <i class="fa fa-fw fa-globe"></i>
+      </span>
+  <div>
+    <h3 data-translate="">spatialRepresentationType</h3>
+    <ul class="gn-label-list"
+        data-ng-repeat="c in mdView.current.record.cl_spatialRepresentationType">
+      <li data-gn-search-filter-popup-link="cl_spatialRepresentationType.key"
+          data-filter="c.key">{{c.default}}</li>
+    </ul>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.resolutionScaleDenominator"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded ">
+        <i class="fa fa-fw fa-globe"></i>
+      </span>
+  <div>
+    <h3 data-translate="">scale</h3>
+    <ul class="gn-comma-list">
+      <li data-ng-repeat="d in mdView.current.record.resolutionScaleDenominator"
+          class="gn-scale">{{d}}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.resolutionDistance"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded">
+        <i class="fa fa-fw fa-globe"></i>
+      </span>
+  <div>
+    <h3 data-translate="">resolution</h3>
+    <ul class="gn-comma-list">
+      <li data-ng-repeat="r in mdView.current.record.resolutionDistance">{{r}}</li>
+    </ul>
+  </div>
+</div>
+
+<div data-ng-if="mdView.current.record.crsDetails"
+     class="gn-margin-bottom flex-row">
+      <span class="badge badge-rounded">
+        <i class="fa fa-fw fa-compass"></i>
+      </span>
+  <div>
+    <h3 data-translate="">crs</h3>
+    <ul class="gn-comma-list">
+      <li data-ng-repeat="r in mdView.current.record.crsDetails">
+        <a ng-show="r.url" href="{{r.url}}">{{r.name || r.code}}</a>
+        <span ng-hide="r.url">{{r.name || r.code}}</span>
+      </li>
+    </ul>
+  </div>
+</div>

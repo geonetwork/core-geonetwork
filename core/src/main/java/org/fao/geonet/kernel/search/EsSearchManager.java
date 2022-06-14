@@ -99,6 +99,7 @@ public class EsSearchManager implements ISearchManager {
 
     public static Map<String, String> relatedIndexFields;
     public static Set<String> FIELDLIST_CORE;
+    public static Set<String> FIELDLIST_RELATED;
     public static Set<String> FIELDLIST_UUID;
 
     static {
@@ -125,6 +126,23 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.UUID)
             .add(Geonet.IndexFieldNames.RESOURCETITLE)
             .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("operatesOn")
+            .build();
+
+        FIELDLIST_RELATED = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add("overview.*")
+            .add("link")
+            .add("format")
+            .add("resourceType")
+            .add("cl_status.key")
+            .add(Geonet.IndexFieldNames.OP_PREFIX + "*")
+            .add(Geonet.IndexFieldNames.GROUP_OWNER)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
             .add("operatesOn")
@@ -440,6 +458,7 @@ public class EsSearchManager implements ISearchManager {
                     ObjectNode docWithErrorInfo = mapper.createObjectNode();
                     String resourceTitle = String.format("Document #%s", e.getId());
                     String id = "";
+                    String uuid = "";
                     String isTemplate = "";
 
                     String failureDoc = documents.get(e.getId());
@@ -447,10 +466,12 @@ public class EsSearchManager implements ISearchManager {
                         JsonNode node = mapper.readTree(failureDoc);
                         resourceTitle = node.get("resourceTitleObject").get("default").asText();
                         id = node.get(IndexFields.DBID).asText();
+                        uuid = node.get("uuid").asText();
                         isTemplate = node.get(IS_TEMPLATE).asText();
                     } catch (Exception ignoredException) {
                     }
                     docWithErrorInfo.put(IndexFields.DBID, id);
+                    docWithErrorInfo.put("uuid", uuid);
                     docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
                     docWithErrorInfo.put(IS_TEMPLATE, isTemplate);
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
@@ -501,6 +522,7 @@ public class EsSearchManager implements ISearchManager {
             .add("inspireThemeUri")
             .add("inspireTheme_syn")
             .add("inspireAnnex")
+            .add("indexingErrorMsg")
             .add("status")
             .add("status_text")
             .add("coordinateSystem")
@@ -517,6 +539,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
             .add("overview")
+            .add("sourceDescription")
             .add("MD_ConstraintsUseLimitation")
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")
@@ -525,11 +548,13 @@ public class EsSearchManager implements ISearchManager {
             .add("link")
             .add("crsDetails")
             .add("format")
+            .add("orderingInstructionsObject")
             .add("contact")
             .add("contactForResource")
             .add("contactForDistribution")
             .add("OrgForResource")
             .add("specificationConformance")
+            .add("measure")
             .add("resourceProviderOrgForResource")
             .add("resourceVerticalRange")
             .add("resourceTemporalDateRange")
@@ -620,24 +645,21 @@ public class EsSearchManager implements ISearchManager {
                 continue;
             }
 
-            if (!name.startsWith("conformTo_")) { // Skip some fields causing errors / TODO
-                if (isObject) {
-                    try {
-                        doc.set(propertyName,
-                            mapper.readTree(
-                                nodeElements.get(0).getTextNormalize()
-                            ));
-                    } catch (IOException e) {
-                        LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                            new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
-                    }
-                } else {
-                    doc.put(propertyName,
-                        booleanFields.contains(propertyName) ?
-                            parseBoolean(nodeElements.get(0).getTextNormalize()) :
-                            nodeElements.get(0).getText());
+            if (isObject) {
+                try {
+                    doc.set(propertyName,
+                        mapper.readTree(
+                            nodeElements.get(0).getTextNormalize()
+                        ));
+                } catch (IOException e) {
+                    LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
+                        new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
                 }
-
+            } else {
+                doc.put(propertyName,
+                    booleanFields.contains(propertyName) ?
+                        parseBoolean(nodeElements.get(0).getTextNormalize()) :
+                        nodeElements.get(0).getText());
             }
         }
         return doc;

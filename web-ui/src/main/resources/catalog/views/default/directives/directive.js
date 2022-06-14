@@ -87,8 +87,8 @@
   ]);
 
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
-    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
+    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings', 'gnLangs',
+    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings, gnLangs) {
       return {
         restrict: 'A',
         replace: true,
@@ -104,6 +104,11 @@
 
           gnConfigService.load().then(function(c) {
             scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
+            scope.isMdWorkflowAssistEnable = gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
+            scope.workFlowApps = gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
+            scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+
           });
 
           function loadTasks() {
@@ -112,7 +117,7 @@
               scope.tasks = data;
               scope.getVisibleTasks();
             });
-          };
+          }
 
           scope.getVisibleTasks = function() {
             $.each(scope.tasks, function(i,t) {

@@ -192,6 +192,7 @@ public class FilesystemStore extends AbstractStore {
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
                                         Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(filename);
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
         Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         if (changeDate != null) {

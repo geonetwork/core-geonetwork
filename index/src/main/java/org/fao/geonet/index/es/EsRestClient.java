@@ -37,6 +37,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -46,10 +47,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.*;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -312,13 +310,23 @@ public class EsRestClient implements InitializingBean {
 //        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        if (searchResponse.status().getStatus() == 200) {
-            return searchResponse;
-        } else {
-            throw new IOException(String.format(
-                "Error during querying index. Errors is '%s'.", searchResponse.status().toString()
-            ));
+        try {
+            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+            if (searchResponse.status().getStatus() == 200) {
+                return searchResponse;
+            } else {
+                throw new IOException(String.format(
+                    "Error during querying index. Errors is '%s'.", searchResponse.status().toString()
+                ));
+            }
+        } catch (ElasticsearchStatusException esException) {
+            Throwable[] suppressed = esException.getSuppressed();
+            if (suppressed.length > 0 && suppressed[0] instanceof ResponseException) {
+                ResponseException re = (ResponseException) suppressed[0];
+                Log.error("geonetwork.index", String.format(
+                    "Error during querying index. %s", re.getMessage()));
+            }
+            throw esException;
         }
     }
 

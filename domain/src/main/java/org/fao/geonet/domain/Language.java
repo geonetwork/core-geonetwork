@@ -114,7 +114,7 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * Return true if this is a language required byt the inspire standards.
+     * Return true if this is a language required by the inspire standards.
      *
      * @return return true if required by inspire.
      */

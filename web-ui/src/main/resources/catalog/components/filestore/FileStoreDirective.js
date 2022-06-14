@@ -64,7 +64,7 @@
               scope.metadataResources = [];
 
               scope.loadMetadataResources = function() {
-                gnfilestoreService.get(scope.uuid, scope.filter).success(
+                return gnfilestoreService.get(scope.uuid, scope.filter).success(
                     function(data) {
                       scope.metadataResources = data;
                     }

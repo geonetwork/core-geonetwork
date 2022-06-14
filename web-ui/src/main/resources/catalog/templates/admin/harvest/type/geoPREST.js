@@ -50,7 +50,7 @@ var gnHarvestergeoPREST = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <baseUrl>' + h.site.baseUrl.replace(/&/g, '&amp;') + '</baseUrl>'
@@ -74,7 +74,7 @@ var gnHarvestergeoPREST = {
                 + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
-                + '    <importxslt>' + h.content.importxslt + '</importxslt>'
+                + '    <importxslt>' + _.escape(h.content.importxslt) + '</importxslt>'
                 + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';

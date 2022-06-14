@@ -1,0 +1,152 @@
+[
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Resource identifier / Add a codespace",
+      "fre": "Identifiant de la ressource / Ajout d'un codespace"
+    },
+    "description": {
+      "eng": "This action add codespace to code not having any. The XPath select mcc:MD_Identifier element not having any codespace.",
+      "fre": "Ce process permet d'ajouter l'identifiant de la base de données dans un bloc d'identification n'ayant pas encore de codespace. On suppose que l'identifiant local est actuellement le seul codé sans codespace. Ce n'est pas le cas si on moissonne donc la qualité de la sélection est importante. Ce XPath sélectionne le bloc mcc:MD_Identifier pour lequel aucun codespace n'est instancié."
+    },
+    "isXpath": true,
+    "insertMode": "gn_add",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier[count(mcc:MD_Identifier/mcc:codeSpace)=0]/mcc:MD_Identifier",
+    "value": "<mcc:codeSpace xmlns:mcc=\"http://standards.iso.org/iso/19115/-3/mcc/1.0\" xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\"><gco:CharacterString>BE.SPW.INFRASIG.CARTON</gco:CharacterString></mcc:codeSpace>"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Keyword / Add a keyword in an existing thesaurus section",
+      "fre": "Mot clé / Ajout d'un mot clé dans une section de thésaurus existante"
+    },
+    "description": {
+      "eng": "The thesaurus section selection is made using the title Anchor element.",
+      "fre": "La sélection du thésaurus se fait par un critère sur l'élément Anchor du titre du thésaurus."
+    },
+    "isXpath": true,
+    "insertMode": "gn_add",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/gcx:Anchor/@xlink:href='https://metawal.wallonie.be/thesaurus/infrasig']/*/mri:keyword[1]",
+    "value": "<mri:keyword xmlns:mri=\"http://standards.iso.org/iso/19115/-3/mri/1.0\" xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\"><gco:CharacterString>Reporting INSPIRE</gco:CharacterString></mri:keyword>"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Keyword / Remove empty keywords",
+      "fre": "Mot clé / Supprimer les mots clés vides"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_delete",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword[@gco:nilReason=\"missing\"]",
+    "value": ""
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Keyword / Replace a keyword",
+      "fre": "Mot clé / Remplacer un mot clé"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_replace",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/gcx:Anchor/@xlink:href = \"https://metawal.wallonie.be/thesaurus/infrasig\"]/*/mri:keyword/gco:CharacterString[. = 'Reporting INSPIRE']",
+    "value": "Reporting INSPIRENO"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Thesaurus / Remove section if no keyword",
+      "fre": "Thésaurus / Supprimer une section sans mot clé"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_delete",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords[count(*/mri:keyword) = 0]",
+    "value": ""
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Distribution / Add an online resource",
+      "fre": "Distribution / Ajout d'une ressource en ligne"
+    },
+    "description": {
+      "eng": "Replace '...' in the XML by the online resource to add.",
+      "fre": "Remplacer les '...' dans le XML par la ressource en ligne à ajouter."
+    },
+    "isXpath": true,
+    "insertMode": "gn_add",
+    "xpath": "/mdb:MD_Metadata/mdb:distributionInfo/*/mrd:transferOptions/mrd:MD_DigitalTransferOptions",
+    "value": "<mrd:onLine xmlns:mrd=\"http://standards.iso.org/iso/19115/-3/mrd/1.0\" xmlns:cit=\"http://standards.iso.org/iso/19115/-3/cit/2.0\" xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\">...</mrd:onLine>"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Distribution / Remove an online resource by URL",
+      "fre": "Distribution / Supprimer une ressource en ligne par URL"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_delete",
+    "xpath": "/mdb:MD_Metadata/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine[*/cit:linkage/gco:CharacterString = \"https://geoservices.wallonie.be/INSPIRE/WMS/NZ/MapServer/WMSServer\"]",
+    "value": ""
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Distribution / Replacing a protocol value",
+      "fre": "Distribution / Remplacer un protocole"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_replace",
+    "xpath": "/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*/cit:protocol/*[text() = 'WWW:DOWNLOAD-1.0-http--download']",
+    "value": "WWW:LINK"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Distribution / Replacing a function value",
+      "fre": "Distribution / Remplacer une fonction"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_replace",
+    "xpath": "/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[starts-with(cit:linkage/*/text(), 'https://walstat.iweps.be/walstat-catalogue')]/cit:function",
+    "value": "<cit:CI_OnLineFunctionCode xmlns:cit=\"http://standards.iso.org/iso/19115/-3/cit/2.0\" codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"browsing\"/>"
+  },
+  {
+    "schema": "iso19115-3.2018",
+    "name": {
+      "eng": "Service type / Set value",
+      "fre": "Service type / Définir la valeur"
+    },
+    "description": {
+      "eng": "",
+      "fre": ""
+    },
+    "isXpath": true,
+    "insertMode": "gn_replace",
+    "xpath": "/mdb:MD_Metadata/mdb:identificationInfo/*/srv:serviceType[1]",
+    "value": "<gco:ScopedName xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\" codeSpace=\"http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType\">view</gco:ScopedName>"
+  }
+]

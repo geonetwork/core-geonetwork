@@ -64,6 +64,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -652,7 +653,8 @@ public class MetadataSchema {
         if (query == null) {
             throw new ResourceNotFoundException(String.format(
                 "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
-                savedQuery, getName(), schemaPlugin.getSavedQueries()));
+                savedQuery, getName(),
+                schemaPlugin.getSavedQueries().stream().map(SavedQuery::getId).collect(Collectors.joining(", "))));
         }
 
         String xpath = query.getXpath();
