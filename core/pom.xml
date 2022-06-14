@@ -386,9 +386,18 @@
     </dependency>
     <!-- Print service: MapFish -->
     <dependency>
+      <groupId>com.github.librepdf</groupId>
+      <artifactId>openpdf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <exclusions>
+        <exclusion>
+          <!-- provided by openpdf -->
+          <groupId>com.itextpdf</groupId>
+          <artifactId>itextpdf</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
