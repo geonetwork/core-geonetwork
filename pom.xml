@@ -524,20 +524,31 @@
         <artifactId>batik-transcoder</artifactId>
         <version>1.10</version>
       </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+      <!-- logging -->
+      <dependency> <!-- usedf for camel -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j18-impl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${slf4j.version}</version>
+      <dependency> <!-- used for LDAP test dependency in core -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>${log4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jcl</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-1.2-api</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -547,6 +558,11 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jul</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
       <dependency>
@@ -886,6 +902,14 @@
         <version>${xmlunit.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-all</artifactId>
+        <version>2.0.0-M24</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- other stuff -->
       <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>

@@ -72,7 +72,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 public class LoggingApi {
     private static final String fileAppenderName = "fileAppender";
     private static final int maxLines = 20000;
-    private final String regexp = "log4j(-(.*?))?\\.xml";
+    private final String regexp = "log4j[2]?(-(.*?))?\\.xml";
     @Autowired
     GeonetworkDataDirectory dataDirectory;
     private FileAppender fileAppender = null;
