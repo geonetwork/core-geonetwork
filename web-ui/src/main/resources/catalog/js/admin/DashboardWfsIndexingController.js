@@ -35,13 +35,15 @@
     '$translate',
     '$element',
     '$timeout',
-    'gnMetadataManager',
     'gnHttp',
     'gnAlertService',
     'gnLangs',
     'wfsFilterService',
-    function($q, $scope, $location, $http, $translate, $element, $timeout, gnMetadataManager, gnHttp, gnAlertService, gnLangs,
-             wfsFilterService) {
+    'gnHumanizeTimeService',
+    'Metadata',
+    function($q, $scope, $location, $http, $translate,
+             $element, $timeout, gnHttp, gnAlertService, gnLangs,
+             wfsFilterService, gnHumanizeTimeService, Metadata) {
       // this returns a valid xx_XX language code based on available locales in bootstrap-table
       // if none found, return 'en'
       // FIXME: use a global service
@@ -57,6 +59,8 @@
         });
         return lang;
       }
+
+      var defaultStrategy = '';
 
       $scope.url = decodeURIComponent($location.search()['wfs-indexing']);
 
@@ -144,8 +148,6 @@
           });
           event.preventDefault();
         });
-
-        // bind md title
         $element.find('div[data-md-uuid]').each(function() {
           updateMdTitle(this);
         });
@@ -194,6 +196,7 @@
 
       $scope.refreshJobList = function() {
         $scope.jobs = {};
+        $scope.uuids = {};
         $scope.error = null;
         $scope.loading = true;
 
@@ -218,12 +221,14 @@
               var featureType = producer.wfsHarvesterParam.typeName;
               var key = url + '#' + featureType;
 
+              $scope.uuids[producer.wfsHarvesterParam.metadataUuid] = null;
+
               $scope.jobs[key] = {
                 url: url,
                 featureType: featureType,
                 status: 'not started',
                 mdUuid: producer.wfsHarvesterParam.metadataUuid,
-                strategy: producer.wfsHarvesterParam.strategy || '',
+                strategy: producer.wfsHarvesterParam.strategy || defaultStrategy,
                 cronScheduleExpression: producer.cronExpression,
                 cronScheduleProducerId: producer.id
               };
@@ -244,29 +249,22 @@
                 });
               }
             });
-
-            angular.forEach($scope.jobs, function(job) {
-              if (!job.mdUuid) return;
-              if ($scope.mdCache[job.mdUuid]) {
-                job.md = $scope.mdCache[job.mdUuid];
-                return;
-              }
-
-              gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
-                if (!md) {
-                  job.md = {
-                    error: 'wfsIndexingMetadataNotFound'
-                  };
-                } else {
-                  job.md = md;
-                }
-                $scope.mdCache[job.mdUuid] = job.md;
-
-                $element.find('div[data-md-uuid=' + job.mdUuid + ']').each(function() {
-                  updateMdTitle(this);
-                });
-              })
-            });
+            $http.post('../api/search/records/_search', {"query": {
+                "bool" : {
+                  "must": [
+                    {"terms": {"uuid": Object.keys($scope.uuids)}}
+                  ]
+                }},
+              "size": Object.keys($scope.uuids).length,
+              "_source": ["resourceTitleObject"]
+            }, {cache: true}).then(
+              function (r) {
+                r.data.hits.hits.forEach(function (hit) {
+                  $scope.mdCache[hit._id] = new Metadata(hit);
+                  $element.find('div[data-md-uuid=' + hit._id + ']').each(function() {
+                    updateMdTitle(this);
+                  });
+              })});
 
             $scope.jobsArray = Object.keys($scope.jobs).sort().map(function (key) {
               return $scope.jobs[key];
@@ -296,8 +294,8 @@
             paginationHAlign: 'right',
             paginationVAlign: 'bottom',
             paginationDetailHAlign: 'left',
-            paginationPreText: 'previous',
-            paginationNextText: 'Next page',
+            paginationPreText: $translate.instant('previous'),
+            paginationNextText: $translate.instant('next'),
             style: 'min-height:100',
             classes: 'table table-responsive full-width',
             sortName: 'endDate',
@@ -337,8 +335,16 @@
               field: 'endDate',
               title: $translate.instant('wfsIndexingEndDate'),
               sortable: true,
+              sorter: function(a, b) {
+                return a && a.localeCompare(b);
+              },
               formatter: function(value, row) {
-                return value ? moment(value).format('LLLL') : null;
+                if (value) {
+                  var date = gnHumanizeTimeService(value, null, true);
+                  return '<div title="' + date.title + '">' + date.value + '</div>'
+                } else {
+                  return null;
+                }
               }
             }, {
               field: 'status',
@@ -370,17 +376,10 @@
                 var labelNow = $translate.instant('wfsIndexingTrigger');
                 var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
-                return '<div class="dropdown">' +
-                  '  <button class="btn btn-default dropdown-toggle" ' +
-                  '          title="' + $translate.instant('wfsHarvesterActions') + '"' +
-                  '          type="button" data-toggle="dropdown"><icon class="fa fa-fw fa-cog"></icon><span class="caret"></span>' +
-                  '  </button>' +
-                  '  <ul class="dropdown-menu dropdown-menu-right">' +
-                  '    <li><a href="#" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a></li>' +
-                  '    <li><a href="#" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play"/>' + labelNow + '</a></li>' +
-                  '    <li><a href="#" data-delete-key="' + key + '"><icon class="fa fa-fw fa-times"/>' + labelDelete + '</a></li>' +
-                  '  </ul>' +
-                  '</div>';
+                return '<a class="btn btn-xs btn-block btn-default" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a>' +
+                  '<a class="btn btn-xs btn-block btn-default" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play text-primary"/>' + labelNow + '</a>' +
+                  '<a class="btn btn-xs btn-block btn-default" ' +
+                  '   data-delete-key="' + key + '"><icon class="fa fa-fw fa-times text-danger"/>' + labelDelete + '</a>';
               }
             }],
             locale: getBsTableLang()
@@ -458,7 +457,7 @@
         var params = {
           typeName: job.featureType,
           url: job.url,
-          strategy: job.strategy,
+          strategy: job.strategy || defaultStrategy,
           metadataUuid: job.mdUuid,
           tokenizedFields: null,
           treeFields : null
@@ -471,8 +470,8 @@
           function(response) {
             if (response.status == 200) {
               var appProfile = angular.fromJson(response.data['0']);
-              params.tokenizedFields = appProfile.tokenizedFields;
-              params.treeFields = appProfile.treeFields;
+              params.tokenizedFields = (appProfile && appProfile.tokenizedFields) || null;
+              params.treeFields = (appProfile && appProfile.treeFields) || null;
               return params
             }
           }).catch(function() {

@@ -1,0 +1,18 @@
+
+    <div ng-include="'../../catalog/views/default/templates/recordView/social.html'"/>
+
+    <div data-ng-show="isRatingEnabled"
+         class="gn-md-side-rating gn-margin-bottom">
+      <h2>
+        <i class="fa fa-fw"></i>
+        <span data-translate="">rate</span>
+      </h2>
+      <div data-gn-metadata-rate="mdView.current.record"/>
+    </div>
+
+    <div data-gn-userfeedback='mdView.current.record'
+         data-gn-user={{user.username}}
+         data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+    </div>
+    <div data-gn-md-feedback="mdView.current.record"></div>
+

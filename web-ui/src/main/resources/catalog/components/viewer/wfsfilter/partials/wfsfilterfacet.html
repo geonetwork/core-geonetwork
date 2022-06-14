@@ -82,7 +82,8 @@
     <div data-ng-if="!managerOnly && isFeaturesIndexed"
          class="gn-facet"
          data-ng-repeat="field in fields track by field.name">
-      <h5 gn-collapsible="field.expanded">
+      <h5 gn-collapsible="field.expanded"
+          title="{{field.definition}}">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}

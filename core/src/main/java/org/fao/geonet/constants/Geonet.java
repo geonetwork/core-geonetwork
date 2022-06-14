@@ -648,7 +648,7 @@ public final class Geonet {
         public static final String GROUP_WEBSITE = "_groupWebsite";
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
-        public static final String GROUP_PUBLISHED = "_groupPublished";
+        public static final String GROUP_PUBLISHED = "groupPublished";
         public static final String CAT = "_cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
@@ -657,9 +657,10 @@ public final class Geonet {
         public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
-        public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
+        public static final String DRAFT_ID = "draftId";
         public static final String RESOURCETITLE = "resourceTitle";
         public static final String RESOURCEABSTRACT = "resourceAbstract";
         public static final String PARENTUUID = "parentUuid";
@@ -676,6 +677,7 @@ public final class Geonet {
         }
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+        public static final String STATUS_WORKFLOW = "statusWorkflow";
     }
 
     public static class SearchConfig {

@@ -45,6 +45,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
@@ -121,8 +122,13 @@ public class ISO19139SchemaPlugin
                         List children = getChild(agId, "code", GMD)
                             .getChildren();
                         String sibUuid = "";
+                        String title = "";
+                        String url = "";
                         if (children.size() == 1) {
-                            sibUuid = ((Element) children.get(0)).getText();
+                            Element charStringOrAnchor = ((Element) children.get(0));
+                            sibUuid = charStringOrAnchor.getText();
+                            title = charStringOrAnchor.getAttributeValue("title", XLINK);
+                            url = charStringOrAnchor.getAttributeValue("href", XLINK);
                         }
                         final Element associationTypeEl = getChild(sib, "associationType", GMD);
                         String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", GMD)
@@ -133,7 +139,9 @@ public class ISO19139SchemaPlugin
                             initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", GMD)
                                 .getAttributeValue("codeListValue");
                         }
-                        AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
+
+                        AssociatedResource resource = new AssociatedResource(
+                            sibUuid, initiativeType, associationType, url, title);
                         listOfResources.add(resource);
                     }
                 } catch (Exception e) {
@@ -156,43 +164,101 @@ public class ISO19139SchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
+        return getAssociatedParents(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedParents(Element metadata) {
+        Set<AssociatedResource> associatedResources = new HashSet<>();
+
         Element parentIdentifier = metadata.getChild("parentIdentifier", GMD);
         if (parentIdentifier != null) {
             Element characterString = parentIdentifier.getChild("CharacterString", GCO);
             if (characterString != null) {
-                HashSet<String> uuids = new HashSet<>();
-                uuids.add(characterString.getText());
-                return uuids;
+                associatedResources.add(new AssociatedResource(characterString.getText(), "", ""));
             }
             Element anchor = parentIdentifier.getChild("Anchor", GMX);
             if (anchor != null) {
-                HashSet<String> uuids = new HashSet<>();
-                uuids.add(anchor.getText());
-                return uuids;
+                associatedResources.add(elementAsAssociatedResource(anchor));
             }
         }
-        return new HashSet<String>();
+        // Parent relation is also frequently encoded using
+        // aggregation. See parentAssociatedResourceType in ISO19115-3
+        return associatedResources;
     }
 
     public Set<String> getAssociatedDatasetUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "operatesOn", SRV);
+        return getAssociatedDatasets(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedDatasets(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//srv:operatesOn");
+        return associatedResources;
     }
 
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", GMD);
+        // Feature catalog may also be embedded into the document
+        // Or the citation of the feature catalog may contains a reference to it
+        return getAssociatedFeatureCatalogues(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:featureCatalogueCitation");
+        return associatedResources;
     }
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "source", GMD);
+        return getAssociatedSources(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
     }
 
-    private Set<String> getAttributeUuidrefValues(Element metadata, String tagName, Namespace namespace) {
-        ElementFilter elementFilter = new ElementFilter(tagName, namespace);
-        return Xml.filterElementValues(
-            metadata,
-            elementFilter,
-            null, null,
-            "uuidref");
+    @Override
+    public Set<AssociatedResource> getAssociatedSources(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:source");
+        return associatedResources;
+    }
+
+    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String XPATH) {
+        Set<AssociatedResource> associatedResources = new HashSet<>();
+        try {
+            final List<?> parentMetadata = Xml
+                .selectNodes(
+                    metadata,
+                    XPATH,
+                    allNamespaces.asList());
+            for (Object o : parentMetadata) {
+                Element sib = (Element) o;
+                AssociatedResource resource = elementAsAssociatedResource(sib);
+                associatedResources.add(resource);
+            }
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        }
+        return associatedResources;
+    }
+
+
+    private AssociatedResource elementAsAssociatedResource(Element ref) {
+        String sibUuid = ref.getAttributeValue("uuidref");
+        if (StringUtils.isEmpty(sibUuid)) {
+            sibUuid = ref.getTextNormalize();
+        }
+        String title = ref.getAttributeValue("title", XLINK);
+        String url = ref.getAttributeValue("href", XLINK);
+        return new AssociatedResource(sibUuid, "", "", url, title);
     }
 
     @Override
@@ -569,8 +635,8 @@ public class ISO19139SchemaPlugin
         return languages;
     }
 
-    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
-        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder, String excludePattern) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder, excludePattern);
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL']");
         return patternStreamer;

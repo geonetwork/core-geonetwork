@@ -115,15 +115,18 @@
               data-filter='{"root": "cit:CI_Responsibility"}'
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>-->
       <!-- To use an ISO19139 contact directory in an ISO19115-3 record
-      use the following configuration: -->
+      use the following configuration:
+              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+       -->
       <directiveAttributes
               data-template-add-action="true"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrd:distributor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -131,9 +134,8 @@
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrl:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -141,9 +143,8 @@
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="cit:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -151,11 +152,36 @@
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
+    <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
+
+    <for name="mcc:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
+
+    <for name="cit:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
 
     <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes

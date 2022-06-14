@@ -14,8 +14,23 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li role="menuitem">
+        <label>
+          <input class="fa fa-fw"
+                 data-gn-selection-md="md"
+                 data-bucket="searchObj.selectionBucket"
+                 data-results="searchObj"
+                 type="checkbox"
+                 data-ng-model="md.selected"
+                 aria-label="{{'clickToSelect' | translate}}"/>
+          <span data-ng-hide="md.selected" data-translate="">addRecordToSelection</span>
+          <span data-ng-show="md.selected" data-translate="">removeRecordFromSelection</span>
+        </label>
+      </li>
+      <li class="divider"
+          role="menuitem"></li>
+      <li role="menuitem">
         <a href=""
-           data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
+           data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
           <span class="fa fa-fw fa-key"></span>&nbsp;
           <span data-translate="">privileges</span>
@@ -30,7 +45,9 @@
         </a></li>
       <!-- Retired metadata can't be published -->
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
+          data-ng-if="md.canReview
+                      && md.draft != 'y'
+                      && md.mdStatus != 3"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -154,6 +171,19 @@
           <span data-translate="">enableWorkflow</span>
         </a>
       </li>
+      <!--metadata workflow assistance external link(s)-->
+      <li role="menuitem" class="divider"
+          data-ng-if="user.isConnected() && user.canEditRecord(md) && isMdWorkflowAssistEnable"></li>
+      <li role="menuitem"
+          data-ng-if="user.isConnected()
+          && isMdWorkflowAssistEnable && user.canEditRecord(md)" data-ng-repeat="app in workFlowApps">
+        <a href=""
+           data-ng-href="{{app.appUrl.replace('{uuid}', md.getUuid()).replace('{lang}', lang).replace('{isoLang}', iso2Lang)}}"
+           target="_blank" rel="noopener">
+          <span class="fa fa-fw fa-external-link"></span>&nbsp;
+          <span data-translate="">{{app.appLabelKey}}&nbsp;</span>
+        </a>
+      </li>
 
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && user.canEditRecord(md) && md.draft != 'y'"></li>
@@ -161,7 +191,7 @@
 
       <li data-ng-repeat="t in tasks"
           data-ng-show="taskConfiguration[t.name] && taskConfiguration[t.name].isVisible && taskConfiguration[t.name].isVisible(md)"
-          data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
+          data-ng-class="{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
         <a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
           <span class="fa fa-fw"></span>&nbsp;
           <span>{{t.label | gnLocalized}}</span>
@@ -169,7 +199,6 @@
       </li>
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && tasks.length > 0 && hasVisibletasks">&nbsp;</li>
-
 
       <li role="menuitem">
         <a href=""
@@ -185,6 +214,18 @@
            data-ng-click="mdService.createChild(md)">
           <span class="fa fa-fw fa-sitemap"></span>&nbsp;
           <span data-translate="">createChild</span>
+        </a>
+      </li>
+
+      <li class="divider"
+          data-ng-if="user.isAdministrator()"
+          role="menuitem"></li>
+      <li role="menuitem">
+        <a data-ng-click="mdService.indexMd(md)"
+           data-ng-if="user.isAdministrator()"
+           href="">
+          <span class="fa fa-fw fa-cogs"></span>&nbsp;
+          <span data-translate="">indexRecord</span>
         </a>
       </li>
     </ul>

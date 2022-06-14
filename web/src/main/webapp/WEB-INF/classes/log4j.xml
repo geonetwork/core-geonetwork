@@ -33,6 +33,9 @@
   <logger name="geonetwork.encryptor">
     <level value="INFO"/>
   </logger>
+  <logger name="geonetwork.spatineo">
+    <level value="ERROR"/>
+  </logger>
   <logger name="geonetwork.resources">
     <level value="ERROR"/>
   </logger>
@@ -221,6 +224,8 @@
     <appender-ref ref="allConsoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <!-- Check also domain/src/main/resources/config-spring-geonetwork.xml
+  show_sql properties. -->
   <logger name="org.hibernate.SQL" additivity="false">
     <level value="ERROR"/>
     <appender-ref ref="consoleAppender"/>

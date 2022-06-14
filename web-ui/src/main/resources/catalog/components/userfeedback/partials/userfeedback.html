@@ -1,20 +1,17 @@
 <section class="gn-userfeedback-sidebar">
   <div class="flex-row vcentre">
     <div class="flex-shrink">
-      <h2>
-        <i class="fa fa-comment-o"></i>
-        <!--<span data-ng-show="rating.ratingCount > 0 && loaded"
-                data-translate="">userFeedback</span>-->
+      <h3>
         <span data-ng-show="rating.ratingCount > 0 && loaded">
-      <span data-translate="">GUFrate</span>
-      <span>{{rating.ratingAverages['-1']}} / 5 <i class="fa fa-fw fa-star"></i></span>
-      <span data-ng-show="rating.ratingAverages && loaded"
-            data-translate=""
-            data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</span>
-    </span>
+          <span data-translate="">GUFrate</span>
+          <span>{{rating.ratingAverages['-1']}} / 5 <i class="fa fa-fw fa-star"></i></span>
+          <span data-ng-show="rating.ratingAverages && loaded"
+               data-translate=""
+               data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</span>
+        </span>
         <span data-ng-show="rating.ratingCount === 0 && loaded"
               data-translate="">GUFnoRatings</span>
-      </h2>
+      </h3>
     </div>
     <div class="flex-grow">
       <div class="pull-right"

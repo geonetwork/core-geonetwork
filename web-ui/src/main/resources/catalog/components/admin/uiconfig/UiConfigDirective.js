@@ -27,8 +27,20 @@
 
   var module = angular.module('gn_ui_config_directive', ['ui.ace', 'gn_timezone_selector']);
 
-  module.directive('gnUiConfig', ['gnGlobalSettings', 'gnProjService',
-    function(gnGlobalSettings, gnProjService) {
+  module.directive('gnUiConfigHelp', [
+    function() {
+      return {
+        restrict: 'E',
+        replace: 'true',
+        template: '<p class="help-block"' +
+          '           data-ng-show="((\'ui-\' + key + \'-help\') | translate) != (\'ui-\' + key + \'-help\')"' +
+          '           data-ng-bind-html="(\'ui-\' + key + \'-help\') | translate"></p>'
+      }
+    }]);
+
+  module.directive('gnUiConfig', [
+    'gnGlobalSettings', 'gnProjService', '$translate',
+    function(gnGlobalSettings, gnProjService, $translate) {
 
       return {
         restrict: 'A',
@@ -42,26 +54,127 @@
 
           var testAppUrl = '../../catalog/views/api/?config=';
 
-          function init() {
-            // merge on top of default config
-            scope.jsonConfig = angular.merge(
-              // If the config is empty, use the default one set in CatController
-              (Object.keys(scope.config).length === 0 || scope.config === "null" || !scope.config ?
-                gnGlobalSettings.getDefaultConfig() :
-                gnGlobalSettings.getMergeableDefaultConfig()),
-              angular.fromJson(scope.config));
+          scope.optionsToAdd = undefined;
+
+          var preferredKey = [
+            'mods.header.languages',
+            'mods.home.facetConfig',
+            'mods.search.facetConfig',
+            'mods.editor.facetConfig',
+            'mods.search.filters'
+          ];
+
+          function buildLabel(tokens) {
+            var prefix = $translate.instant(
+              'ui-'
+              + (tokens[0] === 'mods' ? 'mod' : tokens[0])
+              + (tokens.length > 1 ? '-' + tokens[1] : ''));
+            return prefix
+              + (tokens.length > 2
+                ? ' / ' + $translate.instant('ui-' + tokens[tokens.length -1])
+                : '');
           }
+          function collectConfigOption(jsonConfig) {
+            var options = [];
+            var preferredOptions = [];
+            var paths = gnGlobalSettings.getObjectKeysPaths(
+              jsonConfig,
+              gnGlobalSettings.stopKeyList, false);
+            for(var i = 0; i < paths.length; i++) {
+              var p = paths[i],
+                tokens = p.split('.'),
+                value = _.get(jsonConfig, p),
+                label = buildLabel(tokens),
+                g = p.indexOf('mods') === 0
+                  ? buildLabel(tokens.splice(0, 2))
+                  : $translate.instant('ui-detectors'),
+                o = {
+                  path: p,
+                  label: label ? label : p.split('.').splice(2).join('-'),
+                  group: g,
+                  defaultValue: value,
+                  image: p.replace('.', '-') + '.png'
+                };
+
+              options.push(o);
+              if (preferredKey.indexOf(p) !== -1) {
+                preferredOptions.push(angular.merge({}, o, {
+                  group: $translate.instant('preferredOptions')
+                }));
+              }
+            }
+            preferredOptions.push({
+              path: '.',
+              label: $translate.instant('ui-full-configuration'),
+              group: $translate.instant('preferredOptions'),
+              defaultValue: jsonConfig
+            })
+            return preferredOptions.concat(options);
+          }
+
+          function setValue(path, val, obj) {
+            var fields = path.split('.');
+            var result = obj;
+            for (var i = 0, n = fields.length; i < n && result !== undefined; i++) {
+              var field = fields[i];
+              if (field === "__proto__" || field === "constructor") continue;
+              if (i === n - 1) {
+                result[field] = val;
+              } else {
+                if (typeof result[field] === 'undefined' || !_.isObject(result[field])) {
+                  result[field] = {};
+                }
+                result = result[field];
+              }
+            }
+            return obj;
+          }
+
+          function addOptionToConfig(o, c) {
+            if (c == null) {
+              c = {};
+            }
+            if (o.path === '.') {
+              return o.defaultValue;
+            } else {
+              return setValue(o.path, o.defaultValue, c);
+            }
+          }
+
+          scope.$watch('optionsToAdd', function(n, o) {
+            if (n && n.path != (o && o.path)) {
+              scope.jsonConfig = addOptionToConfig(n, scope.jsonConfig)
+            }
+          })
+
+          scope.configOptions = collectConfigOption(gnGlobalSettings.getDefaultConfig());
+          scope.previousConfig = undefined;
+
+          function init(setPrevious) {
+            if (setPrevious) {
+              scope.previousConfig = angular.fromJson(scope.config);
+            }
+            scope.jsonConfig = angular.fromJson(scope.config);
+          }
+
+          function buildFinalConfig() {
+            scope.finalConfig = angular.merge(
+              gnGlobalSettings.getDefaultConfig(), scope.jsonConfig);
+          }
+
           scope.$watch('config', function (n, o) {
             if (angular.isDefined(n) && n !== o) {
-              init();
+              init(o === undefined);
             }
           }, true);
 
           scope.$watch('jsonConfig', function (n) {
-            scope.config = JSON.stringify(n);
+            scope.config = JSON.stringify(n, null, 2);
+            buildFinalConfig();
           }, true);
 
           scope.sortOrderChoices = ['asc', 'desc'];
+          scope.searchResultContactChoices = ['Org', 'OrgForResource', 'OrgForDistribution'];
 
           // ng-model can't bind to object key, so
           // when key value change, reorganize object.
@@ -104,7 +217,7 @@
           scope.populateProjSettings = function(context) {
             gnProjService.getProjectionSettings(context.code)
               .then(function(data) {
-                if (!data.code) 
+                if (!data.code)
                   return;
                 for (var key in data) {
                   if (data.hasOwnProperty(key))
@@ -116,9 +229,18 @@
               });
           };
 
+          scope.clean = function() {
+            gnGlobalSettings.cleanConfig(scope.jsonConfig);
+          };
           scope.reset = function() {
             angular.extend(scope.jsonConfig,
                 gnGlobalSettings.getDefaultConfig());
+          };
+          scope.empty = function() {
+            scope.jsonConfig = {};
+          };
+          scope.restore = function() {
+            scope.jsonConfig = scope.previousConfig;
           };
 
           scope.testClientConfig = function() {
@@ -139,7 +261,16 @@
         value: '=model'
       },
       template: '<div style="height: {{height}}"' +
-        '          ui-ace="{useWrapMode:true, showGutter:true, mode:\'json\'}"' +
+        '          ui-ace="{' +
+        '  useWrapMode:true, ' +
+        '  showGutter:true, ' +
+        '  mode:\'json\',' +
+        '  require: [\'ace/ext/language_tools\'],\n' +
+        '  advanced: {\n' +
+        '      enableSnippets: true,\n' +
+        '      enableBasicAutocompletion: true,\n' +
+        '      enableLiveAutocompletion: true\n' +
+        '  }}"' +
         '          data-ng-model="asText"></div>',
       link: function(scope, element, attrs) {
         scope.height = (attrs.height || '300') + 'px';

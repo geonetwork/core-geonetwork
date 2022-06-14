@@ -182,8 +182,8 @@
       <util:list>
         <value>json/core+search+v4+custom</value>
         <value>json/schemas</value>
-        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
@@ -198,8 +198,8 @@
       <util:list>
         <value>json/core+search+editor+v4+custom</value>
         <value>json/schemas</value>
-        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>

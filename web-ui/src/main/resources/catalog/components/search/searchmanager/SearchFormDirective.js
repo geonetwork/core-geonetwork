@@ -36,11 +36,13 @@
   goog.require('gn_catalog_service');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
+  goog.require('gn_collection_manager_service');
   goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_selection_directive',
+    'gn_collection_manager_service',
     'gn_search_form_results_directive',
     'search_filter_tags_directive'
   ]);
@@ -50,8 +52,8 @@
    */
   var searchFormController =
       function($scope, $location, $parse, $translate, gnSearchManagerService,
-               Metadata, gnSearchLocation, gnESClient,
-               gnESService, gnESFacet, gnAlertService) {
+               Metadata, gnSearchLocation, gnESClient, gnGlobalSettings,
+               gnESService, gnESFacet, gnAlertService, md5) {
     var defaultParams = {};
     var self = this;
 
@@ -163,7 +165,36 @@
       $scope.finalParams = finalParams;
       var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state,
         $scope.searchObj.configId, $scope.searchObj.filters);
-      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
+
+      function buildSearchKey(esParams) {
+        var param = angular.copy(esParams, {});
+        ['from', 'size', 'sort'].forEach(function(k) {
+          delete param[k];
+        });
+        return md5.createHash(JSON.stringify(param));
+      }
+
+      // Compute facet only if search is reset or new filters apply
+      // When moving in pages or changing sort,
+      // no need to compute aggregations again and again
+      var searchKey = buildSearchKey(esParams),
+          dontComputeAggs = $scope.searchResults.searchKey === searchKey,
+          lastSearchAggs = undefined;
+      if (dontComputeAggs) {
+        lastSearchAggs = $scope.searchResults.facets;
+        delete esParams.aggregations;
+      }
+      // console.log(dontComputeAggs, $scope.searchResults.searchKey, searchKey);
+      $scope.searchResults.searchKey = searchKey;
+
+      // For now, only the list result template renders related records
+      // based on UI config.
+      var template = $scope.resultTemplate && $scope.resultTemplate.endsWith('list.html')
+          ? 'grid' : '',
+        templateConfig = gnGlobalSettings.gnCfg.mods.search[template],
+        types = templateConfig && templateConfig.related ? templateConfig.related : [];
+
+      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId, types)
         .then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
@@ -183,7 +214,8 @@
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = data.hits.total.value;
-        $scope.searchResults.facets = data.facets || {}
+        $scope.searchResults.facets = dontComputeAggs
+          ? lastSearchAggs : (data.facets || {})
 
         // compute page number for pagination
         if ($scope.hasPagination) {
@@ -354,7 +386,11 @@
       $scope.searchObj.state = {
         filters: {},
         exactMatch: false,
-        titleOnly: false
+        titleOnly: false,
+        languageStrategy: 'searchInAllLanguages',
+        forcedLanguage: undefined,
+        languageWhiteList: undefined,
+        detectedLanguage: undefined
       };
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
@@ -487,6 +523,18 @@
       }
     }
 
+    this.getMissingLabel = function(key) {
+      if(!key) return;
+      var facet = $scope.searchResults.facets.filter(function(facet) {
+        return facet.key === key;
+      });
+      return (facet.length
+          && facet[0].config
+          && facet[0].config.terms
+          && facet[0].config.terms.missing)
+        || 'missing';
+    }
+
     this.hasFiltersForKey = function(key) {
       return !!$scope.searchObj.state.filters[key];
     }
@@ -504,7 +552,8 @@
         request.query,
         facet.path,
         facet.items.length + (moreItemsNumber || 20),
-        undefined, undefined,
+        facet.include || undefined,
+        facet.exclude || undefined,
         facetConfigs
         );
     }
@@ -558,6 +607,55 @@
       return $scope.searchObj.state.titleOnly;
     };
 
+
+    /**
+     * @param {string} value
+     */
+    this.setLanguageStrategy = function(value) {
+      this.updateSearchParams({'languageStrategy': value});
+      $scope.searchObj.state.languageStrategy = value;
+    };
+
+    /**
+     * @return {string}
+     */
+    this.getLanguageStrategy = function() {
+      return $scope.searchObj.state.languageStrategy;
+    };
+
+    /**
+     * @param {string} value
+     */
+    this.setForcedLanguage = function(value) {
+      this.updateSearchParams({'forcedLanguage': value});
+      $scope.searchObj.state.forcedLanguage = value;
+    };
+
+    /**
+     * @return {string}
+     */
+    this.getForcedLanguage = function() {
+      return $scope.searchObj.state.forcedLanguage;
+    };
+
+    /**
+     * @param {array<string>} value
+     */
+    this.setLanguageWhiteList = function(value) {
+      $scope.searchObj.state.languageWhiteList = value;
+    };
+
+    /**
+     * @return {array<string>}
+     */
+    this.getLanguageWhiteList = function() {
+      return $scope.searchObj.state.languageWhiteList;
+    };
+
+    this.getDetectedLanguage = function() {
+      return $scope.searchObj.state.detectedLanguage;
+    };
+
     /**
      * @param {boolean} value
      */
@@ -594,9 +692,11 @@
     'Metadata',
     'gnSearchLocation',
     'gnESClient',
+    'gnGlobalSettings',
     'gnESService',
     'gnESFacet',
-    'gnAlertService'
+    'gnAlertService',
+    'md5'
   ];
 
   /**

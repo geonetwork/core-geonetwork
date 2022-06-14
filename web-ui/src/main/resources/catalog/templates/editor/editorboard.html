@@ -6,91 +6,65 @@
       <div class="col-sm-12"
           data-ng-search-form=""
           data-runSearch="true"
-          data-wait-for-user="true" >
-
-
+          data-wait-for-user="true">
         <form class="form-horizontal"
                 role="form">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="row gn-top-search">
-              <div class="col-md-3 gn-search-facet">
-                    <div data-gn-user-searches-panel="user"
-                         data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
+              <div class="col-md-offset-3 col-md-6">
+                <div class="input-group gn-form-any">
+                  <div data-gn-user-searches-list=""
+                       data-ng-cloak=""
+                       data-mode="button"
+                       class="input-group-btn btn-favorites">
                   </div>
-              <div class="col-md-4">
-                    <div class="input-group gn-form-any">
-                      <div data-gn-user-searches-list=""
-                           data-ng-cloak=""
-                           data-mode="button"
-                           class="input-group-btn btn-favorites">
-                      </div>
-                      <input type="text"
-                             class="form-control input-lg"
-                             id="gn-any-field"
-                             title="{{'anyFieldTitle' | translate}}"
-                             data-ng-model="searchObj.params.any"
-                             autocomplete="off"
-                             placeholder="{{'anyPlaceHolder' | translate}}"
-                             aria-label="{{'anyPlaceHolder' | translate}}"
-                             data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
-                             data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
-                             data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
-                             data-typeahead-loading="anyLoading" class="form-control"
-                             data-typeahead-min-length="1"
-                             data-typeahead-focus-first="false"
-                             data-typeahead-wait-ms="600">
+                  <input type="text"
+                         class="form-control input-lg"
+                         id="gn-any-field"
+                         title="{{'anyFieldTitle' | translate}}"
+                         data-ng-model="searchObj.params.any"
+                         autocomplete="off"
+                         placeholder="{{'anyPlaceHolder' | translate}}"
+                         aria-label="{{'anyPlaceHolder' | translate}}"
+                         data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+                         data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+                         data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
+                         data-typeahead-loading="anyLoading" class="form-control"
+                         data-typeahead-min-length="1"
+                         data-typeahead-focus-first="false"
+                         data-typeahead-wait-ms="600">
 
-                      <div class="input-group-btn">
-                        <button type="button"
-                                data-ng-click="resetSearch(searchObj.defaultParams);"
-                                title="{{'ClearTitle' | translate}}"
-                                class="btn btn-default btn-lg btn-reset">
-                          <i class="fa fa-times"></i>
-                          <span class="sr-only" data-translate="">ClearTitle</span>
-                        </button>
-                        <button type="button"
-                                data-ng-click="triggerSearch()"
-                                title="{{'search' | translate}}"
-                                class="btn btn-default btn-lg btn-search">
-                          <i class="fa fa-search"></i>
-                          <span class="sr-only" data-translate="">search</span>
-                        </button>
-                        <button type="button"
-                                class="btn btn-default btn-lg btn-advanced"
-                                title="{{'searchOptions' | translate}}"
-                                data-ng-model="searchObj.advancedMode"
-                                btn-checkbox=""
-                                btn-checkbox-true="1"
-                                btn-checkbox-false="0">
-                          <i class="fa fa-fw fa-sliders"></i>
-                          <span class="sr-only" data-translate="">searchOptions</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div data-ng-show="searchObj.advancedMode">
-                      <!--Advanced search form-->
-                      <div data-ng-include="advancedSearchTemplate"></div>
-                    </div>
+                  <div class="input-group-btn">
+                    <button type="button"
+                            data-ng-click="resetSearch(searchObj.defaultParams);"
+                            title="{{'ClearTitle' | translate}}"
+                            class="btn btn-default btn-lg btn-reset">
+                      <i class="fa fa-times"></i>
+                      <span class="sr-only" data-translate="">ClearTitle</span>
+                    </button>
+                    <button type="button"
+                            data-ng-click="triggerSearch()"
+                            title="{{'search' | translate}}"
+                            class="btn btn-default btn-lg btn-search">
+                      <i class="fa fa-search"></i>
+                      <span class="sr-only" data-translate="">search</span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-default btn-lg btn-advanced"
+                            title="{{'searchOptions' | translate}}"
+                            data-ng-model="searchObj.advancedMode"
+                            btn-checkbox=""
+                            btn-checkbox-true="1"
+                            btn-checkbox-false="0">
+                      <i class="fa fa-fw fa-sliders"></i>
+                      <span class="sr-only" data-translate="">searchOptions</span>
+                    </button>
                   </div>
-              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-right">
-                <a href="#/create" class="btn btn-primary btn-truncate" title="{{'addRecord' | translate}}">
-                  <i class="fa fa-fw fa-plus"/><span class=" hidden-sm" data-translate="">addRecord</span>
-                </a>
-                <a href="#/import" class="btn btn-default btn-truncate" title="{{'ImportRecord' | translate}}">
-                  <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
-                </a>
-                <a href="#/directory" class="btn btn-default btn-truncate" title="{{'directoryManager' | translate}}"
-                  ng-if="user.isEditorOrMore()">
-                  <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md btn-truncate-lg" data-translate="">directoryManager</span>
-                </a>
-                <a href="#/batchedit" class="btn btn-default btn-truncate" title="{{'batchEditing' | translate}}"
-                  ng-if="user.isEditorOrMore()">
-                  <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
-                </a>
-                <a href="#/accessManager" class="btn btn-default" title="{{'accessManager' | translate}}"
-                  ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
-                  <i class="fa fa-fw fa-lock"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
-                </a>
+                </div>
+                <div data-ng-show="searchObj.advancedMode">
+                  <!--Advanced search form-->
+                  <div data-ng-include="advancedSearchTemplate"></div>
+                </div>
               </div>
             </div>
           </form>
@@ -106,18 +80,20 @@
         </div>
 
         <div class="row">
-          <div class="col-sm-3 col-md-3 gn-search-facet">
+          <div class="col-sm-3 col-md-3 col-lg-3 gn-search-facet">
             <div data-search-filter-tags
                  data-dimensions="searchResults.facets"
                  data-use-location-parameters="true"
                  ng-if="searchResults.facets">
             </div>
 
+            <div data-gn-user-searches-panel="user"
+                 data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
             <div
               ng-if="searchResults.facets"
               data-es-facets="searchResults.facets"/>
           </div>
-          <div class="col-sm-9 col-md-9">
+          <div class="col-sm-8 col-md-8 col-lg-7">
 
             <span class="loading fa fa-spinner fa-spin"
                   data-ng-show="searching"></span>
@@ -159,6 +135,29 @@
                   data-search-results="searchResults"
                   data-template-url="resultTemplate"></div>
             </div>
+          </div>
+          <div class="col-sm-1 col-md-1 col-lg-2 gn-sm-nopadding-left">
+            <a href="#/create" class="btn btn-primary btn-block gn-margin-bottom" title="{{'addRecord' | translate}}">
+              <i class="fa fa-fw fa-plus"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">addRecord</span>
+            </a>
+            <a href="#/import"
+               data-ng-if="user.canImportMetadata()"
+               class="btn btn-default btn-block gn-margin-bottom"
+               title="{{'ImportRecord' | translate}}">
+              <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">ImportRecord</span>
+            </a>
+            <a href="#/directory" class="btn btn-default btn-block gn-margin-bottom" title="{{'directoryManager' | translate}}"
+               ng-if="user.isEditorOrMore()">
+              <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">directoryManager</span>
+            </a>
+            <a href="#/batchedit" class="btn btn-default btn-block gn-margin-bottom" title="{{'batchEditing' | translate}}"
+               ng-if="user.isEditorOrMore()">
+              <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
+            </a>
+            <a href="#/accessManager" class="btn btn-default btn-block gn-margin-bottom" title="{{'accessManager' | translate}}"
+               ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+              <i class="fa fa-fw fa-lock"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
+            </a>
           </div>
         </div>
       </div>

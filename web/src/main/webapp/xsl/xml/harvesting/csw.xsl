@@ -28,6 +28,9 @@
     <outputSchema>
       <xsl:value-of select="outputSchema/value"/>
     </outputSchema>
+    <sortBy>
+      <xsl:value-of select="sortBy/value"/>
+    </sortBy>
   </xsl:template>
 
 

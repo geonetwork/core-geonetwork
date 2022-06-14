@@ -8,7 +8,7 @@
 
 
   <fieldset id="gn-harvest-settings-simpleurl-basic-row">
-    <legend id="gn-harvest-settings-simpleurl-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-simpleurl-basic-title"><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div id="gn-harvest-settings-simpleurl-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
@@ -20,15 +20,16 @@
              data-ng-model="harvesterSelected.site.url"/>
       <p class="help-block" data-translate="">simpleurl-urlHelp</p>
     </div>
+
+    <div id="gn-harvest-settings-simpleurl-advanced-authentication-row" data-gn-harvester-account="harvesterSelected"/>
+
   </fieldset>
 
 
   <fieldset id="gn-harvest-settings-simpleurl-advanced-row">
-    <legend id="gn-harvest-settings-simpleurl-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend id="gn-harvest-settings-simpleurl-advanced-title"><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
-
-    <div id="gn-harvest-settings-simpleurl-advanced-authentication-row" data-gn-harvester-account="harvesterSelected"/>
 
     <div id="gn-harvest-settings-loopElement-row"
          data-ng-class="harvesterSelected.site.loopElement == '' ? 'has-error' : ''">

@@ -131,7 +131,7 @@
 
         <xsl:if test="$isNotAllThesaurus">
           <xsl:choose>
-            <xsl:when test="@xlink:href != ''">
+            <xsl:when test="starts-with(@xlink:href, 'local://')">
               <!-- Insert identifiers from the all thesaurus in the existing XLink.
               -->
               <xsl:variable name="currentThesaurus"

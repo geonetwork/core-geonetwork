@@ -128,7 +128,7 @@
 
                 <div id="gn-addonlinesrc-url-list-single-row"
                      class="col-sm-9" data-ng-if="!isFieldMultilingual('url')">
-                  <div data-ng-class="{'input-group': OGCProtocol != null}">
+                  <div data-ng-class="{'input-group': (OGCProtocol != null || params.linkType.fields.url.choices)}">
                     <input data-ng-model="params.url"
                            data-ng-model-options="{debounce: 500}"
                            data-ng-required="params.linkType.fields.url.required"
@@ -139,16 +139,33 @@
                            id="gn-addonlinesrc-url-list-single-input"
                            data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                            placeholder="{{params.linkType.fields.url.placeholder || 'https://...'}}">
-                    <span class="input-group-btn" data-ng-show="OGCProtocol != null">
-                    <!-- Refresh Grid Button -->
-                    <button id="gn-addonlinesrc-url-list-single-button"
-                            type="button"
-                            class="btn btn-warning"
-                            title="{{'loadCapabilitiesLayers' | translate}}"
-                            data-gn-click-and-spin="loadCurrentLink(true)">
-                      <i class="fa fa-refresh"/>
-                    </button>
-                  </span>
+                    <span class="input-group-btn"
+                          data-ng-show="OGCProtocol != null">
+                      <!-- Refresh Grid Button -->
+                      <button id="gn-addonlinesrc-url-list-single-button"
+                              type="button"
+                              class="btn btn-warning"
+                              title="{{'loadCapabilitiesLayers' | translate}}"
+                              data-gn-click-and-spin="loadCurrentLink(true)">
+                        <i class="fa fa-refresh"/>
+                      </button>
+                    </span>
+                    <span class="input-group-btn"
+                          data-ng-show="params.linkType.fields.url.choices">
+                      <button type="button"
+                              class="btn btn-default dropdown-toggle"
+                              data-ng-if="params.linkType.fields.url.choices"
+                              data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu"
+                          data-ng-if="params.linkType.fields.url.choices">
+                        <li data-ng-repeat="c in params.linkType.fields.url.choices">
+                          <a data-ng-click="params.url = c;">{{c}}</a>
+                        </li>
+                      </ul>
+                    </span>
                   </div>
                 </div>
 
@@ -168,12 +185,22 @@
                 </div>
               </div>
 
-              <!-- Layers grid directive -->
+              <!-- Layers tree directive -->
               <div class="form-group">
+                <div data-gn-layers-tree
+                     id="gn-addonlinesrc-layers-row"
+                     class="col-sm-9 col-md-offset-2"
+                     data-ng-if="OGCProtocol != null  && isWMSProtocol()"
+                     data-selection-mode="(!isWMSProtocolWithLayersInUrl() && isEditing) ? 'single' : 'multiple'"
+                     data-layers="capabilitiesLayers"
+                     data-selection="params.selectedLayers">
+                </div>
+
+                <!-- Layers grid directive -->
                 <div data-gn-layers-grid
                      id="gn-addonlinesrc-layers-row"
                      class="col-sm-9 col-md-offset-2"
-                     data-ng-show="OGCProtocol != null"
+                     data-ng-if="OGCProtocol != null && !isWMSProtocol()"
                      data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
                      data-layers="layers"
                      data-selection="params.selectedLayers">

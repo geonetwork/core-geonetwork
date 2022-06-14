@@ -84,6 +84,21 @@
         }
         return title;
       },
+      getDescription: function() {
+        var description = this.props.description;
+        if (this.props.dublinCoreMultilinguals && this.props.dublinCoreMultilinguals.length>0) {
+          var UILangs= this.UILangs;
+          var descriptionInUiLanguage = this.props.dublinCoreMultilinguals.filter(function(v) {
+            return v.tag === 'description';
+          }).filter(function(v) {
+            return v.lang === UILangs[1];
+          });
+          if (descriptionInUiLanguage.length > 0) {
+            description = descriptionInUiLanguage[0].value;
+          }
+        }
+        return description;
+      },
       get: function() {
         return this.props;
       }
@@ -136,19 +151,19 @@
                   var currentUILang2_3char = gnCurrentEdit.allLanguages.iso2code[currentUILang_3char];
                   if (currentUILang2_3char) {
                     currentUILang2_3char = currentUILang2_3char.replace("#", "");
-                    if (!_.contains(result,currentUILang2_3char))
+                    if (!_.includes(result,currentUILang2_3char))
                       result.push(currentUILang2_3char);
                   }
 
 
                   if (gnLangs.langs[currentUILang_3char]) {
                        v = gnLangs.langs[currentUILang_3char];
-                       if (!_.contains(result,v))
+                       if (!_.includes(result,v))
                          result.push(v);
                   }
                   if ( (currentUILang2_3char)  &&  (gnLangs.langs[currentUILang2_3char])) {
                       v = gnLangs.langs[currentUILang2_3char];
-                       if (!_.contains(result,v))
+                       if (!_.includes(result,v))
                          result.push(v);
                   }
                   return result;

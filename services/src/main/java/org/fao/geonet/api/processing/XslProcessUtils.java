@@ -121,6 +121,8 @@ public class XslProcessUtils {
             Element processedMetadata = null;
             try {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+                Lib.resource.checkEditPrivilege(context, id);
+
                 Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
                 Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
@@ -153,8 +155,6 @@ public class XslProcessUtils {
 
                 // --- save metadata and return status
                 if (save) {
-                    Lib.resource.checkEditPrivilege(context, id);
-
                     boolean validate = false;
                     boolean ufo = true;
                     String language = context.getLanguage();

@@ -41,20 +41,28 @@
           </button>
           <ul class="dropdown-menu width-100" role="menu">
             <li>
-              <a href ng-click="addThesaurus('new')" translate>
-                newEmptyThesaurus</a>
+              <a href ng-click="addThesaurus('registry')">
+                <i class="fa fa-fw fa-book"/>
+                <span translate>fromRegistry</span>
+              </a>
             </li>
             <li>
-              <a href ng-click="addThesaurus('file')" translate>
-                fromLocalFile</a>
+              <a href ng-click="addThesaurus('file')">
+                <i class="fa fa-fw fa-upload"/>
+                <span translate>fromLocalFile</span>
+              </a>
             </li>
             <li>
-              <a href ng-click="addThesaurus('registry')" translate>
-                fromRegistry</a>
+              <a href ng-click="addThesaurus('url')">
+                <i class="fa fa-fw fa-link"/>
+                <span translate>fromURL</span>
+              </a>
             </li>
             <li>
-              <a href ng-click="addThesaurus('url')" translate>
-                fromURL</a>
+              <a href ng-click="addThesaurus('new')">
+                <i class="fa fa-fw fa-plus"/>
+                <span translate>newEmptyThesaurus</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -101,9 +109,6 @@
       </div>
 
       <div class="panel-body">
-        <!--<ul>
-        <li data-ng-repeat="(key, value) in thesaurusSelected">{{key}}: {{value}}</li>
-      </ul>-->
         <form id="gn-edit-thesaurus" name="gn-edit-thesaurus"
           class="form-horizontal">
           <input type="hidden" name="_csrf" value="{{csrf}}"/>
@@ -112,6 +117,14 @@
             <div class="col-sm-10">
               <input type="text" name="title" class="form-control"
                 ng-disabled="!isNew()" ng-model="thesaurusSelected.title"/>
+            </div>
+          </div>
+          <div class="form-group"
+               data-ng-if="thesaurusSelected.description != ''">
+            <label class="control-label col-sm-2" translate>thesaurusDescription</label>
+            <div class="col-sm-10">
+              <textarea type="text" name="title" class="form-control"
+                        ng-disabled="!isNew()" ng-model="thesaurusSelected.description"/>
             </div>
           </div>
           <div class="form-group">
@@ -323,13 +336,28 @@
             <!-- Registry selection -->
             <div data-ng-show="importAs == 'registry'"
                  data-gn-registry-browser="thesaurusUrl"/>
-
             <br/>
-            <div
-              data-schema-info-combo="codelist"
-              data-selected-info="thesaurusImportType"
-              data-gn-schema-info="gmd:MD_KeywordTypeCode"
-              lang="lang"></div>
+
+            <label class="control-label">
+              <span data-translate="">thesaurusClass</span>
+              <select class="form-control"
+                      ng_model="thesaurusImportType"
+                      ng-options="o.key as o.label group by o.schema
+                                  for (k, o) in thesaurusTypeBySchema "/>
+             </label>
+            <br/>
+            <label class="control-label"
+                   data-ng-show="importAs != 'registry'">
+              <span data-translate="">origin</span>
+              <select class="form-control"
+                     name="type"
+                     data-ng-model="thesaurusImportOrigin">
+                <option data-ng-repeat="o in thesaurusTypes"
+                       value="{{o}}">{{o}}</option>
+              </select>
+            </label>
+
+
             <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
@@ -360,12 +388,21 @@
                      data-ng-required="true" />
             </div>
 
+            <div class="form-group">
+              <label class="control-label" data-translate="">thesaurusDescription</label>
+              <textarea type="text" name="description"
+                        class="form-control" data-ng-disabled="!isNew()"
+                        id="gn-thesaurus-description" data-ng-model="thesaurusSelected.description"/>
+            </div>
+
             <div class="form-group" data-ng-class="gnCreateThesaurus.filename.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusIdentifier</label>
-              <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                     data-ng-keyup="computeThesaurusNs()"
-                     data-ng-model="thesaurusSelected.filename"
-                     data-ng-required="true"/>
+              <div class="input-group">
+                <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
+                       data-ng-model="thesaurusSelected.filename"
+                       data-ng-required="true"/>
+                  <span class="input-group-addon">.rdf</span>
+                </div>
             </div>
             <div class="form-group">
               <label class="control-label" data-translate="">thesaurusClass</label>
@@ -378,15 +415,20 @@
 
             <div class="form-group" data-ng-class="gnCreateThesaurus.defaultNamespace.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusNamespace</label>
-              <input type="text" name="defaultNamespace" class="form-control"
-                     data-ng-disabled="!isNew()"
-                     data-ng-model="thesaurusSelected.defaultNamespace"
-                     data-ng-required="true"/>
-              <p class="help-block" data-ng-show="isNew() && thesaurusSuggestedNs != ''"
-                data-ng-click="useSuggestedNs()">
-                {{"use"|translate}} {{thesaurusSuggestedNs}} {{"asThesaurusIdentifier"|translate}}
-                <i class="fa fa-double-angle-up"/>
-              </p>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <label>
+                    <input type="checkbox"
+                           data-ng-model="customNamespace"
+                           aria-label="{{'customizeNamespace' | translate}}"/>
+                    <span data-translate="">customizeNamespace</span>
+                  </label>
+                </span>
+                <input type="text" name="defaultNamespace" class="form-control"
+                       data-ng-disabled="!isNew() || !customNamespace"
+                       data-ng-model="thesaurusSelected.defaultNamespace"
+                       data-ng-required="true"/>
+              </div>
             </div>
           </form>
         </div>
@@ -486,7 +528,7 @@
                 <h3 data-ng-translate="" data-ng-show="value.length !== 0">{{key | translate}}</h3>
                 <ul>
                   <li data-ng-repeat="k in value">
-                    <a data-ng-click="editKeyword(k)">{{k.value['#text']}}</a>
+                    <a data-ng-click="editKeyword(k.uri)">{{k.value['#text']}}</a>
                   </li>
                 </ul>
               </div>

@@ -29,7 +29,7 @@
   goog.require('gn_catalog_service');
   goog.require('gn_search_location');
 
-  var module = angular.module('gn_userfeedback_directive', ['vcRecaptcha']);
+  var module = angular.module('gn_userfeedback_directive', ['vcRecaptcha', 'ngMessages']);
 
   module.service('gnUserfeedbackService', [
     '$http', '$q',
@@ -362,50 +362,6 @@
                 scope.uf.captcha = vcRecaptchaService.getResponse();
               }
 
-
-              if (!scope.loggedIn) {
-
-                scope.authorNameError = false;
-                scope.authorEmailError = false;
-                scope.authorOrganizationError = false;
-
-                if (!data.authorName) {
-                  scope.authorNameError = $translate.instant('GUFrequired');
-
-                  return false;
-                }
-                if (!data.authorEmail) {
-                  scope.authorEmailError = $translate.instant('GUFrequired');
-
-                  return false;
-                }
-                if (scope.uf.authorName.length > 64) {
-                  scope.authorNameError = $translate.instant('GUFtooLong');
-
-                  return false;
-                }
-                if (scope.uf.authorEmail.length > 64) {
-                  scope.authorEmailError = $translate.instant('GUFtooLong');
-
-                  return false;
-                }
-
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                if (!re.test(scope.uf.authorEmail)) {
-                  scope.authorEmailError =
-                    $translate.instant('GUFnotValidFormat');
-
-                  return false;
-                }
-                if (scope.uf.authorOrganization && scope.uf.authorOrganization.length > 64) {
-                  scope.authorOrganizationError =
-                    $translate.instant('GUFtooLong');
-
-                  return false;
-                }
-              }
-
               scope.uf.metadataUUID = scope.metatdataUUID;
 
               if (angular.isUndefined(scope.metatdataUUID)) {
@@ -428,7 +384,6 @@
         };
       }]);
 
-
   module.directive(
     'gnUserfeedbacklasthome', ['$http',
       function($http) {
@@ -440,23 +395,26 @@
           },
           templateUrl: '../../catalog/components/userfeedback/partials/userfeedbacklasthome.html',
           link: function(scope) {
-
+            var defaultSize = 6, increment = 6;
             scope.lastCommentsList = [];
-
-            scope.loadLastComments = function() {
+            scope.allCommentsLoaded = false;
+            scope.loadLastComments = function(size) {
               $http({
                 method: 'GET',
-                url: '../api/userfeedback?size=' + (scope.nbOfComments || 6),
+                url: '../api/userfeedback?size=' + size,
                 isArray: true
               }).then(function mySuccess(response) {
-                scope.lastCommentsList = [];
-                scope.lastCommentsList = scope.lastCommentsList.concat(response.data);
+                scope.allCommentsLoaded =
+                  response.data.length < size;
+                scope.lastCommentsList = response.data;
               }, function myError(response) {
                 console.log(response.statusText);
               });
-
             };
-            scope.loadLastComments();
+            scope.loadMore = function() {
+              scope.loadLastComments(scope.lastCommentsList.length + increment)
+            };
+            scope.loadLastComments(scope.nbOfComments || defaultSize);
           }
         };
       }]);

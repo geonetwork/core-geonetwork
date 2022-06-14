@@ -44,8 +44,7 @@
         configId: 'editor',
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
-        selectionBucket: 'be101',
-        filters: gnSearchSettings.filters,
+        selectionBucket: 'e101',
         params: {
           sortBy: 'dateStamp',
           sortOrder: 'desc',
@@ -59,7 +58,7 @@
 
       // Only my record toggle
       $scope.toggleOnlyMyRecord = function(callback) {
-        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
+        $scope.onlyMyRecord ? setOwner() : unsetOwner();
         callback();
       };
       var setOwner = function() {
@@ -69,7 +68,7 @@
         delete $scope.searchObj.params['owner'];
       };
       $scope.$watch('user.id', function(newId) {
-        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+        if (angular.isDefined(newId) && $scope.onlyMyRecord) {
           setOwner();
         }
       });
@@ -87,7 +86,7 @@
               $scope.selectedRecordsCount = 0;
               $scope.selectedStandards = [];
               $scope.selectedRecords = [];
-              $http.get('../api/selections/be101').
+              $http.get('../api/selections/e101').
                   success(function(uuids) {
                     $scope.selectedRecordsCount = uuids.length;
                     if (uuids.length > 0) {
@@ -157,7 +156,7 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function(params) {
-        $http.get('../api/selections/be101').success(function(uuids) {
+        $http.get('../api/selections/e101').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
             uuid: uuids
           },
@@ -182,14 +181,23 @@
     'gnGlobalSettings',
     'gnCurrentEdit',
     'gnSchemaManagerService',
+    'gnPopup', '$translate',
+    'gnClipboard', '$rootScope',
     function($scope, $location, $http, $compile, $httpParamSerializer,
-        gnSearchSettings, gnGlobalSettings,
-        gnCurrentEdit, gnSchemaManagerService) {
+             gnSearchSettings, gnGlobalSettings,
+             gnCurrentEdit, gnSchemaManagerService,
+             gnPopup, $translate, gnClipboard, $rootScope) {
+
+      $scope.editTypes = [{id: 'searchAndReplace', icon: 'fa-refresh fa-rotate-90'},
+        {id: 'xpathEdits', icon: 'fa-code'},
+        {id: 'batchEdits', icon: 'fa-wpforms'}];
 
       // Simple tab handling.
       $scope.selectedStep = 1;
       $scope.setStep = function(step) {
         $scope.selectedStep = step;
+        $scope.preview = undefined;
+        $scope.previewError = undefined;
       };
       $scope.extraParams = {};
       $scope.$watch('selectedStep', function(newValue) {
@@ -208,6 +216,13 @@
               });
             }
           });
+        } else if (newValue === 3) {
+          $scope.canPreview =
+            ($scope.editType === 'searchAndReplace'
+             && $scope.searchAndReplaceChanges[0]
+             && $scope.searchAndReplaceChanges[0].search != '')
+          || ($scope.editType !== 'searchAndReplace'
+              && $scope.changes.length > 0)
         }
       });
 
@@ -222,15 +237,34 @@
       gnSearchSettings.resultTemplate =
           gnSearchSettings.resultViewTpls[0].tplUrl;
 
+
       // TODO: Improve for other standards
       // Object used by directory directive
       gnCurrentEdit = {
         schema: 'iso19139'
       };
 
+      $scope.searchAndReplaceField = {
+        search: '',
+        replacement: '',
+        useRegexp: false,
+        regexpFlags: ''
+      };
+      $scope.searchAndReplaceChanges = [];
+      $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
+      $scope.regexpFlags = ['i', 'c', 'n', 'm'];
+
+      $scope.setType = function(type) {
+        $scope.editType = type;
+        if (type === 'searchAndReplace') {
+          $scope.searchAndReplaceChanges[0] = $scope.searchAndReplaceField;
+        } else {
+          $scope.searchAndReplaceChanges.length = 0;
+        }
+      };
 
       $scope.fieldConfig = null;  // Configuration per standard
-      $scope.changes = [];  // List of changes
+      $scope.changes = [];
       // TODO: Add a mode gn_update_only_if_match ?
       $scope.insertModes = ['gn_add', 'gn_replace', 'gn_delete'];
 
@@ -383,6 +417,29 @@
         $scope.removeChange(c.xpath, c.value);
         xpathCounter--;
       };
+      $scope.pasteFromClipboard = function() {
+        gnClipboard.paste().then(function(text) {
+          try {
+            var config = JSON.parse(text);
+            if (config['insertMode']) {
+              $scope.currentXpath = config;
+            } else {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('batchEditConfigIsNotValid'),
+                timeout: 2,
+                type: 'danger'
+              });
+            }
+          } catch (e) {
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('batchEditConfigIsNotJson'),
+              error: e,
+              timeout: 2,
+              type: 'danger'
+            });
+          }
+        });
+      };
       $scope.editXpathChange = function(c) {
         $scope.removeChange(c.xpath, c.value);
         $scope.currentXpath = c;
@@ -394,15 +451,15 @@
 
       $scope.processReport = null;
 
-      $scope.applyChanges = function() {
+      function buildChanges() {
         var params = [], i = 0;
         angular.forEach($scope.changes, function(field) {
           if (field.value != null) {
             var value = field.value, xpath = field.xpath;
             if (field.insertMode != null) {
               value = '<' + field.insertMode + '>' +
-                  field.value +
-                  '</' + field.insertMode + '>';
+                field.value +
+                '</' + field.insertMode + '>';
             } else {
               value = value;
             }
@@ -410,30 +467,103 @@
             i++;
           }
         });
+        return params;
+      }
 
-        // TODO: Apply changes to a mix of records is maybe not the best
-        // XPath will be applied whatever the standard is.
-        var url = '../api/records/batchediting?'
-          + $httpParamSerializer({
-            'bucket': 'be101',
-            'updateDateStamp': $scope.extraParams.updateDateStamp
-          });
-        return $http.put(url,
-            params
-        ).success(function(data) {
-          $scope.processReport = data;
-        }).error(function(response) {
-          $scope.processReport = response.data;
+      $scope.diffType = undefined;
+      function formatDiff(diff, diffType) {
+        var formattedDiff =
+          diff.replace('<?xml version="1.0" encoding="UTF-8"?>\n', '')
+              .replace(/<preview>(.*)<\/preview>/g, '$1');
+        if (diffType === 'diffhtml') {
+          return formattedDiff
+              .replaceAll('&lt;span&gt;', '<span>')
+              .replaceAll('&lt;/span&gt;', '</span>')
+              .replaceAll('&lt;ins style="background:#e6ffe6;"&gt;', '<ins class="text-success">')
+              .replaceAll('&lt;/ins&gt;', '</ins>')
+              .replaceAll('&lt;del style="background:#ffe6e6;"&gt;', '<del class="text-danger">')
+              .replaceAll('&lt;/del&gt;', '</del>')
+              .replaceAll('&lt;br&gt;','<br/>')
+              .replaceAll('&amp;', '&');
+        } else if (diffType === 'diff') {
+          return formattedDiff.replaceAll('Diff(', '\r\n\r\nDiff(');
+        } else if (diffType === 'patch') {
+          return decodeURIComponent(formattedDiff);
+        } else {
+          return formattedDiff;
+        }
+      }
+
+      function buildRequest(isPreview, uuid, bucket) {
+        var isSearchAndReplace = $scope.editType === 'searchAndReplace';
+
+        var params =
+          isSearchAndReplace ? {
+            search: $scope.searchAndReplaceChanges[0].search,
+            replace: $scope.searchAndReplaceChanges[0].replacement,
+            useRegexp: $scope.searchAndReplaceChanges[0].regexpFlags !== '',
+            regexpFlags: $scope.searchAndReplaceChanges[0].regexpFlags,
+            updateDateStamp: $scope.extraParams.updateDateStamp,
+            diffType: $scope.diffType || ''
+          } : {
+            updateDateStamp: $scope.extraParams.updateDateStamp,
+            diffType: $scope.diffType || ''
+          };
+
+        if (uuid) {
+          params.uuids = uuid;
+        } else if (bucket) {
+          params.bucket = bucket;
+        }
+
+        var url =
+          (isSearchAndReplace
+            ? '../api/processes/db/search-and-replace?'
+            : '../api/records/batchediting' + (isPreview ? '/preview' : '') + '?')
+          + $httpParamSerializer(params);
+
+        if (isSearchAndReplace) {
+          return $http[isPreview ? 'get' : 'post'](url, {
+            headers: {
+              'accept': 'application/xml'
+            }
+          })
+        } else {
+          return $http[isPreview ? 'post' : 'put'](url, buildChanges())
+        }
+      }
+
+      $scope.previewChanges = function(uuid, diffType) {
+        $scope.diffType = diffType;
+        $scope.preview = undefined;
+        $scope.previewError = undefined;
+        return buildRequest(true, uuid, null).then(function(r) {
+          $scope.preview = formatDiff(r.data, diffType);
+        }, function(r) {
+          $scope.previewError = r.data;
         });
       };
 
+      $scope.applyChanges = function() {
+        $scope.preview = undefined;
+        $scope.previewError = undefined;
+        return buildRequest(false, null, 'e101').then(function(r) {
+          $scope.processReport = r.data;
+        }, function(r) {
+          $scope.processReport = r.data;
+        });
+      };
 
+      $scope.setExample = function(e) {
+        $scope.currentXpath = e;
+      };
 
       function init() {
         $http.get('../api/standards/batchconfiguration').
             success(function(data) {
               $scope.fieldConfig = data;
               gnSchemaManagerService.getNamespaces();
+              $scope.setType($scope.editTypes[0].id);
             }).error(function(response) {
               console.warn(response);
             });

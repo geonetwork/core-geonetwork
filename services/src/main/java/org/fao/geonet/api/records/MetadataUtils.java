@@ -24,33 +24,27 @@
 package org.fao.geonet.api.records;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.es.EsHTTPProxy;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
+import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
@@ -70,14 +64,10 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.output.DOMOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -86,9 +76,10 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
-import static org.fao.geonet.kernel.search.EsSearchManager.relatedIndexFields;
+import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
+import static org.fao.geonet.kernel.search.EsSearchManager.*;
 
 
 /**
@@ -99,17 +90,312 @@ public class MetadataUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
 
-    /**
-     * Constants for metadata origin:
-     *
-     *  - portal: the metadata is available in the current portal.
-     *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
-     *  - remote: the metadata is available in a remote resource, used for operatesOn resources.
-     */
-    private static final String ORIGIN_PORTAL = "portal";
-    private static final String ORIGIN_CATALOG = "catalog";
-    private static final String ORIGIN_REMOTE = "remote";
+    public static class RelatedTypeDetails {
+        private String query;
+        private Set<String> expectedRecords = new HashSet<>();
+        private Set<String> remoteRecords = new HashSet<>();
+        private Map<String, Map<String, String>> recordsProperties = new HashMap<>();
 
+        public RelatedTypeDetails(String query) {
+            this.query = query;
+        }
+        public RelatedTypeDetails(String query, Set<String> expectedRecords) {
+            this.query = query;
+            this.expectedRecords = expectedRecords;
+        }
+        public RelatedTypeDetails(String query, Set<String> expectedRecords, Map<String, Map<String, String>> recordsProperties) {
+            this.query = query;
+            this.expectedRecords = expectedRecords;
+            this.recordsProperties = recordsProperties;
+        }
+
+        public RelatedTypeDetails(String query, Set<String> expectedRecords, Map<String, Map<String, String>> recordsProperties, Set<String> remoteRecords) {
+            this.query = query;
+            this.expectedRecords = expectedRecords;
+            this.recordsProperties = recordsProperties;
+            this.remoteRecords = remoteRecords;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
+        public void setQuery(String query) {
+            this.query = query;
+        }
+
+        public Set<String> getExpectedRecords() {
+            return expectedRecords;
+        }
+
+        public void setExpectedRecords(Set<String> expectedRecords) {
+            this.expectedRecords = expectedRecords;
+        }
+
+        public Map<String, Map<String, String>> getRecordsProperties() {
+            return recordsProperties;
+        }
+
+        public void setRecordsProperties(Map<String, Map<String, String>> recordsProperties) {
+            this.recordsProperties = recordsProperties;
+        }
+
+        public Set<String> getRemoteRecords() {
+            return remoteRecords;
+        }
+    }
+
+    public static Map<RelatedItemType, List<AssociatedRecord>> getAssociated(
+        ServiceContext context,
+        AbstractMetadata md, RelatedItemType[] types, int start, int size)
+        throws Exception  {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        SettingManager settingManager = gc.getBean(SettingManager.class);
+        EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
+
+        Element xml = dm.getMetadata(context, md.getId() + "",
+            forEditing, withValidationErrors, keepXlinkAttributes);
+
+        SchemaPlugin instance = SchemaManager.getSchemaPlugin(md.getDataInfo().getSchemaId());
+        final AssociatedResourcesSchemaPlugin schemaPlugin =
+                instance instanceof AssociatedResourcesSchemaPlugin
+                ? (AssociatedResourcesSchemaPlugin) instance : null;
+
+        // For each type, store a query and expected list of uuids.
+        Map<RelatedItemType, RelatedTypeDetails> queries = new HashMap<>();
+        Set<String> allSearchedUuids = new HashSet<>();
+
+
+        // We have 3 types of links
+        // * Those who are in the XML eg.
+        // parent (either parent identifier or associated resources),
+        // services using operatesOn
+        // sources
+        // feature catalogues
+        //
+        // * Those who requires a search to find associated records eg.
+        // children
+        // brothers&sisters
+        //
+        // * All of them could be remote records
+        Arrays.stream(types).forEach(type -> {
+            if (type == RelatedItemType.associated
+                || type == RelatedItemType.hasfeaturecats
+                || type == RelatedItemType.services
+                || type == RelatedItemType.hassources) {
+                queries.put(type,
+                    new RelatedTypeDetails(
+                        String.format("+%s:\"%s\"",
+                            relatedIndexFields.get(type.value()), md.getUuid())
+                    ));
+            } else if (schemaPlugin != null
+                && (type == RelatedItemType.siblings
+                || type == RelatedItemType.parent
+                || type == RelatedItemType.fcats
+                || type == RelatedItemType.datasets
+                || type == RelatedItemType.sources)) {
+                Set<AssociatedResource> listOfAssociatedResources = new HashSet<>();
+                if (type == RelatedItemType.siblings) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedResourcesUUIDs(xml);
+                } else if (type == RelatedItemType.sources) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedSources(xml);
+                } else if (type == RelatedItemType.datasets) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedDatasets(xml);
+                } else if (type == RelatedItemType.parent) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedParents(xml);
+                } else if (type == RelatedItemType.fcats) {
+                    listOfAssociatedResources = schemaPlugin.getAssociatedFeatureCatalogues(xml);
+                }
+
+
+                Set<String> remoteRecords = new HashSet<>();
+                if (type == RelatedItemType.parent || listOfAssociatedResources.size() > 0) {
+                    Set<String> listOfUUIDs = listOfAssociatedResources.stream()
+                        .map(AssociatedResource::getUuid)
+                        .collect(Collectors.toSet());
+                    Map<String, Map<String, String>> recordsProperties = new HashMap<>();
+                    for(AssociatedResource r : listOfAssociatedResources) {
+                        Map<String, String> properties = new HashMap<>();
+                        properties.put("associationType", r.getAssociationType());
+                        properties.put("initiativeType", r.getInitiativeType());
+                        properties.put("resourceTitle", r.getTitle());
+                        properties.put("url", r.getUrl());
+                        recordsProperties.put(r.getUuid(), properties);
+                        boolean isRemote = r.getUrl() != null
+                            && !r.getUrl().startsWith(settingManager.getBaseURL());
+                        if (isRemote) {
+                            remoteRecords.add(r.getUuid());
+                        }
+                    };
+                    queries.put(type,
+                        new RelatedTypeDetails(
+                            String.format("uuid:(%s)%s",
+                            listOfUUIDs.stream()
+                                .collect(Collectors.joining("\" OR \"", "\"", "\"")),
+                                type == RelatedItemType.parent
+                                    ? " OR childUuid:" + "\"" + md.getUuid() + "\""
+                                    : ""),
+                            listOfUUIDs,
+                            recordsProperties,
+                            remoteRecords
+                        ));
+                    allSearchedUuids.addAll(listOfUUIDs);
+                }
+            } else if (schemaPlugin != null && type == RelatedItemType.brothersAndSisters) {
+                // Get parents
+                Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(xml);
+                // and search for records associated to them
+                queries.put(type,
+                    new RelatedTypeDetails(
+                        String.format("+%s:(%s) -uuid:\"%s\"",
+                        relatedIndexFields.get(type.value()),
+                        listOfUUIDs.stream()
+                            .collect(Collectors.joining("\" OR \"", "\"", "\"")),
+                        md.getUuid()),
+                        listOfUUIDs
+                    ));
+                allSearchedUuids.addAll(listOfUUIDs);
+            } else if (schemaPlugin != null && type == RelatedItemType.children) {
+                // Get associated with isComposedOf
+                Set<AssociatedResource> listOfAssociated = schemaPlugin.getAssociatedResourcesUUIDs(xml);
+                Set<String> isComposedOfList = listOfAssociated.stream()
+                    .filter(e -> "isComposedOf".equals(e.getAssociationType()))
+                    .map(AssociatedResource::getUuid)
+                    .collect(Collectors.toSet());
+
+                // and search for records associated and records having parentUuid equal to current
+                queries.put(type,
+                    new RelatedTypeDetails(
+                        String.format("%s:\"%s\" OR uuid:(%s)",
+                            relatedIndexFields.get(type.value()),
+                            md.getUuid(),
+                            isComposedOfList.stream()
+                                .collect(Collectors.joining("\" OR \"", "\"", "\""))
+                            ),
+                        isComposedOfList
+                    ));
+                allSearchedUuids.addAll(isComposedOfList);
+            }
+        });
+
+
+        Map<RelatedItemType, List<AssociatedRecord>> associated =
+            new HashMap<RelatedItemType, List<AssociatedRecord>>();
+        Set<String> allCatalogueUuids = new HashSet<>();
+
+        String privilegesFilter = buildPermissionsFilter(context);
+        ObjectMapper mapper = new ObjectMapper();
+        for (RelatedItemType type : queries.keySet()) {
+            // TODO: Use msearch ?
+            RelatedTypeDetails relatedTypeDetails = queries.get(type);
+            final SearchResponse result = searchMan.query(
+                relatedTypeDetails.getQuery(),
+                privilegesFilter,
+                FIELDLIST_RELATED,
+                start, size);
+            Set<String> expectedUuids = relatedTypeDetails.getExpectedRecords();
+            Set<String> remoteRecords = relatedTypeDetails.getRemoteRecords();
+
+            List<AssociatedRecord> records = new ArrayList<>();
+            if (result.getHits().getTotalHits().value > 0) {
+                for (SearchHit e : Arrays.asList(result.getHits().getHits())) {
+                    allCatalogueUuids.add(e.getId());
+                    AssociatedRecord record = new AssociatedRecord();
+                    record.setUuid(e.getId());
+                    // Set properties eg. remote, associationType, ...
+                    record.setProperties(relatedTypeDetails.recordsProperties.get(e.getId()));
+                    JsonNode source = mapper.readTree(e.getSourceAsString());
+                    ObjectNode doc = mapper.createObjectNode();
+                    doc.set("_source", source);
+                    EsHTTPProxy.addUserInfo(doc, context);
+                    Iterator<String> fieldNames = doc.fieldNames();
+                    while (fieldNames.hasNext()) {
+                        String field = fieldNames.next();
+                        if (!"_source".equals(field)) {
+                            ((ObjectNode) source).set(field, doc.get(field));
+                        }
+                    }
+                    record.setRecord(source);
+                    record.setOrigin(RelatedItemOrigin.catalog.name());
+                    records.add(record);
+                    if (expectedUuids.contains(e.getId())) {
+                        expectedUuids.remove(e.getId());
+                    }
+                    // Remote records may be found in current catalogue (eg. if harvested)
+                    if (remoteRecords.contains(e.getId())) {
+                        remoteRecords.remove(e.getId());
+                    }
+                }
+            }
+
+            buildRemoteRecords(mapper, relatedTypeDetails, records);
+            associated.put(type, records);
+        }
+
+        assignPortalOrigin(start, size, searchMan, associated, allCatalogueUuids);
+
+        // TODO: Editable relation
+        return associated;
+    }
+
+    private static void buildRemoteRecords(ObjectMapper mapper,
+                                           RelatedTypeDetails relatedTypeDetails,
+                                           List<AssociatedRecord> records) throws JsonProcessingException {
+        for(String uuid : relatedTypeDetails.getRemoteRecords()) {
+            AssociatedRecord record = new AssociatedRecord();
+            record.setUuid(uuid);
+            // Set properties eg. remote, url, title, associationType, ...
+            record.setProperties(relatedTypeDetails.recordsProperties.get(uuid));
+            record.setRecord(mapper.readTree(buildRemoteRecord(relatedTypeDetails.recordsProperties.get(uuid))));
+            record.setOrigin(RelatedItemOrigin.remote.name());
+            records.add(record);
+        }
+    }
+
+    private static void assignPortalOrigin(int start, int size, EsSearchManager searchMan, Map<RelatedItemType, List<AssociatedRecord>> associated, Set<String> allCatalogueUuids) throws Exception {
+        String portalFilter;
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            final Source portal = sourceRepository.findById(node.getId()).get();
+            if (StringUtils.isNotEmpty(portal.getFilter())) {
+                portalFilter = portal.getFilter();
+
+                final SearchResponse recordsInPortal = searchMan.query(
+                    String.format("+uuid:(%s)",
+                        allCatalogueUuids.stream()
+                            .collect(Collectors.joining("\" OR \"", "\"", "\""))),
+                    portalFilter,
+                    FIELDLIST_UUID,
+                    start, size);
+
+                Set<String> allPortalUuids = new HashSet<>();
+                if (recordsInPortal.getHits().getTotalHits().value > 0) {
+                    for (SearchHit e : Arrays.asList(recordsInPortal.getHits().getHits())) {
+                        allPortalUuids.add(e.getId());
+                    }
+                }
+
+                if (allPortalUuids.size() > 0) {
+                    associated.forEach((t, records) -> {
+                        records.stream()
+                            .filter(r -> allPortalUuids.contains(r.getUuid()))
+                            .forEach(r -> r.setOrigin(RelatedItemOrigin.portal.name()));
+                    });
+                }
+            }
+        }
+    }
+
+    private static String buildRemoteRecord(Map<String, String> props) {
+        return props == null ? "{}" : String.format(
+            "{\"resourceTitleObject\": {\"default\": \"%s\"}}",
+            props.get("resourceTitle"));
+    }
+
+    @Deprecated
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
                                      int from_, int to_, boolean fast_)
@@ -192,14 +478,15 @@ public class MetadataUtils {
 
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
+
                     String origin;
                     // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null, false);
+                    Element searchResult = search("\"" + resource.getUuid() + "\"", RelatedItemType.siblings.value(), context, from, to, fast, null, false);
                     // If can't be find, skip the result.
                     if (hasResult(searchResult)) {
-                        origin = ORIGIN_PORTAL;
+                        origin = RelatedItemOrigin.portal.name();
                     } else {
-                        origin = ORIGIN_CATALOG;
+                        origin = RelatedItemOrigin.catalog.name();
                     }
 
                     Element sibContent = getRecord(resource.getUuid(), context, dm);
@@ -213,7 +500,13 @@ public class MetadataUtils {
                     }
                 }
             }
-            relatedRecords.addContent(new Element("siblings").addContent(response));
+            // May have been added by brothersAndSisters step above.
+            Element container = relatedRecords.getChild("siblings");
+            if (container == null) {
+                container = new Element("siblings");
+                relatedRecords.addContent(container);
+            }
+            container.addContent(response);
             appendRemoteRecord("siblings", mdIndexFields, relatedRecords.getChild("siblings"));
         }
 
@@ -271,12 +564,12 @@ public class MetadataUtils {
                     for (String fcat_uuid : listOfUUIDs) {
                         String origin;
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
-                        Element searchResult = search(fcat_uuid, RelatedItemType.fcats.value(), context, from, to, fast, null, false);
+                        Element searchResult = search("\"" + fcat_uuid + "\"", RelatedItemType.fcats.value(), context, from, to, fast, null, false);
                         // If can't be find, skip the result.
                         if (hasResult(searchResult)) {
-                            origin = ORIGIN_PORTAL;
+                            origin = RelatedItemOrigin.portal.name();
                         } else {
-                            origin = ORIGIN_CATALOG;
+                            origin = RelatedItemOrigin.catalog.name();
                         }
 
                         Element metadata = new Element("metadata");
@@ -324,7 +617,7 @@ public class MetadataUtils {
         return relatedRecords;
     }
 
-    private static Element search(String uuid, String type, ServiceContext context, String from, String to,
+    private static Element search(String uuidQueryValue, String type, ServiceContext context, String from, String to,
                                   String fast, String exclude, boolean ignorePortalFilter) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
@@ -354,7 +647,7 @@ public class MetadataUtils {
         }
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery),
+            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuidQueryValue, excludeQuery),
             ignorePortalFilter ? null : portalFilter,
             FIELDLIST_CORE,
             fromValue, (toValue - fromValue));
@@ -368,6 +661,9 @@ public class MetadataUtils {
                 final Map<String, Object> source = e.getSourceAsMap();
                 record.addContent(new Element("id").setText((String) source.get(Geonet.IndexFieldNames.ID)));
                 record.addContent(new Element("uuid").setText((String) source.get(Geonet.IndexFieldNames.UUID)));
+                if (type.equals("brothersAndSisters")) {
+                    record.setAttribute("association", "brothersAndSisters");
+                }
 
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCETITLE, "title");
                 setFieldFromIndexDocument(record, source, Geonet.IndexFieldNames.RESOURCEABSTRACT, "abstract");
@@ -534,7 +830,7 @@ public class MetadataUtils {
      *  - portal: the metadata is available in the current portal.
      *  - catalog: the metadata is not available in the current portal, but is available in the local catalog.
      *
-     * @param uuid
+     * @param uuidQueryValue
      * @param type
      * @param context
      * @param from
@@ -546,17 +842,17 @@ public class MetadataUtils {
      * @return
      * @throws Exception
      */
-    private static Element calculateResults(String uuid, String type, ServiceContext context, String from, String to,
+    private static Element calculateResults(String uuidQueryValue, String type, ServiceContext context, String from, String to,
                                     String fast, String exclude, String extraDumpFields,
                                     String portalFilter) throws Exception {
 
         // Search related resources ignoring portal filter
-        Element results = search(uuid, type, context, from, to, fast, exclude, true);
+        Element results = search(uuidQueryValue, type, context, from, to, fast, exclude, true);
 
         // Check if the portal has a filter
         if (StringUtils.isNotEmpty(portalFilter)) {
             // Search related resources with the portal filter
-            Element resultsForPortal = search(uuid, type, context, from, to, fast, exclude, false);
+            Element resultsForPortal = search(uuidQueryValue, type, context, from, to, fast, exclude, false);
 
             // Build the set of uuids from portal results
             HashSet<String> portalResultsUuids = new HashSet<>();
@@ -570,13 +866,13 @@ public class MetadataUtils {
             // Process the full results to add the origin depending if are available in the portal or not
             if (results.getChild("response") != null) {
                 for (Element r : (List<Element>) results.getChild("response").getChildren()) {
-                    String origin = ORIGIN_CATALOG;
+                    String origin = RelatedItemOrigin.catalog.name();
 
                     String uuidValue = r.getChildText("uuid");
 
                     // Is the result available in the portal?
                     if (portalResultsUuids.contains(uuidValue)) {
-                        origin = ORIGIN_PORTAL;
+                        origin = RelatedItemOrigin.portal.name();
                     }
 
                     r.setAttribute("origin", origin);
@@ -586,7 +882,7 @@ public class MetadataUtils {
             // No portal filter: set origin to portal
             if (results.getChild("response") != null) {
                 for (Element r : (List<Element>) results.getChild("response").getChildren()) {
-                    r.setAttribute("origin", ORIGIN_PORTAL);
+                    r.setAttribute("origin", RelatedItemOrigin.portal.name());
                 }
             }
         }
@@ -616,7 +912,7 @@ public class MetadataUtils {
                     if (type.equals(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TYPE))
                         && "remote".equals(linkProperties.get("origin"))) {
                         Element record = new Element("metadata");
-                        record.setAttribute("origin", ORIGIN_REMOTE);
+                        record.setAttribute("origin", RelatedItemOrigin.remote.name());
 
                         if (type.equals(RelatedItemType.siblings.value())) {
                             if (linkProperties.get("associationType") != null) {
@@ -643,4 +939,5 @@ public class MetadataUtils {
             });
         }
     }
+
 }

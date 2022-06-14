@@ -1,0 +1,27 @@
+<strong data-ng-if="relationsFound && title != ''">{{title}}</strong>
+<ul class="gn-related-list"
+    data-ng-repeat="(type, items) in md.related track by $index"
+    data-ng-init="mainType = config.getType(md, type);
+                  icon = config.getClassIcon(mainType);" >
+  <li data-ng-repeat="md in items | orderBy:getOrderBy">
+    <a data-ng-hide="md.remoteUrl"
+       href=""
+       title="{{('link-' + type) | translate}}"
+       gn-metadata-open="md"
+       gn-formatter="formatter.defaultUrl">
+      <i class="fa {{icon}}"/>
+      {{md.resourceTitle}}
+    </a>
+    <a data-ng-show="md.remoteUrl"
+       data-ng-href="{{md.remoteUrl}}"
+       rel="noopener noreferrer"
+       target="_blank"
+       title="{{md.resourceTitle}}">
+      <i class="fa {{icon}}"/>
+      {{md.resourceTitle}}
+      <i data-ng-if="md.origin === 'remote'"
+         class="fa fa-external-link"
+         title="{{'remoteRecord' | translate}}"></i>
+    </a>
+  </li>
+</ul>

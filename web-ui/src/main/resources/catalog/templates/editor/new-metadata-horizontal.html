@@ -1,7 +1,7 @@
 <div class="container" id="gn-new-metadata-container">
   <div class="row">
     <div class="col-md-12 gn-margin-bottom">
-      <h1 data-translate="">createNewMetadata</h1>
+      <h1>{{resourceTitle | translate}}</h1>
 
       <div class="alert alert-warning" data-ng-hide="hasTemplates"
           data-translate="">noTemplatesAvailable
@@ -17,8 +17,9 @@
     </div>
   </div>
 
-  <div class="row" data-ng-show="hasTemplates">
-    <div class="col-sm-2">
+  <div class="row" data-ng-show="hasTemplates && groups.length > 0">
+    <div class="col-sm-2"
+         data-ng-if="filterField">
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
           <span data-translate="">createA</span>
@@ -26,12 +27,13 @@
         </div>
         <div class="panel-body">
           <div class="list-group gn-record-type">
-            <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
-               data-ng-click="getTemplateNamesByType(type)"
-               data-ng-class="{'active': type==activeType}">
-              <i class="fa {{getTypeIcon(type)}} fa-3x"></i>
+            <a data-ng-repeat="type in mdTypes | orderBy: 'label'"
+               href="" class="list-group-item"
+               data-ng-click="getTemplateNamesByType(type.key)"
+               data-ng-class="{'active': type.key == activeType}">
+              <i class="fa {{getTypeIcon(type.key)}} fa-3x"></i>
               <p>
-                {{type | translate}}
+                {{type.label}}
               </p>
             </a>
           </div>
@@ -50,7 +52,7 @@
                  placeholder="{{'filter' | translate}}"
                  class="form-control"
                  data-ng-show="tpls.length > 10"
-                 data-ng-model="tplFilter.title"
+                 data-ng-model="tplFilter.resourceTitle"
                  data-ng-model-options="{debounce: 200}"
           />
 
@@ -112,13 +114,13 @@
       <div class="btn-group">
         <button type="button" class="btn btn-success"
                 data-gn-click-and-spin="createNewMetadata()"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
+                data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
           <i class="fa fa-plus"/>
           <span data-translate="">createMetadata</span>
         </button>
         <button type="button"
                 class="btn btn-success dropdown-toggle"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
+                data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
                 data-toggle="dropdown">
           <span class="caret"></span>&nbsp;
         </button>
@@ -130,7 +132,7 @@
             createMetadataForGroup</a></li>
         </ul>
       </div>
-      <a href="#/board" class="btn btn-default">
+      <a data-ng-click="cancelCreateMetadata()" class="btn btn-default">
         <i class="fa fa-close"/>&nbsp;
         <span data-translate="">cancel</span>
       </a>

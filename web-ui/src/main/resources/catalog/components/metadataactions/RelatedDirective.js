@@ -89,82 +89,205 @@
         }
       });
     };
-    this.getMdsRelatedWithMultipleSearch = function(mds, types) {
-      var uuids = mds.map(function(md) {
-        return md.uuid;
-      });
-      // relatedIndexFields = ImmutableMap.<String, String>builder()
-      //   .put("children", "parentUuid")
-      //   .put("services", "recordOperateOn")
-      //   .put("hasfeaturecats", "hasfeaturecat")
-      //   .put("hassources", "hassources")
-      //   .put("associated", "agg_associated")
-      //   .put("datasets", "uuid")
-      //   .put("fcats", "uuid")
-      //   .put("sources", "uuid")
-      //   .put("parent", "uuid")
-      //   .build();
-      // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
-      // Is a service: If record.operatesOn then uuid: record.operatesOn
-      // Is a sibling?: agg_associated: record.uuid
+  }]);
 
-      var promise = $q.defer();
-      var body = '';
-      var searchFields = {
-        'children': 'parentUuid',
-        'services': 'recordOperateOn',
-        'hassources': 'hassources',
-        'associated': 'agg_associated',
-        'hasfeaturecats': 'hasfeaturecats'
-      };
-      for (var j = 0; j < mds.length; j++) {
-        for (var i = 0; i < types.length; i++) {
-          body += '{"index": "records"}\n';
-          switch (types[i]) {
-            case 'services':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            case 'children':
-              body += '{' +
-                '"query": {"terms": {' +
-                '"' + (searchFields[types[i]] || 'uuid') + '": ["' + mds[j].uuid + '"]}}, ' +
-                '"_source":["resourceTitle*", "id"]}\n';
-              break;
-            default:
-              body += '{"query": {"match_all": {}}, "from": 0, "size": 0}\n'
+  /**
+   * Displays a panel with different types of relations available in the metadata object 'md'.
+   *  - mode: mode to display the relations.
+   *      - tabset: displays the relations in a tabset panel.
+   *      - (other value): displays the relations in different div blocks.
+   *
+   *  - layout: Layout for the relation items.
+   *      - card: display the relation items as a card.
+   *      - (other value): display the relation items as a list.
+   *
+   *  - relatedConfig: array with the configuration of the relations to display. For each relation:
+   *      - types: a list of relation types separated by '|'.
+   *      - filter: Filter a type based on an attribute.
+   *                Can't be used when multiple types are requested
+   *                eg. data-filter="associationType:upstreamData"
+   *                    data-filter="protocol:OGC:.*|ESRI:.*"
+   *                    data-filter="-protocol:OGC:.*"
+   *      - title: title translation key for the relations section.
+   *
+   * Example configuration:
+   *
+   * <div data-gn-related-container="md"
+   *      data-mode="tabset"
+   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *
+   * </div>
+   */
+  module
+    .directive('gnRelatedContainer', [
+        'gnRelatedResources', 'gnConfigService',
+      function (gnRelatedResources, gnConfigService) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/relatedContainer.html';
+          },
+          scope: {
+            md: '=gnRelatedContainer',
+            mode: '=',
+            relatedConfig: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            scope.relations = {};
+            scope.relatedConfigUI = [];
+            scope.config = gnRelatedResources;
+
+            scope.relatedConfig.forEach(function(config) {
+              var t = config.types.split('|');
+
+              config.relations = {};
+
+              t.forEach(function (type) {
+                config.relations[type] =
+                  (type === 'onlines' ? scope.md.link : scope.md.related[type])
+                  || {};
+                config.relationFound = config.relations[type].length > 0;
+
+                var value = config.relations[type];
+
+                // Check if tabs needs to be displayed
+                if (scope.mode === 'tabset'
+                  && config.filter
+                  && angular.isArray(value)) {
+                  var filters = gnConfigService.parseFilters(config.filter)
+
+                  config.relations[type] = [];
+                  for (var i = 0; i < value.length; i++) {
+                    gnConfigService.testFilters(filters, value[i])
+                    && config.relations[type].push(value[i]);
+                  }
+                  config.relationFound = config.relations[type].length > 0;
+                } else {
+                  config.relations[type] = value;
+                }
+
+                scope.relatedConfigUI.push(config);
+              })
+            });
           }
         }
       }
-      $http.post('../api/search/records/_msearch', body).then(function (r) {
-        var related = {};
-        for (var j = 0; j < mds.length; j++) {
-          var uuid = mds[j].uuid;
-          related[uuid] = {};
-          for (var i = 0; i < types.length; i++) {
-            var t = types[i];
-            var values = [];
-            var results = r.data.responses[i + j];
-            if (results.hits.total.value > 0) {
-              for (var k = 0; k < results.hits.hits.length; k ++) {
-                var record = results.hits.hits[k];
-                values.push({
-                  id: record._source.id,
-                  title: {eng: record._source.resourceTitleObject.default}
-                });
-              }
-            }
-            related[uuid][t] = values.length > 0 ? values : undefined;
+    ]);
+
+  module
+    .directive('gnRelatedList', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedSimpleList.html',
+          scope: {
+            md: '=gnRelatedList',
+            user: '=',
+            title: '@?'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+            var count = 0;
+            scope.md && scope.md.related
+              && Object.keys(scope.md.related).forEach(function(key) {
+              count += scope.md.related[key].length;
+            });
+            scope.relationsFound = count > 0;
           }
         }
-        promise.resolve({data: related});
-      });
+    }]);
 
-      return promise.promise;
-    };
-  }]);
+  module
+    .directive('gnRelatedEditorList', [
+      'gnRelatedResources', '$rootScope',
+      function(gnRelatedResources, $rootScope) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedEditorList.html',
+          scope: {
+            related: '=gnRelatedEditorList',
+            type: '@',
+            readonly: '=?',
+            removeCb: '&?'
+          },
+          link: function(scope) {
+            scope.md = {
+              related: {}
+            };
+            scope.md.related[scope.type] = scope.related;
+            scope.remove = angular.isFunction(scope.removeCb)
+              ? function(md) {
+              scope.removeCb({record: md});
+            } : undefined;
+
+            scope.canRemoveLink = function (record) {
+              if (record.origin === 'remote') {
+                return true;
+              } else if (scope.remove) {
+                return true
+              }
+              return false;
+            }
+            scope.user = $rootScope.user;
+            scope.config = gnRelatedResources;
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRelatedDropdown', [
+      'gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedDropdown.html',
+          scope: {
+            md: '=gnRelatedDropdown',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.config = gnRelatedResources;
+            scope.hasRelations = false;
+            if (scope.md && scope.md.related) {
+              var total = 0;
+              Object.keys(scope.md.related).map(function(t) {
+                total += scope.md.related[t].length;
+              });
+              scope.hasRelations = total > 0;
+            }
+          }
+        }
+    }]);
+
+  module
+    .directive('gnRecordIsReplacedBy', [
+      '$http', 'Metadata',
+      function($http, Metadata) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/metadataactions/partials/relatedReplacedBy.html',
+          scope: {
+            uuid: '=gnRecordIsReplacedBy'
+          },
+          link: function(scope) {
+            $http.post('../api/search/records/_search', {"query": {
+                "query_string" : {
+                  "query": "+agg_associated_revisionOf:\"" + scope.uuid + "\""
+                }
+              }}).then(function(r) {
+                scope.items = r.data.hits.hits.map(function(r) {
+                  return new Metadata(r);
+                });
+            });
+          }
+        }
+      }]);
+
   module
       .directive('gnRelated', [
         'gnRelatedService',
@@ -172,9 +295,10 @@
         'gnSearchSettings',
         'gnRelatedResources',
         'gnExternalViewer',
+        'gnConfigService',
         function(gnRelatedService, gnGlobalSettings,
                  gnSearchSettings, gnRelatedResources,
-                 gnExternalViewer) {
+                 gnExternalViewer, gnConfigService) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -186,11 +310,21 @@
               template: '@',
               types: '@',
               title: '@',
+              altTitle: '@',
               list: '@',
+              // Filter a type based on an attribute.
+              // Can't be used when multiple types are requested
+              // eg. data-filter="associationType:upstreamData"
+              // data-filter="protocol:OGC:.*|ESRI:.*"
+              // data-filter="-protocol:OGC:.*"
               filter: '@',
               container: '@',
               user: '=',
-              hasResults: '=?'
+              hasResults: '=?',
+              layout: '@',
+              // Only apply to card layout
+              size: '@',
+              groupSiblingsByType: '=?'
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
@@ -209,6 +343,88 @@
                 controller.registerGnRelated(elem);
               }
 
+              scope.sizeConfig = {};
+              scope.showAllItems = function(type) {
+                scope.sizeConfig[type] = scope.sizeConfig[type] === scope.size
+                  ? scope.relations[type].length
+                  : scope.size;
+              }
+              scope.loadRelations = function(relation) {
+                var relationCount = 0;
+                scope.relationFound = false;
+                angular.forEach(relation, function(value, idx) {
+                  if (!value) { return; }
+
+                  // init object if required
+                  scope.relations = scope.relations || {};
+                  scope.hasResults = true;
+
+                  if (!scope.relations[idx]) {
+                    scope.relations[idx] = [];
+                    scope.sizeConfig[idx] = scope.size;
+                  }
+                  if (scope.filter && angular.isArray(value)) {
+                    var filters = gnConfigService.parseFilters(scope.filter)
+
+                    scope.relations[idx] = [];
+                    for (var i = 0; i < value.length; i++) {
+                      gnConfigService.testFilters(filters, value[i])
+                        && scope.relations[idx].push(value[i]);
+                    }
+                  } else {
+                    scope.relations[idx] = value;
+                  }
+
+                  // siblings, children, parent can contain elements from
+                  // siblings or associated if linking is made in both direction
+                  // Priority:
+                  // * children (can also be associated with isComposedOf),
+                  // and parent (can also be associated with partOfSeamlessDatabase)
+                  // are preserved
+                  // * Exclude children and parent from associated and siblings,
+                  // and also filter siblings from associated to avoid duplicates
+                  var siblingsCount = 0;
+                  if (idx === 'associated' || idx === 'siblings') {
+                    var indexToRemove = [];
+                    for (var i = 0; i < scope.relations[idx].length; i++) {
+                      if ([].concat(idx === 'associated' ? (scope.md.related.siblings || []) : [],
+                                    scope.md.related.parent || [],
+                                    scope.md.related.children || []).filter(function (e) {
+                        return e && e.id === scope.relations[idx][i].id;
+                      }).length > 0) {
+                        // Exclude
+                        indexToRemove.push(i);
+                      }
+                    }
+                    indexToRemove.reverse().forEach(function(value) {
+                      scope.relations[idx].splice(value, 1);
+                    });
+
+                    if (scope.relations.siblings
+                      && scope.relations.siblings.map
+                      && scope.groupSiblingsByType) {
+                      scope.relations.siblings.map(function(r) {
+                        return r.properties && r.properties.initiativeType || '';
+                      }).filter(function(value, index, self) {
+                        return self.indexOf(value) === index;
+                      }).forEach(function(type) {
+                        scope.relations['siblings' + type] = scope.relations.siblings.filter(function (r) {
+                          return r.properties && r.properties.initiativeType === type;
+                        });
+                        siblingsCount += scope.relations['siblings' + type].length;
+                      });
+                      scope.relations.siblings = [];
+                    } else {
+                      siblingsCount = scope.relations[idx].length;
+                    }
+                  }
+
+                  relationCount += idx === 'siblings'
+                    ? siblingsCount : scope.relations[idx].length;
+                });
+                scope.relationFound = relationCount > 0;
+              };
+
               scope.updateRelations = function() {
                 scope.relations = null;
                 if (scope.id) {
@@ -219,45 +435,7 @@
                   (promise = gnRelatedService.get(
                      scope.id, scope.types)
                   ).then(function(data) {
-                       angular.forEach(data, function(value, idx) {
-                         if (!value) { return; }
-
-                         // init object if required
-                         scope.relations = scope.relations || {};
-                         scope.relationFound = true;
-                         scope.hasResults = true;
-
-                         if (!scope.relations[idx]) {
-                           scope.relations[idx] = [];
-                         }
-                         if (scope.filter && angular.isArray(value)) {
-                           var tokens = scope.filter.split(':'),
-                               field = tokens[0],
-                               filter = tokens[1];
-                           scope.relations[idx] = [];
-                           for (var i = 0; i < value.length; i++) {
-                             if (filter.indexOf(value[i][field]) !== -1) {
-                                scope.relations[idx].push(value[i]);
-                             }
-                           }
-                         } else {
-                           scope.relations[idx] = value;
-                         }
-
-                         if (scope.relations.siblings && scope.relations.associated) {
-                           for (var i = 0; i < scope.relations.associated.length; i++) {
-                             if (scope.relations.siblings.filter(function (e) {
-                               return e.id === scope.relations.associated[i].id;
-                             }).length > 0) {
-                               /* siblings object contains associated element */
-                             } else {
-                               scope.relations.siblings.push(scope.relations.associated[i])
-                             }
-                           }
-                           scope.relations.associated = {};
-                         }
-                       });
-
+                       scope.loadRelations(data);
                        if (angular.isDefined(scope.container)
                            && scope.relations == null) {
                          $(scope.container).hide();
@@ -276,28 +454,18 @@
               scope.getTitle = function(link) {
                 return link.title['#text'] || link.title;
               };
-              scope.getBadgeLabel = function(mainType, r) {
-                if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
-                  return r.protocol.replace('WWW:DOWNLOAD:', '');
-                } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
-                  return mainType.replace('SERVICE', '');
-                } else {
-                  return '';
-                }
+
+              scope.getOrderBy = function(link) {
+                return link && link.resourceTitle
+                        ? link.resourceTitle
+                        : link.locTitle
               };
-              scope.hasAction = function(mainType) {
-                var fn = gnRelatedResources.map[mainType].action;
-                // If function name ends with ToMap do not display the action
-                if (fn && fn.name && fn.name.match(/.*ToMap$/) &&
-                   gnGlobalSettings.isMapViewerEnabled === false) {
-                  return false;
-                }
-                return angular.isFunction(fn);
-              };
+
               scope.externalViewerAction = function(mainType, link, md) {
                 gnExternalViewer.viewService(md, link);
               };
-
+              scope.hasAction = gnRelatedResources.hasAction;
+              scope.getBadgeLabel = gnRelatedResources.getBadgeLabel;
               scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
               scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
 
@@ -309,29 +477,199 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    scope.id = scope.md.id;
+                    if (scope.md.related || scope.md.link) {
+                      var relations = {};
+                      scope.types.split('|').map(function(t) {
+                        relations[t] =
+                          (t === 'onlines' ? scope.md.link : scope.md.related[t]);
+                      })
+                      scope.loadRelations(relations);
+                    } else {
+                      scope.id = scope.md.id;
+                      scope.updateRelations();
+                    }
                   }
-                  scope.updateRelations();
                 }
               });
-              //
-              // /**
-              //  * Return an array of all relations of the given types
-              //  * @return {Array}
-              //  */
-              // scope.getByTypes = function() {
-              //   var res = [];
-              //   var types = Array.prototype.splice.call(arguments, 0);
-              //   angular.forEach(scope.relations, function(rel) {
-              //     if (types.indexOf(rel['@type']) >= 0) {
-              //       res.push(rel);
-              //     }
-              //   });
-              //   return res;
-              // };
             }
           };
         }]);
+
+
+  module
+    .directive('gnRecordsFilters', ['$rootScope',
+      function($rootScope) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordsFilters.html';
+          },
+          scope: {
+            agg: '=',
+            filters: '=',
+            title: '@'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            // Show display type toggle if no type selected only
+            scope.showTypes = !angular.isDefined(scope.type);
+            scope.type = scope.type || 'blocks';
+            scope.criteria = {p: {}};
+
+            function removeEmptyFilters(filters, agg) {
+              var cleanFilterPos = [];
+
+              Object.keys(agg).forEach(function(key) {
+                if (agg[key].buckets.length == 0) {
+                  cleanFilterPos.push(key);
+                }
+              });
+
+              _.remove(filters, function (filter) {
+                return cleanFilterPos.indexOf(filter) > -1;
+              });
+            }
+
+
+            function reset() {
+              scope.current = undefined;
+              $rootScope.$broadcast('RecordsFiltersUpdated', {
+                key: '',
+                value: ''
+              });
+            }
+
+            // Remove the filters without values
+            scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
+            scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
+
+            reset();
+
+            scope.filterRecordsBy = function(key, value) {
+              var newKey = key + '-' + value;
+              if (newKey === scope.current) {
+                reset();
+                return;
+              }
+              scope.current = key + '-' + value;
+
+              $rootScope.$broadcast('RecordsFiltersUpdated', {
+                key: key,
+                value: value
+              });
+            };
+          }
+        };
+      }]);
+
+  module
+    .directive('gnRelatedWithStats', [
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/relatedWithStats.html';
+          },
+          scope: {
+            children: '=gnRelatedWithStats',
+            agg: '=',
+            filters: '=',
+            sortBy: '@',
+            type: '@',
+            title: '@'
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            // Show display type toggle if no type selected only
+            scope.showTypes = !angular.isDefined(scope.type);
+            scope.type = scope.type || 'blocks';
+            scope.criteria = {p: {}};
+
+            scope.filterRecordsBy = function(key, value) {
+              if ((key === '') || (value === '')) {
+                reset();
+                return;
+              }
+
+              scope.displayedRecords = [];
+              var b = scope.agg[key].buckets;
+              b.forEach(function (k) {
+                if (k.key === value) {
+                  k.docs.hits.hits.forEach(function (r) {
+                    scope.displayedRecords =
+                      scope.displayedRecords.concat(_.filter(scope.children, {uuid: r._id}));
+                  });
+                  sort();
+                }
+              });
+            };
+
+            scope.$on('RecordsFiltersUpdated', function (event, result) {
+              scope.filterRecordsBy(result.key, result.value);
+            });
+
+            function removeEmptyFilters(filters, agg) {
+              var cleanFilterPos = [];
+
+              Object.keys(agg).forEach(function(key) {
+                if (agg[key].buckets.length == 0) {
+                  cleanFilterPos.push(key);
+                }
+              });
+
+              _.remove(filters, function (filter) {
+                return cleanFilterPos.indexOf(filter) > -1;
+              });
+            }
+
+            function sort() {
+              if (scope.sortBy) {
+                scope.displayedRecords.sort(function(a, b) {
+                  return a[scope.sortBy]
+                    && a[scope.sortBy].localeCompare(b[scope.sortBy])
+                });
+              }
+            }
+
+            function reset() {
+              scope.displayedRecords = scope.children;
+              sort();
+            }
+
+            // Remove the filters without values
+            scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
+            scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
+
+            reset();
+
+            scope.toggleListType = function(type) {
+              scope.type = type;
+            };
+          }
+        };
+      }]);
+
+  module
+    .directive('gnMetadataCard', [
+      function() {
+        return {
+          restrict: 'E',
+          transclude: true,
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/metadataCard.html';
+          },
+          scope: {
+            md: '=',
+            formatterUrl: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+          }
+        };
+      }]);
 
   module.directive('relatedTooltip', function() {
     return function(scope, element, attrs) {
@@ -342,4 +680,191 @@
     };
   });
 
+
+  module
+    .directive('gnRecordLinksButton', ['gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          replace: true,
+          transclude: true,
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordLinksButton.html';
+          },
+          scope: {
+            links: '=gnRecordLinksButton',
+            // empty or dropdown or dropdownOrButton (if one link)
+            btn: '@',
+            btnClass: '@',
+            // btnDisabled: '=',
+            type: '=',
+            title: '@',
+            altTitle: '@',
+            // none, dropdownOnly
+            iconMode: '@',
+            iconClass: '@',
+            record: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            if (scope.links && scope.links.length > 0) {
+              scope.mainType = gnRelatedResources.getType(scope.links[0], scope.type || 'onlines');
+              scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.links[0]);
+            }
+          }
+        }
+      }]);
+
+
+  /**
+   * Can support a link returned by the related API
+   * or a link in a metadata record.
+   *
+   * Related API provides multilingual links and takes care of
+   * user privileges. For metadata link, check download/dynamic properties.
+   */
+  module
+    .directive('gnRecordLinkButton', ['gnRelatedResources', 'gnRelatedService',
+      function(gnRelatedResources, gnRelatedService) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordLinkButton.html';
+          },
+          scope: {
+            link: '=gnRecordLinkButton',
+            btn: '=',
+            btnClass: '=',
+            // none, only
+            iconMode: '=',
+            iconClass: '=',
+            type: '=',
+            record: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            if (scope.link) {
+              scope.mainType = gnRelatedResources.getType(scope.link, scope.type || 'onlines');
+              scope.badge = gnRelatedResources.getBadgeLabel(scope.mainType, scope.link);
+              scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
+              scope.hasAction = gnRelatedResources.hasAction(scope.mainType);
+              scope.service = gnRelatedResources;
+              scope.isDropDown = scope.btn && scope.btn.indexOf('dropdown') === 0;
+              scope.isSibling = (scope.mainType == 'MDSIBLING'
+                && scope.link.associationType
+                && scope.link.associationType != '');
+
+              scope.btnDisabled = scope.record.isLinkDisabled(scope.link);
+            }
+          }
+        }
+      }]);
+
+  module
+    .directive('gnRecordsTable', [
+      'Metadata', 'gnRelatedService',
+      function(Metadata, gnRelatedService) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordsTable.html';
+          },
+          scope: {
+            records: '=gnRecordsTable',
+            // Comma separated values. Supported
+            // * properties eg. resourceTitle
+            // * object path eg. cl_status.key
+            // * links by type eg. link:OGC
+            columns: '@',
+            labels: '@',
+            agg: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            var initialized = false;
+            scope.columnsConfig = scope.columns.split(',');
+            scope.data = [];
+            scope.displayedRecords = [];
+            scope.headers = [];
+            scope.isArray = angular.isArray;
+
+            if (scope.labels) {
+              scope.headers = scope.labels.split(',');
+            } else {
+              scope.columnsConfig.map(function(c) {
+                scope.headers.push(c.startsWith('link/') ? c.split('/')[1] : c);
+              });
+            }
+
+            function loadData() {
+              scope.data = [];
+              scope.displayedRecords = [];
+              scope.records.map(function(r) {
+                r = new Metadata(r);
+                var recordData = {};
+
+                scope.columnsConfig.map(function(c) {
+                  if (c.startsWith('link/')) {
+                    recordData[c] = r.getLinksByFilter(c.split('/')[1]);
+                  } else {
+                    recordData[c] = (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                  }
+                });
+                recordData.md = r;
+                scope.data.push(recordData);
+                scope.displayedRecords.push(recordData);
+              });
+
+              sort();
+            }
+
+            scope.$watchCollection('records', function(n, o) {
+              if (n && (n !== o || !initialized)) {
+                loadData();
+                initialized = true;
+              }
+            });
+
+            function sort() {
+              scope.displayedRecords.sort(function(a, b) {
+                var sortBy = scope.columnsConfig[0];
+                return a[sortBy]
+                  && a[sortBy].localeCompare(b[sortBy])
+              });
+            }
+
+            function reset() {
+              scope.displayedRecords = scope.data;
+              sort();
+            }
+
+            scope.$on('RecordsFiltersUpdated', function (event, result) {
+              scope.filterRecordsBy(result.key, result.value);
+            });
+
+            scope.filterRecordsBy = function(key, value) {
+              if ((key === '') || (value === '')) {
+                reset();
+                return;
+              }
+              scope.displayedRecords = [];
+              var b = scope.agg[key].buckets;
+              b.forEach(function (k) {
+                if (k.key === value) {
+                  k.docs.hits.hits.forEach(function (r) {
+                    scope.displayedRecords =
+                      scope.displayedRecords.concat(_.filter(scope.data,  function (item) {
+                        return item.md._id === r._id;
+                      }));
+                  });
+                }
+              });
+
+              sort();
+            };
+          }
+        }
+      }]);
 })();

@@ -69,7 +69,7 @@ goog.require('gn_alert');
       'mods': {
         'global': {
           'humanizeDates': true,
-          'dateFormat': 'DD-MM-YYYY HH:mm',
+          'dateFormat': 'DD-MM-YYYY',
           'timezone': 'Browser' // Default to browser timezone
         },
         'footer':{
@@ -101,7 +101,8 @@ goog.require('gn_alert');
           'fluidHeaderLayout': true,
           'showGNName': true,
           'isHeaderFixed': false,
-          'isMenubarAccessible': true
+          'isMenubarAccessible': true,
+          'showPortalSwitcher': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -112,11 +113,12 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'showSocialBarInFooter': true,
-          'fluidLayout': true,
+          'showMosaic': true,
+          'showMaps': true,
           'facetConfig': {
-            'inspireThemeUri': {
+            'th_httpinspireeceuropaeutheme-theme_tree.key': {
               'terms': {
-                'field': 'inspireThemeUri',
+                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
                 'size': 34
                 // "order" : { "_key" : "asc" }
               }
@@ -127,9 +129,17 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'cl_hierarchyLevel.key': {
+            // 'OrgForResource': {
+            //   'terms': {
+            //     'field': 'OrgForResource',
+            //     'include': '.*',
+            //     'missing': '- No org -',
+            //     'size': 15
+            //   }
+            // },
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key',
+                'field': 'resourceType',
                 'size': 10
               }
             }
@@ -146,9 +156,40 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
-          'queryTitle': '${any}',
-          'searchOptions': true,
+          // * Search in languages depending on the strategy selected
+          'queryBase': 'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:(${any})^2 OR resourceTitleObject.\\*:\"${any}\"^6',
+          'queryBaseOptions': {
+            'default_operator': 'AND'
+          },
+          // TODO: Exact match should not even analyze
+          // so we could create an exact field not analyzed in the index maybe?
+          'queryExactMatch': 'any.${searchLang}:\"${any})\" OR any.common:\"${any}\" OR resourceTitleObject.\\*:\"${any}\"^2',
+          // * Force UI language - in this case set languageStrategy to searchInUILanguage
+          // and disable language options in searchOptions
+          // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
+          // * Search in French fields (with french analysis)
+          // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
+          'queryTitle': 'resourceTitleObject.\\*:(${any})',
+          'queryTitleExactMatch': 'resourceTitleObject.\\*:"${any}"',
+          'searchOptions': {
+            titleOnly: true,
+            exactMatch: true,
+            language: true
+          },
+          // Language strategy can be:
+          // * searchInUILanguage: search in UI languages
+          // eg. full text field is any.langfre if French
+          // * searchInAllLanguages: search using any.* fields
+          // (no analysis is done, more records are returned)
+          // * searchInDetectedLanguage: restrict the search to the language detected
+          // based on user search. If language detection fails, search in all languages.
+          // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
+          // 'languageStrategy': 'searchInThatLanguage:fre',
+          'languageStrategy': 'searchInAllLanguages',
+          // Limit language detection to some languages only.
+          // If empty, the list of languages in catalogue records is used
+          // and if none found, mods.header.languages is used.
+          'languageWhitelist': [],
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
@@ -190,9 +231,13 @@ goog.require('gn_alert');
                 "filter": { "exists": { "field": "parentUuid" } },
                 "weight": 0.3
               },
-              // Boost down obsolete records
+              // Boost down obsolete and superseded records
               {
                 "filter": { "match": { "cl_status.key": "obsolete" } },
+                "weight": 0.2
+              },
+              {
+                "filter": { "match": { "cl_status.key": "superseded" } },
                 "weight": 0.3
               },
               // {
@@ -220,8 +265,8 @@ goog.require('gn_alert');
                     "query": "",
                     "type": "bool_prefix",
                     "fields": [
-                      "resourceTitleObject.*",
-                      "resourceAbstractObject.*",
+                      "resourceTitleObject.${searchLang}^6",
+                      "resourceAbstractObject.${searchLang}^.5",
                       "tag",
                       "resourceIdentifier"
                       // "anytext",
@@ -256,15 +301,14 @@ goog.require('gn_alert');
               "max_query_terms" : 12
             }
           },
-          // TODOES
           'facetTabField': '',
           // Enable vega only if using vega facet type
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
           'isVegaEnabled': true,
           'facetConfig': {
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'aggs': {
                 'format': {
@@ -344,11 +388,19 @@ goog.require('gn_alert');
             //     'treeKeySeparator': '/'
             //   }
             // },
+
             'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
               'terms': {
                 'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
                 'size': 100,
                 "order" : { "_key" : "asc" }
+              }
+            },
+            'th_httpinspireeceuropaeutheme-theme_tree.key': {
+              'terms': {
+                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
+                'size': 34
+                // "order" : { "_key" : "asc" }
               }
             },
             'tag.default': {
@@ -521,15 +573,21 @@ goog.require('gn_alert');
               'search/resultsview/partials/viewtemplates/list.html',
             'tooltip': 'List',
             'icon': 'fa-bars'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/table.html',
+            'tooltip': 'Table',
+            'icon': 'fa-table'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
+          'searchResultContact': 'OrgForResource',
           'formatter': {
             'list': [{
               'label': 'defaultView',
               // Conditional views can be used to configure custom
               // formatter to use depending on metadata properties.
-              // 'views': [ {
+              // 'views': [{
               //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
               //   'url' : '/formatters/xsl-view?root=div&view=advanced'
               // }, {
@@ -569,7 +627,7 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC', 'ESRI:REST'],
+            'layers': ['OGC:WMS', 'OGC:WFS','OGC:WMTS', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
@@ -658,8 +716,59 @@ goog.require('gn_alert');
         },
         'recordview': {
           'isSocialbarEnabled': true,
-          'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
-          'showStatusTopBarFor': ''
+          'showStatusWatermarkFor': '',
+          'showStatusTopBarFor': '',
+          'showCitation': {
+            'enabled': false,
+            'if': null // {'documentStandard': ['iso19115-3.2018']}
+          },
+          'sortKeywordsAlphabetically': true,
+          'mainThesaurus': ['th_gemet', 'th_gemet-theme'],
+          'locationThesaurus': ['th_regions', 'th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope'],
+          'internalThesaurus': [],
+          'collectionTableConfig': {
+            'labels': 'title,cl_status,format,download,WMS,WFS,Atom,Links',
+            'columns': 'resourceTitle,cl_status[0].key,format,link/protocol:WWW:DOWNLOAD.*,link/protocol:OGC:WMS,link/protocol:OGC:WFS,link/protocol:atom:feed,link/protocol:WWW:LINK.*'
+          },
+          'distributionConfig': {
+            // 'layout': 'tabset',
+            'layout': '',
+            'sections': [
+              // {'types': 'services', 'title': 'Services', 'layout': 'card'},
+              {'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+              {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+              {'types': 'onlines', 'filter': 'function:legend', 'title': 'mapLegend'},
+              {'types': 'onlines', 'filter': 'function:featureCatalogue', 'title': 'featureCatalog'},
+              {'types': 'onlines', 'filter': 'function:dataQualityReport', 'title': 'quality'},
+              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', 'title': 'links'}]
+          },
+          'relatedFacetConfig':  {
+            'cl_status': {
+              'terms': {
+                'field': 'cl_status.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'creationYearForResource': {
+              'terms': {
+                'field': 'creationYearForResource',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'cl_spatialRepresentationType': {
+              'terms': {
+                'field': 'cl_spatialRepresentationType.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'format': {
+              'terms': {
+                'field': 'format',
+                "order" : { "_key" : "asc" }
+              }
+            }
+          }
         },
         'editor': {
           'enabled': true,
@@ -675,19 +784,21 @@ goog.require('gn_alert');
           'facetConfig': {
             'resourceType': {
               'terms': {
-                'field': 'resourceType',
+                'field': 'resourceType'
+              }
+            },
+            'mdStatus': {
+              'terms': {
+                'field': 'statusWorkflow',
                 'size': 20
+              },
+              'meta': {
+                'field': 'statusWorkflow'
               }
             },
             'cl_status.key': {
               'terms': {
                 'field': 'cl_status.key',
-                'size': 15
-              }
-            },
-            'sourceCatalogue': {
-              'terms': {
-                'field': 'sourceCatalogue',
                 'size': 15
               }
             },
@@ -701,42 +812,45 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'valid_inspire',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'sourceCatalogue': {
+              'terms': {
+                'field': 'sourceCatalogue',
+                'size': 100,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'groupOwner': {
               'terms': {
                 'field': 'groupOwner',
-                'size': 10
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             'recordOwner': {
               'terms': {
                 'field': 'recordOwner',
-                'size': 10
-              }
-            },
-            'groupPublished': {
-              'terms': {
-                'field': 'groupPublished',
-                'size': 10
-              }
-            },
-            'documentStandard': {
-              'terms': {
-                'field': 'documentStandard',
-                'size': 10
-              }
-            },
-            'isHarvested': {
-              'terms': {
-                'field': 'isHarvested',
-                'size': 2
-              }
-            },
-            'isTemplate': {
-              'terms': {
-                'field': 'isTemplate',
-                'size': 5
+                'size': 5,
+                'include': '.*'
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'isPublishedToAll': {
@@ -744,8 +858,70 @@ goog.require('gn_alert');
                 'field': 'isPublishedToAll',
                 'size': 2
               }
+            },
+            'groupPublishedId': {
+              'terms': {
+                'field': 'groupPublishedId',
+                'size': 200,
+                'include': '.*'
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'filterByTranslation': true,
+                'displayFilter': true,
+                'collapsed': true
+              }
+            },
+            'documentStandard': {
+              'terms': {
+                'field': 'documentStandard',
+                'size': 10
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 2
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            'isTemplate': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 5
+              },
+              'meta': {
+                'collapsed': true
+              }
             }
           }
+        },
+        'directory': {
+          'sortbyValues': [{
+            'sortBy': 'relevance',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'dateStamp',
+            'sortOrder': 'desc'
+          }, {
+            'sortBy': 'resourceTitleObject.default.keyword',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'recordOwner',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'valid',
+            'sortOrder': 'desc'
+          }],
+          'sortBy': 'relevance',
+          // Add some fuzziness when search on directory entries
+          // but boost exact match.
+          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
         },
         'admin': {
           'enabled': true,
@@ -769,9 +945,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'meta': {
                 'vega': 'arc'
@@ -796,6 +972,12 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
+        },
+        'workflowHelper': {
+          'enabled': false,
+          'workflowAssistApps': [
+            {'appUrl': '', 'appLabelKey': ''}
+          ]
         }
       }
     };
@@ -816,42 +998,61 @@ goog.require('gn_alert');
           blur: 0
         }
       },
+      stopKeyList: [
+        'langDetector',
+        'nodeDetector',
+        'serviceDetector',
+        'baseURLDetector',
+        'languages',
+        'languageWhitelist',
+        'hitsperpageValues',
+        'sortbyValues',
+        'resultViewTpls',
+        'formatter',
+        'downloadFormatter',
+        'related',
+        'linkTypes',
+        'usersearches',
+        'savedSelection',
+        'listOfServices',
+        'showCitation',
+        'externalViewer',
+        'map-viewer',
+        'map-search',
+        'map-editor',
+        'projectionList',
+        'switcherProjectionList',
+        'cookieWarning',
+        'facetConfig',
+        'searchOptions',
+        'graticuleOgcService',
+        'geocoder',
+        'disabledTools',
+        'filters',
+        'scoreConfig',
+        'autocompleteConfig',
+        'moreLikeThisConfig',
+        'relatedFacetConfig',
+        'mainThesaurus',
+        'internalThesaurus',
+        'locationThesaurus',
+        'distributionConfig',
+        'collectionTableConfig',
+        'queryBaseOptions',
+        'workflowAssistApps'
+      ],
       current: null,
       isDisableLoginForm: false,
       isShowLoginAsLink: false,
       isUserProfileUpdateEnabled: true,
       isUserGroupUpdateEnabled: true,
-      init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
-        // start from the default config to make sure every field is present
-        // and override with config arg if required
-        angular.merge(this.gnCfg, config, {});
-
-        // special case: languages (replace with object from config if available)
-        if (config && config.mods) {
-          this.gnCfg.mods.header.languages = angular.extend({
-            mods: {
-              header: {
-                languages: {}
-              }
-            }
-          }, config).mods.header.languages;
-
-          this.gnCfg.mods.search.sortbyValues = angular.extend({
-            mods: {
-              search: {
-                sortbyValues: {}
-              }
-            }
-          }, config).mods.search.sortbyValues;
-
-          this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
-          this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
-          this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
-          this.gnCfg.mods.admin.facetConfig = config.mods.admin.facetConfig;
-        }
-
+      init: function(configOverlay, gnUrl, gnViewerSettings, gnSearchSettings) {
+        this.applyConfig(configOverlay);
+        this.setLegacyOption(gnViewerSettings, gnSearchSettings);
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
+      },
+      setLegacyOption: function(gnViewerSettings, gnSearchSettings) {
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
@@ -860,24 +1061,75 @@ goog.require('gn_alert');
           gnViewerSettings.mapConfig['map-viewer'].context;
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl || defaultConfig.mods.geocoder.appUrl;
       },
+      getObjectKeysPaths: function(obj, stopKeyList, allLevels, prefix) {
+        var keys = Object.keys(obj);
+        var that = this;
+        prefix = prefix ? prefix + '.' : '';
+        return keys.reduce(function(result, key){
+          if (angular.isObject(obj[key]) && Object.keys(obj[key]).length > 0 && (stopKeyList === undefined
+            || (stopKeyList && stopKeyList.indexOf(key) === -1))) {
+            if(allLevels) {
+              result.push(prefix + key);
+            }
+            result = result.concat(that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key));
+          } else {
+            result.push(prefix + key);
+          }
+          return result;
+        }, []);
+      },
+      deleteValueByPath: function(obj, path) {
+        var i;
+        path = path.split('.');
+        for (i = 0; i < path.length - 1; i++)
+          obj = obj[path[i]];
+
+        delete obj[path[i]];
+        return obj;
+      },
+      applyConfig: function(configOverlay, runAllChecks) {
+        var pathToUpdate = this.getObjectKeysPaths(configOverlay, this.stopKeyList, false);
+        for(var i = 0; i < pathToUpdate.length; i++) {
+          var p = pathToUpdate[i],
+            o = _.get(configOverlay, p);
+          if (o !== undefined) {
+            _.set(this.gnCfg, p, o);
+          }
+          if (runAllChecks) {
+            optionInDefaultConfig = _.get(defaultConfig, p);
+            if (optionInDefaultConfig === undefined) {
+              console.warn('Path ' + p + ' not found in default configuration. Check your custom configuration.', config);
+            }
+          }
+        }
+      },
+      cleanConfig: function(config) {
+        var pathToClean = this.getObjectKeysPaths(defaultConfig, this.stopKeyList, true);
+        for(var i = 0; i < pathToClean.length; i++) {
+          var p = pathToClean[i],
+            optionInDefault = _.get(defaultConfig, p),
+            option = _.get(config, p);
+          if (option !== undefined
+            && JSON.stringify(option) === JSON.stringify(optionInDefault)) {
+            this.deleteValueByPath(config, p);
+          }
+        }
+        var pathToRemove = this.getObjectKeysPaths(config, this.stopKeyList, true);
+        for(var i = 0; i < pathToRemove.length; i++) {
+          var p = pathToRemove[i],
+            pathToken = p.split('.'),
+            option = _.get(config, p);
+          if (angular.isObject(option)
+            && Object.keys(option).length === 0) {
+            var key = pathToken.pop();
+            parent = _.get(config, pathToken.join('.'));
+            delete parent[key];
+          }
+        }
+        return config;
+      },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
-      },
-      // this returns a copy of the default config without the languages object
-      // this way, the object can be used as reference for a complete ui
-      // settings page
-      getMergeableDefaultConfig: function() {
-        var copy = angular.copy(defaultConfig);
-        copy.mods.header.languages = {};
-        copy.mods.search.grid.related = [];
-        copy.mods.search.sortbyValues = [];
-        copy.mods.search.hitsperpageValues = [];
-        copy.mods.home.facetConfig = {};
-        copy.mods.search.facetConfig = {};
-        copy.mods.search.scoreConfig = {};
-        copy.mods.admin.facetConfig = {};
-        copy.mods.map["map-editor"].layers = [];
-        return copy;
       },
       getProxyUrl: function() {
         return this.proxyUrl;
@@ -1053,6 +1305,7 @@ goog.require('gn_alert');
       $scope.redirectUrlAfterSign = window.location.href;
 
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnGlobalSettings.isDefaultNode = $scope.isDefaultNode;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;
@@ -1221,6 +1474,15 @@ goog.require('gn_alert');
                 '');
             return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
+          canImportMetadata: function () {
+            var profile = gnConfig['metadata.import.userprofile']
+                || 'Editor',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+
           // The md provide the information about
           // if the current user can edit records or not
           // based on record operation allowed. See edit property.
@@ -1232,11 +1494,22 @@ goog.require('gn_alert');
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
-            if (JSON.parse(md.isHarvested) == true) {
+            if (md.isHarvested
+                && JSON.parse(md.isHarvested) == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
                 md.edit;
             }
             return md.edit;
+          },
+          // Privileges management may be allowed for harvested records.
+          canManagePrivileges: function(md) {
+            if (md && md.isHarvested
+                && JSON.parse(md.isHarvested) == true
+                && gnConfig['system.harvester.enablePrivilegesManagement'] === true
+                && md.edit) {
+              return true;
+            }
+            return this.canEditRecord(md);
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
@@ -1332,7 +1605,8 @@ goog.require('gn_alert');
                 $scope.homeFacet = {
                   list: keys,
                   key: selectedFacet,
-                  lastKey: keys[keys.length - 1]
+                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
+		              config: gnGlobalSettings.gnCfg.mods.home.facetConfig
                 };
               });
             }

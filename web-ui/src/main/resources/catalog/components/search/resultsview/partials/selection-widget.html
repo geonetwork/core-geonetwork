@@ -35,7 +35,9 @@
       <span class="hidden-xs" data-ng-if="operationOnSelectionInProgress" translate="">pleaseWait</span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu" data-ng-if="!operationOnSelectionInProgress">
+    <ul class="dropdown-menu" role="menu"
+        data-ng-if="!operationOnSelectionInProgress"
+        data-ng-init="translateValues = {selectedCount: searchResults.selectedCount}">
       <li data-ng-show="!excludePattern.test('exportMEF')">
         <a href="" data-ng-disabled="operationOnSelectionInProgress"
            data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)">
@@ -83,6 +85,12 @@
           <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>unpublish</span>
         </a>
       </li>
+      <li  data-ng-show="!excludePattern.test('approve')"
+           data-ng-if="user.isReviewerOrMore() && isMdWorkflowEnable">
+        <a href="" data-ng-click="mdService.approve(searchResults.selectionBucket, getCatScope())">
+          <i class="fa fa-fw fa-thumbs-o-up"></i>&nbsp;<span translate>approve</span>
+        </a>
+      </li>
       <li  data-ng-show="!excludePattern.test('transferOwnership')"
            data-ng-if="user.isUserAdminOrMore()">
         <a href=""
@@ -95,28 +103,28 @@
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
-           data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:searchResults}}">
+           data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:translateValues}}">
           <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMdLinks(searchResults.selectionBucket)"
-           data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:searchResults}}">
+           data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:translateValues}}">
           <i class="fa fa-fw fa-link"></i>&nbsp;<span translate>validateLinks</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore() && isInspireValidationEnabled">
         <a href="" data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)"
-                   data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:searchResults}}">
+                   data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}">
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate>validateInspire</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore() && isInspireValidationEnabled && validationNode">
         <a href="" data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket, validationNode)"
-                   data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:searchResults}}">
+                   data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:translateValues}}">
           <i class="fa fa-fw fa-inspire"></i>&nbsp;<span translate>validateInspireUsingNode</span> {{validationNode}}
         </a>
       </li>
@@ -144,7 +152,7 @@
       <li  data-ng-show="!excludePattern.test('delete')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
-           data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
+           data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:translateValues}}">
           <i class="fa fa-fw fa-times"></i>&nbsp;<span translate>delete</span>
         </a>
       </li>
@@ -160,9 +168,22 @@
         <a href="" data-ng-click="a.fn()">
           <i class="fa" data-ng-class="a.icon"></i>&nbsp;<span>{{a.label | translate}}</span>
         </a>
-
       </li>
 
+
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates && collectionTemplates.length > 0"
+          class="divider"></li>
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates && collectionTemplates.length > 0"
+          class="dropdown-header">
+        <i class="fa fa-fw gn-icon-series"></i>&nbsp;
+        <span translate>createCollectionFromSelectionAs</span>
+      </li>
+      <li data-ng-if="!excludePattern.test('collection') && collectionTemplates"
+          data-ng-repeat="c in collectionTemplates">
+        <a href="" data-ng-click="createCollection(c)">
+          <span translate>{{c.resourceTitle}}</span>
+        </a>
+      </li>
     </ul>
   </div>
 

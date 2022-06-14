@@ -95,6 +95,29 @@
       };
 
       /**
+       * Index the current metadata record.
+       * @param {string} md
+       */
+      this.indexMd = function(md) {
+        return $http.get('../api/records/index', {
+          params: {
+            uuids: [md.uuid]
+          }
+        }).then(function(response) {
+          var res = response.data;
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.count', res),
+            type: res.success ? 'success' : 'danger'
+          });
+        }, function(response) {
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.error'),
+            type: 'danger'
+          });
+        });
+      };
+
+      /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.
@@ -236,7 +259,16 @@
         return deferred.promise;
       };
 
+      this.getMetadataIdToEdit = function(md) {
+        if (!md) return;
 
+        if (md.draftId) {
+          return md.draftId;
+        } else {
+          return md.id;
+        }
+
+      };
       this.openPrivilegesPanel = function(md, scope) {
         gnUtilityService.openModal({
           title: $translate.instant('privileges') + ' - ' +
@@ -277,6 +309,14 @@
                 timeout: 0,
                 type: 'danger'});
             });
+      };
+
+      this.approve = function(bucket, scope) {
+        gnUtilityService.openModal({
+          title: 'batchApproveTitle',
+          content: '<div gn-metadata-batch-approve selection-bucket="' + bucket + '"></div>'
+        }, scope, 'StatusUpdated');
+
       };
 
       this.openPrivilegesBatchPanel = function(scope, bucket) {

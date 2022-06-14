@@ -26,7 +26,7 @@
         <div class="gn-md-thumbnail"
              data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
           <a href=""
-             title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+             title="{{md.resourceAbstract | striptags}}"
              gn-metadata-open="md"
              gn-records="searchResults.records"
              gn-formatter="formatter.defaultUrl">

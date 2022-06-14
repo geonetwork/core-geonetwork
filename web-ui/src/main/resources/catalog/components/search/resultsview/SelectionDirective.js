@@ -28,12 +28,12 @@
   var module = angular.module('gn_selection_directive', []);
 
   module.directive('gnSelectionWidget', [
-    '$translate', 'hotkeys',
+    '$translate', '$http', 'hotkeys', 'gnAlertService',
     'gnHttp', 'gnMetadataActions', 'gnConfig', 'gnConfigService',
-    'gnSearchSettings', 'gnSearchManagerService',
-    function($translate, hotkeys,
+    'gnSearchSettings', 'gnSearchManagerService', 'gnCollectionService',
+    function($translate, $http, hotkeys, gnAlertService,
              gnHttp, gnMetadataActions, gnConfig, gnConfigService,
-             gnSearchSettings, gnSearchManagerService) {
+             gnSearchSettings, gnSearchManagerService, gnCollectionService) {
 
       return {
         restrict: 'A',
@@ -41,7 +41,6 @@
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
             'selection-widget.html',
         link: function(scope, element, attrs) {
-
           scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
@@ -49,6 +48,41 @@
               new RegExp(attrs.excludeActionsPattern || '^$');
           scope.withoutActionMenu =
               angular.isDefined(attrs.withoutActionMenu) ? true : false;
+
+
+          scope.withCollectionMenu = undefined;
+          scope.collectionQuery = "+resourceType:series";
+          scope.collectionTemplates = undefined;
+
+          scope.$watchCollection('user', function(n, o) {
+            if (scope.withCollectionMenu === undefined && n && n.isEditorOrMore) {
+              scope.withCollectionMenu = n.isEditorOrMore()
+                && !angular.isDefined(attrs.withoutCollectionMenu) ? true : false;
+
+              scope.withCollectionMenu
+              && gnCollectionService.getTemplates(scope.collectionQuery).then(function(templates) {
+                scope.collectionTemplates = templates;
+              });
+            }
+          });
+
+          scope.createCollection = function(record) {
+            gnSearchManagerService.selected(
+              scope.searchResults.selectionBucket).then(function(r) {
+              gnCollectionService.createCollection(record.uuid, r.data).then(function(r) {
+                window.location.hash = '#/metadata/' + r.id;
+              }, function(r) {
+                gnAlertService.addAlert({
+                  msg: r.data.description,
+                  delay: 20000,
+                  type: 'danger'});
+                if (r.id) {
+                  window.location.hash = '#/metadata/' + r.id
+                }
+              });
+            });
+          }
+
 
           scope.mdService = gnMetadataActions;
 
@@ -59,6 +93,7 @@
               gnConfig[gnConfig.key.isInspireEnabled] &&
               angular.isString(gnConfig['system.inspire.remotevalidation.url']);
             scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'];
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
           });
 
           scope.$on('operationOnSelectionStart', function() {
@@ -190,19 +225,24 @@
 
   module.directive('gnSelectionMd', ['gnSearchManagerService',
     function(gnSearchManagerService) {
-
       return {
         restrict: 'A',
+        scope: {
+          'md': '=gnSelectionMd',
+          'bucket': '=bucket',
+          'results': '=results'
+        },
         link: function(scope, element, attrs) {
-
-          scope.change = function() {
+          element[0] && element[0].addEventListener('click', function(e){
             var method = element[0].checked ? 'select' : 'unselect';
             gnSearchManagerService[method](
-                scope.md.uuid, scope.searchResults.selectionBucket).
+                scope.md.uuid, scope.bucket).
                 success(function(res) {
-                  scope.searchResults.selectedCount = parseInt(res, 10);
+                  scope.md.selected = element[0].checked;
+                  scope.results.selectedCount = parseInt(res, 10);
                 });
-          };
+            e.stopPropagation();
+          });
 
         }
       };

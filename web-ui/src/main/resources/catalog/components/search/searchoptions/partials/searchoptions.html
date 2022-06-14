@@ -1,4 +1,6 @@
-<div title="{{'exactMatch-help' | translate}}">
+<div class="checkbox"
+     title="{{'exactMatch-help' | translate}}"
+     data-ng-show="optionsConfig.exactMatch">
   <label>
     <input type="checkbox"
            data-ng-model="exactMatch"
@@ -6,7 +8,9 @@
     <span data-translate="">exactMatch</span>
   </label>
 </div>
-<div title="{{'titleOnly-help' | translate}}">
+<div class="checkbox"
+     title="{{'titleOnly-help' | translate}}"
+     data-ng-show="optionsConfig.titleOnly">
   <label>
     <input type="checkbox"
            data-ng-model="titleOnly"
@@ -14,11 +18,72 @@
     <span data-translate="">titleOnly</span>
   </label>
 </div>
-<div data-ng-show="user.isConnected()">
+<div class="checkbox"
+     data-ng-show="user.isConnected()">
   <label>
     <input type="checkbox"
            data-ng-model="onlyMyRecord"
            aria-label="{{'onlyMyRecord' | translate}}">
     <span data-translate="">onlyMyRecord</span>
   </label>
+</div>
+<div title="{{'searchAllLanguages-help' | translate}}"
+     data-ng-show="optionsConfig.language"
+     class="gn-margin-top">
+  <label data-translate="">searchWithLang</label>
+  <div class="radio">
+    <label>
+      <input type="radio"
+             name="languageStrategy"
+             value="searchInAllLanguages"
+             data-ng-model="languageStrategy"
+             aria-label="{{'searchInAllLanguages' | translate}}">
+      <span data-translate="">searchInAllLanguages</span>
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio"
+             name="languageStrategy"
+             value="searchInDetectedLanguage"
+             data-ng-model="languageStrategy"
+             aria-label="{{'searchInDetectedLanguage' | translate}}">
+      <span data-translate="">searchInDetectedLanguage</span>
+      <span data-ng-show="$parent.searchObj.state.detectedLanguage">
+        ({{$parent.searchObj.state.detectedLanguage | translate}})
+      </span>
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio"
+             name="languageStrategy"
+             value="searchInUILanguage"
+             data-ng-model="languageStrategy"
+             aria-label="{{'searchInUILanguage' | translate}}">
+      <span data-translate="">searchInUILanguage</span>
+    </label>
+  </div>
+  <div data-ng-show="languagesAvailable.length > 1">
+    <div class="radio">
+      <label>
+        <input type="radio"
+               name="languageStrategy"
+               value="forceALanguage"
+               data-ng-model="languageStrategy"
+               aria-label="{{'forceALanguage' | translate}}">
+        <span data-translate="">forceALanguage</span>
+      </label>
+    </div>
+    <div data-ng-repeat="l in languagesAvailable" class="radio gn-margin-left-lg">
+      <label title="{{l}}">
+        <input type="radio"
+               name="forcedLanguage"
+               value="{{l}}"
+               data-ng-disabled="languageStrategy !== 'forceALanguage'"
+               data-ng-model="forcedLanguage">
+        <span>{{(l | translate) || l}}</span>&nbsp;
+      </label>
+    </div>
+  </div>
 </div>

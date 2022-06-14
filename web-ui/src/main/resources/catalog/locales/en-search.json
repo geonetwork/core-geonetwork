@@ -56,7 +56,7 @@
   "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
   "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
   "tmsLinkDetails":"This dataset is published in the view service (TMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
-  "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+  "esri:restLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
   "wmsLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
   "wmsServiceLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a>.",
   "wmtsLinkDetails": "This dataset is published in the view service (WMTS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
@@ -68,6 +68,9 @@
   "atomDatasetsInFeed":"Datasets available",
   "atomLinkDetails": "This dataset is published in the Atom Feed available at <a href='{{url}}' target='_blank'>{{url}}</a> with name <strong>{{layer}}</strong>.",
   "otherLinkDetails": "Other resources:",
+  "qualityLinkDetails": "Quality report",
+  "featurecatalogueLinkDetails": "Feature catalogue",
+  "legendLinkDetails": "Legend",
   "wmsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
   "wmsLayerNotAvailable": "The layer {{layerName}} is not available in the WMS service. However, you can view one of the available ones",
   "wmsChooseLayerToAdd": "Choose a layer to add to the map",
@@ -174,7 +177,7 @@
   "listOfCategories": "Categories",
   "formats": "Formats",
   "addLayers": "Add layers",
-  "serviceUrl": "http://...",
+  "serviceUrl": "https://...",
   "serviceUrlLabel": "Service URL",
   "CurrentLayers": "Layers",
   "SearchLayer": "Search",
@@ -534,6 +537,13 @@
   "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
   "rssFeed": "RSS feed",
   "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
-  "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document."
-
+  "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
+  "seriesComposedOf": "Composed of",
+  "seriesCoveringPeriod": "Covering period",
+  "approve": "Approve",
+  "fieldRequired": "The value is required",
+  "fieldTooLong": "The value is too long",
+  "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+  "fieldTooShort": "The value is too short",
+  "fieldEmailNotValid": "A valid email address is required"
 }

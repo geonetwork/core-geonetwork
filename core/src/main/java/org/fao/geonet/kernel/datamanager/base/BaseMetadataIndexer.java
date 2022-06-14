@@ -72,15 +72,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
+
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
     @Autowired
 	private EsSearchManager searchManager;
     @Autowired
-    private GeonetworkDataDirectory geonetworkDataDirectory;
+    private SourceRepository sourceRepository;
     @Autowired
-    private MetadataStatusRepository statusRepository;
+    protected MetadataStatusRepository statusRepository;
 
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
@@ -464,7 +466,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 // If not available, use the local catalog logo
                 if (!added) {
-                    logoUUID = source + ".png";
+                    Source sourceCatalogue = sourceRepository.findOneByUuid(source);
+                    logoUUID =
+                        sourceCatalogue != null
+                            && StringUtils.isNotEmpty(sourceCatalogue.getLogo())
+                        ? sourceCatalogue.getLogo() : source + DEFAULT_LOGO_EXTENSION;
                     final Path logosDir = resources.locateLogosDir(getServiceContext());
                     try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
                         if (image != null) {
@@ -568,6 +574,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Optional<Group> g = groupRepository.findById(groupId);
                 if (g.isPresent()) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
+                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED + "Id", g.get().getId());
 
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {

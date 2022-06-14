@@ -601,7 +601,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         }
 
         @Override
-        public void process() throws Exception {
+        public void process(String catalogueId) throws Exception {
             doHarvest(logger);
         }
     }
@@ -673,7 +673,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         logger.info("Started harvesting from node : " + nodeName);
                         HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                         // todo check (was: processwithfastindexing)
-                        h.process();
+                        h.process(settingManager.getSiteId());
                         logger.info("Ended harvesting from node : " + nodeName);
 
                         if (getParams().isOneRunOnly()) {
@@ -866,12 +866,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
-        context.getBean(SourceRepository.class).save(source);
         final String icon = params.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, params.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         return id;
     }
@@ -894,9 +895,11 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         context.getBean(SourceRepository.class).save(source);
         final String icon = copy.getIcon();
         if (icon != null) {
-            context.getBean(Resources.class)
+            String filename = context.getBean(Resources.class)
                 .copyLogo(context, "images" + File.separator + "harvesting" + File.separator + icon, copy.getUuid());
+            source.setLogo(filename);
         }
+        context.getBean(SourceRepository.class).save(source);
 
         setParams(copy);
     }

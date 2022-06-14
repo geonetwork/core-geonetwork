@@ -61,6 +61,114 @@
     }
   ]);
 
+
+  module.directive('gnBatchEditExamplesSelector', [
+    '$http', 'gnGlobalSettings', 'gnLangs',
+    function($http, gnGlobalSettings, gnLangs) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          cb: '&gnBatchEditExamplesSelector'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/batchedit-example-selector.html',
+        link: function(scope, element, attrs) {
+          scope.batchExamples = [];
+          scope.click = function(e) {
+            var example = angular.copy(e, {});
+            example.field = example.name[gnLangs.getCurrent()];
+            delete example.schema;
+            delete example.name;
+            delete example.isXpath;
+            delete example.description;
+            scope.cb()(example);
+          }
+          $http.get(gnGlobalSettings.gnUrl +
+            '../catalog/config/batch-examples.json')
+            .success(function(data) {
+              scope.batchExamples = data;
+            });
+        }
+      };
+    }
+  ]);
+
+
+  module.directive('gnRecordMosaic', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          query: '@gnRecordMosaic',
+          records: '=',
+          sort: '@',
+          size: '@',
+          imageSize: '@'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/mosaic.html',
+        link: function(scope, element, attrs) {
+          scope.images = [];
+          scope.imageSize = parseInt(attrs.imagesize) || 300;
+
+          function loadImages(hits) {
+            hits && hits.map && hits.map(function(h) {
+              var overview = h.overview
+                || (h._source && h._source.overview);
+              if (overview) {
+                scope.images = scope.images.concat(overview);
+              }
+            });
+            if (scope.size) {
+              scope.images = scope.images.slice(0, scope.size);
+            }
+          }
+
+          if (scope.records) {
+            loadImages(scope.records);
+          }
+
+          if (scope.query) {
+            var query = {
+              "_source": {"includes": ["overview"]},
+              "from": 0,
+              "size": scope.size || 10,
+              "query": {
+                "bool" : {
+                  "must": [
+                    {"exists": {"field": "overview"}},
+                    {"query_string": {"query": scope.query}}
+                  ]
+                }
+              }};
+
+            if (scope.sort) {
+              var descOrder = scope.sort.startsWith('-'),
+              sort = {};
+              sort[descOrder ? scope.sort.substr(1) : scope.sort] = {
+                order: descOrder ? 'desc' : 'asc'
+              }
+              query.sort = [sort]
+            } else {
+              query.query = {
+                "function_score": {
+                  "random_score": {seed: Math.floor(Math.random() * 10000)},
+                  query: query.query
+                }
+              }
+            }
+
+            $http.post('../api/search/records/_search', query).then(function(r) {
+              loadImages(r.data.hits.hits);
+            });
+          }
+        }
+      };
+    }
+  ]);
+
   module.directive('gnConfirmClick', [
     function() {
       return {
@@ -248,9 +356,16 @@
         scope: {
           processReport: '=gnBatchReport'
         },
-        templateUrl: '../../catalog/components/utility/' +
-            'partials/batchreport.html',
+        templateUrl: function ($element, $attrs) {
+          return $attrs.templateUrl || '../../catalog/components/utility/' +
+            'partials/batchreport.html'
+        },
         link: function(scope, element, attrs) {
+          scope.hasMetadataInfo = function() {
+            return (scope.processReport && scope.processReport.metadataInfos &&
+              (Object.keys(scope.processReport.metadataInfos).length > 0));
+          }
+
           scope.$watch('processReport', function(n, o) {
             if (n && n != o) {
               scope.processReportWarning = n.notFound != 0 ||
@@ -560,11 +675,44 @@
     }
   ]);
 
-  /**
-   * @ngdoc directive
-   * @name gn_utility.directive:gnCopyToClipboard
-   * @function
-   *
+  module.service('gnClipboard', ['$q', function ($q) {
+    return {
+      copy: function (toCopy) {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-write"})
+          .then(function(result) {
+          if (result.state == "granted" || result.state == "prompt") {
+            navigator.clipboard.writeText(toCopy).then(function() {
+              deferred.resolve();
+            }, function() {
+              deferred.reject();
+            });
+          }
+        }, function() {
+          deferred.reject();
+        });
+        return deferred.promise;
+      },
+      paste: function () {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-read"})
+          .then(function(result) {
+            if (result.state == "granted" || result.state == "prompt") {
+              navigator.clipboard.readText().then(function(text) {
+                deferred.resolve(text);
+              }, function() {
+                deferred.reject();
+              });
+            }
+          }, function() {
+            deferred.reject();
+          });
+        return deferred.promise;
+      }
+    }
+  }])
+
+  /*
    * @description
    * Put a string in a input field with copy to clipboard functions attached to it.
    *
@@ -582,53 +730,32 @@
    * The second option only displays the copy button (in case the input is not needed). The input is
    * moved out of sight, because for copying you need an input (or textarea)
    */
-  module.directive('gnCopyToClipboard', ['gnAlertService','$translate',
-    function (gnAlertService,$translate) {
+  module.directive('gnCopyToClipboardButton', ['gnClipboard', '$timeout',
+    function(gnClipboard, $timeout) {
       return {
         restrict: 'A',
+        replace: true,
+        template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
+          '           ng-click="copy()" ' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-fw" ' +
+          '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
+          '</a>',
         scope: {
-          copytext: '@gnCopyToClipboard',
-          buttononly: '@gnCopyButtonOnly'
+          btnClass: '@'
         },
-        templateUrl: '../../catalog/components/utility/' +
-          'partials/copytoclipboard.html',
-        link: function(scope, element, attr) {
-
-          var target = element.find('input:first');
-          scope.moveinput = (scope.buttononly === 'true');
-
-          scope.copyToClipboard = function() {
-            // select the current focus
-            var currentFocus = document.activeElement;
-
-            // set focus on the text input
-            target.focus();
-            target[0].setSelectionRange(0, target.val().length);
-
-            // copy the selection
-            var succeed;
-
-            try {
-              succeed = document.execCommand("copy");
-            } catch (e) {
-              console.warn(e);
-              succeed = false;
-            }
-
-            // Restore original focus
-            if (currentFocus && typeof currentFocus.focus === "function") {
-              currentFocus.focus();
-            }
-
-            if (succeed) {
-              gnAlertService.addAlert({
-                msg: $translate.instant('textCopied'),
-                delay: 5000,
-                type: 'success'});
-            }
-
-            return succeed;
-          };
+        link: function linkFn(scope, element, attr) {
+          scope.copied = false;
+          scope.title = attr['tooltip'] || 'copyToClipboard';
+          scope.copy = function() {
+            gnClipboard.copy(
+              attr['text']
+                ? attr['text']
+                : element.parent().text().trim()).then(function() {
+              scope.copied = true;
+              $timeout(function() {scope.copied = false}, attr['timeout'] || 2000);
+            })
+          }
         }
       };
     }
@@ -739,6 +866,97 @@
     }
   ]);
 
+  module.directive('gnSearchFilterPopupLink', [
+    function() {
+      return {
+        restrict: 'A',
+        transclude: true,
+        template: '<div gn-popover> ' +
+          '<span gn-popover-anchor><ng-transclude/></span> ' +
+          '<div gn-popover-content> ' +
+          '<a data-gn-search-filter-link="{{field}}" data-filter="filter" data-label="{{label}}"><ng-transclude/></a> ' +
+          '</div>',
+        scope: {
+          field: '@gnSearchFilterPopupLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
+  module.directive('gnSearchFilterLink', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<a href=\'#/search?query_string=%7B"{{field}}":%7B"{{::filter | encodeURIComponent}}":true%7D%7D\'>' +
+                  '  <i class="fa fa-fw fa-filter"/>' +
+                  '  <span>{{(label || \'focusOn\') | translate}} <ng-transclude/></span>' +
+                  '</a>',
+        scope: {
+          field: '@gnSearchFilterLink',
+          filter: '=',
+          label: '@'
+        }
+      };
+    }
+  ]);
+
+  module.directive('gnStatusBadge', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<div data-ng-if="::md.cl_status.length > 0"' +
+                  ' title="{{::md.cl_status[0].key | translate}}"' +
+                  ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
+                  '</div>',
+        scope: {
+          md: '=gnStatusBadge'
+        }
+      };
+    }
+  ]);
+
+
+  module.directive('gnCircleLetterIcon', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        template: '<svg xmlns="http://www.w3.org/2000/svg" ' +
+          '             style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"' +
+          '             viewBox="0 0 500 500">' +
+          '    <defs>' +
+          '      <pattern id="image{{imageId}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + orgKey + \'.png\'}}"></image>' +
+          '      </pattern>' +
+          '    </defs>' +
+          '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <text x="50%" y="50%"' +
+          '          text-anchor="middle" alignment-baseline="central"' +
+          '          font-size="300">{{hasIcon ? \'\' : org.substr(0, 1).toUpperCase()}}</text>' +
+          '</svg>',
+        scope: {
+          org: '=gnCircleLetterIcon',
+          orgKey: '='
+        },
+        link: function(scope, element, attrs) {
+          scope.hasIcon = false;
+          scope.imageId = Math.random().toString(36).substr(2, 9)
+          if (scope.orgKey) {
+            $http.get('../api/logos/' + scope.orgKey + '.png', {cache: true})
+              .then(function(r) {
+              scope.hasIcon = r.status === 200;
+            });
+          }
+        }
+      };
+    }
+  ]);
+
+
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnDirectoryEntryPicker
@@ -758,28 +976,45 @@
            link: function(scope, element, attrs) {
              element.attr('placeholder', '...');
 
-             var url = gnUrlUtils.append('q@json',
-              gnUrlUtils.toKeyValue({
-                isTemplate: 's',
-                any: '*QUERY*',
-                root: 'gmd:CI_ResponsibleParty',
-                sortBy: 'resourceTitleObject.default.keyword',
-                sortOrder: '',
-                resultType: 'subtemplates'
-              })
-             );
-             var parseResponse = function(data) {
-               var records = gnSearchManagerService.format(data);
-               return records.metadata;
-             };
+             function buildRecord(d) {
+               return {uuid: d._id,
+                 label: d._source.resourceTitle
+                   || d._source.resourceTitleObject.default
+                   || '-'};
+             }
+
              var source = new Bloodhound({
                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                queryTokenizer: Bloodhound.tokenizers.whitespace,
                limit: 200,
                remote: {
                  wildcard: 'QUERY',
-                 url: url,
-                 filter: parseResponse
+                 url: '../api/search/records/_search',
+                 prepare: function (query, settings) {
+                   settings.type = "POST";
+                   settings.contentType = "application/json; charset=UTF-8";
+                   settings.data = JSON.stringify(
+                     {from: 0, size: 10,
+                       sort : [{'resourceTitleObject.default.keyword': 'asc'}],
+                       query: {
+                         bool: {
+                           must: {
+                             query_string: {
+                               query: (query || '*')
+                             }
+                           },
+                           filter: [
+                             {term: {isTemplate: 's'}},
+                             {term: {root: 'gmd:CI_ResponsibleParty'}}
+                           ]
+                         }}});
+                   return settings;
+                 },
+                 transform: function(response) {
+                   return response.hits.hits.map(function(d, i) {
+                     return buildRecord(d);
+                   });
+                 }
                }
              });
              source.initialize();
@@ -788,11 +1023,11 @@
                highlight: true
              }, {
                name: 'directoryEntry',
-               displayKey: 'title',
+               displayKey: 'label',
                source: source.ttAdapter(),
                templates: {
                  suggestion: function(datum) {
-                   return '<p>' + datum.title + '</p>';
+                   return '<p>' + datum.label + '</p>';
                  }
                }
              });
@@ -879,7 +1114,9 @@
             var content = legend.nextAll();
             //open up the content needed - toggle the slide-
             //if visible, slide up, if not slidedown.
-            content.slideToggle(attrs.duration || 250, function() {
+            content.filter(function(i, e) {
+              return $(e).css('visibility') !== 'hidden';
+            }).slideToggle(attrs.duration || 250, function() {
               //execute this after slideToggle is done
               //change the icon of the legend based on
               // visibility of content div
@@ -1200,7 +1437,14 @@
             }
           };
 
-          init();
+          // init once we have a config
+          var initDone = false;
+          var unwatchInit = scope.$watch('config', function(n, o) {
+            if (!n) { return; }
+            init();
+            initDone = true;
+            unwatchInit();
+          });
 
           // model -> view
           if (!isRange) {
@@ -1216,9 +1460,6 @@
             });
           }
           else {
-            scope.$watch('config', function(n, o) {
-              init();
-            });
             scope.$watchCollection('date', function(newValue, oldValue) {
               if (!scope.date) {
                 scope.date = {};
@@ -1339,6 +1580,13 @@
               // to use in ng-repeat
               scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
+                  // Reset pagination to the first page when the filtered results have less results
+                  // than the ones needed to be displayed in the current page
+                  if (scope.items().length < ((scope.paginator.currentPage *
+                    scope.paginator.pageSize)+1)) {
+                    scope.paginator.currentPage = 0;
+                  }
+
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;
@@ -1507,6 +1755,12 @@
         return href;
       }}
   ]);
+  module.filter('getMailDomain', [function() {
+      return function(mail) {
+        return (mail && mail.indexOf('@') !== -1)
+          ? mail.replace(/.*@(.*)/, '$1') : '';
+      }}
+  ]);
   /**
    * Append size parameter to request a smaller thumbnail.
    */
@@ -1630,8 +1884,8 @@
                 '<div class="modal fade in"' +
                 '     id="gn-img-modal-' + (img.id || img.lUrl || img.url) + '">' +
                 '<div class="modal-dialog gn-img-modal in">' +
-                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
-                '<i class="fa fa-times text-danger"/></button>' +
+                '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
+                '<i class="fa fa-times"/></button>' +
                 '  <img src="' + (img.lUrl || img.url || img.id) + '"/>' +
                 (label != '' ? labelDiv : '') +
                 '</div>' +
@@ -1812,6 +2066,42 @@
       }
     };
   });
+
+  /**
+   * Directive to display a metadata selector, that accepts a search object
+   * to filter the metadata to display in the selector.
+   */
+  module.directive('gnMetadataSelector', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          uuid: '=gnMetadataSelector',  // Model property with the metadata uuid selected
+          searchObj: '=',               // ElasticSearch search object
+          md: '=',                      // Metadata object selected
+          elementName: '@'              // Input element name for the uuid control
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/metadataselector.html',
+        link: function(scope, element, attrs) {
+          scope.searchObj.params = angular.extend({},
+            scope.searchObj.defaultParams);
+
+          scope.updateParams = function() {
+            scope.searchObj.params.any = scope.searchObj.any;
+          };
+
+          scope.selectMetadata = function(md) {
+            scope.md = md;
+            scope.uuid = md.uuid;
+          }
+
+        }
+      };
+    }
+  ]);
+
 
   /**
    * @ngdoc directive

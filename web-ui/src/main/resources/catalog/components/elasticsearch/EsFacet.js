@@ -42,7 +42,7 @@
       'topic*',
       'inspire*',
       'resource*',
-      'draft',
+      'draft*',
       'overview.*',
       'owner*',
       'link*',
@@ -95,7 +95,7 @@
             'creat*',
             'group*',
             'resource*',
-            'draft',
+            'draft*',
             'owner*',
             'recordOwner',
             'status*',
@@ -204,7 +204,9 @@
             'uuid',
             'overview.*',
             'resource*',
-            'link'
+            'link',
+            'format',
+            'cl_status.key'
           ]
         }
       },
@@ -331,6 +333,7 @@
             && fieldConfig.meta
             && fieldConfig.meta.collapsed,
           meta: respAgg.meta,
+          config: reqAgg,
           items: [],
           path: (path || []).concat([searchFieldId])
         };
@@ -340,7 +343,7 @@
           if(fieldId.contains('_tree')) {
             facetModel.type = 'tree';
             facetModel.items = [];
-            gnFacetTree.getTree(respAgg.buckets, fieldId, respAgg.meta).then(function (tree) {
+            gnFacetTree.getTree(respAgg.buckets, fieldId, respAgg.meta, reqAgg.terms.missing).then(function (tree) {
               this.items = tree.items;
             }.bind(facetModel));
           } else {
@@ -356,10 +359,12 @@
                 var isWildcard = fieldConfig && fieldConfig.meta
                   && fieldConfig.meta.wildcard,
                   key = (bucket.key_as_string || bucket.key),
+                  isMissingValue = key === reqAgg.terms.missing,
                   itemPath = facetModel.path.concat([
-                    isWildcard ?
-                      (key + '*').replace(' ', '\\\\ ') :
-                      (key + '')
+                    isMissingValue ? '#MISSING#'
+                      : (isWildcard ?
+                        (key + '*').replace(' ', '\\\\ ') :
+                        (key + ''))
                   ]);
                 var facet = {
                   value: key,

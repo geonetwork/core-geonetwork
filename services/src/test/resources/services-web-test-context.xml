@@ -54,5 +54,4 @@
       <bean class="org.springframework.data.web.SortHandlerMethodArgumentResolver"/>
     </mvc:argument-resolvers>
   </mvc:annotation-driven>
-
 </beans>

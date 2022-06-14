@@ -1,0 +1,22 @@
+<div class="input-group-btn"
+     data-ng-show="batchExamples.length > 0">
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Examples
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu"
+        role="menu">
+      <li data-ng-repeat="e in batchExamples">
+        <a href="" data-ng-click="click(e)"
+           title="XPath: {{e.xpath}} &#10;&#10;XML: {{e.value}}">
+          <span>{{e.name[lang]|empty:e.name.eng}}</span>
+          <p>
+            <em>{{e.description[lang]|empty:e.description.eng}}</em>
+            (<strong>{{e.schema}}</strong>)
+          </p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

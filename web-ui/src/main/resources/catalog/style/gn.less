@@ -23,6 +23,15 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+.gn-copy-to-clipboard-button-floatright {
+  position: relative;
+  right: 4px;
+  top: 4px;
+  float: right;
+  z-index: 9999;
+  opacity: .6;
+}
+
 .gn-portal {
   .navbar {
     display: none;
@@ -210,9 +219,11 @@ a {
   }
 }
 .gn-btn-modal-img {
+  border-radius: 50% !important;
   position: absolute;
   top: -1.2em;
   right: -1.2em;
+  padding: 7px 12px !important;
 }
 
 /**
@@ -344,6 +355,13 @@ div.gn-scroll-spy {
     a {
       min-width: max-content;
     }
+    label {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: normal;
+      white-space: nowrap;
+    }
   }
 }
 
@@ -378,11 +396,13 @@ div.gn-scroll-spy {
       }
       // error message
       .alert {
-        position: fixed;
-        bottom: 0;
-        width: calc(~"100% - 100px");
-        margin-left: 200px;
-        margin-right: 200px;
+        &.alert-warning {
+          position: fixed;
+          bottom: 0;
+          width: calc(~"100% - 100px");
+          margin-left: 200px;
+          margin-right: 200px;
+        }
       }
     }
   }
@@ -430,6 +450,7 @@ div.thumb-small {
   width: 32%;
   padding: 0;
   border-radius: 2px;
+  text-align: center;
   a.onlinesrc-remove {
     position: absolute;
     z-index: 99;
@@ -661,17 +682,23 @@ i.fa-times.delete:hover {
 
 
 .gn-search-page {
+  .gn-status {
+    position: absolute;
+    bottom: 9px;
+    margin-left: -8px;
+    z-index: 99;
+  }
   .gn-status, .gn-workflow-status {
     border: 2px solid @brand-primary;
     display: inline-block;
     margin-top: 5px;
     margin-right: 5px;
-    border-radius: 5px;
-    padding: 5px 8px;
-    color: @brand-primary;
+    border-radius: 0 3px 3px 0;
+    padding: 5px 18px;
+    background-color: @brand-primary;
     font-weight: 500;
     font-size: 80%;
-    background-color: #fff;
+    color: #fff;
   }
   .gn-status-mdview, .gn-workflow-status-mdview {
     position: relative;
@@ -684,45 +711,45 @@ i.fa-times.delete:hover {
   or not and with which colors */
   .gn-status-completed {
     border-color: darken(@brand-success, 5%);
-    color: @brand-success;
+    background-color: @brand-success;
   }
   .gn-status-historicalArchive {
     border-color: darken(@brand-warning, 5%);
-    color: @brand-warning;
+    background-color: @brand-warning;
   }
   .gn-status-obsolete {
     border-color: darken(@brand-danger, 5%);
-    color: @brand-danger;
+    background-color: @brand-danger;
   }
   .gn-status-superseded {
     border-color: darken(@brand-danger, 5%);
-    color: @brand-danger;
+    background-color: @brand-danger;
   }
   .gn-workflow-status {
-    background-color: rgba(255, 255, 255 , 0.7);
+    color: rgba(255, 255, 255 , 0.7);
     border-color: darken(@brand-success, 5%);
-    color: @brand-success;
+    background-color: @brand-success;
   }
   .gn-workflow-status-mdview {
     border-color: darken(@brand-success, 5%);
-    color: @brand-success;
+    background-color: @brand-success;
   }
   /* Decide here which status should be displayed
   or not and with which colors */
   .gn-workflow-status-1 {
     border-color: darken(@brand-danger, 5%);
-    color: @brand-danger;
+    background-color: @brand-danger;
   }
   .gn-workingcopy-status {
     border: 1px solid @btn-default-border;
-    background-color: #fff;
+    color: #fff;
     border-radius: 20px;
     padding: 0 15px 0 0;
     font-size: 12px;
     margin-top: 7px;
     display: block;
     cursor: pointer;
-    color: @gray-dark;
+    background-color: @gray-dark;
     .fa {
       border-radius: 1000px;
       width: 32px;
@@ -781,6 +808,7 @@ i.fa-times.delete:hover {
     font-size: 4rem;
     font-family: "Open sans", Helvetica, Arial, sans-serif;
     padding: 0.5rem;
+    z-index: 1;
     .gn-status {
       border-radius: 15px;
       text-transform: uppercase;
@@ -800,10 +828,49 @@ i.fa-times.delete:hover {
       border-radius: 5px;
     }
   }
+
+  // positioning
+  //
+  // default is lower left and absolute
+  //
+  // options:
+  // - bottom left
+  // - top right
+  // - in a table row
+  .gn-status-bottomleft {
+    position: relative;
+  }
+  .gn-status-topright {
+    position: absolute;
+    left: auto;
+    right: 0;
+    float: right;
+    top: 8px;
+    margin-right: -8px;
+    bottom: auto;
+  }
+  .gn-status-table {
+    position: relative;
+    bottom: unset;
+    border: unset;
+    padding: 0.2em 0.6em 0.3em;
+    border-radius: 0.25em;
+    line-height: 1;
+    font-weight: bold;
+    margin-top: 0;
+    margin-left: 0;
+  }
+  // ----- increase the text size
+  .gn-status-md {
+    font-size: 1.3em;
+  }
+  .gn-status-lg {
+    font-size: 1.6em;
+  }
 }
 
 // Language specific layout
-html[lang=eng] {
+html {
   .gn-scale,
   [data-facet=denominators] span.gn-facet-label,
   .gn-facet-denominators span.gn-facet-label {
@@ -812,7 +879,7 @@ html[lang=eng] {
     }
   }
 }
-html[lang=fre] {
+html[lang=fr] {
   .gn-scale,
   [data-facet=denominators] span.gn-facet-label,
   .gn-facet-denominators span.gn-facet-label {
@@ -858,6 +925,16 @@ button, .btn, .btn:active, a {
   }
 }
 
+[gn-popover-anchor], [data-gn-popover-anchor] {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+[gn-popover-content] {
+  word-break: break-word;
+}
+
 .popover {
   height: auto;
   border-radius: 2px;
@@ -866,6 +943,11 @@ button, .btn, .btn:active, a {
   .popover-content {
     display: table-cell;
     vertical-align: middle;
+    // 'extra' title within the popover content to re-use the title styles
+    .popover-title {
+      display: block !important;
+      margin: -10px -15px 10px -15px;
+    }
     ul {
       margin: 0;
       list-style: none;
@@ -1357,6 +1439,18 @@ gn-indexing-task-status {
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
 .max-width-none { max-width: none; }
 .height-auto { height: auto !important; max-height: none !important; }
+.col-2 {
+  column-count: 2;
+  &>div {
+    break-inside: avoid;
+  }
+}
+.col-3 {
+  column-count: 3;
+  &>div {
+    break-inside: avoid;
+  }
+}
 
 html {
   // As a side-effect of setting the @viewport in bootstrap,
@@ -1373,4 +1467,9 @@ html {
 // Clickable elements
 .clickable {
   cursor: pointer;
+}
+
+.batch-report-metadata-info {
+  max-height: 300px;
+  overflow: scroll;
 }

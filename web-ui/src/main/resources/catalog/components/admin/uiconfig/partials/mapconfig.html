@@ -1,6 +1,46 @@
 <label class="control-label" translate>mapConfigContext</label>
-<input type="text" class="form-control"
-  data-ng-model="mCfg[key]['context']"/>
+
+<div data-ng-controller="GnSearchController">
+  <div data-ng-search-form=""
+       data-ng-controller="GnMapContextRecordController">
+    <div class="input-group dropdown"
+         id="serviceList">
+      <input type="text" class="form-control"
+             data-ng-model="mCfg[key]['context']"/>
+
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                data-ng-click="updateParams();triggerSearch();" type="text">
+          <i class="fa fa-search"/>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li>
+            <input class="form-control"
+                   onClick="window.event.stopPropagation()"
+                   data-ng-change="updateParams();triggerSearch();" type="text"
+                   data-toggle="dropdown"
+                   data-ng-model="searchObj.any"
+                   data-ng-model-options="{debounce: 200}"
+                   placeholder="{{'search' | translate}}"/>
+          </li>
+          <li data-ng-repeat="md in searchResults.records">
+            <a href=""
+               data-ng-click="mCfg[key]['context'] = md.linkUrlProtocolOGCOWSC">
+              {{md.resourceTitleObject.default}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="help-block">
+      {{('mapConfigContext-help') | translate}} </p>
+  </div>
+</div>
+
+
 <label class="control-label" translate>mapConfigExtent</label>
 <div class="input-group">
   <span class="input-group-addon">MinX</span>

@@ -45,6 +45,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
@@ -52,8 +53,7 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -74,9 +74,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.*;
@@ -92,8 +90,21 @@ public class MetadataEditingApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
     @Autowired
     SchemaManager schemaManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
+
+    @Autowired
+    MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
+    private StatusValueRepository statusValueRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Edit a record", description = "Return HTML form for editing.")
     @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
@@ -115,6 +126,21 @@ public class MetadataEditingApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        SettingManager sm = context.getBean(SettingManager.class);
+
+        // Code to handle the flag METADATA_EDITING_CREATED_DRAFT:
+        //   1) Editing an approved metadata, without a working copy creates the working copy and should set
+        //      METADATA_EDITING_CREATED_DRAFT = true, to remove the working copy if the user cancel the editor form.
+        //
+        //   2) Editing an approved metadata, with a working copy should NOT set
+        //      METADATA_EDITING_CREATED_DRAFT = true, in this case should NOT be removed the working copy
+        //      if the user cancel the editor form.
+        boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        boolean flagCreateDraftFromApprovedMetadata = false;
+        if (isEnabledWorkflow) {
+            flagCreateDraftFromApprovedMetadata = (metadataDraftRepository.findOneByUuid(metadata.getUuid()) == null);
+        }
 
         // Start editing session
         IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
@@ -143,7 +169,7 @@ public class MetadataEditingApi {
                 sb.append("redirectUrl=catalog.edit");
             }
 
-            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, true);
+            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, flagCreateDraftFromApprovedMetadata);
 
             Element el = new Element("script");
             el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
@@ -353,8 +379,20 @@ public class MetadataEditingApi {
                     // Only editors can submit a record
                     if (isEditor || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
+                        StatusValue statusValue = statusValueRepository.findById(changeToStatus).get();
+
+                        MetadataStatus metadataStatus = new MetadataStatus();
+
+                        metadataStatus.setMetadataId(metadata.getId());
+                        metadataStatus.setUuid(metadata.getUuid());
+                        metadataStatus.setChangeDate(new ISODate());
+                        metadataStatus.setUserId(session.getUserIdAsInt());
+                        metadataStatus.setStatusValue(statusValue);
+                        metadataStatus.setChangeMessage("Save and submit metadata");
+
+                        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                        listOfStatusChange.add(metadataStatus);
+                        sa.onStatusChange(listOfStatusChange);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -363,8 +401,20 @@ public class MetadataEditingApi {
                     // Only reviewers can approve
                     if (isReviewer || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
-                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(),
-                            changeToStatus);
+                        StatusValue statusValue = statusValueRepository.findById(changeToStatus).get();
+
+                        MetadataStatus metadataStatus = new MetadataStatus();
+
+                        metadataStatus.setMetadataId(metadata.getId());
+                        metadataStatus.setUuid(metadata.getUuid());
+                        metadataStatus.setChangeDate(new ISODate());
+                        metadataStatus.setUserId(session.getUserIdAsInt());
+                        metadataStatus.setStatusValue(statusValue);
+                        metadataStatus.setChangeMessage("Save and approve metadata");
+
+                        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+                        listOfStatusChange.add(metadataStatus);
+                        sa.onStatusChange(listOfStatusChange);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
@@ -407,8 +457,24 @@ public class MetadataEditingApi {
                 dataMan.indexMetadata(id, true);
             }
 
+            // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+            // status of the published and draft versions
+            if (metadata instanceof MetadataDraft) {
+                Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+                if (metadataApproved != null) {
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true);
+                }
+            }
+
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataMan.endEditingSession(id, session);
+
+            if (isEnabledWorkflow) {
+                // After saving & close remove the information to remove the draft copy if the user cancels the editor
+                context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+            }
+
             if (isUnpublished) {
                 throw new IllegalStateException(String.format("Record saved but as it was invalid at the end of "
                     + "the editing session. The public record '%s' was unpublished.", metadata.getUuid()));

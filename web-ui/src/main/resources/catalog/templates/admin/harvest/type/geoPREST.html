@@ -8,7 +8,7 @@
   </div>
 
   <fieldset id="gn-harvest-settings-rest-basic-row">
-    <legend id="gn-harvest-settings-rest-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-rest-basic-title"><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
 
@@ -17,6 +17,8 @@
       <input id="gn-harvest-settings-rest-basic-host-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.baseUrl"/>
       <p class="help-block" data-translate="">geoPREST-hostHelp</p>
     </div>
+
+    <div id="gn-harvest-settings-rest-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
     <fieldset id="gn-harvest-settings-rest-basic-filter-row" class="form-horizontal">
       <legend id="gn-harvest-settings-rest-basic-filter-title" data-translate="">harvesterFilter</legend>
@@ -37,11 +39,9 @@
   </fieldset>
 
   <fieldset id="gn-harvest-settings-rest-advanced-row">
-    <legend id="gn-harvest-settings-rest-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+    <legend id="gn-harvest-settings-rest-advanced-title"><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
-
-    <div id="gn-harvest-settings-rest-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
     <div id="gn-harvest-settings-rest-advanced-validate-row">
       <label id="gn-harvest-settings-rest-advanced-validate-label" class="control-label">
@@ -52,7 +52,9 @@
     </div>
     <div id="gn-harvest-settings-rest-advanced-xsl-row">
       <label id="gn-harvest-settings-rest-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
-      <div id="gn-harvest-settings-rest-advanced-xsl-list" data-gn-import-xsl="harvesterSelected.content.importxslt"/>
+      <div id="gn-harvest-settings-rest-advanced-xsl-list"
+           data-gn-import-xsl="harvesterSelected.content.importxslt"
+           data-mode="btn-group"/>
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
   </fieldset>

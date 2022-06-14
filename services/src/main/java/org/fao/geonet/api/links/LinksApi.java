@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.links;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +34,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
@@ -45,6 +45,7 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -74,8 +75,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
@@ -105,13 +108,15 @@ public class LinksApi {
     MBeanExporter mBeanExporter;
     @Autowired
     AccessManager accessManager;
+    @Autowired
+    SettingManager settingManager;
 
     private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
     @PostConstruct
     public void iniMBeansSlidingWindowWithEmptySlot() {
         for (int i = 0; i < NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP; i++) {
-            EmptySlot emptySlot = new EmptySlot(i);
+            EmptySlot emptySlot = new EmptySlot(settingManager.getSiteId(), i);
             mAnalyseProcesses.addFirst(emptySlot);
             try {
                 mBeanExporter.registerManagedResource(emptySlot, emptySlot.getObjectName());
@@ -182,7 +187,7 @@ public class LinksApi {
         if (filter != null) {
             Integer stateToMatch = null;
             String url = null;
-            String associatedRecord = null;
+            List<String> associatedRecords = null;
             if (filter.has("lastState")) {
                 stateToMatch = 0;
                 if (filter.getString("lastState").equalsIgnoreCase("ok")) {
@@ -197,10 +202,12 @@ public class LinksApi {
             }
 
             if (filter.has("records")) {
-                associatedRecord = filter.getString("records");
+                associatedRecords = Arrays.stream(
+                    filter.getString("records").split(" ")
+                ).collect(Collectors.toList());
             }
 
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
@@ -348,6 +355,25 @@ public class LinksApi {
         return report;
     }
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Analyze one or more links",
+        description = "")
+    @RequestMapping(
+        path = "/analyze",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public void analyzeLinks(
+        @Parameter(description = "URL")
+        @RequestParam(required = false)
+            String[] url
+    ) throws IOException, JDOMException {
+        MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
+        registredMAnalyseProcess.testLink(Lists.newArrayList(url));
+    }
+
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove all links and status history",
@@ -364,7 +390,11 @@ public class LinksApi {
     }
 
     private MAnalyseProcess getRegistredMAnalyseProcess() {
-        MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(linkRepository, metadataRepository, urlAnalyser, appContext);
+        MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(
+            settingManager.getSiteId(),
+            linkRepository,
+            metadataRepository,
+            urlAnalyser, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
         try {
             mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());

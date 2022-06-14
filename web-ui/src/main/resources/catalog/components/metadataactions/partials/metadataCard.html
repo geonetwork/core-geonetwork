@@ -1,0 +1,66 @@
+<li class="list-group-item panel panel-default gn-card"
+    gn-metadata-open="md"
+    gn-formatter="formatterUrl"
+    id="gn-info-list-mw-{{md.uuid}}"
+    data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
+
+  <div class="panel-heading gn-card-heading">
+    <div class="gn-md-title">
+      <a data-ng-hide="md.remoteUrl"
+         href=""
+         title="{{md.resourceTitle}}"
+         gn-metadata-open="md"
+         gn-formatter="formatter.defaultUrl">
+        <h1>
+          <span class="clamp-2">{{md.resourceTitle}}</span>
+        </h1>
+      </a>
+      <a data-ng-show="md.remoteUrl"
+         data-ng-href="{{md.remoteUrl}}"
+         rel="noopener noreferrer"
+         target="_blank"
+         title="{{md.resourceTitle}}">
+        <h1>
+          <span class="clamp-2">{{md.resourceTitle || md.remoteUrl}}</span>
+        </h1>
+      </a>
+    </div>
+  </div>
+  <!-- /.gn-card-heading -->
+  <div class="panel-body gn-card-body">
+    <div class="gn-md-contents">
+      <div class="gn-md-thumbnail"
+           title="{{md.resourceAbstract | striptags}}"
+           data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
+        <a data-ng-hide="md.remoteUrl"
+           href=""
+           gn-metadata-open="md"
+           gn-formatter="formatter.defaultUrl">
+          <div class="gn-img-thumbnail"
+               style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}')">
+          </div>
+        </a>
+        <a data-ng-show="md.remoteUrl"
+           data-ng-href="{{md.remoteUrl}}"
+           rel="noopener noreferrer"
+           target="_blank">
+          <div class="gn-img-thumbnail"
+               style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}')">
+          </div>
+        </a>
+      </div>
+      <div class="gn-md-details">
+        <div class="gn-md-abstract">
+          <p>{{md.resourceAbstract}}</p>
+          <div class="gn-md-types">
+                <span class="badge"
+                      data-ng-repeat="t in md.resourceType track by $index">{{t | translate}}</span>
+          </div>
+        </div>
+      </div>
+      <ng-transclude/>
+    </div>
+  </div>
+  <!-- /.gn-card-body -->
+</li>
+<!-- /.gn-card -->
