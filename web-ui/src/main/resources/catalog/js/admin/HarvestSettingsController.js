@@ -548,7 +548,7 @@
               },
               {
                 "terms": {
-                  "cl_hierarchyLevel.key": ["service"]
+                  "resourceType": ["service"]
                 }
               }]
             }
@@ -579,7 +579,7 @@
               },
                 {
                   "terms": {
-                    "cl_hierarchyLevel.key": ["dataset"]
+                    "resourceType": ["dataset"]
                   }
                 }]
             }
