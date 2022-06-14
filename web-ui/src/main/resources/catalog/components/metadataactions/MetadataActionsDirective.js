@@ -501,6 +501,7 @@
             })
               .then(function(r) {
                 if(format === '?') {
+                  scope.formats = [];
                   for (var i = 0; i < r.data.length; i ++) {
                     var f = r.data[i],
                       prefix = 'cite.format.',
@@ -527,7 +528,6 @@
 
           function loadCitation() {
             scope.citationAvailable = false;
-            scope.formats = [];
             scope.getCitation('?').then(function() {
               scope.getCitation(scope.format || scope.defaultFormat);
             });
