@@ -180,7 +180,8 @@ def process_wps_execute(
     # monitor the process
     with timeout_(seconds=timeout):
         try:
-            monitorExecution(execution)
+            # calling every 10s (default is 3)
+            monitorExecution(execution, sleepSecs=10)
         except TimeoutError as e:
             send_mail(
                 to_email=[email],
