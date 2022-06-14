@@ -371,10 +371,13 @@
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
-              scope.isDoiEnabled = gnConfig['system.publication.doi.doienabled'];
               scope.isMdWorkflowEnableForMetadata = gnConfig['metadata.workflow.enable'] &&
                 scope.gnCurrentEdit.metadata.draft === 'y';
-              scope.isMdPublished = scope.gnCurrentEdit.metadata.isPublishedToAll === 'true';
+              scope.isDoiApplicableForMetadata = gnConfig['system.publication.doi.doienabled']
+                && scope.gnCurrentEdit.metadata.isTemplate === 'n'
+                && scope.gnCurrentEdit.metadata.isPublished()
+                && JSON.parse(scope.gnCurrentEdit.metadata.isHarvested) === false;
+
 
               /**
                * Calls service 'relations.get' to load
@@ -407,11 +410,10 @@
                *
                */
               scope.canPublishDoiForResource = function (resource){
-                return scope.isDoiEnabled
+                return scope.isDoiApplicableForMetadata
                   && resource.lUrl !== null
                   && resource.lUrl.match('doi.org') !== null
-                  && !scope.isMdWorkflowEnableForMetadata
-                  && scope.isMdPublished;
+                  && !scope.isMdWorkflowEnableForMetadata;
               }
 
               /**
