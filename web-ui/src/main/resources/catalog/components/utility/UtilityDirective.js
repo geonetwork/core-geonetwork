@@ -737,6 +737,7 @@
         replace: true,
         template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
           '           ng-click="copy()" ' +
+          '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
           '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
