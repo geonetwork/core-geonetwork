@@ -1521,7 +1521,7 @@
     "ui-mod-page": "Static pages",
     "logoHeight": "Logo height",
     "logoSelect": "Logo Selection",
-    "filterLogo": "Filter on the logo name"
+    "filterLogo": "Filter on the logo name",
     "ui-addWMSLayersToMap": "Add WMS layers from metadata to the map viewer",
     "ui-urlLayerParam": "URL parameter with the layer name",
     "ui-addWMSLayersToMap-urlLayerParam": "URL parameter with the layer name",
