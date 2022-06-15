@@ -171,8 +171,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>diff_match_patch</groupId>
-      <artifactId>diff_match_patch</artifactId>
+      <groupId>org.bitbucket.cowwoc</groupId>
+      <artifactId>diff-match-patch</artifactId>
     </dependency>
   </dependencies>
 
