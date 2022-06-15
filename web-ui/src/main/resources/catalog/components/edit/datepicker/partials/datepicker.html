@@ -45,7 +45,7 @@
              data-ng-hide="mode !== '' || !hideTimezone"
              data-ng-model="timezone" />
 
-      <div class="input-group-btn">
+      <div class="input-group-btn" data-ng-show="!hideDateMode">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>
         </button>
