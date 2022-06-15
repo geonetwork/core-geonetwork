@@ -845,7 +845,6 @@
     "system/inspire/atomSchedule": "Schedule for feed retrieval",
     "system/inspire/atomProtocol": "Atom protocol value",
     "system/inspire/atomExecute": "Execute harvester",
-    "system/inspire/atomLocal": "Local",
     "system/inspire/atomRemote": "Remote",
     "system/inspire/atomDisabled": "Disabled",
     "system/inspire/enable-help": "Enable INSPIRE CSW (ie. language support and INSPIRE GetCapabilities document) and INSPIRE indexing. INSPIRE themes thesaurus MUST be installed to properly index themes and annexes. Note: It does not enable the INSPIRE editor view mode (see iso19139/layout/config-editor.xml).",

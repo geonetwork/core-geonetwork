@@ -28,22 +28,14 @@ package org.fao.geonet.inspireatom;
  * @author Jose García
  */
 public class InspireAtomType {
-
-    /**
-     * Create atom from metadata content
-     **/
-    public static final String ATOM_LOCAL = "local";
-
     /**
      * Create atom from remote feeds referenced in metadata
      **/
     public static final String ATOM_REMOTE = "remote";
-
-
+    
     /**
      * Private constructor to avoid instantiate the class.
      */
     private InspireAtomType() {
-
     }
 }

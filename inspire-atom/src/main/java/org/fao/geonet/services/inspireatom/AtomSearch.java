@@ -99,23 +99,7 @@ public class AtomSearch implements Service {
             params.addContent(new Element("identifier").setText(values));
         }
 
-        // Depending on INSPIRE atom format decide which service use.
-        String atomFormat = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM);
-
-//        search.exec(params, context);
         String privilegesFilter = buildPermissionsFilter(context);
-        String IDENTIFIER_QUERY = "{" +
-            "          \"nested\": {" +
-            "            \"path\": \"resourceIdentifier\"," +
-            "            \"query\": {" +
-            "              \"term\": {" +
-            "                \"resourceIdentifier.code\": {" +
-            "                  \"value\": \"%s\"" +
-            "                }" +
-            "              }" +
-            "            }" +
-            "        }";
-
         String jsonQuery = "{" +
             "    \"bool\": {" +
             "      \"must\": [" +
@@ -140,28 +124,21 @@ public class AtomSearch implements Service {
             FIELDLIST_CORE,
             0, 1000);
 
-        // Create atom feed from search results.
-        if (atomFormat.equalsIgnoreCase(InspireAtomType.ATOM_LOCAL)) {
-            return null; // result.exec(params, context);
+        Element feeds = new Element("feeds");
 
-            // Create atom feed from feeds referenced in metadata.
-        } else {
-            Element feeds = new Element("feeds");
-
-            // Loop over the results and retrieve feeds to add in results
-            // First element in results (pos=0) is the summary, ignore it
-            for (SearchHit hit : result.getHits().getHits()) {
-                String id = hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString();
-                InspireAtomFeed feed = service.findByMetadataId(Integer.parseInt(id));
-                if (feed != null) {
-                    Element feedEl = Xml.loadString(feed.getAtom(), false);
-                    feeds.addContent((Content) feedEl.clone());
-                } else {
-                    System.out.println(String.format("No feed available for %s", hit.getId()));
-                }
+        // Loop over the results and retrieve feeds to add in results
+        // First element in results (pos=0) is the summary, ignore it
+        for (SearchHit hit : result.getHits().getHits()) {
+            String id = hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString();
+            InspireAtomFeed feed = service.findByMetadataId(Integer.parseInt(id));
+            if (feed != null) {
+                Element feedEl = Xml.loadString(feed.getAtom(), false);
+                feeds.addContent((Content) feedEl.clone());
+            } else {
+                Log.debug(Geonet.ATOM, String.format("No feed available for %s", hit.getId()));
             }
-
-            return feeds;
         }
+
+        return feeds;
     }
 }
