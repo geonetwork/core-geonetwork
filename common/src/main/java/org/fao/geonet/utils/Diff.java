@@ -1,7 +1,6 @@
 package org.fao.geonet.utils;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
-import org.jdom.Element;
 
 import java.util.LinkedList;
 
