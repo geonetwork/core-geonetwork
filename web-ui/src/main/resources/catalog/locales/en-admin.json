@@ -765,6 +765,8 @@
     "system/clickablehyperlinks/enable-help": "If set, GeoNetwork will display clickable hyperlinks in the metadata.",
     "system/publication": "Publication",
     "system/publication/doi/doienabled": "Allow creation of Digital Object Identifier (DOI)",
+    "system/publication/doi/doipattern": "DOI pattern",
+    "system/publication/doi/doipattern-help": "Default is '\\{\\{uuid\\}\\}' but the DOI structure can be customized with database id and/or record group eg. 'example-\\{\\{groupOwner\\}\\}-\\{\\{id\\}\\}'",
     "system/publication/doi/doienabled-help": "A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible. More information available on <a href='https://www.datacite.org/dois.html'>DataCite website</a>.",
     "system/publication/doi/doipublicurl": "The final DOI URL prefix",
     "system/publication/doi/doipublicurl-help": "Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.",

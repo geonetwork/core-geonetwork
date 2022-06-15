@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchematronValidator;
-import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -66,11 +65,13 @@ public class DoiManager {
     private static final String DOI_ADD_XSL_PROCESS = "process/doi-add.xsl";
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
-    public static final String DOI_PREFIX_PARAMETER = "doiPrefix";
+    public static final String DOI_ID_PARAMETER = "doiId";
     public static final String DOI_DEFAULT_URL = "https://doi.org/";
+    public static final String DOI_DEFAULT_PATTERN = "{{uuid}}";
 
     private DoiClient client;
     private String doiPrefix;
+    private String doiPattern;
     private String landingPageTemplate;
     private boolean initialised = false;
 
@@ -80,6 +81,9 @@ public class DoiManager {
 
     @Autowired
     SchematronValidator validator;
+
+    @Autowired
+    DoiBuilder doiBuilder;
 
     @Autowired
     SchematronRepository schematronRepository;
@@ -107,14 +111,18 @@ public class DoiManager {
         if (sm != null) {
 
             String serverUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIURL);
-            String doiPublicUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL);
-            if (StringUtils.isEmpty(doiPublicUrl)) {
-                doiPublicUrl = DOI_DEFAULT_URL;
-            }
+            String doiPublicUrl = StringUtils.defaultIfEmpty(
+                    sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL),
+                    DOI_DEFAULT_URL);
             String username = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIUSERNAME);
             String password = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPASSWORD);
 
             doiPrefix = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIKEY);
+            doiPattern = StringUtils.defaultIfEmpty(
+                sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPATTERN),
+                DOI_DEFAULT_PATTERN
+            );
+
             landingPageTemplate = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE);
 
             final boolean emptyUrl = StringUtils.isEmpty(serverUrl);
@@ -151,13 +159,16 @@ public class DoiManager {
         }
     }
 
+    public String checkDoiUrl(AbstractMetadata metadata) {
+        return doiBuilder.create(doiPattern, doiPrefix, metadata);
+    }
 
     public Map<String, Boolean> check(ServiceContext serviceContext, AbstractMetadata metadata, Element dataciteMetadata) throws Exception {
         Map<String, Boolean> conditions = new HashMap<>();
         checkInitialised();
         conditions.put(DoiConditions.API_CONFIGURED, true);
 
-        String doi =  DoiBuilder.create(this.doiPrefix, metadata.getUuid());
+        String doi =  doiBuilder.create(doiPattern, doiPrefix, metadata);
         checkPreConditions(metadata, doi);
         conditions.put(DoiConditions.RECORD_IS_PUBLIC, true);
         conditions.put(DoiConditions.STANDARD_SUPPORT, true);
@@ -167,7 +178,7 @@ public class DoiManager {
         Element dataciteFormatMetadata =
             dataciteMetadata == null ?
             convertXmlToDataCiteFormat(metadata.getDataInfo().getSchemaId(),
-                metadata.getXmlData(false)) : dataciteMetadata;
+                metadata.getXmlData(false), doi) : dataciteMetadata;
         checkPreConditionsOnDataCite(metadata, doi, dataciteFormatMetadata, serviceContext.getLanguage());
         conditions.put(DoiConditions.DATACITE_FORMAT_IS_VALID, true);
         return conditions;
@@ -176,13 +187,13 @@ public class DoiManager {
     public Map<String, String> register(ServiceContext context, AbstractMetadata metadata) throws Exception {
         Map<String, String> doiInfo = new HashMap<>(3);
         // The new DOI for this record
-        String doi =  DoiBuilder.create(this.doiPrefix, metadata.getUuid());
+        String doi =  doiBuilder.create(doiPattern, doiPrefix, metadata);
         doiInfo.put("doi", doi);
 
         // The record in datacite format
         Element dataciteFormatMetadata =
                 convertXmlToDataCiteFormat(metadata.getDataInfo().getSchemaId(),
-                    metadata.getXmlData(false));
+                    metadata.getXmlData(false), doi);
 
         try {
             check(context, metadata, dataciteFormatMetadata);
@@ -408,7 +419,7 @@ public class DoiManager {
     public void unregisterDoi(AbstractMetadata metadata, ServiceContext context) throws DoiClientException, ResourceNotFoundException {
         checkInitialised();
 
-        final String doi = DoiBuilder.create(this.doiPrefix, metadata.getUuid());
+        final String doi = doiBuilder.create(doiPattern, doiPrefix, metadata);
         final String doiResponse = client.retrieveDoi(doi);
         if (doiResponse == null) {
             throw new ResourceNotFoundException(String.format(
@@ -479,7 +490,7 @@ public class DoiManager {
      * @return The record converted into the DataCite format.
      * @throws Exception if there is no conversion available.
      */
-    private Element convertXmlToDataCiteFormat(String schema, Element md) throws Exception {
+    private Element convertXmlToDataCiteFormat(String schema, Element md, String doi) throws Exception {
         final Path styleSheet = dm.getSchemaDir(schema).resolve(DATACITE_XSL_CONVERSION_FILE);
         final boolean exists = Files.exists(styleSheet);
         if (!exists) {
@@ -488,7 +499,7 @@ public class DoiManager {
         };
 
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put(DOI_PREFIX_PARAMETER, this.doiPrefix);
+        params.put(DOI_ID_PARAMETER, doi);
         Element dataciteMetadata = Xml.transform(md, styleSheet, params);
         return dataciteMetadata;
     }
