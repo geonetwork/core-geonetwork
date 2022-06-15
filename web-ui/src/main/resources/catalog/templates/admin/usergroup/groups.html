@@ -21,10 +21,11 @@
           <a href="" class="list-group-item"
              data-ng-repeat="g in pageItems()"
              data-ng-class="g.id === groupSelected.id ? 'active' : ''"
-             data-ng-click="selectGroup(g)"> {{g.label[lang]|empty:g.name}}
+             data-ng-click="selectGroup(g)">
             <img data-ng-if="g.logo"
                  data-ng-src="../../images/harvesting/{{g.logo}}"
-                 class="pull-right gn-logo" />
+                 class="gn-selected-logo" />
+            {{g.label[lang]|empty:g.name}}
           </a>
           <span data-gn-pagination-list=""
                 data-items="groups | filter:groupSearch | orderBy:sortByLabel"
@@ -144,10 +145,12 @@
 
               <!--Display saved logo-->
               <div class="row" data-ng-show="groupSelected.logo">
-                <div class="col-md-12">
+                <div class="col-md-6 gn-nopadding-left gn-nopadding-right">
                   <img data-ng-show="groupSelected.logo"
                        src="../../images/harvesting/{{ groupSelected.logo }}"
                        class="img-thumbnail form-group" data-ng-attr-title="{{ groupSelected.logo }}">
+                </div>
+                <div class="col-md-6">
                   <a href="" data-ng-click="deleteGroupLogo()"
                      class="text-danger">
                     <i data-ng-show="groupSelected.logo"
@@ -158,15 +161,15 @@
 
               <!--Display logo picker from harvester logos-->
               <div class="row" data-ng-show="queue.length == 0">
-                <div class="col-md-5 media-middle" translate>selectExistingLogo</div>
-                <div class="col-md-3">
-                  <div class="form-group" gn-logo-picker="groupSelected.logo"></div>
+                <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>selectExistingLogo</div>
+                <div class="col-md-12 gn-nopadding-left gn-nopadding-right gn-margin-bottom">
+                  <div gn-logo-picker="groupSelected.logo"></div>
                 </div>
               </div>
               <!--Display logo upload input-->
               <div class="row" data-ng-show="!groupSelected.logo" id="group-logo-upload">
-                <div class="col-md-5" translate>addNewLogo</div>
-                <div class="col-md-7" >
+                <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>addNewLogo</div>
+                <div class="col-md-12 gn-nopadding-left">
                   <div class="panel panel-default">
                     <div class="panel-heading" data-translate="">upload</div>
                     <div class="panel-body">
