@@ -70,12 +70,6 @@ public class AtomDescribe implements Service {
 
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
 

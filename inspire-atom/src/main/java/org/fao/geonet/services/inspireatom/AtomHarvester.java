@@ -42,12 +42,6 @@ public class AtomHarvester implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 

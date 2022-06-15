@@ -26,6 +26,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import nonapi.io.github.classgraph.utils.Join;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ReservedOperation;
@@ -53,6 +54,8 @@ import java.util.List;
 import java.util.Map;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 
+import static org.fao.geonet.inspireatom.util.InspireAtomUtil.retrieveKeywordsFromFileIdentifier;
+
 /**
  * INSPIRE OpenSearchDescription atom service.
  *
@@ -68,12 +71,6 @@ public class AtomServiceDescription implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -156,25 +153,21 @@ public class AtomServiceDescription implements Service {
         String feedSubtitle = inspireAtomFeed.getSubtitle();
         String feedLang = inspireAtomFeed.getLang();
         String feedUrl = inspireAtomFeed.getAtomUrl();
+        List<String> keywords = retrieveKeywordsFromFileIdentifier(context, fileIdentifier);
 
-        throw new NotImplementedException("Not implemented in ES");
-        // TODOES
-//        String keywords = LuceneSearcher.getMetadataFromIndex(context.getLanguage(), fileIdentifier, "keyword");
-//
-//
-//        // Process datasets information
-//        Element datasetsEl = processDatasetsInfo(datasetsInformation, fileIdentifier, context);
-//
-//        // Build response.
-//        return new Element("response")
-//            .addContent(new Element("fileId").setText(fileIdentifier))
-//            .addContent(new Element("title").setText(feedTitle))
-//            .addContent(new Element("subtitle").setText(feedSubtitle))
-//            .addContent(new Element("lang").setText(feedLang))
-//            .addContent(new Element("keywords").setText(keywords))
-//            .addContent(new Element("authorName").setText(feedAuthorName))
-//            .addContent(new Element("url").setText(feedUrl))
-//            .addContent(datasetsEl);
+        // Process datasets information
+        Element datasetsEl = processDatasetsInfo(datasetsInformation, fileIdentifier, context);
+
+        // Build response.
+        return new Element("response")
+            .addContent(new Element("fileId").setText(fileIdentifier))
+            .addContent(new Element("title").setText(feedTitle))
+            .addContent(new Element("subtitle").setText(feedSubtitle))
+            .addContent(new Element("lang").setText(feedLang))
+            .addContent(new Element("keywords").setText(Join.join(", ", keywords)))
+            .addContent(new Element("authorName").setText(feedAuthorName))
+            .addContent(new Element("url").setText(feedUrl))
+            .addContent(datasetsEl);
     }
 
 

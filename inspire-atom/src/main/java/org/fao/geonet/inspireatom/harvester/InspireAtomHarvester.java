@@ -125,7 +125,7 @@ public class InspireAtomHarvester {
                 processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result);
 
             // Process DATASET metadata feeds related to the service metadata
-            logger.info("ATOM feed harvest : processing dataset metadata feeds (" + datasetsInformation.size() + ")");
+            logger.info("ATOM feed harvest: processing dataset metadata feeds (" + datasetsInformation.size() + ")");
             processDatasetsMetadataFeeds(dataMan, datasetsInformation, result);
 
             logger.info("ATOM feed harvest finished");
@@ -222,10 +222,9 @@ public class InspireAtomHarvester {
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
-
                 String atomUrl = entry.getValue();
-                logger.debug("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
+                logger.info("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
 
                 String atomFeedDocument = InspireAtomUtil.retrieveRemoteAtomFeedDocument(gc, atomUrl);
                 logger.debug("Atom feed Document for service metadata (" + metadataUuid + "): " + atomFeedDocument);
