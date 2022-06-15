@@ -222,7 +222,7 @@
               <xsl:for-each select="tags">
                 <mri:keyword>
                   <gco:CharacterString>
-                    <xsl:value-of select="name" disable-output-escaping="yes"/> <!-- this can contain HTML entities -->
+                    <xsl:value-of select="java-xsl-util:html2textNormalized(name)" /> <!-- this can contain HTML entities -->
                   </gco:CharacterString>
                 </mri:keyword>
               </xsl:for-each>
