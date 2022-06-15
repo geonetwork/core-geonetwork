@@ -198,8 +198,8 @@
    *
    */
       .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
-        'gnConfigService', '$filter',
-        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter) {
+        'gnConfigService', '$filter', 'gnConfig',
+        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter, gnConfig) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -216,6 +216,13 @@
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
               scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
+              scope.isMdWorkflowEnableForMetadata = gnConfig['metadata.workflow.enable'] &&
+                scope.gnCurrentEdit.metadata.draft === 'y';
+              scope.isDoiApplicableForMetadata = gnConfig['system.publication.doi.doienabled']
+                && scope.gnCurrentEdit.metadata.isTemplate === 'n'
+                && scope.gnCurrentEdit.metadata.isPublished()
+                && scope.gnCurrentEdit.metadata.isHarvested === 'n';
+
 
               /**
                * Calls service 'relations.get' to load
@@ -238,6 +245,21 @@
                 return angular.isUndefined(scope.types) ? true :
                         category.match(scope.types) !== null;
               };
+
+              /**
+               * Doi can be published for a resource if:
+               *   - Doi publication is enabled.
+               *   - The resource matches doi.org url
+               *   - The workflow is not enabled for the metadata and
+               *     the metadata is published.
+               *
+               */
+              scope.canPublishDoiForResource = function (resource){
+                return scope.isDoiApplicableForMetadata
+                  && resource.lUrl !== null
+                  && resource.lUrl.match('doi.org') !== null
+                  && !scope.isMdWorkflowEnableForMetadata;
+              }
 
               /**
                * Builds metadata url checking if the resource points to internal or external url.
