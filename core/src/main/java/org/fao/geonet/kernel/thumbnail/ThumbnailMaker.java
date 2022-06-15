@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2014 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,8 +24,6 @@
 package org.fao.geonet.kernel.thumbnail;
 
 import jeeves.server.context.ServiceContext;
-
-import org.dom4j.DocumentException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -36,19 +34,13 @@ import org.mapfish.print.utils.PJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.awt.Graphics2D;
-import java.awt.Transparency;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 /**
  * Use MapFish print module to generate thumbnail.
@@ -155,7 +147,7 @@ public class ThumbnailMaker {
     }
 
     public Path generateThumbnail(String jsonConfig, Integer rotationAngle)
-        throws IOException, DocumentException, com.itextpdf.text.DocumentException {
+        throws IOException {
 
         PJsonObject specJson = MapPrinter.parseSpec(jsonConfig);
         if (Log.isDebugEnabled(LOGGER_NAME)) {
