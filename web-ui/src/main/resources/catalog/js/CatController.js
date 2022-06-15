@@ -1482,6 +1482,14 @@ goog.require('gn_alert');
                 '');
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
+          canDeletePublishedMetadata: function () {
+            var profile = gnConfig['metadata.delete.profilePublishedMetadata']
+                || 'Editor',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
 
           // The md provide the information about
           // if the current user can edit records or not
