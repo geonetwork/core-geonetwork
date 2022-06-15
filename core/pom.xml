@@ -399,11 +399,6 @@
       <artifactId>print-lib</artifactId>
       <exclusions>
         <exclusion>
-          <!-- provided by openpdf -->
-          <groupId>com.itextpdf</groupId>
-          <artifactId>itextpdf</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
         </exclusion>

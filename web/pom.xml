@@ -323,10 +323,6 @@
       <artifactId>print-lib</artifactId>
       <exclusions>
         <exclusion>
-          <groupId>com.lowagie</groupId>
-          <artifactId>itext</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
         </exclusion>
