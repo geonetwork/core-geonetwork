@@ -55,33 +55,33 @@ if [[ "$1" = catalina.sh ]]; then
 
     # Set Elasticsearch properties
     if [ "${ES_HOST}" != "localhost" ]; then
-        sed -i "s#http://localhost:9200#${ES_PROTOCOL:="http"}://${ES_HOST}:${ES_PORT:="9200"}#g" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/web.xml" ;
-        sed -i "s#es.host=localhost#es.host=${ES_HOST}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#http://localhost:9200#${ES_PROTOCOL:="http"}://${ES_HOST}:${ES_PORT:="9200"}#g" "/opt/geonetwork/WEB-INF/web.xml" ;
+        sed -i "s#es.host=localhost#es.host=${ES_HOST}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi;
 
     if [ -n "${ES_PROTOCOL}" ] && [ "${ES_PROTOCOL}" != "http" ] ; then
-        sed -i "s#es.protocol=http#es.protocol=${ES_PROTOCOL}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#es.protocol=http#es.protocol=${ES_PROTOCOL}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi
 
     if [ -n "${ES_PORT}" ] && [ "$ES_PORT" != "9200" ] ; then
-        sed -i "s#es.port=9200#es.port=${ES_PORT}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#es.port=9200#es.port=${ES_PORT}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi
 
     if [ -n "${ES_INDEX_RECORDS}" ] && [ "$ES_INDEX_RECORDS" != "gn-records" ] ; then
-        sed -i "s#es.index.records=gn-records#es.index.records=${ES_INDEX_RECORDS}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#es.index.records=gn-records#es.index.records=${ES_INDEX_RECORDS}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi
 
     if [ "${ES_USERNAME}" != "" ] ; then
-        sed -i "s#es.username=#es.username=${ES_USERNAME}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#es.username=#es.username=${ES_USERNAME}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi
 
     if [ "${ES_PASSWORD}" != "" ] ; then
-        sed -i "s#es.password=#es.password=${ES_PASSWORD}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#es.password=#es.password=${ES_PASSWORD}#" "/opt/geonetwork/WEB-INF/config.properties" ;
     fi
 
     if [ -n "${KB_URL}" ] && [ "$KB_URL" != "http://localhost:5601" ]; then
-        sed -i "s#kb.url=http://localhost:5601#kb.url=${KB_URL}#" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/config.properties" ;
-        sed -i "s#http://localhost:5601#${KB_URL}#g" "${CATALINA_HOME}/webapps/geonetwork/WEB-INF/web.xml" ;
+        sed -i "s#kb.url=http://localhost:5601#kb.url=${KB_URL}#" "/opt/geonetwork/WEB-INF/config.properties" ;
+        sed -i "s#http://localhost:5601#${KB_URL}#g" "/opt/geonetwork/WEB-INF/web.xml" ;
     fi
 
     exec "$@"
