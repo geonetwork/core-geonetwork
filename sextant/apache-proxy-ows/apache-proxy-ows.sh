@@ -14,8 +14,8 @@ if [ ! -e "$1" ]; then
     exit 0
 fi
 
-
 rm apache_conf.csv
+rm sextant_services.conf
 
 shopt -s globstar
 echo 'Début de parcours de fichier...'
@@ -78,3 +78,9 @@ done
 cat temp.csv | env LC_COLLATE=c sort -t"|" -u -k1 >> apache_conf.csv
 # supprime le fichier csv existant.
 rm temp.csv
+while IFS=, read -r field1 field2
+do
+    echo "ProxyPass $field2" >> sextant_services.conf
+    echo "ProxyPassReverse $field2" >> sextant_services.conf
+    echo >> sextant_services.conf
+done < apache_conf.csv
