@@ -44,4 +44,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         #TODO: Enable tests, if reliable:
-        run: mvn -DskipTests=true -Dmaven.javadoc.skip=true -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=geonetwork_core-geonetwork
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=geonetwork_core-geonetwork -DskipTests=true -Dmaven.javadoc.skip=true
