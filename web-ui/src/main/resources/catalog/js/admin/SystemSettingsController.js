@@ -530,21 +530,6 @@
       }
 
       /**
-       * Save settings and move to the batch process page
-       *
-       * TODO: set the process to use and select all
-       */
-      $scope.saveAndProcessSettings = function(formId, process) {
-        $scope.saveSettings(formId);
-
-        $location.path('/tools/batch/select/all/process/' + process)
-            .search(
-            'urlPrefix=' + buildUrl($scope.initalSettings) +
-            '&newUrlPrefix=' + buildUrl($scope.settings));
-      };
-
-
-      /**
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function() {
