@@ -93,6 +93,7 @@ public class OpenApiController extends AbstractOpenApiResource {
         springDocConfigProperties.setPathsToExclude(Arrays.asList(new String[]{"/0.1/**"}));
         springDocConfigProperties.setPackagesToScan(Arrays.asList(new String[]{
             "org.fao.geonet.api",
+            "org.fao.geonet.services.inspireatom",
             "org.fao.geonet.monitor.service"}));
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.servletContextProvider = servletContextProvider;

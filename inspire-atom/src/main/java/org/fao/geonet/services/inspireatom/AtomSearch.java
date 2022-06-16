@@ -24,51 +24,100 @@ package org.fao.geonet.services.inspireatom;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
+import static org.springframework.http.HttpStatus.OK;
 
-/**
- * INSPIRE atom search service.
- *
- * @author Jose García
- */
-public class AtomSearch implements Service {
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        SettingManager sm = context.getBean(SettingManager.class);
-        DataManager dm = context.getBean(DataManager.class);
-        InspireAtomService service = context.getBean(InspireAtomService.class);
-        EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+@RequestMapping(value = {
+    "/{portal}/api/atom"
+})
+@Tag(name = "atom",
+    description = "ATOM")
+@RestController
+public class AtomSearch {
+
+    @Autowired
+    InspireAtomService service;
+
+    @Autowired
+    SettingManager sm;
+
+    @Autowired
+    DataManager dm;
+
+    @Autowired
+    EsSearchManager searchMan;
+
+    @Autowired
+    InspireAtomFeedRepository inspireAtomFeedRepository;
+
+    @Autowired
+    LanguageUtils languageUtils;
+
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get ATOM feeds",
+        description = "")
+    @GetMapping(
+        value = "/feeds",
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(OK)
+    @ResponseBody
+    public Element feeds(
+        @Parameter(
+            description = "fileIdentifier",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String fileIdentifier,
+        @Parameter(hidden = true)
+            HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
@@ -77,7 +126,6 @@ public class AtomSearch implements Service {
             throw new Exception("Inspire is disabled");
         }
 
-        String fileIdentifier = params.getChildText("fileIdentifier");
         List<String> datasetIdentifiers = new ArrayList<>();
 
         // If fileIdentifier is provided search only in the related datasets
@@ -94,9 +142,9 @@ public class AtomSearch implements Service {
             // Retrieve the datasets related to the service metadata
             datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
 
-            // Add query filter
-            String values = Joiner.on(" or ").join(datasetIdentifiers);
-            params.addContent(new Element("identifier").setText(values));
+            // Add query filter / TODO Migrate ?
+            //            String values = Joiner.on(" or ").join(datasetIdentifiers);
+            //            params.addContent(new Element("identifier").setText(values));
         }
 
         String privilegesFilter = buildPermissionsFilter(context);
@@ -138,7 +186,41 @@ public class AtomSearch implements Service {
                 Log.debug(Geonet.ATOM, String.format("No feed available for %s", hit.getId()));
             }
         }
-
         return feeds;
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get ATOM feeds",
+        description = "")
+    @GetMapping(
+        value = "/feeds",
+        produces = MediaType.TEXT_HTML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(OK)
+    @ResponseBody
+    public String feedsAsHtml(
+        @Parameter(
+            description = "fileIdentifier",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String fileIdentifier,
+        @Parameter(hidden = true)
+            HttpServletRequest request) throws Exception {
+        Element feeds = feeds(fileIdentifier, request);
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+
+        return new XsltResponseWriter(null, "atom-feeds")
+            .withXml(feeds)
+            .withJson(String.format("catalog/locales/%s-v4.json", language))
+            .withXsl("xslt/services/inspire-atom/search-results.xsl")
+            .asHtml();
     }
 }

@@ -331,5 +331,14 @@
   "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)",
   "portals": "Change Portals",
   "chooseFileToUpload": "Choose or drop a file here",
-  "switchPortals": "Switch to another Portal"
+  "switchPortals": "Switch to another Portal",
+  "atom.header": "Atom feeds",
+  "atom.noresults": "No atom feed available",
+  "atom.title": "Title",
+  "atom.content": "Content",
+  "atom.id": "Identifier",
+  "atom.rights": "Rights",
+  "atom.describedby": "Described by",
+  "atom.author": "Author",
+  "atom.updated": "Updated"
 }

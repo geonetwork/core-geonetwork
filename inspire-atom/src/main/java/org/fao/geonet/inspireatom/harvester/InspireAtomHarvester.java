@@ -61,8 +61,6 @@ import java.util.*;
  * @author Jose García
  */
 public class InspireAtomHarvester {
-    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
-    private final static String EXTRACT_DATASET_ID_XSLT = "extract-datasetid.xsl";
     private Logger logger = Log.createLogger(Geonet.ATOM);
     /**
      * GeoNetwork context.
