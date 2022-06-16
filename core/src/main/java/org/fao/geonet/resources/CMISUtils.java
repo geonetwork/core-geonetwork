@@ -125,7 +125,7 @@ public class CMISUtils {
                 }
             });
         } catch (ExecutionException e) {
-            throw new ResourceNotFoundException("Error getting resource from cache: " + folderKey, e);
+            throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
         }
         if (refresh && !foundWithoutCache[0]) {
             try {
@@ -156,15 +156,23 @@ public class CMISUtils {
     }
 
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder) {
-        return getCmisObjectMap(folder, baseFolder, null);
+        return getCmisObjectMap(folder, baseFolder, createOperationContext(), null);
+    }
+
+    public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, OperationContext oc) {
+        return getCmisObjectMap(folder, baseFolder,  oc, null);
     }
 
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, String suffixlessKeyFilename) {
+        return getCmisObjectMap(folder, baseFolder,  createOperationContext(), null);
+    }
+
+    public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, OperationContext oc, String suffixlessKeyFilename) {
         if (baseFolder == null) {
             baseFolder = "";
         }
         Map<String, Document> documentMap = new HashMap<>();
-        for (CmisObject cmisObject : folder.getChildren()) {
+        for (CmisObject cmisObject : folder.getChildren(oc)) {
             if (cmisObject instanceof Folder) {
                 documentMap.putAll(getCmisObjectMap((Folder) cmisObject, baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), suffixlessKeyFilename));
                 return documentMap;

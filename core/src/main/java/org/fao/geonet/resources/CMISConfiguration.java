@@ -40,7 +40,10 @@ import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -575,6 +578,35 @@ public class CMISConfiguration {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
                 }
+
+                // Setup default filter. Only include properties that are used by the application.
+                // Having too many may cause performance issues on some systems.
+                // The default is generally an empty string meaning all properties are used.
+                if (StringUtils.isEmpty(client.getDefaultContext().getFilterString())) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context filter.");
+                    // excluding "cmis:secondaryObjectTypeIds" from the list as it could decrease performance on some systems.
+                    client.getDefaultContext().setFilter(new HashSet<>(Arrays.asList(
+                        "cmis:objectTypeId",
+                        "cmis:description",
+                        "cmis:createdBy",
+                        "cmis:contentStreamFileName",
+                        "cmis:isMajorVersion",
+                        "cmis:contentStreamLength",
+                        "cmis:contentStreamMimeType",
+                        "cmis:baseTypeId",
+                        "cmis:isLatestMajorVersion",
+                        "cmis:versionLabel",
+                        "cmis:creationDate",
+                        "cmis:name",
+                        "cmis:isLatestVersion",
+                        "cmis:lastModificationDate",
+                        "cmis:objectId",
+                        "cmis:lastModifiedBy",
+                        "cmis:contentStreamId",
+                        "cmis:changeToken",
+                        "cmis:versionSeriesId")));
+                }
+
             } catch (CmisRuntimeException | CmisConnectionException e) {
                 client = null;
                 Log.error(Geonet.RESOURCES,
