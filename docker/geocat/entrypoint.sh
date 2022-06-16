@@ -29,9 +29,15 @@ if [[ "$1" = catalina.sh ]]; then
     echo "JAVA_OPTS=${JAVA_OPTS}"
     echo "================================="
     echo "CATALINA_OPTS=${CATALINA_OPTS}"
+    echo "WEBAPP_CONTEXT_NAME=${WEBAPP_CONTEXT_NAME}"
     echo "================================="
     echo ""
     echo ""
+
+    if [[ ! -f "${CATALINA_HOME}/conf/Catalina/localhost/${WEBAPP_CONTEXT_NAME}.xml" ]]; then
+      echo "Creating context file: ${CATALINA_HOME}/conf/Catalina/localhost/${WEBAPP_CONTEXT_NAME}.xml"
+      cp "${CATALINA_HOME}/conf/Catalina/localhost/geonetwork.xml.dist" "${CATALINA_HOME}/conf/Catalina/localhost/${WEBAPP_CONTEXT_NAME}.xml"
+    fi
 
     # Sanity check: ES_HOST variable is mandatory
     if [ -z "${ES_HOST}" ]; then

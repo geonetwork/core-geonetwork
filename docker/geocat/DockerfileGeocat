@@ -29,8 +29,10 @@ RUN test -n "$DATA_DIR"
 ENV NODE_VERSION 18.0.0
 ENV ES_DUMP_VER=${ES_DUMP_VER:-latest}
 
-ENV CATALINA_OPTS "-Dgeonetwork.dir=$DATA_DIR -Dgeonetwork.schema.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/data/formatter"
+ENV CATALINA_OPTS "-Dgeonetwork.db.type=jndi -Dgeonetwork.dir=$DATA_DIR -Dgeonetwork.schema.dir=/opt/geonetwork/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/opt/geonetwork/WEB-INF/data/data/formatter -Dgeonetwork.config.dir=$DATA_DIR/config -Dgeonetwork.indexConfig.dir=/opt/geonetwork/WEB-INF/data/config/index"
 ENV JAVA_OPTS "-Xmx2048M -Xss2M -XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true"
+ENV WEBAPP_CONTEXT_NAME=geonetwork
+
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -91,10 +93,13 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && apt-get autoremove -y ruby-dev libpq-dev build-essential
 
 
-COPY --from=downloader /tmp/geonetwork/geonetwork ${CATALINA_HOME}/webapps/geonetwork
+COPY ./geonetwork.xml  $CATALINA_HOME/conf/Catalina/localhost/geonetwork.xml.dist
 
-RUN cp "${CATALINA_HOME}"/webapps/geonetwork/WEB-INF/lib/postgresql-*.jar "${CATALINA_HOME}/lib" \
+COPY --from=downloader /var/lib/jetty/webapps/geonetwork ${CATALINA_HOME}/webapps/opt/geonetwork
+
+RUN cp "${CATALINA_HOME}"/webapps/opt/geonetwork/WEB-INF/lib/postgresql-*.jar "${CATALINA_HOME}/lib" \
     && mkdir -p ${DATA_DIR}
+  
 
 COPY ./datasync/ /opt/datasync/
 
