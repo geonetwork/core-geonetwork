@@ -45,13 +45,6 @@
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-
-  <!-- List of keywords to search for to flag a record as opendata.
-   Do not put accents or upper case letters here as comparison will not
-   take them in account. -->
-  <xsl:variable name="openDataKeywords"
-                select="'opendata|open data|donnees ouvertes'"/>
-
   <xsl:variable name="dateFormat" as="xs:string"
                 select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
@@ -183,32 +176,49 @@
         <useLimitation><xsl:value-of select="gn-fn-index:json-escape(.)"/></useLimitation>
       </xsl:for-each>
 
-      <xsl:variable name="geoTags"
-                    select="dct:spatial[. != '']"/>
-      <xsl:if test="count($geoTags) > 0">
-        <keywordType-place type="object">[
-          <xsl:for-each select="$geoTags">
-            {"default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>}
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-        ]</keywordType-place>
-      </xsl:if>
+      <xsl:variable name="allKeywords">
+        <xsl:variable name="keywords"
+                      select="dc:subject[. != '']"/>
+        <xsl:if test="count($keywords) > 0">
+          <thesaurus>
+            <info type="theme" field="otherKeywords-theme"/>
+            <keywords>
+              <xsl:for-each select="$keywords">
+                <keyword>
+                  <values>
+                    <value>
+                      "default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+                    </value>
+                  </values>
+                </keyword>
+              </xsl:for-each>
+            </keywords>
+          </thesaurus>
+        </xsl:if>
 
-      <xsl:variable name="tags"
-                    select="dc:subject[. != '']"/>
+        <xsl:variable name="geoDescription"
+                      select="dct:spatial[. != '']"/>
+        <xsl:if test="count($geoDescription) > 0">
+          <thesaurus>
+            <info type="place" field="otherKeywords-place"/>
+            <keywords>
+              <xsl:for-each select="$geoDescription">
+                <keyword>
+                  <values>
+                    <value>
+                      "default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+                    </value>
+                  </values>
+                </keyword>
+              </xsl:for-each>
+            </keywords>
+          </thesaurus>
+        </xsl:if>
+      </xsl:variable>
 
-      <tagNumber>
-        <xsl:value-of select="count($tags)"/>
-      </tagNumber>
-
-      <xsl:if test="count($tags) > 0">
-        <tag type="object">[
-          <xsl:for-each select="$tags">
-            {"default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>}
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-          ]</tag>
-      </xsl:if>
+      <xsl:call-template name="build-all-keyword-fields">
+        <xsl:with-param name="allKeywords" select="$allKeywords"/>
+      </xsl:call-template>
 
 
 
