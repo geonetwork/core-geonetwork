@@ -75,6 +75,6 @@ for identityMapping in "${identityMappings[@]}"; do
     ((configCounter++))
 
 done
-cat temp.csv | env LC_COLLATE=c sort -t"|" -k1 >> apache_conf.csv
+cat temp.csv | env LC_COLLATE=c sort -t"|" -u -k1 >> apache_conf.csv
 # supprime le fichier csv existant.
 rm temp.csv
