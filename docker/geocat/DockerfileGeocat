@@ -95,9 +95,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 COPY ./geonetwork.xml  $CATALINA_HOME/conf/Catalina/localhost/geonetwork.xml.dist
 
-COPY --from=downloader /var/lib/jetty/webapps/geonetwork ${CATALINA_HOME}/webapps/opt/geonetwork
+COPY --from=downloader /tmp/geonetwork/geonetwork /opt/geonetwork
 
-RUN cp "${CATALINA_HOME}"/webapps/opt/geonetwork/WEB-INF/lib/postgresql-*.jar "${CATALINA_HOME}/lib" \
+RUN cp /opt/geonetwork/WEB-INF/lib/postgresql-*.jar "${CATALINA_HOME}/lib" \
     && mkdir -p ${DATA_DIR}
   
 
