@@ -11,6 +11,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    # Only analyze with Sonar on non-fork repos:
+    # https://github.community/t/how-to-detect-a-pull-request-from-a-fork/18363/4
+    if: github.event.pull_request.head.repo.fork != true
     steps:
       - uses: actions/checkout@v3
         with:
