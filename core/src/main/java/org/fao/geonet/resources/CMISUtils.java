@@ -43,6 +43,7 @@ import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.client.api.OperationContext;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
@@ -114,7 +115,7 @@ public class CMISUtils {
                         // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
                         Folder folder;
                         synchronized (this) {
-                            ObjectId objectId = cmisConfiguration.getClient().createPath(subFolder, folderKey, "cmis:folder");
+                            ObjectId objectId = cmisConfiguration.getClient().createPath(subFolder, folderKey, BaseTypeId.CMIS_FOLDER.value());
                             folder = (Folder) cmisConfiguration.getClient().getObject(objectId);
                         }
                         if (refresh) {
@@ -196,7 +197,7 @@ public class CMISUtils {
 
 
         //Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
+        properties.put(PropertyIds.OBJECT_TYPE_ID, BaseTypeId.CMIS_DOCUMENT.value());
         properties.put(PropertyIds.NAME, filenameKey);
 
         if (changeDate != null) {

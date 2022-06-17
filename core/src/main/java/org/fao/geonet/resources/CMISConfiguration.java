@@ -27,6 +27,7 @@ import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
@@ -586,25 +587,25 @@ public class CMISConfiguration {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context filter.");
                     // excluding "cmis:secondaryObjectTypeIds" from the list as it could decrease performance on some systems.
                     client.getDefaultContext().setFilter(new HashSet<>(Arrays.asList(
-                        "cmis:objectTypeId",
-                        "cmis:description",
-                        "cmis:createdBy",
-                        "cmis:contentStreamFileName",
-                        "cmis:isMajorVersion",
-                        "cmis:contentStreamLength",
-                        "cmis:contentStreamMimeType",
-                        "cmis:baseTypeId",
-                        "cmis:isLatestMajorVersion",
-                        "cmis:versionLabel",
-                        "cmis:creationDate",
-                        "cmis:name",
-                        "cmis:isLatestVersion",
-                        "cmis:lastModificationDate",
-                        "cmis:objectId",
-                        "cmis:lastModifiedBy",
-                        "cmis:contentStreamId",
-                        "cmis:changeToken",
-                        "cmis:versionSeriesId")));
+                        PropertyIds.NAME,
+                        PropertyIds.OBJECT_ID,
+                        PropertyIds.OBJECT_TYPE_ID,
+                        PropertyIds.BASE_TYPE_ID,
+                        PropertyIds.CREATED_BY,
+                        PropertyIds.CREATION_DATE,
+                        PropertyIds.LAST_MODIFIED_BY,
+                        PropertyIds.LAST_MODIFICATION_DATE,
+                        PropertyIds.CHANGE_TOKEN,
+                        PropertyIds.DESCRIPTION,
+                        PropertyIds.IS_LATEST_VERSION,
+                        PropertyIds.IS_MAJOR_VERSION,
+                        PropertyIds.IS_LATEST_MAJOR_VERSION,
+                        PropertyIds.VERSION_LABEL,
+                        PropertyIds.VERSION_SERIES_ID,
+                        PropertyIds.CONTENT_STREAM_LENGTH,
+                        PropertyIds.CONTENT_STREAM_MIME_TYPE,
+                        PropertyIds.CONTENT_STREAM_FILE_NAME,
+                        PropertyIds.CONTENT_STREAM_ID)));
                 }
 
             } catch (CmisRuntimeException | CmisConnectionException e) {
