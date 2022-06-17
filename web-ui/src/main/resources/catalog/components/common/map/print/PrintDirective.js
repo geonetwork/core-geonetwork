@@ -73,7 +73,7 @@
           overlayCanvas.width = width;
           overlayCanvas.height = height;
           var ctx = overlayCanvas.getContext('2d');
-          
+
 
           var minx, miny, maxx, maxy;
           minx = printRectangle[0], miny = printRectangle[1],
@@ -492,14 +492,15 @@
               type: 'WMS',
               baseURL: config.wmsUrl ||
                   layer.url ||
-                  layer.getSource().getParams().URL,
+                  layer.getSource().getParams().URL ||
+                  layer.getSource().getUrls()[0],
               layers: layers,
               styles: styles,
               format: 'image/' + (config.format || 'png'),
               customParams: {
                 'EXCEPTIONS': 'XML',
                 'TRANSPARENT': 'true',
-                'CRS': proj.getCode(), 
+                'CRS': proj.getCode(),
                 'TIME': params.TIME
               },
               singleTile: config.singleTile || true
