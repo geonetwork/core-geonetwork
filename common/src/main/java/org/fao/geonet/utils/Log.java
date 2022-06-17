@@ -25,31 +25,55 @@ package org.fao.geonet.utils;
 
 
 import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.apache.log4j.bridge.AppenderWrapper;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.appender.RollingFileAppender;
 
+import java.io.File;
 import java.util.Enumeration;
 
 //=============================================================================
 
+/**
+ * Jeeves logging integration, defining functional logger categories by module
+ * (rather that strictly based on java package structure).
+ */
 public final class Log {
+
+    /** Jeeves base logging moodule. */
     public static final String JEEVES = "jeeves";
 
     //---------------------------------------------------------------------------
     //--- Logging constants
     //---------------------------------------------------------------------------
+    /** Jeeves engine */
     public static final String ENGINE = JEEVES + ".engine";
+    /** Jeeves monitor */
     public static final String MONITOR = JEEVES + ".monitor";
+    /** Jeeves application handler */
     public static final String APPHAND = JEEVES + ".apphand";
+    /** Jeeves web application */
     public static final String WEBAPP = JEEVES + ".webapp";
+    /** Jeeves request handling */
     public static final String REQUEST = JEEVES + ".request";
+    /** Jeeves service */
     public static final String SERVICE = JEEVES + ".service";
+
+    /** Jeeves scheduler, used for {@code ScheduleContext}. */
     public static final String SCHEDULER = JEEVES + ".scheduler";
+
+    /** Jeeves resources */
     public static final String RESOURCES = JEEVES + ".resources";
+
+    /** Jeeves xlink processor */
     public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
+
+    /** Jeeves xml resolver */
     public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
+    /** Jeeves transformer factory */
     public static final String TRANSFORMER_FACTORY = JEEVES
         + ".transformerFactory";
     /**
@@ -134,12 +158,30 @@ public final class Log {
     //--------------------------------------------------------------------------
 
     /**
-     * Returns a simple logger object
+     * Logger wrapper providing module logging services.
+     *
+     * The provided {@code fallbackModule} is used to indicate parent module to
+     * assist in determing log file location.
+     *
+     * @param module
+     *
+     * @return logger providing module logging services.
      */
     public static org.fao.geonet.Logger createLogger(final String module) {
         return createLogger(module, null);
     }
 
+    /**
+     * Logger wrapper providing module logging services.
+     *
+     * The provided {@code fallbackModule} is used to indicate parent module to
+     * assist in determing log file location.
+     *
+     * @param module
+     * @param fallbackModule
+     *
+     * @return logger providing module logging services.
+     */
     public static org.fao.geonet.Logger createLogger(final String module,
                                                      final String fallbackModule) {
         return new org.fao.geonet.Logger() {
@@ -172,11 +214,22 @@ public final class Log {
                 Log.error(module, t.getMessage(), t);
             }
 
-            public void setAppender(FileAppender fa) {
+            public void setAppender(org.apache.log4j.FileAppender fa) {
                 Logger.getLogger(module).removeAllAppenders();
                 Logger.getLogger(module).addAppender(fa);
             }
 
+            /**
+             * The log file name from the file appender for this module.
+             *
+             * Note both module and fallback module are provided allowing providing a better opportunity
+             * to learn the log file location. Harvesters use the log file name parent directory as a good
+             * location to create {@code /harvester_logs/} folder.
+             *
+             * Built-in configuration uses log file location {@code logs/geonetwork.log} relative to the current directory, or relative to system property {@code log_file}.
+             *
+             * @return logfile location of {@code logs/geonetwork.log} file
+             */
             public String getFileAppender() {
                 // Set effective level to be sure it writes the log
                 Logger.getLogger(module).setLevel(getThreshold());
@@ -185,21 +238,38 @@ public final class Log {
                 Enumeration appenders = Logger.getLogger(module)
                     .getAllAppenders();
                 while (appenders.hasMoreElements()) {
-                    Appender a = (Appender) appenders.nextElement();
-                    if (a instanceof FileAppender) {
-                        return ((FileAppender) a).getFile();
+                    Appender appender = (Appender) appenders.nextElement();
+                    File file = toLogFile(appender);
+                    if (file != null) {
+                        return file.getName();
                     }
                 }
                 appenders = Logger.getLogger(fallbackModule).getAllAppenders();
                 while (appenders.hasMoreElements()) {
-                    Appender a = (Appender) appenders.nextElement();
-                    if (a instanceof FileAppender) {
-                        return ((FileAppender) a).getFile();
+                    Appender appender = (Appender) appenders.nextElement();
+                    File file = toLogFile(appender);
+                    if (file != null) {
+                        return file.getName();
                     }
                 }
-
+                /*
+                if (System.getProperties().containsKey("log_dir")){
+                    File logDir = new File( System.getProperty("log_dir"));
+                    if( logDir.exists() && logDir.isDirectory()){
+                        File logFile = new File( logDir, "logs/geonetwork.log");
+                        if(logFile.exists()){
+                            return logFile;
+                        }
+                    }
+                }
+                else  {
+                    File logFile = new File("logs/geonetwork.log");
+                    if(logFile.exists()){
+                        return logFile;
+                    }
+                }
+                */
                 return "";
-
             }
 
             public Level getThreshold() {
@@ -211,6 +281,37 @@ public final class Log {
                 return module;
             }
         };
+    }
+
+    /**
+     * Looks up log file location from FileAppender or RollingFileAppender, and
+     * ensures the file exsists.
+     *
+     * @param appender
+     * @return log file location (providing file exists).
+     */
+    private static File toLogFile(Appender appender){
+        if( appender instanceof AppenderWrapper){
+            AppenderWrapper wrapper = (AppenderWrapper) appender;
+            org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
+            if( appender2 instanceof FileAppender){
+                FileAppender fileAppender = (FileAppender) appender2;
+                String fileName = fileAppender.getFileName();
+                File file = new File(fileName);
+                if(file.exists()){
+                    return file;
+                }
+            }
+            if( appender2 instanceof RollingFileAppender){
+                RollingFileAppender fileAppender = (RollingFileAppender) appender2;
+                String fileName = fileAppender.getFileName();
+                File file = new File(fileName);
+                if(file.exists()){
+                    return file;
+                }
+            }
+        }
+        return null;
     }
 
 }

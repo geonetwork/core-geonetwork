@@ -19,7 +19,7 @@
   </Appenders>
   <Loggers>
     <!-- Geonetwork module (and submodule) logging -->
-    <Logger name="geonetwork" level="error" additivity="false">
+    <Logger name="geonetwork" level="warn" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Logger>
@@ -51,7 +51,7 @@
     <Logger name="geonetwork.mef" level="error"/>
     <Logger name="geonetwork.resources" level="error"/>
     <Logger name="geonetwork.schemamanager" level="error"/>
-    <Logger name="geonetwork.search" level="error"/>
+    <Logger name="geonetwork.search" level="warn"/>
     <Logger name="geonetwork.security" level="error"/>
     <Logger name="geonetwork.spatineo" level="error"/>
     <Logger name="geonetwork.sru" level="error"/>

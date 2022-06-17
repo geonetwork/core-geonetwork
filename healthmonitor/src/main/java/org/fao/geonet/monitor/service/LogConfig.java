@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,8 +35,11 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.FileAppender;
+import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
+import org.apache.log4j.bridge.AppenderWrapper;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.util.FileUtil;
 import org.fao.geonet.utils.Log;
@@ -48,52 +50,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * get last lines of log
+ * Service to get last lines of log.
+ *
+ * This service is deprecated, please transition to use of {@code LoggingApi} service.
  *
  * @author bmaire
  */
 @Deprecated
 @Controller("/log")
 public class LogConfig {
-    private static final String fileAppenderName = "fileAppender";
-    private static final int maxLines = 20000;
-    private FileAppender fileAppender = null;
+    /**
+     * This is the name of the RollingFileAppender in your log4j2.xml configuration file.
+     *
+     * LogConofig uses this name to lookup RollingFileAppender to check configuration in
+     * case a custom log file location has been used.
+     */
+    private static final String FILE_APPENDER_NAME = "File";
 
-    @PostConstruct
-    public void init() throws Exception {
-        isAppenderLogFileLoaded();
-    }
-
-
-    boolean isAppenderLogFileLoaded() {
-        if (fileAppender == null || fileAppender.getFile() == null) {
-            fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
-
-            if (fileAppender == null) {
-                fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
-            }
-
-            if (fileAppender == null) {
-                Log.error(Geonet.GEONETWORK,
-                    "Error when getting appender named 'fileAppender'. " +
-                        "Check your log configuration file. " +
-                        "No appender found.");
-                return false;
-            } else {
-                String logFileName = fileAppender.getFile();
-                if (logFileName == null) {
-                    Log.error(Geonet.GEONETWORK,
-                        "Error when getting logger file for the " +
-                            "appender named 'fileAppender'. " +
-                            "Check your log configuration file. " +
-                            "A FileAppender is required to return last activity to the user interface." +
-                            "Appender file not found.");
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    private static final int MAX_LINES = 20000;
 
     /**
      * Download the log file in a ZIP.
@@ -102,16 +76,16 @@ public class LogConfig {
         MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     public void getLog(HttpServletResponse response) throws IOException {
-        if (isAppenderLogFileLoaded()) {
-            File file = new File(fileAppender.getFile());
 
+        File logfile = logfile();
+        if (logfile != null) {
             // create ZIP FILE
 
             String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
             // set headers for the response
             response.setContentType("application/zip");
-            response.setContentLength((int) file.length());
+            response.setContentLength((int) logfile.length());
             String headerKey = "Content-Disposition";
             String headerValue = String.format("attachment; filename=\"%s\"", "export-log-" + fname + ".zip");
             response.setHeader(headerKey, headerValue);
@@ -123,9 +97,9 @@ public class LogConfig {
             InputStream in = null;
             try {
                 zos = new ZipOutputStream(response.getOutputStream());
-                ze = new ZipEntry(file.getName());
+                ze = new ZipEntry(logfile.getName());
                 zos.putNextEntry(ze);
-                in = new FileInputStream(file);
+                in = new FileInputStream(logfile);
                 while ((read = in.read(bytes)) != -1) {
                     zos.write(bytes, 0, read);
                 }
@@ -151,13 +125,80 @@ public class LogConfig {
         required = false, defaultValue = "2000") int lines) {
         String lastActivity = null;
 
-        if (isAppenderLogFileLoaded()) {
-            lastActivity = FileUtil.readLastLines(new File(fileAppender.getFile()),
-                Math.min(lines, maxLines));
+        File logfile = logfile();
+        if (logfile != null) {
+            lastActivity = FileUtil.readLastLines( logfile, Math.min(lines, MAX_LINES));
         } else {
             throw new RuntimeException("No log file found. Check logger configuration.");
         }
         return lastActivity;
+    }
+
+    /**
+     * Logfile location as determined from appender, or system property, or default.
+     *
+     * Note this code is duplicated with the {@code LoggingApi} replacement
+     *
+     * @return logfile location, or {@code null} if unable to determine
+     */
+    private File logfile(){
+        // Appender is supplied by LogUtils based on parsing log4j2.xml file indicated
+        // by database settings
+
+        // First, try the fileappender from the logger named "geonetwork"
+        Appender appender = Logger.getLogger(Geonet.GEONETWORK).getAppender(FILE_APPENDER_NAME);
+        // If still not found, try the one from the logger named "jeeves"
+        if (appender == null) {
+            appender = Logger.getLogger(Log.JEEVES).getAppender(FILE_APPENDER_NAME);
+        }
+        if (appender != null) {
+            if (appender instanceof AppenderWrapper) {
+                AppenderWrapper wrapper = (AppenderWrapper) appender;
+                org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
+
+                if (appender2 instanceof FileAppender) {
+                    FileAppender fileAppender = (FileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+                if (appender2 instanceof RollingFileAppender) {
+                    RollingFileAppender fileAppender = (RollingFileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+            }
+        }
+        Log.warning(Geonet.GEONETWORK, "Error when getting logger file for the " + "appender named '" + FILE_APPENDER_NAME + "'. "
+            + "Check your log configuration file. "
+            + "A FileAppender or RollingFileAppender is required to return last activity to the user interface."
+            + "Appender file not found.");
+
+        if (System.getProperties().containsKey("log_dir")){
+            File logDir = new File( System.getProperty("log_dir"));
+            if( logDir.exists() && logDir.isDirectory()){
+                File logFile = new File( logDir, "logs/geonetwork.log");
+                if(logFile.exists()){
+                    return logFile;
+                }
+            }
+        }
+        else  {
+            File logFile = new File("logs/geonetwork.log");
+            if(logFile.exists()){
+                return logFile;
+            }
+        }
+        return null; // unavailable
     }
 
 }
