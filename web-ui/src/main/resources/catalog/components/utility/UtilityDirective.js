@@ -853,7 +853,7 @@
             '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
-              'form > fieldset > legend[data-gn-slide-toggle]',
+              'form > div > fieldset > legend[data-gn-slide-toggle]',
               event = attr['event'] || 'click';
           element.on('click', function() {
             $(selector).each(function(idx, elem) {
