@@ -30,6 +30,7 @@ readarray urlPubliques < <(yq eval ".sites[].url_publique" $1)
 readarray urlInternes< <(yq eval ".sites[].url_interne" $1)
 
 configCounter=0
+touch temp.csv
 for identityMapping in "${identityMappings[@]}"; do
     arrVar=()
     echo "Travail sur : $identityMapping"
@@ -56,8 +57,8 @@ for identityMapping in "${identityMappings[@]}"; do
       then
         arrVar+=("$(basename "${f%.*}")")
       elif [[ -f "${f}" ]] && [ "${extension}" == "no_extension" ]
-        then
-         arrVar+=("$(basename "${f%.*}")")
+      then
+        arrVar+=("$(basename "${f%.*}")")
       fi
     done
 
@@ -69,18 +70,22 @@ for identityMapping in "${identityMappings[@]}"; do
       urlPublique=$(echo $urlPublique | sed -e "s/\$1/$value/g")
       urlInterne=$(echo $urlInterne | sed -e "s/\$1/$value/g")
       # echo "${urlPubliques[$configCounter]}/$value, ${urlInternes[$configCounter]}/$value"  >> apache_conf.csv
+      if grep -wR "$urlInterne" temp.csv
+        then
+          echo "[WARNING] $urlInterne existe déja"
+      fi
       echo "$urlPublique, $urlInterne" >> temp.csv
     done
 
     ((configCounter++))
 
 done
-cat temp.csv | env LC_COLLATE=c sort -t"|" -u -k1 >> apache_conf.csv
+cat temp.csv | env LC_COLLATE=c sort -t"|" -k1 >> apache_conf.csv
 # supprime le fichier csv existant.
 rm temp.csv
 while IFS=, read -r field1 field2
 do
-    echo "ProxyPass $field2" >> sextant_services.conf
-    echo "ProxyPassReverse $field2" >> sextant_services.conf
+    echo "ProxyPass $field1 $field2" >> sextant_services.conf
+    echo "ProxyPassReverse $field1 $field2" >> sextant_services.conf
     echo >> sextant_services.conf
 done < apache_conf.csv
