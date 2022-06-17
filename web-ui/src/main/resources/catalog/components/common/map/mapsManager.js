@@ -109,6 +109,7 @@
         VIEWER_MAP: 'viewer',
         SEARCH_MAP: 'search',
         EDITOR_MAP: 'editor',
+        GENERATE_THUMBNAIL_MAP: 'thumbnail',
 
         /**
          * @ngdoc method

@@ -275,6 +275,11 @@ goog.require('gn_alert');
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
           },
+          'map-thumbnail': {
+            'context': '../../map/config-viewer.xml',
+            'extent': [0, 0, 0, 0],
+            'layers': []
+          },
           'autoFitOnLayer': false
         },
         'geocoder': {

@@ -510,7 +510,7 @@
                 var initThumbnailMaker = function() {
 
                   if (!scope.loaded) {
-                    scope.map = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+                    scope.map = gnMapsManager.createMap(gnMapsManager.GENERATE_THUMBNAIL_MAP);
 
                     // scope.map = new ol.Map({
                     //   layers: [],
