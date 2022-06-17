@@ -85,7 +85,7 @@ cat temp.csv | env LC_COLLATE=c sort -t"|" -k1 >> apache_conf.csv
 rm temp.csv
 while IFS=, read -r field1 field2
 do
-    echo "ProxyPass $field1 $field2" >> sextant_services.conf
-    echo "ProxyPassReverse $field1 $field2" >> sextant_services.conf
+    echo "ProxyPass $field1$field2" >> sextant_services.conf
+    echo "ProxyPassReverse $field1$field2" >> sextant_services.conf
     echo >> sextant_services.conf
 done < apache_conf.csv
