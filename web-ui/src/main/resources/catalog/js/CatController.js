@@ -1060,6 +1060,24 @@ goog.require('gn_alert');
         gnViewerSettings.defaultContext =
           gnViewerSettings.mapConfig['map-viewer'].context;
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl || defaultConfig.mods.geocoder.appUrl;
+
+        // Map protocols used to load layers/services in the map viewer
+        gnSearchSettings.mapProtocols = {
+          layers: [
+            'OGC:WMS',
+            'OGC:WMTS',
+            'OGC:WMS-1.1.1-http-get-map',
+            'OGC:WMS-1.3.0-http-get-map',
+            'OGC:WFS',
+            'ESRI:REST'
+          ],
+          services: [
+            'OGC:WMS-1.3.0-http-get-capabilities',
+            'OGC:WMS-1.1.1-http-get-capabilities',
+            'OGC:WMTS-1.0.0-http-get-capabilities',
+            'OGC:WFS-1.0.0-http-get-capabilities'
+          ]
+        };
       },
       getObjectKeysPaths: function(obj, stopKeyList, allLevels, prefix) {
         var keys = Object.keys(obj);

@@ -331,5 +331,7 @@
   "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)",
   "portals": "Change Portals",
   "chooseFileToUpload": "Choose or drop a file here",
+  "mimeType": "Format",
+  "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
   "switchPortals": "Switch to another Portal"
 }

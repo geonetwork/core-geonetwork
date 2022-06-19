@@ -1,0 +1,39 @@
+<div data-ng-class="{'panel panel-default': panelMode}"
+     class="gn-file-uploader">
+  <div data-ng-if="panelMode" class="panel-heading" data-gn-slide-toggle>
+    <i class="fa fa-fw {{icon}}"></i>
+    <span data-translate="">{{title}}</span>
+  </div>
+  <div data-ng-class="{'panel-body': panelMode}">
+    <ul class="list-inline">
+      <li class="thumbnail"
+          data-ng-class="isOverview ? 'gn-list-thumb' : 'gn-list-file'"
+          data-ng-repeat="f in relations">
+        <img data-ng-if="isOverview"
+             class="thumb-small"
+             title="{{f.title | gnLocalized: lang}}"
+             data-ng-src="{{onlinesrcService.getApprovedUrl(f.lUrl || f.id)}}"/>
+
+        <span class="flex-row" data-ng-if="!isOverview">
+          <div class="width-25" data-gn-link-icon="f" data-mode="gn-icon-inline"></div>
+          <div class="width-75" data-gn-link-label="f"/>
+        </span>
+
+        <a href="" class="onlinesrc-remove"
+           data-ng-if="readonly !== true"
+           data-gn-confirm-click="{{removeBtnConfirm | translate:{url: f.lUrl} }}"
+           data-gn-click-and-spin="removeFile(f)"
+           title="{{removeBtnTitle | translate}}">
+          <i class="btn fa fa-times text-danger"></i>
+        </a>
+      </li>
+    </ul>
+
+    <div data-ng-hide="isOverview && relations.thumbnails.length >= numberOfOverviews"
+         data-gn-data-uploader-button="btnLabel"
+         data-is-overview="isOverview"
+         data-file-types="fileTypes"
+         data-after-upload-cb="linkUploadedFileToRecord">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="form-horizontal"
+     data-ng-show="uuid"
+     id="gn-upload-{{id}}"
+     data-file-upload="filestoreUploadOptions">
+  <span class="btn btn-primary btn-block fileinput-button"
+        data-ng-class="{disabled: disabled}">
+   <i class="fa fa-fw fa-plus-circle"
+      data-ng-class="{hidden: active()}"/>
+   <i class="fa fa-fw fa-spinner fa-spin"
+      data-ng-class="{hidden: !active()}"
+      data-file-upload-progress="progress()"/>
+    <span>{{btnLabel | translate}}</span>
+    <input type="file"
+           name="file"
+           accept="{{fileTypes}}"
+           data-ng-disabled="disabled"/>
+  </span>
+
+  <ul class="list-group"
+      data-ng-if="queue.length > 0">
+    <li data-ng-repeat="file in queue"
+        data-ng-class="isOverview ? 'gn-list-thumb' : 'gn-list-file'"
+        class="thumbnail flex-row">
+      <i class="fa fa-fw width-25"
+         data-ng-class="isOverview ? 'gn-icon-thumbnail' : 'fa-file'"></i>
+      <span class="width-75">{{file.name}}</span>
+      <i class="btn fa fa-times text-danger"
+         data-ng-click="clear(file)"/>
+    </li>
+  </ul>
+
+  <div data-ng-if="active()"
+       class="col-lg-5 fade"
+       data-ng-class="{in: active()}">
+    <div class="progress progress-striped active"
+         data-file-upload-progress="progress()"
+         data-file-upload-done="loadMetadataResources()">
+      <div class="progress-bar progress-bar-success"
+           data-ng-style="{width: num + '%'}"/>
+    </div>
+    <div class="progress-extended">&nbsp;</div>
+  </div>
+</div>

@@ -28,6 +28,7 @@ Insert is made in first transferOptions found.
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
@@ -40,6 +41,8 @@ Insert is made in first transferOptions found.
   <xsl:param name="desc"/>
   <xsl:param name="function"/>
   <xsl:param name="applicationProfile"/>
+  <xsl:param name="mimeType"/>
+  <xsl:param name="mimeTypeStrategy" select="'protocol'"/>
 
   <!-- Add an optional uuidref attribute to the onLine element created. -->
   <xsl:param name="uuidref"/>
@@ -137,7 +140,7 @@ Insert is made in first transferOptions found.
   <xsl:template match="gmd:onLine[$updateKey != '' and
                         normalize-space($updateKey) = concat(
                         gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
-                        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
+                        gmd:CI_OnlineResource/gmd:protocol/*,
                         gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
                         ]">
     <xsl:call-template name="createOnlineSrc"/>
@@ -187,9 +190,7 @@ Insert is made in first transferOptions found.
                   </gmd:URL>
                 </gmd:linkage>
                 <gmd:protocol>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$protocol"/>
-                  </gco:CharacterString>
+                 <xsl:call-template name="setProtocol"/>
                 </gmd:protocol>
 
                 <xsl:if test="$applicationProfile != ''">
@@ -359,9 +360,7 @@ Insert is made in first transferOptions found.
 
               <xsl:if test="$protocol != ''">
                 <gmd:protocol>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$protocol"/>
-                  </gco:CharacterString>
+                  <xsl:call-template name="setProtocol"/>
                 </gmd:protocol>
               </xsl:if>
 
@@ -515,6 +514,26 @@ Insert is made in first transferOptions found.
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="setProtocol">
+    <xsl:choose>
+      <xsl:when test="$mimeTypeStrategy = 'mimeType'">
+        <gmx:MimeFileType type="{$mimeType}">
+          <xsl:value-of select="$protocol"/>
+        </gmx:MimeFileType>
+      </xsl:when>
+      <xsl:when test="$mimeTypeStrategy = 'protocol' and $mimeType != ''">
+        <gco:CharacterString>
+          <xsl:value-of select="concat($protocol, ':', $mimeType)"/>
+        </gco:CharacterString>
+      </xsl:when>
+      <xsl:otherwise>
+        <gco:CharacterString>
+          <xsl:value-of select="$protocol"/>
+        </gco:CharacterString>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="extra" priority="2"/>
