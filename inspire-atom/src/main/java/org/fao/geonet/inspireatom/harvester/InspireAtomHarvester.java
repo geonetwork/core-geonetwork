@@ -26,7 +26,14 @@ package org.fao.geonet.inspireatom.harvester;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
+import org.apache.logging.log4j.core.config.builder.api.LayoutComponentBuilder;
+import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.util.Builder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -452,25 +459,29 @@ public class InspireAtomHarvester {
         if (!d.isDirectory()) {
             directory = d.getParent() + File.separator;
         }
-
-        FileAppender fa = new FileAppender();
-        fa.setName(harvesterName);
         String logfile = directory + "atomharvester_" + packageType + "_"
             + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
-        fa.setFile(logfile);
 
         SettingManager settingManager = gc.getBean(SettingManager.class);
-
         String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
         if (StringUtils.isBlank(timeZoneSetting)) {
             timeZoneSetting = TimeZone.getDefault().getID();
         }
-        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
 
-        fa.setThreshold(logger.getThreshold());
-        fa.setAppend(true);
-        fa.activateOptions();
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+
+        PatternLayout layout = PatternLayout.newBuilder()
+            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
+            .build();
+
+        Builder<org.apache.logging.log4j.core.appender.FileAppender> fileBuilder = org.apache.logging.log4j.core.appender.FileAppender.newBuilder()
+            .setName(harvesterName)
+            .withFileName(logfile)
+            .setLayout(layout)
+            .withAppend(true);
+
+        FileAppender fa = fileBuilder.build();
 
         logger.setAppender(fa);
 

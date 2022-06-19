@@ -27,7 +27,17 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.builder.api.AppenderComponentBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ComponentBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
+import org.apache.logging.log4j.core.config.builder.api.LayoutComponentBuilder;
+import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.util.Builder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -193,36 +203,45 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
         log = Log.createLogger(harvesterName, "geonetwork.harvester");
 
-        String directory = log.getFileAppender();
-        if (directory == null || directory.isEmpty()) {
-            directory = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
+        String directoryPath = log.getFileAppender();
+        if (directoryPath == null || directoryPath.isEmpty()) {
+            directoryPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
         }
-        File d = new File(directory);
-        if (!d.isDirectory()) {
-            directory = d.getParent() + File.separator;
+        File directoryFile = new File(directoryPath);
+        if (!directoryFile.isDirectory()) {
+            if( directoryFile.getParentFile() != null){
+                directoryFile = directoryFile.getParentFile();
+            }
         }
-
-        FileAppender fa = new FileAppender();
-        fa.setName(harvesterName);
-        String logfile = directory + "harvester_" + packageType + "_"
+        File logFile = new File(directoryFile, "harvester_" + packageType + "_"
             + harvesterName + "_"
             + dateFormat.format(new Date(System.currentTimeMillis()))
-            + ".log";
-        fa.setFile(logfile);
+            + ".log");
+
+        String logPath = logFile.getName();
 
         String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
         if (StringUtils.isBlank(timeZoneSetting)) {
             timeZoneSetting = TimeZone.getDefault().getID();
         }
-        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
 
-        fa.setThreshold(log.getThreshold());
-        fa.setAppend(true);
-        fa.activateOptions();
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+
+        PatternLayout layout = PatternLayout.newBuilder()
+            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
+            .build();
+
+        Builder<FileAppender> fileBuilder = FileAppender.newBuilder()
+            .setName(harvesterName)
+            .withFileName(logPath)
+            .setLayout(layout)
+            .withAppend(true);
+
+        FileAppender fa = fileBuilder.build();
 
         log.setAppender(fa);
 
-        return logfile;
+        return logPath;
     }
     //--------------------------------------------------------------------------
     //---

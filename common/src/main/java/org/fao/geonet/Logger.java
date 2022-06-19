@@ -23,9 +23,9 @@
 
 package org.fao.geonet;
 
-import org.apache.log4j.FileAppender;
-
 //=============================================================================
+
+import org.apache.logging.log4j.core.appender.FileAppender;
 
 /**
  * GeoNetwork logger wrapper providing module based logging services.

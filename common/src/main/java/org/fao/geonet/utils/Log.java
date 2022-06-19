@@ -214,9 +214,9 @@ public final class Log {
                 Log.error(module, t.getMessage(), t);
             }
 
-            public void setAppender(org.apache.log4j.FileAppender fa) {
+            public void setAppender(FileAppender fa) {
                 Logger.getLogger(module).removeAllAppenders();
-                Logger.getLogger(module).addAppender(fa);
+                Logger.getLogger(module).addAppender( new AppenderWrapper(fa));
             }
 
             /**
@@ -231,44 +231,44 @@ public final class Log {
              * @return logfile location of {@code logs/geonetwork.log} file
              */
             public String getFileAppender() {
+                Logger log = Logger.getLogger(module);
                 // Set effective level to be sure it writes the log
-                Logger.getLogger(module).setLevel(getThreshold());
+                log.setLevel(getThreshold());
 
                 @SuppressWarnings("rawtypes")
-                Enumeration appenders = Logger.getLogger(module)
-                    .getAllAppenders();
+                Enumeration appenders = log.getAllAppenders();
                 while (appenders.hasMoreElements()) {
                     Appender appender = (Appender) appenders.nextElement();
                     File file = toLogFile(appender);
-                    if (file != null) {
+                    if (file != null && file.exists()) {
                         return file.getName();
                     }
                 }
-                appenders = Logger.getLogger(fallbackModule).getAllAppenders();
+
+                Logger fallback = Logger.getLogger(fallbackModule);
+                appenders = fallback.getAllAppenders();
                 while (appenders.hasMoreElements()) {
                     Appender appender = (Appender) appenders.nextElement();
                     File file = toLogFile(appender);
-                    if (file != null) {
+                    if (file != null && file.exists()) {
                         return file.getName();
                     }
                 }
-                /*
                 if (System.getProperties().containsKey("log_dir")){
                     File logDir = new File( System.getProperty("log_dir"));
                     if( logDir.exists() && logDir.isDirectory()){
                         File logFile = new File( logDir, "logs/geonetwork.log");
                         if(logFile.exists()){
-                            return logFile;
+                            return logFile.getName();
                         }
                     }
                 }
                 else  {
                     File logFile = new File("logs/geonetwork.log");
                     if(logFile.exists()){
-                        return logFile;
+                        return logFile.getName();
                     }
                 }
-                */
                 return "";
             }
 
