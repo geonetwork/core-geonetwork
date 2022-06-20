@@ -345,7 +345,7 @@
         return promise;
       };
       $scope.saveAndClose = function() {
-        return gnEditor.save(false)
+        return gnEditor.save(false, null, true)
             .then(function(form) {
               $scope.gnCurrentEdit = '';
               $scope.closeEditor();
