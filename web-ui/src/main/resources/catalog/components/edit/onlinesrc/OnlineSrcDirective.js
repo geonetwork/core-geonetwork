@@ -700,7 +700,7 @@
                       "isMultilingual": false
                     },
                     "mimeTypeStrategy": {
-                      "value": "mimeType",
+                      "value": "mimeType"
                     },
                     "name": {},
                     "desc": {},
