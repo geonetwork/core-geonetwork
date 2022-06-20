@@ -126,8 +126,13 @@
         <div data-ng-if="(md.draft == 'e') && (md['geonet:info'].edit == 'true')"
              title="{{'workingCopy' | translate}}"
              class="gn-workingcopy-status pull-right">
-          <i class="fa fa-pencil"></i>
-          <span>{{'workingCopy' | translate}}</span>
+          <a href=""
+             data-ng-href="catalog.search#/metadraf/{{md.getUuid()}}"
+             title="{{'seeDraft' | translate}}">
+            <i class="fa fa-pencil"></i>
+            <span>{{'workingCopy' | translate}}</span>
+          </a>
+
         </div>
       </div>
     </div>
