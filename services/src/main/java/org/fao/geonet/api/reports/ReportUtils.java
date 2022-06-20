@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableSet;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.QuoteMode;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -155,7 +156,7 @@ public final class ReportUtils {
             Map<String, Object> mdIndexFields = searchManager.getDocument(metadataUuid);
             Object field = mdIndexFields.get(fieldName);
             if (field instanceof HashMap) {
-                if (fieldNameKey != "") {
+                if (StringUtils.isNotEmpty(fieldNameKey)) {
                     return (String) ((HashMap<?, ?>) field).get(fieldNameKey);
                 } else {
                     return (String) field.toString();
@@ -165,14 +166,14 @@ public final class ReportUtils {
             } else if (field instanceof ArrayList) {
                 Object fieldItem = ((ArrayList<?>) field).get(0);
                 if (fieldItem instanceof HashMap) {
-                    if (fieldNameKey != "") {
+                    if (StringUtils.isNotEmpty(fieldNameKey)) {
                         return (String) ((HashMap<?, ?>) fieldItem).get(fieldNameKey);
                     } else {
                         return (String) fieldItem.toString();
                     }
                 }
                 else if (fieldItem instanceof String) {
-                    return (String) field.toString().replace("[", "").replace("]", " ");
+                    return (String) fieldItem;
                 }
             }
         } catch (Exception e) {
