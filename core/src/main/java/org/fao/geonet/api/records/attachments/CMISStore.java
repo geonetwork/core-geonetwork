@@ -176,9 +176,14 @@ public class CMISStore extends AbstractStore {
 
         Map<String, Object> properties = new HashMap<String, Object>();
         setCmisMetadataUUIDPrimary(properties, metadataUuid);
+
+        OperationContext oc = cmisUtils.createOperationContext();
+        // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+        oc.setRenditionFilterString("");
+
         CmisObject cmisObject;
         try {
-            cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
+            cmisObject = cmisConfiguration.getClient().getObjectByPath(key, oc);
         } catch (Exception e) {
             cmisObject = null;
         }
@@ -436,6 +441,10 @@ public class CMISStore extends AbstractStore {
         final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
         try {
             Folder sourceParentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
+
+            OperationContext oc = cmisUtils.createOperationContext();
+            // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+            oc.setRenditionFilterString("");
 
             Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null);
 
