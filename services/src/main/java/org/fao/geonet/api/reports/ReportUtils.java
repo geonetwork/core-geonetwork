@@ -154,7 +154,6 @@ public final class ReportUtils {
         try {
             Map<String, Object> mdIndexFields = searchManager.getDocument(metadataUuid);
             Object field = mdIndexFields.get(fieldName);
-            System.out.println(mdIndexFields);
             if (field instanceof HashMap) {
                 if (fieldNameKey != "") {
                     return (String) ((HashMap<?, ?>) field).get(fieldNameKey);
