@@ -399,22 +399,23 @@ public class InspireAtomUtil {
             "    }" +
             "}";
         ObjectMapper objectMapper = new ObjectMapper();
-
+        String id = "";
         try {
             JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, datasetIdCode));
 
             final SearchResponse result = searchMan.query(
                 esJsonQuery,
                 FIELDLIST_CORE,
-                0, 10000);
+                0, 1);
 
             for (SearchHit hit : result.getHits()) {
-                return hit.getId();
+                id = hit.getId();
+                break;
             }
         } catch (Exception ex) {
             Log.error(Geonet.ATOM, ex.getMessage(), ex);
         }
-        return "";
+        return id;
     }
 
     public static Element prepareServiceFeedEltBeforeTransform(final String schema,
@@ -568,12 +569,11 @@ public class InspireAtomUtil {
             }
         } catch (Exception e) {
 
-        } finally {
-            if (datasetMd == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "No dataset found with resource identifier '%s'. Check that a record exist with hierarchy level is set to 'dataset'" +
-                        " with a resource identifier set to '%s'.", spIdentifier, spIdentifier));
-            }
+        }
+        if (datasetMd == null) {
+            throw new ResourceNotFoundException(String.format(
+                "No dataset found with resource identifier '%s'. Check that a record exist with hierarchy level is set to 'dataset'" +
+                    " with a resource identifier set to '%s'.", spIdentifier, spIdentifier));
         }
 
         try {
@@ -617,14 +617,13 @@ public class InspireAtomUtil {
             }
         } catch (Exception e) {
 
-        } finally {
-            if (serviceMetadata == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "No service operating the dataset '%s'. " +
-                        "Check that a service is attached to that dataset and that its service type is set to 'download'.",
-                    datasetMd.getUuid()));
+        }
+        if (serviceMetadata == null) {
+            throw new ResourceNotFoundException(String.format(
+                "No service operating the dataset '%s'. " +
+                    "Check that a service is attached to that dataset and that its service type is set to 'download'.",
+                datasetMd.getUuid()));
 
-            }
         }
 
         DataManager dm = context.getBean(DataManager.class);
