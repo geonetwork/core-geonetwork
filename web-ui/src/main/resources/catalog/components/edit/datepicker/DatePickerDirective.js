@@ -187,7 +187,6 @@
 
              scope.$watch('date', buildDate);
              scope.$watch('time', buildDate);
-             scope.$watch('timezone', buildDate);
              scope.$watch('year', buildDate);
              scope.$watch('month', buildDate);
              scope.$watch('dateInput', buildDate);
