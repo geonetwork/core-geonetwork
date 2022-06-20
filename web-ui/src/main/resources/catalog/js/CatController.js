@@ -633,6 +633,7 @@ goog.require('gn_alert');
           'isFilterTagsDisplayedInSearch': true,
           'showMapInFacet': false,
           'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
+          'showBatchDropdown': true,
           'usersearches': {
             'enabled': false,
             'includePortals': true,
