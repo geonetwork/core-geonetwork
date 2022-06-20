@@ -146,7 +146,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         String language = context.getLanguage();
 
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, false, false, false, language, changeDate,
-            true);
+            true, false);
 
         if (force) {
             //change ownership of metadata to new harvester (Used in OVERRIDE option)

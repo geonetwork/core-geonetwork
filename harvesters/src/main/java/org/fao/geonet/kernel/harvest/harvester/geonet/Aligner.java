@@ -814,7 +814,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             boolean updateDateStamp = true;
             String language = context.getLanguage();
             metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                updateDateStamp);
+                updateDateStamp, false);
             metadata = metadataRepository.findOneById(Integer.valueOf(id));
             result.updatedMetadata++;
             if (force) {

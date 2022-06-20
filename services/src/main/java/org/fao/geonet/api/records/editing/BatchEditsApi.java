@@ -274,7 +274,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                             serviceContext, record.getId() + "", metadata,
                             validate, ufo, index,
                             "eng", // Not used when validate is false
-                            changeDate, uds);
+                            changeDate, uds, false);
                         report.addMetadataInfos(record, "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);

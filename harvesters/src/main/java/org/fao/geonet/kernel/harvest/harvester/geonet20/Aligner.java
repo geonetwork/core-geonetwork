@@ -298,7 +298,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false, false);
 
                 result.updatedMetadata++;
             }

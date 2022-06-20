@@ -415,8 +415,9 @@ public class DataManager {
     @Deprecated
     public AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-            final boolean updateDateStamp) throws Exception {
-        return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);
+            final boolean updateDateStamp, final boolean fastIndexMode) throws Exception {
+        return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate,
+            updateDateStamp, fastIndexMode);
     }
 
     @Deprecated

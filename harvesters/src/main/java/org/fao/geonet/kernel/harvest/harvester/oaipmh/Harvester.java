@@ -585,7 +585,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             }
 
             final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
-                true);
+                true, false);
             if (force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());

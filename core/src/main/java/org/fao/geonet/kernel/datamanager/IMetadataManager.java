@@ -171,7 +171,7 @@ public interface IMetadataManager {
      * @return metadata if the that was updated
      */
     AbstractMetadata updateMetadata(ServiceContext context, String metadataId, Element md, boolean validate, boolean ufo, boolean index,
-            String lang, String changeDate, boolean updateDateStamp) throws Exception;
+            String lang, String changeDate, boolean updateDateStamp, boolean fastIndexMode) throws Exception;
 
     /**
      * Add privileges information about metadata record which depends on context and usually could not be stored in db or Lucene index

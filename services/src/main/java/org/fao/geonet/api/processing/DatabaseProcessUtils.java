@@ -107,7 +107,7 @@ public class DatabaseProcessUtils {
                         boolean ufo = true;
                         String language = context.getLanguage();
 
-                        dataMan.updateMetadata(context, id, wellFormedXml, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                        dataMan.updateMetadata(context, id, wellFormedXml, validate, ufo, index, language, new ISODate().toString(), updateDateStamp, false);
                         if (index) {
                             dataMan.indexMetadata(id, true);
                         }

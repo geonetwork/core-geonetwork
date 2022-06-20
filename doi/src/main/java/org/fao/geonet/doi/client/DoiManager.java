@@ -400,7 +400,7 @@ public class DoiManager {
 //        md.detach();
 
         dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
-            context.getLanguage(), new ISODate().toString(), true);
+            context.getLanguage(), new ISODate().toString(), true, false);
     }
 
 
@@ -440,7 +440,7 @@ public class DoiManager {
             Element recordWithoutDoi = removeDOIValue(doiUrl, metadata.getDataInfo().getSchemaId(), md);
 
             dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true, true,
-                context.getLanguage(), new ISODate().toString(), true);
+                context.getLanguage(), new ISODate().toString(), true, false);
         } catch (Exception ex) {
             throw new DoiClientException(ex.getMessage());
         }
