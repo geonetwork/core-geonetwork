@@ -408,9 +408,8 @@ public class InspireAtomUtil {
                 FIELDLIST_CORE,
                 0, 1);
 
-            for (SearchHit hit : result.getHits()) {
-                id = hit.getId();
-                break;
+            if (result.getHits().getTotalHits().value > 0) {
+                id = result.getHits().getAt(0).getId();
             }
         } catch (Exception ex) {
             Log.error(Geonet.ATOM, ex.getMessage(), ex);
