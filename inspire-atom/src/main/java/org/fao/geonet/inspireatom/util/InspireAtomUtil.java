@@ -408,7 +408,7 @@ public class InspireAtomUtil {
                 FIELDLIST_CORE,
                 0, 1);
 
-            if (result.getHits().getTotalHits().value > 0) {
+            if (result.getHits().getTotalHits() != null && result.getHits().getTotalHits().value > 0) {
                 id = result.getHits().getAt(0).getId();
             }
         } catch (Exception ex) {
