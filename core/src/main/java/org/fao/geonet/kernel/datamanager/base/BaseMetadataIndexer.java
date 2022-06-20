@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -318,32 +319,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, true, false);
+            indexMetadata(metadataId, true, IndexingMode.full);
         }
     }
 
     @Override
-    public void indexMetadataFastMode(final String metadataId,
-                                      final boolean forceRefreshReaders)
-        throws Exception {
-        indexMetadata(metadataId, forceRefreshReaders, true);
-    }
-
-
-    @Override
     public void indexMetadata(final String metadataId,
-                              final boolean forceRefreshReaders)
-        throws Exception {
-        indexMetadata(metadataId, forceRefreshReaders, false);
-    }
-
-
-    private void indexMetadata(final String metadataId,
                               final boolean forceRefreshReaders,
-                              final boolean fastIndexMode)
+                              final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;
-
+        long start = System.currentTimeMillis();
         try {
             Multimap<String, Object> fields = ArrayListMultimap.create();
             int id$ = Integer.parseInt(metadataId);
@@ -418,7 +404,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     schema
                 ));
                 searchManager.index(null, md, indexKey, fields, metadataType,
-                    forceRefreshReaders, fastIndexMode);
+                    forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -556,7 +542,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 }
 
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType,
-                    forceRefreshReaders, fastIndexMode);
+                    forceRefreshReaders, indexingMode);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
@@ -566,6 +552,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         if (fullMd != null) {
             this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
+        long end = System.currentTimeMillis();
+        Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms", metadataId, indexingMode, end - start));
     }
 
     @Override

@@ -20,6 +20,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -91,7 +92,7 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo()
             .setHarvested(false);
 
-        int id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, true, false, UpdateDatestamp.NO,
+        int id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.full, false, UpdateDatestamp.NO,
             false, false).getId();
 
         MetadataStatus metadataStatus = new MetadataStatus();
