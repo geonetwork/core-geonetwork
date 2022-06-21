@@ -71,6 +71,7 @@ import com.google.common.collect.Maps;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ThesaurusManager implements ThesaurusFinder {
 
@@ -103,6 +104,16 @@ public class ThesaurusManager implements ThesaurusFinder {
     private Path thesauriDirectory = null;
     private boolean initialized = false;
 
+    @Value("${thesaurus.cache.maxsize:50000}")
+    private int thesaurusCacheMaxSize = 50000;
+
+    public int getThesaurusCacheMaxSize() {
+        return thesaurusCacheMaxSize;
+    }
+
+    public void setThesaurusCacheMaxSize(int thesaurusCacheMaxSize) {
+        this.thesaurusCacheMaxSize = thesaurusCacheMaxSize;
+    }
 
     /**
      * Initialize ThesaurusManager.
@@ -214,10 +225,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                         continue;
                     }
 
-                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
+                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, outputRdf, siteURL, thesaurusCacheMaxSize);
 
                 } else {
-                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
+                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL, thesaurusCacheMaxSize);
                 }
 
                 try {
@@ -409,7 +420,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String aRdfDataFile = uuid + ".rdf";
         Path thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         final String siteURL = settingManager.getSiteURL(context);
-        Thesaurus gst = new Thesaurus(isoLanguagesMapper, aRdfDataFile, root, type, thesaurusFile, siteURL);
+        Thesaurus gst = new Thesaurus(isoLanguagesMapper, aRdfDataFile, root, type, thesaurusFile, siteURL, thesaurusCacheMaxSize);
 
         try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)) {
             getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
