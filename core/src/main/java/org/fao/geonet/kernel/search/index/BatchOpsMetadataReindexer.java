@@ -207,6 +207,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
             Log.warning(Geonet.INDEX_ENGINE, String.format(
                 "Indexing range [%d-%d]/%d by threads %s.",
                 beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
+            long start = System.currentTimeMillis();
             for (int i = beginIndex; i < beginIndex + count; i++) {
                 try {
                     dm.indexMetadata(ids[i] + "", false);
@@ -216,8 +217,10 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 }
             }
             Log.warning(Geonet.INDEX_ENGINE, String.format(
-                "Indexing range [%d-%d]/%d completed by threads %s.",
-                beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
+                "Indexing range [%d-%d]/%d completed in %dms by threads %s.",
+                beginIndex, beginIndex + count, ids.length,
+                System.currentTimeMillis() - start,
+                Thread.currentThread().getId()));
             ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
