@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableSet;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.QuoteMode;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -122,13 +123,15 @@ public final class ReportUtils {
 
 
     /**
-     * Retrieves a metadata title from the Lucene index.
+     * Retrieves a metadata field from the index.
      *
      * @param metadataUuid Metadata identifier.
-     * @return Metadata title.
+     * @param fieldName  Lucene field name.
+     * @param fieldNameKey  Key of the field name (eg 'default').
+     * @return Metadata field.
      */
-    public static String retrieveMetadataTitle(final String metadataUuid) {
-        return retrieveMetadataIndexField(metadataUuid, "title");
+    public static String retrieveMetadataIndex(final String metadataUuid,final String fieldName, final String fieldNameKey) {
+        return retrieveMetadataIndexField(metadataUuid, fieldName, fieldNameKey);
     }
 
 
@@ -137,25 +140,40 @@ public final class ReportUtils {
      * <p>
      * Duplicated with XslUtil - to refactor.
      * <p>
-     * TODO / TODOES
+     * TODO / TODOES improve the management of the different type of fields
      *
      * @param metadataUuid Metadata identifier.
      * @param fieldName  Lucene field name.
+     * @param fieldNameKey  Key of the field name (eg 'default').
      * @return Field value.
      */
     private static String retrieveMetadataIndexField(
         final String metadataUuid,
-        final String fieldName) {
+        final String fieldName,
+        final String fieldNameKey) {
         EsSearchManager searchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         try {
             Map<String, Object> mdIndexFields = searchManager.getDocument(metadataUuid);
-            if ("title".equals(fieldName)) {
-                Object titleObjectField = mdIndexFields.get(IndexFields.RESOURCE_TITLE + "Object");
-                Object titleField = mdIndexFields.get(IndexFields.RESOURCE_TITLE);
-                if (titleObjectField instanceof HashMap) {
-                    return (String) ((HashMap<?, ?>) titleObjectField).get("default");
-                } else if (titleField instanceof String) {
-                    return (String) titleField;
+            Object field = mdIndexFields.get(fieldName);
+            if (field instanceof HashMap) {
+                if (StringUtils.isNotEmpty(fieldNameKey)) {
+                    return (String) ((HashMap<?, ?>) field).get(fieldNameKey);
+                } else {
+                    return (String) field.toString();
+                }
+            } else if (field instanceof String) {
+                return (String) field;
+            } else if (field instanceof ArrayList) {
+                Object fieldItem = ((ArrayList<?>) field).get(0);
+                if (fieldItem instanceof HashMap) {
+                    if (StringUtils.isNotEmpty(fieldNameKey)) {
+                        return (String) ((HashMap<?, ?>) fieldItem).get(fieldNameKey);
+                    } else {
+                        return (String) fieldItem.toString();
+                    }
+                }
+                else if (fieldItem instanceof String) {
+                    return (String) fieldItem;
                 }
             }
         } catch (Exception e) {
