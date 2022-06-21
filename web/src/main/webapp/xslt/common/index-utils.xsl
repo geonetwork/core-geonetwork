@@ -575,6 +575,28 @@
     <xsl:param name="thesaurusId" as="xs:string?"/>
     <xsl:param name="thesaurusName" as="xs:string?"/>
 
+    <xsl:variable name="mappingThesaurus" as="node()*">
+      <!-- INSPIRE themes are loaded from INSPIRE registry. The thesaurus key changed. -->
+      <thesaurus old="th_inspire-theme"
+                 new="th_httpinspireeceuropaeutheme-theme"/>
+      <thesaurus old="th_SpatialScope"
+                 new="th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
+
+      <!-- Map normalised anchor name for INSPIRE Spatial Scope to a key -->
+      <thesaurus old="th_httpinspire-ec-europa-eumetadata-codelistSpatialScope"
+                 new="th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
+      <!-- Map normalised thesaurus name for INSPIRE GEMET Themes to a key -->
+      <thesaurus old="GEMET - INSPIRE themes, version 1.0"
+                 new="th_httpinspireeceuropaeutheme-theme"/>
+      <!-- Map normalised anchor name for INSPIRE GEMET Themes to a key -->
+      <thesaurus old="th_httpinspire-ec-europa-eutheme"
+                 new="th_httpinspireeceuropaeutheme-theme"/>
+      <!-- Map normalised anchor name for INSPIRE Priority Dataset to a key -->
+      <thesaurus old="th_httpinspire-ec-europa-eumetadata-codelistPriorityDataset"
+                 new="th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
+    </xsl:variable>
+
+
     <xsl:variable name="key">
       <xsl:choose>
         <xsl:when test="starts-with($thesaurusId, 'geonetwork.thesaurus')">
@@ -594,7 +616,12 @@
     <xsl:variable name="keyWithoutDot"
                   select="replace($key, '\.', '-')"/>
 
-    <xsl:value-of select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+    <xsl:variable name="fieldName"
+                  select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+
+    <xsl:value-of select="if($mappingThesaurus[@old = $fieldName])
+                          then $mappingThesaurus[@old = $fieldName]/@new
+                          else $fieldName"/>
   </xsl:function>
 
 
