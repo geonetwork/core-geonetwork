@@ -439,6 +439,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     if (groupOpt.isPresent()) {
                         Group group = groupOpt.get();
                         fields.put(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner));
+                        fields.put(Geonet.IndexFieldNames.GROUP_OWNER_NAME, group.getName());
                         final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                         if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
                             fields.put(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite());
