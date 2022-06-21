@@ -497,8 +497,12 @@
                                         gmd:identifier[position() = 1]/gmd:MD_Identifier/
                                           gmd:code/(gco:CharacterString|gmx:Anchor)"/>
 
+            <xsl:variable name="thesaurusRefAnchor"
+                          select=" gmd:thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href"/>
+
             <xsl:variable name="thesaurusId"
-                          select="normalize-space($thesaurusRef/text())"/>
+                          select="if ($thesaurusRefAnchor) then $thesaurusRefAnchor
+                                  else normalize-space($thesaurusRef/text())"/>
 
             <xsl:variable name="thesaurusUri"
                           select="$thesaurusRef/@xlink:href"/>
