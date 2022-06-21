@@ -613,29 +613,15 @@
       </xsl:choose>
     </xsl:variable>
 
-
-
     <xsl:variable name="keyWithoutDot"
                   select="replace($key, '\.', '-')"/>
 
     <xsl:variable name="fieldName"
                   select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
 
-
-
-    <xsl:variable name="finalName" select="if($mappingThesaurus[@old = $fieldName])
+    <xsl:value-of select="if($mappingThesaurus[@old = $fieldName])
                           then $mappingThesaurus[@old = $fieldName]/@new
                           else $fieldName"/>
-
-    <xsl:message>
-      thesaurusId: <xsl:value-of select="$thesaurusId" />
-      key: <xsl:value-of select="$key" />
-      keyWithoutDot: <xsl:value-of select="$keyWithoutDot" />
-      fieldName: <xsl:value-of select="$fieldName" />
-      finalName: <xsl:value-of select="$finalName" />
-    </xsl:message>
-
-    <xsl:value-of select="$finalName" />
   </xsl:function>
 
 
