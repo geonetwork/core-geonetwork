@@ -53,7 +53,9 @@
   <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory"
         lazy-init="true"/>
 
-  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
+  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true">
+    <property name="thesaurusCacheMaxSize" value="${thesaurus.cache.maxsize}"/>
+  </bean>
 
   <util:list id="allThesaurusExclude">
     <value>external.theme.access_use_conditions</value>
