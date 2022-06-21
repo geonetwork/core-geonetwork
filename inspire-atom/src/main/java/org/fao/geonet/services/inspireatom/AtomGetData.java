@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.InspireAtomFeed;
@@ -51,6 +50,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -105,7 +105,9 @@ public class AtomGetData {
         @RequestParam(defaultValue = "")
             String crs,
         @Parameter(hidden = true)
-            HttpServletRequest request
+            HttpServletRequest request,
+        @Parameter(hidden = true)
+            HttpServletResponse response
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -144,12 +146,9 @@ public class AtomGetData {
             // Only one download for the CRS specified
         } else if (downloadCount == 1) {
 
-            // Jeeves checks for <reponse redirect="true" url="...." mime-type="..." /> to manage about redirecting
-            // to the provided file
-            return new Element("response")
-                .setAttribute("redirect", "true")
-                .setAttribute("url", selectedEntry.getUrl())
-                .setAttribute("mime-type", selectedEntry.getType());
+            response.setContentType(selectedEntry.getType());
+            response.sendRedirect(selectedEntry.getUrl());
+            return null;
 
             // Otherwise, return a feed with the downloads for the specified CRS
         } else {
