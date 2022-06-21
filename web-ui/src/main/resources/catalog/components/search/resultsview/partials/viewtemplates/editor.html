@@ -63,7 +63,9 @@
               <i class="fa fa-pencil"></i>
             </a>
             <a class="btn btn-default"
-               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's' && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable) && md.draft != 'e'"
+               data-ng-show="(!md.isPublished() || (md.isPublished() && user.canDeletePublishedMetadata())) && user.canEditRecord(md) && md.isTemplate != 's'
+                             && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
+                             && md.draft != 'e'"
                data-gn-click-and-spin="deleteRecord(md)"
                data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
                title="{{'delete' | translate}}">
