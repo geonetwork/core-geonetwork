@@ -25,6 +25,11 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.yammer.metrics.core.TimerContext;
+import jeeves.monitor.MonitorManager;
+import jeeves.monitor.timer.IndexingRecordMeter;
+import jeeves.monitor.timer.IndexingRecordTimer;
+import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -77,14 +82,14 @@ import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
 
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
-
     @Autowired
     private EsSearchManager searchManager;
     @Autowired
     private SourceRepository sourceRepository;
     @Autowired
     protected MetadataStatusRepository statusRepository;
-
+    @Autowired
+    MonitorManager monitorManager;
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     @Autowired
@@ -329,6 +334,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                               final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;
+        monitorManager.getMeter(IndexingRecordMeter.class).mark();
+        TimerContext timerContext = monitorManager.getTimer(IndexingRecordTimer.class).time();
         long start = System.currentTimeMillis();
         try {
             Multimap<String, Object> fields = ArrayListMultimap.create();
@@ -548,12 +555,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
                 + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
+        } finally {
+            timerContext.stop();
         }
         if (fullMd != null) {
             this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
-        long end = System.currentTimeMillis();
-        Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms", metadataId, indexingMode, end - start));
+        Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms",
+            metadataId, indexingMode, System.currentTimeMillis() - start));
     }
 
     @Override
