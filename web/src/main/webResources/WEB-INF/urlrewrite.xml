@@ -146,7 +146,7 @@
       INSPIRE Atom OpenSearchDescription
     </note>
     <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
-    <to type="forward">/srv/api/describe/service/$2</to>
+    <to type="forward">/srv/api/atom/describe/service/$2</to>
   </rule>
 
   <rule>
