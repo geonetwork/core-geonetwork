@@ -141,7 +141,7 @@ public class GeonetworkClientRegistrationProviderTest {
         OIDCConfiguration configuration = new OIDCConfiguration();
         configuration.setClientId("clientid");
         configuration.setClientSecret("clientsecret");
-        configuration.setScopes("openid,email");//use 2 scopes
+        configuration.setScopes("openid email");//use 2 scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             configuration
