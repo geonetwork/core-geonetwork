@@ -42,7 +42,8 @@ public class AddElemValue {
         String finalStringVal = stringValue;
         Element finalNodeVal = null;
 
-        if (Xml.isXMLLike(stringValue)) {
+        String valueWithoutSpecialTag = stringValue.replaceAll("</?gn_(add|replace|delete)>", "");
+        if (Xml.isXMLLike(valueWithoutSpecialTag)) {
             try {
                 finalNodeVal = Xml.loadString(stringValue, false);
                 finalStringVal = null;
@@ -55,7 +56,7 @@ public class AddElemValue {
             }
         }
         this.nodeValue = finalNodeVal;
-        this.stringValue = finalStringVal;
+        this.stringValue = valueWithoutSpecialTag;
     }
 
     public AddElemValue(Element nodeValue) {

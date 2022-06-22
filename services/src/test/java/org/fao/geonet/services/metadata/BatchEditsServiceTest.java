@@ -40,6 +40,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
@@ -194,7 +195,134 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(1, nodes.size());
     }
 
-        @Test
+
+    @Test
+    public void testUpdateRecordUpdateAttribute() throws Exception {
+        final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
+        BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@codeListValue",
+                "newScope"
+            )
+        };
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        Gson gson = new GsonBuilder()
+            .create();
+        JsonElement jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        AbstractMetadata updatedRecord = repository.findOneByUuid(uuid);
+        Element xml = Xml.loadString(updatedRecord.getData(), false);
+
+        List attr = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@codeListValue",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals("newScope", ((Attribute) attr.get(0)).getValue());
+
+
+        listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@codeListValue",
+                "<gn_replace>anotherNewScope</gn_replace>"
+            )
+        };
+
+        jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        updatedRecord = repository.findOneByUuid(uuid);
+        xml = Xml.loadString(updatedRecord.getData(), false);
+
+        attr = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@codeListValue",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals("anotherNewScope", ((Attribute) attr.get(0)).getValue());
+    }
+
+
+    @Test
+    public void testUpdateRecordDeleteAttribute() throws Exception {
+        final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
+        BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@codeListValue",
+                "<gn_delete/>"
+            )
+        };
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        Gson gson = new GsonBuilder()
+            .create();
+        JsonElement jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        AbstractMetadata updatedRecord = repository.findOneByUuid(uuid);
+        Element xml = Xml.loadString(updatedRecord.getData(), false);
+
+        List scope = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals(null, ((Element) scope.get(0)).getAttribute("codeListValue"));
+    }
+
+
+    @Test
+    public void testUpdateRecordAddAttribute() throws Exception {
+        final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
+        BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/@newAttribute",
+                "<gn_add>value</gn_add>"
+            )
+        };
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        Gson gson = new GsonBuilder()
+            .create();
+        JsonElement jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        AbstractMetadata updatedRecord = repository.findOneByUuid(uuid);
+        Element xml = Xml.loadString(updatedRecord.getData(), false);
+
+        List scope = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals("value", ((Element) scope.get(0)).getAttributeValue("newAttribute"));
+    }
+
+    @Test
     public void testUpdateRecordElement() throws Exception {
         final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
         // XPath has no match and same type as fragment, element is created
