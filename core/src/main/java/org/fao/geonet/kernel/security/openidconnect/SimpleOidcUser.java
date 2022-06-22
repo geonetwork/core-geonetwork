@@ -26,6 +26,7 @@ import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -88,6 +89,47 @@ class SimpleOidcUser {
             }
         }
     }
+
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) {
+        username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
+        if (username == null)
+            username =  (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
+        if (username == null) {
+            username = (String) attributes.get(StandardClaimNames.NAME);
+        }
+        if (username != null) {
+            username =  org.apache.commons.lang.StringUtils.left(username,256); //first max 256 chars
+        }
+
+        if (username != null && username.length() > 0) {
+            surname = (String) attributes.get(StandardClaimNames.FAMILY_NAME);
+            firstname = (String) attributes.get(StandardClaimNames.GIVEN_NAME); ;
+            email = (String) attributes.get(StandardClaimNames.EMAIL); ;
+
+
+            if (attributes.containsKey(oidcConfiguration.organizationProperty)) {
+                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
+            }
+
+
+//            if (attributes.get(StandardClaimNames.ADDRESS) != null) {
+//                Map _address =  (Map) attributes.get(StandardClaimNames.ADDRESS);
+//                address = new Address();
+//                address.setAddress(_address.getStreetAddress());
+//                address.setCity(idToken.getAddress().getLocality());
+//                address.setState(idToken.getAddress().getRegion());
+//                address.setZip(idToken.getAddress().getPostalCode());
+//                address.setCountry(idToken.getAddress().getCountry());
+//            }
+
+
+            Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
+            if (profileGroups != null && profileGroups.size() > 0) {
+                profile = oidcRoleProcessor.getMaxProfile(profileGroups).name();
+            }
+        }
+    }
+
 
     public void updateUser(User user) {
         if (!StringUtils.isEmpty(this.getSurname())) {

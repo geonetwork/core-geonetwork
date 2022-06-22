@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -85,12 +86,12 @@ public class GeonetworkClientRegistrationProvider {
      */
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
                                                 String serverMetadataJsonText,
-                                                String clientId,
-                                                String clientSecret,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
-        //10 is just to check if there's some text in the string
-        if ((serverMetadataJsonText != null) && (serverMetadataJsonText.trim().length() > 10)) {
+        String clientId = oidcConfiguration.clientId;
+        String clientSecret = oidcConfiguration.clientSecret;
+        //50 is just to check if there's some text in the string
+        if ((serverMetadataJsonText != null) && (serverMetadataJsonText.trim().length() > 50)) {
             Log.debug(Geonet.SECURITY,"OpenID Connect - using IDP server metadata config from text");
             clientRegistration = createClientRegistration(new ByteArrayInputStream(serverMetadataJsonText.getBytes()), clientId, clientSecret);
         }
@@ -102,10 +103,11 @@ public class GeonetworkClientRegistrationProvider {
 
     //get the JSON from an inputstream (i.e. from a file, string, or resource)
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
-                                                String clientId,
-                                                String clientSecret,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
+        this.oidcConfiguration = oidcConfiguration;
+        String clientId = oidcConfiguration.clientId;
+        String clientSecret = oidcConfiguration.clientSecret;
         clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
     }
 
@@ -175,11 +177,9 @@ public class GeonetworkClientRegistrationProvider {
             scopes= scope.toStringList();
         }
 
-        //allow the user to limit the scopes.
-        // we are "intersecting" the two lists and ensure that "openid" is in the result.
+       // we set the scopes to what the user requested - independent of what the server says the allowed scopes are
         if (oidcConfiguration.getScopeSet() != null){
-            List<String> configuredScopes = oidcConfiguration.getScopeSet();
-            scopes.retainAll(configuredScopes);
+            scopes = new ArrayList<>(oidcConfiguration.getScopeSet());
             if (!scopes.contains(OidcScopes.OPENID))
                 scopes.add(OidcScopes.OPENID);
         }

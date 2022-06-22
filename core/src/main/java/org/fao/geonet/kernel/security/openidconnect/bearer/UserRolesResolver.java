@@ -20,30 +20,22 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.kernel.security.openidconnect;
+package org.fao.geonet.kernel.security.openidconnect.bearer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
- * Trivial factory for making SimpleOidcUser.
+ * This is an interface for how to get user roles/groups (list of role/group) names.
+ *
+ * Typically, this will either be;
+ *  + in the access token (keycloak - with configuration)
+ *  + in the userinfo (oidc endpoint) results (keycloak - with configuration)
+ *  + available via some external API (azure AD - graph api)
  */
-public class SimpleOidcUserFactory {
+public interface UserRolesResolver {
 
-    @Autowired
-    OIDCConfiguration oidcConfiguration;
-
-    @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
-
-
-    public SimpleOidcUser create(OidcIdToken idToken) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken);
-    }
-
-    public SimpleOidcUser create(Map attributes) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, attributes);
-    }
+    List<String> resolveRoles(String tokenValue, Map claims, OidcUserInfo userInfo) throws Exception;
 }

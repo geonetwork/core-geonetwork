@@ -37,6 +37,8 @@ import java.util.Map;
  */
 public class OIDCConfiguration implements SecurityProviderConfiguration {
 
+    public String userNameAttribute = "email";
+
     /**
      * in the ID token, which property contain's the users organization?
      */
@@ -80,6 +82,10 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
      */
     public boolean userGroupUpdateEnabled = true;
 
+
+    public String clientId;
+    public String clientSecret;
+
     public String getScopes() {
         return scopes;
     }
@@ -91,13 +97,21 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public List<String> getScopeSet() {
         if (!StringUtils.hasText(scopes))
            return null;
-        return Arrays.asList(scopes.split(","));
+        return Arrays.asList(scopes.split(" "));
     }
 
     public String  scopes = null; //null or empty -> all
 
     public String roleConverterString = null;
 
+
+    public String getUserNameAttribute() {
+        return userNameAttribute;
+    }
+
+    public void setUserNameAttribute(String userNameAttribute) {
+        this.userNameAttribute = userNameAttribute;
+    }
 
     public String getOrganizationProperty() {
         return organizationProperty;
@@ -167,6 +181,22 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         this.userGroupUpdateEnabled = userGroupUpdateEnabled;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
     // "group1=role1,group2=role2,..."
     public void updateRoleConverterString(String serialized) {
         Map<String, String> result = new HashMap<>();
@@ -188,5 +218,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         this.roleConverterString = roleConverterString;
         updateRoleConverterString(roleConverterString);
     }
+
+
 
 }

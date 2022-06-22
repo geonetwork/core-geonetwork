@@ -68,6 +68,42 @@ public class OidcUser2GeonetworkUser {
     @Autowired
     private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
+
+
+    public UserDetails getUserDetails(Map attributes, boolean withDbUpdate) {
+        SimpleOidcUser simpleUser = simpleOidcUserFactory.create(attributes);
+        if (!StringUtils.hasText(simpleUser.getUsername()))
+            return null;
+
+        User user;
+        boolean newUserFlag = false;
+        try {
+            user = (User) geonetworkAuthenticationProvider.loadUserByUsername(simpleUser.getUsername());
+        } catch (UsernameNotFoundException e) {
+            user = new User();
+            user.setUsername(simpleUser.getUsername());
+            newUserFlag = true;
+            Log.debug(Geonet.SECURITY, "Adding a new user: " + user);
+        }
+
+        simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
+
+        Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
+        user.setProfile(oidcRoleProcessor.getProfile(attributes));
+
+
+        //Apply changes to database is required.
+        if (withDbUpdate) {
+            if (newUserFlag || oidcConfiguration.isUserProfileUpdateEnabled()) {
+                userRepository.save(user);
+            }
+            if (newUserFlag || oidcConfiguration.isUserGroupUpdateEnabled()) {
+                updateGroups(profileGroups, user);
+            }
+        }
+        return user;
+    }
+
     /**
      * given an oidc ID token, get the spring user details for the user.
      * If this is a new user, it will be saved to the GN database (as a GN user).

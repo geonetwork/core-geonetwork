@@ -20,30 +20,19 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.kernel.security.openidconnect;
+package org.fao.geonet.kernel.security.openidconnect.bearer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import com.nimbusds.jose.JOSEObject;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 
 import java.util.Map;
 
-/**
- * Trivial factory for making SimpleOidcUser.
- */
-public class SimpleOidcUserFactory {
+public class SimpleTokenParser implements AccessTokenParser {
 
-    @Autowired
-    OIDCConfiguration oidcConfiguration;
-
-    @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
-
-
-    public SimpleOidcUser create(OidcIdToken idToken) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken);
-    }
-
-    public SimpleOidcUser create(Map attributes) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, attributes);
+    @Override
+    public Map parseToken(String token) throws Exception {
+        JWT jj = JWTParser.parse(token);
+        return ((JOSEObject) jj).getPayload().toJSONObject();
     }
 }

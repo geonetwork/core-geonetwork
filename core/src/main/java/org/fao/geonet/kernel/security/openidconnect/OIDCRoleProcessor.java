@@ -79,6 +79,14 @@ public class OIDCRoleProcessor {
         return getProfileGroups(roleNames);
     }
 
+    public Map<Profile, List<String>> getProfileGroups(Map attributes) {
+        List<String> oidcOriginalRoleNames = getTokenRoles(attributes);
+        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+        List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
+
+        return getProfileGroups(roleNames);
+    }
+
     /**
      * given an oauth2 user, compute the profileGroups (i.e. from the user's attributes)
      * @param user - oauth2 user from OIDC
@@ -164,7 +172,12 @@ public class OIDCRoleProcessor {
      */
     public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, Map<String, Object> claims) {
         List<String> oidcOriginalRoleNames = getTokenRoles(claims);
-        oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
+
+        return createAuthorities(roleHierarchy,oidcOriginalRoleNames);
+    }
+
+    public Collection<? extends GrantedAuthority> createAuthorities(RoleHierarchy roleHierarchy, List<String> oidcOriginalRoleNames) {
+         oidcOriginalRoleNames.add(oidcConfiguration.minimumProfile);
 
         List<String> roleNames = simpleConvertRoles(oidcOriginalRoleNames);
         Map<Profile, List<String>> profileGroups = getProfileGroups(roleNames);
@@ -286,7 +299,11 @@ public class OIDCRoleProcessor {
      */
     public List<String> getTokenRoles(Map<String, Object> attributes) {
         String pathToRoles = oidcConfiguration.getIdTokenRoleLocation();
-        if (!StringUtils.hasText(pathToRoles)) {
+        return getTokenRoles(attributes, pathToRoles);
+    }
+
+    public List<String> getTokenRoles(Map<String, Object> attributes, String pathToRoles) {
+         if (!StringUtils.hasText(pathToRoles)) {
             Log.debug(Geonet.SECURITY, "oidc: pathToRoles is null/empty - cannot process");
             return new ArrayList<>();
         }
@@ -315,5 +332,6 @@ public class OIDCRoleProcessor {
         Log.debug(Geonet.SECURITY, "oidc: pathToRoles - couldnt find role list - " + pathToRoles);
         return new ArrayList<>(); // unexpected...
     }
+
 
 }

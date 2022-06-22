@@ -123,11 +123,11 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testScopes_all() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setClientId( "clientid");
+        configuration.setClientSecret( "clientsecret");
         configuration.setScopes("");//use all scopes from server
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
-            "clientid",
-            "clientsecret",
             configuration
         );
 
@@ -139,11 +139,11 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testScopes_limited() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setClientId( "clientid");
+        configuration.setClientSecret( "clientsecret");
         configuration.setScopes("openid,email");//use 2 scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
-            "clientid",
-            "clientsecret",
             configuration
         );
 
@@ -157,11 +157,11 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingKeycloakConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setClientId( "clientid");
+        configuration.setClientSecret( "clientsecret");
         configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
-            "clientid",
-            "clientsecret",
             configuration
         );
 
@@ -186,11 +186,11 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingAzureADConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.setClientId( "clientid");
+        configuration.setClientSecret( "clientsecret");
         configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(azureADConfig),
-            "clientid",
-            "clientsecret",
             configuration
         );
 

@@ -55,6 +55,10 @@ public class GeonetworkOidcUserService extends OidcUserService {
     @Autowired
     RoleHierarchy roleHierarchy;
 
+    public OAuth2User loaduser() {
+        return null;
+    }
+
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {

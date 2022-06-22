@@ -42,10 +42,8 @@
 
   <!-- Reads from the .json file and creates a ClientRegistration -->
   <bean id="openidconnect_ClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
-    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_FNAME}"/>
-    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT}"/>
-    <constructor-arg value="${OPENIDCONNECT_CLIENTID}"/>
-    <constructor-arg value="${OPENIDCONNECT_CLIENTSECRET}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_FNAME:#{''}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT:#{''}}"/>
     <constructor-arg ref="openidconnect_Configuration"/>
   </bean>
 
@@ -79,7 +77,33 @@
     <property name="authenticationManager" ref="openidconnect_ProviderManager"/>
   </bean>
 
+  <bean id="openidconnect_BearerTokenAuthenticationFilter" class="org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter">
+    <constructor-arg ref="openidconnect_ProviderManager"/>
+  </bean>
 
+<!--  <bean id="openidconnect_GeonetworkBearerTokenAuthenticationFilter" class="org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkBearerTokenAuthenticationFilter">-->
+<!--&lt;!&ndash;    <constructor-arg ref="openidconnect_ProviderManager"/>&ndash;&gt;-->
+<!--  </bean>-->
+
+
+  <bean id="openidconnect_RSA_Factory" class="org.fao.geonet.kernel.security.openidconnect.bearer.JwtDecoderFactory"/>
+
+
+  <!-- create a JWT decoder.
+         This requires the server's public key's N and E numbers.
+         You can get these by;
+         a) get the server's OpenID Connect metadata document
+         b) get the url from the 'jwks_uri' property and follow the url to get the document
+         c) find the first entry with use:"sig"
+            + if multiple, get an id token and look for the one with the maiting 'kid'
+         d) extract the N and E values
+         e) use those values below (put them in environment variables)
+         NOTE: I put in default values, so it doesn't throw exceptions if you aren't using bearer tokens.
+  -->
+  <bean id="openidconnect_Bearer_createJwtDecoder" factory-bean="openidconnect_RSA_Factory"  factory-method="createJwtDecoder">
+      <constructor-arg value="#{systemEnvironment['OPENIDCONNECT_BEARER_PUBLIC_N'] == null ? '100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' : systemEnvironment['OPENIDCONNECT_BEARER_PUBLIC_N']}"/>
+      <constructor-arg value="#{systemEnvironment['OPENIDCONNECT_BEARER_PUBLIC_E'] == null ? 'AQAB' : systemEnvironment['OPENIDCONNECT_BEARER_PUBLIC_E'] }"/>
+  </bean>
 
   <bean id="openidconnect_DefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
 
@@ -87,6 +111,30 @@
 
   <bean id="openidconnect_UserService" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcUserService">
   </bean>
+
+<!--  <bean id="openidconnect_bearer_rolesprovider" class="org.fao.geonet.kernel.security.openidconnect.bearer.UserInfoAccessTokenRolesResolver">-->
+<!--  </bean>-->
+
+  <bean id="openidconnect_bearer_rolesprovider" class="org.fao.geonet.kernel.security.openidconnect.bearer.MSGraphUserRolesResolver">
+  </bean>
+
+  <bean id="openidconnect_JwtAuthenticationProvider" class="org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkJwtAuthenticationProvider">
+    <constructor-arg>
+      <bean class="org.fao.geonet.kernel.security.openidconnect.bearer.SimpleTokenParser">
+      </bean>
+    </constructor-arg>
+    <constructor-arg ref="openidconnect_UserService"/>
+    <constructor-arg ref="openidconnect_bearer_rolesprovider"/>
+    <constructor-arg>
+        <list>
+          <bean id="openidconnect_bearer_tokenvalidator" class="org.fao.geonet.kernel.security.openidconnect.bearer.AudienceAccessTokenValidator">
+          </bean>
+          <bean id="openidconnect_bearer_tokenvalidator" class="org.fao.geonet.kernel.security.openidconnect.bearer.SubjectAccessTokenValidator">
+          </bean>
+        </list>
+    </constructor-arg>
+  </bean>
+
 
 
 
@@ -99,6 +147,7 @@
     <constructor-arg>
     <util:list>
       <ref bean="openidconnect_AuthorizationProvider"/>
+      <ref bean="openidconnect_JwtAuthenticationProvider"/>
     </util:list>
     </constructor-arg>
   </bean>
@@ -150,6 +199,9 @@
         <ref bean="openidconnect_OAuth2AuthorizationRequestRedirectFilter"/>
         <ref bean="openidconnect_OAuth2LoginAuthenticationFilter"/>
         <ref bean="logoutFilter"/>
+
+        <ref bean="openidconnect_BearerTokenAuthenticationFilter"/>
+<!--        <ref bean="openidconnect_GeonetworkBearerTokenAuthenticationFilter"/>-->
 
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>

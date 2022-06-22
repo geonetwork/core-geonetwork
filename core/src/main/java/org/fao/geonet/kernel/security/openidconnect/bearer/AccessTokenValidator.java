@@ -20,30 +20,15 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.kernel.security.openidconnect;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+package org.fao.geonet.kernel.security.openidconnect.bearer;
 
 import java.util.Map;
 
 /**
- * Trivial factory for making SimpleOidcUser.
+ *  Bearer tokens should be checked to make sure they are applicable to this application (to prevent
+ *  token reuse from another application)
  */
-public class SimpleOidcUserFactory {
+public interface AccessTokenValidator {
 
-    @Autowired
-    OIDCConfiguration oidcConfiguration;
-
-    @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
-
-
-    public SimpleOidcUser create(OidcIdToken idToken) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken);
-    }
-
-    public SimpleOidcUser create(Map attributes) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, attributes);
-    }
+    void verifyToken(Map accessTokenClaims, Map userInfoClaims) throws Exception;
 }
