@@ -24,6 +24,9 @@ package org.fao.geonet.kernel.security.openidconnect.bearer;
 
 import java.util.Map;
 
+/**
+ * interface for access token parsers (i.e. one that validates signature, one that doesnt)
+ */
 public interface AccessTokenParser {
 
     Map parseToken(String token) throws Exception;

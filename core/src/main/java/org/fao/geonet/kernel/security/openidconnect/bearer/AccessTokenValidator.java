@@ -25,8 +25,8 @@ package org.fao.geonet.kernel.security.openidconnect.bearer;
 import java.util.Map;
 
 /**
- *  Bearer tokens should be checked to make sure they are applicable to this application (to prevent
- *  token reuse from another application)
+ * Bearer tokens should be checked to make sure they are applicable to this application (to prevent
+ * token reuse from another application)
  */
 public interface AccessTokenValidator {
 

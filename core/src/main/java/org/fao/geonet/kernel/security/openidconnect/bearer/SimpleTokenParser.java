@@ -28,6 +28,9 @@ import com.nimbusds.jwt.JWTParser;
 
 import java.util.Map;
 
+/**
+ * simple token parser that doesn't validate signature (or anything else)
+ */
 public class SimpleTokenParser implements AccessTokenParser {
 
     @Override

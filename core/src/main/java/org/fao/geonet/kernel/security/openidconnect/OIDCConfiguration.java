@@ -45,9 +45,9 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String organizationProperty = "organization";
 
     /**
-     *   For role/groups, we allow them to take the form of "GN-group:GN-profile".
-     *   this defines the ":" separator.
-     *   Shouldn't need to change this.
+     * For role/groups, we allow them to take the form of "GN-group:GN-profile".
+     * this defines the ":" separator.
+     * Shouldn't need to change this.
      */
     public String groupPermissionSeparator = ":";
 
@@ -85,6 +85,8 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     public String clientId;
     public String clientSecret;
+    public String scopes = null; //null or empty -> all
+    public String roleConverterString = null;
 
     public String getScopes() {
         return scopes;
@@ -96,14 +98,9 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     public List<String> getScopeSet() {
         if (!StringUtils.hasText(scopes))
-           return null;
+            return null;
         return Arrays.asList(scopes.split(" "));
     }
-
-    public String  scopes = null; //null or empty -> all
-
-    public String roleConverterString = null;
-
 
     public String getUserNameAttribute() {
         return userNameAttribute;
@@ -218,7 +215,6 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         this.roleConverterString = roleConverterString;
         updateRoleConverterString(roleConverterString);
     }
-
 
 
 }

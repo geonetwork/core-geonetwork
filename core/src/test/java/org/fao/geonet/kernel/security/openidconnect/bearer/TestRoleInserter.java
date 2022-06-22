@@ -38,16 +38,16 @@ import static org.junit.Assert.assertTrue;
 public class TestRoleInserter {
 
     @Test
-    public void testRoleInserter1(){
+    public void testRoleInserter1() {
         Map m = new HashMap();
-        m.put("email","dave@geocat.net");
+        m.put("email", "dave@geocat.net");
 
         OidcUserInfo result = RoleInserter.insertRoles("resource_access.gn-key.roles",
             new OidcUserInfo(m),
-            Arrays.asList("a","b","c"));
+            Arrays.asList("a", "b", "c"));
 
         assertNotNull(result.getClaims().get("resource_access"));
-        Map resource_access = (Map)result.getClaims().get("resource_access");
+        Map resource_access = (Map) result.getClaims().get("resource_access");
         assertNotNull(resource_access.get("gn-key"));
         Map gn_key = (Map) resource_access.get("gn-key");
         assertNotNull(gn_key.get("roles"));
@@ -60,16 +60,16 @@ public class TestRoleInserter {
     }
 
     @Test
-    public void testRoleInserter2(){
+    public void testRoleInserter2() {
         Map m = new HashMap();
-        m.put("resource_access", new HashMap() );
+        m.put("resource_access", new HashMap());
 
         OidcUserInfo result = RoleInserter.insertRoles("resource_access.gn-key.roles",
             new OidcUserInfo(m),
-            Arrays.asList("a","b","c"));
+            Arrays.asList("a", "b", "c"));
 
         assertNotNull(result.getClaims().get("resource_access"));
-        Map resource_access = (Map)result.getClaims().get("resource_access");
+        Map resource_access = (Map) result.getClaims().get("resource_access");
         assertNotNull(resource_access.get("gn-key"));
         Map gn_key = (Map) resource_access.get("gn-key");
         assertNotNull(gn_key.get("roles"));
@@ -80,19 +80,20 @@ public class TestRoleInserter {
         assertTrue(roles.contains("b"));
         assertTrue(roles.contains("c"));
     }
+
     @Test
-    public void testRoleInserter3(){
+    public void testRoleInserter3() {
         Map m = new HashMap();
         Map _resource_access = new HashMap();
         _resource_access.put("gn-key", new HashMap());
-        m.put("resource_access",_resource_access );
+        m.put("resource_access", _resource_access);
 
         OidcUserInfo result = RoleInserter.insertRoles("resource_access.gn-key.roles",
             new OidcUserInfo(m),
-            Arrays.asList("a","b","c"));
+            Arrays.asList("a", "b", "c"));
 
         assertNotNull(result.getClaims().get("resource_access"));
-        Map resource_access = (Map)result.getClaims().get("resource_access");
+        Map resource_access = (Map) result.getClaims().get("resource_access");
         assertNotNull(resource_access.get("gn-key"));
         Map gn_key = (Map) resource_access.get("gn-key");
         assertNotNull(gn_key.get("roles"));
@@ -105,21 +106,21 @@ public class TestRoleInserter {
     }
 
     @Test
-    public void testRoleInserter4(){
+    public void testRoleInserter4() {
         Map m = new HashMap();
         Map _resource_access = new HashMap();
         Map _gn_key = new HashMap();
         _gn_key.put("roles", new ArrayList());
 
         _resource_access.put("gn-key", _gn_key);
-        m.put("resource_access",_resource_access );
+        m.put("resource_access", _resource_access);
 
         OidcUserInfo result = RoleInserter.insertRoles("resource_access.gn-key.roles",
             new OidcUserInfo(m),
-            Arrays.asList("a","b","c"));
+            Arrays.asList("a", "b", "c"));
 
         assertNotNull(result.getClaims().get("resource_access"));
-        Map resource_access = (Map)result.getClaims().get("resource_access");
+        Map resource_access = (Map) result.getClaims().get("resource_access");
         assertNotNull(resource_access.get("gn-key"));
         Map gn_key = (Map) resource_access.get("gn-key");
         assertNotNull(gn_key.get("roles"));

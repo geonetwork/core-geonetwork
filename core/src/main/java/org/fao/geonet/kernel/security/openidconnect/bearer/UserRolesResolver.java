@@ -29,11 +29,11 @@ import java.util.Map;
 
 /**
  * This is an interface for how to get user roles/groups (list of role/group) names.
- *
+ * <p>
  * Typically, this will either be;
- *  + in the access token (keycloak - with configuration)
- *  + in the userinfo (oidc endpoint) results (keycloak - with configuration)
- *  + available via some external API (azure AD - graph api)
+ * + in the access token (keycloak - with configuration)
+ * + in the userinfo (oidc endpoint) results (keycloak - with configuration)
+ * + available via some external API (azure AD - graph api)
  */
 public interface UserRolesResolver {
 

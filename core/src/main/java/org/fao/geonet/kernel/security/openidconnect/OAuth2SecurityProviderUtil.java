@@ -30,11 +30,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 
 /**
  * This implements GN's SecurityProviderUtil.
- *
+ * <p>
  * Based on GN's Keycloak security plugin.
  */
 public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
@@ -64,12 +63,10 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
             OidcUser user = (OidcUser) auth.getPrincipal();
             OidcIdToken idToken = user.getIdToken();
             return oidcUser2GeonetworkUser.getUserDetails(idToken, withDbUpdate);
-        }
-        else  if (auth != null && auth.getPrincipal() instanceof OAuth2User) {
+        } else if (auth != null && auth.getPrincipal() instanceof OAuth2User) {
             OAuth2User user = (OAuth2User) auth.getPrincipal();
             return oidcUser2GeonetworkUser.getUserDetails(user.getAttributes(), withDbUpdate);
-        }
-        else {
+        } else {
             // If unknown auth class then return null.
             // This will occur when it is an anonymous user.
             return null;

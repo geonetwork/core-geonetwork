@@ -48,8 +48,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- *   This is a OAuth2LoginAuthenticationFilter successfulAuthentication method.
- *   See below for details.
+ * This is a OAuth2LoginAuthenticationFilter successfulAuthentication method.
+ * See below for details.
  */
 public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthenticationFilter {
 

@@ -28,6 +28,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.time.Instant;
 import java.util.Collection;
 
+/**
+ * Cached info about the User (used and resolved by the JwtAuthenticationProvider).
+ */
 public class UserInfoCacheItem {
 
     public String accessToken;
@@ -35,15 +38,15 @@ public class UserInfoCacheItem {
     public OAuth2User user;
     Collection<? extends GrantedAuthority> authorities;
 
-    public UserInfoCacheItem(String accessToken, Instant expireTime, OAuth2User user,Collection<? extends GrantedAuthority> authorities) {
+    public UserInfoCacheItem(String accessToken, Instant expireTime, OAuth2User user, Collection<? extends GrantedAuthority> authorities) {
         this.accessToken = accessToken;
         this.user = user;
         this.expireTime = expireTime;
         this.authorities = authorities;
     }
 
-    public boolean isExpired(){
-        return (expireTime.compareTo(Instant.now()) <0);
+    public boolean isExpired() {
+        return (expireTime.compareTo(Instant.now()) < 0);
     }
 
     public String getAccessToken() {

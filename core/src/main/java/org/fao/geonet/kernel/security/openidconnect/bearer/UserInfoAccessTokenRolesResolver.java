@@ -26,14 +26,15 @@ import org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration;
 import org.fao.geonet.kernel.security.openidconnect.OIDCRoleProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- *  This gets a users roles from the results of the UserInfo (or from the Access Token)
+ * This gets a users roles from the results of the UserInfo (or from the Access Token).
+ * Keycloak can be configured to put the user's roles/groups in the Access Token and/or the userinfo result.
+ * For Azure AD, you must use the Graph API (cf MSGraphUserRolesResolver)
  */
 public class UserInfoAccessTokenRolesResolver implements UserRolesResolver {
 
@@ -45,28 +46,28 @@ public class UserInfoAccessTokenRolesResolver implements UserRolesResolver {
 
 
     List<String> resolveRoles(OidcUserInfo userInfo, String pathToRoles) {
-        if ( (userInfo == null) || (pathToRoles==null) )
+        if ((userInfo == null) || (pathToRoles == null))
             return null;
 
-        return roleProcessor.getTokenRoles(userInfo.getClaims(),pathToRoles);
+        return roleProcessor.getTokenRoles(userInfo.getClaims(), pathToRoles);
     }
 
     List<String> resolveRoles(Map claims, String pathToRoles) {
-        if ((claims == null)|| (pathToRoles==null) )
+        if ((claims == null) || (pathToRoles == null))
             return null;
-        return roleProcessor.getTokenRoles(claims,pathToRoles);
+        return roleProcessor.getTokenRoles(claims, pathToRoles);
     }
 
 
-        @Override
-    public List<String> resolveRoles(String tokenValue,Map claims, OidcUserInfo userInfo) {
-            String pathToRoles = oidcConfiguration.getIdTokenRoleLocation();
-            List<String> result = resolveRoles(userInfo,pathToRoles);
-            if ( (result == null) || (result.isEmpty()) )
-                result = resolveRoles(claims,pathToRoles);
-            if ((result == null)|| (result.isEmpty()) )
-                return new ArrayList<>();
-            return result;
+    @Override
+    public List<String> resolveRoles(String tokenValue, Map claims, OidcUserInfo userInfo) {
+        String pathToRoles = oidcConfiguration.getIdTokenRoleLocation();
+        List<String> result = resolveRoles(userInfo, pathToRoles);
+        if ((result == null) || (result.isEmpty()))
+            result = resolveRoles(claims, pathToRoles);
+        if ((result == null) || (result.isEmpty()))
+            return new ArrayList<>();
+        return result;
     }
 
 

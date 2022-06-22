@@ -24,6 +24,12 @@ package org.fao.geonet.kernel.security.openidconnect.bearer;
 
 import java.util.Map;
 
+/**
+ * This verifies that the token is about our user (i.e. the access token and userinfo endpoint agree on who).
+ *
+ * for keycloak, the "sub" of the JWT and userInfo are the same.
+ * for Azure AD, the "sub" of the userInfo is in the JWT "xms_st" claim.
+ */
 public class SubjectAccessTokenValidator implements AccessTokenValidator {
 
     @Override
@@ -38,9 +44,9 @@ public class SubjectAccessTokenValidator implements AccessTokenValidator {
             return;
 
         //Azure AD case - use accesstoken.xms_st.sub vs userinfo.sub
-        if ( (claims.get("xms_st") != null) && (claims.get("xms_st") instanceof Map )) {
+        if ((claims.get("xms_st") != null) && (claims.get("xms_st") instanceof Map)) {
             Map xmls_st = (Map) claims.get("xms_st");
-            if (xmls_st.get("sub") !=null) {
+            if (xmls_st.get("sub") != null) {
                 if (xmls_st.get("sub").equals(userInfoClaims.get("sub")))
                     return;
             }

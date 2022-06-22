@@ -37,12 +37,12 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 
 /**
- *  This class overrides OidcUserService#loadUser
- *
- *  This implementation uses the OIDCRoleProcessor to get the authorities
- *  for the user (i.e. Administrator, Reviewer, etc...).
- *      NOTE: this includes ALL the lower-level permissions - so an "Administrator" will also have
- *            Reviewer, Editor, UserAdmin, RegisteredUser, Guest, etc...
+ * This class overrides OidcUserService#loadUser
+ * <p>
+ * This implementation uses the OIDCRoleProcessor to get the authorities
+ * for the user (i.e. Administrator, Reviewer, etc...).
+ * NOTE: this includes ALL the lower-level permissions - so an "Administrator" will also have
+ * Reviewer, Editor, UserAdmin, RegisteredUser, Guest, etc...
  */
 public class GeonetworkOidcUserService extends OidcUserService {
 

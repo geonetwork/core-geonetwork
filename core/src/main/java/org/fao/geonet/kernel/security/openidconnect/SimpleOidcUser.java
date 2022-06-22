@@ -34,11 +34,11 @@ import java.util.Map;
 
 /**
  * Contains information about the user (from the oidc ID Token).
- *
+ * <p>
  * This class knows how to do two things;
  * a) extra info from the OIDC ID Token
  * b) move info to a GN user
- *
+ * <p>
  * parts taken from BaselUser (GN keycloak plugin)
  */
 class SimpleOidcUser {
@@ -59,7 +59,7 @@ class SimpleOidcUser {
             username = idToken.getFullName();
         }
         if (username != null) {
-            username =  org.apache.commons.lang.StringUtils.left(username,256); //first max 256 chars
+            username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
         }
 
         if (username != null && username.length() > 0) {
@@ -93,18 +93,20 @@ class SimpleOidcUser {
     SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) {
         username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
         if (username == null)
-            username =  (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
+            username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
         if (username == null) {
             username = (String) attributes.get(StandardClaimNames.NAME);
         }
         if (username != null) {
-            username =  org.apache.commons.lang.StringUtils.left(username,256); //first max 256 chars
+            username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
         }
 
         if (username != null && username.length() > 0) {
             surname = (String) attributes.get(StandardClaimNames.FAMILY_NAME);
-            firstname = (String) attributes.get(StandardClaimNames.GIVEN_NAME); ;
-            email = (String) attributes.get(StandardClaimNames.EMAIL); ;
+            firstname = (String) attributes.get(StandardClaimNames.GIVEN_NAME);
+            ;
+            email = (String) attributes.get(StandardClaimNames.EMAIL);
+            ;
 
 
             if (attributes.containsKey(oidcConfiguration.organizationProperty)) {

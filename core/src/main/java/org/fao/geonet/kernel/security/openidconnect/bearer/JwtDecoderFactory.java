@@ -33,17 +33,21 @@ import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 
+/**
+ * factory for creating a JwtDecoder based on an RSA "e" and "n" value.
+ * NOTE: this doesn't work for MS Azure AD JWT tokens, but does work for keycloak tokens.
+ */
 public class JwtDecoderFactory {
 
     //taken from nimbus-jose
     public JwtDecoder createJwtDecoder(String nStr, String eStr) throws Exception {
         // this is for people who don't want to use Bearer tokens - don't cause errors if we dont have to
-        if (nStr == null)  {
-            Log.warning(Geonet.SECURITY,"OpenID Connect - Bearer Token - public key - null 'n' value.");
+        if (nStr == null) {
+            Log.warning(Geonet.SECURITY, "OpenID Connect - Bearer Token - public key - null 'n' value.");
             // will throw, below
         }
         if (eStr == null) {
-            Log.warning(Geonet.SECURITY,"OpenID Connect - Bearer Token - public key - null 'e' value.");
+            Log.warning(Geonet.SECURITY, "OpenID Connect - Bearer Token - public key - null 'e' value.");
             // will throw, below
         }
 
@@ -56,7 +60,7 @@ public class JwtDecoderFactory {
         RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
 
         KeyFactory factory = KeyFactory.getInstance("RSA");
-        RSAPublicKey publicKey =  (RSAPublicKey) factory.generatePublic(spec);
+        RSAPublicKey publicKey = (RSAPublicKey) factory.generatePublic(spec);
         JwtDecoder decoder = NimbusJwtDecoder.withPublicKey(publicKey).build();
         return decoder;
     }

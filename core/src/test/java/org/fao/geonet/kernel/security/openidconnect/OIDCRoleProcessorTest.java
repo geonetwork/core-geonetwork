@@ -22,16 +22,11 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.kernel.security.openidconnect.bearer.JwtDecoderFactory;
 import org.junit.Test;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,14 +90,14 @@ public class OIDCRoleProcessorTest {
     public void testRoleConverterParser() {
         OIDCRoleProcessor oidcRoleProcessor = getOIDCRoleProcessor();
         oidcRoleProcessor.oidcConfiguration.setRoleConverterString("A=B");
-        assertEquals(1,oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
-        assertEquals("A",oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
-        assertEquals("B",oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
+        assertEquals(1, oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
+        assertEquals("A", oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
+        assertEquals("B", oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
 
         oidcRoleProcessor.oidcConfiguration.setRoleConverterString("A=B:C");
-        assertEquals(1,oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
-        assertEquals("A",oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
-        assertEquals("B:C",oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
+        assertEquals(1, oidcRoleProcessor.oidcConfiguration.getRoleConverter().size());
+        assertEquals("A", oidcRoleProcessor.oidcConfiguration.getRoleConverter().keySet().iterator().next());
+        assertEquals("B:C", oidcRoleProcessor.oidcConfiguration.getRoleConverter().values().iterator().next());
     }
 
     //simple test - just make sure the change map works

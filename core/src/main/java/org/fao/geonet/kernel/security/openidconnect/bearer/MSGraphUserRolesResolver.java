@@ -41,21 +41,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *   make sure your Azure AD application has "GroupMember.Read.All" permission:
- *   a) go to your application in Azure AD (in the portal)
- *   b) On the left, go to "API permissions"
- *   c) click "Add a permission"
- *   d) press "Microsoft Graph"
- *   e) press "Delegated permission"
- *   f) Scroll down to "GroupMember"
- *   g) Choose "GroupMemeber.Read.All"
- *   h) press "Add permission"
- *   i) on the API Permission screen, press the "Grant admin consent for ..." text
- *
- *   This class will go to the "https://graph.microsoft.com/v1.0/me/memberOf" and attach your access token.
- *   It will then read the response and find all the user's groups.
- *
- *   NOTE: to be consistent with the rest of Azure, we use the Groups OID (guid) NOT its name.
+ * make sure your Azure AD application has "GroupMember.Read.All" permission:
+ * a) go to your application in Azure AD (in the portal)
+ * b) On the left, go to "API permissions"
+ * c) click "Add a permission"
+ * d) press "Microsoft Graph"
+ * e) press "Delegated permission"
+ * f) Scroll down to "GroupMember"
+ * g) Choose "GroupMemeber.Read.All"
+ * h) press "Add permission"
+ * i) on the API Permission screen, press the "Grant admin consent for ..." text
+ * <p>
+ * This class will go to the "https://graph.microsoft.com/v1.0/me/memberOf" and attach your access token.
+ * It will then read the response and find all the user's groups.
+ * <p>
+ * NOTE: to be consistent with the rest of Azure, we use the Groups OID (guid) NOT its name.
  */
 public class MSGraphUserRolesResolver implements UserRolesResolver {
 
@@ -73,6 +73,15 @@ public class MSGraphUserRolesResolver implements UserRolesResolver {
     OIDCConfiguration oidcConfiguration;
 
 
+    /**
+     * talk to the actual azure graph api to get user's group memberships.
+     *    1. attaches the access token to the request.
+     *    2. sets the Accepts header to  "application/json"  (required)
+     *
+     * @param accessToken
+     * @return
+     * @throws IOException
+     */
     public String resolveUrl(String accessToken) throws IOException {
         String tokenHeaderValue = "Bearer " + accessToken;
         String tokenHeaderName = "Authorization";
@@ -80,23 +89,24 @@ public class MSGraphUserRolesResolver implements UserRolesResolver {
         HttpURLConnection http = null;
         try {
             http = (HttpURLConnection) memberOfEndpoint.openConnection();
-            http.setRequestProperty("Accept","application/json");
+            http.setRequestProperty("Accept", "application/json");
             http.setRequestProperty(tokenHeaderName, tokenHeaderValue);
             String result = new BufferedReader(new InputStreamReader(http.getInputStream()))
                 .lines().collect(Collectors.joining("\n"));
             return result;
-        }
-        finally {
+        } finally {
             if (http != null)
                 http.disconnect();
         }
     }
 
+    // parses the resulting json from the user's group memberships json result.
+    //returns a list of the groups (object id) that the user is a member of.
     public List<String> parseJson(String jsonString) throws JSONException {
         List<String> result = new ArrayList<>();
         JSONObject json = new JSONObject(jsonString);
         JSONArray values = json.getJSONArray("value");
-        for (int i=0;i<values.length();i++){
+        for (int i = 0; i < values.length(); i++) {
             JSONObject object = (JSONObject) values.get(i);
             if (!object.get("@odata.type").equals("#microsoft.graph.group"))
                 continue;
@@ -111,8 +121,7 @@ public class MSGraphUserRolesResolver implements UserRolesResolver {
             String jsonStr = resolveUrl(tokenValue);
             List<String> result = parseJson(jsonStr);
             return result;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }

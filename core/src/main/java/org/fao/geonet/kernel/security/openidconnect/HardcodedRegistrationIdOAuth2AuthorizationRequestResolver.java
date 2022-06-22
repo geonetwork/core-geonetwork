@@ -34,17 +34,17 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
 
 /**
- *  This is to make things work well in Geonetwork.
- *  Spring's oauth allows for multiple oauth providers - and the /signin/... path would normally indicate which one
- *  (by the name).
- *
- *  We're only using one provider (called CLIENTREGISTRATION_NAME - "geonetwork-oicd") and it works better in GN if
- *  you just use a simple "/signin" URL instead of a more complicated one.
- *
- *  This class bridges between the two methods (spring and GN's).
- *
- *  NOTE: this is MUCH more difficult that expected because spring's DefaultOAuth2AuthorizationRequestResolver
- *  is a FINAL CLASS and most of its methods are private!
+ * This is to make things work well in Geonetwork.
+ * Spring's oauth allows for multiple oauth providers - and the /signin/... path would normally indicate which one
+ * (by the name).
+ * <p>
+ * We're only using one provider (called CLIENTREGISTRATION_NAME - "geonetwork-oicd") and it works better in GN if
+ * you just use a simple "/signin" URL instead of a more complicated one.
+ * <p>
+ * This class bridges between the two methods (spring and GN's).
+ * <p>
+ * NOTE: this is MUCH more difficult that expected because spring's DefaultOAuth2AuthorizationRequestResolver
+ * is a FINAL CLASS and most of its methods are private!
  */
 public class HardcodedRegistrationIdOAuth2AuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
 

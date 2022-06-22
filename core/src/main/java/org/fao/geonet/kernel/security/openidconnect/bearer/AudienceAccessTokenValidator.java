@@ -31,35 +31,34 @@ import java.util.Map;
 /**
  * This checks that the token is connected to this application.  This will prevent a token for another application
  * being used by us.
- *
+ * <p>
  * NOTE: Azure AD's JWT AccessToken has a fixed "aud", no "azp", but an "appid" (should be our client id).
- *     example;
- *        "aud": "00000003-0000-0000-c000-000000000000",
- *        "appid": "b9e8d05a-08b6-48a5-81c8-9590a0f550f3",
- *
+ * example;
+ * "aud": "00000003-0000-0000-c000-000000000000",
+ * "appid": "b9e8d05a-08b6-48a5-81c8-9590a0f550f3",
+ * <p>
  * NOTE: Keycloak has the audience as "account", no "appid", but "azp" is should be our client id.
- *      example;
- *         "aud": "account",
- *         "azp": "live-key",
+ * example;
+ * "aud": "account",
+ * "azp": "live-key",
  */
-public class AudienceAccessTokenValidator implements AccessTokenValidator{
+public class AudienceAccessTokenValidator implements AccessTokenValidator {
 
     @Autowired
     OIDCConfiguration oidcConfiguration;
 
     /**
      * "aud" must be our client id
-     *   OR "azp" must be our client id (or, if its a list, contain our client id)
-     *   OR "appid" must be our client id.
-     *
-     *   Otherwise, its a token not for us...
-     *
+     * OR "azp" must be our client id (or, if its a list, contain our client id)
+     * OR "appid" must be our client id.
+     * <p>
+     * Otherwise, its a token not for us...
      *
      * @param claims@throws Exception
      */
     @Override
-    public void verifyToken(Map claims,  Map userInfoClaims) throws Exception {
-        if ((claims.get("aud")  != null) && claims.get("aud").equals(oidcConfiguration.getClientId()))
+    public void verifyToken(Map claims, Map userInfoClaims) throws Exception {
+        if ((claims.get("aud") != null) && claims.get("aud").equals(oidcConfiguration.getClientId()))
             return;
 
         if ((claims.get("appid") != null) && claims.get("appid").equals(oidcConfiguration.getClientId()))

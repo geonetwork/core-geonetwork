@@ -123,8 +123,8 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testScopes_all() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId( "clientid");
-        configuration.setClientSecret( "clientsecret");
+        configuration.setClientId("clientid");
+        configuration.setClientSecret("clientsecret");
         configuration.setScopes("");//use all scopes from server
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
@@ -132,15 +132,15 @@ public class GeonetworkClientRegistrationProviderTest {
         );
 
         assertNotNull(out.getClientRegistration());
-        assertEquals(9,out.getClientRegistration().getScopes().size());
+        assertEquals(9, out.getClientRegistration().getScopes().size());
     }
 
     // test to limit scope usage to openid and email
     @Test
     public void testScopes_limited() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId( "clientid");
-        configuration.setClientSecret( "clientsecret");
+        configuration.setClientId("clientid");
+        configuration.setClientSecret("clientsecret");
         configuration.setScopes("openid,email");//use 2 scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
@@ -148,7 +148,7 @@ public class GeonetworkClientRegistrationProviderTest {
         );
 
         assertNotNull(out.getClientRegistration());
-        assertEquals(2,out.getClientRegistration().getScopes().size());
+        assertEquals(2, out.getClientRegistration().getScopes().size());
         assertTrue(out.getClientRegistration().getScopes().contains("openid"));
         assertTrue(out.getClientRegistration().getScopes().contains("email"));
     }
@@ -157,8 +157,8 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingKeycloakConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId( "clientid");
-        configuration.setClientSecret( "clientsecret");
+        configuration.setClientId("clientid");
+        configuration.setClientSecret("clientsecret");
         configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
@@ -186,8 +186,8 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingAzureADConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId( "clientid");
-        configuration.setClientSecret( "clientsecret");
+        configuration.setClientId("clientid");
+        configuration.setClientSecret("clientsecret");
         configuration.setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(azureADConfig),

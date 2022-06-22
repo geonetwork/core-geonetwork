@@ -29,15 +29,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a simple class that will put roles in the correct location in an OidcUserInfo (basically a Map of claims).
+ */
 public class RoleInserter {
 
+    /**
+     * Puts the roles inside the OidcUserInfo (map) at the given location.
+     *
+     * For example
+     *   _path = "resource_access.gn-key.roles"
+     *   userInfo = {"a":"A", ...}
+     *   userRoles = ["Reviewer","Editor"]
+     *
+     *   -->  {"a":"A", ...,
+     *   "resource_access": {
+     *          "gn-key": {
+     *              "roles" : ["Reviewer","Editor"]
+     *          }
+     *      }
+     *   }
+     *
+     * @param _path     dot-delimited location (ie. "resource_access.gn-key.roles") to put the roles
+     * @param userInfo  current info about the user (basically a key-value map)
+     * @param userRoles list of the user's roles/groups
+     * @return
+     */
     public static OidcUserInfo insertRoles(String _path, OidcUserInfo userInfo, List<String> userRoles) {
         String[] paths = _path.trim().split("\\.");
         Map result = new HashMap(userInfo.getClaims());
         Map current = result;
         for (int t = 0; t < paths.length; t++) {
             String path = paths[t];
-            boolean lastPathPart =  (t == paths.length - 1);
+            boolean lastPathPart = (t == paths.length - 1);
             if (!lastPathPart && current.containsKey(path)) {
                 current = (Map) current.get(path);
                 continue;
@@ -48,8 +72,7 @@ public class RoleInserter {
             if (!lastPathPart) {
                 current.put(path, new HashMap());
                 current = (Map) current.get(path);
-            }
-            else {
+            } else {
                 current.put(path, new ArrayList(userRoles));
             }
         }

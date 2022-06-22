@@ -28,6 +28,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 
 import java.util.Map;
 
+/**
+ * This decodes a JWT and validates its signature.  See JwtDecoderFactory.
+ * The JwtDecoder also validates other parts of the JWT.
+ */
 public class SignatureValidatingTokenParser implements AccessTokenParser {
 
     JwtDecoder jwtDecoder;
@@ -38,7 +42,7 @@ public class SignatureValidatingTokenParser implements AccessTokenParser {
 
     @Override
     public Map parseToken(String token) throws Exception {
-            Jwt jwt = this.jwtDecoder.decode(token);
-            return jwt.getClaims();
+        Jwt jwt = this.jwtDecoder.decode(token);
+        return jwt.getClaims();
     }
 }
