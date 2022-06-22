@@ -54,7 +54,7 @@
         lazy-init="true"/>
 
   <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true">
-    <property name="thesaurusCacheMaxSize" value="${thesaurus.cache.maxsize}"/>
+    <property name="thesaurusCacheMaxSize" value="${thesaurus.cache.maxsize:0}"/>
   </bean>
 
   <util:list id="allThesaurusExclude">
