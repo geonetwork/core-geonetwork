@@ -28,7 +28,7 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:math="http://exslt.org/math"
                 version="2.0"
-                exclude-result-prefixes="srv gco gmd exslt geonet math">
+                exclude-result-prefixes="#all">
 
   <xsl:import href="process-utility.xsl"/>
 
@@ -46,6 +46,10 @@
     </msg>
     <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS service </msg>
     <msg id="b" xml:lang="dut">. Gebruik deze functie om de dekking, de projectie of thumbnail af te leiden of bij te werken vanuit deze WMS-service voor de laag met de naam: </msg>
+    <msg id="connectPoint" xml:lang="eng">WMS view service</msg>
+    <msg id="connectPoint" xml:lang="fre">Service de visualisation WMS</msg>
+    <msg id="connectPointDesc" xml:lang="eng">Service connect point URL</msg>
+    <msg id="connectPointDesc" xml:lang="fre">Adresse de connexion au service de visualisation WMS</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->
@@ -54,6 +58,7 @@
   <xsl:param name="setAndReplaceExtent" select="'0'"/>
   <xsl:param name="setCRS" select="'0'"/>
   <xsl:param name="setDynamicGraphicOverview" select="'0'"/>
+  <xsl:param name="setServiceConnectPoint" select="'0'"/>
   <xsl:param name="wmsServiceUrl"/>
 
   <xsl:variable name="maxSrs" select="21"/>
@@ -91,13 +96,15 @@
                   select="$root//gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')
                                             and normalize-space(gmd:linkage/gmd:URL)!='']"/>
     <xsl:variable name="srv"
-                  select="$root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
+                  select="count($root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]) > 0"/>
 
     <!-- Check if server is up and new value are available
      <xsl:variable name="capabilities"
       select="geonet:get-wms-capabilities(gmd:linkage/gmd:URL, '1.1.1')"/>
 -->
     <xsl:for-each select="$onlineResources">
+      <xsl:variable name="url"
+                    select="normalize-space(gmd:linkage/gmd:URL)"/>
       <suggestion process="add-info-from-wms" id="{generate-id()}" category="onlineSrc"
                   target="gmd:extent">
         <name>
@@ -115,8 +122,13 @@
             "setDynamicGraphicOverview":{"type":"boolean",
             "defaultValue":"<xsl:value-of select="$setDynamicGraphicOverview"/>"},
           </xsl:if>
+          <xsl:if test="$srv and count($root//srv:containsOperations[
+                      */srv:connectPoint/*/gmd:linkage/*/text() = $url]) = 0">
+            "setServiceConnectPoint":{"type":"boolean",
+            "defaultValue":"<xsl:value-of select="$setServiceConnectPoint"/>"},
+          </xsl:if>
           "wmsServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of
-            select="normalize-space(gmd:linkage/gmd:URL)"/>"}
+            select="$url"/>"}
           }
         </params>
       </suggestion>
@@ -265,7 +277,44 @@
       <!-- End of service -->
       <xsl:copy-of select="srv:coupledResource|
                 srv:couplingType|
-                srv:containsOperations|
+                srv:containsOperations
+                "/>
+
+      <xsl:if test="$setServiceConnectPoint
+                    and count(srv:containsOperations[
+                      */srv:connectPoint/*/gmd:linkage/*/text() = $wmsServiceUrl]) = 0">
+        <srv:containsOperations>
+          <srv:SV_OperationMetadata>
+            <srv:operationName>
+              <gco:CharacterString>GetCapabilities</gco:CharacterString>
+            </srv:operationName>
+            <srv:DCP>
+              <srv:DCPList codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DCPList" codeListValue="WebServices"/>
+            </srv:DCP>
+            <srv:connectPoint>
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL><xsl:value-of select="$wmsServiceUrl"/></gmd:URL>
+                </gmd:linkage>
+                <gmd:protocol>
+                  <gco:CharacterString>OGC:WMS</gco:CharacterString>
+                </gmd:protocol>
+                <gmd:name>
+                  <gco:CharacterString><xsl:value-of select="geonet:i18n($wms-info-loc, 'connectPoint', $guiLang)"/></gco:CharacterString>
+                </gmd:name>
+                <gmd:description>
+                  <gco:CharacterString><xsl:value-of select="geonet:i18n($wms-info-loc, 'connectPointDesc', $guiLang)"/></gco:CharacterString>
+                </gmd:description>
+                <gmd:function>
+                  <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                </gmd:function>
+              </gmd:CI_OnlineResource>
+            </srv:connectPoint>
+          </srv:SV_OperationMetadata>
+        </srv:containsOperations>
+      </xsl:if>
+
+      <xsl:copy-of select="
                 srv:operatesOn
                 "/>
 

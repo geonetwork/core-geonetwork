@@ -331,5 +331,6 @@
   "metadata/link/excludedUrlPattern-help": "eg. (https://resources.domain.org/datasets/.*|https://uri.domain.org/.*)",
   "portals": "Change Portals",
   "chooseFileToUpload": "Choose or drop a file here",
+  "setServiceConnectPoint": "Add service connect point",
   "switchPortals": "Switch to another Portal"
 }
