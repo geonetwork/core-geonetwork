@@ -246,11 +246,14 @@ public class InspireAtomUtil {
         for (Object field : atomIndexFields.getChildren()) {
             Element f = (Element) field;
 
-            DatasetFeedInfo datasetFeedInfo = new DatasetFeedInfo(f.getChildText("identifier"),
-                f.getChildText("namespace"),
-                f.getChildText("feedUrl"));
+            // Some feed entries contain an empty identifier, skip them
+            if (StringUtils.isNotEmpty(f.getChildText("identifier"))) {
+                DatasetFeedInfo datasetFeedInfo = new DatasetFeedInfo(f.getChildText("identifier"),
+                    f.getChildText("namespace"),
+                    f.getChildText("feedUrl"));
 
-            datasetsInformation.add(datasetFeedInfo);
+                datasetsInformation.add(datasetFeedInfo);
+            }
         }
 
         return datasetsInformation;
