@@ -35,8 +35,6 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.Map;
 
-//import org.fao.oaipmh.util.Xml;
-
 //=============================================================================
 
 public abstract class AbstractRequest {
@@ -49,11 +47,11 @@ public abstract class AbstractRequest {
     private final XmlRequest transport;
     private Path schemaPath;
 
-    public AbstractRequest(GeonetHttpRequestFactory transport) {
+    protected AbstractRequest(GeonetHttpRequestFactory transport) {
         this.transport = transport.createXmlRequest();
     }
 
-    public AbstractRequest(XmlRequest transport) {
+    protected AbstractRequest(XmlRequest transport) {
         this.transport = transport;
     }
 

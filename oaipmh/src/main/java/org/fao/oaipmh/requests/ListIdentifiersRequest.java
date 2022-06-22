@@ -47,7 +47,7 @@ public class ListIdentifiersRequest extends TokenListRequest {
 
     public ListIdentifiersResponse execute() throws IOException, OaiPmhException,
         JDOMException, SAXException, Exception {
-        Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
 
         if (resumpToken != null)
             params.put("resumptionToken", resumpToken);

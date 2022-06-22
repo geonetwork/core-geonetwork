@@ -24,7 +24,7 @@
 package org.fao.oaipmh.requests;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -45,7 +45,7 @@ public abstract class ListRequest extends AbstractRequest {
     //---
     //---------------------------------------------------------------------------
 
-    public ListRequest(GeonetHttpRequestFactory transport) {
+    protected ListRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
@@ -67,12 +67,9 @@ public abstract class ListRequest extends AbstractRequest {
     //---
     //---------------------------------------------------------------------------
 
-    public Element resume(ResumptionToken token) throws IOException, OaiPmhException,
-        JDOMException, SAXException, Exception {
-        Map<String, String> params = new HashMap<String, String>();
-
-        params.put("resumptionToken", token.getToken());
-
+    public Element resume(ResumptionToken token)
+            throws IOException, OaiPmhException, JDOMException, SAXException, Exception {
+        final Map<String, String> params = Collections.singletonMap("resumptionToken", token.getToken());
         return sendRequest(params);
     }
 }

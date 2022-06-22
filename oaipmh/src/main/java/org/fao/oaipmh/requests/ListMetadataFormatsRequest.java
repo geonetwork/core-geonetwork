@@ -65,7 +65,7 @@ public class ListMetadataFormatsRequest extends AbstractRequest {
 
     public ListMetadataFormatsResponse execute() throws IOException, OaiPmhException,
         JDOMException, SAXException, Exception {
-        Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
 
         if (identifier != null)
             params.put("identifier", identifier);
