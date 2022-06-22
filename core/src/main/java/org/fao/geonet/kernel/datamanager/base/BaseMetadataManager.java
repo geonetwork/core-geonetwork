@@ -189,7 +189,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Sort.Direction.DESC, Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
             PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
