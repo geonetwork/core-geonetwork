@@ -957,7 +957,7 @@
             ? ('gn-icon-' + scope.link.protocol.replace(':','-').replace(' ','-').toLowerCase()) : '';
           scope.typeIconClass = gnRelatedResources.getClassIcon(scope.mainType);
 
-          scope.typeClass = 'gn-icontype-' + scope.mainType.toLowerCase();
+          scope.typeClass = 'gn-icontype-' + scope.mainType.replace(':','-').replace(' ','-').toLowerCase();
         }
       };
     }

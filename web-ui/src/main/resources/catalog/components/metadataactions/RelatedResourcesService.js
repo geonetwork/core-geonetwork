@@ -68,13 +68,13 @@
           };
 
           this.getBadgeLabel = function(mainType, r) {
-            if (r.mimeType != '') {
+            if (r.mimeType != undefined && r.mimeType != '') {
               return r.mimeType;
             } else if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
               return r.protocol.replace('WWW:DOWNLOAD:', '');
-            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
+            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/) != null) {
               return mainType.replace('SERVICE', '');
-            } else if (mainType.match(/KML|GPX/)) {
+            } else if (mainType.match(/KML|GPX/) != null) {
               return mainType;
             } else {
               return '';
