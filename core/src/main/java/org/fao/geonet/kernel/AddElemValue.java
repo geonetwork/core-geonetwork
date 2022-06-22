@@ -39,11 +39,9 @@ public class AddElemValue {
     private final Element nodeValue;
 
     public AddElemValue(String stringValue) throws JDOMException, IOException {
-        String finalStringVal = stringValue;
         Element finalNodeVal = null;
-
-        String valueWithoutSpecialTag = stringValue.replaceAll("</?gn_(add|replace|delete)>", "");
-        if (Xml.isXMLLike(valueWithoutSpecialTag)) {
+        String finalStringVal = stringValue.replaceAll("</?gn_(add|replace|delete)>", "");
+        if (Xml.isXMLLike(finalStringVal)) {
             try {
                 finalNodeVal = Xml.loadString(stringValue, false);
                 finalStringVal = null;
@@ -56,7 +54,7 @@ public class AddElemValue {
             }
         }
         this.nodeValue = finalNodeVal;
-        this.stringValue = valueWithoutSpecialTag;
+        this.stringValue = finalStringVal;
     }
 
     public AddElemValue(Element nodeValue) {
