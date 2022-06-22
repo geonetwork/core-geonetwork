@@ -30,14 +30,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
 import com.neovisionaries.i18n.LanguageCode;
-
-import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
-import org.fao.geonet.api.records.attachments.Store;
-import org.fao.geonet.domain.MetadataResourceContainer;
-import org.jdom.input.SAXBuilder;
-import org.jsoup.Jsoup;
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -62,9 +54,10 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
@@ -94,7 +87,9 @@ import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
+import org.jsoup.Jsoup;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.operation.valid.IsValidOp;
@@ -104,6 +99,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -113,8 +109,6 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -145,8 +139,6 @@ import static org.fao.geonet.utils.Xml.getXmlFromJSON;
  * @author jesse
  */
 public final class XslUtil {
-
-
     public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
         ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
@@ -1170,7 +1162,8 @@ public final class XslUtil {
         if (extension.matches(supportedExtension)) {
 
             try {
-                Matcher m = Pattern.compile(".*/api/records/(.*)/attachments/(.*)$").matcher(url);
+                SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+                Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
                     Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
@@ -1384,6 +1377,7 @@ public final class XslUtil {
 
         return languageLabel;
     }
+
 
     public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
         List<String> res = new ArrayList<String>();

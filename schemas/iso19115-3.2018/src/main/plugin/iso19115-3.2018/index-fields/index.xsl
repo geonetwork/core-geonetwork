@@ -401,13 +401,6 @@
         <xsl:for-each select="$overviews">
           <overview type="object">{
             "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex and not($fastIndexMode)">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="count(../../mcc:fileDescription) > 0">,
               "text":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
