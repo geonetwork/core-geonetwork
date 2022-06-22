@@ -1,0 +1,30 @@
+================================================================================
+===
+=== GeoNetwork 3.12.6: List of changes
+===
+================================================================================
+- Remote INSPIRE Atom - skip processing dataset feed entries without an identifier (#6419)
+- [BP] Bump mysql-connector-java from 8.0.20 to 8.0.29 (#6418)
+- [BP] Configure the user profile allowed to delete published metadata (#6398)
+- [BP] Harvesters / GeoNetwork harvester / Re-add exiting files when re-harvesting (#6416)
+- move pencil icon inside the working copy link. Use default popup title of the link. (#6379)
+- [BP] Remove unused properties from cmis call to increase performance (#6404)
+- [BP] Update datepicker widget to configure the display of the date mode selector - remove timezone watcher - not relevant in 3.12.x
+- [BP] Update datepicker widget to configure the display of the date mode selector
+- [BP] Support custom map configuration to generate map thumbnails
+- Exclude log4j2 dependencies from MapFish. (#6412)
+- [BP] Change some of the CMIS private methods to protected
+- [BP] Webdav harvester - add the number of files to harvest in INFO log level and remote duplicated log entry
+- [BP] Disable the DOI publication in the metadata editor for metadata using the metadata workflow (#6367)
+- [BP] Switch from iText to OpenPDF for PDF map rendering (#6392)
+- Backport: Enable fixed default metadata std name for iso19115-3 conversion
+- [BP]Update locale parsing from keycloak token to support different formats.
+- [BP] Workflow - create working copy - clone files after assigning the privileges. Fixes #6349 (#6350)
+- [BP] User metadata feedback - fix related to #6341 to don't include  unrequired fields when the user is logged. Hiding the fields trigger the validation, it is required to use data-ng-if directive instead of data-ng-hide (#6346)
+- [BP] Add inline messages for the Add Feedback form (#6341)
+- [BP] Use parent element to retrieve labels in the schemas that use the context attribute
+- [BP] Fix DOI publication task enabling after publishing the metadata
+- [BP] Metadata map thumbnail - don't rotate the image when using the Landscape layout
+- [BP] Update ResourceFilter to return a 404 for xml resources if not found. Previously was returning an image even for xml documents
+- [BP] Support context map files per UI language
+- Update Dutch, French and German translations (#6333)
