@@ -479,6 +479,26 @@
           </hasInspireTheme>
         </xsl:if>
 
+        <!-- Maps thesaurus name to internal identifiers used in GeoNetwork -->
+        <!-- Used for metadata created outside GeoNetwork to index the thesaurus information in an unified way -->
+        <xsl:variable name="mappingThesaurusNameToId" as="node()*">
+          <thesaurus name="http://inspire.ec.europa.eu/theme"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme"/>
+
+          <thesaurus name="http://www.eionet.europa.eu/gemet/inspire_themes"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme"/>
+
+          <thesaurus name="GEMET - INSPIRE themes, version 1.0"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme"/>
+
+          <thesaurus name="Spatial scope"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
+
+          <thesaurus name="INSPIRE priority data set"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
+
+        </xsl:variable>
+
         <xsl:variable name="allKeywords">
           <xsl:for-each-group select="*/gmd:MD_Keywords"
                               group-by="concat(gmd:thesaurusName/*/gmd:title/(gco:CharacterString|gmx:Anchor)/text(), '-', gmd:type/*/@codeListValue[. != ''])">
@@ -501,8 +521,12 @@
                           select=" gmd:thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href"/>
 
             <xsl:variable name="thesaurusId"
-                          select="if ($thesaurusRefAnchor) then $thesaurusRefAnchor
-                                  else normalize-space($thesaurusRef/text())"/>
+                          select="if (normalize-space($thesaurusRef/text()))
+                                  then normalize-space($thesaurusRef/text())
+                                  else if($mappingThesaurusNameToId[@name = $thesaurusTitle])
+                                  then $mappingThesaurusNameToId[@name = $thesaurusTitle]/@id
+                                  else if ($thesaurusRefAnchor) then $thesaurusRefAnchor
+                                  else ''"/>
 
             <xsl:variable name="thesaurusUri"
                           select="$thesaurusRef/@xlink:href"/>
