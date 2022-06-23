@@ -35,6 +35,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
@@ -194,6 +195,10 @@ public class AttachmentsApi {
         @Parameter(description = "The file to upload") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        if (org.apache.commons.lang3.StringUtils.contains(file.getOriginalFilename(),';')) {
+            throw new NotAllowedException(String.format(
+                "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
+        }
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
