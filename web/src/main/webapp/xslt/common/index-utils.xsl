@@ -301,6 +301,16 @@
     </xsl:for-each>
   </xsl:function>
 
+  <!-- Template to build the following index fields for the metadata keywords:
+          - tag: contains all the keywords.
+          - tagNumber: total number of keywords.
+          - isOpenData: checks if any keyword is defined in openDataKeywords to flag it as open data.
+          - keywordType-{TYPE}: Index field per keyword type (examples: keywordType-theme, keywordType-place).
+          - th_{THESAURUSID}: Field with keywords of a thesaurus, eg. th_regions
+          - th_{THESAURUSID}Number: Field with keywords of a thesaurus, eg. th_regionsNumber
+          - allKeywords: Object field with all thesaurus and all keywords.
+          - {THESAURUSID}_tree: Object with keywords tree per thesaurus.
+  -->
   <xsl:template name="build-all-keyword-fields" as="node()*">
     <xsl:param name="allKeywords" as="node()?"/>
 
@@ -315,10 +325,12 @@
     </xsl:for-each>]
     </tag>
 
+    <!-- Total number of keywords. -->
     <tagNumber>
       <xsl:value-of select="count($allKeywords//keyword)"/>
     </tagNumber>
 
+    <!-- Checks if any keyword is defined in openDataKeywords to flag it as open data -->
     <isOpenData>
       <xsl:value-of select="count(
                         $allKeywords//keyword/values/value[matches(
@@ -330,7 +342,6 @@
                             '\p{Mn}', ''),
                           'NFKC'),
                         $openDataKeywords)]) > 0"/></isOpenData>
-
 
     <!-- Build index field for type
     keywordType-place: [{default: France}]-->
@@ -347,18 +358,20 @@
       </xsl:element>
     </xsl:for-each-group>
 
-    <!-- Field with keyword count eg. th_regionsNumber -->
+    <!-- Fields with keywords and keyword count of a thesaurus, eg. th_regions, th_regionsNumber -->
     <xsl:for-each select="$allKeywords/thesaurus[info/@field]">
+      <!-- Keyword count of a thesaurus -->
       <xsl:element name="{info/@field}Number">
         <xsl:value-of select="count(keywords/keyword)"/>
       </xsl:element>
 
+      <!-- Keywords of a thesaurus -->
       <xsl:element name="{info/@field}">
         <xsl:attribute name="type" select="'object'"/>
         [<xsl:for-each select="keywords/keyword">
         {
         <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
@@ -391,6 +404,7 @@
       }
     </allKeywords>
 
+    <!-- Object with keywords tree per thesaurus -->
     <xsl:for-each select="$allKeywords/thesaurus[keywords/keyword/tree/*/value]">
       <xsl:element name="{info/@field}_tree">
         <xsl:attribute name="type" select="'object'"/>{
@@ -586,7 +600,7 @@
       <thesaurus old="th_httpinspire-ec-europa-eumetadata-codelistSpatialScope"
                  new="th_httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope"/>
       <!-- Map normalised thesaurus name for INSPIRE GEMET Themes to a key -->
-      <thesaurus old="GEMET - INSPIRE themes, version 1.0"
+      <thesaurus old="th_GEMET-INSPIREthemesversion1-0"
                  new="th_httpinspireeceuropaeutheme-theme"/>
       <!-- Map normalised anchor name for INSPIRE GEMET Themes to a key -->
       <thesaurus old="th_httpinspire-ec-europa-eutheme"

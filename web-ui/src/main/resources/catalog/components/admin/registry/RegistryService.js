@@ -72,7 +72,7 @@
           {key: 'lv', label: 'lv'}, {key: 'mt', label: 'mt'},
           {key: 'nl', label: 'nl'}, {key: 'pl', label: 'pl'},
           {key: 'pt', label: 'pt'}, {key: 'ro', label: 'ro'},
-          {key: 'sk', label: 'sk'}, {key: 'si', label: 'si'},
+          {key: 'sk', label: 'sk'}, {key: 'sl', label: 'sl'},
           {key: 'sv', label: 'sv'});
         deferred.resolve(languages);
 
