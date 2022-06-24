@@ -1630,7 +1630,8 @@
             </template>
           </action>
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+          <field name="verticalDatum"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'L11')]"/>

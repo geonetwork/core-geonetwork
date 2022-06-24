@@ -294,6 +294,7 @@
   <projectTitle>Program title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
+  <verticalDatum>Vertical Datum</verticalDatum>
   <addADistributor>Add distributor</addADistributor>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>

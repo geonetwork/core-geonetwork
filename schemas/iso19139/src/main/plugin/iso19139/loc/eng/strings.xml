@@ -235,6 +235,7 @@
   <projectTitle>Program title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
+  <verticalDatum>Vertical Datum</verticalDatum>
   <addADistributor>Add distributor</addADistributor>
   <associatedResources>Associated resources</associatedResources>
   <additionalInfo>Additional information</additionalInfo>
