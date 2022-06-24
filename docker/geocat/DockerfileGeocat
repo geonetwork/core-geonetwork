@@ -36,6 +36,20 @@ ENV WEBAPP_CONTEXT_NAME=geonetwork
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+RUN apt-get update && apt-get install --no-install-recommends -y \
+      ruby \
+      libpq5 \
+      ruby-dev \
+      libpq-dev \
+      build-essential\
+      python3-pip \
+      pgp \
+      dirmngr \
+    && pip3 install --no-cache-dir j2cli \
+    && gem install pgsync \
+    && pgsync --version \
+    && apt-get autoremove -y ruby-dev libpq-dev build-essential
+
 # Install elasticdump (and required node.js) and pgsync
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -80,17 +94,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && npm install elasticdump@${ES_DUMP_VER} -g \
     && elasticdump --version
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-      ruby \
-      libpq5 \
-      ruby-dev \
-      libpq-dev \
-      build-essential\
-      python3-pip \
-    && pip3 install --no-cache-dir j2cli \
-    && gem install pgsync \
-    && pgsync --version \
-    && apt-get autoremove -y ruby-dev libpq-dev build-essential
+
 
 
 COPY ./geonetwork.xml  $CATALINA_HOME/conf/Catalina/localhost/geonetwork.xml.dist
