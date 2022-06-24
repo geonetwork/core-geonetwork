@@ -963,7 +963,7 @@
                 match="mri:descriptiveKeywords[
                         */mri:thesaurusName/cit:CI_Citation/cit:title]"
                 priority="100">
-    <xsl:param name="fieldName"/>
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
 
     <dl class="gn-keyword">
       <dt>
@@ -999,16 +999,26 @@
   <xsl:template mode="render-field"
                 match="mri:descriptiveKeywords[not(*/mri:thesaurusName/cit:CI_Citation/cit:title)]"
                 priority="100">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
     <dl class="gn-keyword">
       <dt>
-        <xsl:value-of select="$schemaStrings/noThesaurusName"/>
-        <xsl:if test="*/mri:type/*[@codeListValue != '']">
-          <xsl:variable name="thesaurusType">
-            <xsl:apply-templates mode="render-value"
-                                 select="*/mri:type/*/@codeListValue"/>
-          </xsl:variable>
-          (<xsl:value-of select="normalize-space($thesaurusType)"/>)
-        </xsl:if>
+        <xsl:variable name="thesaurusType">
+          <xsl:apply-templates mode="render-value"
+                               select="*/mri:type/*/@codeListValue[. != '']"/>
+        </xsl:variable>
+
+        <xsl:choose>
+          <xsl:when test="$fieldName != ''">
+            <xsl:value-of select="$fieldName"/>
+          </xsl:when>
+          <xsl:when test="$thesaurusType != ''">
+            <xsl:copy-of select="$thesaurusType"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </dt>
       <dd>
         <div>
