@@ -212,6 +212,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         String id = String.valueOf(metadata.getId());
 
+        // Sextant / test for avoiding
+        // https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/419#note_91859
+        metadataManager.flush();
+
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
