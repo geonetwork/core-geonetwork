@@ -1507,10 +1507,12 @@
         "type": "keyword"
       },
       "geom": {
-        "type": "geo_shape"
+        "type": "geo_shape",
+        "ignore_malformed": true
       },
       "shape": {
-        "type": "geo_shape"
+        "type": "geo_shape",
+        "ignore_malformed": true
       },
       "location": {
         "type": "geo_point"
