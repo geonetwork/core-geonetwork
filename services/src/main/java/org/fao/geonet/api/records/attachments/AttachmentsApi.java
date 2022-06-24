@@ -32,10 +32,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
@@ -51,7 +49,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -195,10 +199,6 @@ public class AttachmentsApi {
         @Parameter(description = "The file to upload") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
-        if (org.apache.commons.lang3.StringUtils.contains(file.getOriginalFilename(),';')) {
-            throw new NotAllowedException(String.format(
-                "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
-        }
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
