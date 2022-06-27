@@ -1523,6 +1523,9 @@
       "isPublishedToAll": {
         "type": "keyword"
       },
+      "groupOwnerName": {
+        "type": "keyword"
+      },
       "groupOwner": {
         "type": "keyword"
       },
