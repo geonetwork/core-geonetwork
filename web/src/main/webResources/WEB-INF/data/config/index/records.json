@@ -1825,6 +1825,12 @@
       "root": {
         "type": "keyword"
       },
+      "indexingError": {
+        "type": "boolean"
+      },
+      "indexingErrorMsg": {
+        "type": "keyword"
+      },
       "statusWorkflow": {
         "type": "keyword"
       }
