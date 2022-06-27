@@ -968,6 +968,11 @@ goog.require('gn_alert');
               'meta': {
                 'vega': 'arc'
               }
+            },
+            'indexingErrorMsg': {
+              'terms': {
+                'field': 'indexingErrorMsg'
+              }
             }
           }
         },
