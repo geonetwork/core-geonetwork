@@ -122,7 +122,8 @@
             'overview.*',
             'resource*',
             'isTemplate',
-            'valid'
+            'valid',
+            'index*'
           ]
         },
         track_total_hits: true
@@ -214,7 +215,7 @@
         facets: {
           "indexingErrorMsg": {
             "terms": {
-              "field": "indexingErrorMsg.keyword",
+              "field": "indexingErrorMsg",
               "size": 10
             }
           },

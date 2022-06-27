@@ -97,7 +97,8 @@
   </div>
 
 
-  <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null"
+  <div class="col-lg-7"
+       data-ng-hide="harvesterSelected['@id'] == null"
        data-ng-search-form="">
 
     <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
@@ -356,6 +357,7 @@
               </div>
 
 
+
               <div data-search-filter-tags
                    data-dimensions="searchResults.facets"
                    ng-if="searchResults.facets">
@@ -364,7 +366,6 @@
               <!-- This information is not relevant for GeoNetwork protocol
                   which attach records to the source catalogs which has different
                   UUIDs. TODO -->
-
               <div data-gn-search-form-results=""
                    data-gn-search-form-results-mode="title"
                    data-search-results="searchResults"
@@ -372,7 +373,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </tab>
     </tabset>
