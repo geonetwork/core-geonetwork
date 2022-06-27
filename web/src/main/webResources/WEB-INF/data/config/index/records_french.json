@@ -1575,6 +1575,9 @@
       "groupOwner": {
         "type": "keyword"
       },
+      "groupOwnerName": {
+        "type": "keyword"
+      },
       "recordOwner": {
         "type": "keyword"
       },
