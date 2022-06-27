@@ -971,7 +971,8 @@ goog.require('gn_alert');
             },
             'indexingErrorMsg': {
               'terms': {
-                'field': 'indexingErrorMsg'
+                'field': 'indexingErrorMsg',
+                'size': 12
               }
             }
           }
