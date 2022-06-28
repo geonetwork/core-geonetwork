@@ -549,6 +549,27 @@
                   </gmd:name>
                 </gmd:CI_OnlineResource>
               </gmd:onLine>
+              <xsl:for-each select="rel-canonical">
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>
+                        <xsl:value-of select="."/>
+                      </gmd:URL>
+                    </gmd:linkage>
+                    <gmd:protocol>
+                      <gco:CharacterString>
+                        rel-canonical
+                      </gco:CharacterString>
+                    </gmd:protocol>
+                    <gmd:name>
+                      <gco:CharacterString>
+                        Seanoe
+                      </gco:CharacterString>
+                    </gmd:name>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </xsl:for-each>
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
         </gmd:MD_Distribution>

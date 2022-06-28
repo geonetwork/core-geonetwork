@@ -77,10 +77,15 @@
         <xsl:if test="/root/info/record/uuid">
           <xsl:choose>
             <xsl:when test="/root/info/record/harvestinfo/harvested = 'true'">
+              <xsl:variable name="canonicalUrl"
+                            select="($metadata//*:onLine/*[*:protocol/* =
+                              ('rel-canonical')
+                              ]/*:linkage/*)"/>
               <xsl:variable name="doiUrl"
-                            select="$metadata//*:onLine/*[*:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/*:linkage/*"/>
-
-              <link rel="canonical" href="{$doiUrl}"/>
+                            select="($metadata//*:onLine/*[*:protocol/* =
+                              ('WWW:LINK-1.0-http--metadata-URL', 'DOI')
+                              ]/*:linkage/*)[1]"/>
+              <link rel="canonical" href="{if ($canonicalUrl) then $canonicalUrl else $doiUrl}"/>
             </xsl:when>
             <xsl:otherwise>
               <link rel="canonical" href="{$nodeUrl}api/records/{/root/info/record/uuid}" />
