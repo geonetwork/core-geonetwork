@@ -83,12 +83,6 @@
 
         gnUtilityService.scrollTo();
 
-        angular.extend(md, {
-          links: md.getLinksByType('LINK'),
-          downloads: md.getLinksByType('DOWNLOAD'),
-          layers: md.getLinksByType('OGC', 'kml', 'ESRI:REST')
-        });
-
         gnMdViewObj.current.record = md;
 
         // TODO: do not add duplicates

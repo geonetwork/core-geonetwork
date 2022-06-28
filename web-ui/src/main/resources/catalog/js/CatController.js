@@ -673,12 +673,38 @@ goog.require('gn_alert');
             'related': ['parent', 'children', 'services', 'datasets']
           },
           'linkTypes': {
-            'links': ['LINK', 'kml'],
-            'downloads': ['DOWNLOAD'],
-            'layers': ['OGC', 'ESRI:REST'],
-            'maps': ['ows']
+            'links': [
+              'LINK'
+            ],
+            'downloads': [
+              'WWW:DOWNLOAD',
+              'WWW:OPENDAP',
+              'WWW:FTP',
+              'OGC:WFS',
+              'OGC Web Feature Service',
+              'OGC:WCS',
+              'MYO:MOTU-SUB',
+              'FILE',
+              'COPYFILE',
+              'DB',
+              'KML'
+            ],
+            // 'downloadServices': [
+            //   'OGC:WFS',
+            //   'OGC:WCS',
+            //   'ATOM'
+            // ],
+            'layers': [
+              'OGC:WMS',
+              'OGC:OWS-C',
+              'OGC Web Map Service',
+              // 'OGC:WFS',
+              'OGC:WMTS',
+              'ESRI:REST'
+            ]
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showMapInFacet': false,
           'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,

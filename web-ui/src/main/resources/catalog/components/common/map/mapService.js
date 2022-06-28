@@ -67,17 +67,19 @@
       'Metadata',
       'gnWfsService',
       'gnGlobalSettings',
+      'gnSearchSettings',
       'gnViewerSettings',
       'gnViewerService',
       'gnAlertService',
-      'wfsFilterService',
       '$http',
       'gnEsriUtils',
+      'wfsFilterService',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnMetadataManager, Metadata, gnWfsService,
-          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-         wfsFilterService, $http, gnEsriUtils) {
+          gnGlobalSettings, gnSearchSettings, gnViewerSettings,
+          gnViewerService, gnAlertService,
+          $http, gnEsriUtils, wfsFilterService) {
 
         /**
          * @description
@@ -2170,8 +2172,7 @@
                 if (md) {
                   layer.set('md', md);
 
-                  var mdLinks = md.getLinksByType('#OGC:WMTS',
-                      '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
+                  var mdLinks = md.linksByType.layers;
 
                   angular.forEach(mdLinks, function(link) {
                     var layerUrl = layer.get('directUrl') || layer.get('url');
@@ -2214,20 +2215,18 @@
             // END SEXTANT SPECIFIC
 
             // We can bind layer and download/process
-            if (md.getLinksByType(linkGroup, '#OGC:WMTS',
-                '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map').length == 1) {
 
-              var downloads = md && md.getLinksByType(linkGroup,
-                  'WWW:DOWNLOAD-1.0-link--download',
-                  'WWW:OPENDAP', 'MYO:MOTU-SUB',
-                  'FILE', 'DB', 'WWW:FTP',
-                  '#OGC:WFS', '#OGC:WCS', 'COPYFILE');
+            if (md.linksByType.layers.length > 0) {
+              var downloads = md && md.getLinksByType.apply(md,
+                [linkGroup].concat(gnSearchSettings.linkTypes['downloads']));
               layer.set('downloads', downloads);
 
-              var wfs = md && md.getLinksByType(linkGroup, '#OGC:WFS');
+              var wfs = md && md.getLinksByType(
+                linkGroup, 'WFS');
               layer.set('wfs', wfs);
 
-              var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
+              var process = md && md.getLinksByType(
+                linkGroup, 'OGC:WPS');
               layer.set('processes', process);
             }
           },
