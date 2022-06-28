@@ -610,8 +610,8 @@
    * on the metadata.
    */
   module.factory('Metadata', [
-    'gnLangs', '$translate', 'gnConfigService', 'gnGlobalSettings',
-    function(gnLangs, $translate, gnConfigService, gnGlobalSettings) {
+    'gnLangs', '$translate', 'gnConfigService', 'gnGlobalSettings', 'gnSearchSettings',
+    function(gnLangs, $translate, gnConfigService, gnGlobalSettings, gnSearchSettings) {
     function Metadata(k) {
       // Move _source properties to the root.
       var source = k._source;
@@ -665,6 +665,10 @@
 
       // See below; probably not necessary
       this.linksCache = [];
+      this.linksByType = {};
+      for (var p in gnSearchSettings.linkTypes) {
+        this.linksByType[p] = this.getLinksByType.apply(this, gnSearchSettings.linkTypes[p]);
+      }
 
       this.getAllContacts();
     };
@@ -764,9 +768,9 @@
       /**
        * Get all links of the metadata of the given types.
        * The types are strings in arguments.
-       * You can give the exact matching with # ('#OG:WMS') or just find an
+       * You can give the exact matching with # ('#OGC:WMS') or just find an
        * occurence for the match ('OGC').
-       * You can passe several types to find ('OGC','WFS', '#getCapabilities')
+       * You can pass several types to find ('OGC','WFS', '#getCapabilities')
        *
        * If the first argument is a number, you do the search within the link
        * group (search only onlinesrc in the given transferOptions).
@@ -775,14 +779,12 @@
        */
       getLinksByType: function() {
         var ret = [];
-
         var types = Array.prototype.splice.call(arguments, 0);
         var groupId;
 
         var key = types.join('|');
         if (angular.isNumber(types[0])) {
-          groupId = types[0];
-          types.splice(0, 1);
+          groupId = types.splice(0, 1)[0];
         }
         if (this.linksCache[key] && groupId === undefined) {
           return this.linksCache[key];
