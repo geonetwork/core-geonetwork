@@ -67,6 +67,16 @@ public class RemoteHarvesterConfiguration {
 
     private boolean skipHarvesting;
 
+    private Integer storeAtMostNHistoricalRuns;
+
+    public Integer getStoreAtMostNHistoricalRuns() {
+        return storeAtMostNHistoricalRuns;
+    }
+
+    public void setStoreAtMostNHistoricalRuns(Integer storeAtMostNHistoricalRuns) {
+        this.storeAtMostNHistoricalRuns = storeAtMostNHistoricalRuns;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -180,11 +190,11 @@ public class RemoteHarvesterConfiguration {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RemoteHarvesterConfiguration that = (RemoteHarvesterConfiguration) o;
-        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && executeLinkChecker == that.executeLinkChecker && skipHarvesting == that.skipHarvesting && url.equals(that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(filter, that.filter) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint);
+        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && executeLinkChecker == that.executeLinkChecker && skipHarvesting == that.skipHarvesting && url.equals(that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(filter, that.filter) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint) && Objects.equals(storeAtMostNHistoricalRuns, that.storeAtMostNHistoricalRuns);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, longTermTag, filter, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort, executeLinkChecker, skipHarvesting);
+        return Objects.hash(url, longTermTag, filter, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort, executeLinkChecker, skipHarvesting, storeAtMostNHistoricalRuns);
     }
 }

@@ -379,7 +379,7 @@
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
-          }</overview>
+            }</overview>
         </xsl:for-each>
 
         <xsl:for-each
@@ -499,6 +499,70 @@
 
         </xsl:variable>
 
+        <!-- Configuration for thesaurus synonyms -->
+        <xsl:variable name="thesaurusSynonyms" as="node()*">
+          <thesaurus id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset">
+            <synonyms file="synonyms-legislation.xml" fieldName="synonymsLegislation"/>
+            <synonyms file="synonyms-environmental-domain.xml" fieldName="synonymsEnvironmentalDomain"/>
+          </thesaurus>
+        </xsl:variable>
+
+        <!-- Process thesaurus synonyms -->
+        <xsl:for-each-group select="*/gmd:MD_Keywords"
+                            group-by="concat(gmd:thesaurusName/*/gmd:title/(gco:CharacterString|gmx:Anchor)/text(), '-', gmd:type/*/@codeListValue[. != ''])">
+          <xsl:sort select="current-grouping-key()"/>
+
+          <xsl:variable name="thesaurusTitle"
+                        select="if (starts-with(current-grouping-key(), '-'))
+                                  then concat('otherKeywords', current-grouping-key())
+                                  else gmd:thesaurusName/*/gmd:title/(gco:CharacterString|gmx:Anchor)/text()"/>
+
+          <xsl:variable name="thesaurusRef"
+                        select="gmd:thesaurusName/gmd:CI_Citation/
+                                        gmd:identifier[position() = 1]/gmd:MD_Identifier/
+                                          gmd:code/(gco:CharacterString|gmx:Anchor)"/>
+
+          <xsl:variable name="thesaurusRefAnchor"
+                        select=" gmd:thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href"/>
+
+          <xsl:variable name="thesaurusId"
+                        select="if($mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)])
+                                  then $mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)]/@id
+                                  else if ($thesaurusRefAnchor) then $thesaurusRefAnchor
+                                  else if (normalize-space($thesaurusRef/text()))
+                                  then normalize-space($thesaurusRef/text())
+                                  else ''"/>
+
+          <xsl:variable name="keywords"
+                        select="gmd:keyword[*/normalize-space() != '']"/>
+
+          <xsl:for-each select="$thesaurusSynonyms[@id = $thesaurusId]">
+
+            <xsl:for-each select="synonyms">
+              <xsl:variable name="synonymsList" select="document(concat('./', @file ))" />
+              <xsl:variable name="fieldName" select="@fieldName" />
+
+              <xsl:for-each select="$keywords">
+                <xsl:variable name="termValue" select="normalize-space(gmx:Anchor/@xlink:href)" />
+
+                <xsl:if test="count($synonymsList/data/term[@value = $termValue]) = 1">
+                  <xsl:element name = "{$fieldName}">
+                    <xsl:value-of select="$termValue" />
+                  </xsl:element>
+                </xsl:if>
+
+                <xsl:if test="count($synonymsList/data/term[synonyms/synonym = $termValue]) &gt;= 1">
+                  <xsl:for-each select="$synonymsList/data/term[synonyms/synonym = $termValue]">
+                    <xsl:element name="{$fieldName}">
+                      <xsl:value-of select="@value" />
+                    </xsl:element>
+                  </xsl:for-each>
+                </xsl:if>
+              </xsl:for-each>
+            </xsl:for-each>
+          </xsl:for-each>
+        </xsl:for-each-group>
+
         <xsl:variable name="allKeywords">
           <xsl:for-each-group select="*/gmd:MD_Keywords"
                               group-by="concat(gmd:thesaurusName/*/gmd:title/(gco:CharacterString|gmx:Anchor)/text(), '-', gmd:type/*/@codeListValue[. != ''])">
@@ -521,11 +585,11 @@
                           select=" gmd:thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href"/>
 
             <xsl:variable name="thesaurusId"
-                          select="if (normalize-space($thesaurusRef/text()))
-                                  then normalize-space($thesaurusRef/text())
-                                  else if($mappingThesaurusNameToId[@name = $thesaurusTitle])
-                                  then $mappingThesaurusNameToId[@name = $thesaurusTitle]/@id
+                          select="if($mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)])
+                                  then $mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)]/@id
                                   else if ($thesaurusRefAnchor) then $thesaurusRefAnchor
+                                  else if (normalize-space($thesaurusRef/text()))
+                                  then normalize-space($thesaurusRef/text())
                                   else ''"/>
 
             <xsl:variable name="thesaurusUri"
@@ -1079,7 +1143,7 @@
             <xsl:copy-of select="gn-fn-index:build-record-link(., @xlink:href, @xlink:title, 'parent')"/>
             <!--
             TODOES - Need more work with routing -->
-<!--            <recordJoin type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
+            <!--            <recordJoin type="object">{"name": "children", "parent": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}</recordLink>-->
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
@@ -1174,7 +1238,7 @@
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
       "organisation":"<xsl:value-of
-        select="gn-fn-index:json-escape($organisationName)"/>",
+      select="gn-fn-index:json-escape($organisationName)"/>",
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
       "website":"<xsl:value-of select="$website"/>",

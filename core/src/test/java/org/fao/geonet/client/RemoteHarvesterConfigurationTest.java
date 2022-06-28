@@ -17,6 +17,7 @@ public class RemoteHarvesterConfigurationTest {
         harvesterConfiguration.setLookForNestedDiscoveryService(false);
         harvesterConfiguration.setErrorConfigDuplicatedUuids(false);
         harvesterConfiguration.setDoNotSort(true);
+        harvesterConfiguration.setStoreAtMostNHistoricalRuns(5);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String body = gson.toJson(harvesterConfiguration);
