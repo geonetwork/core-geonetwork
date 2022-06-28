@@ -1221,7 +1221,15 @@
             "type": "keyword"
           }
         }
+      }, {
+        "synonyms": {
+          "match": "synonyms*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
       }
+
     ],
     "properties": {
       "any": {

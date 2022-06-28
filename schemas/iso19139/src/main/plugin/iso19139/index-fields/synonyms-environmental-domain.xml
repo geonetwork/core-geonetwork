@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <term value="air">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZonesAndAgglomerations-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZones-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ModelAreas-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MeasurementAndModellingData-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoads-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailways-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirTransport-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-Population-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-DenselyPopulatedBuiltUpAreas-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/Pr</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistricts-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistrictsSubUnits-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Lakes-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Rivers-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/TransitionalWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/CoastalWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/GroundwaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverNetwork-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterProtectionAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-ShellfishDesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-FreshwaterFishDesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/OtherProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AreasOfPotentialSignificantFloodRisk-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-ObservedEvents-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-PotentialFutureEvents-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasLowProbabilityScenario-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Fl</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/UrbanWasteWaterTreatmentPlants-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DischargePointsToReceivingWaters-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreasLessSensitiveAreasAndCatchments-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreas-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LessSensitiveAreas-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreaCatchments-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-676</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-1991-676</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-676</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NitratesVulnerableZones-dir-1991-676</synonym>
+    </synonyms>
+  </term>
+  <term value="nature">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Pan-EuropeanBiogeographicalRegions-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesDistribution-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesDistribution-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-Sensitive-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-Sensitive-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Natura2000Sites-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2014-1143</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/InvasiveAlienSpeciesDistribution-reg-2014-1143</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EEA-AWP</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationallyDesignatedAreasCDDA</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/national-legislation</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="waste">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1999-31</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ExemptedIslandsAndIsolatedSettlements-dir-1999-31</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2006-21</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FacilitiesForManagingExtractiveWaste-dir-2006-21</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalFacilitiesReceivingSludge-dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalSitesWhereSludgeIsDeposited-dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2017-852</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MercuryStorageFacilities-reg-2017-852</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1999-31</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LandfillOfWasteSites-dir-1999-31</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="industrial-accidents">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2012-18</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EstablishmentsInvolvingDangerousSubstances-dir-2012-18</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="industrial-emissions">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SitesAndFacilities-reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ActualPollutantReleases-reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Installations-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LargeCombustionPlants-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Boreholes-reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BoreholesForHydraulicFracturing-reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Emissions-dir-2010-75</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="">
+    <synonyms/>
+  </term>
+  <term value="">
+    <synonyms/>
+  </term>
+  <term value="##synonyms dataset">
+    <synonyms>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="air-quality-management-zones-agglomerations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZonesAndAgglomerations-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZones-dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="air-quality-model-areas-incl-assessment-methods-models">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ModelAreas-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="air-quality-monitoring-stations-incl-assessment-methods-measurements">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="air-quality-data">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MeasurementAndModellingData-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="major-roads">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoads-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="major-railways">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailways-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="major-air-transport">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirTransport-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-agglomerations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="population">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-Population-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="population-densely-populated-built-up-areas">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-DenselyPopulatedBuiltUpAreas-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-roads-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-roads-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-railways-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-railways-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-airports-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-airports-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-road-noise-in-agglomerations-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-road-noise-in-agglomerations-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-railway-noise-in-agglomerations-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-railway-noise-in-agglomerations-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-aircraft-noise-in-agglomerations-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-aircraft-noise-in-agglomerations-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-industrial-noise-in-agglomerations-lden">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-industrial-noise-in-agglomerations-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-in-agglomerations-lnight-sic">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationDEN-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-in-agglomerations-lnight">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationNight-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="river-basin-district">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistricts-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="river-basin-district-sub-units">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistrictsSubUnits-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-surface-water-body-lake">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Lakes-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-surface-water-body-river">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Rivers-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-surface-water-body-transitional-waters">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/TransitionalWaters-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-surface-water-body-coastal-waters">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/CoastalWaters-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-groundwater-body">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/GroundwaterBodies-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="river-network">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverNetwork-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="drinking-water-protected-areas">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterProtectionAreas-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term
+    value="water-framework-directive-protected-areas-not-reported-under-other-directives-shellfish-designated-waters">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-ShellfishDesignatedWaters-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term
+    value="water-framework-directive-protected-areas-not-reported-under-other-directives-freshwater-fish-designated-waters">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-FreshwaterFishDesignatedWaters-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term
+    value="water-framework-directive-protected-areas-not-reported-under-other-directives-other-protected-areas">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/OtherProtectedAreas-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-framework-directive-monitoring-stations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-areas-of-potential-significant-flood-risk">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AreasOfPotentialSignificantFloodRisk-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-preliminary-flood-risk-assessment-observed-events">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-ObservedEvents-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-preliminary-flood-risk-assessment-potential-future-events">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-PotentialFutureEvents-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-hazard-areas-low-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasLowProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-hazard-areas-medium-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasMediumProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-hazard-areas-high-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasHighProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-risk-zones-low-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZones-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesLowProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-risk-zones-medium-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZones-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesMediumProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-flood-risk-zones-high-probability-scenario">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZones-dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesHighProbabilityScenario-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="floods-directive-management-units">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementUnits-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="marine-strategy-framework-directive-marine-reporting-units">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineRegionsAndUnits-dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MSFDReportingUnits-dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineAssessmentUnits-dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineRegions-dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineSubRegions-dir-2008-56</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="marine-strategy-framework-directive-marine-monitoring-stations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2008-56</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="drinking-water-protection-areas-supply-zones-safeguard-zones">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterSupplyZones-dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LargeWaterSupplyZones-dir-1998-83</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="small-water-supply-zones-wsz">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterSupplyZones-dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SmallWaterSupplyZones-dir-1998-83</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="bathing-water-directive-bathing-sites-abstraction-points">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterAbstractionPoints-dir-1998-83</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="bathing-water-directive-bathing-waters">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2006-7</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BathingWaterSites-dir-2006-7</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="biogeographical-regions-pan-european-dataset">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Pan-EuropeanBiogeographicalRegions-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="habitat-types-distribution">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesDistribution-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="habitat-types-range">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesRange-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="species-distribution">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesDistribution-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="species-range">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesRange-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-range">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-range-sensitive">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-Sensitive-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-distribution">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-distribution-sensitive">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-Sensitive-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="natura-2000-sites">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Natura2000Sites-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="alien-species-distribution">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2014-1143</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/InvasiveAlienSpeciesDistribution-reg-2014-1143</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="e-prtr-sites-facilities">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SitesAndFacilities-reg-2006-166</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="e-prtr-emission-data">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ActualPollutantReleases-reg-2006-166</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="industrial-emissions-directive-installations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Installations-dir-2010-75</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="combustion-plants">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LargeCombustionPlants-dir-2010-75</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="urban-wastewater-treatment-directive-agglomerations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-1991-271</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="urban-waste-water-treatment-directive-plants">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/UrbanWasteWaterTreatmentPlants-dir-1991-271</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="urban-waste-water-treatment-directive-discharge-points">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DischargePointsToReceivingWaters-dir-1991-271</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="urban-waste-water-treatment-directive-sensitive-areas">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreasLessSensitiveAreasAndCatchments-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreas-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LessSensitiveAreas-dir-1991-271</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreaCatchments-dir-1991-271</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="nitrates-directive-monitoring-stations">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-676</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-1991-676</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="nitrates-directive-nitrate-vulnerable-zones">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-676</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NitratesVulnerableZones-dir-1991-676</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="areas-exempt-from-requirement-to-obtain-a-permit-to-dump-waste">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1999-31</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ExemptedIslandsAndIsolatedSettlements-dir-1999-31</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="extractive-waste-facilities">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2006-21</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FacilitiesForManagingExtractiveWaste-dir-2006-21</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="seveso-iii-directive-location-of-establishment">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2012-18</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EstablishmentsInvolvingDangerousSubstances-dir-2012-18</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="boreholes-for-hydraulic-fracturing">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Boreholes-reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BoreholesForHydraulicFracturing-reco-2014-70</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="agricultural-sludge-receiving-facilities">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalFacilitiesReceivingSludge-dir-1986-278</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="agricultural-sludge-deposit-sites">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1986-278</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalSitesWhereSludgeIsDeposited-dir-1986-278</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="mercury-storage-facilities">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2017-852</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MercuryStorageFacilities-reg-2017-852</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="nationally-designated-areas-cdda">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EEA-AWP</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationallyDesignatedAreasCDDA</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="biogeographical-regions-national-datasets">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/national-legislation</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="industrial-emissions-directive-lcp-emission-data">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Emissions-dir-2010-75</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="location-of-landfill-of-waste-sites">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1999-31</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LandfillOfWasteSites-dir-1999-31</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="">
+    <synonyms/>
+  </term>
+  <term value="##synonyms grouping">
+    <synonyms>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="air-quality-management-zones-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZonesAndAgglomerations-dir-2008-50</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="major-roads-railways-and-air-transport-network-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-roads-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-railways-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-major-airports-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-road-noise-in-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-railway-noise-in-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-aircraft-noise-in-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-for-industrial-noise-in-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="noise-contour-map-in-agglomerations-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineation-dir-2002-49</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="water-bodies-water-framework-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="surface-water-bodies-water-framework-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="protected-areas-water-framework-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="preliminary-flood-risk-assessment-floods-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="fd-hazard-areas-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="fd-flood-risk-zones-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZones-dir-2007-60</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="msfd-marine-reporting-units-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-56</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineRegionsAndUnits-dir-2008-56</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="drinking-water-protection-areas-supply-zones-safeguard-zones-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1998-83</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterSupplyZones-dir-1998-83</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="habitat-types-and-species-distribution-and-range-habitats-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="habitat-types-distribution-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesDistribution-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="species-distribution-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesDistribution-dir-1992-43</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="bird-species-distribution-and-range-birds-directive-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-distribution-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="birds-range-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="eu-registry-on-industrial-sites-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-reg-2006-166</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+  <term value="boreholes-for-hydraulic-fracturing-grouping">
+    <synonyms>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reco-2014-70</synonym>
+      <synonym>http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Boreholes-reco-2014-70</synonym>
+      <synonym/>
+    </synonyms>
+  </term>
+</data>
