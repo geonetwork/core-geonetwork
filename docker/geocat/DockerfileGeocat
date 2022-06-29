@@ -26,7 +26,7 @@ ARG ES_DUMP_VER
 
 RUN test -n "$DATA_DIR"
 
-ENV NODE_VERSION 18.0.0
+ENV NODE_VERSION 16.5.1
 ENV ES_DUMP_VER=${ES_DUMP_VER:-latest}
 
 ENV CATALINA_OPTS "-Dgeonetwork.db.type=jndi -Dgeonetwork.dir=$DATA_DIR -Dgeonetwork.schema.dir=/opt/geonetwork/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/opt/geonetwork/WEB-INF/data/data/formatter -Dgeonetwork.config.dir=$DATA_DIR/config -Dgeonetwork.indexConfig.dir=/opt/geonetwork/WEB-INF/data/config/index"
@@ -45,6 +45,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
       python3-pip \
       pgp \
       dirmngr \
+      xz-utils \
     && pip3 install --no-cache-dir j2cli \
     && gem install pgsync \
     && pgsync --version \
