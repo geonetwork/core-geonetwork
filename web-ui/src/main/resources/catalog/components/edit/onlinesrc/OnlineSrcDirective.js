@@ -1349,8 +1349,25 @@
 
                     angular.forEach(scope.params.selectedLayers,
                       function (layer) {
-                        names.push(layer.Name || layer.name);
-                        descs.push(layer.Title || layer.title);
+                        if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
+                          names.push(layer.Name || layer.name);
+                          descs.push(layer.Title || layer.title);
+
+                        } else {
+                          // In resourceurl mode check with WMS field use for the resource name
+                          // and the resource description
+                          if (scope.config.wmsResources.resourceName === 'layerName') {
+                            names.push(layer.Name || layer.name);
+                          } else if (scope.config.wmsResources.resourceName === 'layerTitle') {
+                            names.push(layer.Title || layer.title);
+                          }
+
+                          if (scope.config.wmsResources.resourceDescription === 'layerName') {
+                            descs.push(layer.Name || layer.name);
+                          } else if (scope.config.wmsResources.resourceDescription === 'layerTitle') {
+                            descs.push(layer.Title || layer.title);
+                          }
+                        }
                       });
 
                     if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
@@ -1364,6 +1381,35 @@
                           desc: descs.join(',')
                         });
                       }
+                    } else {
+                      if (scope.isMdMultilingual) {
+                        var langCode = scope.mdLangs[scope.mdLang];
+
+                        if (names.length > 0) {
+                          angular.forEach(scope.mdLangs, function(value,key){
+                            scope.params.name[value] = names.join(',');
+                          });
+                        }
+
+                        if (descs.length > 0) {
+                          angular.forEach(scope.mdLangs, function(value,key){
+                            scope.params.desc[langCode] = descs.join(',');
+                          });
+                        }
+                      } else {
+                        if (names.length > 0) {
+                          angular.extend(scope.params, {
+                            name: names.join(',')
+                          });
+                        }
+
+                        if (descs.length > 0) {
+                          angular.extend(scope.params, {
+                            desc: descs.join(',')
+                          });
+                        }
+                      }
+
                     }
                   }
                 });
