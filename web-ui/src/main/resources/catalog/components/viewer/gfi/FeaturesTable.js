@@ -34,7 +34,9 @@
         scope: {
           loader: '=?gnFeaturesTableLoader',
           map: '=?gnFeaturesTableLoaderMap',
-          active: '=gnActive'
+          active: '=gnActive',
+          showExport: '=',
+          height: '='
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -56,7 +58,7 @@
   };
 
   GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
-    
+
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
       var outer = document.createElement('div');
@@ -86,30 +88,44 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
-            height: 250,
+            height: this.ctrl.height || '100%',
             sortable: true,
-            onPostBody: function() {
+            onPostBody: function(data) {
               var trs = element.find('tbody').children();
               for (var i = 0; i < trs.length; i++) {
                 $(trs[i]).mouseenter(function(e) {
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
                   var row = $(e.currentTarget)
-                  .parents('table')
-                  .data()['bootstrap.table']
-                  .data[$(e.currentTarget).data('index')];
+                      .parents('table')
+                      .data()['bootstrap.table']
+                      .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
-                  var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  var source = this.featuresTablesCtrl.highlightOverlay.getSource();
                   source.clear();
                   if (feature && feature.getGeometry()) {
                     source.addFeature(feature);
                   }
                 }.bind(this));
+
                 $(trs[i]).mouseleave(function(e) {
-                  this.featuresTablesCtrl.fOverlay.getSource().clear();
+                  this.featuresTablesCtrl.highlightOverlay.getSource().clear();
                 }.bind(this));
               }
+
+              var d = element.bootstrapTable().data()['bootstrap.table'].data;
+              if (angular.isArray(d)) {
+                var source = this.featuresTablesCtrl.featuresOverlay.getSource();
+                source.clear();
+                for (var i = 0; i < d.length; i++) {
+                  var feature = this.loader.getFeatureFromRow(d[i]);
+                  if (feature && feature.getGeometry()) {
+                    source.addFeature(feature);
+                  }
+                }
+              }
+
               element.parents('gn-features-table').find('.clearfix')
               .addClass('sxt-clearfix')
               .removeClass('clearfix');
@@ -135,16 +151,13 @@
                 );
               }
             }.bind(this),
-            showExport: true,
+            showExport: this.ctrl.showExport !== false,
             exportTypes: ['csv'],
             exportDataType: 'all',
             locale: getBsTableLang()
-          },bstConfig)
+          }, bstConfig)
       );
-      scope.$watch('ctrl.active', function() {
-        element.bootstrapTable('resetWidth');
-        element.bootstrapTable('resetView');
-      });
+      scope.$watch('ctrl.active', resizeBsTable);
     }.bind(this));
   };
 

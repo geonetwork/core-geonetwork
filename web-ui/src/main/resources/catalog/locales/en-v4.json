@@ -352,5 +352,6 @@
   "setServiceConnectPoint": "Add service connect point",
   "mimeType": "Format",
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
-  "switchPortals": "Switch to another Portal"
+  "switchPortals": "Switch to another Portal",
+  "dataPreview":  "Discover data"
 }

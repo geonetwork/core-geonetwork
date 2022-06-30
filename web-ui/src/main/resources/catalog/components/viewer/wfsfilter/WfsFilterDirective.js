@@ -133,6 +133,7 @@
           featureTypeName: '@?',
           wfsUrl: '@',
           displayCount: '@',
+          displayTableOnLoad: '@',
           baseLayer: '=?baseLayer',
           layer: '=?layer',
           md: '=?',
@@ -159,7 +160,8 @@
           scope.showCount = angular.isDefined(attrs['showcount']);
 
           scope.ctrl = {
-            searchGeometry: undefined
+            searchGeometry: undefined,
+            fullTextSearch: ''
           };
 
           scope.output = {};
@@ -364,6 +366,9 @@
               docFields = indexObject.filteredDocTypeFieldsInfo;
               scope.countTotal = indexObject.totalCount;
 
+              if (scope.displayTableOnLoad) {
+                scope.showTable();
+              }
               if (scope.md) {
                 gnFeaturesTableService.loadFeatureCatalogue(scope.md.uuid, scope.md)
                   .then(function(catalogue) {
@@ -551,8 +556,16 @@
 
             addBboxAggregation(aggs);
 
-            //indexObject is only available if Elastic is configured
             if (indexObject) {
+              if (scope.ctrl.fullTextSearch != '') {
+                var param = {};
+                param[scope.ctrl.fullTextSearch] = true;
+                facetsState.any = {
+                  values: param
+                };
+              } else {
+                delete facetsState.any;
+              }
               indexObject.searchWithFacets({
                 params: facetsState,
                 geometry: scope.filterGeometry
@@ -564,6 +577,10 @@
                     f.expanded = true;
                   }
                 });
+
+                if (scope.displayTableOnLoad) {
+                  scope.showTable();
+                }
               });
             }
           };
@@ -615,11 +632,11 @@
             }
           };
 
-          // scope.$watch('featureExtent', function(n, o) {
-          //   if (n && n !== o) {
-          //     scope.zoomToResults();
-          //   }
-          // });
+          scope.$watch('featureExtent', function(n, o) {
+            if (n && n !== o) {
+              scope.zoomToResults();
+            }
+          });
 
 
           scope.accentify = function(str) {
@@ -654,6 +671,7 @@
           scope.resetFacets = function(init) {
             scope.output = {};
             scope.lastClickedField = null;
+            scope.ctrl.fullTextSearch = '';
 
             if(!init) {
               scope.resetSLDFilters();
@@ -685,6 +703,10 @@
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
             then(function(resp) {
+              if (scope.displayTableOnLoad) {
+                scope.showTable();
+              }
+
               searchResponseHandler(resp, false);
             });
           };
@@ -973,6 +995,7 @@
 
           element.on('$destroy', function() {
             scope.$destroy();
+            gnFeaturesTableManager.clear();
           });
 
           // triggered when the filter state is changed

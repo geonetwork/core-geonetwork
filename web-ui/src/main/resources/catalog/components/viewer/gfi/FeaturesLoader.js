@@ -405,7 +405,7 @@
 
     return this.dictionary.then(function(dictionary) {
 
-      var pageList = [5, 10, 50, 100],
+      var pageList = [100, 500, 1000],
         columns = [],
         index = this.indexObject,
         map = this.map,
@@ -451,6 +451,33 @@
             var sort = {};
             sort[p.sort] = {'order' : p.order};
             queryObject.sort.push(sort);
+          }
+          if (coordinates) {
+            var radius = map.getView().getResolution() / 0.4; // meters
+            var minLonMaxLat = ol.proj.transform(
+              [coordinates[0] - radius, coordinates[1] + radius],
+              map.getView().getProjection(),
+              'EPSG:4326'
+            );
+            var maxLonMinLat = ol.proj.transform(
+              [coordinates[0] + radius, coordinates[1] - radius],
+              map.getView().getProjection(),
+              'EPSG:4326'
+            );
+            queryObject.query.bool.filter = {
+              'geo_shape': {
+                'geom': {
+                  'shape': {
+                    'type': 'envelope',
+                    'coordinates': [
+                      minLonMaxLat,
+                      maxLonMinLat
+                    ]
+                  },
+                  'relation': 'intersects'
+                }
+              }
+            };
           }
           return JSON.stringify(queryObject);
         }.bind(this),

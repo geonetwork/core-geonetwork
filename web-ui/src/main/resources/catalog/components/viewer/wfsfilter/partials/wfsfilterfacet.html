@@ -28,7 +28,9 @@
       </div>
 
       <button class="btn btn-default btn-xs"
-              data-ng-if="!managerOnly && isFeaturesIndexed"
+              data-ng-if="!managerOnly
+                          && isFeaturesIndexed
+                          && displayTableOnLoad != 'true'"
               title="{{::'Table' | translate}}"
               ng-click="showTable()">
         <i class="fa fa-table"></i>
@@ -46,7 +48,8 @@
               data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
-      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'"
+      <button data-ng-if="user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true')"
               type="button"
               class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown"
@@ -55,7 +58,8 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'">
+          data-ng-if="user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true')">
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
             <i class="fa fa-cloud-download"></i>&nbsp;
@@ -77,8 +81,30 @@
       </a>
     </div>
 
+    <!-- Search -->
+    <div data-ng-if="!managerOnly && isFeaturesIndexed"
+         class="input-group input-group-sm">
+      <input class="form-control input-xs"
+             data-ng-keyup="$event.keyCode == 13 && filterFacets()"
+             type="text"
+             placeholder="{{::'anyPlaceHolder' | translate}}"
+             data-ng-model="ctrl.fullTextSearch"/>
+      <span class="input-group-btn">
+        <button data-ng-if="!managerOnly && isFeaturesIndexed"
+                data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
+                title="{{'reset' | translate}}"
+                class="btn btn-default btn-xs gn-reset-facets">
+          <i class="fa fa-fw fa-times"></i>
+        </button>
+        <button class="btn btn-default btn-xs"
+                title="{{'search' | translate}}"
+                data-ng-click="filterFacets()">
+          <i class="fa fa-fw fa-search"></i>
+        </button>
+      </span>
+    </div>
 
-    <!--Facet fields-->
+    <!-- Facets -->
     <div data-ng-if="!managerOnly && isFeaturesIndexed"
          class="gn-facet"
          data-ng-repeat="field in fields track by field.name">
@@ -146,13 +172,5 @@
         />
       </div>
     </div>
-
-    <button data-ng-if="!managerOnly && isFeaturesIndexed"
-            data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
-            class="btn btn-primary btn-xs gn-reset-facets">
-      <span translate>reset</span>
-    </button>
-
   </div>
-
 </form>
