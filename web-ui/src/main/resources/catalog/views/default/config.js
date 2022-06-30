@@ -82,6 +82,10 @@
               stroke: new ol.style.Stroke({
                 color: 'orange',
                 width: 2
+              }),
+              image: new ol.style.Circle({
+                radius: 5,
+                stroke: new ol.style.Stroke({color: 'orange', width: 2}),
               })
             }),
             mdExtentHighlight: new ol.style.Style({
@@ -91,6 +95,11 @@
               }),
               fill: new ol.style.Fill({
                 color: 'rgba(255,255,0,0.3)'
+              }),
+              image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({color: 'orange'}),
+                stroke: new ol.style.Stroke({color: 'rgba(255,0,0,1)', width: 3}),
               })
             })
 
