@@ -1,10 +1,10 @@
 <form name="wfsFilterForm"
-      ng-if="isFeatureTypeAvailable !== false"
-      data-ng-init="userCanManage = (user.canEditRecord(md)
-                      || (user.isAdministrator() && md.isHarvested == 'true')) === true">
+      ng-if="isFeatureTypeAvailable !== false">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
   <!--WFS not available alert-->
-  <div data-ng-show="userCanManage && isWfsAvailable == false"
+  <div data-ng-show="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))
+                      && isWfsAvailable == false"
        class="alert alert-warning">
     <button type="button" class="close"><i class="fa fa-times"/></button>
     <span data-translate=""
@@ -13,7 +13,8 @@
 
   <div data-ng-show="isWfsAvailable">
     <!--WFS not indexed alert-->
-    <div data-ng-show="status"
+    <div data-ng-show="status && (user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
          class="alert alert-warning" title="{{statusTitle}}">
       <button type="button" class="close"
               data-ng-click="status = null"><i class="fa fa-times"/></button>
@@ -47,10 +48,13 @@
       </button>
       <button class="btn btn-default btn-xs"
               title="{{::'refresh' | translate}}"
+              data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
               data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
-      <button data-ng-if="userCanManage"
+      <button data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
               type="button"
               class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown"
@@ -59,7 +63,8 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="userCanManage">
+          data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))">
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
             <i class="fa fa-cloud-download"></i>&nbsp;
