@@ -112,7 +112,7 @@
       } else if (node === true || node === false) {
         var value = nodeName.endsWith('*')
           ? nodeName.replace(' ', '\\\\ ')
-          : '"' + nodeName + '"';
+          : '"' + nodeName.replaceAll('"', '\\\"') + '"';
         query_string += (node ? '' : '-') + indexKey + ':' + value;
       }
       return query_string
