@@ -113,7 +113,7 @@
       } else if (node === true || node === false) {
         var value = nodeName.endsWith('*')
           ? nodeName.replace(' ', '\\\\ ')
-          : '"' + nodeName + '"';
+          : '"' + nodeName.replaceAll('"', '\\\"') + '"';
         if (nodeName === '#MISSING#') {
           query_string += '(' + (node ? '-' : '') + '_exists_:' + indexKey + ')';
         } else {
