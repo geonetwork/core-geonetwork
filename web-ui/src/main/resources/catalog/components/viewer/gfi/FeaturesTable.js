@@ -26,8 +26,9 @@
 
   var module = angular.module('gn_featurestable_directive', ['gn_utility_service']);
 
-  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'getBsTableLang',
-    function($http, gfiTemplateURL, getBsTableLang) {
+  module.directive('gnFeaturesTable', [
+    '$http', 'gfiTemplateURL', 'getBsTableLang', '$translate',
+    function($http, gfiTemplateURL, getBsTableLang, $translate) {
 
       return {
         restrict: 'E',
@@ -48,7 +49,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang);
+          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang, $translate);
         }
       };
     }]);
@@ -57,7 +58,8 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
+  GnFeaturesTableController.prototype.initTable =
+    function(element, scope, getBsTableLang, $translate) {
 
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
@@ -90,6 +92,8 @@
           angular.extend({
             height: this.ctrl.height || '100%',
             sortable: true,
+            striped: true,
+            // showToggle: true,
             onPostBody: function(data) {
               var trs = element.find('tbody').children();
               for (var i = 0; i < trs.length; i++) {
@@ -154,7 +158,18 @@
             showExport: this.ctrl.showExport !== false,
             exportTypes: ['csv'],
             exportDataType: 'all',
-            locale: getBsTableLang()
+            formatRecordsPerPage: function(pageNumber){
+              return pageNumber;
+            },
+            formatLoadingMessage: function(){
+              return '...';
+            },
+            formatShowingRows: function (pageFrom, pageTo, totalRows) {
+              return '' + pageFrom + ' - ' + pageTo + ' '
+                + $translate.instant('resultXonY') + ' '
+                + totalRows + ' ' + $translate.instant('features');
+            }
+            // locale: getBsTableLang()
           }, bstConfig)
       );
       scope.$watch('ctrl.active', resizeBsTable);
