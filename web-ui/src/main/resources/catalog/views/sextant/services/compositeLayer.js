@@ -72,7 +72,7 @@
           group.displayInLayerManager = layer.displayInLayerManager;
           group.set('originalWms', layer);
           group.set('tooltipsVisible', false);
-          group.getSource = function() { return false; };
+          group.getSource = function() { return layer.getSource(); };
           olDecorateLayer(group);
 
           // add to map instead of WMS
