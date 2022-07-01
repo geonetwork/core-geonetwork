@@ -9,9 +9,11 @@
   module.service('sxtService', [
     'SEXTANT_LEGACY_FACET_MAPPING',
     'gnLangs',
+    'gnGlobalSettings',
     '$http',
     '$q',
-    function(SEXTANT_LEGACY_FACET_MAPPING, gnLangs, $http, $q) {
+    function(SEXTANT_LEGACY_FACET_MAPPING,
+             gnLangs, gnGlobalSettings, $http, $q) {
 
     var panierEnabled = typeof sxtSettings === 'undefined' || !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
@@ -23,28 +25,15 @@
       '#WWW:FTP'
     ];
 
-    var allDownloadTypes = [
-      '#FILE',
-      '#DB',
-      '#COPYFILE',
-      '#WWW:DOWNLOAD-1.0-link--download',
-      '#WWW:DOWNLOAD-1.0-http--download',
-      '#WWW:OPENDAP',
-      '#MYO:MOTU-SUB',
-      '#WWW:FTP',
-      '#OGC:WFS',
-      '#OGC Web Feature Service',
-      '#OGC:WCS'
-    ];
+    var allDownloadTypes = gnGlobalSettings.gnCfg.mods.search.linkTypes.downloads;
 
     var downloadTypes = panierEnabled ? allDownloadTypes : directDownloadTypes;
 
     var downloadTypesWithoutWxS = downloadTypes.filter(function (protocol) {
-      return protocol !== '#OGC:WFS' && protocol !== '#OGC:WCS';
+      return protocol !== 'OGC:WFS' && protocol !== 'OGC:WCS';
     });
 
-    var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC Web Map Service', '#OGC:WMS-1.1.1-http-get-map',
-      '#OGC:OWS-C'];
+    var layerTypes = gnGlobalSettings.gnCfg.mods.search.linkTypes.layers;
 
     this.feedMd = function(scope) {
       var md = scope.md;
