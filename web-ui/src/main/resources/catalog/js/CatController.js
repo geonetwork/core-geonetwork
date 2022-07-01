@@ -48,6 +48,27 @@ goog.require('gn_alert');
   module.constant('gnSearchSettings', {});
   module.constant('gnViewerSettings', {});
   module.constant('gnGlobalSettings', function() {
+    var sextantDownloadProtocols = [
+      'WWW:DOWNLOAD',
+      'WWW:OPENDAP',
+      'WWW:FTP',
+      'OGC:WFS',
+      'OGC Web Feature Service',
+      'OGC:WCS',
+      'MYO:MOTU-SUB',
+      'FILE',
+      'COPYFILE',
+      'DB',
+      'KML'
+    ];
+    var sextantViewProtocols = [
+      'OGC:WMS',
+      'OGC:OWS-C',
+      'OGC Web Map Service',
+      'OGC:WMTS',
+      'ESRI:REST'
+    ];
+
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
@@ -502,23 +523,12 @@ goog.require('gn_alert');
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:(WMT?S.*|OWS-C)|OGC Web Map Service/'
+                      'query': '+linkProtocol:/' + sextantViewProtocols.join('|') + '/'
                     }
                   },
                   'availableInDownloadService': {
                     'query_string': {
-                      'query': '+linkProtocol:/(OGC:(WFS.*|WCS)|FILE|DB|COPYFILE)|OGC Web Feature Service/'
-                    }
-                  },
-                  'availableForFileDownload': {
-                    'query_string': {
-                      'query': '+linkProtocol:/(WWW:DOWNLOAD|WWW:FTP|WWW:OPENDAP|MYO:MOTU-SUB)/'
-                    }
-                  },
-                  'availableInProcessingService': {
-                    'query_string': {
-                      'default_field': 'linkProtocol',
-                      'query': '+linkProtocol:/OGC:WPS.*/'
+                      'query': '+linkProtocol:/' + sextantDownloadProtocols.join('|') + '/'
                     }
                   }
                 }
@@ -676,32 +686,13 @@ goog.require('gn_alert');
             'links': [
               'LINK'
             ],
-            'downloads': [
-              'WWW:DOWNLOAD',
-              'WWW:OPENDAP',
-              'WWW:FTP',
-              'OGC:WFS',
-              'OGC Web Feature Service',
-              'OGC:WCS',
-              'MYO:MOTU-SUB',
-              'FILE',
-              'COPYFILE',
-              'DB',
-              'KML'
-            ],
+            'downloads': sextantDownloadProtocols,
             // 'downloadServices': [
             //   'OGC:WFS',
             //   'OGC:WCS',
             //   'ATOM'
             // ],
-            'layers': [
-              'OGC:WMS',
-              'OGC:OWS-C',
-              'OGC Web Map Service',
-              // 'OGC:WFS',
-              'OGC:WMTS',
-              'ESRI:REST'
-            ]
+            'layers': sextantViewProtocols
           },
           'isFilterTagsDisplayedInSearch': true,
           'showMapInFacet': false,
