@@ -629,11 +629,6 @@
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.geonetwork-opensource.schemas</groupId>
-      <artifactId>gn-schema-iso19115-3</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -995,13 +990,6 @@
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>gn-schema-iso19115-3.2018</artifactId>
-                      <type>zip</type>
-                      <overWrite>false</overWrite>
-                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>org.geonetwork-opensource.schemas</groupId>
-                      <artifactId>gn-schema-iso19115-3</artifactId>
                       <type>zip</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${schema-plugins.dir}</outputDirectory>

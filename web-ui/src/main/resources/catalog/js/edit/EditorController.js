@@ -263,7 +263,6 @@
                   // Example : open ISO19139 record having
                   // standardName containing medsea in advanced mode
                   'iso19139': firstTabDispatcher,
-                  'iso19115-3': firstTabDispatcher,
                   'iso19115-3.2018': firstTabDispatcher
                 };
                 if (schemaCustomConfig) {
