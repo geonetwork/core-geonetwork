@@ -74,7 +74,8 @@ goog.require('gn_alert');
         },
         'footer':{
           'enabled': true,
-          'showSocialBarInFooter': true
+          'showSocialBarInFooter': true,
+          'showApplicationInfoAndLinksInFooter': true
         },
         'header': {
           'enabled': true,
@@ -1272,6 +1273,10 @@ goog.require('gn_alert');
       $scope.getSocialLinksVisible = function() {
         var onMdView =  $location.absUrl().indexOf('/metadata/') > -1;
         return !onMdView && gnGlobalSettings.gnCfg.mods.footer.showSocialBarInFooter;
+      };
+
+      $scope.getApplicationInfoVisible = function() {
+        return gnGlobalSettings.gnCfg.mods.footer.showApplicationInfoAndLinksInFooter;
       };
 
       function detectNode(detector) {
