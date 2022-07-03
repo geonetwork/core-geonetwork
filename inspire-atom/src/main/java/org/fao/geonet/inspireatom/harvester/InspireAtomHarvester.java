@@ -338,19 +338,25 @@ public class InspireAtomHarvester {
                     continue;
                 }
 
-                InspireAtomFeed inspireAtomFeed = InspireAtomFeed.build(atomDoc);
-                inspireAtomFeed.setMetadataId(Integer.parseInt(metadataId));
-                inspireAtomFeed.setAtomDatasetid(datasetFeedInfo.identifier);
-                inspireAtomFeed.setAtomDatasetns(datasetFeedInfo.namespace);
-                inspireAtomFeed.setAtomUrl(atomUrl);
-                inspireAtomFeed.setAtom(atomFeedDocument);
+                // A metadata should be referenced by 1 feed. If referenced by more than 1 feed, ignore the other feeds.
+                long count = repository.count(InspireAtomFeedSpecs.hasMetadataId(Integer.parseInt(metadataId)));
 
-                repository.save(inspireAtomFeed);
+                if (count == 0) {
+                    InspireAtomFeed inspireAtomFeed = InspireAtomFeed.build(atomDoc);
+                    inspireAtomFeed.setMetadataId(Integer.parseInt(metadataId));
+                    inspireAtomFeed.setAtomDatasetid(datasetFeedInfo.identifier);
+                    inspireAtomFeed.setAtomDatasetns(datasetFeedInfo.namespace);
+                    inspireAtomFeed.setAtomUrl(atomUrl);
+                    inspireAtomFeed.setAtom(atomFeedDocument);
 
-                // Index the metadata to store the atom feed information in the index
-                dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
-                result.addContent(new Element("feed").setAttribute("uuid", metadataUuid)
-                    .setAttribute("feed", atomUrl).setAttribute("status", "ok"));
+                    repository.save(inspireAtomFeed);
+
+                    // Index the metadata to store the atom feed information in the index
+                    dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
+                    result.addContent(new Element("feed").setAttribute("uuid", metadataUuid)
+                        .setAttribute("feed", atomUrl).setAttribute("status", "ok"));
+
+                }
             } catch (Exception ex) {
                 // Log exception and continue processing the other metadata
                 logger.error("Failed to process atom feed for dataset metadata: " + metadataUuid + " " + ex.getMessage());
