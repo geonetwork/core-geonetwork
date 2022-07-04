@@ -938,12 +938,12 @@ goog.require('gn_alert');
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:WMS.*/'
+                      'query': '+linkProtocol:/' + sextantViewProtocols.join('|') + '/'
                     }
                   },
                   'availableInDownloadService': {
                     'query_string': {
-                      'query': '+linkProtocol:/OGC:WFS.*/'
+                      'query': '+linkProtocol:/' + sextantDownloadProtocols.join('|') + '/'
                     }
                   }
                 }
