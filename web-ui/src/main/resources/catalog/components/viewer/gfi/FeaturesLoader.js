@@ -267,7 +267,8 @@
         data: data,
         pagination: true,
         pageSize: pageList[1],
-        pageList: pageList
+        pageList: pageList,
+        undefinedText: ''
       };
     });
   };
@@ -346,12 +347,14 @@
       uuid = layer.get('metadataUuid');
     }
 
-    this.dictionary = null;
     if(uuid) {
       this.dictionary = this.featureService.loadFeatureCatalogue(uuid, layer.get('md'))
         .then(function(catalogue) {
           return catalogue;
         });
+    } else {
+      var $q = this.$injector.get('$q');
+      this.dictionary = $q.when(undefined);
     }
   };
 
@@ -413,7 +416,7 @@
 
       fields.forEach(function(field) {
         if ($.inArray(field.idxName, this.excludeCols) === -1) {
-          var fieldSpec = dictionary[field.name] || {};
+          var fieldSpec = (dictionary && dictionary[field.name]) || {};
           columns.push({
             field: field.idxName,
             title: fieldSpec.name || field.label,
