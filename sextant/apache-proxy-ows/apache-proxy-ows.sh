@@ -50,25 +50,37 @@ for identityMapping in "${identityMappings[@]}"; do
     fi
     identityMapping=${identityMapping%/*}
     for f in $identityMapping/** ; do
+      basenameValue="$(basename "${f%.*}")"
+      urlInterne=$(echo $urlInterne | sed -e "s/\$1/$basenameValue/g")
+      fDirname=$(dirname $f)
+      difference=$(diff <(fold -w1 <<< "$identityMapping") <(fold -w1 <<< "$fDirname") | awk '/[<>]/{printf $2}')
 
       # Keep only file and filename
       currentFileExtension=`echo $f |  sed 's/^.*\.//'`
       if [[ -f "${f}" ]] && [ "${currentFileExtension}" = "${extension}" ]
       then
-        arrVar+=("$(basename "${f%.*}")")
+        newbaseName="$(basename "${f%.*}")"
+        if [ ! -z "$difference" ]
+        then
+          str_esc=$(printf '%s\n' "$difference" | sed 's:/:\\&:g')
+          difference="${difference:1}"
+          str_esc="${difference}/"
+          newbaseName=$str_esc$newbaseName
+        fi
+        arrVar+=($newbaseName)
       elif [[ -f "${f}" ]] && [ "${extension}" == "no_extension" ]
       then
         arrVar+=("$(basename "${f%.*}")")
       fi
-    done
+      done
 
     for value in "${arrVar[@]}"
     do
       # Get url publique and interne and remove new line
       urlPublique=$(echo ${urlPubliques[$configCounter]} | sed -e 's/\r//g')
       urlInterne=$(echo ${urlInternes[$configCounter]} | sed -e 's/\r//g')
-      urlPublique=$(echo $urlPublique | sed -e "s/\$1/$value/g")
-      urlInterne=$(echo $urlInterne | sed -e "s/\$1/$value/g")
+      urlPublique=$(echo $urlPublique | sed -e "s|\$1|$value|g")
+      urlInterne=$(echo $urlInterne | sed -e "s|\$1|$value|g")
       # echo "${urlPubliques[$configCounter]}/$value, ${urlInternes[$configCounter]}/$value"  >> apache_conf.csv
       if grep -wR "$urlInterne" temp.csv
         then
