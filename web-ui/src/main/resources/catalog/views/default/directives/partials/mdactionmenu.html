@@ -13,7 +13,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li role="menuitem">
+      <li role="menuitem" data-ng-if="showBatchDropdown">
         <label>
           <input class="fa fa-fw"
                  data-gn-selection-md="md"
@@ -27,7 +27,8 @@
         </label>
       </li>
       <li class="divider"
-          role="menuitem"></li>
+          role="menuitem"
+          data-ng-if="showBatchDropdown"></li>
       <li role="menuitem">
         <a href=""
            data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"

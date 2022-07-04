@@ -14,7 +14,7 @@
       data-ng-class="{'gn-record-selected': md.selected}"
       gn-fix-mdlinks="">
 
-    <td class="gn-md-select">
+    <td class="gn-md-select" data-ng-if="showBatchDropdown">
       <input gn-selection-md type="checkbox"
              ng-model="md.selected"
              aria-label="{{'clickToSelect' | translate}}"
