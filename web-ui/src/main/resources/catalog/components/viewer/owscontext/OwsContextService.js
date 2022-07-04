@@ -162,6 +162,8 @@
           }
         }
 
+        gnViewerSettings.initialExtent = extent;
+
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
             projection: projection
