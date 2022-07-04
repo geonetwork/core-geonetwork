@@ -111,8 +111,12 @@
                 gnMap.zoom(map, delta);
               };
               scope.zoomToMaxExtent = function(map) {
-                map.getView().fit(map.getView().
-                    getProjection().getExtent(), map.getSize());
+                if (gnViewerSettings.initialExtent) {
+                  map.getView().fit(gnViewerSettings.initialExtent, map.getSize());
+                } else {
+                  map.getView().fit(map.getView().
+                  getProjection().getExtent(), map.getSize());
+                }
               };
               scope.ol3d = null;
 
