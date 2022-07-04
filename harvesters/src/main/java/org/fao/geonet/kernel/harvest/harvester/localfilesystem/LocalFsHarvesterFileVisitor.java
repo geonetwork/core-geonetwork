@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.csw.Aligner;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
@@ -307,6 +308,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             result.badFormat++;
             return;
         }
+
+        Aligner.applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, null);
 
         String id = dataMan.getMetadataId(uuid);
         if (id == null) {

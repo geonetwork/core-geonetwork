@@ -75,6 +75,20 @@
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
 
+    <div id="gn-harvest-settings-file-advanced-batchEdits-row">
+      <label id="gn-harvest-settings-file-advanced-batchEdits-label" class="control-label">
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+
+      <div gn-batch-edit-examples-selector="addBatchEdits"/>
+
+      <div id="gn-harvest-settings-file-advanced-batchEdits-list"
+           style="height: 300px"
+           ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+           data-ng-model="harvesterSelected.content.batchEdits"/>
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
+    </div>
+
     <div id="gn-harvest-settings-file-advanved-script-row">
       <label id="gn-harvest-settings-file-advanved-script-label" class="control-label" data-translate="">filesystem-beforeScript</label>
       <input id="gn-harvest-settings-file-advanved-script-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.beforeScript"/>
