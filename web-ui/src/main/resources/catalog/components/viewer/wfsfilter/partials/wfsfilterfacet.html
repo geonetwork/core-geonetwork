@@ -110,71 +110,73 @@
     </div>
 
     <!-- Facets -->
-    <div data-ng-if="!managerOnly && isFeaturesIndexed"
-         class="gn-facet"
-         data-ng-repeat="field in fields track by field.name">
-      <h5 gn-collapsible="field.expanded"
-          title="{{field.definition}}">
-        <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
-        {{field.label}}
-      </h5>
+    <div class="gn-facet-container">
+      <div data-ng-if="!managerOnly && isFeaturesIndexed"
+           class="gn-facet"
+           data-ng-repeat="field in fields track by field.name">
+        <h5 gn-collapsible="field.expanded"
+            title="{{field.definition}}">
+          <span class="fa fa-arrow-circle-right"
+                data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
+          {{field.label}}
+        </h5>
 
-      <!-- value filter field -->
-      <div class="filter-input sxt-layertree-filter"
-           ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
-        <span class="fa fa-times-circle clear" title="clear"
-              ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
-              ng-show="facetFilters[field.name]"></span>
-        <input type="text" class="form-control input-sm layerfilter"
-               placeholder="{{ 'filter' | translate }}"
-               ng-model="facetFilters[field.name]"
-               ng-model-options="{debounce: 300}"
-               ng-change="onFilterInputChange(field)">
-      </div>
-
-      <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
-        <div class="list-group">
-          <div class="list-group-item"
-               data-ng-repeat="facet in field.values"
-               data-ng-click="onCheckboxClick(field, facet)"
-               data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
-            <i class="fa fa-fw text-primary"
-               data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square-o' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
-          </div>
-          <div data-ng-if="field.tree"
-               gn-wfs-filter-facets-tree="field"
-               gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
-          </div>
-
-          <div ng-if="field.dates"
-               gn-facet-daterange="output[field.name].values"
-               available-dates="field.dates"
-               show-graph="{{field.display == 'graph'}}"
-               graph-expanded="field.expanded"
-               dates-count="field.datesCount"
-               callback="onUpdateDateRange(field, from, to)">
-          </div>
+        <!-- value filter field -->
+        <div class="filter-input sxt-layertree-filter"
+             ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
+          <span class="fa fa-times-circle clear" title="clear"
+                ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
+                ng-show="facetFilters[field.name]"></span>
+          <input type="text" class="form-control input-sm layerfilter"
+                 placeholder="{{ 'filter' | translate }}"
+                 ng-model="facetFilters[field.name]"
+                 ng-model-options="{debounce: 300}"
+                 ng-change="onFilterInputChange(field)">
         </div>
-        <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
-          <span translate>more</span>...
-        </a>
+
+        <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
+          <div class="list-group">
+            <div class="list-group-item"
+                 data-ng-repeat="facet in field.values"
+                 data-ng-click="onCheckboxClick(field, facet)"
+                 data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
+              <i class="fa fa-fw text-primary"
+                 data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square-o' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
+            </div>
+            <div data-ng-if="field.tree"
+                 gn-wfs-filter-facets-tree="field"
+                 gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
+            </div>
+
+            <div ng-if="field.dates"
+                 gn-facet-daterange="output[field.name].values"
+                 available-dates="field.dates"
+                 show-graph="{{field.display == 'graph'}}"
+                 graph-expanded="field.expanded"
+                 dates-count="field.datesCount"
+                 callback="onUpdateDateRange(field, from, to)">
+            </div>
+          </div>
+          <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
+            <span translate>more</span>...
+          </a>
+        </div>
       </div>
-    </div>
-    <!--Geometry Field-->
-    <div class="gn-facet"
-         ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField">
-      <h5 gn-collapsible="indexObject.geomField.expanded">
-        <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
-        {{'gnbbox' | translate}}
-      </h5>
-      <div class="list-group"
-           data-ng-class="{'collapse': !indexObject.geomField.expanded}">
-        <gn-bbox-input data-value="ctrl.searchGeometry"
-                       data-map="map"
-                       data-watch-value-change="true"
-        />
+      <!--Geometry Field-->
+      <div class="gn-facet"
+           ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField">
+        <h5 gn-collapsible="indexObject.geomField.expanded">
+          <span class="fa fa-arrow-circle-right"
+                data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
+          {{'gnbbox' | translate}}
+        </h5>
+        <div class="list-group"
+             data-ng-class="{'collapse': !indexObject.geomField.expanded}">
+          <gn-bbox-input data-value="ctrl.searchGeometry"
+                         data-map="map"
+                         data-watch-value-change="true"
+          />
+        </div>
       </div>
     </div>
   </div>

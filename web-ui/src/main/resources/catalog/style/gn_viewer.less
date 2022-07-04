@@ -776,13 +776,25 @@ gn-features-tables, .gn-viewer-info-pane {
       width: 100%;
     }
   }
+  .fixed-table-container {
+    height: 200px;
+  }
 }
 
-.gn-md-view gn-features-tables {
-  position: unset;
-  .gn-features-table {
-    border: none;
-    box-shadow: none !important;
+.gn-md-view {
+  gn-features-tables {
+    position: unset;
+    .gn-features-table {
+      border: none;
+      box-shadow: none !important;
+    }
+  }
+  .fixed-table-container {
+    height: 600px;
+  }
+  [data-gn-wfs-filter-facets] .gn-facet-container {
+    overflow: auto;
+    height: 550px;
   }
 }
 

@@ -404,7 +404,6 @@
   geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
-    var $filter = this.$injector.get('$filter');
 
     return this.dictionary.then(function(dictionary) {
 

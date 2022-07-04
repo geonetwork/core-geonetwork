@@ -90,10 +90,17 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
-            height: this.ctrl.height || '100%',
+            // TODO Fixing the height breaks horizontal scroll.
+            // For now setting height using CSS.
+            // height: this.ctrl.height || 250,
             sortable: true,
             striped: true,
-            // showToggle: true,
+            showToggle: true,
+            iconsPrefix: 'fa',
+            icons: {
+              toggleOff: 'fa-list-alt icon-list-alt',
+              toggleOn: 'fa-table icon-list-alt',
+            },
             onPostBody: function(data) {
               var trs = element.find('tbody').children();
               for (var i = 0; i < trs.length; i++) {
@@ -130,17 +137,24 @@
                 }
               }
 
-              element.parents('gn-features-table').find('.clearfix')
-              .addClass('sxt-clearfix')
-              .removeClass('clearfix');
+              // element.parents('gn-features-table').find('.clearfix')
+              // .addClass('sxt-clearfix')
+              // .removeClass('clearfix');
 
               // trigger an async digest loop to make the table appear
               setTimeout(function() { scope.$apply(); });
             }.bind(this),
             onPostHeader: function() { // avoid resizing issue on page change
-              if (!once) { return; }
-              element.bootstrapTable('resetView');
-              once = false;
+              // if (!once) { return; }
+              // element.bootstrapTable('resetView');
+              // once = false;
+              // var el = $('.fixed-table-header');
+              // setTimeout(function() {
+              //   var width = getScrollbarWidth();
+              //   if (parseInt(el.css('margin-right'), 10) > width) {
+              //     el.css('margin-right', width + 'px');
+              //   }
+              // }, 0);
             },
             onDblClickRow: function(row, elt) {
               if (!this.map) {
@@ -158,6 +172,17 @@
             showExport: this.ctrl.showExport !== false,
             exportTypes: ['csv'],
             exportDataType: 'all',
+            exportOptions: {
+              onCellHtmlData: function onCellHtmlData(cell, rowIndex, colIndex, htmlData) {
+                if (cell.is('th')) {
+                  return cell.find('.th-inner').text();
+                }
+                else if (cell.is('td') && cell.children('a').length > 0 ) {
+                  return cell.find('a').context.innerHTML.match(/href="([^"]*)/)[1];
+                }
+                return htmlData;
+              }
+            },
             formatRecordsPerPage: function(pageNumber){
               return pageNumber;
             },
