@@ -43,6 +43,7 @@ import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.client.api.OperationContext;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
@@ -114,7 +115,7 @@ public class CMISUtils {
                         // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
                         Folder folder;
                         synchronized (this) {
-                            ObjectId objectId = cmisConfiguration.getClient().createPath(subFolder, folderKey, "cmis:folder");
+                            ObjectId objectId = cmisConfiguration.getClient().createPath(subFolder, folderKey, BaseTypeId.CMIS_FOLDER.value());
                             folder = (Folder) cmisConfiguration.getClient().getObject(objectId);
                         }
                         if (refresh) {
@@ -125,7 +126,7 @@ public class CMISUtils {
                 }
             });
         } catch (ExecutionException e) {
-            throw new ResourceNotFoundException("Error getting resource from cache: " + folderKey, e);
+            throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
         }
         if (refresh && !foundWithoutCache[0]) {
             try {
@@ -156,15 +157,23 @@ public class CMISUtils {
     }
 
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder) {
-        return getCmisObjectMap(folder, baseFolder, null);
+        return getCmisObjectMap(folder, baseFolder, createOperationContext(), null);
+    }
+
+    public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, OperationContext oc) {
+        return getCmisObjectMap(folder, baseFolder,  oc, null);
     }
 
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, String suffixlessKeyFilename) {
+        return getCmisObjectMap(folder, baseFolder,  createOperationContext(), null);
+    }
+
+    public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, OperationContext oc, String suffixlessKeyFilename) {
         if (baseFolder == null) {
             baseFolder = "";
         }
         Map<String, Document> documentMap = new HashMap<>();
-        for (CmisObject cmisObject : folder.getChildren()) {
+        for (CmisObject cmisObject : folder.getChildren(oc)) {
             if (cmisObject instanceof Folder) {
                 documentMap.putAll(getCmisObjectMap((Folder) cmisObject, baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), suffixlessKeyFilename));
                 return documentMap;
@@ -188,7 +197,7 @@ public class CMISUtils {
 
 
         //Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
+        properties.put(PropertyIds.OBJECT_TYPE_ID, BaseTypeId.CMIS_DOCUMENT.value());
         properties.put(PropertyIds.NAME, filenameKey);
 
         if (changeDate != null) {

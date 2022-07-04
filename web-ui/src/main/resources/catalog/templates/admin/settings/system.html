@@ -112,7 +112,6 @@
                   <!-- According to entry -->
                   <div class="col-sm-8" data-ng-switch="s['name']">
 
-
                     <select data-ng-switch-when="metadata/import/userprofile"
                             class="form-control"
                             name="{{s.name}}">
@@ -126,6 +125,22 @@
                               ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
                       </option>
                     </select>
+
+
+                    <select data-ng-switch-when="metadata/delete/profilePublishedMetadata"
+                            class="form-control"
+                            name="{{s.name}}">
+                      <option value="Editor"
+                              ng-selected="'Editor' == s.value">{{'Editor' | translate}}
+                      </option>
+                      <option value="Reviewer"
+                              ng-selected="'Reviewer' == s.value">{{'Reviewer' | translate}}
+                      </option>
+                      <option value="Administrator"
+                              ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
+                      </option>
+                    </select>
+
 
                     <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                       <input type="hidden"
