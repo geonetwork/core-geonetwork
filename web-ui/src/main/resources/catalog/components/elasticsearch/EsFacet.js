@@ -212,13 +212,8 @@
         }
       },
       recordsWithErrors: {
+        
         facets: {
-          'indexingErrorMsg': {
-            'terms': {
-              'field': 'indexingErrorMsg',
-              'size': 10
-            }
-          },
           'indexingErrorType': {
             'filters': {
               'filters': {
@@ -238,6 +233,23 @@
           'isHarvested': {
             'terms': {
               'field': 'isHarvested'
+            }
+          },
+          'indexingErrorMsg': {
+            'terms': {
+              'field': 'indexingErrorMsg',
+              'size': 10,
+              'exclude': 'Warning.*'
+            }
+          },
+          'indexingWarningMsg': {
+            'terms': {
+              'field': 'indexingErrorMsg',
+              'size': 10,
+              'include': 'Warning.*'
+            },
+            'meta': {
+              'displayFilter': false
             }
           }
         },
