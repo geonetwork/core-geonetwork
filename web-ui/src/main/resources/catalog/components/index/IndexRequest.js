@@ -149,13 +149,13 @@
    * @return {httpPromise} return array of field names
    */
   geonetwork.gnIndexRequest.prototype.getDocTypeInfo = function(options) {
-    var docTypeId = this.config.idDoc(options);
+    this.config.docTypeId = this.config.idDoc(options);
     var defer = this.$q.defer();
     this.$http.post(this.ES_URL, {
       size: 1,
       'query': {
         'query_string': {
-          'query': this.config.docTypeIdField + ':"' + docTypeId + '"'
+          'query': this.config.docTypeIdField + ':"' + this.config.docTypeId + '"'
         }
       }
     }).then(angular.bind(this, function(response) {
@@ -193,11 +193,12 @@
         }, this);
 
         this.totalCount = indexInfo.totalRecords_i;
+        this.isPointOnly = indexInfo.isPointOnly;
         this.initBaseRequest_(options);
       }
       catch (e) {
         var msg = this.$translate.instant('docTypeNotIndexed', {
-          id: docTypeId
+          id: this.config.docTypeId
         });
         defer.reject({statusText: msg});
       }

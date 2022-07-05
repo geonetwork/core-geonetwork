@@ -39,6 +39,15 @@
         <i class="fa fa-table"></i>
       </button>
       <button class="btn btn-default btn-xs"
+              data-ng-disabled="!indexObject.isPointOnly"
+              data-ng-if="!managerOnly
+                          && isFeaturesIndexed
+                          && displayTableOnLoad != 'true'"
+              title="{{::'Heatmap' | translate}}"
+              ng-click="showHeatmap()">
+        <i class="fa fa-th-large"></i>
+      </button>
+      <button class="btn btn-default btn-xs"
               ng-class="{ disabled: !filtersChanged }"
               data-ng-if="!managerOnly && isFeaturesIndexed"
               title="{{::'applyFilter' | translate}}"
@@ -85,6 +94,12 @@
         <i class="fa fa-globe"></i>
       </a>
     </div>
+
+    <gn-heatmap data-ng-if="featureTypeName"
+                map="map"
+                feature-type="indexObject.config.docTypeId"
+                filter="indexObject.requestParams"
+                enabled="enableHeatmap"/>
 
     <!-- Search -->
     <div data-ng-if="!managerOnly && isFeaturesIndexed"

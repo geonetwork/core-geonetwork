@@ -90,10 +90,8 @@
                 }
 
               }, {
-                match_phrase: {
-                  featureTypeId: {
-                    query: encodeURIComponent(featureType)
-                  }
+                query_string: {
+                  query: '+featureTypeId:\"' + featureType + '\"'
                 }
               }, {
                 geo_bounding_box: {

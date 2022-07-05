@@ -245,6 +245,7 @@
 
             scope.originalUrl = scope.wfsUrl;
             scope.wfsUrl = getWfsUrl(mode, scope.layer);
+            scope.enableHeatmap = false;
 
             angular.extend(scope, {
               fields: [],
@@ -252,7 +253,6 @@
               isFeatureTypeAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
-              // FIXME: On page reload the md is undefined and the filter does not work
               md: scope.layer ? scope.layer.get('md') : scope.md,
               mdUrl: scope.layer ? scope.layer.get('url') : null,
               url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
@@ -980,6 +980,11 @@
             // reset from wfsFilter directive: only signal change of filter
             scope.$broadcast('FiltersChanged');
           });
+
+          scope.enableHeatmap = false;
+          scope.showHeatmap = function() {
+            scope.enableHeatmap = !scope.enableHeatmap;
+          }
 
           scope.showTable = function() {
             gnFeaturesTableManager.clear();

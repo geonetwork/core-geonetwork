@@ -142,12 +142,13 @@
 
           // adjust ES request based on current filters
           // (skip the initial watch trigger)
-          $scope.$watch('ctrl.filter', function(newValue, oldValue) {
-            if (!ctrl.enabled || oldValue === undefined) {
-              return;
-            }
-            ctrl.refresh();
-          }, true);
+          function reload(newValue, oldValue) {
+              if (!ctrl.enabled || oldValue === undefined) {
+                return;
+              }
+              ctrl.refresh();
+          }
+          $scope.$watch('ctrl.filter', reload, true);
         }],
         link: function(scope, element, attrs) {
           // destroy scope on element removal
