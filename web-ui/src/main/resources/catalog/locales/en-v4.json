@@ -117,6 +117,7 @@
   "indexRecordsWithErrors": "Index records with errors",
   "top10IndexingErrors": "Top 10 indexing errors:",
   "facet-indexingErrorMsg": "Indexing errors",
+  "facet-indexingWarningMsg": "Indexing warnings",
   "facet-indexingErrorType": "Error types",
   "rebuildIndex": "Reindex records",
   "dropIndexAndRebuild": "Delete index and reindex",

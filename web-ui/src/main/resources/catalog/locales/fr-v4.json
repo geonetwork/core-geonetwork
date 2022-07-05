@@ -101,6 +101,7 @@
   "indexRecordsWithErrors": "Fiches avec des erreurs d'indexation",
   "top10IndexingErrors": "Les principales erreurs d'indexation",
   "facet-indexingErrorMsg": "Erreurs d'indexation",
+  "facet-indexingWarningMsg": "Alertes d'indexation",
   "facet-indexingErrorType": "Error types",
   "rebuildIndex": "Réindexer les fiches",
   "dropIndexAndRebuild": "Supprimer l'index et réindexer",

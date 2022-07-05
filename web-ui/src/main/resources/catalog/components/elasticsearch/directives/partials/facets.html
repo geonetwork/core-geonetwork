@@ -44,10 +44,11 @@
           ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
 
         <div class="input-group input-group-sm gn-facet-input-group"
-             ng-if="facet.type === 'terms' && facet.includeFilter
+             ng-if="facet.type === 'terms'
+                    && (facet.meta ? facet.meta.displayFilter !== false : facet.includeFilter)
                     && (facet.more
-                    || facet.include.length > 0
-                    || facet.meta && facet.meta.displayFilter)">
+                    || (facet.include && facet.include.length > 0)
+                    || (facet.meta && facet.meta.displayFilter === true))">
           <span class="input-group-addon" id="sizing-addon3">
             <span class="fa fa-filter"></span>
           </span>
