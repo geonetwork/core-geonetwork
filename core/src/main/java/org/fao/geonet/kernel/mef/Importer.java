@@ -55,10 +55,12 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
@@ -346,7 +348,11 @@ public class Importer {
                     // In GeoNetwork 3.x, links to resources changed:
                     // * thumbnails contains full URL instead of file name only
                     // * API mode change old URL structure.
-                    MetadataResourceDatabaseMigration.updateMetadataResourcesLink(metadata, null, sm);
+                    try {
+                        MetadataResourceDatabaseMigration.updateMetadataResourcesLink(metadata, null, sm);
+                    } catch (UnsupportedOperationException ex) {
+                        // Ignore, this is triggered when importing templates with empty gmd:fileIdentifier, should not fail.
+                    }
                 }
 
                 if (validate) {
@@ -431,9 +437,19 @@ public class Importer {
                                 Integer.valueOf(finalGroupId));
                             allowedRepository.save(allowedSet);
                         }
-
                     }
                 });
+
+                if (validate) {
+                    Metadata md = context.getBean(MetadataRepository.class).findOne(iMetadataId);
+
+                    if (md != null) {
+                        // Persist the validation status
+                        IMetadataValidator metadataValidator = context.getBean(IMetadataValidator.class);
+
+                        metadataValidator.doValidate(md, context.getLanguage());
+                    }
+                }
 
                 dm.indexMetadata(metadataIdMap.get(index), true, null);
             }
