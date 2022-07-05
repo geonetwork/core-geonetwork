@@ -75,6 +75,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -180,6 +181,9 @@ public class MetadataInsertDeleteApi {
 
     @Autowired
     RoleHierarchy roleHierarchy;
+
+    @Autowired
+    IMetadataValidator metadataValidator;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
@@ -974,6 +978,13 @@ public class MetadataInsertDeleteApi {
                     }
                 }
             });
+        }
+
+        if (rejectIfInvalid) {
+            // Persist the validation status
+            AbstractMetadata metadata = metadataRepository.findOneById(iId);
+
+            metadataValidator.doValidate(metadata, context.getLanguage());
         }
 
         dataManager.indexMetadata(id.get(0), true);
