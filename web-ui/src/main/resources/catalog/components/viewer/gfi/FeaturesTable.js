@@ -99,7 +99,8 @@
             iconsPrefix: 'fa',
             icons: {
               toggleOff: 'fa-list-alt icon-list-alt',
-              toggleOn: 'fa-table icon-list-alt'
+              toggleOn: 'fa-table icon-list-alt',
+              export: 'fa-download'
             },
             onPostBody: function(data) {
               var trs = element.find('tbody').children();

@@ -246,6 +246,7 @@
             scope.originalUrl = scope.wfsUrl;
             scope.wfsUrl = getWfsUrl(mode, scope.layer);
             scope.enableHeatmap = false;
+            scope.featuresInMapExtent = false;
 
             angular.extend(scope, {
               fields: [],
@@ -495,6 +496,25 @@
             scope.filterFacets(field.name);
           };
 
+          scope.featuresInMapExtent = false;
+
+          onMoveEnd = function(evt) {
+            var extent = scope.map.getView().calculateExtent(map.getSize());
+            var wgsExtent = ol.extent.applyTransform(extent,
+              ol.proj.getTransform(scope.map.getView().getProjection(), "EPSG:4326"));
+            scope.ctrl.searchGeometry = wgsExtent.join(',');
+            scope.filterFacets();
+          };
+
+          scope.setFeaturesInMapExtent = function() {
+            scope.featuresInMapExtent = !scope.featuresInMapExtent;
+            if (scope.featuresInMapExtent) {
+              scope.map.on('moveend', onMoveEnd);
+            } else {
+              scope.map.un('moveend', onMoveEnd);
+            }
+          };
+
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
@@ -606,7 +626,7 @@
 
           function setFeatureExtent(agg) {
             if (scope.layer) {
-              scope.autoZoomToExtent = true;
+              scope.autoZoomToExtent = scope.featuresInMapExtent === false;
               if (scope.autoZoomToExtent
                 && agg.bbox_xmin.value && agg.bbox_ymin.value
                 && agg.bbox_xmax.value && agg.bbox_ymax.value) {
@@ -986,7 +1006,9 @@
             scope.enableHeatmap = !scope.enableHeatmap;
           }
 
+          scope.enableTable = false;
           scope.showTable = function() {
+            scope.enableTable = !scope.enableTable;
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
               name: scope.layer.get('label') || scope.layer.get('name'),

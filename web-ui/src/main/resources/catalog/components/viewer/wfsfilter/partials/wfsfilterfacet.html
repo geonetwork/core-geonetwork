@@ -43,7 +43,8 @@
               data-ng-if="!managerOnly
                           && isFeaturesIndexed
                           && displayTableOnLoad != 'true'"
-              title="{{::'Heatmap' | translate}}"
+              title="{{(indexObject.isPointOnly ? 'Heatmap' : 'heatmapAvailableForPointOnly') | translate}}"
+              data-ng-class="{'active': enableHeatmap}"
               ng-click="showHeatmap()">
         <i class="fa fa-th-large"></i>
       </button>
@@ -115,6 +116,13 @@
                 title="{{'reset' | translate}}"
                 class="btn btn-default btn-xs gn-reset-facets">
           <i class="fa fa-fw fa-times"></i>
+        </button>
+        <button data-ng-if="!managerOnly && isFeaturesIndexed"
+                title="{{'featuresInMapExtent' | translate}}"
+                data-ng-click="setFeaturesInMapExtent()"
+                data-ng-class="{'active': featuresInMapExtent}"
+                class="btn btn-default btn-xs">
+          <i class="fa fa-pencil-square-o fa-fw"></i>
         </button>
         <button class="btn btn-default btn-xs"
                 title="{{'search' | translate}}"
