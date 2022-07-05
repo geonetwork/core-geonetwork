@@ -161,7 +161,12 @@
 
           scope.ctrl = {
             searchGeometry: undefined,
-            fullTextSearch: ''
+            query: {},
+            filter: {
+              params: {},
+              fullTextSearch: '',
+              geometry: ''
+            }
           };
 
           scope.output = {};
@@ -515,6 +520,20 @@
             }
           };
 
+          function setSearchState(facetsState) {
+            if (scope.ctrl.filter.fullTextSearch != '') {
+              var param = {};
+              param[scope.ctrl.filter.fullTextSearch] = true;
+              facetsState.any = {
+                values: param
+              };
+            } else {
+              delete facetsState.any;
+            }
+            scope.ctrl.filter.params = facetsState;
+            scope.ctrl.filter.geometry = scope.filterGeometry;
+            scope.ctrl.query = indexObject.buildESParams(scope.ctrl.filter, {});
+          }
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
@@ -577,19 +596,9 @@
             addBboxAggregation(aggs);
 
             if (indexObject) {
-              if (scope.ctrl.fullTextSearch != '') {
-                var param = {};
-                param[scope.ctrl.fullTextSearch] = true;
-                facetsState.any = {
-                  values: param
-                };
-              } else {
-                delete facetsState.any;
-              }
-              indexObject.searchWithFacets({
-                params: facetsState,
-                geometry: scope.filterGeometry
-              }, aggs).
+              setSearchState(facetsState);
+
+              indexObject.searchWithFacets(scope.ctrl.filter, aggs).
               then(function(resp) {
                 searchResponseHandler(resp, filterInputUpdate);
                 angular.forEach(scope.fields, function(f) {
@@ -691,7 +700,7 @@
           scope.resetFacets = function(init) {
             scope.output = {};
             scope.lastClickedField = null;
-            scope.ctrl.fullTextSearch = '';
+            scope.ctrl.filter.fullTextSearch = '';
 
             if(!init) {
               scope.resetSLDFilters();
@@ -719,6 +728,8 @@
             var aggs = {};
             addBboxAggregation(aggs);
             textInputsHistory = {};
+
+            setSearchState({});
 
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).

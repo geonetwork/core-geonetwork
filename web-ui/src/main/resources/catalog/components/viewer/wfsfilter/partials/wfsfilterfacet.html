@@ -41,8 +41,7 @@
       <button class="btn btn-default btn-xs"
               data-ng-disabled="!indexObject.isPointOnly"
               data-ng-if="!managerOnly
-                          && isFeaturesIndexed
-                          && displayTableOnLoad != 'true'"
+                          && isFeaturesIndexed"
               title="{{(indexObject.isPointOnly ? 'Heatmap' : 'heatmapAvailableForPointOnly') | translate}}"
               data-ng-class="{'active': enableHeatmap}"
               ng-click="showHeatmap()">
@@ -96,10 +95,10 @@
       </a>
     </div>
 
-    <gn-heatmap data-ng-if="featureTypeName"
+    <gn-heatmap data-ng-if="!managerOnly && featureTypeName"
                 map="map"
                 feature-type="indexObject.config.docTypeId"
-                filter="indexObject.requestParams"
+                filter="ctrl.query"
                 enabled="enableHeatmap"/>
 
     <!-- Search -->
@@ -109,7 +108,7 @@
              data-ng-keyup="$event.keyCode == 13 && filterFacets()"
              type="text"
              placeholder="{{::'anyPlaceHolder' | translate}}"
-             data-ng-model="ctrl.fullTextSearch"/>
+             data-ng-model="ctrl.filter.fullTextSearch"/>
       <span class="input-group-btn">
         <button data-ng-if="!managerOnly && isFeaturesIndexed"
                 data-gn-click-and-spin="resetFacets(false).then(filterWMS)"

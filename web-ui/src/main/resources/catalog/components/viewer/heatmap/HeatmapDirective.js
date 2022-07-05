@@ -100,7 +100,7 @@
           // this will refresh the heatmap
           ctrl.refresh = function() {
             gnHeatmapService.requestHeatmapData(ctrl.featureType, ctrl.map,
-              ctrl.filter.params, ctrl.filter.geometry, ctrl.filter.any)
+              ctrl.filter)
               .then(function(cells) {
                 // add cells as features
                 ctrl.source.clear();
