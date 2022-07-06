@@ -99,6 +99,25 @@
               <div class="col-sm-1 gn-control"></div>
             </div>
 
+
+            <div id="gn-addonlinesrc-mimeType-row"
+                 class="form-group"
+                 data-ng-class="{'gn-required': params.linkType.fields.mimeType.required }"
+                 data-ng-if="key === 'mimeType' &&
+                             !params.linkType.fields.mimeType.hidden">
+              <label id="gn-addonlinesrc-mimeType-label"
+                     class="col-sm-2 control-label">
+                <span data-translate="">mimeType</span>
+              </label>
+              <div class="col-sm-9">
+                <input id="gn-addonlinesrc-mimeType-list"
+                       type="text" name="format" data-ng-model="params.mimeType"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"/>
+              </div>
+              <div class="col-sm-1 gn-control"></div>
+            </div>
+
+
             <!-- URL text field -->
             <div data-ng-if="key === 'url'">
               <div id="gn-addonlinesrc-url-row"
