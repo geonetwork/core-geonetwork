@@ -18,7 +18,7 @@ RUN sed -i "s/<sec:filter-chain\s* pattern=\"\/dashboards\/\*\*\"\s* filters=\"\
 
 
 #####################################################################
-FROM tomcat:8.5-jdk8 as final
+FROM tomcat:8.5-jdk8-temurin as final
 
 ARG DATA_DIR
 ARG ES_DUMP_VER
