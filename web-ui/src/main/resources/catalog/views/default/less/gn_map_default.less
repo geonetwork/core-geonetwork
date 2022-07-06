@@ -3,7 +3,7 @@
 @btn-link-disabled-color: #707070;
 @dropdown-link-disabled-color: #707070;
 
-.gn-map-fixed { 
+.gn-map-fixed {
   [ol-map] {
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -28,7 +28,7 @@
   left: 0px;
   right: 0px;
   [ol-map] {
-    height: calc(~"100vh - @{gn-menubar-height} - @{gn-bottombar-height} - 2px");
+    height: 100%;
   }
   .ol-attribution {
     .gn-attribution();
@@ -122,14 +122,37 @@
 
 .gn-hide-footer {
   [gn-main-viewer] {
-    [ol-map] {
-      height: calc(~"100vh - @{gn-menubar-height} - 1px");
-    }
     .control-tools {
       bottom: 1em;
     }
   }
 }
+
+// calculate map viewer height
+
+// ----- default (menubar + map + footer)
+[gn-main-viewer] {
+  height: calc(~"100vh - @{gn-menubar-height} - @{gn-bottombar-height} - 1px");
+}
+// ----- header + menubar + map + footer
+.gn-logo-in-header {
+  [gn-main-viewer] {
+    height: calc(~"100vh - @{gn-header-height} - @{gn-menubar-height} - @{gn-bottombar-height} - 1px");
+  }
+}
+// ----- menubar + map (NO footer)
+.gn-hide-footer {
+  [gn-main-viewer] {
+    height: calc(~"100vh - @{gn-menubar-height} - 1px");
+  }
+}
+// ----- header + menubar + map (NO footer)
+.gn-logo-in-header.gn-hide-footer {
+  [gn-main-viewer] {
+    height: calc(~"100vh - @{gn-header-height} - @{gn-menubar-height} - 1px");
+  }
+}
+
 // minimap on search results
 .gn-search-map {
   [ol-map] {
