@@ -34,6 +34,7 @@ import com.neovisionaries.i18n.LanguageCode;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MetadataResourceContainer;
+import org.fao.geonet.exceptions.TermNotFoundException;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
@@ -1380,12 +1381,13 @@ public final class XslUtil {
             return "";
         }
 
+        Thesaurus thesaurus = null;
         try {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
             thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
-            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+            thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
 
             if (thesaurus != null) {
                 KeywordBean keywordBean = thesaurus.getKeywordWithLabel(keyword, langCode);
@@ -1394,6 +1396,17 @@ public final class XslUtil {
                 }
             }
             return "";
+        } catch (TermNotFoundException ex) {
+            try {
+                if (!langCode.equals(Geonet.DEFAULT_LANGUAGE)) {
+                    KeywordBean keywordBean = thesaurus.getKeywordWithLabel(keyword, Geonet.DEFAULT_LANGUAGE);
+                    if (keywordBean != null) {
+                        return keywordBean.getUriCode();
+                    }
+                }
+            } catch (Exception ex2) {
+            }
+
         } catch (Exception ex) {
         }
         return "";
