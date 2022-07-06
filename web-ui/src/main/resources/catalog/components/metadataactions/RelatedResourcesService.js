@@ -68,10 +68,14 @@
           };
 
           this.getBadgeLabel = function(mainType, r) {
-            if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
+            if (r.mimeType != undefined && r.mimeType != '') {
+              return r.mimeType;
+            } else if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
               return r.protocol.replace('WWW:DOWNLOAD:', '');
-            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
+            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/) != null) {
               return mainType.replace('SERVICE', '');
+            } else if (mainType.match(/KML|GPX/) != null) {
+              return mainType;
             } else {
               return '';
             }
@@ -102,9 +106,10 @@
            * @return {boolean}
            */
           this.isLayerProtocol = function(link) {
-            return Object.keys(link.title || link.name).length > 0 &&
-               gnSearchSettings.mapProtocols.layers.
-               indexOf(link.protocol) > -1;
+            return (link.title || link.name)
+              && Object.keys(link.title || link.name).length > 0
+              && gnSearchSettings.mapProtocols.layers.
+                    indexOf(link.protocol) > -1;
           };
 
           var addWMSToMap = gnViewerSettings.resultviewFns && gnViewerSettings.resultviewFns.addMdLayerToMap;
@@ -425,8 +430,13 @@
           };
 
           this.getType = function(resource, type) {
-            resource.locTitle = $filter('gnLocalized')(resource.name) || resource.name;
-            resource.locDescription = $filter('gnLocalized')(resource.description) || resource.description;
+            resource.locTitle = angular.isObject(resource.name)
+              ? $filter('gnLocalized')(resource.name)
+              : ((angular.isObject(resource.title)
+                ? $filter('gnLocalized')(resource.title) : resource.title)
+                || resource.name);
+            resource.locDescription = angular.isObject(resource.description)
+              ? $filter('gnLocalized')(resource.description) : resource.description;
             resource.locUrl = $filter('gnLocalized')(resource.url) || resource.url;
             var protocolOrType = angular.isDefined(resource.protocol)
               ? (resource.protocol
@@ -450,7 +460,11 @@
                 }
               } else if (protocolOrType.match(/download/i)) {
                 var url = $filter('gnLocalized')(resource.url) || resource.url || '';
-                if (url.match(/zip/i)) {
+                if (url.match(/sld|qml|lyr/i)) {
+                  return 'LEGEND';
+                } else if (url.match(/qgs|mxd|ows/i)) {
+                  return 'MAP';
+                } else if (url.match(/zip/i)) {
                   return 'LINKDOWNLOAD-ZIP';
                 } else if (url.match(/pdf/i)) {
                   return 'LINKDOWNLOAD-PDF';

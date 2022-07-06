@@ -8,7 +8,7 @@
     <div class="panel-heading gn-card-heading"
          data-ng-class="{'gn-record-selected': md.selected}">
       <div class="gn-md-title">
-        <div class="gn-md-select">
+        <div class="gn-md-select" data-ng-if="showBatchDropdown">
           <input data-gn-selection-md="md"
                  data-bucket="searchResults.selectionBucket"
                  data-results="searchResults"

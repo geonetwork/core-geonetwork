@@ -153,26 +153,18 @@
         <ul class="list-group"
             data-ng-show="relations.onlines && relations.onlines.length > 0">
           <li class="list-group-item" href=""
-              data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse">
+              data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse"
+              data-ng-init="gnRelatedResources.getType(resource, 'onlines')">
             <div class="row">
-              <div class="col-md-1">
-                <i class="fa fa-fw"
-                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
-              </div>
-              <div class="col-md-10">
-                {{resource.protocol || ''}}<br/>
-                <a data-ng-href="{{onlinesrcService.getApprovedUrl(resource.lUrl)}}"
-                   title="{{resource.lUrl}}"
-                   data-ng-if="resource.lUrl.match('^http|ftp') !== null"
-                   target="_blank">
-                  {{resource.lUrl}}
-                </a>
-                <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
-                  {{resource.lUrl}}
-                </span>
+              <div class="col-md-11">
+                <span data-gn-link-icon="resource" data-mode="gn-icon-inline"></span>
+                <span data-gn-link-label="resource"/>
+                <br data-ng-if="resource.locTitle"/>
+                <strong>{{resource.locTitle}}</strong>
+                <br data-ng-if="resource.locDescription"/>
+                {{resource.locDescription}}
                 <br/>
-                <strong>{{resource.title | gnLocalized: lang}}</strong><br/>
-                {{resource.description | gnLocalized: lang}}
+                <em data-ng-if="resource.protocol">{{resource.protocol || ''}}</em>
 
                 <div data-ng-if="canPublishDoiForResource(resource)"
                      data-gn-doi-wizard="gnCurrentEdit.uuid"

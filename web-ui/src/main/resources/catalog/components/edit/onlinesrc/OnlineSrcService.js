@@ -454,52 +454,6 @@
           });
         },
 
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#getIconByProtocol
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * Get display icon depending of the protocol
-         * of the online resource.
-         * To display onlinesrc list
-         *
-         * @param {string} protocol name
-         * @return {string} icon class
-         */
-        getIconByProtocol: function(p) {
-          if (p.type) {
-            for (i = 0; i < protocolIcons.length; ++i) {
-              if (p.type.indexOf(protocolIcons[i][0]) >= 0 ||
-                  p.type.indexOf(protocolIcons[i][0]) >= 0) {
-                return protocolIcons[i][1];
-              }
-            }
-          }
-          if (p.protocol) {
-            for (i = 0; i < protocolIcons.length; ++i) {
-              if (p.protocol.indexOf(protocolIcons[i][0]) >= 0 ||
-                  p.protocol.indexOf(protocolIcons[i][0]) >= 0) {
-                return protocolIcons[i][1];
-              }
-            }
-          }
-          return defaultIcon;
-        },
-
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#getIconByProtocol
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * Get display icon depending of the protocol
-         * of the online resource.
-         * To display onlinesrc list
-         *
-         * @param {string} protocol name
-         * @return {string} icon class
-         */
         getApprovedUrl: function(url) {
           if(gnCurrentEdit.metadata.draft
              && url.match(".*/api/records/(.*)/attachments/.*") != null) {

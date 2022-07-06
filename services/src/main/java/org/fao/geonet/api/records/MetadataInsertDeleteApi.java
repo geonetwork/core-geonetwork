@@ -476,7 +476,7 @@ public class MetadataInsertDeleteApi {
         String metadataUuid = null;
 
 
-        if (generateUuid && !StringUtils.isEmpty(targetUuid)) {
+        if (!generateUuid && !StringUtils.isEmpty(targetUuid)) {
             // Check if the UUID exists
             try {
                 ApiUtils.getRecord(targetUuid);

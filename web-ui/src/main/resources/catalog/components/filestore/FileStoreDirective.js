@@ -22,122 +22,186 @@
  */
 
 (function() {
-  goog.provide('gn_filestore_directive');
+  goog.provide("gn_filestore_directive");
 
   /**
    */
-  angular.module('gn_filestore_directive', [
-    'blueimp.fileupload'
+  angular.module("gn_filestore_directive", [
+    "blueimp.fileupload"
   ])
+    /**
+     * Upload a file in the filestore
+     */
+    .directive("gnDataUploaderButton", [
+      "gnCurrentEdit", "$rootScope", "$translate",
+      function(gnCurrentEdit, $rootScope, $translate) {
+        return {
+          restrict: "A",
+          templateUrl: "../../catalog/components/filestore/" +
+            "partials/dataUploaderButton.html",
+          scope: {
+            btnLabel: "=?gnDataUploaderButton",
+            isOverview: "=?isOverview",
+            uploadOptions: "=?",
+            fileTypes: "=?",
+            visibility: "@?",
+            afterUploadCb: "&?",
+            afterUploadErrorCb: "&?"
+          },
+          link: function(scope, element, attrs) {
+            scope.uuid = undefined;
+            scope.gnCurrentEdit = gnCurrentEdit;
+            scope.lang = scope.$parent.lang;
+            scope.id = Math.random();
+            scope.fileTypes = scope.fileTypes || '*.*';
+            scope.autoUpload =
+              angular.isUndefined(attrs["autoUpload"]) ||
+              attrs["autoUpload"] == "true";
+            scope.visibility =
+              angular.isUndefined(attrs["visibility"])
+                ? "public" : attrs["visibility"];
+            scope.queue = [];
 
-      .directive('gnFileStore', [
-        'gnFileStoreService',
-        'gnOnlinesrc',
-        'gnCurrentEdit',
-        '$translate',
-        '$rootScope',
-        '$parse',
-        function(gnfilestoreService, gnOnlinesrc, gnCurrentEdit, $translate, $rootScope, $parse) {
-          return {
-            restrict: 'A',
-            templateUrl: '../../catalog/components/filestore/' +
-                'partials/filestore.html',
-            scope: {
-              uuid: '=gnFileStore',
-              selectCallback: '&',
-              filter: '='
-            },
-            link: function(scope, element, attrs, controller) {
-              scope.autoUpload =
-                  angular.isUndefined(attrs['autoUpload']) ||
-                  attrs['autoUpload'] == 'true';
-              var defaultStatus =
-                  angular.isUndefined(attrs['defaultStatus']) ?
-                  'public' : attrs['defaultStatus'];
-              scope.onlinesrcService = gnOnlinesrc;
-              scope.gnCurrentEdit = gnCurrentEdit;
+            var uploadFile = function() {
+              scope.queue = [];
+              scope.filestoreUploadOptions = angular.extend({
+                  singleUpload: true,
+                  autoUpload: scope.autoUpload,
+                  url: "../api/records/" + gnCurrentEdit.uuid
+                    + "/attachments?visibility=" + (scope.visibility || "public"),
+                  dropZone: $("#gn-upload-" + scope.id),
+                  // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
+                  done: uploadResourceSuccess,
+                  fail: uploadResourceFailed,
+                  headers: { "X-XSRF-TOKEN": $rootScope.csrf }
+                },
+                scope.uploadOptions || {});
+            };
 
-              scope.setResource = function(r) {
-                scope.selectCallback({ selected: r });
-              };
-              scope.id = Math.random();
-              scope.metadataResources = [];
+            var unregisterWatch = scope.$watch("gnCurrentEdit.uuid", function(n, o) {
+              if ((n && angular.isUndefined(scope.uuid))
+                || (n && n != o)) {
+                scope.uuid = n;
+                uploadFile();
+                unregisterWatch();
+              }
+            });
 
-              scope.loadMetadataResources = function() {
-                return gnfilestoreService.get(scope.uuid, scope.filter).success(
-                    function(data) {
-                      scope.metadataResources = data;
-                    }
-                );
-              };
-              scope.setResourceStatus = function(r) {
-                gnfilestoreService.updateStatus(r).then(function() {
-                  scope.loadMetadataResources();
-                }, function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('resourceUploadError'),
-                    error: {
-                      message: (data.errorThrown || data.statusText) +
-                          (angular.isFunction(data.response) ?
-                          data.response().jqXHR.responseJSON.message : '')
-                    },
-                    timeout: 0,
-                    type: 'danger'});
-                });
-              };
-              scope.deleteResource = function(r) {
-                gnfilestoreService.delete(r).success(
-                    scope.loadMetadataResources
-                );
-              };
+            var uploadResourceSuccess = function(e, data) {
+              $rootScope.$broadcast("gnFileStoreUploadDone");
+              if (scope.afterUploadCb && angular.isFunction(scope.afterUploadCb())) {
+                scope.afterUploadCb()(data.response().jqXHR.responseJSON);
+              }
+              scope.clear(scope.queue);
+            };
 
-              var uploadResourceSuccess = function(data) {
-                $rootScope.$broadcast('gnFileStoreUploadDone');
-                scope.clear(scope.queue);
-              };
+            var uploadResourceFailed = function(e, data) {
+              var message = data.errorThrown +
+              angular.isDefined(data.response().jqXHR.responseJSON.message)
+                ? data.response().jqXHR.responseJSON.message : "";
 
-              scope.$on('gnFileStoreUploadDone', scope.loadMetadataResources);
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("resourceUploadError"),
+                error: {
+                  message: message === "ResourceAlreadyExistException"
+                    ? $translate.instant("uploadedResourceAlreadyExistException", {
+                      file: data.files[0].name
+                    }) : message
+                },
+                timeout: 0,
+                type: "danger"
+              });
+              if (scope.afterUploadErrorCb && angular.isFunction(scope.afterUploadErrorCb())) {
+                scope.afterUploadErrorCb()(message);
+              }
+            };
 
-              var uploadResourceFailed = function(e, data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('resourceUploadError'),
+          }
+        };
+      }])
+    .directive("gnFileStore", [
+      "gnFileStoreService",
+      "gnOnlinesrc",
+      "gnCurrentEdit",
+      "$translate",
+      "$rootScope",
+      "$parse",
+      function(gnfilestoreService, gnOnlinesrc, gnCurrentEdit, $translate, $rootScope, $parse) {
+        return {
+          restrict: "A",
+          templateUrl: "../../catalog/components/filestore/" +
+            "partials/filestore.html",
+          scope: {
+            uuid: "=gnFileStore",
+            selectCallback: "&",
+            filter: "="
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.autoUpload =
+              angular.isUndefined(attrs["autoUpload"]) ||
+              attrs["autoUpload"] == "true";
+            var defaultStatus =
+              angular.isUndefined(attrs["defaultStatus"]) ?
+                "public" : attrs["defaultStatus"];
+            scope.onlinesrcService = gnOnlinesrc;
+            scope.gnCurrentEdit = gnCurrentEdit;
+
+            scope.setResource = function(r) {
+              scope.selectCallback({ selected: r });
+            };
+            scope.metadataResources = [];
+
+            scope.loadMetadataResources = function() {
+              return gnfilestoreService.get(scope.uuid, scope.filter).success(
+                function(data) {
+                  scope.metadataResources = data;
+                }
+              );
+            };
+            scope.setResourceStatus = function(r) {
+              gnfilestoreService.updateStatus(r).then(function() {
+                scope.loadMetadataResources();
+              }, function(data) {
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("resourceUploadError"),
                   error: {
-                    message: data.errorThrown +
-                        angular.isDefined(
-                        data.response().jqXHR.responseJSON.message) ?
-                        data.response().jqXHR.responseJSON.message : ''
+                    message: (data.errorThrown || data.statusText) +
+                      (angular.isFunction(data.response) ?
+                        data.response().jqXHR.responseJSON.message : "")
                   },
                   timeout: 0,
-                  type: 'danger'});
-              };
-
-              scope.$watch('filter', function(newValue, oldValue) {
-                if (angular.isDefined(scope.uuid) &&
-                    newValue != oldValue) {
-                  scope.loadMetadataResources();
-                }
+                  type: "danger"
+                });
               });
-              scope.$watch('uuid', function(newValue, oldValue) {
-                if (angular.isDefined(scope.uuid) &&
-                    newValue != oldValue) {
+            };
+            scope.deleteResource = function(r) {
+              gnfilestoreService.delete(r).success(
+                scope.loadMetadataResources
+              );
+            };
+            scope.$on("gnFileStoreUploadDone", scope.loadMetadataResources);
 
-                  scope.loadMetadataResources();
+            scope.$watch("filter", function(newValue, oldValue) {
+              if (angular.isDefined(scope.uuid) &&
+                newValue != oldValue) {
+                scope.loadMetadataResources();
+              }
+            });
+            scope.$watch("uuid", function(newValue, oldValue) {
+              if (angular.isDefined(scope.uuid) &&
+                newValue != oldValue) {
+                scope.loadMetadataResources();
 
-                  scope.queue = [];
-                  scope.filestoreUploadOptions = {
-                    autoUpload: scope.autoUpload,
-                    url: '../api/records/' + scope.uuid +
-                        '/attachments?visibility=' + defaultStatus,
-                    dropZone: $('#' + scope.id),
-                    singleUpload: false,
-                    // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
-                    done: uploadResourceSuccess,
-                    fail: uploadResourceFailed,
-                    headers: {'X-XSRF-TOKEN': $rootScope.csrf}
-                  };
-                }
-              });
-            }
-          };
-        }]);
+                scope.queue = [];
+                scope.filestoreUploadOptions = {
+                  autoUpload: scope.autoUpload,
+                  url: "../api/records/" + scope.uuid +
+                    "/attachments?visibility=" + defaultStatus,
+                  singleUpload: false
+                };
+              }
+            });
+          }
+        };
+      }]);
 })();

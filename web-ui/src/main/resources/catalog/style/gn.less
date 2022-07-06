@@ -444,6 +444,16 @@ div.thumb-small {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.gn-list-file {
+  position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 5px !important;
+  padding-right: 25px !important;
+}
 .gn-list-thumb {
   position: relative;
   margin: 5px;
@@ -451,6 +461,8 @@ div.thumb-small {
   padding: 0;
   border-radius: 2px;
   text-align: center;
+}
+.gn-list-file, .gn-list-thumb {
   a.onlinesrc-remove {
     position: absolute;
     z-index: 99;
@@ -686,7 +698,7 @@ i.fa-times.delete:hover {
     position: absolute;
     bottom: 9px;
     margin-left: -8px;
-    z-index: 99;
+    z-index: 98;
   }
   .gn-status, .gn-workflow-status {
     border: 2px solid @brand-primary;

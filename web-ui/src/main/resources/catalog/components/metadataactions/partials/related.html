@@ -16,18 +16,8 @@
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
          data-ng-repeat="r in items | orderBy:getOrderBy"
          gn-popover="">
-      <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
-        <strong>
-          <div class="clearfix">
-            <i class="fa"
-               data-ng-class="icon"/>
-          </div>
-          <span data-ng-if="badge != ''"
-                class="label label-default"
-                data-ng-class="{
-                  'label-primary': icon === 'fa-download' || icon === 'fa-file-pdf-o',
-                  'label-success': icon === 'fa-globe'}">{{badge}}</span>
-        </strong>
+      <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center"
+           data-gn-link-icon="r">
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-10 col-sm-7'"
            gn-popover-anchor="">

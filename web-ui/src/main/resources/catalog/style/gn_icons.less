@@ -1,6 +1,7 @@
 /* this is a set of icons used in geonetwork, they either map to fa-variables or can be defined here (as font symbol or background image) */
 @import "../lib/style/font-awesome/less/variables";
 @import "../lib/style/font-awesome/less/mixins";
+@import "../lib/style/bootstrap/less/variables.less";
 
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before, .gn-icon-datasets:before { content: @fa-var-database; }
@@ -62,8 +63,50 @@
 .gn-icon-fcats:before { content: @fa-var-table }
 .gn-icon-thumbnail:before { content: @fa-var-picture-o }
 .gn-icon-onlinesrc:before { content: @fa-var-link }
+
+.gn-icon-shp:before,
+.gn-icon-gpx:before,
+.gn-icon-kml:before,
+.gn-icon-qgs:before,
+.gn-icon-geojson:before,
+.gn-icon-wms:before,
+.gn-icon-arcgis-mapservice:before { content: @fa-var-map-o }
+
+.gn-icon-tif:before,
+.gn-icon-tiff:before,
+.gn-icon-aig:before,
+.gn-icon-ecw:before { content: @fa-var-image }
+
+.gn-icon-spatialite:before,
+.gn-icon-gpkg:before,
+.gn-icon-mdb:before { content: @fa-var-database }
+
+.gn-icon-arcgis-featureservice:before,
+.gn-icon-service:before,
+.gn-icon-services:before { content: @fa-var-cloud }
+
+.gn-icon-csv:before,
+.gn-icon-xls:before,
+.gn-icon-ods:before,
+.gn-icon-txt:before { content: @fa-var-table }
+
+.gn-icon-sld:before,
+.gn-icon-qml:before,
+.gn-icon-lyr:before { content: @fa-var-tint }
+
+.gn-icon-pdf:before { content: @fa-var-file-pdf-o }
+
+.gn-icon-mp3:before { content: @fa-var-volume-up }
+
+.gn-icon-ogc-gml:before { content: @fa-var-file-code-o }
+
+.gn-icon-json:before { content: @fa-var-file-text-o }
+
+.gn-icon-zip-shape, .gn-icon-zip-shape{ content: @fa-var-file-zip-o }
+
+.gn-icon-doi:before { content: @fa-var-info-circle }
+
 .gn-icon-parent:before { content: @fa-var-sitemap }
-.gn-icon-service:before, .gn-icon-services:before  { content: @fa-var-cloud }
 .gn-icon-source:before, .gn-icon-sources:before {
   content: @fa-var-sitemap;
 }
@@ -74,3 +117,39 @@
 
 .gn-icon-MyFrequentlyUsedRecords:before { content: @fa-var-star }
 .gn-icon-WatchingRecords:before { content: @fa-var-bell }
+
+.gn-icon-inline {
+  display: inline-block;
+}
+
+.gn-icontype-wms,
+.gn-icontype-sos,
+.gn-icontype-wps,
+.gn-icontype-wcs,
+.gn-icontype-atom,
+.gn-icontype-esri-rest,
+.gn-icontype-wfs {
+  background-color: @btn-success-bg !important;
+}
+
+.gn-icontype-linkdownload {
+  background-color: @btn-primary-bg !important;
+}
+
+.gn-icontype-legend,
+.gn-icontype-map {
+  background-color: @btn-warning-bg !important;
+}
+
+
+[data-gn-link-icon] .label {
+  text-transform: uppercase;
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+[data-gn-link-label] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

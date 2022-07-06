@@ -61,40 +61,8 @@
     </tbody>
   </table>
 
-  <form class="form-horizontal"
-        role="form"
-        method="POST"
-        enctype="multipart/form-data"
-        data-file-upload="filestoreUploadOptions">
-
-    <span class="btn btn-success btn-block fileinput-button"
-          data-ng-class="{disabled: disabled}">
-      <i class="fa fa-plus fa-white"></i>
-      <span data-translate="">chooseOnlinesrc</span>
-      <input type="file"
-             multiple="multiple"
-             name="file"
-             data-ng-disabled="disabled"/>
-    </span>
-
-    <ul class="list-group">
-      <li data-ng-repeat="file in queue"
-          class="list-group-item">
-        {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-        <i class="fa fa-times"
-           data-ng-click="clear(file)"/>
-      </li>
-    </ul>
-
-    <div class="col-lg-5 fade" data-ng-class="{in: active()}">
-      <div class="progress progress-striped active"
-           data-file-upload-progress="progress()"
-           data-file-upload-done="loadMetadataResources()">
-        <div class="progress-bar progress-bar-success"
-             data-ng-style="{width: num + '%'}"/>
-      </div>
-      <div class="progress-extended">&nbsp;</div>
-    </div>
-
-  </form>
+  <div data-gn-data-uploader-button="'chooseOnlinesrc'"
+       data-after-upload-cb="linkUploadedFileToRecord"
+       data-upload-options="filestoreUploadOptions">
+  </div>
 </div>

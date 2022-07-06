@@ -1115,6 +1115,11 @@
           </xsl:element>
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape(cit:protocol/*/text())"/>",
+            "mimeType":"<xsl:value-of select="if (*/gcx:MimeFileType)
+                                              then gn-fn-index:json-escape(*/gcx:MimeFileType/@type)
+                                              else if (starts-with(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
+                                              then gn-fn-index:json-escape(replace(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', ''))
+                                              else ''"/>",
             "url":"<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())"/>",
             "name":"<xsl:value-of select="gn-fn-index:json-escape((cit:name/*/text())[1])"/>",
             "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>",
