@@ -73,6 +73,10 @@
     </msg>
     <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS service </msg>
     <msg id="b" xml:lang="dut">. Gebruik deze functie om de dekking, de projectie of thumbnail af te leiden of bij te werken vanuit deze WMS-service voor de laag met de naam: </msg>
+    <msg id="connectPoint" xml:lang="eng">WMS view service</msg>
+    <msg id="connectPoint" xml:lang="fre">Service de visualisation WMS</msg>
+    <msg id="connectPointDesc" xml:lang="eng">Service connect point URL</msg>
+    <msg id="connectPointDesc" xml:lang="fre">Adresse de connexion au service de visualisation WMS</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->
@@ -81,6 +85,7 @@
   <xsl:param name="setAndReplaceExtent" select="'0'"/>
   <xsl:param name="setCRS" select="'0'"/>
   <xsl:param name="setDynamicGraphicOverview" select="'0'"/>
+  <xsl:param name="setServiceConnectPoint" select="'0'"/>
   <xsl:param name="wmsServiceUrl"/>
 
   <xsl:variable name="maxSrs" select="21"/>
@@ -118,13 +123,15 @@
                                   contains(cit:protocol/gco:CharacterString, 'OGC:WMS')
                                   and normalize-space(cit:linkage/gco:CharacterString) != '']"/>
     <xsl:variable name="srv"
-                  select="$root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
+                  select="count($root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]) > 0"/>
 
     <!-- Check if server is up and new value are available
      <xsl:variable name="capabilities"
       select="geonet:get-wms-capabilities(gmd:linkage/gmd:URL, '1.1.1')"/>
 -->
     <xsl:for-each select="$onlineResources">
+      <xsl:variable name="url"
+                    select="normalize-space(cit:linkage/gco:CharacterString)"/>
       <suggestion process="add-info-from-wms" id="{generate-id()}" category="onlineSrc"
                   target="gex:extent">
         <name>
@@ -134,16 +141,23 @@
           select="./cit:name/gco:CharacterString"/>.
         </name>
         <operational>true</operational>
-        <params>{"setExtent":{"type":"boolean", "defaultValue":"<xsl:value-of select="$setExtent"/>"},
+        <params>{
+          "setExtent":{"type":"boolean", "defaultValue":"<xsl:value-of select="$setExtent"/>"},
           "setAndReplaceExtent":{"type":"boolean", "defaultValue":"<xsl:value-of
-            select="$setAndReplaceExtent"/>"}, "setCRS":{"type":"boolean", "defaultValue":"<xsl:value-of
+            select="$setAndReplaceExtent"/>"},
+          "setCRS":{"type":"boolean", "defaultValue":"<xsl:value-of
             select="$setCRS"/>"},
           <xsl:if test="not($srv)">
             "setDynamicGraphicOverview":{"type":"boolean",
             "defaultValue":"<xsl:value-of select="$setDynamicGraphicOverview"/>"},
           </xsl:if>
+          <xsl:if test="$srv and count($root//srv:containsOperations[
+                      */srv:connectPoint/*/cit:linkage/*/text() = $url]) = 0">
+            "setServiceConnectPoint":{"type":"boolean",
+            "defaultValue":"<xsl:value-of select="$setServiceConnectPoint"/>"},
+          </xsl:if>
           "wmsServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of
-            select="normalize-space(cit:linkage/gco:CharacterString)"/>"}
+            select="$url"/>"}
           }
         </params>
       </suggestion>
@@ -272,7 +286,54 @@
       <xsl:apply-templates select="mri:environmentDescription"/>
       <xsl:apply-templates select="mri:supplementalInformation"/>
 
-      <xsl:apply-templates select="srv:*"/>
+      <xsl:apply-templates select="srv:serviceType
+                                  |srv:serviceTypeVersion
+                                  |srv:accessProperties
+                                  |srv:couplingType
+                                  |srv:coupledResource
+                                  |srv:operatedDataset
+                                  |srv:profile
+                                  |srv:serviceStandard
+                                  |srv:containsOperations
+      "/>
+
+      <xsl:if test="$setServiceConnectPoint
+                    and count(srv:containsOperations[
+                      */srv:connectPoint/*/cit:linkage/*/text() = $wmsServiceUrl]) = 0">
+        <srv:containsOperations>
+          <srv:SV_OperationMetadata>
+            <srv:operationName>
+              <gco:CharacterString>GetCapabilities</gco:CharacterString>
+            </srv:operationName>
+            <srv:distributedComputingPlatform>
+              <srv:DCPList codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DCPList" codeListValue="WebServices"/>
+            </srv:distributedComputingPlatform>
+            <srv:connectPoint>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString><xsl:value-of select="$wmsServiceUrl"/></gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString>OGC:WMS</gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString><xsl:value-of select="geonet:i18n($wms-info-loc, 'connectPoint', $guiLang)"/></gco:CharacterString>
+                </cit:name>
+                <cit:description>
+                  <gco:CharacterString><xsl:value-of select="geonet:i18n($wms-info-loc, 'connectPointDesc', $guiLang)"/></gco:CharacterString>
+                </cit:description>
+                <cit:function>
+                  <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                </cit:function>
+              </cit:CI_OnlineResource>
+            </srv:connectPoint>
+          </srv:SV_OperationMetadata>
+        </srv:containsOperations>
+      </xsl:if>
+
+      <xsl:apply-templates select="srv:operatesOn
+                                  |srv:containsChain
+      "/>
     </xsl:copy>
   </xsl:template>
 
