@@ -1,4 +1,4 @@
-FROM maven:3-jdk-8 as downloader
+FROM maven:3-eclipse-temurin-8 as downloader
 
 WORKDIR /tmp/geonetwork
 COPY . /tmp/geonetwork/
