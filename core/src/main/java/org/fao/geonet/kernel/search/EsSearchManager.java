@@ -396,6 +396,11 @@ public class EsSearchManager implements ISearchManager {
             doc.put("sourceCatalogue", catalog);
         }
 
+        JsonNode errors = doc.get(INDEXING_ERROR_MSG);
+        if (errors != null) {
+            doc.put(INDEXING_ERROR_FIELD, "true");
+        }
+
         String jsonDocument = mapper.writeValueAsString(doc);
 
         if (forceRefreshReaders) {
