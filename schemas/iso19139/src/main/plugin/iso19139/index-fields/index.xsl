@@ -543,7 +543,16 @@
               <xsl:variable name="fieldName" select="@fieldName" />
 
               <xsl:for-each select="$keywords">
-                <xsl:variable name="termValue" select="normalize-space(gmx:Anchor/@xlink:href)" />
+                <!--<xsl:variable name="termValue" select="normalize-space(gmx:Anchor/@xlink:href)" />-->
+
+                <xsl:variable name="termValue"
+                              select="if (gmx:Anchor/@xlink:href[. != ''])
+                                          then gmx:Anchor/@xlink:href
+                                          else util:getKeywordUri(
+                                                (*/text())[1],
+                                                $thesaurusId,
+                                                $allLanguages/lang[@id = 'default']/@value)"/>
+
 
                 <xsl:if test="count($synonymsList/data/term[@value = $termValue]) = 1">
                   <xsl:element name = "{$fieldName}">
