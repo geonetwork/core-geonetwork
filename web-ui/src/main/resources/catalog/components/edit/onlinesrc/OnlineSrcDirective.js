@@ -350,9 +350,10 @@
         '$http',
         '$filter',
         '$log',
+        '$q',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
             gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnUrlUtils, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http, $filter, $log) {
+            $rootScope, $translate, $timeout, $http, $filter, $log, $q) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
