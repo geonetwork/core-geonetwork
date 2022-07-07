@@ -1031,7 +1031,6 @@ public class MetadataSharingApi {
                 throw new Exception(String.format(messages.getString("api.metadata.share.errorMetadataNotValid"), metadata.getUuid()));
             }
         }
-
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
             if (metadataStatus != null) {
@@ -1070,16 +1069,11 @@ public class MetadataSharingApi {
         boolean isReviewOperationAllowedOnMdForUser = accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
         boolean isPublishForbiden = !isMdGroupReviewer && !isAdmin && !isReviewOperationAllowedOnMdForUser;
         if (isPublishForbiden) {
-
-            throw new Exception(String.format("User not allowed to publish the metadata %s. You need to be administrator, or reviewer of the metadata group or reviewer with edit privilege on the metadata.",
-                    metadataUuid));
-
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
-                metadataUuid, messages.getString(accessManager.getReviewerRule()) ));
-
+                metadataUuid));
 
         }
 
