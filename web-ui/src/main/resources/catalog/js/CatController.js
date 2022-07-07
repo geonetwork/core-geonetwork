@@ -1041,6 +1041,7 @@ goog.require('gn_alert');
         'map-viewer',
         'map-search',
         'map-editor',
+        'map-thumbnail',
         'projectionList',
         'switcherProjectionList',
         'cookieWarning',
