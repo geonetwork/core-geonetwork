@@ -294,12 +294,20 @@ goog.require('gn_alert');
             "from": 0,
             "size": 20
           },
+          'moreLikeThisSameType': true,
           'moreLikeThisConfig': {
             "more_like_this" : {
-              "fields" : ["resourceTitleObject.default", "resourceAbstractObject.default", "tag.raw"],
+              "fields" : [
+                "resourceTitleObject.default",
+                "resourceAbstractObject.default",
+                "tag.raw"
+              ],
               "like" : null,
               "min_term_freq" : 1,
-              "max_query_terms" : 12
+              "min_word_length" : 3,
+              "max_query_terms" : 35,
+              // "analyzer": "english",
+              "minimum_should_match": "70%"
             }
           },
           'facetTabField': '',
