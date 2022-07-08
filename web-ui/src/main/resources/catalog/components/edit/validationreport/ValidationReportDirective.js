@@ -88,6 +88,14 @@
                     });
                   });
 
+                  // Move xsd rules to the end of the mandatory rules
+                  var xsdItem = _.find(scope.ruleTypes, function(r) { return r.id == 'xsd'; });
+                  if (xsdItem !== undefined) {
+                    scope.ruleTypes = _.without(scope.ruleTypes, xsdItem);
+
+                    scope.ruleTypes.push(xsdItem);
+                  }
+
                   scope.ruleTypes = scope.ruleTypes.concat(optional);
                   scope.hasSuccess = scope.ruleTypes.length > 0;
                   scope.loading = false;
