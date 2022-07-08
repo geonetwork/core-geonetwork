@@ -97,6 +97,7 @@ public class Settings {
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publicationnotification/emails";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
     public static final String SYSTEM_HARVESTING_MAIL_RECIPIENT = "system/harvesting/mail/recipient";
     public static final String SYSTEM_HARVESTING_MAIL_LEVEL3 = "system/harvesting/mail/level3";

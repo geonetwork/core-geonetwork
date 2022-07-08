@@ -880,6 +880,8 @@
     "system/metadataprivs/usergrouponly": "Only set privileges to user's groups",
     "system/metadataprivs/publicationbyrevieweringroupowneronly": "Publication by users reviewer in record group only",
     "system/metadataprivs/publicationbyrevieweringroupowneronly-help": "Allow publication by administrator and reviewer member of record group. If false, then also all users reviewer in group with editing rights can publish/unpublish a record.",
+    "system/metadataprivs/publicationnotification/emails": "Emails to notify when a metadata is published / unpublished",
+    "system/metadataprivs/publicationnotification/emails-help": "Comma separated list of emails to notify when a metadata is published / unpublished",
     "system/metadatacreate" : "Metadata create",
     "system/metadatacreate/generateUuid" : "Generate UUID",
     "system/metadatacreate/generateUuid-help" : "GeoNetwork assigns a random metadata UUID to the metadata created by a user (default). To assign the metadata UUID manually disable this option and fill the metadata UUID prefix.",

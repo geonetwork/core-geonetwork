@@ -36,6 +36,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility class to send mails. Supports both html and plain text. It usually
@@ -44,6 +46,7 @@ import java.util.Properties;
  * @author delawen
  */
 public class MailUtil {
+    public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
 
     public static final String LOG_MODULE_NAME = "geonetwork";
 
@@ -344,7 +347,7 @@ public class MailUtil {
     private static void configureBasics(String hostName, Integer smtpPort,
                                         String from, String username, String password, Email email, Boolean ssl,
                                         Boolean tls, Boolean ignoreSslCertificateErrors) {
-        if (hostName != null) {
+        if (StringUtils.isNotEmpty(hostName)) {
             email.setHostName(hostName);
         } else {
             throw new IllegalArgumentException(
@@ -480,4 +483,29 @@ public class MailUtil {
 
         email.send();
     }
+
+
+    /**
+     *
+     * @param message  The message to work on
+     * @param uuid     The record UUID
+     * @param language The language (define the index to look into)
+     * @return The message with field substituted by values
+     */
+    public static String compileMessageWithIndexFields(String message, String uuid, String language) {
+        // Search lucene field to replace
+        Matcher m = metadataLuceneField.matcher(message);
+        ArrayList<String> fields = new ArrayList<String>();
+        while (m.find()) {
+            fields.add(m.group(1));
+        }
+
+        // First substitution for variables not stored in the index
+        for (String f : fields) {
+            String mdf = XslUtil.getIndexField(null, uuid, f, language);
+            message = message.replace("{{index:" + f + "}}", mdf);
+        }
+        return message;
+    }
+
 }

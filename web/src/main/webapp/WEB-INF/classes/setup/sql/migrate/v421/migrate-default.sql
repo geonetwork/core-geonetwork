@@ -7,5 +7,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 -- cf. https://www.un.org/en/about-us/member-states/turkiye (run this manually if it applies to your catalogue)
 -- UPDATE metadata SET data = replace(data, 'Turkey', 'Türkiye') WHERE data LIKE '%Turkey%';
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationnotification/emails', '', 0, 9182, 'n');
+
 UPDATE Settings SET value='4.2.1' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
