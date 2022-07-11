@@ -168,7 +168,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                 thiz.stop(Common.Status.INACTIVE);
                                 thiz.running = false;
                             } else {
-                                OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId, log);
+                                OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId, log, true);
 
                                 OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
 
