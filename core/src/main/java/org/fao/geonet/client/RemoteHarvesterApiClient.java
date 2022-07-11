@@ -93,8 +93,8 @@ public class RemoteHarvesterApiClient {
     }
 
 
-    public OrchestratedHarvestProcessStatus retrieveProgress(String processId, Logger log) throws RemoteHarvesterApiClientException {
-        String harvesterProgressUrl = url + String.format("/getstatus/%s", processId);
+    public OrchestratedHarvestProcessStatus retrieveProgress(String processId, Logger log, boolean quick) throws RemoteHarvesterApiClientException {
+        String harvesterProgressUrl = url + String.format("/getstatus/%s?quick=%b", processId,quick);
 
         ClientHttpResponse httpResponse = null;
         HttpGet getMethod = null;
