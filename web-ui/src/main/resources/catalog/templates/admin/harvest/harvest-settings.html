@@ -129,6 +129,10 @@
         <span data-translate="">harvestStatus</span>
       </div>
       <div class="panel-body">
+
+
+        <div><strong><span data-translate="">harvestProcessID</span>:</strong> {{harvesterSelected.info.result.processID}}  <a href class="btn btn-default" data-ng-click="getDetailedInfo(harvesterSelected)" data-translate="">harvestUpdateDetails</a></div>
+
         <!--        <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">-->
         <div id="gn-harvest-harvester-running" class="gn-harvester-running" data-ng-if="harvesterSelected.options.skipHarvesting !== 'true'"
              data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningHarvest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningHarvest === true">-->
@@ -137,14 +141,14 @@
 
           <p data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest === true">harvesterDescription</p>
 
-          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus != null">
+          <div class="panel panel-default" data-ng-if="harvesterSelected.infoDetailed.harvesterStatus.harvestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <p>State: {{harvesterSelected.info.result.harvesterStatus.harvestStatus.state}}</p>
-              <div data-ng-repeat="endpoint in harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints">
-                <p data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints.length > 1">End-point: {{endpoint.expectedNumberOfRecords}}</p>
+              <p>State: {{harvesterSelected.infoDetailed.harvesterStatus.harvestStatus.state}}</p>
+              <div data-ng-repeat="endpoint in harvesterSelected.infoDetailed.harvesterStatus.harvestStatus.endpoints">
+                <p data-ng-if="harvesterSelected.infoDetailed.harvesterStatus.harvestStatus.endpoints.length > 1">End-point: {{endpoint.expectedNumberOfRecords}}</p>
                 <p><span data-translate="">harvestStatusExpected</span>: {{endpoint.expectedNumberOfRecords}}</p>
                 <p><span data-translate="">harvestStatusReceived</span>: {{endpoint.numberOfRecordsReceived}}</p>
               </div>
@@ -157,18 +161,18 @@
 
           <p data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker === true">linkCheckerDescription</p>
 
-          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.linkCheckStatus != null">
+          <div class="panel panel-default" data-ng-if="harvesterSelected.infoDetailed.harvesterStatus.linkCheckStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <span data-translate="">linkCheckerStatusDatasets</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.linkCheckStatus.datasetRecordStatus.nTotalDocuments}}
-              <div data-ng-repeat="statusType in harvesterSelected.info.result.harvesterStatus.linkCheckStatus.datasetRecordStatus.statusTypes">
+              <span data-translate="">linkCheckerStatusDatasets</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.infoDetailed.harvesterStatus.linkCheckStatus.datasetRecordStatus.nTotalDocuments}}
+              <div data-ng-repeat="statusType in harvesterSelected.infoDetailed.harvesterStatus.linkCheckStatus.datasetRecordStatus.statusTypes">
                 <p>{{statusType.statusType}}. <span data-translate="">linkCheckerStatusProcessed</span> {{statusType.nDocuments}}</p>
               </div>
 
-              <span data-translate="">linkCheckerStatusServices</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.linkCheckStatus.serviceRecordStatus.nTotalDocuments}}
-              <div data-ng-repeat="statusType in harvesterSelected.info.result.harvesterStatus.linkCheckStatus.serviceRecordStatus.statusTypes">
+              <span data-translate="">linkCheckerStatusServices</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.infoDetailed.harvesterStatus.linkCheckStatus.serviceRecordStatus.nTotalDocuments}}
+              <div data-ng-repeat="statusType in harvesterSelected.infoDetailed.harvesterStatus.linkCheckStatus.serviceRecordStatus.statusTypes">
                 <p>{{statusType.statusType}}. <span data-translate="">linkCheckerStatusProcessed</span> {{statusType.nDocuments}}</p>
               </div>
             </div>
@@ -181,14 +185,14 @@
 
           <p data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest === true">ingesterDescription</p>
 
-          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.ingestStatus != null">
+          <div class="panel panel-default" data-ng-if="harvesterSelected.infoDetailed.harvesterStatus.ingestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <p><span data-translate="">ingestStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.ingestStatus.totalRecords}}</p>
-              <p><span data-translate="">ingestStatusAdded</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIngested}}</p>
-              <p><span data-translate="">ingestStatusIndexed</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIndexed}}</p>
+              <p><span data-translate="">ingestStatusTotal</span> {{harvesterSelected.infoDetailed.harvesterStatus.ingestStatus.totalRecords}}</p>
+              <p><span data-translate="">ingestStatusAdded</span>  {{harvesterSelected.infoDetailed.harvesterStatus.ingestStatus.numberOfRecordsIngested}}</p>
+              <p><span data-translate="">ingestStatusIndexed</span>  {{harvesterSelected.infoDetailed.harvesterStatus.ingestStatus.numberOfRecordsIndexed}}</p>
 
               <p><span data-translate="">ingestStatusInfo</span></p>
             </div>

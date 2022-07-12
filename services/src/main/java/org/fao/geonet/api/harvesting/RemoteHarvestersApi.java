@@ -38,10 +38,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,12 @@ public class RemoteHarvestersApi {
         @Parameter(
             description = "The harvester processes identifiers"
         )
-        String[] id
+        String[] id,
+        @Parameter(
+            description = "Request quick information"
+        )
+        @RequestParam(required = false, defaultValue = "true")
+            Boolean quick
     ) throws Exception {
         String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
         if (StringUtils.isEmpty(url)) {
@@ -96,7 +98,7 @@ public class RemoteHarvestersApi {
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
 
         for(int i = 0; i < id.length; i++) {
-            OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i], null, false);
+            OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i], null, quick);
             OrchestratedHarvestProcessState state = harvesterProcessStatus.getOrchestratedHarvestProcessState();
 
             RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
@@ -142,7 +144,12 @@ public class RemoteHarvestersApi {
             description = "The harvester process identifier"
         )
         @PathVariable
-            String processId
+            String processId,
+        @Parameter(
+            description = "Request quick information"
+        )
+        @RequestParam(required = false, defaultValue = "true")
+            Boolean quick
     ) throws Exception {
         String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
         if (StringUtils.isEmpty(url)) {
@@ -151,7 +158,7 @@ public class RemoteHarvestersApi {
 
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
-        OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId, null, false);
+        OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId, null, quick);
 
         RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
         remoteHarvesterInfoStatus.processID = harvesterProcessStatus.getProcessID();
