@@ -253,6 +253,17 @@
         }
       };
 
+      $scope.getDetailedInfo = function(harvesterSelected) {
+        var harvesterId = harvesterSelected.info.result.processID;
+
+        $http.get('../api/remoteharvesters/progress?id=' + harvesterId + "&quick=false").success(
+          function(data) {
+            harvesterSelected.infoDetailed = data[0];
+          }).error(function(data) {
+
+        });
+      };
+
       $scope.refreshHarvester = function() {
         $scope.loadHarvesters().then(function() {
           if ($scope.harvesterSelected) {
