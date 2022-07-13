@@ -67,6 +67,12 @@
             scope.registryUrl = url;
           }
 
+          scope.selectAllRegistryLanguages = function(selectValues) {
+            for (var i = 0; i < scope.languages.length; i ++) {
+              scope.selectedLanguages[scope.languages[i].key] = selectValues;
+            }
+          }
+
           function getMainLanguage() {
             for (var p in scope.selectedLanguages) {
               if (scope.selectedLanguages.hasOwnProperty(p) &&
