@@ -38,6 +38,8 @@
     </label>
     <div class="row">
       <div class="col-md-6 gn-nopadding-left">
+        <a href data-ng-click="selectAllRegistryLanguages(true)" data-translate="">selectAll</a> |
+        <a href data-ng-click="selectAllRegistryLanguages(false)" data-translate="">selectNone</a>
         <ul class="list-group gn-nopadding-right">
           <li data-ng-repeat="l in languages" class="list-group-item">
             <label><input type="checkbox"
