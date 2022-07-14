@@ -408,6 +408,13 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
      */
     public OperResult stop(final Status newStatus) throws SchedulerException {
+        log.warning("AbstractHarvester#stop called");
+        try{
+            throw new Exception("AbstractHarvester#stop called for stack trace");
+        }
+        catch (Exception e){
+            log.error(e);
+        }
         this.cancelMonitor.set(true);
 
         JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
