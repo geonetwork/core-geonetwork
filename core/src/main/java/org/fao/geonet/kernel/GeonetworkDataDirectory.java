@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -46,10 +46,6 @@ import java.util.Iterator;
  * support files used by GeoNetwork for various purposes (eg. Lucene index, spatial index, logos).
  */
 public class GeonetworkDataDirectory {
-    /**
-     * The default GeoNetwork data directory location.
-     */
-//    static final String GEONETWORK_DEFAULT_DATA_DIR = Joiner.on("/").join(GEONETWORK_DEFAULT_DATA_DIR_PARTS);
     /**
      * A suffix of the keys used to look up paths in system.properties or system.env or in Servlet
      * context.
@@ -455,6 +451,10 @@ public class GeonetworkDataDirectory {
                     + " via bean properties, not looking up");
             }
         } else {
+            dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
+        }
+        if (dir == null) {
+            envKey = Geonet.GEONETWORK + key;
             dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
         }
         if (dir == null) {
