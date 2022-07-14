@@ -193,9 +193,12 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
 
-                                    thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
 
-                                    thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
+                                    if (!state.equals(OrchestratedHarvestProcessState.ERROR) &&
+                                        !state.equals(OrchestratedHarvestProcessState.USERABORT)) {
+                                        thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
+                                        thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
+                                    }
 
                                     thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;
