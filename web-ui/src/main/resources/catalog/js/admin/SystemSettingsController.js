@@ -174,6 +174,12 @@
       $scope.loadTplReport = null;
       $scope.atomFeedType = '';
 
+      $scope.isGroupPublicationNotificationLevel = false;
+
+      $scope.changePublicationNotificationLevel = function (value) {
+        $scope.isGroupPublicationNotificationLevel = (value === 'recordGroupEmail');
+      }
+
       /**
          * Load catalog settings as a flat list and
          * extract firs and second level sections.
@@ -224,6 +230,9 @@
 
                 } else if ($scope.settings[i].name == 'metadata/workflow/draftWhenInGroup') {
                   $scope.draftInAllGroups = ($scope.settings[i].value == '.*');
+
+                } else if ($scope.settings[i].name == 'system/metadataprivs/publication/notificationLevel') {
+                  $scope.isGroupPublicationNotificationLevel = ($scope.settings[i].value === 'recordGroupEmail');
                 }
 
                 var tokens = $scope.settings[i].name.split('/');
