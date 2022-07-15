@@ -52,6 +52,7 @@ import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.metadata.DefaultStatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -60,6 +61,7 @@ import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.WorkflowUtil;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,7 +79,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS;
+import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -283,7 +285,7 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
-        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS));
+        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request,
@@ -1053,7 +1055,7 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
-        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS));
+        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), true,null, request,
@@ -1095,7 +1097,7 @@ public class MetadataSharingApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
-            boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS));
+            boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
             for (String uuid : records) {
                 AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
@@ -1186,9 +1188,44 @@ public class MetadataSharingApi {
     }
 
     private void notifyPublication(ServiceContext context, HttpServletRequest request, Map<String, Boolean> metadataUuidsToNotifyPublication) {
-        String notificationEmails = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS);
+        List<String> toAddress = new ArrayList<>();
 
-        List<String> toAddress = Arrays.asList(notificationEmails.split(","));
+        String notificationSetting = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
+        if (StringUtils.isNotEmpty(notificationSetting)) {
+            StatusValueNotificationLevel notificationLevel =
+                StatusValueNotificationLevel.valueOf(notificationSetting);
+            if (notificationLevel != null) {
+                if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
+                    List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
+                       Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
+
+                   toAddress = groupToNotify.stream()
+                       .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
+                       .map(Group::getEmail)
+                       .collect(Collectors.toList());
+                } else {
+                    Set<Integer> metadataIds = new HashSet<>();
+                    for (String key : metadataUuidsToNotifyPublication.keySet()) {
+                        try {
+                            metadataIds.add( Integer.parseInt(metadataUtils.getMetadataId(key)));
+                        } catch (Exception ex) {
+                            // Ignore
+                        }
+                    }
+
+                    List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
+                        metadataIds,
+                        null);
+
+                   toAddress = userToNotify.stream()
+                        .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
+                        .map(User::getEmail)
+                        .collect(Collectors.toList());
+
+                }
+            }
+        }
+
 
         if (toAddress.size() > 0) {
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());

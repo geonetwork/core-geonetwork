@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
@@ -329,6 +330,18 @@ public class DefaultStatusActions implements StatusActions {
         }
         return users;
     }
+
+    static public List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+        List<Group> groups = new ArrayList<>();
+
+        if ((notificationLevel != null) && (notificationLevel == StatusValueNotificationLevel.recordGroupEmail)) {
+            groups = groupRepository.findAll(GroupSpecs.inGroupNames(groupNames));
+        }
+
+        return groups;
+    }
+
 
     /**
      * Unset all operations on 'All' Group. Used when status

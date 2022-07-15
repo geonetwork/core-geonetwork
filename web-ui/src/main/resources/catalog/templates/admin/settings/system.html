@@ -224,6 +224,12 @@
                               ng-selected="l === s.value">{{l}}
                       </option>
                     </select>
+                    <select data-ng-switch-when="system/metadataprivs/publication/notificationLevel" class="form-control"
+                            name="{{s.name}}">
+                      <option data-ng-repeat="l in notificationLevels" value="{{l}}"
+                              ng-selected="l === s.value">{{l}}
+                      </option>
+                    </select>
                     <select data-ng-switch-when="system/oai/mdmode" class="form-control"
                             name="{{s.name}}">
                       <option value="1"
