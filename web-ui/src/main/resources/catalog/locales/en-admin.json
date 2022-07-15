@@ -863,6 +863,8 @@
     "system/localrating": "Metadata rating",
     "system/localrating/enable": "Local rating",
     "system/localrating/enable-help": "If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).",
+    "system/localrating/notificationGroups": "Groups to notify in case of rating",
+    "system/localrating/notificationGroups-help": "List of groups, separated by the char |, to notify in case of rating (for 'Notify the group(s) emails' notification level)",
     "system/metadata": "Metadata configuration",
     "system/metadata/prefergrouplogo": "Prefer Group Logo",
     "system/users": "Groups & users",

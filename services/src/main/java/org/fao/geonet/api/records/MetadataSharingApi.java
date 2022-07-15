@@ -1188,13 +1188,13 @@ public class MetadataSharingApi {
     }
 
     private void notifyPublication(ServiceContext context, HttpServletRequest request, Map<String, Boolean> metadataUuidsToNotifyPublication) {
-        List<String> toAddress = new ArrayList<>();
-
         String notificationSetting = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
         if (StringUtils.isNotEmpty(notificationSetting)) {
             StatusValueNotificationLevel notificationLevel =
                 StatusValueNotificationLevel.valueOf(notificationSetting);
             if (notificationLevel != null) {
+                List<String> toAddress;
+
                 if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
                     List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
                        Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
@@ -1223,43 +1223,42 @@ public class MetadataSharingApi {
                         .collect(Collectors.toList());
 
                 }
-            }
-        }
 
+                if (toAddress.size() > 0) {
+                    Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+                    ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        if (toAddress.size() > 0) {
-            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+                    String subject = String.format(
+                        messages.getString("metadata_published_subject"),
+                        sm.getSiteName());
 
-            String subject = String.format(
-                messages.getString("metadata_published_subject"),
-                sm.getSiteName());
+                    String message = messages.getString("metadata_published_text");
+                    String recordPublishedMessage = messages.getString("metadata_published_record_text")
+                        .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+                    String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
+                        .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
 
-            String message = messages.getString("metadata_published_text");
-            String recordPublishedMessage = messages.getString("metadata_published_record_text")
-                .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
-            String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
-                .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+                    StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
 
-            StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
+                    metadataUuidsToNotifyPublication.forEach( (key, value) -> {
+                        if (value) {
+                            listOfProcessedMetadataMessage.append(
+                                MailUtil.compileMessageWithIndexFields(recordPublishedMessage, key, context.getLanguage()));
+                        } else {
+                            listOfProcessedMetadataMessage.append(
+                                MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, key, context.getLanguage()));
+                        }
+                    });
 
-            metadataUuidsToNotifyPublication.forEach( (key, value) -> {
-                if (value) {
-                    listOfProcessedMetadataMessage.append(
-                        MailUtil.compileMessageWithIndexFields(recordPublishedMessage, key, context.getLanguage()));
-                } else {
-                    listOfProcessedMetadataMessage.append(
-                        MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, key, context.getLanguage()));
+                    String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
+
+                    // Send mail to notify about metadata publication / un-publication
+                    try {
+                        MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
+                    } catch (IllegalArgumentException ex) {
+                        Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+                    }
                 }
-            });
-
-            String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
-
-            // Send mail to notify about metadata publication / un-publication
-            try {
-                MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
-            } catch (IllegalArgumentException ex) {
-                Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
             }
         }
     }

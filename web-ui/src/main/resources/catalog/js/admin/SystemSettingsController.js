@@ -175,6 +175,11 @@
       $scope.atomFeedType = '';
 
       $scope.isGroupPublicationNotificationLevel = false;
+      $scope.isGroupLocalRatingNotificationLevel = false;
+
+      $scope.changeLocalRatingNotificationLevel = function (value) {
+        $scope.isGroupLocalRatingNotificationLevel = (value === 'recordGroupEmail');
+      }
 
       $scope.changePublicationNotificationLevel = function (value) {
         $scope.isGroupPublicationNotificationLevel = (value === 'recordGroupEmail');
@@ -233,6 +238,9 @@
 
                 } else if ($scope.settings[i].name == 'system/metadataprivs/publication/notificationLevel') {
                   $scope.isGroupPublicationNotificationLevel = ($scope.settings[i].value === 'recordGroupEmail');
+
+                } else if ('system/localrating/notificationLevel') {
+                  $scope.isGroupLocalRatingNotificationLevel = ($scope.settings[i].value === 'recordGroupEmail');
                 }
 
                 var tokens = $scope.settings[i].name.split('/');
