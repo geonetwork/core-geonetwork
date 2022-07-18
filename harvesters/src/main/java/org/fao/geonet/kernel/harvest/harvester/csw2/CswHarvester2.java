@@ -165,6 +165,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
                                 check = false;
+                                log.warning("Harvester cancelled. Stopping to set it as INACTIVE.");
                                 thiz.stop(Common.Status.INACTIVE);
                                 thiz.running = false;
                             } else {
@@ -199,6 +200,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
                                         thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
                                     }
+
+                                    log.warning("Harvester finished with state" + state.toString() + ". Stopping to set it as INACTIVE.");
 
                                     thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;

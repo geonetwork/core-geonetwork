@@ -409,6 +409,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      */
     public OperResult stop(final Status newStatus) throws SchedulerException {
         log.warning("AbstractHarvester#stop called");
+        log.warning("org.fao.geonet.kernel.harvest.harvester.AbstractHarvester called from ip: "+context.getIpAddress());
+
         try{
             throw new Exception("AbstractHarvester#stop called for stack trace");
         }
@@ -705,6 +707,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         }
 
                         if (getParams().isOneRunOnly()) {
+                            log.warning("Harvester set to run once. Stopping to set it as INACTIVE");
                             stop(Status.INACTIVE);
                         }
                     } catch (InvalidParameterValueEx e) {
