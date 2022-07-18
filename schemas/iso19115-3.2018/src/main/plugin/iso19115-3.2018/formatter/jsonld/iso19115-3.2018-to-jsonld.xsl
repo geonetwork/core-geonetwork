@@ -63,8 +63,6 @@
    TODO: Add support to translation https://bib.schema.org/workTranslation
    -->
 
-
-
   <!-- Used for json escape string -->
   <xsl:import href="common/index-utils.xsl"/>
 
@@ -307,10 +305,16 @@
         <xsl:variable name="p" select="normalize-space(cit:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />",
-        "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>",
-        "name": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:name"/>,
-        "description": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:description"/>
+        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />"
+        <xsl:if test="cit:protocol">,
+          "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>"
+        </xsl:if>
+        <xsl:if test="cit:name">,
+          "name": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:name"/>
+        </xsl:if>
+        <xsl:if test="cit:description">,
+          "description": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:description"/>
+        </xsl:if>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
