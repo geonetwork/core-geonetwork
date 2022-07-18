@@ -333,6 +333,7 @@
               highlight: true
             }, {
               displayKey: 'username',
+              limit: 100,
               templates: {
                 suggestion: function(datum) {
                   return '<p>' + datum.name + ' ' + datum.surname +
