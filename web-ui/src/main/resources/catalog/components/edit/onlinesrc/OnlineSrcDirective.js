@@ -1393,7 +1393,7 @@
 
                         if (descs.length > 0) {
                           angular.forEach(scope.mdLangs, function(value,key){
-                            scope.params.desc[langCode] = descs.join(',');
+                            scope.params.desc[value] = descs.join(',');
                           });
                         }
                       } else {
