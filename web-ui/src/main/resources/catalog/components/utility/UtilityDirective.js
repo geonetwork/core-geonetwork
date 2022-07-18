@@ -61,6 +61,19 @@
     }
   ]);
 
+  module.directive('gnIndexErrorPanel', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/indexerrorpanel.html',
+        link: function(scope, element, attrs) {
+
+        }
+      };
+    }
+  ]);
 
   module.directive('gnBatchEditExamplesSelector', [
     '$http', 'gnGlobalSettings', 'gnLangs',
