@@ -249,7 +249,6 @@ public class InspireAtomUtil {
                     f.getChildText("feedUrl"));
 
                 datasetsInformation.add(datasetFeedInfo);
-                datasetsInformation.add(datasetFeedInfo);
             }
         }
 
