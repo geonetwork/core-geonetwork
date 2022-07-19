@@ -1670,7 +1670,10 @@ goog.require('gn_alert');
         var statusToApply = {};
         $.extend(statusToApply, defaultStatus, status);
 
-        gnAlertService.addAlert(statusToApply, statusToApply.timeout);
+        
+        if ($scope.showHealthIndexError !== true) {
+          gnAlertService.addAlert(statusToApply, statusToApply.timeout);
+        }
       });
 
       gnSessionService.scheduleCheck($scope.user);
