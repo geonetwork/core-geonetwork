@@ -361,5 +361,5 @@
   "atom.updated": "Updated",
   "setServiceConnectPoint": "Add service connect point",
   "mimeType": "Format",
-  "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
+  "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first."
 }
