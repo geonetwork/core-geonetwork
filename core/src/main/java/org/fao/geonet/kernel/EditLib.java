@@ -500,13 +500,6 @@ public class EditLib {
                 value.getNodeValue().getName()
                     .equals(SpecialUpdateTags.CREATE);
 
-            if (isValueXml &&
-                xpathProperty.matches(".*@[^/\\]]+")) {
-                throw new AssertionError(String.format(
-                    "Cannot set Xml on an attribute. Xpath:'%s' value: '%s'.",
-                    xpathProperty, Xml.getString(value.getNodeValue())
-                ));
-            }
             LOGGER_ADD_ELEMENT.debug("Inserting at location {} the snippet or value {}", xpathProperty, value);
 
             xpathProperty = cleanRootFromXPath(xpathProperty, metadataRecord);

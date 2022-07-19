@@ -32,13 +32,13 @@
   goog.require('gn_related_directive');
 
 
-  var fileUploader = [
+  var fileUploaderList = [
     'gnOnlinesrc', 'gnFileStoreService', 'gnCurrentEdit', '$rootScope', '$translate',
     function(gnOnlinesrc, gnFileStoreService, gnCurrentEdit, $rootScope, $translate) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/edit/onlinesrc/' +
-          'partials/file-uploader.html',
+          'partials/fileUploader.html',
         scope: {},
         link: function (scope, element, attrs) {
           scope.relations = {};
@@ -52,6 +52,8 @@
           scope.type = attrs['type'] || scope.defaultType;
           scope.panelMode = angular.isDefined(attrs['title'])
             && attrs['title'] === '' ? false : true;
+          scope.fileTypes = angular.isDefined(attrs['fileTypes'])
+            ? attrs['fileTypes'] : '';
           scope.protocol = attrs['protocol'] || 'WWW:DOWNLOAD';
           scope.isOverview = scope.type === scope.defaultType;
           scope.title = attrs['title'] || (scope.isOverview ? 'overview' : 'download');
@@ -75,58 +77,23 @@
               });
           };
 
-          var uploadFile = function() {
-            scope.queue = [];
-            scope.filestoreUploadOptions = {
-              autoUpload: true,
-              url: '../api/records/' + gnCurrentEdit.uuid +
-                '/attachments?visibility=public',
-              dropZone: $('#gn-overview-dropzone'),
-              singleUpload: true,
-              // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
-              done: uploadResourceSuccess,
-              fail: uploadResourceFailed,
-              headers: {'X-XSRF-TOKEN': $rootScope.csrf}
-            };
-
-          };
-
-          var linkOverviewToRecord = function (link) {
-            var params = scope.isOverview ? {
+          scope.linkUploadedFileToRecord = function (link) {
+            var tokens = link.url.split('.'),
+              params = scope.isOverview ? {
               thumbnail_url: link.url,
               thumbnail_desc: link.name || '',
               process: 'thumbnail-add',
               id: gnCurrentEdit.id
             } : {
               url: link.url,
-              name: link.name || '',
               protocol: scope.protocol,
               process: 'onlinesrc-add',
-              id: gnCurrentEdit.id
-            };
+              id: gnCurrentEdit.id,
+              mimeType: tokens.length ? tokens.pop().toLowerCase() : '',
+              mimeTypeStrategy: 'mimeType',
+              name: link.name || link.url.split('/').pop() || ''
+              };
             gnOnlinesrc.add(params);
-          };
-
-          var uploadResourceSuccess = function(e, data) {
-            $rootScope.$broadcast('gnFileStoreUploadDone');
-            scope.clear(scope.queue);
-            linkOverviewToRecord(data.response().jqXHR.responseJSON);
-          };
-
-          scope.$on('gnFileStoreUploadDone', scope.loadRelations);
-
-          var uploadResourceFailed = function(e, data) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('resourceUploadError'),
-              error: {
-                message: data.errorThrown +
-                angular.isDefined(
-                  data.response().jqXHR.responseJSON.message) ?
-                  data.response().jqXHR.responseJSON.message : ''
-              },
-              timeout: 0,
-              type: 'danger'});
-            scope.clear(scope.queue);
           };
 
           scope.removeFile = function(file) {
@@ -143,16 +110,19 @@
                 gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
                   loadRelations();
                 });
+              }, function (r) {
+                  // Can be missing in filestore, then remove the dead link from the record
+                  gnOnlinesrc[scope.isOverview ? 'removeThumbnail' : 'removeOnlinesrc'](file).then(function() {
+                    loadRelations();
+                  });
               });
             }
-
           };
           function init(n, o) {
             if (angular.isUndefined(scope.uuid) ||
               n != o) {
               scope.uuid = n;
               loadRelations();
-              uploadFile();
             }
           }
           scope.$watch('gnCurrentEdit.uuid', init);
@@ -346,8 +316,9 @@
    * name and description. See onlineSrcList directive
    * or full editor mode.
    */
-    .directive('gnFileUploader', fileUploader)
-    .directive('gnOverviewManager', fileUploader)
+    .directive('gnFileUploader', fileUploaderList)
+    .directive('gnOverviewManager', fileUploaderList)
+
 
   /**
    * @ngdoc directive
@@ -377,9 +348,11 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
-        'gnConfigService', '$filter', 'gnConfig',
-        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter, gnConfig) {
+      .directive('gnOnlinesrcList', [
+          'gnOnlinesrc', 'gnCurrentEdit', 'gnRelatedResources',
+          'gnConfigService', '$filter', 'gnConfig',
+        function(gnOnlinesrc, gnCurrentEdit, gnRelatedResources,
+                 gnConfigService, $filter, gnConfig) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -390,6 +363,7 @@
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
+              scope.gnRelatedResources = gnRelatedResources;
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
@@ -692,7 +666,7 @@
                 var initThumbnailMaker = function() {
 
                   if (!scope.loaded) {
-                    scope.map = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+                    scope.map = gnMapsManager.createMap(gnMapsManager.GENERATE_THUMBNAIL_MAP);
 
                     // scope.map = new ol.Map({
                     //   layers: [],
@@ -721,6 +695,12 @@
                     },
                     "protocol": {
                       "isMultilingual": false
+                    },
+                    "mimeType": {
+                      "isMultilingual": false
+                    },
+                    "mimeTypeStrategy": {
+                      "value": "mimeType"
                     },
                     "name": {},
                     "desc": {},
@@ -908,6 +888,8 @@
                         linkType: typeConfig,
                         url: fields.url,
                         protocol: linkToEdit.protocol,
+                        mimeType: linkToEdit.mimeType,
+                        mimeTypeStrategy: 'mimeType',
                         name: fields.name,
                         desc: fields.desc,
                         applicationProfile: linkToEdit.applicationProfile,
@@ -918,6 +900,8 @@
                       scope.editingKey = null;
                       scope.params.linkType = typeConfig;
                       scope.params.protocol = null;
+                      scope.params.mimeType = '';
+                      scope.mimeTypeStrategy = 'mimeType';
                       scope.params.name= '';
                       scope.params.desc= '';
                       initMultilingualFields();
@@ -1004,6 +988,7 @@
                   if (scope.params) {
                     scope.params.url = '';
                     scope.params.protocol = '';
+                    scope.params.mimeType = '';
                     scope.params.function = '';
                     scope.params.applicationProfile = '';
                     resetProtocol();
@@ -1015,6 +1000,7 @@
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
                     if (scope.clearFormOnProtocolChange) {
+                      scope.params.mimeType = '';
                       scope.params.name = '';
                       scope.params.desc = '';
                       initMultilingualFields();
@@ -1267,7 +1253,7 @@
                       selectedLayersNames = params[scope.addLayersInUrl].split(',');
                     }
 
-                    scope.layers.forEach(function(l) {
+                    scope.layers.forEach && scope.layers.forEach(function(l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
                       }
@@ -1275,9 +1261,10 @@
 
                     scope.params.url = gnUrlUtils.remove(scope.params.url, [scope.addLayersInUrl], true);
                   } else {
-                    var selectedLayersNames = scope.params.name.split(',');
+                    var selectedLayersNames =
+                      angular.isObject(scope.params.name) ? [] : scope.params.name.split(',');
                     scope.params.selectedLayers = [];
-                    scope.layers.forEach(function(l) {
+                    scope.layers.forEach && scope.layers.forEach(function(l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
                       }
@@ -1297,6 +1284,7 @@
                     if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
+                      scope.params.mimeType = '';
                       scope.params.name = '';
                       scope.params.desc = '';
                     }

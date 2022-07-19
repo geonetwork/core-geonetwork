@@ -210,6 +210,11 @@ public class MetadataInsertDeleteApi {
             approved=false;
         }
 
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
+            checkUserProfileToDeletePublishedMetadata(userSession);
+        }
+
         store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
@@ -240,6 +245,7 @@ public class MetadataInsertDeleteApi {
         Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
@@ -250,6 +256,17 @@ public class MetadataInsertDeleteApi {
                 || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
+
+                if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
+                    try {
+                        checkUserProfileToDeletePublishedMetadata(userSession);
+                    } catch (NotAllowedException ex) {
+                        report.addMetadataInfos(metadata, "The user has no permissions to delete published metadata.");
+                        continue;
+                    }
+                }
+
+
                 MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
                 ApplicationContextHolder.get().publishEvent(preRemoveEvent);
 
@@ -459,7 +476,7 @@ public class MetadataInsertDeleteApi {
         String metadataUuid = null;
 
 
-        if (generateUuid && !StringUtils.isEmpty(targetUuid)) {
+        if (!generateUuid && !StringUtils.isEmpty(targetUuid)) {
             // Check if the UUID exists
             try {
                 ApiUtils.getRecord(targetUuid);
@@ -976,6 +993,24 @@ public class MetadataInsertDeleteApi {
             // Is the user profile is higher than the profile allowed to import metadata?
             if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to import metadata.");
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the user profile is allowed to import metadata.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToDeletePublishedMetadata(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+                throw new NotAllowedException("The user has no permissions to delete published metadata.");
             }
         }
 

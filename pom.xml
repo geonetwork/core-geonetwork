@@ -910,7 +910,7 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.20</version>
+        <version>8.0.29</version>
       </dependency>
       <dependency>
          <groupId>com.oracle.database.jdbc</groupId>
@@ -1542,6 +1542,9 @@
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.7.0</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>
+
+    <sonar.organization>geonetwork</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>

@@ -116,7 +116,7 @@ public class CMISStore extends AbstractStore {
         return resourceList;
     }
 
-    private MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
+    protected MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId,
                                                        Document document, int metadataId, boolean approved) {
 
@@ -134,7 +134,7 @@ public class CMISStore extends AbstractStore {
             settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
     }
 
-    private static String getFilename(final String key) {
+    protected static String getFilename(final String key) {
         final String[] splittedKey = key.split("/");
         return splittedKey[splittedKey.length - 1];
     }
@@ -160,7 +160,7 @@ public class CMISStore extends AbstractStore {
         throw new UnsupportedOperationException("CMISStore does not support getResourceInternal.");
     }
 
-    private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + cmisConfiguration.getFolderDelimiter() + visibility.toString() + cmisConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
@@ -173,7 +173,7 @@ public class CMISStore extends AbstractStore {
         return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
     }
 
-    private MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
+    protected MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> additionalProperties)
         throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
@@ -181,9 +181,14 @@ public class CMISStore extends AbstractStore {
 
         Map<String, Object> properties = new HashMap<String, Object>();
         setCmisMetadataUUIDPrimary(properties, metadataUuid);
+
+        OperationContext oc = cmisUtils.createOperationContext();
+        // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+        oc.setRenditionFilterString("");
+
         CmisObject cmisObject;
         try {
-            cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
+            cmisObject = cmisConfiguration.getClient().getObjectByPath(key, oc);
         } catch (Exception e) {
             cmisObject = null;
         }
@@ -212,14 +217,14 @@ public class CMISStore extends AbstractStore {
             doc, metadataId, approved);
     }
 
-    private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
+    protected void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
         if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) &&
             !cmisConfiguration.getCmisMetadataUUIDPropertyName().contains(cmisConfiguration.getSecondaryPropertySeparator())) {
             properties.put(cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
         }
     }
 
-    private void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
+    protected void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
         if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) &&
             cmisConfiguration.getCmisMetadataUUIDPropertyName().contains(cmisConfiguration.getSecondaryPropertySeparator())) {
             String[] splitPropertyNames = cmisConfiguration.getCmisMetadataUUIDPropertyName().split(Pattern.quote(cmisConfiguration.getSecondaryPropertySeparator()));
@@ -375,7 +380,7 @@ public class CMISStore extends AbstractStore {
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
-    private boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
+    protected boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
                                    final String resourceId) throws Exception {
         final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
@@ -442,6 +447,10 @@ public class CMISStore extends AbstractStore {
         try {
             Folder sourceParentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
 
+            OperationContext oc = cmisUtils.createOperationContext();
+            // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+            oc.setRenditionFilterString("");
+
             Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null);
 
 
@@ -458,7 +467,7 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    private Map<String, Object> getSecondaryProperties(Document document) {
+    protected Map<String, Object> getSecondaryProperties(Document document) {
         String aspectId=null;
         Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
         if (aspectProperty != null) {
@@ -478,7 +487,7 @@ public class CMISStore extends AbstractStore {
     }
 
 
-    private String getMetadataDir(ServiceContext context, final int metadataId) {
+    protected String getMetadataDir(ServiceContext context, final int metadataId) {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);
@@ -497,7 +506,7 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    private Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
+    protected Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
         //If we not already figured out the base metadata dir then lets figure it out.
         if (baseMetadataDir == null) {
             Path systemFullDir = getDataDirectory(context).getSystemDataDir();
@@ -542,7 +551,7 @@ public class CMISStore extends AbstractStore {
      * http://localhost:8080/livelink/cs?func=ll&objaction=overview&objid={cmisobjectid}&vernum={version}
      */
 
-    private MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
+    protected MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
                                                                                                          int metadataId,
                                                                                                          final String metadataUuid,
                                                                                                          final MetadataResourceVisibility visibility,
@@ -653,7 +662,7 @@ public class CMISStore extends AbstractStore {
         };
     }
 
-    private static class ResourceHolderImpl implements ResourceHolder {
+    protected static class ResourceHolderImpl implements ResourceHolder {
         private CmisObject cmisObject;
         private Path tempFolderPath;
         private Path path;

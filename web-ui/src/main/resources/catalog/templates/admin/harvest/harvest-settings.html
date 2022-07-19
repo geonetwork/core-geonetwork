@@ -125,10 +125,11 @@
   </div>
 
 
-  <div class="col-lg-7" data-ng-hide="harvesterSelected['@id'] == null"
-       data-ng-search-form="">
+  <div class="col-lg-7"
+       data-ng-hide="harvesterSelected['@id'] == null">
 
-    <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
+    <tabset id="harvester-tabset"
+            type="pills" justified="false" role="tablist">
       <tab heading="{{'settings' | translate}}"
            role="tab"
            active="true">
@@ -339,23 +340,18 @@
            data-ng-show="searchResults.count > 0"
            role="tab">
         <div id="gn-harvest-records-panel"
+             data-ng-search-form=""
              class="gn-margin-top">
 
           <div class="panel panel-default">
             <div class="panel-heading">
               <span data-translate="">summary</span>
+              <strong>
+                {{ searchResults.count }}
+                <span data-translate="">metadataRecords</span>
+              </strong>
             </div>
             <div class="panel-body">
-              <div class="row gn-margin-bottom">
-                <ul class="col-md-4 text-center list-group gn-nomargin-bottom">
-                  <li class="list-group-item">
-                    <h1><i class="fa fa-file-text-o"></i> {{ searchResults.count }}</h1>
-                    <p data-translate="">
-                      metadataRecords
-                    </p>
-                  </li>
-                </ul>
-              </div>
               <div class="row">
                 <div data-ng-show="searchResults.records.length > 0"
                      class="gn-harvester-facets"
@@ -363,7 +359,8 @@
               </div>
             </div>
           </div>
-          <div class="panel panel-default">
+          <div class="panel panel-default"
+               data-ng-if="searchResults.count > 0">
             <div class="panel-heading">
               <span id="gn-harvest-records-title" data-translate="">harvesterRecords</span>
             </div>
@@ -395,6 +392,7 @@
               </div>
 
 
+
               <div data-search-filter-tags
                    data-dimensions="searchResults.facets"
                    ng-if="searchResults.facets">
@@ -403,7 +401,6 @@
               <!-- This information is not relevant for GeoNetwork protocol
                   which attach records to the source catalogs which has different
                   UUIDs. TODO -->
-
               <div data-gn-search-form-results=""
                    data-gn-search-form-results-mode="title"
                    data-search-results="searchResults"
@@ -411,7 +408,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </tab>
     </tabset>

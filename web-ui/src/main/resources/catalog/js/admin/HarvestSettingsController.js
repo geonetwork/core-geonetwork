@@ -34,6 +34,7 @@
       ['ui.bootstrap.typeahead', 'gn_category',
        'gn_importxsl']);
 
+
   /**
    * GnHarvestSettingsController provides management interface
    * for harvest settings.
@@ -43,11 +44,11 @@
     '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
     'Metadata', 'gnMapsManager', 'gnGlobalSettings', 'gnConfig',
-    'gnClipboard',
+    'gnClipboard', 'gnSearchSettings',
     function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
              Metadata, gnMapsManager, gnGlobalSettings, gnConfig,
-             gnClipboard) {
+             gnClipboard, gnSearchSettings) {
 
       $scope.searchObj = {
         internal: true,
@@ -365,9 +366,7 @@
           loadHistory();
 
           // Retrieve records in that harvester
-          angular.extend($scope.searchObj.params, {
-            harvesterUuid: $scope.harvesterSelected.site.uuid
-          });
+          $scope.searchObj.params.harvesterUuid = $scope.harvesterSelected.site.uuid;
           $scope.$broadcast('resetSearch', $scope.searchObj.params);
         });
       };
@@ -648,7 +647,15 @@
       };
 
       $scope.addBatchEdits = function(e) {
-        var array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        var array;
+        try {
+          array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        } catch (e) {
+          console.warn("Harvester batch edit config is not a valid JSON.",
+            $scope.harvesterSelected.content.batchEdits,
+            e);
+          array = [];
+        }
         if (angular.isArray(array)) {
           e.value = '<' + e.insertMode + '>' +
                     e.value +

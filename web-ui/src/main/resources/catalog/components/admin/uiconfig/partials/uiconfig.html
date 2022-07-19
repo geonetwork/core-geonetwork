@@ -543,7 +543,7 @@
 
 
               <!-- boolean -->
-              <div data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps"
+              <div data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink"
                    data-ng-switch-when-separator="|">
                 <input type="checkbox"
                        id="{{key}}-checkbox"
@@ -710,6 +710,12 @@
                 </div>
               </div>
               <div data-ng-switch-when="map-editor">
+                <h3>{{('ui-' + key) | translate}}</h3>
+                <gn-ui-config-help/>
+                <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
+                </div>
+              </div>
+              <div data-ng-switch-when="map-thumbnail">
                 <h3>{{('ui-' + key) | translate}}</h3>
                 <gn-ui-config-help/>
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">

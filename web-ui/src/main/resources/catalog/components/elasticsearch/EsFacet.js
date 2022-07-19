@@ -120,7 +120,8 @@
             'overview.*',
             'resource*',
             'isTemplate',
-            'valid'
+            'valid',
+            'index*'
           ]
         },
         track_total_hits: true
@@ -211,16 +212,44 @@
         }
       },
       recordsWithErrors: {
+        
         facets: {
-          "indexingErrorMsg": {
-            "terms": {
-              "field": "indexingErrorMsg.keyword",
-              "size": 10
+          'indexingErrorType': {
+            'filters': {
+              'filters': {
+                'errors': {
+                  'query_string': {
+                    'query': '-indexingErrorMsg:/Warning.*/'
+                  }
+                },
+                'warning': {
+                  'query_string': {
+                    'query': '+indexingErrorMsg:/Warning.*/'
+                  }
+                }
+              }
             }
           },
-          "isHarvested": {
-            "terms": {
-              "field": "isHarvested"
+          'isHarvested': {
+            'terms': {
+              'field': 'isHarvested'
+            }
+          },
+          'indexingErrorMsg': {
+            'terms': {
+              'field': 'indexingErrorMsg',
+              'size': 10,
+              'exclude': 'Warning.*'
+            }
+          },
+          'indexingWarningMsg': {
+            'terms': {
+              'field': 'indexingErrorMsg',
+              'size': 10,
+              'include': 'Warning.*'
+            },
+            'meta': {
+              'displayFilter': false
             }
           }
         },

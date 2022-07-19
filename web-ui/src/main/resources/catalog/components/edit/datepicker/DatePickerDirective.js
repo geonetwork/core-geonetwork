@@ -55,7 +55,8 @@
              tagName: '@',
              indeterminatePosition: '@',
              required: '@',
-             hideTime: '@'
+             hideTime: '@',
+             hideDateMode: '@'
            },
            templateUrl: '../../catalog/components/edit/datepicker/partials/' +
            'datepicker.html',
@@ -67,6 +68,8 @@
              scope.dateTypeSupported = Modernizr.inputtypes.date;
              scope.isValidDate = true;
              scope.hideTime = scope.hideTime == 'true';
+             // Hide the date mode picker: date / datetime / month-year / year
+             scope.hideDateMode = scope.hideDateMode == 'true';
 
              var getTimeZoneOffset = function(timeZone) {
                var actualTz = timeZone;
