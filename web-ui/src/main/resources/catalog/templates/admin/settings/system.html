@@ -367,34 +367,18 @@
                       </div>
                     </div>
                     <div data-ng-switch-when="system/server/host">
-                      <div data-ng-class="processName !== null ? 'input-group' : ''">
+                      <div>
                         <input type="text" class="form-control"
                               id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                              data-ng-model="s.value"
-                              data-ng-change="processRecommended('siteIdChange', s['name'])"/>
-                        <span class="input-group-btn" data-ng-show="processName !== null">
-                            <button type="submit" class="btn btn-warning"
-                                    title="{{processTitle}}"
-                                    data-ng-click="saveAndProcessSettings('#gn-settings', 'url-host-relocator')">
-                              <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
-                            >processRecommendedOnHostChange</span></button>
-                          </span>
+                              data-ng-model="s.value"/>
                       </div>
                     </div>
 
                     <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
-                      <div data-ng-class="resourceIdProcessName !== null ? 'input-group' : ''">
+                      <div>
                         <input type="text" class="form-control"
                               id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                              data-ng-model="s.value"
-                              data-ng-change="processRecommendedForId('resourceIdentifierChange', s['name'])"/>
-                        <span class="input-group-btn" data-ng-show="resourceIdProcessName !== null">
-                            <button type="submit" class="btn btn-warning"
-                                    title="{{processTitle}}"
-                                    data-ng-click="saveAndProcessSettings('#gn-settings', 'add-resource-id')">
-                              <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
-                            >processRecommendedOnPrefixChange</span></button>
-                          </span>
+                              data-ng-model="s.value"/>
                       </div>
                     </div>
 
