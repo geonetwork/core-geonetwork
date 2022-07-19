@@ -847,10 +847,19 @@
                 match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title and
                 count(*/gmd:keyword/*[. != '']) > 0]"
                 priority="100">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
     <dl class="gn-keyword">
       <dt>
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
+        <xsl:choose>
+          <xsl:when test="$fieldName != ''">
+            <xsl:value-of select="$fieldName"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="render-value"
+                                 select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </dt>
       <dd>
         <div>
@@ -871,6 +880,8 @@
   <xsl:template mode="render-field"
                 match="gmd:descriptiveKeywords[not(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title)]"
                 priority="100">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
     <dl class="gn-keyword">
       <dt>
         <xsl:variable name="thesaurusType">
@@ -879,6 +890,9 @@
         </xsl:variable>
 
         <xsl:choose>
+          <xsl:when test="$fieldName != ''">
+            <xsl:value-of select="$fieldName"/>
+          </xsl:when>
           <xsl:when test="$thesaurusType != ''">
             <xsl:copy-of select="$thesaurusType"/>
           </xsl:when>
