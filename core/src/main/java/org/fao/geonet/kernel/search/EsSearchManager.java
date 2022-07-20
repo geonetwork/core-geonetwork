@@ -556,7 +556,6 @@ public class EsSearchManager implements ISearchManager {
             .add("hasxlinks")
             .add("hasInspireTheme")
             .add("hasOverview")
-            .add(IndexFields.HAS_ATOM)
             .add(Geonet.IndexFieldNames.HASXLINKS)
             .add(INDEXING_ERROR_FIELD)
             .add("isHarvested")

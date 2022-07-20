@@ -421,8 +421,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
                 if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                    fields.put("has_atom", "y");
-                    fields.put("any", feed.getAtom());
+                    fields.put("atomfeed", feed.getAtom());
                 }
 
                 if (owner != null) {

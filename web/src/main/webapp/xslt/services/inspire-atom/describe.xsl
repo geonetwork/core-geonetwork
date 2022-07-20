@@ -21,7 +21,6 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:georss="http://www.georss.org/georss"
@@ -30,7 +29,7 @@
                 exclude-result-prefixes="#all" version="2.0">
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="atom:feed|@*" />
+    <xsl:apply-templates select="atom:feed|@*"/>
   </xsl:template>
 
 
@@ -45,7 +44,7 @@
     <xsl:param name="element"/>
     <xsl:param name="prefix"/>
     <xsl:choose>
-      <xsl:when test="local-name($element)=name($element) and $prefix != '' ">
+      <xsl:when test="local-name($element) = name($element) and $prefix != ''">
         <xsl:element name="{$prefix}:{local-name($element)}">
           <xsl:apply-templates select="@*|node()"/>
         </xsl:element>
@@ -61,5 +60,4 @@
   <xsl:template match="@*">
     <xsl:copy-of select="."></xsl:copy-of>
   </xsl:template>
-
 </xsl:stylesheet>

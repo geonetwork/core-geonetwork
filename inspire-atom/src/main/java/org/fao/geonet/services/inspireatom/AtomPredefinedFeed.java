@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.inspireatom;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
@@ -75,6 +76,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/{portal}")
+@Hidden
 public class AtomPredefinedFeed {
 
     /**

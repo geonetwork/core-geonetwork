@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <accept>Godta</accept>
-  <atom>
-    <results>
-      <header>Atom feeds</header>
-      <noresults>No atom feed available</noresults>
-      <title>Title</title>
-      <content>Content</content>
-      <id>Identifier</id>
-      <rights>Rights</rights>
-      <describedby>Described by</describedby>
-      <author>Author</author>
-      <updated>Updated</updated>
-    </results>
-  </atom>
   <bookmarkDelicious>Lag bokmerke på Delicious</bookmarkDelicious>
   <bookmarkDigg>Lag bokmerke på Digg</bookmarkDigg>
   <bookmarkEmail>Send en referanse til denne posten pr epost</bookmarkEmail>

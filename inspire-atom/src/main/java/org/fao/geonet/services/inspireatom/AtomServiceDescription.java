@@ -22,13 +22,25 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import nonapi.io.github.classgraph.utils.Join;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -52,34 +64,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * INSPIRE OpenSearchDescription atom service.
- *
- * @author Jose García
- */
-public class AtomServiceDescription implements Service {
-    /**
-     * Service uuid param name
-     **/
-    private final static String SERVICE_IDENTIFIER_PARAM = "fileIdentifier";
+import javax.servlet.http.HttpServletRequest;
+
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.inspireatom.util.InspireAtomUtil.retrieveKeywordsFromFileIdentifier;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
+@RequestMapping(value = {
+    "/{portal}/api/atom"
+})
+@Tag(name = "atom",
+    description = "ATOM")
+@RestController
+public class AtomServiceDescription {
+
+    @Autowired
+    InspireAtomService service;
+
+    @Autowired
+    SettingManager sm;
+
+    @Autowired
+    DataManager dm;
+
+    @Autowired
+    InspireAtomFeedRepository inspireAtomFeedRepository;
 
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-
-    }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
-
-    public Element exec(Element params, ServiceContext context) throws Exception {
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Describe service",
+        description = "")
+    @GetMapping(
+        value = "/describe/service/{metadataUuid}",
+        produces = MediaType.APPLICATION_XML_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Feeds."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(OK)
+    @ResponseBody
+    public Element describe(
+        @Parameter(
+            description = "metadataUuid",
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @Parameter(hidden = true)
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = context.getBean(DataManager.class);
-        SettingManager sm = context.getBean(SettingManager.class);
-
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
@@ -87,38 +127,35 @@ public class AtomServiceDescription implements Service {
             throw new Exception("Inspire is disabled");
         }
 
-        String fileIdentifier = Util.getParam(params, SERVICE_IDENTIFIER_PARAM, "");
-        if (StringUtils.isEmpty(fileIdentifier)) {
-            return new Element("response");
+        AbstractMetadata record;
+        try {
+            record = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (ResourceNotFoundException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        InspireAtomService service = context.getBean(InspireAtomService.class);
-
-        String id = dm.getMetadataId(fileIdentifier);
-        if (id == null) throw new MetadataNotFoundEx("Metadata not found.");
-
-        Element md = dm.getMetadata(id);
-        String schema = dm.getMetadataSchema(id);
+        Element md = record.getXmlData(false);
+        String schema = record.getDataInfo().getSchemaId();
+        String id = record.getId() + "";
 
         String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
-        // Check if allowed to the metadata
-        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-
         // Check if it is a service metadata
         if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
-            throw new Exception("No service metadata found with uuid:" + fileIdentifier);
+            throw new Exception("No service metadata found with uuid:" + metadataUuid);
         }
 
         // Get dataset identifiers referenced by service metadata.
-        List<String> datasetIdentifiers = null;
-
         InspireAtomFeed inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
         if (inspireAtomFeed == null) {
             String serviceFeedUrl = InspireAtomUtil.extractAtomFeedUrl(schema, md, dm, atomProtocol);
 
             if (StringUtils.isEmpty(serviceFeedUrl)) {
-                throw new ResourceNotFoundEx("No atom feed for service metadata found with uuid:" + fileIdentifier);
+                throw new ResourceNotFoundEx("No atom feed for service metadata found with uuid:" + metadataUuid);
             } else {
                 InspireAtomHarvester inspireAtomHarvester = new InspireAtomHarvester(gc);
                 inspireAtomHarvester.harvestServiceMetadata(context, id);
@@ -126,7 +163,7 @@ public class AtomServiceDescription implements Service {
                 inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
 
                 if (inspireAtomFeed == null) {
-                    throw new ResourceNotFoundEx("No atom feed for service metadata found with uuid:" + fileIdentifier);
+                    throw new ResourceNotFoundEx("No atom feed for service metadata found with uuid:" + metadataUuid);
                 }
             }
         }
@@ -156,25 +193,25 @@ public class AtomServiceDescription implements Service {
         String feedSubtitle = inspireAtomFeed.getSubtitle();
         String feedLang = inspireAtomFeed.getLang();
         String feedUrl = inspireAtomFeed.getAtomUrl();
+        List<String> keywords = retrieveKeywordsFromFileIdentifier(context, metadataUuid);
 
-        throw new NotImplementedException("Not implemented in ES");
-        // TODOES
-//        String keywords = LuceneSearcher.getMetadataFromIndex(context.getLanguage(), fileIdentifier, "keyword");
-//
-//
-//        // Process datasets information
-//        Element datasetsEl = processDatasetsInfo(datasetsInformation, fileIdentifier, context);
-//
-//        // Build response.
-//        return new Element("response")
-//            .addContent(new Element("fileId").setText(fileIdentifier))
-//            .addContent(new Element("title").setText(feedTitle))
-//            .addContent(new Element("subtitle").setText(feedSubtitle))
-//            .addContent(new Element("lang").setText(feedLang))
-//            .addContent(new Element("keywords").setText(keywords))
-//            .addContent(new Element("authorName").setText(feedAuthorName))
-//            .addContent(new Element("url").setText(feedUrl))
-//            .addContent(datasetsEl);
+        // Process datasets information
+        Element datasetsEl = processDatasetsInfo(datasetsInformation, metadataUuid, context);
+
+        Element response = new Element("response")
+            .addContent(new Element("fileId").setText(metadataUuid))
+            .addContent(new Element("title").setText(feedTitle))
+            .addContent(new Element("subtitle").setText(feedSubtitle))
+            .addContent(new Element("lang").setText(feedLang))
+            .addContent(new Element("keywords").setText(Join.join(", ", keywords)))
+            .addContent(new Element("authorName").setText(feedAuthorName))
+            .addContent(new Element("url").setText(feedUrl))
+            .addContent(datasetsEl);
+
+        return new XsltResponseWriter(null, "opensearch")
+            .withXml(response)
+            .withXsl("xslt/services/inspire-atom/opensearch.xsl")
+            .asElement();
     }
 
 
@@ -192,13 +229,9 @@ public class AtomServiceDescription implements Service {
         throws Exception {
         Element datasetsEl = new Element("datasets");
 
-        final InspireAtomFeedRepository repository = context.getBean(InspireAtomFeedRepository.class);
-
-        DataManager dm = context.getBean(DataManager.class);
-
         for (DatasetFeedInfo datasetFeedInfo : datasetsInformation) {
             // Get the metadata uuid for the dataset
-            String datasetUuid = repository.retrieveDatasetUuidFromIdentifier(datasetFeedInfo.identifier);
+            String datasetUuid = inspireAtomFeedRepository.retrieveDatasetUuidFromIdentifier(datasetFeedInfo.identifier);
 
             // If dataset metadata not found, ignore
             if (StringUtils.isEmpty(datasetUuid)) {
@@ -208,7 +241,7 @@ public class AtomServiceDescription implements Service {
             }
 
             String id = dm.getMetadataId(datasetUuid);
-            InspireAtomFeed inspireAtomFeed = repository.findByMetadataId(Integer.parseInt(id));
+            InspireAtomFeed inspireAtomFeed = inspireAtomFeedRepository.findByMetadataId(Integer.parseInt(id));
 
             String idNs = inspireAtomFeed.getAtomDatasetid();
             String namespace = inspireAtomFeed.getAtomDatasetns();
@@ -261,10 +294,8 @@ public class AtomServiceDescription implements Service {
                     downloadsCountByCrs.remove(entry.getCrs());
                 }
             }
-
             datasetsEl.addContent(datasetEl);
         }
-
         return datasetsEl;
     }
 
