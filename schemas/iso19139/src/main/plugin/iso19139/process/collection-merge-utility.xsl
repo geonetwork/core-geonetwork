@@ -69,6 +69,7 @@
               </xsl:message>-->
 
               <xsl:for-each select="distinct-values($groupKey)">
+                <xsl:sort select="." order="descending"/>
                 <xsl:variable name="groupKey"
                               select="current()"/>
                 <xsl:variable name="emptyKey"
