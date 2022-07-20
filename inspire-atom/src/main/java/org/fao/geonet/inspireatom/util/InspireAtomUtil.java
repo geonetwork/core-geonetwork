@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.GeonetContext;
@@ -411,7 +412,9 @@ public class InspireAtomUtil {
                 FIELDLIST_CORE,
                 0, 1);
 
-            if (result.getHits().getTotalHits() != null && result.getHits().getTotalHits().value > 0) {
+            TotalHits totalHits = result.getHits().getTotalHits();
+
+            if ((totalHits != null) && (totalHits.value > 0)) {
                 id = result.getHits().getAt(0).getId();
             }
         } catch (Exception ex) {
