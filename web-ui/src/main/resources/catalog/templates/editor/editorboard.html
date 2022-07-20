@@ -2,13 +2,13 @@
      data-ng-controller="GnSearchController">
   <div class="row" data-ng-controller="GnEditorBoardSearchController">
     <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
-
       <div class="col-sm-12"
-          data-ng-search-form=""
-          data-runSearch="true"
-          data-wait-for-user="true">
+           data-ng-search-form=""
+           data-runSearch="true"
+           data-wait-for-user="true">
         <form class="form-horizontal"
-                role="form">
+              data-ng-if="!showHealthIndexError"
+              role="form">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="row gn-top-search">
               <div class="col-md-offset-3 col-md-6">
@@ -80,6 +80,9 @@
         </div>
 
         <div class="row">
+          <div class="col-sm-3 col-md-3 col-lg-3"
+               data-gn-index-error-panel=""></div>
+
           <div class="col-sm-3 col-md-3 col-lg-3 gn-search-facet">
             <div data-search-filter-tags
                  data-dimensions="searchResults.facets"

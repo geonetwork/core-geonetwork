@@ -1,8 +1,13 @@
 <div data-ng-search-form=""
      data-runSearch="true">
-  <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
+
+  <div data-ng-if="!showHealthIndexError"
+       data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
   <div class="row gn-row-results">
+    <div class="col-sm-offset-6"
+         data-gn-index-error-panel=""></div>
+
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
         <div ng-if="showMapInFacet">
