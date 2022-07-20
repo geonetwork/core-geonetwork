@@ -109,6 +109,7 @@
     '$http',
     'wfsFilterService',
     '$q',
+    '$timeout',
     '$rootScope',
     '$translate',
     'gnIndexRequestManager',
@@ -120,7 +121,7 @@
     'gnAlertService',
     'gnWfsService',
     'gnOwsCapabilities',
-    function($http, wfsFilterService, $q, $rootScope, $translate,
+    function($http, wfsFilterService, $q, $timeout, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager, gnFeaturesTableService,
              gnAlertService, gnWfsService, gnOwsCapabilities) {
@@ -395,6 +396,10 @@
             }, function(error) {
               scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
+              $timeout(function() {
+                scope.status = null;
+                scope.statusTitle = null;
+              }, 2000);
               scope.checkFeatureTypeInWfs();
             });
           };
