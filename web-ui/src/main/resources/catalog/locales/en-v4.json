@@ -171,6 +171,9 @@
   "exactMatch-help": "Exact match means that '\"' are added to the search terms.",
   "titleOnly": "Search in title only",
   "titleOnly-help": "Search in title only.",
+  "gnbbox": "Geographical area",
+  "featuresInMapExtent": "Features in current map extent only",
+  "heatmapAvailableForPointOnly": "Heatmap only supported for point layer.",
   "wfsIndexingEndDate": "Last indexing date",
   "wfsIndexingScheduled": "Scheduled?",
   "wfsIndexingNewSchedule": "Add WFS harvester",
@@ -361,5 +364,7 @@
   "atom.updated": "Updated",
   "setServiceConnectPoint": "Add service connect point",
   "mimeType": "Format",
-  "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first."
+  "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
+  "switchPortals": "Switch to another Portal",
+  "dataPreview":  "Discover data"
 }

@@ -199,11 +199,13 @@
         // data is not an object: this is an error
         if (typeof data !== 'object') {
           console.warn('An error occurred while searching. Response is not an object.', esParams, data.data);
-          gnAlertService.addAlert({
-            id: 'searchError',
-            msg: $translate.instant('searchInvalidResponse'),
-            type: 'danger'
-          });
+          if($scope.showHealthIndexError !== true) { // Index status already displayed
+            gnAlertService.addAlert({
+              id: 'searchError',
+              msg: $translate.instant('searchInvalidResponse'),
+              type: 'danger'
+            });
+          }
           return;
         }
 

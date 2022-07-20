@@ -32,29 +32,40 @@
       restrict: 'E',
       scope: {
         map: '<gnFeaturesTablesMap',
-        active: '<gnActive'
+        active: '<gnActive',
+        showClose: '=',
+        showExport: '=',
+        height: '='
       },
       controllerAs: 'ctrl',
       bindToController: true,
       controller: 'gnFeaturesTablesController',
       templateUrl: '../../catalog/components/viewer/gfi/partials/' +
           'featurestables.html'
-          // link: function (scope, element, attrs, controller) {
-          //   controller.tableElt = element.find('table');
-          // }
     };
 
   }]);
 
-  var GnFeaturesTablesController = function(gnFeaturesTableManager) {
+  var GnFeaturesTablesController = function(gnFeaturesTableManager,
+                                            gnSearchSettings) {
     this.tm = gnFeaturesTableManager;
 
     this.tables = gnFeaturesTableManager.tables;
 
-    this.fOverlay = new ol.layer.Vector({
+    this.featuresOverlay = new ol.layer.Vector({
       source: new ol.source.Vector({
         useSpatialIndex: false
       }),
+      style: gnSearchSettings.olStyles.mdExtent,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      map: this.map
+    });
+    this.highlightOverlay = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        useSpatialIndex: false
+      }),
+      style: gnSearchSettings.olStyles.mdExtentHighlight,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       map: this.map
@@ -68,7 +79,7 @@
 
 
   module.controller('gnFeaturesTablesController', [
-    'gnFeaturesTableManager',
+    'gnFeaturesTableManager', 'gnSearchSettings',
     GnFeaturesTablesController
   ]);
 

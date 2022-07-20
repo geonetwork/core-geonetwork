@@ -82,13 +82,6 @@
 
         gnUtilityService.scrollTo();
 
-        angular.extend(md, {
-          links: md.getLinksByType('LINK'),
-          downloads: md.getLinksByType('DOWNLOAD'),
-          layers: md.getLinksByType('OGC', 'kml', 'ESRI:REST'),
-          overviews: md.overview
-        });
-
         gnMdViewObj.current.record = md;
 
         // Record with associations

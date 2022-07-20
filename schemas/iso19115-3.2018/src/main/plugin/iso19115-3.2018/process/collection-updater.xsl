@@ -69,34 +69,32 @@
 
 
   <xsl:variable name="elements" as="node()*">
-    <tag name="mri:descriptiveKeywords" context="mri:MD_DataIdentification"
+    <tag name="mri:descriptiveKeywords" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/mri:thesaurusName/*/cit:title/*/text()"
          merge="mri:keyword"/>
-    <!-- TODO: temporalElement is also part of mri:extent.
-    How to group by both? -->
-    <tag name="mri:extent" context="mri:MD_DataIdentification"
-         groupBy="*/gex:geographicElement"
-         merge="gex:geographicElement"/>
+    <tag name="mri:extent" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
+         groupBy="*/(gex:geographicElement|gex:temporalElement)"
+         merge="gex:geographicElement|gex:temporalElement"/>
     <!-- TODO: mri:defaultLocale can be in various places. -->
-    <tag name="mri:defaultLocale" context="mri:MD_DataIdentification"
+    <tag name="mri:defaultLocale" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="mri:defaultLocaleCode/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
          merge="mri:defaultLocaleCode"/>
-    <tag name="mri:graphicOverview" context="mri:MD_DataIdentification"
+    <tag name="mri:graphicOverview" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/mcc:fileName/*/text()"
          merge="."/>
-    <tag name="mri:spatialRepresentationType" context="mri:MD_DataIdentification"
+    <tag name="mri:spatialRepresentationType" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="mcc:MD_SpatialRepresentationTypeCode/@codeListValue"
          merge="mri:spatialRepresentationType"/>
-    <tag name="mri:spatialResolution" context="mri:MD_DataIdentification"
+    <tag name="mri:spatialResolution" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/mri:equivalentScale/*/mri:denominator/*/text()"
          merge="mri:spatialResolution"/>
-    <tag name="mri:topicCategory" context="mri:MD_DataIdentification"
+    <tag name="mri:topicCategory" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="mri:MD_TopicCategoryCode/text()"
          merge="mri:MD_TopicCategoryCode"/>
     <tag name="mdb:contact" context="mdb:MD_Metadata"
          groupBy="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/*/text()"
          merge="."/>
-    <tag name="mri:pointOfContact" context="mri:MD_DataIdentification"
+    <tag name="mri:pointOfContact" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/*/text()"
          merge="."/>
   </xsl:variable>
@@ -120,6 +118,7 @@
                   select="$root//mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue = ('series', 'service')"/>
     <xsl:variable name="hasMembers"
                   select="$existingMemberUuids != ''"/>
+
     <xsl:if test="$isACollection and $hasMembers">
       <suggestion process="collection-updater" id="{generate-id()}" category="collection"
                   target="">
@@ -145,7 +144,7 @@
 
   <!-- Create empty elements that will be populated by the merge
   and may not exist in current record.-->
-  <xsl:template match="mri:MD_DataIdentification" mode="expand">
+  <xsl:template match="mri:MD_DataIdentification|srv:SV_ServiceIdentification" mode="expand">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="mri:citation" mode="expand"/>
