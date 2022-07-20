@@ -634,9 +634,26 @@ goog.require('gn_alert');
             'related': ['parent', 'children', 'services', 'datasets']
           },
           'linkTypes': {
-            'links': ['LINK', 'kml'],
-            'downloads': ['DOWNLOAD'],
-            'layers': ['OGC:WMS', 'OGC:WFS','OGC:WMTS', 'ESRI:REST'],
+            'links': [
+              'LINK'
+            ],
+            'downloads': [
+              'WWW:DOWNLOAD',
+              'WWW:OPENDAP',
+              'WWW:FTP',
+              'KML'
+            ],
+            // 'downloadServices': [
+            //   'OGC:WFS',
+            //   'OGC:WCS',
+            //   'ATOM'
+            // ],
+            'layers': [
+              'OGC:WMS',
+              // 'OGC:WFS',
+              'OGC:WMTS',
+              'ESRI:REST'
+            ],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
