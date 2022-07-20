@@ -55,6 +55,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -381,10 +382,10 @@ public class Importer {
                     //
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null, docType = null, title = null, category = null;
-                    boolean ufo = false, indexImmediate = true;
+                    boolean ufo = false;
                     String fcId = dm
                         .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate.codeString, docType,
-                            category, createDate, changeDate, ufo, indexImmediate);
+                            category, createDate, changeDate, ufo, IndexingMode.full);
 
                     if (Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -547,11 +548,11 @@ public class Importer {
         //
         int userid = context.getUserSession().getUserIdAsInt();
         String docType = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        boolean ufo = false;
 
         String metadataId = metadataManager
             .insertMetadata(context, schema, md.get(index), uuid, userid, groupId, source, isTemplate.codeString, docType, category,
-                createDate, changeDate, ufo, indexImmediate);
+                createDate, changeDate, ufo, IndexingMode.none);
 
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);
 

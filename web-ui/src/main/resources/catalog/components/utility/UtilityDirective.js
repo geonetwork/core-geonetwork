@@ -737,6 +737,7 @@
         replace: true,
         template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
           '           ng-click="copy()" ' +
+          '           href=""' +
           '           title="{{::title | translate}}">' +
           '  <i class="fa fa-fw" ' +
           '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
@@ -852,7 +853,7 @@
             '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
-              'form > fieldset > legend[data-gn-slide-toggle]',
+              'form > div > fieldset > legend[data-gn-slide-toggle]',
               event = attr['event'] || 'click';
           element.on('click', function() {
             $(selector).each(function(idx, elem) {

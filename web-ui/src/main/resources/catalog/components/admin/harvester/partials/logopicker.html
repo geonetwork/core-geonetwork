@@ -1,22 +1,75 @@
-<button type="button" class="btn btn-default dropdown-toggle"
-        data-toggle="dropdown">
-          <span data-ng-if="logo">
-            <img class="gn-logo harvester-logo" data-ng-src="../../images/harvesting/{{logo}}"
-                 alt="{{logo}}"/>
-          </span>
-  &nbsp;
-  <span class="caret"/>
+<button type="button"
+        class="btn btn-default"
+        data-ng-click="openLogoPicker()">
+  <img class="gn-selected-logo gn-margin-right"
+       data-ng-if="logo"
+       data-ng-src="../../images/harvesting/{{logo}}"
+       alt="{{logo}}"/>
+  <span data-translate="">logoSelect</span>
 </button>
-<ul class="dropdown-menu" role="menu">
-  <li>
-    <input class="form-control"
-           data-ng-show="icons.length > 10"
-           data-ng-model="search.$" autofocus=""
-           placeholder="{{'filter' | translate}}"/>
-  </li>
-  <li data-ng-repeat="i in icons | filter:search  | orderBy: i" title="{{i}}">
-    <a data-ng-click="setIcon(i)">
-      <img class="gn-logo harvester-logo" data-ng-src="../../images/harvesting/{{i}}" />
-    </a>
-  </li>
-</ul>
+<div data-gn-modal=""
+     class="gn-logo-list gn-logo-list-lg max-width-none"
+     data-gn-popup-options="{title:'logoSelect'}"
+     id="logo-picker-modal">
+  <div class="row gn-margin-bottom">
+    <div class="col-md-6 gn-nopadding-left">
+      <label for="filter-logo"
+             data-ng-show="icons.length > 10"
+             data-translate="">filterLogo</label>
+      <div class="input-group"
+           data-ng-show="icons.length > 10">
+        <span class="input-group-addon">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+        </span>
+        <input class="form-control"
+               data-ng-show="icons.length > 10"
+               data-ng-model="search.$"
+               id="filter-logo"
+               autofocus=""
+               placeholder="{{'filter' | translate}}"/>
+      </div>
+    </div>
+    <div class="col-md-6 gn-nopadding-right">
+      <div class="pull-right">
+        <!-- toggle buttons -->
+        <label for="logoheight-toggle-buttons" data-translate="">logoHeight</label><br>
+        <div id="logoheight-toggle-buttons" class="btn-group" data-toggle="buttons">
+          <button type="button" class="btn btn-default"
+                  data-ng-click="toggleLogoHeight('small')"
+                  data-ng-model="logoheightType"
+                  data-ng-class="{'active': logoheightType === 'small' || logoheightType === undefined}"
+                  aria-label="{{'logoHeightSmall' | translate}}">
+            <i class="fa fa-th" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="btn btn-default"
+                  data-ng-click="toggleLogoHeight('medium')"
+                  data-ng-model="logoheightType"
+                  data-ng-class="{'active': logoheightType === 'medium'}"
+                  aria-label="{{'logoHeightMedium' | translate}}">
+            <i class="fa fa-th-large" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="btn btn-default"
+                  data-ng-click="toggleLogoHeight('large')"
+                  data-ng-model="logoheightType"
+                  data-ng-class="{'active': logoheightType === 'large'}"
+                  aria-label="{{'logoHeightLarge' | translate}}">
+            <i class="fa fa-stop" aria-hidden="true"></i>
+          </button>
+        </div>
+        <!-- /toggle buttons -->
+      </div>
+    </div>
+  </div>
+  <div class="list-group-container">
+    <div class="list-group" id="gn-logo-list" data-ng-class="{'gn-logo-height-small': logoheightType === 'small' || logoheightType === undefined, 'gn-logo-height-medium': logoheightType === 'medium', 'gn-logo-height-large': logoheightType === 'large'}">
+      <a class="list-group-item clearfix"
+         href=""
+         data-ng-click="setIcon(i);closeLogoPicker();"
+         data-ng-repeat="i in icons | filter:search  | orderBy: i">
+        <img data-ng-src="../../images/harvesting/{{i}}" alt="i" />
+        <label>{{i.split(".").slice(0, -1).join(".")}}</label>
+      </a>
+    </div>
+    <!-- /.list-group -->
+  </div>
+</div>

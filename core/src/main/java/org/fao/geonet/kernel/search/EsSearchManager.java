@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -174,6 +175,9 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     public EsRestClient client;
 
+    @Autowired
+    OverviewIndexFieldUpdater overviewFieldUpdater;
+
     private int commitInterval = 200;
 
     // public for test, to be private or protected
@@ -197,11 +201,11 @@ public class EsSearchManager implements ISearchManager {
 
     private void addMDFields(Element doc, Path schemaDir,
                              Element metadata, MetadataType metadataType,
-                             boolean fastIndexMode) {
+                             IndexingMode indexingMode) {
         final Path styleSheet = getXSLTForIndexing(schemaDir, metadataType);
         try {
             Map<String, Object> indexParams = new HashMap<String, Object>();
-            indexParams.put("fastIndexMode", fastIndexMode);
+            indexParams.put("fastIndexMode", indexingMode.equals(IndexingMode.core));
 
             Element fields = Xml.transform(metadata, styleSheet, indexParams);
             /* Generates something like that:
@@ -344,7 +348,12 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
-        fields.put("indexingDate", new Date());
+        Map<String, Object> fieldMap = new HashMap<>();
+        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
+        return updateFields(id, fieldMap, fieldsToRemove);
+    }
+    public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws Exception {
+        fieldMap.put("indexingDate", new Date());
         BulkRequest bulkrequest = new BulkRequest();
         StringBuffer script = new StringBuffer();
         fieldsToRemove.forEach(f ->
@@ -356,8 +365,6 @@ public class EsSearchManager implements ISearchManager {
                 script.toString(),
                 Collections.emptyMap()));
         bulkrequest.add(deleteFieldRequest);
-        Map<String, Object> fieldMap = new HashMap<>();
-        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
         UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id)
             .doc(fieldMap);
         bulkrequest.add(addFieldRequest);
@@ -399,11 +406,11 @@ public class EsSearchManager implements ISearchManager {
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
                       boolean forceRefreshReaders,
-                      boolean fastIndexMode) throws Exception {
+                      IndexingMode indexingMode) throws Exception {
 
         Element docs = new Element("doc");
         if (schemaDir != null) {
-            addMDFields(docs, schemaDir, metadata, metadataType, fastIndexMode);
+            addMDFields(docs, schemaDir, metadata, metadataType, indexingMode);
         }
         addMoreFields(docs, dbFields);
 
@@ -445,7 +452,10 @@ public class EsSearchManager implements ISearchManager {
                     "An error occurred while indexing {} documents in current indexing list. Error is {}.",
                     new Object[]{listOfDocumentsToIndex.size(), e.getMessage()});
             } finally {
-                //                listOfDocumentsToIndex.clear();
+                // TODO: Trigger this async ?
+                documents.keySet().forEach(uuid -> {
+                    overviewFieldUpdater.process(uuid);
+                });
             }
         }
     }

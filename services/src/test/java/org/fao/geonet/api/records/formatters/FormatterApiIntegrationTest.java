@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -131,7 +132,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         metadata.getSourceInfo().setOwner(1).setSourceId(source);
         metadata.getHarvestInfo().setHarvested(false);
 
-        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
             false, false).getId();
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));

@@ -45,8 +45,6 @@
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
-  <xsl:output method="xml" indent="yes"/>
-
   <xsl:output name="default-serialize-mode"
               indent="no"
               omit-xml-declaration="yes"
@@ -370,13 +368,6 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != '' and not($fastIndexMode)">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>

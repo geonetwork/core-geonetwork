@@ -36,6 +36,8 @@ public class DoiSettings {
         "system/publication/doi/doipassword";
     public static final String SETTING_PUBLICATION_DOI_DOIKEY =
         "system/publication/doi/doikey";
+    public static final String SETTING_PUBLICATION_DOI_DOIPATTERN =
+        "system/publication/doi/doipattern";
     public static final String SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE =
         "system/publication/doi/doilandingpagetemplate";
 

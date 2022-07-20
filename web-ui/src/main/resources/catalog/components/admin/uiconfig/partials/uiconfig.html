@@ -715,6 +715,12 @@
                 <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
                 </div>
               </div>
+              <div data-ng-switch-when="map-thumbnail">
+                <h3>{{('ui-' + key) | translate}}</h3>
+                <gn-ui-config-help/>
+                <div ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'">
+                </div>
+              </div>
 
               <div data-ng-switch-when="createPageTpl">
                 <label class="control-label">{{('ui-' + key) | translate}}</label>

@@ -257,8 +257,34 @@
                     scope.icons = data[0];
                   });
 
+              /**
+               * Set the icon
+               * @param {String} icon Icon name
+               */
               scope.setIcon = function(icon) {
                 scope.logo = icon;
+              };
+
+              /**
+               * Open the Logo picker modal dialog
+               */
+              scope.openLogoPicker = function () {
+                $('#logo-picker-modal').modal('show');
+              }
+
+              /**
+               * Close the Logo picker modal dialog
+               */
+              scope.closeLogoPicker = function () {
+                $('#logo-picker-modal').modal('hide');
+              }
+
+              /**
+               * Toggle the logo height
+               * @param  {String} type Type of logo height selected
+               */
+              scope.toggleLogoHeight = function(type) {
+                scope.logoheightType = type;
               };
             }
           };

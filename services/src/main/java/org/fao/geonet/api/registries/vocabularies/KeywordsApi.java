@@ -1314,7 +1314,7 @@ public class KeywordsApi {
             }
 
             final String siteURL = settingManager.getSiteURL(context);
-            Thesaurus gst = new Thesaurus(languagesMapper, fname, type, dir, path, siteURL);
+            Thesaurus gst = new Thesaurus(languagesMapper, fname, type, dir, path, siteURL, thesaurusMan.getThesaurusCacheMaxSize());
             thesaurusMan.addThesaurus(gst, false);
         } else {
             IO.deleteFile(rdfFile, false, Geonet.THESAURUS);

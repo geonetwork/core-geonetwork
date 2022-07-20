@@ -89,11 +89,11 @@ public class CMISResources extends Resources {
         return this.resourceBaseDir;
     }
 
-    private String getKey(final Path dir, final String name) {
+    protected String getKey(final Path dir, final String name) {
         return getKey(dir.resolve(name));
     }
 
-    private String getKey(final Path path) {
+    protected String getKey(final Path path) {
 
         // Get keyPath as a relative path from /.
         Path keyPath;
@@ -142,7 +142,7 @@ public class CMISResources extends Resources {
         }
     }
 
-    private Path getKeyPath(String key) {
+    protected Path getKeyPath(String key) {
         // Keypath should not reference the base path so it should be removed.
         return Paths.get(key.substring(cmisConfiguration.getBaseRepositoryPath().length()));
     }
@@ -379,7 +379,7 @@ public class CMISResources extends Resources {
         }
     }
 
-    private class CMISResourceHolder implements ResourceHolder {
+    protected class CMISResourceHolder implements ResourceHolder {
         private final String key;
         private Path path = null;
         private Path tempFolderPath = null;

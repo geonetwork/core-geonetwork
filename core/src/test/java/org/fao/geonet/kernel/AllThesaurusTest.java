@@ -64,7 +64,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     public void setUp() throws Exception {
         Path gcThesaurusFile = this.folder.getRoot().toPath().resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
-            "local", gcThesaurusFile, "http://org.fao.geonet", true);
+            "local", gcThesaurusFile, "http://org.fao.geonet", true, 0);
         final boolean thesauriExist = Files.exists(gcThesaurusFile);
         if (!thesauriExist) {
             String thesaurusName = "secondThesaurus";
@@ -276,7 +276,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         final String regionsPath = "/org/fao/geonet/services/region/external/thesauri/place/regions.rdf";
         Path regionsFile = Paths.get(AllThesaurusTest.class.getResource(regionsPath).toURI());
         final Thesaurus regionsThesaurus = new Thesaurus(isoLangMapper, regionsFile.getFileName().toString(), null, null, "external",
-            "place", regionsFile, "http://org.fao.geonet", false);
+            "place", regionsFile, "http://org.fao.geonet", false, 0);
         regionsThesaurus.initRepository();
         final HashMap<String, Thesaurus> thesauri = Maps.newHashMap();
         thesauri.put(regionsThesaurus.getKey(), regionsThesaurus);

@@ -44,8 +44,6 @@
               </a>
             </ul>
           </div>
-
-
           <button type="button" class="btn btn-primary btn-block" id="gn-btn-source-add"
                   data-ng-click="addSubPortal()"
                   data-ng-show="user.isAdministrator()">
@@ -116,10 +114,12 @@
               <label data-translate="">sourceLogo</label>
 
               <div class="row" data-ng-show="source.logo">
-                <div class="col-md-12">
+                <div class="col-md-6 gn-nopadding-left">
                   <img data-ng-show="source.logo"
                        src="../../images/harvesting/{{ source.logo }}"
                        class="img-thumbnail form-group" data-ng-attr-title="{{ source.logo }}">
+                </div>
+                <div class="col-md-6 gn-nopadding-left">
                   <a href="" data-ng-click="deleteSourceLogo()"
                      class="text-danger">
                     <i data-ng-show="source.logo"
@@ -130,8 +130,8 @@
 
               <!--Display logo picker from harvester logos-->
               <div class="row" data-ng-show="queue.length == 0">
-                <div class="col-md-5 media-middle" translate>selectExistingLogo</div>
-                <div class="col-md-3">
+                <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>selectExistingLogo</div>
+                <div class="col-md-12 gn-nopadding-left gn-margin-bottom">
                   <div class="form-group" gn-logo-picker="source.logo"></div>
                 </div>
               </div>
@@ -142,8 +142,8 @@
                     data-file-upload="logoUploadOptions" role="form">
                 <input type="hidden" name="_csrf" value="{{csrf}}"/>
                 <div class="row" data-ng-show="!source.logo" id="group-logo-upload">
-                  <div class="col-md-5" translate>addNewLogo</div>
-                  <div class="col-md-7" >
+                  <div class="col-md-12 gn-nopadding-left gn-margin-bottom" translate>addNewLogo</div>
+                  <div class="col-md-12 gn-nopadding-left gn-nopadding-right">
                     <div class="panel panel-default">
                       <div class="panel-heading" data-translate="">upload</div>
                       <div class="panel-body">
