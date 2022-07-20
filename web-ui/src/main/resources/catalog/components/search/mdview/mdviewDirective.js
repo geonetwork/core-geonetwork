@@ -206,30 +206,31 @@
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'datapreview.html',
         controller: ['$scope', '$timeout',
-          function ($scope, $timeout) {
-          $scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
-          $scope.hasExtent = false;
-          $scope.extentLayer = new ol.layer.Vector({
+          function (scope, $timeout) {
+          scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          scope.hasExtent = false;
+          scope.currentLayer = undefined;
+          scope.extentLayer = new ol.layer.Vector({
             source: new ol.source.Vector(),
-            map: $scope.map,
+            map: scope.map,
             style: gnSearchSettings.olStyles.mdExtent
           });
 
           this.addRecordsExtent = function(records) {
-            $scope.extentLayer.getSource().clear();
+            scope.extentLayer.getSource().clear();
 
             for (var i = 0; i < records.length; i++) {
               var feat = gnMap.getBboxFeatureFromMd(records[i],
-                $scope.map.getView().getProjection());
-              $scope.extentLayer.getSource().addFeature(feat);
-              $scope.hasExtent = !!feat.getGeometry();
+                scope.map.getView().getProjection());
+              scope.extentLayer.getSource().addFeature(feat);
+              scope.hasExtent = !!feat.getGeometry();
             }
 
-            if ($scope.hasExtent) {
+            if (scope.hasExtent) {
               $timeout(function() {
-                $scope.map.getView().fit(
-                  $scope.extentLayer.getSource().getExtent(),
-                  $scope.map.getSize());
+                scope.map.getView().fit(
+                  scope.extentLayer.getSource().getExtent(),
+                  scope.map.getSize());
               }, 100);
             }
           }
@@ -239,7 +240,11 @@
             scope.map.get('creationPromise').then(function() {
               ctrl.addRecordsExtent([scope.md]);
               scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
-                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md).then(function(layer) {
+                  if (!scope.currentLayer) {
+                    scope.currentLayer = layer;
+                  }
+                });
               });
             })
           }

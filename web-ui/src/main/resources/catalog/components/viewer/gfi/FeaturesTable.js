@@ -26,15 +26,18 @@
 
   var module = angular.module('gn_featurestable_directive', ['gn_utility_service']);
 
-  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'getBsTableLang',
-    function($http, gfiTemplateURL, getBsTableLang) {
+  module.directive('gnFeaturesTable', [
+    '$http', 'gfiTemplateURL', 'getBsTableLang', '$translate',
+    function($http, gfiTemplateURL, getBsTableLang, $translate) {
 
       return {
         restrict: 'E',
         scope: {
           loader: '=?gnFeaturesTableLoader',
           map: '=?gnFeaturesTableLoaderMap',
-          active: '=gnActive'
+          active: '=gnActive',
+          showExport: '=',
+          height: '='
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -46,7 +49,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang);
+          ctrls.ctrl.initTable(element.find('table'), scope, getBsTableLang, $translate);
         }
       };
     }]);
@@ -55,8 +58,9 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
-    
+  GnFeaturesTableController.prototype.initTable =
+    function(element, scope, getBsTableLang, $translate) {
+
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
       var outer = document.createElement('div');
@@ -86,41 +90,72 @@
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
-            height: 250,
+            // TODO Fixing the height breaks horizontal scroll.
+            // For now setting height using CSS.
+            // height: this.ctrl.height || 250,
             sortable: true,
-            onPostBody: function() {
+            striped: true,
+            showToggle: true,
+            iconsPrefix: 'fa',
+            icons: {
+              toggleOff: 'fa-list-alt icon-list-alt',
+              toggleOn: 'fa-table icon-list-alt',
+              export: 'fa-download'
+            },
+            onPostBody: function(data) {
               var trs = element.find('tbody').children();
               for (var i = 0; i < trs.length; i++) {
                 $(trs[i]).mouseenter(function(e) {
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
                   var row = $(e.currentTarget)
-                  .parents('table')
-                  .data()['bootstrap.table']
-                  .data[$(e.currentTarget).data('index')];
+                      .parents('table')
+                      .data()['bootstrap.table']
+                      .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
-                  var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  var source = this.featuresTablesCtrl.highlightOverlay.getSource();
                   source.clear();
                   if (feature && feature.getGeometry()) {
                     source.addFeature(feature);
                   }
                 }.bind(this));
+
                 $(trs[i]).mouseleave(function(e) {
-                  this.featuresTablesCtrl.fOverlay.getSource().clear();
+                  this.featuresTablesCtrl.highlightOverlay.getSource().clear();
                 }.bind(this));
               }
-              element.parents('gn-features-table').find('.clearfix')
-              .addClass('sxt-clearfix')
-              .removeClass('clearfix');
+
+              var d = element.bootstrapTable().data()['bootstrap.table'].data;
+              if (angular.isArray(d)) {
+                var source = this.featuresTablesCtrl.featuresOverlay.getSource();
+                source.clear();
+                for (var i = 0; i < d.length; i++) {
+                  var feature = this.loader.getFeatureFromRow(d[i]);
+                  if (feature && feature.getGeometry()) {
+                    source.addFeature(feature);
+                  }
+                }
+              }
+
+              // element.parents('gn-features-table').find('.clearfix')
+              // .addClass('sxt-clearfix')
+              // .removeClass('clearfix');
 
               // trigger an async digest loop to make the table appear
               setTimeout(function() { scope.$apply(); });
             }.bind(this),
             onPostHeader: function() { // avoid resizing issue on page change
-              if (!once) { return; }
-              element.bootstrapTable('resetView');
-              once = false;
+              // if (!once) { return; }
+              // element.bootstrapTable('resetView');
+              // once = false;
+              // var el = $('.fixed-table-header');
+              // setTimeout(function() {
+              //   var width = getScrollbarWidth();
+              //   if (parseInt(el.css('margin-right'), 10) > width) {
+              //     el.css('margin-right', width + 'px');
+              //   }
+              // }, 0);
             },
             onDblClickRow: function(row, elt) {
               if (!this.map) {
@@ -135,16 +170,35 @@
                 );
               }
             }.bind(this),
-            showExport: true,
+            showExport: this.ctrl.showExport !== false,
             exportTypes: ['csv'],
             exportDataType: 'all',
-            locale: getBsTableLang()
-          },bstConfig)
+            exportOptions: {
+              onCellHtmlData: function onCellHtmlData(cell, rowIndex, colIndex, htmlData) {
+                if (cell.is('th')) {
+                  return cell.find('.th-inner').text();
+                }
+                else if (cell.is('td') && cell.children('a').length > 0 ) {
+                  return cell.find('a').context.innerHTML.match(/href="([^"]*)/)[1];
+                }
+                return htmlData;
+              }
+            },
+            formatRecordsPerPage: function(pageNumber){
+              return pageNumber;
+            },
+            formatLoadingMessage: function(){
+              return '...';
+            },
+            formatShowingRows: function (pageFrom, pageTo, totalRows) {
+              return '' + pageFrom + ' - ' + pageTo + ' '
+                + $translate.instant('resultXonY') + ' '
+                + totalRows + ' ' + $translate.instant('features');
+            }
+            // locale: getBsTableLang()
+          }, bstConfig)
       );
-      scope.$watch('ctrl.active', function() {
-        element.bootstrapTable('resetWidth');
-        element.bootstrapTable('resetView');
-      });
+      scope.$watch('ctrl.active', resizeBsTable);
     }.bind(this));
   };
 

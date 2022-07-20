@@ -267,7 +267,8 @@
         data: data,
         pagination: true,
         pageSize: pageList[1],
-        pageList: pageList
+        pageList: pageList,
+        undefinedText: ''
       };
     });
   };
@@ -346,12 +347,14 @@
       uuid = layer.get('metadataUuid');
     }
 
-    this.dictionary = null;
     if(uuid) {
       this.dictionary = this.featureService.loadFeatureCatalogue(uuid, layer.get('md'))
         .then(function(catalogue) {
           return catalogue;
         });
+    } else {
+      var $q = this.$injector.get('$q');
+      this.dictionary = $q.when(undefined);
     }
   };
 
@@ -401,11 +404,10 @@
   geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
-    var $filter = this.$injector.get('$filter');
 
     return this.dictionary.then(function(dictionary) {
 
-      var pageList = [5, 10, 50, 100],
+      var pageList = [100, 500, 1000],
         columns = [],
         index = this.indexObject,
         map = this.map,
@@ -413,7 +415,7 @@
 
       fields.forEach(function(field) {
         if ($.inArray(field.idxName, this.excludeCols) === -1) {
-          var fieldSpec = dictionary[field.name] || {};
+          var fieldSpec = (dictionary && dictionary[field.name]) || {};
           columns.push({
             field: field.idxName,
             title: fieldSpec.name || field.label,
@@ -451,6 +453,33 @@
             var sort = {};
             sort[p.sort] = {'order' : p.order};
             queryObject.sort.push(sort);
+          }
+          if (coordinates) {
+            var radius = map.getView().getResolution() / 0.4; // meters
+            var minLonMaxLat = ol.proj.transform(
+              [coordinates[0] - radius, coordinates[1] + radius],
+              map.getView().getProjection(),
+              'EPSG:4326'
+            );
+            var maxLonMinLat = ol.proj.transform(
+              [coordinates[0] + radius, coordinates[1] - radius],
+              map.getView().getProjection(),
+              'EPSG:4326'
+            );
+            queryObject.query.bool.filter = {
+              'geo_shape': {
+                'geom': {
+                  'shape': {
+                    'type': 'envelope',
+                    'coordinates': [
+                      minLonMaxLat,
+                      maxLonMinLat
+                    ]
+                  },
+                  'relation': 'intersects'
+                }
+              }
+            };
           }
           return JSON.stringify(queryObject);
         }.bind(this),

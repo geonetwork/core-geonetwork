@@ -100,7 +100,7 @@
           // this will refresh the heatmap
           ctrl.refresh = function() {
             gnHeatmapService.requestHeatmapData(ctrl.featureType, ctrl.map,
-              ctrl.filter.params, ctrl.filter.geometry, ctrl.filter.any)
+              ctrl.filter)
               .then(function(cells) {
                 // add cells as features
                 ctrl.source.clear();
@@ -142,12 +142,13 @@
 
           // adjust ES request based on current filters
           // (skip the initial watch trigger)
-          $scope.$watch('ctrl.filter', function(newValue, oldValue) {
-            if (!ctrl.enabled || oldValue === undefined) {
-              return;
-            }
-            ctrl.refresh();
-          }, true);
+          function reload(newValue, oldValue) {
+              if (!ctrl.enabled || oldValue === undefined) {
+                return;
+              }
+              ctrl.refresh();
+          }
+          $scope.$watch('ctrl.filter', reload, true);
         }],
         link: function(scope, element, attrs) {
           // destroy scope on element removal
