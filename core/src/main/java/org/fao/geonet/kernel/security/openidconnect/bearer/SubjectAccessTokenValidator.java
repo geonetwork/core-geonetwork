@@ -29,19 +29,21 @@ import java.util.Map;
  *
  * for keycloak, the "sub" of the JWT and userInfo are the same.
  * for Azure AD, the "sub" of the userInfo is in the JWT "xms_st" claim.
+ *  "xms_st": {
+ *     "sub": "982kuI1hxIANLB__lrKejDgDnyjPnhbKLdPUF0JmOD1"
+ *   },
+ *
+ *   The spec suggests verifying the user vs token subjects match, so this does that check.
  */
 public class SubjectAccessTokenValidator implements AccessTokenValidator {
 
     @Override
     public void verifyToken(Map claims, Map userInfoClaims) throws Exception {
         //normal case - subjects are the same
-        if (claims.get("sub") == null)
-            throw new Exception("no subject ('sub') in the access token");
-        if (userInfoClaims.get("sub") == null)
-            throw new Exception("no subject ('sub') in the userInfo claims");
-
-        if (claims.get("sub").equals(userInfoClaims.get("sub")))
-            return;
+        if  ( (claims.get("sub") != null) &&   (userInfoClaims.get("sub") != null) ) {
+            if (claims.get("sub").equals(userInfoClaims.get("sub")))
+                return;
+        }
 
         //Azure AD case - use accesstoken.xms_st.sub vs userinfo.sub
         if ((claims.get("xms_st") != null) && (claims.get("xms_st") instanceof Map)) {

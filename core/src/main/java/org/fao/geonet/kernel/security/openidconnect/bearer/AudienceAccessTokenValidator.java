@@ -37,7 +37,7 @@ import java.util.Map;
  * "aud": "00000003-0000-0000-c000-000000000000",
  * "appid": "b9e8d05a-08b6-48a5-81c8-9590a0f550f3",
  * <p>
- * NOTE: Keycloak has the audience as "account", no "appid", but "azp" is should be our client id.
+ * NOTE: Keycloak has the audience as "account", no "appid", but "azp"  should be our client id.
  * example;
  * "aud": "account",
  * "azp": "live-key",
@@ -54,18 +54,22 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
      * <p>
      * Otherwise, its a token not for us...
      *
-     * @param claims@throws Exception
+     *  This checks that the audience of the JWT access token is us.
+     *  The main attack this tries to prevent is someone getting an access token (i.e. from keycloak or azure) that
+     *  was meant for another application (say a silly calendar app), and then using that token here.  The IDP provider
+     *  (keycloak/azure) will validate the token as "good", but it wasn't generated for us.  This does a check of the
+     *  token that OUR client ID is mentioned (not another app).
      */
     @Override
-    public void verifyToken(Map claims, Map userInfoClaims) throws Exception {
-        if ((claims.get("aud") != null) && claims.get("aud").equals(oidcConfiguration.getClientId()))
+    public void verifyToken(Map claimsJWT, Map userInfoClaims) throws Exception {
+        if ((claimsJWT.get("aud") != null) && claimsJWT.get("aud").equals(oidcConfiguration.getClientId()))
             return;
 
-        if ((claims.get("appid") != null) && claims.get("appid").equals(oidcConfiguration.getClientId()))
+        if ((claimsJWT.get("appid") != null) && claimsJWT.get("appid").equals(oidcConfiguration.getClientId()))
             return; //azure specific
 
         //azp - keycloak
-        Object azp = claims.get("azp");
+        Object azp = claimsJWT.get("azp");
         if (azp != null) {
             if (azp instanceof String) {
                 if (((String) azp).equals(oidcConfiguration.getClientId()))
