@@ -1199,7 +1199,7 @@
 
           <xsl:for-each select="mdq:result/mdq:DQ_QuantitativeResult">
             <xsl:variable name="qmDate" select="mdq:dateTime/gco:Date/text()"/>
-            <xsl:variable name="qmValue" select="normalize-space(mdq:value/gco:Record/text())"/>
+            <xsl:variable name="qmValue" select="normalize-space((mdq:value/gco:Record/text())[1])"/>
             <xsl:variable name="qmStatement" select="normalize-space(../../mdq:result/mdq:DQ_DescriptiveResult/mdq:statement/gco:CharacterString/text())"/>
             <xsl:variable name="qmUnit" select="mdq:valueUnit/*/gml:identifier/text()"/>
 
@@ -1207,9 +1207,9 @@
               <xsl:when test="$isDps and $qmId = 'AP.5.1'"></xsl:when>
               <xsl:otherwise>
                 <dqValues><xsl:value-of select="concat(
-                $dqId, '|', $cptName, '|', $qmId, '|', $qmName, '|',
-                $qmDate, '|', $qmValue, '|', $qmUnit, '|',
-                 $qmDefinition, '|', $qmStatement)"/></dqValues>
+                $dqId[1], '|', $cptName[1], '|', $qmId[1], '|', $qmName[1], '|',
+                $qmDate[1], '|', $qmValue[1], '|', $qmUnit[1], '|',
+                 $qmDefinition[1], '|', $qmStatement[1])"/></dqValues>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:for-each>

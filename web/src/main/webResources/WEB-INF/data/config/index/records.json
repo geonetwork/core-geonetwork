@@ -1177,14 +1177,6 @@
         }
       },
       {
-        "org": {
-          "match": "*Org*",
-          "mapping": {
-            "type": "keyword"
-          }
-        }
-      },
-      {
         "tree": {
           "match": "th_*_tree",
           "mapping": {
@@ -1262,6 +1254,14 @@
                 "type": "keyword"
               }
             }
+          }
+        }
+      },
+      {
+        "org": {
+          "match": "*Org*",
+          "mapping": {
+          "type": "keyword"
           }
         }
       },

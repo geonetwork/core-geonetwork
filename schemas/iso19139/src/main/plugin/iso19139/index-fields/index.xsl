@@ -536,7 +536,7 @@
           <xsl:variable name="keywordsForType"
                         select="$keywords[../gmd:type/*/@codeListValue = $type]
                         |$geoDesciption[$type = 'place']"/>
-          <xsl:element name="keywordType-{$type}">
+          <xsl:element name="keywordType-{normalize-space($type)}">
             <xsl:attribute name="type" select="'object'"/>
             [<xsl:for-each select="$keywordsForType">
             <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
