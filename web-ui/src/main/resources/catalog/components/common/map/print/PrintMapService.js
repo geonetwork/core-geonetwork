@@ -529,8 +529,6 @@
               textStyle.getStroke().getColor()));
           literal.labelOutlineWidth = textStyle.getStroke().getWidth();
         }
-        literal.fillOpacity = 0.0;
-        literal.pointRadius = 0;
       }
 
       return literal;
