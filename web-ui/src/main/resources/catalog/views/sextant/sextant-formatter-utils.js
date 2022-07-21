@@ -103,6 +103,10 @@
         var lineNumbers = element.getAttribute('data-line-number') != null
           ? parseInt(element.getAttribute('data-line-number'), 10)
           : MAX_HEIGHT_LINE;
+        // make sure lineheight is not null;
+        if (!lineHeightPx) {
+          lineHeightPx = 10;
+        }
         if (elHeightPx < lineHeightPx * (lineNumbers + 1)) {
           return;
         }
