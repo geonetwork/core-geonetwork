@@ -260,6 +260,9 @@
       },{
         value: '3395',
         label: 'Mercator - Datum WGS84'
+      },{
+        value: '2975',
+        label: 'RGR92 / UTM zone 40S'
       }];
 
       gnPanierSettings.formats = {

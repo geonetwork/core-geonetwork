@@ -161,15 +161,15 @@
               var rendered = false;
 
               /** object that contains the form values */
-              var inputCrs, crs = angular.isArray(scope.element.md.crs) ?
-                  scope.element.md.crs[0] : scope.element.md.crs;
+              var inputCrs, crs = angular.isArray(scope.element.md.crsDetails) ?
+                  scope.element.md.crsDetails[0] : scope.element.md.crsDetails;
 
-              var crsExp = crs && (/(?:EPSG:)(\d+)/.exec(crs));
+              var crsExp = crs && (/(?:EPSG:)(\d+)/.exec(crs.code));
               if(angular.isArray(crsExp)) {
                 crs = crsExp[1];
               }
               else {
-                crs = crs && crs.split('::')[crs.split('::').length-1];
+                crs = crs && crs.code.split('::')[crs.code.split('::').length-1];
               }
 
               if(crs) {

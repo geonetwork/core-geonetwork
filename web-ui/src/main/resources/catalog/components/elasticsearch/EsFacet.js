@@ -64,6 +64,7 @@
       'cl_spatialRepresentationType*',
       'mdStatus*',
       'recordLink',
+      'crsDetails', // SPECIFIC SEXTANT
       'th_sextant-theme_tree' // SPECIFIC SEXTANT
     ]};
     this.configs = {
