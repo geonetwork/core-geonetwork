@@ -368,12 +368,18 @@
         );
       };
 
-      this.openPrivilegesBatchPanel = function (scope, bucket) {
-        gnUtilityService.openModal(
-          {
-            title: "privileges",
-            content:
-              '<div gn-share="" ' +
+      this.submit = function(bucket, scope) {
+        gnUtilityService.openModal({
+          title: 'batchSubmitTitle',
+          content: '<div gn-metadata-batch-submit selection-bucket="' + bucket + '"></div>'
+        }, scope, 'StatusUpdated');
+
+      };
+
+      this.openPrivilegesBatchPanel = function(scope, bucket) {
+        gnUtilityService.openModal({
+          title: 'privileges',
+          content: '<div gn-share="" ' +
               'gn-share-batch="true" ' +
               'selection-bucket="' +
               bucket +

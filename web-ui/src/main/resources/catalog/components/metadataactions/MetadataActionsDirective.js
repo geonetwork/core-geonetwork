@@ -69,28 +69,83 @@
 
                   scope.$broadcast("operationOnSelectionStop");
 
-                  // A report is returned
-                  gnUtilityService.openModal(
-                    {
-                      title: translations.metadataApproved,
-                      content:
-                        '<div gn-batch-report="processReport" template-url="' +
-                        reportTemplate +
-                        '"></div>',
-                      className: "gn-status-popup",
-                      onCloseCallback: function () {
-                        scope.$emit("StatusUpdated", true);
-                        scope.$broadcast("operationOnSelectionStop");
-                        scope.processReport = null;
-                      }
-                    },
-                    scope,
-                    "StatusUpdated"
-                  );
-                },
-                function (response) {
-                  scope.$broadcast("operationOnSelectionStop");
-                  scope.$emit("metadataStatusUpdated", false);
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: translations.metadataApproved,
+                  content: '<div gn-batch-report="processReport" template-url="' + reportTemplate + '"></div>',
+                  className: 'gn-status-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('metadataStatusUpdated', true);
+                    scope.$emit('StatusUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'StatusUpdated');
+              }, function(response) {
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('metadataStatusUpdated', false);
+
+                scope.$emit('StatusUpdated', {
+                  title: $translate.instant('metadataStatusUpdatedErrors'),
+                  error: response.data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+          };
+        }
+      };
+    }]);
+
+  module.directive('gnMetadataBatchSubmit', ['$translate', '$http',
+    'gnMetadataManager', 'gnUtilityService',
+    function($translate, $http, gnMetadataManager, gnUtilityService) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'batchsubmit.html',
+        scope: {
+          selectionBucket: '@'
+        },
+        link: function(scope) {
+          var translations = null;
+          $translate(['metadataSubmitted']).then(function(t) {
+            translations = t;
+          });
+
+          scope.changeMessage = '';
+
+          scope.submit = function() {
+            scope.$broadcast('operationOnSelectionStart');
+
+            return $http.put('../api/records/submit',
+              {
+                bucket: scope.selectionBucket,
+                message: scope.changeMessage
+              }).then(
+              function(response) {
+                scope.processReport = response.data;
+                var reportTemplate = '../../catalog/components/utility/' +
+                  'partials/batchreport-workflow.html'
+
+                scope.$broadcast('operationOnSelectionStop');
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: translations.metadataSubmitted,
+                  content: '<div gn-batch-report="processReport" template-url="' + reportTemplate + '"></div>',
+                  className: 'gn-status-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('metadataStatusUpdated', true);
+                    scope.$emit('StatusUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'StatusUpdated');
+              }, function(response) {
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('metadataStatusUpdated', false);
 
                   scope.$emit("StatusUpdated", {
                     title: $translate.instant("metadataStatusUpdatedErrors"),
