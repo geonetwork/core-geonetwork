@@ -2184,7 +2184,9 @@
       <option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS 网络要素服务</option>
       <option show="-" value="ESRI:AIMS--http-get-image">ArcIMS 网络影像地图服务</option>
       <option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML 服务 (ver 2.0)</option>
-
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
