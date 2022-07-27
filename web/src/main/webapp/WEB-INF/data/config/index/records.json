@@ -1221,7 +1221,15 @@
             "type": "keyword"
           }
         }
+      }, {
+        "synonyms": {
+          "match": "synonyms*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
       }
+
     ],
     "properties": {
       "any": {
@@ -1521,6 +1529,9 @@
         "type": "keyword"
       },
       "isPublishedToAll": {
+        "type": "keyword"
+      },
+      "groupOwnerName": {
         "type": "keyword"
       },
       "groupOwner": {
