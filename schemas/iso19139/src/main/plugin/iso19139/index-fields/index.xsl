@@ -497,6 +497,11 @@
           <thesaurus name="INSPIRE priority data set"
                      id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
 
+          <thesaurus name="http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
+
+          <thesaurus name="http://inspire.ec.europa.eu/metadata-codelist/SpatialScope"
+                     id="geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" />
         </xsl:variable>
 
         <!-- Configuration for thesaurus synonyms -->
@@ -528,6 +533,8 @@
           <xsl:variable name="thesaurusId"
                         select="if($mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)])
                                   then $mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)]/@id
+                                  else if ($mappingThesaurusNameToId[@name = normalize-space($thesaurusRefAnchor)]) then
+                                  $mappingThesaurusNameToId[@name = normalize-space($thesaurusRefAnchor)]/@id
                                   else if ($thesaurusRefAnchor) then $thesaurusRefAnchor
                                   else if (normalize-space($thesaurusRef/text()))
                                   then normalize-space($thesaurusRef/text())
@@ -596,6 +603,8 @@
             <xsl:variable name="thesaurusId"
                           select="if($mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)])
                                   then $mappingThesaurusNameToId[@name = normalize-space($thesaurusTitle)]/@id
+                                  else if ($mappingThesaurusNameToId[@name = normalize-space($thesaurusRefAnchor)]) then
+                                  $mappingThesaurusNameToId[@name = normalize-space($thesaurusRefAnchor)]/@id
                                   else if ($thesaurusRefAnchor) then $thesaurusRefAnchor
                                   else if (normalize-space($thesaurusRef/text()))
                                   then normalize-space($thesaurusRef/text())
