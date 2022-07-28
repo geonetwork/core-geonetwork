@@ -70,7 +70,7 @@ public class MetadataIndicator implements Serializable {
     /**
      * Metadata indicator value.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     public String getValue() {
         return value;
     }
