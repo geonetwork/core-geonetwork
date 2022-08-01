@@ -650,7 +650,9 @@
               } else {
                 $scope.keywordSelected = null;
                 $('#keywordModal').modal('hide');
-                searchThesaurusKeyword();
+                $scope.buildHierarchy().then(function() {
+                  searchThesaurusKeyword();
+                });
                 creatingKeyword = false;
               }
             })
@@ -674,7 +676,9 @@
             .success(function(data) {
               $scope.keywordSelected = null;
               $('#keywordModal').modal('hide');
-              searchThesaurusKeyword();
+              $scope.buildHierarchy().then(function() {
+                searchThesaurusKeyword();
+              });
               selectedKeywordOldId = null;
             })
             .error(function(data) {
@@ -698,7 +702,9 @@
         $http.get('thesaurus.keyword.remove?pThesaurus=' + k.thesaurusKey +
             '&id=' + encodeURIComponent(k.uri))
             .success(function(data) {
-              searchThesaurusKeyword();
+              $scope.buildHierarchy().then(function() {
+                searchThesaurusKeyword();
+              });
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

@@ -1422,7 +1422,7 @@ public class KeywordsApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Apply Sextant format to thesaurus (ie. biuld hierarchy from / separated labels, cleanup URIs, add identifier and e for scheme.",
+        summary = "Apply Sextant format to thesaurus (ie. build hierarchy from / separated labels, cleanup URIs, add identifier and e for scheme.",
         description = ""
     )
     @RequestMapping(
