@@ -299,6 +299,7 @@ public class EsRestClient implements InitializingBean {
         searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(size);
+        searchSourceBuilder.trackTotalHits(true);
         if (postFilterBuilder != null) {
             searchSourceBuilder.postFilter(postFilterBuilder);
         }
@@ -307,7 +308,6 @@ public class EsRestClient implements InitializingBean {
             sort.forEach(s -> searchSourceBuilder.sort(s));
         }
 
-//        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
         try {
@@ -399,7 +399,7 @@ public class EsRestClient implements InitializingBean {
                     throw new IOException(String.format(
                         "Your query '%s' returned more than one record, %d in fact. Can't retrieve field values for more than one record.",
                         query,
-                        searchResponse.getHits().getTotalHits()
+                        searchResponse.getHits().getTotalHits().value
                     ));
                 }
             } else {
