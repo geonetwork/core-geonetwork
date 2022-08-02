@@ -93,7 +93,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="citation" match="citation[lower-case($format) = 'html']">
+  <xsl:template mode="citation" match="citation[lower-case($format) = ('html', '')]">
     <xsl:variable name="hasAuthor"
                   select="count(authorsNameAndOrgList/*) > 0"/>
     <xsl:variable name="hasPublisher"
@@ -125,6 +125,13 @@
               <xsl:value-of select="$url"/>
             </a>
             <br/>
+
+            <xsl:if test="additionalCitation != ''">
+              <br/>
+              <em><xsl:value-of select="$schemaStrings/citationAdditional"/></em>
+              <br/>
+              <xsl:value-of select="additionalCitation"/>
+            </xsl:if>
           </p>
         </div>
       </div>
