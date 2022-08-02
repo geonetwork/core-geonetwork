@@ -50,8 +50,8 @@
         <dependencies>
           <dependency>
             <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>8.7</version>
+            <artifactId>Saxon-HE</artifactId>
+            <version>${saxon.version}</version>
           </dependency>
           <dependency>
             <groupId>commons-codec</groupId>
@@ -117,8 +117,8 @@
                     <dependencies>
                       <dependency>
                         <groupId>net.sf.saxon</groupId>
-                        <artifactId>saxon</artifactId>
-                        <version>8.7</version>
+                        <artifactId>Saxon-HE</artifactId>
+                        <version>${saxon.version}</version>
                       </dependency>
                       <dependency>
                         <groupId>commons-codec</groupId>

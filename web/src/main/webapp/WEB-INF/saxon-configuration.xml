@@ -1,0 +1,23 @@
+<configuration xmlns="http://saxon.sf.net/ns/configuration"
+               edition="HE">
+  <global lineNumbering="true"
+          preEvaluateDoc="false"/>
+  <resources>
+    <extensionFunction>org.fao.geonet.util.xslt.EncodeForHTMLFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.EncodeForJavascriptFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetAuthServerBaseUrlFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetBuildNumberFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetClientIdFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetInitOnLoadFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetNodeNameFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetRealmFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetSecurityProviderFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetSettingValueFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationJsonPropertyFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.IsDisabledLoginFormFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.IsShowLoginAsLinkFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.IsUserGroupUpdateEnabledFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.IsUserProfileUpdateEnabledFn</extensionFunction>
+  </resources>
+</configuration>

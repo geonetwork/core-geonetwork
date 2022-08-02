@@ -85,7 +85,7 @@
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon-dom</artifactId>
+      <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
       <groupId>org.openrdf</groupId>

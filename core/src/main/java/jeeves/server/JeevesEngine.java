@@ -220,7 +220,8 @@ public class JeevesEngine {
                     if (line.length() == 0) {
                         warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
                     }
-                    TransformerFactoryFactory.init(line);
+                    File saxonConfiguration = new File(_appPath + TransformerFactoryFactory.SAXON_CONFIGURATION_PATH);
+                    TransformerFactoryFactory.init(line, saxonConfiguration);
                     break;
                 }
             }

@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:util="java:org.fao.geonet.util.XslUtil"
+<xsl:stylesheet xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
   <!-- Global XSL variables about the catalog and user session -->
@@ -48,7 +48,7 @@
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <!-- Used by SearchApi loading translation from JSON locale files. -->
   <xsl:variable name="t" select="/root/translations"/>
-  <xsl:variable name="lang" select="if (/root/gui/language) then /root/gui/language else 'eng'"/>
+  <xsl:variable name="lang" select="if (/root/gui/language != '') then /root/gui/language else 'eng'"/>
   <xsl:variable name="lang2chars" select="/root/gui/lang2chars"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 

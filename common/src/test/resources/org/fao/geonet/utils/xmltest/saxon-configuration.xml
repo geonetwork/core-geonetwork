@@ -1,0 +1,8 @@
+<configuration xmlns="http://saxon.sf.net/ns/configuration"
+               edition="HE">
+  <global lineNumbering="true"
+          preEvaluateDoc="false"/>
+  <resources>
+    <extensionFunction>org.fao.geonet.util.xslt.GetBuildNumberFn</extensionFunction>
+  </resources>
+</configuration>

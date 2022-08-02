@@ -38,6 +38,7 @@ import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.ElementSelectors;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,7 +100,8 @@ public abstract class XslProcessTest {
 
     @Before
     public void setup() throws URISyntaxException {
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        File saxonConfiguration = new File(this.getClass().getResource("saxon-configuration.xml").getFile());
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
 
         if (xslFilename != null) {
             xslFile = Paths.get(testClass.getClassLoader().getResource(xslFilename).toURI());

@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.transform.TransformerConfigurationException;
+import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -62,7 +63,8 @@ public class ISO19139SchemaPluginTest {
 
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        File saxonConfiguration = new File(this.getClass().getResource("saxon-configuration.xml").getFile());
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
 
         ns.put(
                 ISO19139Namespaces.GMD.getPrefix(),

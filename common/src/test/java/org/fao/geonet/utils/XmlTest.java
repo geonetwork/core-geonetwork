@@ -38,10 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.GenericApplicationContext;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -117,7 +114,8 @@ public class XmlTest {
 
     @Test
     public void testTransformDefaultTransformer() throws Exception {
-        TransformerFactoryFactory.init(null);
+        File saxonConfiguration = new File(XmlTest.class.getResource("xmltest/saxon-configuration.xml").getFile());
+        TransformerFactoryFactory.init(null, saxonConfiguration);
         doTestTransform();
     }
 
@@ -142,11 +140,12 @@ public class XmlTest {
 
     @Test
     public void testTransformSaxonTransformer() throws Exception {
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        File saxonConfiguration = new File(XmlTest.class.getResource("xmltest/saxon-configuration.xml").getFile());
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
         try {
             doTestTransform();
         } finally {
-            TransformerFactoryFactory.init(null);
+            TransformerFactoryFactory.init(null, saxonConfiguration);
         }
     }
 

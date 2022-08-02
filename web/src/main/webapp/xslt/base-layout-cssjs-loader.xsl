@@ -23,8 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:keycloakUtil="java:org.fao.geonet.kernel.security.keycloak.KeycloakXslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
+                xmlns:keycloakUtil="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
   <!-- Template to load CSS and Javascript -->

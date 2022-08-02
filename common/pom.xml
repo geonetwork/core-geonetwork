@@ -87,7 +87,7 @@
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon</artifactId>
+      <artifactId>Saxon-HE</artifactId>
     </dependency>
     <dependency>
       <groupId>globus</groupId>
