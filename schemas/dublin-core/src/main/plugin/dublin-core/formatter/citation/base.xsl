@@ -14,7 +14,6 @@
 
   <xsl:import href="sharedFormatterDir/xslt/render-variables.xsl"/>
   <xsl:import href="../../layout/utility-fn.xsl"/>
-  <xsl:import href="../../../iso19115-3.2018/formatter/citation/common.xsl"/>
 
   <xsl:template name="get-dublin-core-citation">
     <xsl:param name="metadata" as="node()"/>
