@@ -8,16 +8,29 @@
     <extensionFunction>org.fao.geonet.util.xslt.GetAuthServerBaseUrlFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetBuildNumberFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetClientIdFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetCodeListTranslationFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetIndexFieldFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetInitOnLoadFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetIsoLanguageLabelFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetKeywordHierarchyFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetLanguageFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetNodeNameFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetRealmFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSecurityProviderFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSettingValueFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetSiteUrlFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetThreeCharLangCodeFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetTwoCharLangCodeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationJsonPropertyFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsDisabledLoginFormFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsShowLoginAsLinkFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsUserGroupUpdateEnabledFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsUserProfileUpdateEnabledFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CodeListValueDescFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CodeListValueLabelFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CreateFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CreateForLangFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.NodeLabelFn</extensionFunction>
   </resources>
 </configuration>
