@@ -10,7 +10,7 @@
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -29,7 +29,7 @@
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"

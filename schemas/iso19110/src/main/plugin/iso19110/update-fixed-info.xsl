@@ -30,7 +30,7 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all"
 >

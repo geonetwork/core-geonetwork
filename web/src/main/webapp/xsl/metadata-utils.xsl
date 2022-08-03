@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:exslt="http://exslt.org/common"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="1.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="exslt saxon geonet java">
@@ -49,7 +49,7 @@
     </xsl:param>
 
     <xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>
-    <saxon:call-template name="{$briefSchemaCallBack}"/>
+    <xsl:call-template name="{$briefSchemaCallBack}"/>
   </xsl:template>
 
 </xsl:stylesheet>

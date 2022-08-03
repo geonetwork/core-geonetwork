@@ -24,11 +24,10 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                version="2.0" extension-element-prefixes="saxon"
->
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0">
   <!-- Global XSL variables about the metadata record. This should be included for
   service dealing with one metadata record (eg. viewing, editing). -->
 
@@ -49,21 +48,21 @@
   <xsl:variable name="isTemplate" select="$metadataInfo/isTemplate"/>
 
   <xsl:variable name="isService">
-    <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-is-service')}"/>
   </xsl:variable>
 
   <xsl:variable name="metadataTitle">
-    <saxon:call-template name="{concat('get-', $schema, '-title')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-title')}"/>
   </xsl:variable>
 
   <xsl:variable name="metadataLanguage">
-    <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-language')}"/>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguages">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-other-languages')}"/>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguagesAsJson">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
   </xsl:variable>
   <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*[not(@default)]) > 0"/>
 
@@ -92,7 +91,7 @@
   <xsl:variable name="withXPath" select="false()"/>
 
   <xsl:variable name="editorConfig">
-    <saxon:call-template name="{concat('get-', $schema, '-configuration')}"/>
+    <xsl:call-template name="{concat('get-', $schema, '-configuration')}"/>
   </xsl:variable>
 
   <xsl:variable name="iso19139EditorConfig">

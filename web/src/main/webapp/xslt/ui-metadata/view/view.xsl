@@ -45,9 +45,9 @@
 
       <!-- Dispatch to profile mode -->
       <xsl:variable name="profileTemplate" select="concat('render-',$schema)"/>
-      <saxon:call-template name="{$profileTemplate}">
+      <xsl:call-template name="{$profileTemplate}">
         <xsl:with-param name="base" select="$metadata"/>
-      </saxon:call-template>
+      </xsl:call-template>
 
     </article>
   </xsl:template>

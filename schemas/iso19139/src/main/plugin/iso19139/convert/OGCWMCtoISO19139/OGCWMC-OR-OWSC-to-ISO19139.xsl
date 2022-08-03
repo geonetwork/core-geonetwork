@@ -6,7 +6,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
                 exclude-result-prefixes="#all">

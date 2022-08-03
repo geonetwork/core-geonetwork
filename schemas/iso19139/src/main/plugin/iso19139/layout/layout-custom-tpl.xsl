@@ -5,12 +5,10 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -80,19 +78,19 @@
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
+                  <xsl:call-template name="{concat('evaluate-', $schema)}">
                     <xsl:with-param name="base" select="$base"/>
                     <xsl:with-param name="in"
                                     select="concat('/', @del, '/gn:element')"/>
-                  </saxon:call-template>
+                  </xsl:call-template>
                 </xsl:if>
 
                 <xsl:if test="@xpath != ''">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
+                  <xsl:call-template name="{concat('evaluate-', $schema)}">
                     <xsl:with-param name="base" select="$base"/>
                     <xsl:with-param name="in"
                                     select="concat('/', @xpath)"/>
-                  </saxon:call-template>
+                  </xsl:call-template>
                 </xsl:if>
               </col>
             </xsl:for-each>
@@ -104,28 +102,6 @@
                 <xsl:apply-templates mode="form-builder" select=".">
                   <xsl:with-param name="base" select="$base"/>
                 </xsl:apply-templates>
-                <!--<xsl:variable name="nodes">
-
-                <saxon:call-template name="{concat('evaluate-', $schema)}">
-                  <xsl:with-param name="base" select="$base"/>
-                  <xsl:with-param name="in"
-                                  select="concat('/', @xpath)"/>
-                </saxon:call-template>
-                </xsl:variable>
-
-                <xsl:for-each select="$nodes">
-                  <saxon:call-template name="{concat('dispatch-', $schema)}">
-                    <xsl:with-param name="base" select="."/>
-                  </saxon:call-template>
-                </xsl:for-each>
-
-                <xsl:if test="@or and @in">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/../', @in, '/gn:child[@name=''', @or, ''']')"/>
-                  </saxon:call-template>
-                </xsl:if>-->
               </col>
             </row>
           </xsl:for-each>

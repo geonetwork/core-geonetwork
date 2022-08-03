@@ -51,8 +51,9 @@
                             select="$existingMembers//*[name() = $current/@name]"/>
               <xsl:variable name="groupBy"
                             select="$current/@groupBy"/>
-              <xsl:variable name="groupKey"
-                            select="saxon:evaluate(concat('$p1/', $groupBy), $match)"/>
+              <xsl:variable name="groupKey">
+                <xsl:evaluate xpath="$groupBy" context-item="$match"/>
+              </xsl:variable>
               <xsl:variable name="elementName"
                             select="$current/@name"/>
               <xsl:variable name="merge"
@@ -74,11 +75,12 @@
                               select="current()"/>
                 <xsl:variable name="emptyKey"
                               select=". = ''"/>
-                <xsl:variable name="groupValues"
-                              select="saxon:evaluate(
-                                concat('$p1[', $groupBy, ' = ''',
-                                 replace($groupKey, '''', '''''') ,''']'), $match)"/>
-
+                <xsl:variable name="xpath"
+                              select="concat('$p1[', $groupBy, ' = ''',
+                                 replace($groupKey, '''', '''''') ,''']')"/>
+                <xsl:variable name="groupValues">
+                  <xsl:evaluate xpath="$xpath" context-item="$match"/>
+                </xsl:variable>
                 <!--
                 <xsl:message>empty: <xsl:value-of select="$emptyKey"/> </xsl:message>
                 <xsl:message> Groups: <xsl:copy-of select="$groupValues"/></xsl:message>-->

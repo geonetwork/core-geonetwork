@@ -45,7 +45,7 @@
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 extension-element-prefixes="saxon"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">

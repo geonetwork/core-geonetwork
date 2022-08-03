@@ -31,7 +31,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="gmd">
 

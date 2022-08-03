@@ -26,8 +26,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
   <!-- Provides XSL function related to metadata management like
   retrieving labels, helper, -->
@@ -192,11 +191,11 @@
         <xsl:for-each select="$codelists">
           <xsl:if test="@displayIf">
             <xsl:variable name="match">
-              <saxon:call-template name="{concat('evaluate-', $schema)}">
+              <xsl:call-template name="{concat('evaluate-', $schema)}">
                 <xsl:with-param name="base"
                                 select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
                 <xsl:with-param name="in" select="concat('/', @displayIf)"/>
-              </saxon:call-template>
+              </xsl:call-template>
             </xsl:variable>
             <xsl:if test="$match != ''">
               <xsl:copy-of select="."/>
@@ -273,11 +272,11 @@
           <xsl:variable name="helpersMatchingCurrentRecord">
             <xsl:for-each select="$helper[@displayIf]">
               <xsl:variable name="match">
-                <saxon:call-template name="{concat('evaluate-', $schema)}">
+                <xsl:call-template name="{concat('evaluate-', $schema)}">
                   <xsl:with-param name="base"
                                   select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
                   <xsl:with-param name="in" select="concat('/', @displayIf)"/>
-                </saxon:call-template>
+                </xsl:call-template>
               </xsl:variable>
 
               <xsl:if test="$match/*">

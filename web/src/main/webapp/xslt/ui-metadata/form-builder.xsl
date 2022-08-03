@@ -26,10 +26,10 @@
                 xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/" version="2.0"
-                extension-element-prefixes="saxon" exclude-result-prefixes="#all">
+                version="3.0"
+                exclude-result-prefixes="#all">
   <!-- Build the form for creating HTML elements. -->
 
   <xsl:import href="../common/base-variables-metadata.xsl"/>
@@ -168,10 +168,10 @@
                 <xsl:choose>
                   <xsl:when test="starts-with(., 'eval#')">
                     <xsl:attribute name="{name()}">
-                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                      <xsl:call-template name="{concat('evaluate-', $schema)}">
                         <xsl:with-param name="base" select="$node"/>
                         <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
-                      </saxon:call-template>
+                      </xsl:call-template>
                     </xsl:attribute>
                   </xsl:when>
                   <xsl:otherwise>
@@ -1028,11 +1028,11 @@
 
 
                           <xsl:attribute name="{name(.)}">
-                            <saxon:call-template name="{concat('evaluate-', $schema)}">
+                            <xsl:call-template name="{concat('evaluate-', $schema)}">
                               <xsl:with-param name="base" select="$metadata//*[gn:element/@ref = $parentEditInfo/@ref]"/>
                               <xsl:with-param name="in"
                                               select="concat('/../', $xpath)"/>
-                            </saxon:call-template>
+                            </xsl:call-template>
                           </xsl:attribute>
                         </xsl:when>
                         <xsl:otherwise>
@@ -1252,10 +1252,10 @@
                   <xsl:choose>
                     <xsl:when test="starts-with(., 'eval#')">
                       <xsl:attribute name="{name()}">
-                        <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:call-template name="{concat('evaluate-', $schema)}">
                           <xsl:with-param name="base" select="$node"/>
                           <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
-                        </saxon:call-template>
+                        </xsl:call-template>
                       </xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1848,7 +1848,7 @@
                       </xsl:when>
                       <xsl:otherwise>
                         <!-- Call schema render mode of the field without label and controls.-->
-                        <saxon:call-template name="{concat('dispatch-', $schema)}">
+                        <xsl:call-template name="{concat('dispatch-', $schema)}">
                           <xsl:with-param name="base" select=".[name() != 'directiveAttributes']"/>
                           <xsl:with-param name="config" as="node()?">
                             <xsl:if test="@use">
@@ -1857,7 +1857,7 @@
                               </field>
                             </xsl:if>
                           </xsl:with-param>
-                        </saxon:call-template>
+                        </xsl:call-template>
                       </xsl:otherwise>
                     </xsl:choose>
 

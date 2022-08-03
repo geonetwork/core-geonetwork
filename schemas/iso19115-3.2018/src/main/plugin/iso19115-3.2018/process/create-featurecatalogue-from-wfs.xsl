@@ -30,7 +30,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" exclude-result-prefixes="#all">
 

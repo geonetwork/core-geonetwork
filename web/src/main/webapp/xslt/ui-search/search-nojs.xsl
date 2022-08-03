@@ -24,7 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
   <!--

@@ -32,7 +32,7 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 xmlns:void="http://www.w3.org/TR/void/"
-                xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
+                xmlns:xslUtils="https://geonetwork-opensource.org/xsl-extension"
                 version="1.0">
 
   <xsl:import href="../../layout/tpl-rdf.xsl"/>

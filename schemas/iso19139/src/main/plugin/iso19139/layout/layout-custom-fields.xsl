@@ -31,7 +31,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"

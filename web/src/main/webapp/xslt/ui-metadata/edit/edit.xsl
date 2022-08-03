@@ -22,11 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
-                version="2.0"
-                extension-element-prefixes="saxon" exclude-result-prefixes="#all">
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0"
+                exclude-result-prefixes="#all">
 
 
   <!-- The editor form.
@@ -111,7 +110,7 @@
 
 
           <xsl:variable name="metadataExtents">
-            <saxon:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
+            <xsl:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
           </xsl:variable>
           <input type="hidden" id="extent" value="{normalize-space($metadataExtents)}"/>
 
@@ -152,9 +151,9 @@
               <xsl:apply-templates mode="render-xml" select="$metadata"/>
             </xsl:when>
             <xsl:otherwise>
-              <saxon:call-template name="{concat('dispatch-',$schema)}">
+              <xsl:call-template name="{concat('dispatch-',$schema)}">
                 <xsl:with-param name="base" select="$metadata"/>
-              </saxon:call-template>
+              </xsl:call-template>
             </xsl:otherwise>
           </xsl:choose>
         </div>
@@ -183,9 +182,9 @@
     <xsl:param name="id"/>
 
     <xsl:variable name="config">
-      <saxon:call-template name="{concat('get-', $schema, '-online-source-config')}">
+      <xsl:call-template name="{concat('get-', $schema, '-online-source-config')}">
         <xsl:with-param name="pattern" select="$pattern"/>
-      </saxon:call-template>
+      </xsl:call-template>
     </xsl:variable>
 
     <xsl:if test="$config/config/*">

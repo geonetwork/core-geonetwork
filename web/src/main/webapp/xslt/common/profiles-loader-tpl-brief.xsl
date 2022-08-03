@@ -22,10 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                version="3.0">
   <!--
     Load the brief template loader if the metadata has to be
     converted to its brief format. Use the mode="brief" on each
@@ -75,7 +74,7 @@
   <xsl:template match="*" mode="brief">
     <xsl:variable name="schema" select="gn:info/schema"/>
     <xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>
-    <saxon:call-template name="{$briefSchemaCallBack}"/>
+    <xsl:call-template name="{$briefSchemaCallBack}"/>
   </xsl:template>
 
 </xsl:stylesheet>

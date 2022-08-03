@@ -5,7 +5,7 @@
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
-  xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+  xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
   exclude-result-prefixes="#all">
 
   <!-- Get the main metadata languages -->

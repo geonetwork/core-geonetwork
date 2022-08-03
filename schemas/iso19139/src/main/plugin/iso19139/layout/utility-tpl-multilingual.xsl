@@ -26,7 +26,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
@@ -98,8 +99,9 @@
     <xsl:text>{</xsl:text><xsl:value-of select="string-join($langs/lang, ',')"/><xsl:text>}</xsl:text>
   </xsl:template>
 
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19139-other-languages">
+  <xsl:function name="gn-fn-metadata:get-iso19139-other-languages">
+    <xsl:param name="metadata" as="node()"/>
+
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:choose>
       <xsl:when test="$isTemplate = 's' or $isTemplate = 't'">
@@ -125,6 +127,11 @@
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:function>
+
+  <!-- Get the list of other languages -->
+  <xsl:template name="get-iso19139-other-languages">
+    <xsl:copy-of select="gn-fn-metadata:get-iso19139-other-languages($metadata)"/>
   </xsl:template>
 
   <!-- Template used to return a translation if one found,

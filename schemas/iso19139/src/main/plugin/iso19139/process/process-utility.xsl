@@ -23,7 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"

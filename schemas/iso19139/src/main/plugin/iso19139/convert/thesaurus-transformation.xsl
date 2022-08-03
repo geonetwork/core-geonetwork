@@ -29,7 +29,7 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 version="2.0"

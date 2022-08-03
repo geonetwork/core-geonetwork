@@ -38,9 +38,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 
@@ -53,36 +51,45 @@
 
        A node returned by evaluate will lost its context (ancestors).
     -->
-  <xsl:template name="evaluate-iso19139">
+  <xsl:function name="gn-fn-metadata:evaluate-iso19139" as="node()?">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
-    <!-- <xsl:message>in xml <xsl:copy-of select="$base"></xsl:copy-of></xsl:message>
-     <xsl:message>search for <xsl:copy-of select="$in"></xsl:copy-of></xsl:message>-->
-    <xsl:variable name="nodeOrAttribute" select="saxon:evaluate(concat('$p1', $in), $base)"/>
+    <!--
+     <xsl:message>in xml <xsl:copy-of select="$base"></xsl:copy-of></xsl:message>
+     <xsl:message>search for <xsl:copy-of select="$in"></xsl:copy-of></xsl:message>
+    -->
+      <xsl:evaluate xpath="$in" context-item="$base"/>
+    <!--<xsl:variable name="nodeOrAttribute">
+    </xsl:variable>
 
     <xsl:choose>
       <xsl:when test="$nodeOrAttribute instance of text()+">
+        <xsl:message>text</xsl:message>
         <xsl:value-of select="$nodeOrAttribute"/>
       </xsl:when>
       <xsl:when test="$nodeOrAttribute instance of element()+">
+        <xsl:message>el</xsl:message>
         <xsl:copy-of select="$nodeOrAttribute"/>
       </xsl:when>
       <xsl:when test="$nodeOrAttribute instance of attribute()+">
+        <xsl:message>att</xsl:message>
         <xsl:value-of select="$nodeOrAttribute"/>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:message>?</xsl:message>
         <xsl:value-of select="$nodeOrAttribute"/>
       </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+    </xsl:choose>-->
+  </xsl:function>
 
   <!-- Evaluate XPath returning a boolean value. -->
-  <xsl:template name="evaluate-iso19139-boolean">
+  <xsl:function name="gn-fn-metadata:evaluate-iso19139-boolean"
+                as="xs:boolean">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
 
-    <xsl:value-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
-  </xsl:template>
+    <xsl:evaluate xpath="$in" context-item="$base"/>
+  </xsl:function>
 
 
 </xsl:stylesheet>

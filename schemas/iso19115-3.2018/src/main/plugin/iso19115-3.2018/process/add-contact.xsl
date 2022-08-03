@@ -7,7 +7,7 @@
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" exclude-result-prefixes="#all">
 

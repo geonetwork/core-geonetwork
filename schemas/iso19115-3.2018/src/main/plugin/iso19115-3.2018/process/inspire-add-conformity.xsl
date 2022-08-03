@@ -10,22 +10,22 @@
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 exclude-result-prefixes="#all">
-  
+
   <xsl:import href="process-utility.xsl"/>
-  
+
   <xsl:variable name="dateFormat">[Y0001]-[M01]-[D01]</xsl:variable>
-  
+
   <xsl:param name="dataDir"/>
-  
+
   <!-- i18n information -->
   <xsl:variable name="inspire-conformity-loc">
     <msg id="a" xml:lang="eng"> INSPIRE theme(s) found. Run this task to add an INSPIRE conformity section.</msg>
     <msg id="a" xml:lang="fre"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une section conformité INSPIRE.</msg>
   </xsl:variable>
-  
-  
+
+
   <!--
         Mapping between INSPIRE Themes from annex I and Data sepcification title
         -->
@@ -55,7 +55,7 @@
       <spec title="RÈGLEMENT (UE) N o 1089/2010 DE LA COMMISSION du 23 novembre 2010 portant modalités d'application de la directive 2007/2/CE du Parlement européen et du Conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques" date="2010-12-08"/>
     </fre>
   </xsl:variable>
-  
+
   <xsl:variable name="inspire-thesaurus"
     select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
 
@@ -90,7 +90,7 @@
 
 
   <!-- ================================================================= -->
-  <!-- Add a dataQuality section to set INSPIRE conformance result     
+  <!-- Add a dataQuality section to set INSPIRE conformance result
 		 Set the report date to metadata date stamp					       -->
   <!-- ================================================================= -->
   <xsl:template match="/mdb:MD_Metadata">
@@ -116,7 +116,7 @@
                             mdb:dataQualityInfo"/>
 
 
-      <!-- Add one data quality report per themes from Annex I -->      
+      <!-- Add one data quality report per themes from Annex I -->
       <xsl:variable name="keywords"
                     select="//mri:keyword/gco:CharacterString"/>
       <xsl:variable name="metadataLanguage"
@@ -161,8 +161,8 @@
           </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
-      
-      
+
+
       <!-- For Annex II and III and reference to commission regulation 1089/2010 -->
       <xsl:variable name="isThemesFromAnnexIIorIII">
         <xsl:for-each select="$metadataInspireThemes">
@@ -178,7 +178,7 @@
           $theme != 'protected sites'"><xsl:value-of select="true()"/></xsl:if>
         </xsl:for-each>
       </xsl:variable>
-      
+
       <xsl:if test="$isThemesFromAnnexIIorIII">
         <xsl:variable name="defaultTitle"
                         select="$specificationTitles/eng/
@@ -213,7 +213,7 @@
     <xsl:param name="title"/>
     <xsl:param name="pass" select="'0'"/>
     <xsl:param name="date" select="format-dateTime(current-dateTime(),$dateFormat)"/>
-    
+
     <mdb:dataQualityInfo>
       <mdq:DQ_DataQuality>
         <mdq:scope>

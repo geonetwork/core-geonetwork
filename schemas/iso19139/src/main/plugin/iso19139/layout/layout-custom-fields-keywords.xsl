@@ -29,10 +29,10 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+                xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
 

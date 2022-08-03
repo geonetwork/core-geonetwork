@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
                 xmlns:gnf="http://www.fao.org/geonetwork/functions"
                 version="2.0"
                 exclude-result-prefixes="tr gnf">

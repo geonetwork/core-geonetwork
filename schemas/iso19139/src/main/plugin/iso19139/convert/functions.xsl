@@ -24,7 +24,7 @@
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:date="http://exslt.org/dates-and-times"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
                 version="2.0"

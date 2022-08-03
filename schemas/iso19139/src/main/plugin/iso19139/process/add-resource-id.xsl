@@ -28,7 +28,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:import href="../../iso19139/process/process-utility.xsl"/>

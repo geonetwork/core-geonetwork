@@ -51,9 +51,9 @@
         select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
         <!-- Dispatch to profile mode -->
         <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
-        <saxon:call-template name="{$profileTemplate}">
+        <xsl:call-template name="{$profileTemplate}">
           <xsl:with-param name="base" select="."/>
-        </saxon:call-template>
+        </xsl:call-template>
       </xsl:for-each>
     </xsl:variable>
 
