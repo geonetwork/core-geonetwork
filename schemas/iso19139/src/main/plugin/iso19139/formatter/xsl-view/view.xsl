@@ -327,6 +327,16 @@
                     select="gmd:identificationInfo/*/gmd:citation/*/gmd:otherCitationDetails"/>
 
       <xsl:choose>
+        <!-- Landing page case -->
+        <xsl:when test="$language = 'all'">
+          <xsl:variable name="citationInfo">
+            <xsl:call-template name="get-iso19139-citation">
+              <xsl:with-param name="metadata" select="$metadata"/>
+              <xsl:with-param name="language" select="$language"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:apply-templates mode="citation" select="$citationInfo"/>
+        </xsl:when>
         <xsl:when test="count($forcedCitation) > 0">
           <xsl:variable name="txt">
             <xsl:for-each select="$forcedCitation">
@@ -345,16 +355,6 @@
                data-gn-metadata-citation=""
                data-text="{$citation}">
           </div>
-        </xsl:when>
-        <!-- Landing page case -->
-        <xsl:when test="$language = 'all'">
-          <xsl:variable name="citationInfo">
-            <xsl:call-template name="get-iso19139-citation">
-              <xsl:with-param name="metadata" select="$metadata"/>
-              <xsl:with-param name="language" select="$language"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:apply-templates mode="citation" select="$citationInfo"/>
         </xsl:when>
         <xsl:otherwise>
           <div data-ng-if="showCitation"
