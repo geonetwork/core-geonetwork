@@ -65,7 +65,7 @@
   <citationProposal>Citation proposal</citationProposal>
   <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
   <associatedResources>Associated resources</associatedResources>
-
+  <citationAdditional>When using this dataset in a publication, also cite the related work(s) with:</citationAdditional>
 
   <add-resource-id>Compute resource identifier</add-resource-id>
   <add-resource-idHelp>Compose the resource identifier using the catalog URL and

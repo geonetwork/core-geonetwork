@@ -565,6 +565,6 @@
   <sxt-view-temporal>Couverture temporelle</sxt-view-temporal>
   <sxt-keyword-section>Mots clés</sxt-keyword-section>
   <sxt-view-related>Ressources associées</sxt-view-related>
-  <sxt-record-citation>Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :</sxt-record-citation>
+  <citationAdditional>Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :</citationAdditional>
   <sxt-view-networkLink>Chemin d'accès</sxt-view-networkLink>
 </strings>

@@ -58,6 +58,8 @@
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
   <xsl:include href="../../formatter/jsonld/iso19115-3.2018-to-jsonld.xsl"/>
+  <xsl:include href="../../formatter/citation/base.xsl"/>
+  <xsl:include href="../../formatter/citation/common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -330,69 +332,19 @@
                   <xsl:with-param name="txt" select="$txt"/>
                 </xsl:call-template>
               </xsl:when>
-              <xsl:otherwise>
-                <p>
-                <!-- Custodians -->
-                <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/
-                                    *[cit:role/*/@codeListValue = ('custodian', 'author')]">
-
-                  <xsl:variable name="name"
-                                select="normalize-space(.//cit:individual/*/cit:name[1])"/>
-
-                  <xsl:value-of select="$name"/>
-                  <xsl:if test="$name != ''"><xsl:comment select="'.'"/>(</xsl:if>
-                  <xsl:for-each select="cit:party/*/cit:name">
-                    <xsl:call-template name="get-iso19115-3.2018-localised">
-                      <xsl:with-param name="langId" select="$langId"/>
-                    </xsl:call-template>
-                  </xsl:for-each>
-                  <xsl:if test="$name">)</xsl:if>
-                  <xsl:if test="position() != last()"><xsl:comment select="'.'"/>-<xsl:comment select="'.'"/></xsl:if>
-                </xsl:for-each>
-
-                <!-- Publication year: use last publication or revision date -->
-                <xsl:variable name="publicationDate">
-                  <xsl:perform-sort select="mdb:identificationInfo/*/mri:citation/*/cit:date/*[
-                                      cit:dateType/*/@codeListValue = ('publication', 'revision')]/
-                                        cit:date/gco:*[. != '']">
-                    <xsl:sort select="." order="descending"/>
-                  </xsl:perform-sort>
-                </xsl:variable>
-                <xsl:choose>
-                  <xsl:when test="$publicationDate/*[1]">
-                    <xsl:for-each select="$publicationDate/*[1]">
-                      (<xsl:value-of select="substring($publicationDate, 1, 4)"/>).
-                    </xsl:for-each>
-                  </xsl:when>
-                  <xsl:otherwise>.<xsl:comment select="'.'"/></xsl:otherwise>
-                </xsl:choose>
-
-                <!-- Title -->
-                <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:title">
-                  <xsl:call-template name="get-iso19115-3.2018-localised">
-                    <xsl:with-param name="langId" select="$langId"/>
+              <!-- Landing page case -->
+              <xsl:when test="$language = 'all'">
+                <xsl:variable name="citationInfo">
+                  <xsl:call-template name="get-iso19115-3.2018-citation">
+                    <xsl:with-param name="metadata" select="$metadata"/>
+                    <xsl:with-param name="language" select="$language"/>
                   </xsl:call-template>
-                </xsl:for-each>
-
-                <xsl:text>. </xsl:text>
-
-                <!-- Publishers -->
-                <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/
-                                    *[cit:role/*/@codeListValue = 'publisher']">
-                  <xsl:for-each select="cit:party/*/cit:name">
-                    <xsl:call-template name="get-iso19115-3.2018-localised">
-                      <xsl:with-param name="langId" select="$langId"/>
-                    </xsl:call-template>
-                  </xsl:for-each>
-                  <xsl:if test="position() != last()"><xsl:comment select="'.'"/>-<xsl:comment select="'.'"/></xsl:if>
-                </xsl:for-each>
-
-                <br/>
-                <a href="{$landingPageUrl}">
-                  <xsl:value-of select="$landingPageUrl"/>
-                </a>
-                <br/>
-              </p>
+                </xsl:variable>
+                <xsl:apply-templates mode="citation" select="$citationInfo"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <div data-ng-if="showCitation"
+                     data-gn-metadata-citation="md"/>
               </xsl:otherwise>
             </xsl:choose>
           </div>

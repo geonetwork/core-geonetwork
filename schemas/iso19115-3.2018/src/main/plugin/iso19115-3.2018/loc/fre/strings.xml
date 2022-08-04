@@ -55,7 +55,7 @@
   <citationProposal>Proposition de citation</citationProposal>
   <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
   <associatedResources>Ressources associées</associatedResources>
-
+  <citationAdditional>Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :</citationAdditional>
 
 
   <add-resource-id>Générer un identifiant</add-resource-id>

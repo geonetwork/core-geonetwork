@@ -560,6 +560,94 @@
     }
   ]);
 
+
+  module.service('gnClipboard', ['$q', function ($q) {
+    return {
+      copy: function (toCopy) {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-write"})
+          .then(function(result) {
+            if (result.state == "granted" || result.state == "prompt") {
+              navigator.clipboard.writeText(toCopy).then(function() {
+                deferred.resolve();
+              }, function() {
+                deferred.reject();
+              });
+            }
+          }, function() {
+            deferred.reject();
+          });
+        return deferred.promise;
+      },
+      paste: function () {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-read"})
+          .then(function(result) {
+            if (result.state == "granted" || result.state == "prompt") {
+              navigator.clipboard.readText().then(function(text) {
+                deferred.resolve(text);
+              }, function() {
+                deferred.reject();
+              });
+            }
+          }, function() {
+            deferred.reject();
+          });
+        return deferred.promise;
+      }
+    }
+  }])
+
+  /*
+   * @description
+   * Put a string in a input field with copy to clipboard functions attached to it.
+   *
+   * The code to be used in a HTML page:
+   *
+   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}"></span>
+   *
+   * or
+   *
+   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="true"></span>
+   *
+   * The first option displays an input and copy button. Copying the text to the clipboard is triggered by
+   * clicking on the button or in the input.
+   *
+   * The second option only displays the copy button (in case the input is not needed). The input is
+   * moved out of sight, because for copying you need an input (or textarea)
+   */
+  module.directive('gnCopyToClipboardButton', ['gnClipboard', '$timeout',
+    function(gnClipboard, $timeout) {
+      return {
+        restrict: 'A',
+        replace: true,
+        template: '<a class="{{::btnClass || \'btn btn-default btn-xs\'}}" ' +
+          '           ng-click="copy()" ' +
+          '           href=""' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-fw" ' +
+          '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
+          '</a>',
+        scope: {
+          btnClass: '@'
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.copied = false;
+          scope.title = attr['tooltip'] || 'copyToClipboard';
+          scope.copy = function() {
+            gnClipboard.copy(
+              attr['text']
+                ? attr['text']
+                : element.parent().text().trim()).then(function() {
+              scope.copied = true;
+              $timeout(function() {scope.copied = false}, attr['timeout'] || 2000);
+            })
+          }
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnMetadataPicker

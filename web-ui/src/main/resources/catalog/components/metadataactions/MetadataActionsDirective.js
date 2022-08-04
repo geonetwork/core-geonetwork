@@ -401,6 +401,96 @@
   );
 
 
+  module.directive('gnMetadataCitation', [
+    '$translate', '$http', '$filter',
+    function($translate, $http, $filter) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'citation.html',
+        scope: {
+          md: '=gnMetadataCitation',
+          format: '@',
+          text: '@'
+        },
+        link: function(scope) {
+          scope.defaultFormat = 'html';
+          scope.currentFormat = null;
+          scope.formats = [];
+          scope.citationText = '';
+          scope.citationAvailable = false;
+          scope.isCode = false;
+
+          function buildUrl() {
+            return '../api/records/' + scope.md.uuid + '/formatters/citation?format=';
+          }
+
+          scope.getCitation = function(format) {
+            return $http.get(buildUrl() + format, {
+              cache: true,
+              headers: {'Accept': format === '?' ? 'application/json' : 'text/plain'}
+            })
+              .then(function(r) {
+                if(format === '?') {
+                  scope.formats = [];
+                  for (var i = 0; i < r.data.length; i ++) {
+                    var f = r.data[i],
+                      prefix = 'cite.format.',
+                      translation = $translate.instant(prefix + f),
+                      translationFound = translation.indexOf(prefix) === -1,
+                      help = $translate.instant(prefix + f + '.help'),
+                      helpFound = translation.indexOf(prefix) === -1;
+                    scope.formats.push({
+                      id: f,
+                      label: translationFound ? translation : f,
+                      help: helpFound ? help : ''
+                    })
+                  }
+                } else {
+                  scope.currentFormat = format;
+                  scope.isCode = ['ris', 'bibtex'].indexOf(format) != -1;
+                  scope.citationText = r.data;
+                  scope.citationAvailable = true;
+                }
+              }, function(r) {
+                scope.citationAvailable = false;
+              });
+          }
+
+          function loadCitation() {
+            scope.citationAvailable = false;
+            scope.getCitation('?').then(function() {
+              scope.getCitation(scope.format || scope.defaultFormat);
+            });
+          }
+
+          if (scope.md) {
+            loadCitation();
+          }
+
+          if (scope.text) {
+            scope.citationText = '<blockquote>\n' +
+              '      <div class="row">\n' +
+              '        <div class="col-md-3">\n' +
+              '          <i class="fa fa-quote-left pull-right"></i>\n' +
+              '        </div>\n' +
+              '        <div class="col-md-9">\n' +
+              '          <p>' +  $filter('linky')(scope.text, '_blank') +
+              '</p></div></div></blockquote>';
+            scope.citationAvailable = true;
+          }
+
+          scope.$watchCollection('md', function(n, o) {
+            if (n && n !== o) {
+              loadCitation();
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnTransferOwnership

@@ -778,7 +778,11 @@ goog.require('gn_alert');
         'recordview': {
           'isSocialbarEnabled': true,
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
-          'showStatusTopBarFor': ''
+          'showStatusTopBarFor': '',
+          'showCitation': {
+            'enabled': true,
+            'if': null // {'documentStandard': ['iso19115-3.2018']}
+          }
         },
         'editor': {
           'enabled': true,

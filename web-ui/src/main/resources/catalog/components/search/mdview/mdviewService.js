@@ -285,10 +285,11 @@
     'gnMetadataManager',
     'sxtService',
     'gnUtilityService',
+    'gnGlobalSettings',
     function($rootScope, $http, $compile, $translate,
              $sce, gnAlertService, gnConfig,
              gnSearchSettings, $q, gnMetadataManager, sxtService,
-             gnUtilityService) {
+             gnUtilityService, gnGlobalSettings) {
 
 
       /**
@@ -415,6 +416,7 @@
             newscope.fragment =
                 $compile(angular.element(response.data))(newscope);
 
+            newscope.showCitation = gnGlobalSettings.gnCfg.mods.recordview.showCitation;
             var el = document.createElement('div');
             el.setAttribute('gn-metadata-display', '');
             el.setAttribute('template',

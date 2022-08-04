@@ -213,5 +213,12 @@
   "searchInAllLanguages": "in all languages",
   "searchInUILanguage": "in UI language",
   "searchInDetectedLanguage": "in detected language",
-  "forceALanguage": "in language:"
+  "forceALanguage": "in language:",
+  "cite.dataset": "Cite dataset",
+  "cite.format.html": "Html",
+  "cite.format.text": "Text",
+  "cite.format.ris": "RIS",
+  "cite.format.ris.help": "Tag format developed by Research Information Systems.",
+  "cite.format.bibtex": "BibTex",
+  "cite.format.bibtex.help": "A BibTeX database file is formed by a list of entries, with each entry corresponding to a bibliographical item."
 }

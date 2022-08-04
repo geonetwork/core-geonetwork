@@ -178,5 +178,12 @@
   "IndexReadOnlyHealthCheck": "L'index est en lecture seule",
   "summary": "Sommaire",
   "metadataRecords": "Fiches",
-  "results": "Résultats"
+  "results": "Résultats",
+  "cite.dataset": "Citer la ressource",
+  "cite.format.html": "Html",
+  "cite.format.text": "Texte",
+  "cite.format.ris": "RIS",
+  "cite.format.ris.help": "Format développé par Research Information Systems.",
+  "cite.format.bibtex": "BibTex",
+  "cite.format.bibtex.help": "A BibTeX database file is formed by a list of entries, with each entry corresponding to a bibliographical item."
 }

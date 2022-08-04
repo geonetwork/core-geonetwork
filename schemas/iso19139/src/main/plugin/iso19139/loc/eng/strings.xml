@@ -580,6 +580,6 @@
   <sxt-view-temporal>Temporal coverage</sxt-view-temporal>
   <sxt-keyword-section>Tags</sxt-keyword-section>
   <sxt-view-related>Related resources</sxt-view-related>
-  <sxt-record-citation>When using this dataset in a publication, also cite the related work(s) with:</sxt-record-citation>
+  <citationAdditional>When using this dataset in a publication, also cite the related work(s) with:</citationAdditional>
   <sxt-view-networkLink>Data access</sxt-view-networkLink>
 </strings>
