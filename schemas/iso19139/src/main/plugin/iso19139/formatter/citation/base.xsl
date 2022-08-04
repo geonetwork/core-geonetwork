@@ -47,13 +47,13 @@
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
+          <!--<xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select=".//gmd:organisationName">
             <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>-->
         </author>
       </xsl:for-each>
     </xsl:variable>
@@ -159,7 +159,7 @@
 
 
     <xsl:variable name="additionalCitation">
-      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/gmd:description">
+      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--publication-URL')]/gmd:description">
         <xsl:call-template name="localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
