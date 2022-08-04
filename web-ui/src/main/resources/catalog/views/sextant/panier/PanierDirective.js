@@ -161,30 +161,38 @@
               var rendered = false;
 
               /** object that contains the form values */
-              var inputCrs, crs = angular.isArray(scope.element.md.crsDetails) ?
+              var inputCrs, outputCrs,
+                  crs = angular.isArray(scope.element.md.crsDetails) ?
                   scope.element.md.crsDetails[0] : scope.element.md.crsDetails;
 
-              var crsExp = crs && (/(?:EPSG:)(\d+)/.exec(crs.code));
+              var crsExp = crs && (/(?:EPSG:)(\d+)/.exec(crs.code)),
+              httpUrlPrefix = "http://www.opengis.net/def/crs/EPSG/0/";
               if(angular.isArray(crsExp)) {
-                crs = crsExp[1];
-              }
-              else {
-                crs = crs && crs.code.split('::')[crs.code.split('::').length-1];
+                inputCrs = crsExp[1];
+              } else if (crs
+                && crs.code.indexOf(httpUrlPrefix) === 0) {
+                inputCrs = crs.code.replace(httpUrlPrefix, "");
+              } else {
+                inputCrs = crs && crs.code.split('::')[crs.code.split('::').length-1];
               }
 
-              if(crs) {
-                for(var i=0;i<gnPanierSettings.projs.length;i++) {
-                  var p = gnPanierSettings.projs[i];
-                  if(p.value == crs) {
-                    inputCrs = crs;
-                    break;
-                  }
-                }
-              }
               if(!inputCrs) {
                 inputCrs = gnPanierSettings.projs[0].value;
               }
 
+              if(inputCrs) {
+                for(var i = 0; i < gnPanierSettings.projs.length; i++) {
+                  var p = gnPanierSettings.projs[i];
+                  if(p.value == inputCrs) {
+                    outputCrs = inputCrs;
+                    break;
+                  }
+                }
+              }
+
+              if(!outputCrs) {
+                outputCrs = gnPanierSettings.projs[0].value;
+              }
 
               var dataTypes = scope.element.md.cl_spatialRepresentationType;
               var dataType;
@@ -209,7 +217,7 @@
                 },
                 output: {
                   format: scope.formats[0].value,
-                  epsg: inputCrs,
+                  epsg: outputCrs,
                   name: scope.element.link.name
                 },
 
