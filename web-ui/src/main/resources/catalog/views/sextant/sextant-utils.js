@@ -25,7 +25,10 @@
       '#WWW:FTP'
     ];
 
-    var allDownloadTypes = gnGlobalSettings.gnCfg.mods.search.linkTypes.downloads;
+    // Sextant / Exact match on protocol
+    // https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/542#note_95919
+    var allDownloadTypes = gnGlobalSettings.gnCfg.mods.search.linkTypes.downloads
+      .map(function(p) {return '#' + p});
 
     var downloadTypes = panierEnabled ? allDownloadTypes : directDownloadTypes;
 
