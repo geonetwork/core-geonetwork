@@ -38,7 +38,7 @@ import java.util.zip.ZipFile;
 
 /**
  * Instances of this class represent geographic files. A geographic file can be a ZIP file including
- * ESRI Shapefiles and GeoTIFF files, or an individual GeoTIFF file.
+ * ESRI Shapefiles, GeoPackage, and GeoTIFF files, or an individual GeoTIFF file or individual GeoPackage file.
  *
  * @author Éric Lemoine, Camptocamp France SAS
  * @author Francois Prunayre
@@ -46,6 +46,7 @@ import java.util.zip.ZipFile;
 public class GeoFile implements Closeable {
     private FileSystem zipFile = null;
     private Path file = null;
+    private String _format = null;
     private boolean _containsSld = false;
     private String _sldBody;
 
@@ -153,6 +154,7 @@ public class GeoFile implements Closeable {
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         String fileName = file.getFileName().toString();
                         if (fileIsShp(fileName)) {
+                            _format = "shp";
                             String base = getBase(fileName);
 
                             if (onlyOneFileAllowed) {
@@ -167,6 +169,29 @@ public class GeoFile implements Closeable {
                                 } else
                                     throw new IllegalArgumentException(
                                         "Shapefile name ("
+                                            + base
+                                            + ") is not equal to ZIP file name ("
+                                            + file.getFileName() + ").");
+                            } else {
+                                layers.add(base);
+                            }
+                        }
+                        if (fileIsGpkg(fileName)) {
+                            _format = "gpkg";
+                            String base = getBase(fileName);
+
+                            if (onlyOneFileAllowed) {
+                                if (layers.size() > 1)
+                                    throw new IllegalArgumentException(
+                                        "Only one geopackage per zip is allowed. "
+                                            + layers.size()
+                                            + " geopackage found.");
+
+                                if (base.equals(getBase(fileName))) {
+                                    layers.add(base);
+                                } else
+                                    throw new IllegalArgumentException(
+                                        "Geopackage name ("
                                             + base
                                             + ") is not equal to ZIP file name ("
                                             + file.getFileName() + ").");
@@ -195,6 +220,12 @@ public class GeoFile implements Closeable {
                 is.close();
                 zf.close();
             }
+        } else {
+            String fileName = file.getFileName().toString();
+            if (fileIsGpkg(fileName)) {
+                _format = "gpkg";
+                layers.add(getBase(fileName));
+            }
         }
 
         return layers;
@@ -214,6 +245,7 @@ public class GeoFile implements Closeable {
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         String fileName = file.getFileName().toString();
                         if (fileIsGeotif(fileName)) {
+                            _format = "tiff";
                             layers.add(getBase(fileName));
                         }
                         return FileVisitResult.CONTINUE;
@@ -223,6 +255,7 @@ public class GeoFile implements Closeable {
         } else {
             String fileName = file.getFileName().toString();
             if (fileIsGeotif(fileName)) {
+                _format = "tiff";
                 layers.add(getBase(fileName));
             }
         }
@@ -238,6 +271,11 @@ public class GeoFile implements Closeable {
         return extension.equalsIgnoreCase("shp");
     }
 
+    private Boolean fileIsGpkg(String fileName) {
+        String extension = getExtension(fileName);
+        return extension.equalsIgnoreCase("gpkg");
+    }
+
     private Boolean fileIsSld(String fileName) {
         String extension = getExtension(fileName);
         return extension.equalsIgnoreCase("sld");
@@ -251,8 +289,14 @@ public class GeoFile implements Closeable {
         return this._sldBody;
     }
 
+    public String getFormat() {
+        return this._format;
+    }
+
     @Override
     public void close() throws IOException {
-        zipFile.close();
+        if (zipFile != null) {
+            zipFile.close();
+        }
     }
 }
