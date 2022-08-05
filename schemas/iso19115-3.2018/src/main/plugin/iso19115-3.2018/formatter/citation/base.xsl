@@ -152,7 +152,7 @@
     </xsl:variable>
 
     <xsl:variable name="additionalCitation">
-      <xsl:for-each select=".//mrd:onLine/*[cit:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/cit:description">
+      <xsl:for-each select=".//mrd:onLine/*[cit:protocol/* = 'WWW:LINK-1.0-http--publication-URL']/cit:description">
         <xsl:call-template name="get-iso19115-3.2018-localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>

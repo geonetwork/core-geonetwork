@@ -159,7 +159,7 @@
 
 
     <xsl:variable name="additionalCitation">
-      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'DOI')]/gmd:description">
+      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = 'WWW:LINK-1.0-http--publication-URL']/gmd:description">
         <xsl:call-template name="localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
