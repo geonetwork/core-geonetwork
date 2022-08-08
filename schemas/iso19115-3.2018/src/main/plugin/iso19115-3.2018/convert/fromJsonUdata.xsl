@@ -46,6 +46,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:import href="protocol-mapping.xsl"></xsl:import>
+  <xsl:import href="udata-licenses.xsl"></xsl:import>
 
   <xsl:output method="xml" indent="yes"/>
   <xsl:strip-space elements="*"/>
@@ -188,18 +189,38 @@
           </mri:descriptiveKeywords>
 
           <mri:resourceConstraints>
+            <xsl:variable name="licenseId" select="license"></xsl:variable>
+            <xsl:variable name="licenseFound" select="count($udataLicenses/license[id=$licenseId]) > 0"></xsl:variable>
+
             <mco:MD_LegalConstraints>
               <mco:reference>
                 <cit:CI_Citation>
-                  <cit:onlineResource>
-                    <cit:CI_OnlineResource>
-                      <cit:linkage>
+                  <xsl:choose>
+                    <xsl:when test="$licenseFound">
+                      <xsl:variable name="license" select="$udataLicenses/license[id=$licenseId]"></xsl:variable>
+                      <cit:title>
                         <gco:CharacterString>
-                          <xsl:value-of select="license"/> <!-- TODO: map codes to actual licenses -->
+                          <xsl:value-of select="$license/title"/>
                         </gco:CharacterString>
-                      </cit:linkage>
-                    </cit:CI_OnlineResource>
-                  </cit:onlineResource>
+                      </cit:title>
+                      <cit:onlineResource>
+                        <cit:CI_OnlineResource>
+                          <cit:linkage>
+                            <gco:CharacterString>
+                              <xsl:value-of select="$license/url"/> <!-- TODO: map codes to actual licenses; use https://www.data.gouv.fr/api/1/datasets/licenses/ -->
+                            </gco:CharacterString>
+                          </cit:linkage>
+                        </cit:CI_OnlineResource>
+                      </cit:onlineResource>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <cit:title>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$licenseId"/>
+                        </gco:CharacterString>
+                      </cit:title>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </cit:CI_Citation>
               </mco:reference>
             </mco:MD_LegalConstraints>
@@ -216,6 +237,50 @@
               </lan:characterEncoding>
             </lan:PT_Locale>
           </mri:defaultLocale>
+
+          <xsl:variable name="temporalExtent" select="temporal_coverage"></xsl:variable>
+          <xsl:if test="$temporalExtent/end != '' or $temporalExtent/start != ''">
+            <mri:extent>
+              <gex:EX_Extent>
+                <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                    <gex:extent>
+                      <gml:TimePeriod>
+                        <gml:beginPosition>
+                          <xsl:value-of select="$temporalExtent/start"></xsl:value-of>
+                        </gml:beginPosition>
+                        <gml:endPosition>
+                          <xsl:value-of select="$temporalExtent/end"></xsl:value-of>
+                        </gml:endPosition>
+                      </gml:TimePeriod>
+                    </gex:extent>
+                  </gex:EX_TemporalExtent>
+                </gex:temporalElement>
+              </gex:EX_Extent>
+            </mri:extent>
+          </xsl:if>
+
+          <!-- TODO: spatial extent -->
+          <!--<mri:extent>
+            <gex:EX_Extent>
+              <gex:geographicElement>
+                <gex:EX_GeographicBoundingBox>
+                  <gex:westBoundLongitude>
+                    <gco:Decimal>-180</gco:Decimal>
+                  </gex:westBoundLongitude>
+                  <gex:eastBoundLongitude>
+                    <gco:Decimal>180</gco:Decimal>
+                  </gex:eastBoundLongitude>
+                  <gex:southBoundLatitude>
+                    <gco:Decimal>-90</gco:Decimal>
+                  </gex:southBoundLatitude>
+                  <gex:northBoundLatitude>
+                    <gco:Decimal>90</gco:Decimal>
+                  </gex:northBoundLatitude>
+                </gex:EX_GeographicBoundingBox>
+              </gex:geographicElement>
+            </gex:EX_Extent>
+          </mri:extent>-->
         </mri:MD_DataIdentification>
       </mdb:identificationInfo>
 
