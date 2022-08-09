@@ -44,6 +44,12 @@ import java.util.Map;
  */
 public class AudienceAccessTokenValidator implements AccessTokenValidator {
 
+
+    private final String AUDIENCE_CLAIM_NAME = "aud";
+    private final String APPID_CLAIM_NAME = "appid";
+    private final String KEYCLOAK_AUDIENCE_CLAIM_NAME = "azp";
+
+
     @Autowired
     OIDCConfiguration oidcConfiguration;
 
@@ -62,14 +68,18 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
      */
     @Override
     public void verifyToken(Map claimsJWT, Map userInfoClaims) throws Exception {
-        if ((claimsJWT.get("aud") != null) && claimsJWT.get("aud").equals(oidcConfiguration.getClientId()))
+        if ((claimsJWT.get(AUDIENCE_CLAIM_NAME) != null)
+            && claimsJWT.get(AUDIENCE_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
             return;
+        }
 
-        if ((claimsJWT.get("appid") != null) && claimsJWT.get("appid").equals(oidcConfiguration.getClientId()))
+        if ((claimsJWT.get(APPID_CLAIM_NAME) != null)
+            && claimsJWT.get(APPID_CLAIM_NAME).equals(oidcConfiguration.getClientId())) {
             return; //azure specific
+        }
 
         //azp - keycloak
-        Object azp = claimsJWT.get("azp");
+        Object azp = claimsJWT.get(KEYCLOAK_AUDIENCE_CLAIM_NAME);
         if (azp != null) {
             if (azp instanceof String) {
                 if (((String) azp).equals(oidcConfiguration.getClientId()))
@@ -77,8 +87,9 @@ public class AudienceAccessTokenValidator implements AccessTokenValidator {
             } else if (azp instanceof List) {
                 List azps = (List) azp;
                 for (Object o : azps) {
-                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientId())))
+                    if ((o instanceof String) && (o.equals(oidcConfiguration.getClientId()))) {
                         return;
+                    }
                 }
             }
         }
