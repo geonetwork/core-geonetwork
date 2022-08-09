@@ -176,7 +176,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             JSONObject sanitizedJson = sanitize(new JSONObject(recordAsJson));
             String recordAsXml = XML.toString(sanitizedJson,"record")
                 .replace("<@", "<")
-                .replace("</@", "</");
+                .replace("</@", "</")
+                .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
             recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));

@@ -242,7 +242,10 @@ class Harvester implements IHarvester<HarvestResult> {
             String recordAsXml = XML.toString(
                     new JSONObject(
                             objectMapper.writeValueAsString(record)), "record");
-            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml).replace("<@", "<").replace("</@", "</");
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml)
+                    .replace("<@", "<")
+                    .replace("</@", "</")
+                    .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
             Element recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));
             recordAsElement.addContent(new Element("apiUrl").setText(apiUrl));
