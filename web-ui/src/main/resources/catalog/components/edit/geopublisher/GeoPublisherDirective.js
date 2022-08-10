@@ -216,7 +216,7 @@
                       // Service returns text.
                       // Extract exception message from this
                       scope.statusCode =
-                       r.data.match('GeoPublisherException: (.*)\n')[1];
+                        r.data && r.data.description ? r.data.description : r.status;
                       scope.isPublished = false;
                     });
               };
