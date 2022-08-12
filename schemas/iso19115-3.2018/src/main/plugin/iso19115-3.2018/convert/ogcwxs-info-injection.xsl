@@ -873,19 +873,29 @@
           </xsl:otherwise>
         </xsl:choose>
       </mco:MD_LegalConstraints>
-      <!-- Copy security constraints & general constraints from the template record -->
-      <xsl:apply-templates mode="copy" select="$securityConstraints"/>
-      <xsl:apply-templates mode="copy" select="$generalConstraints"/>
+    </mri:resourceConstraints>
+    <!-- If they exist copy security constraints & general constraints from the template record -->
+    <xsl:if test="$securityConstraints">
+      <mri:resourceConstraints>
+        <xsl:apply-templates mode="copy" select="$securityConstraints"/>
+      </mri:resourceConstraints>
+    </xsl:if>
+    <xsl:if test="$generalConstraints">
+      <mri:resourceConstraints>
+        <xsl:apply-templates mode="copy" select="$generalConstraints"/>
+      </mri:resourceConstraints>
+    </xsl:if>
       <!-- If general constraints not in template record and GetCaps "<AccessConstraints>" is "NONE" output 'no conditions apply' -->
       <xsl:if test="not($generalConstraints) and lower-case(.) = 'none'">
-        <mco:MD_Constraints>
-          <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-          <mco:useLimitation>
-            <gco:CharacterString>no conditions apply</gco:CharacterString>
-          </mco:useLimitation>
-        </mco:MD_Constraints>
+        <mri:resourceConstraints>
+          <mco:MD_Constraints>
+            <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+            <mco:useLimitation>
+              <gco:CharacterString>no conditions apply</gco:CharacterString>
+            </mco:useLimitation>
+          </mco:MD_Constraints>
+        </mri:resourceConstraints>
       </xsl:if>
-    </mri:resourceConstraints>
   </xsl:template>
 
 
