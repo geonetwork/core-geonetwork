@@ -554,6 +554,12 @@
                              select="."/>
       </xsl:for-each>
 
+      <!-- If no '<AccessConstraints>' in "getCapabilities" response then 
+           copy constraints from template record -->
+      <xsl:if test="not($constraints)">
+        <xsl:apply-templates mode="copy" select="mri:resourceConstraints"/>
+      </xsl:if>
+
       <xsl:apply-templates mode="copy" select="mri:associatedResource"/>
       <xsl:apply-templates mode="copy" select="mri:defaultLocale"/>
       <xsl:apply-templates mode="copy" select="mri:otherLocale"/>
@@ -791,7 +797,8 @@
     </mri:descriptiveKeywords>
   </xsl:template>
 
-  <!-- Resource Constraints -->
+  <!-- Resource constraints -->
+  <!-- If there is 'AccessConstraints' in getCapabilities response -->
   <xsl:template mode="convert"
                 match="wms:AccessConstraints">
     <xsl:variable name="resConstraints"
@@ -834,7 +841,7 @@
                 codeListValue="{.}"/>
             </mco:accessConstraints>
           </xsl:when>
-          <!-- Second option: if there is an entry in the template record use that -->
+          <!-- Second option: if there is a legal constraints entry in the template record use that -->
           <xsl:when test="$useLimitation != ''">
             <xsl:apply-templates mode="copy" select="$legalConstraints"/>
           </xsl:when>
@@ -871,14 +878,12 @@
       <xsl:apply-templates mode="copy" select="$generalConstraints"/>
       <!-- If general constraints not in template record and GetCaps "<AccessConstraints>" is "NONE" output 'no conditions apply' -->
       <xsl:if test="not($generalConstraints) and lower-case(.) = 'none'">
-        <mri:resourceConstraints>
+        <mco:MD_Constraints>
           <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-          <mco:MD_Constraints>
-            <mco:useLimitation>
-              <gco:CharacterString>no conditions apply</gco:CharacterString>
-            </mco:useLimitation>
-          </mco:MD_Constraints>
-        </mri:resourceConstraints>
+          <mco:useLimitation>
+            <gco:CharacterString>no conditions apply</gco:CharacterString>
+          </mco:useLimitation>
+        </mco:MD_Constraints>
       </xsl:if>
     </mri:resourceConstraints>
   </xsl:template>
