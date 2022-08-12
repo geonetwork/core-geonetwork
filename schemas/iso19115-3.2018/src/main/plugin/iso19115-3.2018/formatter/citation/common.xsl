@@ -99,12 +99,12 @@
     <xsl:variable name="hasPublisher"
                   select="count(publishersNameAndOrgList/*) > 0"/>
     <blockquote>
-      <div class="row">
+      <!--<div class="row">
         <div class="col-md-3">
           <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
         </div>
         <div class="col-md-9">
-          <p>
+          <p>-->
             <xsl:value-of select="string-join(authorsNameAndOrgList/*, ', ')"/>
             <xsl:choose>
               <xsl:when test="lastPublicationDate != ''">
@@ -132,9 +132,9 @@
               <br/>
               <xsl:value-of select="additionalCitation"/>
             </xsl:if>
-          </p>
+          <!--</p>
         </div>
-      </div>
+      </div>-->
     </blockquote>
   </xsl:template>
 

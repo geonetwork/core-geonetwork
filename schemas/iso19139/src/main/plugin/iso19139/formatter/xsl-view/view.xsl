@@ -335,7 +335,19 @@
               <xsl:with-param name="language" select="$language"/>
             </xsl:call-template>
           </xsl:variable>
-          <xsl:apply-templates mode="citation" select="$citationInfo"/>
+          <blockquote>
+            <div class="row">
+              <div class="col-md-1">
+                <i class="fa fa-quote-left pull-right"><xsl:comment>Cite</xsl:comment></i>
+              </div>
+              <div class="col-md-11">
+                <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
+                  <xsl:value-of select="$schemaStrings/citationProposal"/>
+                </h2><br/>
+                <xsl:apply-templates mode="citation" select="$citationInfo"/>
+              </div>
+            </div>
+          </blockquote>
         </xsl:when>
         <xsl:when test="count($forcedCitation) > 0">
           <xsl:variable name="txt">

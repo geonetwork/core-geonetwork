@@ -104,7 +104,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="getTags" match="mdb:MD_Metadata">
+  <xsl:template mode="getTags" match="mdb:MD_Metadata[$view != 'cersat']">
     <xsl:param name="byThesaurus" select="false()"/>
 
     <section class="gn-md-side-social">
@@ -213,7 +213,7 @@
     <xsl:value-of select="mdb:identificationInfo/*/mri:graphicOverview[1]/*/mcc:fileName/gco:CharacterString"/>
   </xsl:template>
 
-  <xsl:template mode="getExtent" match="mdb:MD_Metadata">
+  <xsl:template mode="getExtent" match="mdb:MD_Metadata[$view != 'cersat']">
     <section class="gn-md-side-extent">
       <h2>
         <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
@@ -244,7 +244,7 @@
     </section>
   </xsl:template>
 
-  <xsl:template mode="getOverviews" match="mdb:MD_Metadata">
+  <xsl:template mode="getOverviews" match="mdb:MD_Metadata[$view != 'cersat']">
     <section class="gn-md-side-overview">
       <h2>
         <i class="fa fa-fw fa-image"><xsl:comment select="'.'"/></i><xsl:comment select="'.'"/>
@@ -272,18 +272,20 @@
 
 
   <xsl:template mode="getMetadataHeader" match="mdb:MD_Metadata">
-    <div class="gn-abstract">
-      <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
-        <xsl:variable name="txt">
-          <xsl:call-template name="get-iso19115-3.2018-localised">
-            <xsl:with-param name="langId" select="$langId"/>
+    <xsl:if test="$view != 'cersat'">
+      <div class="gn-abstract">
+        <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
+          <xsl:variable name="txt">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="addLineBreaksAndHyperlinks">
+            <xsl:with-param name="txt" select="$txt"/>
           </xsl:call-template>
-        </xsl:variable>
-        <xsl:call-template name="addLineBreaksAndHyperlinks">
-          <xsl:with-param name="txt" select="$txt"/>
-        </xsl:call-template>
-      </xsl:for-each>
-    </div>
+        </xsl:for-each>
+      </div>
+    </xsl:if>
 
     <xsl:if test="$withJsonLd = 'true'">
       <script type="application/ld+json">
@@ -303,53 +305,55 @@
     <xsl:variable name="landingPageUrl"
                   select="if ($doiUrl != '') then $doiUrl else concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
-    <xsl:if test="$displayCitation">
-      <blockquote>
-        <div class="row" style="margin: 0px;">
-          <div class="col-md-1">
-            <i class="fa fa-quote-left pull-right"
-               style="font-size: 75px;"><xsl:comment select="'icon'"/></i>
-          </div>
-          <div class="col-md-11">
-            <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-              <xsl:value-of select="$schemaStrings/citationProposal"/>
-            </h2>
-            <br/>
+    <xsl:if test="$displayCitation and $view != 'cersat'">
+      <xsl:variable name="forcedCitation"
+                    select="mdb:identificationInfo/*/mri:citation/*/cit:otherCitationDetails"/>
+      <xsl:choose>
+        <!-- Landing page case -->
+        <xsl:when test="$language = 'all'">
+          <xsl:variable name="citationInfo">
+            <xsl:call-template name="get-iso19115-3.2018-citation">
+              <xsl:with-param name="metadata" select="$metadata"/>
+              <xsl:with-param name="language" select="$language"/>
+            </xsl:call-template>
+          </xsl:variable>
 
-
-            <xsl:variable name="forcedCitation"
-                          select="mdb:identificationInfo/*/mri:citation/*/cit:otherCitationDetails"/>
-            <xsl:choose>
-              <xsl:when test="count($forcedCitation) > 0">
-                <xsl:variable name="txt">
-                  <xsl:for-each select="$forcedCitation">
-                    <xsl:call-template name="get-iso19115-3.2018-localised">
-                      <xsl:with-param name="langId" select="$langId"/>
-                    </xsl:call-template>
-                  </xsl:for-each>
-                </xsl:variable>
-                <xsl:call-template name="addLineBreaksAndHyperlinks">
-                  <xsl:with-param name="txt" select="$txt"/>
-                </xsl:call-template>
-              </xsl:when>
-              <!-- Landing page case -->
-              <xsl:when test="$language = 'all'">
-                <xsl:variable name="citationInfo">
-                  <xsl:call-template name="get-iso19115-3.2018-citation">
-                    <xsl:with-param name="metadata" select="$metadata"/>
-                    <xsl:with-param name="language" select="$language"/>
-                  </xsl:call-template>
-                </xsl:variable>
+          <blockquote>
+            <div class="row">
+              <div class="col-md-1">
+                <i class="fa fa-quote-left pull-right"><xsl:comment>Cite</xsl:comment></i>
+              </div>
+              <div class="col-md-11">
+                <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
+                  <xsl:value-of select="$schemaStrings/citationProposal"/>
+                </h2><br/>
                 <xsl:apply-templates mode="citation" select="$citationInfo"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <div data-ng-if="showCitation"
-                     data-gn-metadata-citation="md"/>
-              </xsl:otherwise>
-            </xsl:choose>
+              </div>
+            </div>
+          </blockquote>
+        </xsl:when>
+        <xsl:when test="count($forcedCitation) > 0">
+          <xsl:variable name="txt">
+            <xsl:for-each select="$forcedCitation">
+              <xsl:call-template name="get-iso19115-3.2018-localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </xsl:for-each>
+          </xsl:variable>
+          <xsl:call-template name="addLineBreaksAndHyperlinks">
+            <xsl:with-param name="txt" select="$txt"/>
+          </xsl:call-template>
+
+          <div data-ng-if="showCitation"
+               data-gn-metadata-citation=""
+               data-text="{$citation}">
           </div>
-        </div>
-      </blockquote>
+        </xsl:when>
+        <xsl:otherwise>
+          <div data-ng-if="showCitation"
+               data-gn-metadata-citation="md"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
