@@ -241,6 +241,12 @@
             selectedFeature = feature;
             selectedFeature.setStyle(featureSelectedStyle);
             showFeatureTooltip(selectedFeature, true, coordinate);
+
+            // prevent interference from GFI
+            map.set('disable-gfi', true);
+            setTimeout(function() {
+              map.set('disable-gfi', false);
+            }, 100);
           }
           function handleFeatureClickNoHit() {
             if (selectedFeature) {

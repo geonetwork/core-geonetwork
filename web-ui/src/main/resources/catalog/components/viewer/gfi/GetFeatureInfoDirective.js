@@ -128,7 +128,7 @@
     this.$scope = $scope;
     this.map = $scope.map;
     var map = this.map;
-    var coordinates;
+    this.coordinates = null;
 
     this.overlay = new ol.Overlay({
       positioning: 'center-center',
@@ -137,37 +137,12 @@
     });
     map.addOverlay(this.overlay);
 
-    map.on('singleclick', function(e) {
-      if (!this.canApply()) {
-        return;
-      }
-      this.$scope.$apply(function() {
-        var layers = map.getLayers().getArray().filter(function(layer) {
-          return layer.background != true
-            && (layer.getSource() instanceof ol.source.ImageWMS ||
-              layer.getSource() instanceof ol.source.TileWMS ||
-              layer.getSource() instanceof ol.source.ImageArcGISRest)
-            && layer.getVisible();
-        }).reverse();
-
-        // SEXTANT SPECIFIC
-        // add layers inside a group (composite layers)
-        // do not include in GFI if in tooltip mode (ie the vector layer is visible)
-        var compositeLayers = map.getLayers().getArray().filter(function(layer) {
-          return (layer instanceof ol.layer.Group && layer.get('originalWms') &&
-            !layer.get('tooltipsVisible') && layer.getVisible());
-        }).map(function(group) {
-          return group.get('originalWms');
-        }).reverse();
-        Array.prototype.push.apply(layers, compositeLayers);
-        // END SEXTANT SPECIFIC
-
-        coordinates = e.coordinate;
-        this.registerTables(layers, e.coordinate);
-
+    map.on('singleclick', function (e) {
+      // make sure that this will run after other click handlers on the map
+      setTimeout(function () {
+        this.handleClick(e);
       }.bind(this));
     }.bind(this));
-
 
     $scope.$watch(function() {
       return this.gnFeaturesTableManager.isLoading();
@@ -179,7 +154,7 @@
       return this.gnFeaturesTableManager.getCount();
     }.bind(this), function(newVal, oldVal) {
       this.overlay.setPosition(
-          (newVal == 0) ? undefined : coordinates
+          (newVal == 0) ? undefined : this.coordinates
       );
       this.map.updateSize();
     }.bind(this));
@@ -199,6 +174,37 @@
       }
     }
     return true;
+  };
+
+  geonetwork.GnGfiController.prototype.handleClick = function(e) {
+    if (!this.canApply()) {
+      return;
+    }
+    this.$scope.$apply(function () {
+      var layers = this.map.getLayers().getArray().filter(function (layer) {
+        return layer.background != true
+          && (layer.getSource() instanceof ol.source.ImageWMS ||
+            layer.getSource() instanceof ol.source.TileWMS ||
+            layer.getSource() instanceof ol.source.ImageArcGISRest)
+          && layer.getVisible();
+      }).reverse();
+
+      // SEXTANT SPECIFIC
+      // add layers inside a group (composite layers)
+      // do not include in GFI if in tooltip mode (ie the vector layer is visible)
+      var compositeLayers = this.map.getLayers().getArray().filter(function (layer) {
+        return (layer instanceof ol.layer.Group && layer.get('originalWms') &&
+          !layer.get('tooltipsVisible') && layer.getVisible());
+      }).map(function (group) {
+        return group.get('originalWms');
+      }).reverse();
+      Array.prototype.push.apply(layers, compositeLayers);
+      // END SEXTANT SPECIFIC
+
+      this.coordinates = e.coordinate;
+      this.registerTables(layers, e.coordinate);
+
+    }.bind(this));
   };
 
   geonetwork.GnGfiController.prototype.registerTables =
