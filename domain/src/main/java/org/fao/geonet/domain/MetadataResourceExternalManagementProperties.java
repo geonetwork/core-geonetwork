@@ -32,21 +32,48 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "metadataResourceExternalManagementProperties")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MetadataResourceExternalManagementProperties {
-        private final String id;
-        private final String url;
+    private final String id;
+    private final String url;
+    private ValidationStatus status=ValidationStatus.UNKNOWN;
 
-        public MetadataResourceExternalManagementProperties(String id, String url) {
-            this.id = id;
-            this.url = url;
-        }
+    public MetadataResourceExternalManagementProperties(String id, String url) {
+        this.id = id;
+        this.url = url;
+    }
 
-        public String getUrl() {
+    public String getUrl() {
             return url;
         }
 
-        public String getId() {
+    public String getId() {
             return id;
         }
+
+    public ValidationStatus getStatus() {
+        return status;
     }
+
+    public void setStatus(ValidationStatus status) {
+        this.status = status;
+    }
+
+    public static enum ValidationStatus {
+        UNKNOWN(0),VALID(1), INCOMPLETE(2), WARNING(3);
+        private int statusValue;
+
+        private ValidationStatus (int statusValue) {
+            this.statusValue = statusValue;
+        }
+
+        public static ValidationStatus fromValue(int value) {
+            for (ValidationStatus status : values()) {
+                if (status.statusValue ==value) {
+                    return status;
+                }
+            }
+            return null;
+        }
+    }
+}
 
 

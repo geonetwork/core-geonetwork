@@ -1486,3 +1486,41 @@ html {
   max-height: 300px;
   overflow: scroll;
 }
+
+.resource-status-unknown,
+.resource-status-incomplete,
+.resource-status-valid {
+  position: relative;
+
+}
+
+/* CSS hex codes  https://www.fontawesomecheatsheet.com/font-awesome-cheatsheet-4x/ */
+
+.resource-status-unknown::before,
+.resource-status-incomplete::before,
+.resource-status-valid::before{
+  content: "\f15c";  /* fa-file-text */
+  position: relative;
+  font-size: 1.1em;
+  color: #3277B3;
+  left: 0;
+  vertical-align: text-top;
+}
+
+.resource-status-incomplete::after {
+  content: "\f071"; /* fa-exclamation-triangle */
+  position: absolute;
+  font-size: 0.5em;
+  left: 1.75em;
+  top: 1.9em;
+  color: darkorange;
+}
+
+.resource-status-valid::after {
+  content: "\f14a";  /* fa-check-square */
+  position: absolute;
+  font-size: 0.5em;
+  left: 1.75em;
+  top: 1.9em;
+  color: green;
+}

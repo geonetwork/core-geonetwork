@@ -128,7 +128,7 @@ public class CMISStore extends AbstractStore {
         }
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType());
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType(), null);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
@@ -430,7 +430,7 @@ public class CMISStore extends AbstractStore {
             }
             Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
             MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType());
+                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), null);
 
             return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
                 settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
@@ -559,7 +559,8 @@ public class CMISStore extends AbstractStore {
                                                                                                          String filename,
                                                                                                          String version,
                                                                                                          String cmisObjectId,
-                                                                                                         ObjectType type
+                                                                                                         ObjectType type,
+                                                                                                         MetadataResourceExternalManagementProperties.ValidationStatus status
     ) {
         String metadataResourceExternalManagementPropertiesUrl = cmisConfiguration.getExternalResourceManagementUrl();
         if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
@@ -624,6 +625,10 @@ public class CMISStore extends AbstractStore {
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
                 = new MetadataResourceExternalManagementProperties(cmisObjectId, metadataResourceExternalManagementPropertiesUrl);
+
+        if (status != null) {
+            metadataResourceExternalManagementProperties.setStatus(status);
+        }
 
         return metadataResourceExternalManagementProperties;
     }
