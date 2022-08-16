@@ -336,11 +336,13 @@
                         <xsl:value-of select="title"/>
                       </gco:CharacterString>
                     </cit:name>
-                    <cit:description>
-                      <gco:CharacterString>
-                        <xsl:value-of select="description"></xsl:value-of>
-                      </gco:CharacterString>
-                    </cit:description>
+                    <xsl:if test="description != '' and description != 'null'">
+                      <cit:description>
+                        <gco:CharacterString>
+                          <xsl:value-of select="description"></xsl:value-of>
+                        </gco:CharacterString>
+                      </cit:description>
+                    </xsl:if>
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </mrd:MD_DigitalTransferOptions>
