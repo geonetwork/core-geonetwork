@@ -46,7 +46,8 @@
         </h3>
         <!-- Display description if available -->
         <p data-ng-if="::r.locDescription.length > 0
-                       && r.locDescription !== r.locTitle">
+                       && r.locDescription !== r.locTitle"
+           title="{{::r.locDescription}}">
           {{::r.locDescription | striptags | characters:150}}
         </p>
         <div data-ng-switch on="mainType">
