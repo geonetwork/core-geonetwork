@@ -247,7 +247,7 @@
           title: 'mdStatusTitle-' + label,
           content: '<div data-gn-metadata-status-updater="md" ' +
                         'data-status-to-select="' + statusToBe +
-                        '" data-status-type="' + statusType + '" task="t"></div>'
+                        '" data-status-type="' + statusType + '" task="task"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
