@@ -41,8 +41,6 @@ public class SpatineoUtil {
     private static final String API = "https://api.spatineo.com/monitor/resolverRequest";
     private static final String LOGGER_NAME = "geonetwork.spatineo";
 
-    private ServiceContext context;
-
     public static Node registerServiceInSpatineoMonitor(String url, Integer maxNumberOfCalls) {
         DOMOutputter outputter = new DOMOutputter();
         Element report = new Element("report");
@@ -73,7 +71,6 @@ public class SpatineoUtil {
      * pages. eg. https://directory.spatineo.com/service/{id}/index.html
      */
     public static Map<String, String> registerService(String url, Integer maxNumberOfCalls) throws TimeoutException, IOException {
-        //ClientHttpResponse httpResponse = null;
         ServiceContext context = ServiceContext.get();
         final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         HttpGet req = new HttpGet(API);
@@ -98,7 +95,7 @@ public class SpatineoUtil {
                     method.setEntity(null);
                     method.setHeader(HttpHeaders.COOKIE, "JSESSIONID=" + cookie);
                 }
-                httpResponse = requestFactory.execute(method,new Function<HttpClientBuilder, Void>() {
+                httpResponse = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
                     @Nullable
                     @Override
                     public Void apply(@Nullable HttpClientBuilder input) {
