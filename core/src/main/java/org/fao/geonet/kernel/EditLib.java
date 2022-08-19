@@ -509,7 +509,8 @@ public class EditLib {
 
             // If a property is not found in metadata,
             // or in create mode, create it...
-            if ( (nodeList.isEmpty() && createXpathNodeIfNotExist) || isCreateMode) {
+            if (((nodeList.isEmpty() && createXpathNodeIfNotExist) || isCreateMode)
+                && !isDeleteMode) {
                 int indexOfRequiredPortion = -1;
                 // Extract the XPath for the element to match. For:
                 //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
