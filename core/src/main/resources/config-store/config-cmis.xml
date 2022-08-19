@@ -121,6 +121,7 @@
         <property name="webservicesPolicyService" value="${cmis.webservices.policy.service}"/>
         <property name="webservicesAclService" value="${cmis.webservices.acl.service}"/>
         <property name="webservicesMemoryThreshold" value="${cmis.webservices.memory.threshold}"/>
+        <property name="externalResourceManagementStatus" value="${cmis.external.resource.management.status}"/>
     </bean>
 
     <bean id="cmisutils" class="org.fao.geonet.resources.CMISUtils">

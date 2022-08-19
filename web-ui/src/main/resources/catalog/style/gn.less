@@ -1487,18 +1487,18 @@ html {
   overflow: scroll;
 }
 
-.resource-status-unknown,
-.resource-status-incomplete,
-.resource-status-valid {
+.external-resource-status-unknown,
+.external-resource-status-incomplete,
+.external-resource-status-valid {
   position: relative;
 
 }
 
 /* CSS hex codes  https://www.fontawesomecheatsheet.com/font-awesome-cheatsheet-4x/ */
 
-.resource-status-unknown::before,
-.resource-status-incomplete::before,
-.resource-status-valid::before{
+.external-resource-status-unknown::before,
+.external-resource-status-incomplete::before,
+.external-resource-status-valid::before{
   content: "\f15c";  /* fa-file-text */
   position: relative;
   font-size: 1.1em;
@@ -1507,7 +1507,7 @@ html {
   vertical-align: text-top;
 }
 
-.resource-status-incomplete::after {
+.external-resource-status-incomplete::after {
   content: "\f071"; /* fa-exclamation-triangle */
   position: absolute;
   font-size: 0.5em;
@@ -1516,7 +1516,7 @@ html {
   color: darkorange;
 }
 
-.resource-status-valid::after {
+.external-resource-status-valid::after {
   content: "\f14a";  /* fa-check-square */
   position: absolute;
   font-size: 0.5em;

@@ -91,6 +91,7 @@ public class CMISConfiguration {
     private Boolean externalResourceManagementModalEnabled;
     private Boolean externalResourceManagementFolderEnabled;
     private String externalResourceManagementFolderRoot;
+    private String externalResourceManagementStatus;
 
     /*
      * Enable option to add versioning in the link to the resource.
@@ -249,6 +250,14 @@ public class CMISConfiguration {
         }
 
         this.externalResourceManagementFolderRoot = folderRoot;
+    }
+
+    public String getExternalResourceManagementStatus() {
+        return externalResourceManagementStatus;
+    }
+
+    public void setExternalResourceManagementStatus(String externalResourceManagementStatus) {
+        this.externalResourceManagementStatus = externalResourceManagementStatus;
     }
 
     @Nonnull
