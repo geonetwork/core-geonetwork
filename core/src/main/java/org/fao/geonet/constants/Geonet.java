@@ -104,6 +104,7 @@ public final class Geonet {
         public static final String SET_UUID = "set-uuid.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
+        public static final String DUPLICATE_METADATA = "duplicate-metadata.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";
         public static final String SCHEMA_SUBSTITUTES = "schema-substitutes.xml";
         public static final String SCHEMA_CONVERSIONS = "schema-conversions.xml";
