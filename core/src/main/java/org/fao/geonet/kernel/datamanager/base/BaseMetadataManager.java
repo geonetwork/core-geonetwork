@@ -474,6 +474,8 @@ public class BaseMetadataManager implements IMetadataManager {
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
+
+            xml = duplicateMetadata(schema, xml, context);
         }
 
         final Metadata newMetadata = new Metadata();
@@ -1257,6 +1259,38 @@ public class BaseMetadataManager implements IMetadataManager {
                     md.addNamespaceDeclaration(ns);
                 }
             }
+        }
+    }
+
+    /**
+     * Applies a xslt process when duplicating a metadata, typically to remove identifiers
+     * or other information like DOI (Digital Object Identifiers) and returns the updated metadata.
+     *
+     * @param schema        Metadata schema.
+     * @param md            Metadata to duplicate.
+     * @param srvContext
+     * @return              If the xslt process exists, the metadata processed, otherwise the original metadata.
+     * @throws Exception
+     */
+    private Element duplicateMetadata(String schema,  Element md, ServiceContext srvContext) throws Exception {
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
+            Geonet.File.DUPLICATE_METADATA);
+
+        if (Files.exists(styleSheet)) {
+            // --- setup environment
+            Element env = new Element("env");
+            env.addContent(new Element("lang").setText(srvContext.getLanguage()));
+
+            // add original metadata to result
+            Element result = new Element("root");
+            result.addContent(md);
+            result.addContent(env);
+
+            result = Xml.transform(result, styleSheet);
+
+            return result;
+        } else {
+            return md;
         }
     }
 
