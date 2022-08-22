@@ -205,6 +205,8 @@ public class CMISStore extends AbstractStore {
                 secondaryProperties.putAll(additionalProperties);
             }
             setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
+            MetadataResourceExternalManagementProperties.ValidationStatus status = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(cmisConfiguration.getExternalResourceManagementStatusDefaultValue());
+            setCmisExternalManagementResourceStatusSecondary(properties, status);
             try {
                 doc.updateProperties(secondaryProperties);
             } catch (Exception e) {
@@ -223,6 +225,14 @@ public class CMISStore extends AbstractStore {
             properties.put(cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
         }
     }
+
+    protected void setCmisExternalManagementResourceStatusSecondary(Map<String, Object> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
+        if (!StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementStatusPropertyName()) && !StringUtils.isEmpty(status) ) {
+            properties.put(cmisConfiguration.getExternalResourceManagementStatusPropertyName(), status.getValue());
+        }
+    }
+
+
 
     protected void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
         if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) &&

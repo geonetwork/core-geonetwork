@@ -99,13 +99,14 @@
         <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
         <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
         <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
+        <property name="externalResourceManagementStatusPropertyName" value="${cmis.external.resource.status.property.name}"/>
+        <property name="externalResourceManagementStatusDefaultValue" value="${cmis.external.resource.management.status.default.value}"/>
 
         <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
         <property name="versioningState" value="${cmis.versioning.state}"/>
         <property name="versioningMajorOnUpdate" value="${cmis.versioning.major.on.update}"/>
 
         <property name="cmisMetadataUUIDPropertyName" value="${cmis.metadata.uuid.property.name}"/>
-        <property name="cmisMetadataStatusPropertyName" value="${cmis.metadata.status.property.name}"/>
 
         <property name="browserUrl" value="${cmis.browser.url}"/>
 
@@ -122,7 +123,6 @@
         <property name="webservicesPolicyService" value="${cmis.webservices.policy.service}"/>
         <property name="webservicesAclService" value="${cmis.webservices.acl.service}"/>
         <property name="webservicesMemoryThreshold" value="${cmis.webservices.memory.threshold}"/>
-        <property name="externalResourceManagementStatus" value="${cmis.external.resource.management.status}"/>
     </bean>
 
     <bean id="cmisutils" class="org.fao.geonet.resources.CMISUtils">

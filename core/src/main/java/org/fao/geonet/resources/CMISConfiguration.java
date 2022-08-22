@@ -83,7 +83,7 @@ public class CMISConfiguration {
     private String repositoryId;
     private String repositoryName;
     private String cmisMetadataUUIDPropertyName;
-    private String cmisMetadataStatusPropertyName;
+
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -92,7 +92,8 @@ public class CMISConfiguration {
     private Boolean externalResourceManagementModalEnabled;
     private Boolean externalResourceManagementFolderEnabled;
     private String externalResourceManagementFolderRoot;
-    private String externalResourceManagementStatus;
+    private String externalResourceManagementStatusPropertyName;
+    private String externalResourceManagementStatusDefaultValue;
 
     /*
      * Enable option to add versioning in the link to the resource.
@@ -253,12 +254,12 @@ public class CMISConfiguration {
         this.externalResourceManagementFolderRoot = folderRoot;
     }
 
-    public String getExternalResourceManagementStatus() {
-        return externalResourceManagementStatus;
+    public String getExternalResourceManagementStatusDefaultValue() {
+        return externalResourceManagementStatusDefaultValue;
     }
 
-    public void setExternalResourceManagementStatus(String externalResourceManagementStatus) {
-        this.externalResourceManagementStatus = externalResourceManagementStatus;
+    public void setExternalResourceManagementStatusDefaultValue(String externalResourceManagementStatusDefaultValue) {
+        this.externalResourceManagementStatusDefaultValue = externalResourceManagementStatusDefaultValue;
     }
 
     @Nonnull
@@ -453,8 +454,12 @@ public class CMISConfiguration {
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
     }
 
-    public void setCmisMetadataStatusPropertyName(String cmisMetadataStatusPropertyName) {
-        this.cmisMetadataStatusPropertyName = cmisMetadataStatusPropertyName;
+    public String getExternalResourceManagementStatusPropertyName() {
+        return externalResourceManagementStatusPropertyName;
+    }
+
+    public void setExternalResourceManagementStatusPropertyName(String externalResourceManagementStatusPropertyName) {
+        this.externalResourceManagementStatusPropertyName = externalResourceManagementStatusPropertyName;
     }
 
 

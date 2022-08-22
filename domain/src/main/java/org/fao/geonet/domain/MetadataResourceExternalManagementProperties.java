@@ -73,6 +73,10 @@ public class MetadataResourceExternalManagementProperties {
             }
             return null;
         }
+
+        public int getValue () {
+            return statusValue;
+        }
     }
 }
 
