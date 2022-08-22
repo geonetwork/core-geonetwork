@@ -83,6 +83,7 @@ public class CMISConfiguration {
     private String repositoryId;
     private String repositoryName;
     private String cmisMetadataUUIDPropertyName;
+    private String cmisMetadataStatusPropertyName;
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -451,6 +452,11 @@ public class CMISConfiguration {
         }
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
     }
+
+    public void setCmisMetadataStatusPropertyName(String cmisMetadataStatusPropertyName) {
+        this.cmisMetadataStatusPropertyName = cmisMetadataStatusPropertyName;
+    }
+
 
     @PostConstruct
     public void init() {

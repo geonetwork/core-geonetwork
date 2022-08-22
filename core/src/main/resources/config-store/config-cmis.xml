@@ -105,6 +105,7 @@
         <property name="versioningMajorOnUpdate" value="${cmis.versioning.major.on.update}"/>
 
         <property name="cmisMetadataUUIDPropertyName" value="${cmis.metadata.uuid.property.name}"/>
+        <property name="cmisMetadataStatusPropertyName" value="${cmis.metadata.status.property.name}"/>
 
         <property name="browserUrl" value="${cmis.browser.url}"/>
 
