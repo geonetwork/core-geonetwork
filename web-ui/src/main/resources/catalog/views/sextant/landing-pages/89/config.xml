@@ -1,6 +1,6 @@
 <config>
   <portalUrl>
-    <fre>https://www.emodnet-bathymetry.eu/metadata-amp-data/composite-dtms-catalogue-service#/metadata/${uuid}</fre>
-    <eng>https://www.emodnet-bathymetry.eu/metadata-amp-data/composite-dtms-catalogue-service#/metadata/${uuid}</eng>
+    <fre>https://sextant.ifremer.fr/documentation/emodnet_bathymetry/api/catalogue.html#/metadata/${uuid}</fre>
+    <eng>https://sextant.ifremer.fr/documentation/emodnet_bathymetry/api/catalogue.html#/metadata/${uuid}</eng>
   </portalUrl>
 </config>
