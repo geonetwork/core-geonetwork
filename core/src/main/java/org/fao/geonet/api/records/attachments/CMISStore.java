@@ -205,8 +205,11 @@ public class CMISStore extends AbstractStore {
                 secondaryProperties.putAll(additionalProperties);
             }
             setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
-            MetadataResourceExternalManagementProperties.ValidationStatus status = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(cmisConfiguration.getExternalResourceManagementStatusDefaultValue());
-            setCmisExternalManagementResourceStatusSecondary(properties, status);
+            if (cmisObject==null) {
+                MetadataResourceExternalManagementProperties.ValidationStatus status = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(cmisConfiguration.getExternalResourceManagementStatusDefaultValue());
+                setCmisExternalManagementResourceStatusSecondary(properties, status);
+            }
+
             try {
                 doc.updateProperties(secondaryProperties);
             } catch (Exception e) {
