@@ -396,7 +396,7 @@ public class EditLib {
 
             if (isReplaceAllMode) {
                 // Remove all
-                AddElemValue propertyValueToProcess = new AddElemValue("<gn_delete></gn_delete>");
+                AddElemValue propertyValueToProcess = new AddElemValue(new Element("gn_delete"));
 
                 addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
                     createXpathNodeIfNotExist);
