@@ -27,6 +27,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.EnhancedPatternLayout;
+import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.appender.FileAppender;
@@ -194,16 +195,35 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
+    /**
+     * Filename safe representation of harvester name (using '_' as needed).
+     *
+     * @return filename safe harvester name
+     */
+    protected String harvesterName(){
+        return this.getParams().getName().replaceAll("\\W+", "_");
+    }
+
+    /**
+     * Used to configure Log4J to route harvester messages to an individual file.
+     *
+     * Log4J uses the precense of a {@code ThreadContext.put("harvester", name)} to determine
+     * log file location.
+     *
+     * @return the location of the logfile
+     */
     private String initializeLog() {
 
         // configure personalized logger
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
-        log = Log.createLogger(harvesterName, "geonetwork.harvester");
+        final String harvesterName = harvesterName();
+
+//        log = Log.createLogger(harvesterName, "geonetwork.harvester");
 
         String directoryPath = log.getFileAppender();
+
         if (directoryPath == null || directoryPath.isEmpty()) {
             directoryPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
         }
@@ -220,26 +240,26 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
         String logPath = logFile.getName();
 
-        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
+//        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
+//        if (StringUtils.isBlank(timeZoneSetting)) {
+//            timeZoneSetting = TimeZone.getDefault().getID();
+//        }
 
-        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+//        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
 
-        PatternLayout layout = PatternLayout.newBuilder()
-            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
-            .build();
+//        PatternLayout layout = PatternLayout.newBuilder()
+//            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
+//            .build();
 
-        Builder<FileAppender> fileBuilder = FileAppender.newBuilder()
-            .setName(harvesterName)
-            .withFileName(logPath)
-            .setLayout(layout)
-            .withAppend(true);
+//        Builder<FileAppender> fileBuilder = FileAppender.newBuilder()
+//            .setName(harvesterName)
+//            .withFileName(logPath)
+//            .setLayout(layout)
+//            .withAppend(true);
+//
+//        FileAppender fa = fileBuilder.build();
 
-        FileAppender fa = fileBuilder.build();
-
-        log.setAppender(fa);
+        // log.setAppender(fa);
 
         return logPath;
     }
@@ -676,6 +696,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 try {
 
                     String logfile = initializeLog();
+                    ThreadContext.put("harvest",harvesterName());
+                    ThreadContext.putIfNull("logfile",logfile);
+
                     this.log.info("Starting harvesting of " + this.getParams().getName());
                     error = null;
                     errors.clear();
