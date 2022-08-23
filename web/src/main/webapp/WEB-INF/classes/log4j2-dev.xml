@@ -17,19 +17,12 @@
       <DefaultRolloverStrategy max="3" fileIndex="min"/>
     </RollingFile>
     <Routing name="Harvester">
-      <Route key="$${ctx: harvester}">
-        <File name="harvester-default" fileName="logs/harvester.log">
-          <PatternLayout>
-            <pattern>%d{ISO8601} [%t] %p %c{3} - %m%n</pattern>
-          </PatternLayout>
-        </File>
-      </Route>
-      <Routes pattern="$${ctx:harvester}">
+      <Routes pattern="$${ctx:logfile}">
         <!-- value dynamically determines the name of the log file. -->
         <Route>
-          <File name="harvester-${ctx:harvester}" fileName=">${ctx:logfile}">
+          <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-log_dir}/${ctx:logfile}">
             <PatternLayout>
-              <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
+              <pattern>%date{ISO8601}{${ctx:timeZone}} %-5level [%logger] - %message%n</pattern>
             </PatternLayout>
           </File>
         </Route>
@@ -41,6 +34,7 @@
     <Logger name="geonetwork" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
+      <AppenderRef ref="Harvester"/>
     </Logger>
     <Logger name="geonetwork.accessmanager" level="debug"/>
     <Logger name="geonetwork.atom" level="debug"/>

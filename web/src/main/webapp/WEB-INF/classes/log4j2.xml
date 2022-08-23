@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" dest="out">
   <Properties>
-    <Property name="log_dir">.</Property>
+    <Property name="log_dir">./logs</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
     </Console>
     <RollingFile name="File">
-      <filename>${sys:log_dir:-log_dir}/logs/geonetwork.log</filename>
-      <filePattern>${sys:log_dir:-log_dir}/logs/geonetwork.log-%i.log</filePattern>
+      <filename>${sys:log_dir:-log_dir}/geonetwork.log</filename>
+      <filePattern>${sys:log_dir:-log_dir}/geonetwork.log-%i.log</filePattern>
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10 MB" />
@@ -17,19 +17,12 @@
       <DefaultRolloverStrategy max="3" fileIndex="min"/>
     </RollingFile>
     <Routing name="Harvester">
-      <Route key="$${ctx: harvester}">
-        <File name="harvester-default" fileName="logs/harvester.log">
-          <PatternLayout>
-            <pattern>%d{ISO8601} [%t] %p %c{3} - %m%n</pattern>
-          </PatternLayout>
-        </File>
-      </Route>
-      <Routes pattern="$${ctx:harvester}">
+      <Routes pattern="$${ctx:logfile}">
         <!-- value dynamically determines the name of the log file. -->
         <Route>
-          <File name="harvester-${ctx:harvester}" fileName=">${ctx:logfile}">
+          <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-log_dir}/${ctx:logfile}">
             <PatternLayout>
-              <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
+              <pattern>%date{ISO8601}{${ctx:timeZone}} %-5level [%logger] - %message%n</pattern>
             </PatternLayout>
           </File>
         </Route>
@@ -41,6 +34,7 @@
     <Logger name="geonetwork" level="error" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
+      <AppenderRef ref="Harvester"/>
     </Logger>
     <Logger name="geonetwork.accessmanager" level="error"/>
     <Logger name="geonetwork.atom" level="info"/>
@@ -91,8 +85,8 @@
 
     <!--  Spring logging configuration -->
     <Logger name="org.springframework" level="error" additivity="false">
-        <AppenderRef ref="Console"/>
-        <AppenderRef ref="File"/>
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
     </Logger>
     <Logger name="org.springframework.beans" level="error"/>
     <Logger name="org.springframework.security" level="error"/>

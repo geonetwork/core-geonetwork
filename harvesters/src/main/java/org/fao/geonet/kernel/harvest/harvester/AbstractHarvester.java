@@ -196,19 +196,17 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
     /**
-     * Filename safe representation of harvester name (using '_' as needed).
-     *
-     * @return filename safe harvester name
-     */
-    protected String harvesterName(){
-        return this.getParams().getName().replaceAll("\\W+", "_");
-    }
-
-    /**
      * Used to configure Log4J to route harvester messages to an individual file.
      *
-     * Log4J uses the precense of a {@code ThreadContext.put("harvester", name)} to determine
-     * log file location.
+     * This method has the side effect of setting Log4J ThreadContext values:
+     * <ul>
+     *     <li>harvester</li>
+     *     <li>logfile</li>
+     *     <li>timeZone</li>
+     * </ul>
+     *
+     * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
+     * the logfile location.
      *
      * @return the location of the logfile
      */
@@ -218,32 +216,46 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        final String harvesterName = harvesterName();
 
-//        log = Log.createLogger(harvesterName, "geonetwork.harvester");
 
-        String directoryPath = log.getFileAppender();
+        // Filename safe representation of harvester name (using '_' as needed).
+        final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
 
-        if (directoryPath == null || directoryPath.isEmpty()) {
-            directoryPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
+        String logfile = "harvester_"
+            + packageType
+            + "_" + harvesterName
+            + "_" + dateFormat.format(new Date(System.currentTimeMillis()))
+            + ".log";
+
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
+        if (StringUtils.isBlank(timeZoneSetting)) {
+            timeZoneSetting = TimeZone.getDefault().getID();
         }
-        File directoryFile = new File(directoryPath);
-        if (!directoryFile.isDirectory()) {
-            if( directoryFile.getParentFile() != null){
-                directoryFile = directoryFile.getParentFile();
-            }
-        }
-        File logFile = new File(directoryFile, "harvester_" + packageType + "_"
-            + harvesterName + "_"
-            + dateFormat.format(new Date(System.currentTimeMillis()))
-            + ".log");
 
-        String logPath = logFile.getName();
+        ThreadContext.put("harvest",harvesterName);
+        ThreadContext.putIfNull("logfile",logfile);
+        ThreadContext.put("timeZone",timeZoneSetting);
 
-//        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
-//        if (StringUtils.isBlank(timeZoneSetting)) {
-//            timeZoneSetting = TimeZone.getDefault().getID();
+        return logfile;
+
+
+
+        // log = Log.createLogger(harvesterName, "geonetwork.harvester");
+
+        // String directoryPath = log.getFileAppender();
+
+//        if (directoryPath == null || directoryPath.isEmpty()) {
+//            directoryPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
 //        }
+//        File directoryFile = new File(directoryPath);
+//        if (!directoryFile.isDirectory()) {
+//            if( directoryFile.getParentFile() != null){
+//                directoryFile = directoryFile.getParentFile();
+//            }
+//        }
+
+
+
 
 //        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
 
@@ -261,7 +273,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
         // log.setAppender(fa);
 
-        return logPath;
+//        return logPath;
     }
     //--------------------------------------------------------------------------
     //---
@@ -285,7 +297,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
         initInfo(context);
 
-        initializeLog();
+        // initializeLog();
         if (status == Status.ACTIVE) {
             doSchedule();
         }
@@ -696,8 +708,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 try {
 
                     String logfile = initializeLog();
-                    ThreadContext.put("harvest",harvesterName());
-                    ThreadContext.putIfNull("logfile",logfile);
 
                     this.log.info("Starting harvesting of " + this.getParams().getName());
                     error = null;
