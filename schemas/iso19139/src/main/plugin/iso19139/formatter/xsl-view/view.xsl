@@ -429,7 +429,11 @@
   </xsl:template>-->
 
   <xsl:template mode="render-field"
-                match="*[gmx:Anchor]|*[normalize-space(gco:CharacterString) != '']|gml:beginPosition[. != '']|gml:endPosition[. != '']|gml320:beginPosition[. != '']|gml320:endPosition[. != '']"
+                match="*[gmx:Anchor]|*[normalize-space(gco:CharacterString) != '']|
+                       gml:beginPosition[. != '']|gml:endPosition[. != '']|
+                       gml320:beginPosition[. != '']|gml320:endPosition[. != '']|
+                       gml:begin[. != '']|gml320:begin[. != '']|
+                       gml:end[. != '']|gml320:end[. != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -1118,9 +1122,11 @@
 
   <xsl:template mode="render-value"
                 match="gco:Integer|gco:Decimal|
-       gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
-       gco:LocalName|gml:beginPosition|gml:endPosition|gml320:beginPosition|gml320:endPosition">
+                       gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
+                       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
+                       gco:LocalName|
+                       gml:beginPosition|gml:endPosition|gml:being|gml:end|
+                       gml320:beginPosition|gml320:endPosition|gml320:being|gml320:end">
 
     <xsl:choose>
       <xsl:when test="contains(., 'http')">
@@ -1205,7 +1211,9 @@
   <xsl:template mode="render-value"
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
-                      |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
+                      |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:begin[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:end[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
     <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"><xsl:comment select="name()"/>
       <xsl:value-of select="."/>
     </span>
