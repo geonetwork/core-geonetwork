@@ -409,9 +409,10 @@
                *
                */
               scope.canPublishDoiForResource = function (resource){
+                var doiKey = gnConfig['system.publication.doi.doikey'];
                 return scope.isDoiApplicableForMetadata
                   && resource.lUrl !== null
-                  && resource.lUrl.match('doi.org') !== null
+                  && resource.lUrl.match('doi.org/' + doiKey) !== null
                   && !scope.isMdWorkflowEnableForMetadata;
               }
 
