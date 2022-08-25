@@ -294,12 +294,20 @@ goog.require('gn_alert');
             "from": 0,
             "size": 20
           },
+          'moreLikeThisSameType': true,
           'moreLikeThisConfig': {
             "more_like_this" : {
-              "fields" : ["resourceTitleObject.default", "resourceAbstractObject.default", "tag.raw"],
+              "fields" : [
+                "resourceTitleObject.default",
+                "resourceAbstractObject.default",
+                "tag.raw"
+              ],
               "like" : null,
               "min_term_freq" : 1,
-              "max_query_terms" : 12
+              "min_word_length" : 3,
+              "max_query_terms" : 35,
+              // "analyzer": "english",
+              "minimum_should_match": "70%"
             }
           },
           'facetTabField': '',
@@ -626,9 +634,26 @@ goog.require('gn_alert');
             'related': ['parent', 'children', 'services', 'datasets']
           },
           'linkTypes': {
-            'links': ['LINK', 'kml'],
-            'downloads': ['DOWNLOAD'],
-            'layers': ['OGC:WMS', 'OGC:WFS','OGC:WMTS', 'ESRI:REST'],
+            'links': [
+              'LINK'
+            ],
+            'downloads': [
+              'WWW:DOWNLOAD',
+              'WWW:OPENDAP',
+              'WWW:FTP',
+              'KML'
+            ],
+            // 'downloadServices': [
+            //   'OGC:WFS',
+            //   'OGC:WCS',
+            //   'ATOM'
+            // ],
+            'layers': [
+              'OGC:WMS',
+              // 'OGC:WFS',
+              'OGC:WMTS',
+              'ESRI:REST'
+            ],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
@@ -1033,6 +1058,7 @@ goog.require('gn_alert');
         'map-viewer',
         'map-search',
         'map-editor',
+        'map-thumbnail',
         'projectionList',
         'switcherProjectionList',
         'cookieWarning',
@@ -1670,7 +1696,10 @@ goog.require('gn_alert');
         var statusToApply = {};
         $.extend(statusToApply, defaultStatus, status);
 
-        gnAlertService.addAlert(statusToApply, statusToApply.timeout);
+        
+        if ($scope.showHealthIndexError !== true) {
+          gnAlertService.addAlert(statusToApply, statusToApply.timeout);
+        }
       });
 
       gnSessionService.scheduleCheck($scope.user);

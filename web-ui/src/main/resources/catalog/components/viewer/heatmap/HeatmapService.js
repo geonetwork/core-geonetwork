@@ -53,7 +53,7 @@
        * @param {string} text filter
        * @return {Promise}
        */
-      this.requestHeatmapData = function(featureType, map, params, geometry, any) {
+      this.requestHeatmapData = function(featureType, map, query) {
         var bufferedSize = map.getSize().map(function(value) {
           return value * BUFFER_RATIO;
         });
@@ -85,24 +85,13 @@
           query: {
             bool: {
               must: [{
-                query_string: {
-                  query: params || '*:*'
-                }
-
-              }, {
-                match_phrase: {
-                  featureTypeId: {
-                    query: encodeURIComponent(featureType)
+                geo_bounding_box: {
+                  location : {
+                    top_left : topLeft,
+                    bottom_right : bottomRight
                   }
                 }
-              }, {
-                geo_bounding_box: {
-                    location : {
-                      top_left : topLeft,
-                      bottom_right : bottomRight
-                    }
-                }
-              }]
+              }].concat(query.query.bool.must)
             }
           },
           size: 0,
@@ -119,16 +108,16 @@
         // apply filter to params
         // note: merging with the base request is done manually: not ideal but
         // currently no better way available
-        var filterParams = indexObject.buildESParams({
-          params: params,
-          geometry: geometry,
-          any: any
-        });
-        Array.prototype.push.apply(reqParams.query.bool.must,
-          filterParams.query.bool.must);
-        if (geometry) {
-          reqParams.query.bool.filter = filterParams.query.bool.filter;
-        }
+        // var filterParams = indexObject.buildESParams({
+        //   params: params,
+        //   geometry: geometry,
+        //   any: any
+        // });
+        // Array.prototype.push.apply(reqParams.query.bool.must,
+        //   filterParams.query.bool.must);
+        // if (geometry) {
+        //   reqParams.query.bool.filter = filterParams.query.bool.filter;
+        // }
 
         // cancel previous request
         if (me.requestCanceller) {

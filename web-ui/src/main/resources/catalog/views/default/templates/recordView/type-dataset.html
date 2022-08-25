@@ -16,19 +16,19 @@
 
 <!-- map & extent -->
 <div class="row gn-section gn-padding-top">
-  <div class="col-md-8 gn-record">
-    <h2 data-translate="">spatialExtent</h2>
+  <div class="gn-record"
+       data-ng-class="showDataBrowser ? 'col-md-12' : 'col-md-8'">
+    <h2>{{(showDataBrowser ? 'dataPreview' : 'spatialExtent') | translate}}</h2>
     <div data-gn-data-preview="mdView.current.record"/>
 
     <br/>
     <div data-gn-keyword-badges="mdView.current.record"
          data-thesaurus="viewConfig.locationThesaurus"/>
   </div>
-  <!-- /.col-md-8 gn-record -->
-  <div class="col-md-4 gn-md-side gn-nopadding-top">
+  <div class="col-md-4 gn-md-side gn-nopadding-top"
+       data-ng-if="!showDataBrowser">
     <div ng-include="'../../catalog/views/default/templates/recordView/spatial.html'"/>
   </div>
-  <!-- /.col-md-4 gn-md-side -->
 </div>
 
 <!-- links (Download, API, Others) -->
@@ -79,8 +79,13 @@
   <div class="col-md-12 gn-record">
     <h2 data-translate="">technicalInformation</h2>
   </div>
-  <div class="col-md-12 gn-md-side gn-nopadding-top">
+  <div class="gn-md-side gn-nopadding-top"
+       data-ng-class="showDataBrowser ? 'col-md-8' : 'col-md-12'">
     <div class="col-3 gn-padding-bottom-lg" ng-include="'../../catalog/views/default/templates/recordView/technical.html'"/>
+  </div>
+  <div class="col-md-4 gn-md-side gn-nopadding-top"
+       data-ng-if="showDataBrowser">
+    <div ng-include="'../../catalog/views/default/templates/recordView/spatial.html'"/>
   </div>
 </div>
 

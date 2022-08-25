@@ -1,7 +1,6 @@
 <ul class="row list-group gn-info-list gn-resultview-sumup">
   <li class="list-group-item panel panel-default gn-card"
       data-ng-repeat="md in searchResults.records"
-      data-gn-fix-mdlinks=""
       title="{{(md.resourceAbstract) | striptags}}"
       ng-click="loadMap(maps[0], md)">
 

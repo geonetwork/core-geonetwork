@@ -146,7 +146,7 @@
       INSPIRE Atom OpenSearchDescription
     </note>
     <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
-    <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+    <to type="forward">/srv/api/atom/describe/service/$2</to>
   </rule>
 
   <rule>
@@ -154,7 +154,7 @@
       INSPIRE Atom search (html)
     </note>
     <from>^/opensearch/(.*)/(.*)/searchhtml?(.*)$</from>
-    <to type="forward">/srv/$1/atom.search.html?fileIdentifier=$2</to>
+    <to type="forward">/srv/api/atom/feeds</to>
   </rule>
 
   <rule>
@@ -162,7 +162,7 @@
       INSPIRE Atom search (html)
     </note>
     <from>^/opensearch/(.*)/searchhtml?(.*)$</from>
-    <to type="forward">/srv/$1/atom.search.html</to>
+    <to type="forward">/srv/api/atom/feeds</to>
   </rule>
 
   <rule>
@@ -170,7 +170,7 @@
       INSPIRE Atom search
     </note>
     <from>^/opensearch/(.*)/(.*)/search?(.*)$</from>
-    <to type="forward">/srv/$1/atom.search?fileIdentifier=$2</to>
+    <to type="forward">/srv/api/atom/feeds?fileIdentifier=$2</to>
   </rule>
 
   <rule>
@@ -178,7 +178,7 @@
       INSPIRE Atom search
     </note>
     <from>^/opensearch/(.*)/search?(.*)$</from>
-    <to type="forward">/srv/$1/atom.search</to>
+    <to type="forward">/srv/api/atom/feeds</to>
   </rule>
 
   <rule>
@@ -186,9 +186,6 @@
       INSPIRE HTML search
     </note>
     <from>^/(.*)/(.*)/opensearch/htmlsearch\?.*q=(.*)</from>
-<!--
-    <to type="forward">/$1/$2/catalog.search#/search?any=$3</to>
--->
     <to type="permanent-redirect">%{context-path}/$1/$2/catalog.search#/search?any=$3</to>
   </rule>
 
@@ -197,7 +194,7 @@
       INSPIRE Atom Describe (service)
     </note>
     <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
+    <to type="forward">/srv/api/atom/describe/resource?fileIdentifier=$2</to>
   </rule>
 
   <rule>
@@ -205,7 +202,7 @@
       INSPIRE Atom DescribeBy
     </note>
     <from>^/opensearch/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe</to>
+    <to type="forward">/srv/api/atom/describe/resource</to>
   </rule>
 
   <rule>
@@ -229,7 +226,7 @@
       INSPIRE Atom GetData
     </note>
     <from>^/opensearch/(.*)/download?(.*)$</from>
-    <to type="forward">/srv/$1/atom.download</to>
+    <to type="forward">/srv/api/atom/download/resource</to>
   </rule>
 
 

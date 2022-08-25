@@ -295,7 +295,7 @@
         if (!creatingThesaurus) {
           return;
         }
-        
+
         $scope.thesaurusSuggestedNs = $scope.thesaurusSelected && $scope.thesaurusNamespace
           ? $scope.thesaurusNamespace
             .replace('{{type}}', $scope.thesaurusSelected.dname)
@@ -356,7 +356,14 @@
         $scope.clear($scope.queue);
         $scope.thesaurusUrl = '';
 
-        $('#thesaurusModal').modal('hide');
+        // Don't close automatically the dialog for INSPIRE Registry.
+        // Usually the user needs to import several INSPIRE thesaurus
+        // and if closing the dialog, all the configuration for the
+        // URL end-point and languages need to be done every time.
+        if ($scope.importAs !== 'registry') {
+          $('#thesaurusModal').modal('hide');
+        }
+
 
         loadThesaurus();
       };

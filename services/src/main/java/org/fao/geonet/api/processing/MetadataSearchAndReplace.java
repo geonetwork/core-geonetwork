@@ -48,6 +48,7 @@ import java.util.Set;
  *
  * @author Jose García
  */
+@Deprecated
 public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
     String process;
     Map<String, String> params;

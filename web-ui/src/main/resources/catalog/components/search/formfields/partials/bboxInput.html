@@ -23,14 +23,18 @@
                ng-disabled="readOnly">
       </div>
     </div>
-    <!--Draw buttons-->
+
     <div gn-btn-group class="col-sm-4">
-      <button class="btn btn-default btn-sm" ng-model="dragboxInteraction.active" gn-btn>
-        <span class="fa fa-pencil-square-o fa-fw"></span>
-      </button>
-      <button class="btn btn-default btn-sm" data-ng-click="clear()">
-        <span class="fa fa-trash-o fa-fw"></span>
-      </button>
+      <div  class="btn-group">
+        <button class="btn btn-default btn-xs"
+                ng-model="dragboxInteraction.active" gn-btn>
+          <span class="fa fa-pencil-square-o fa-fw"></span>
+        </button>
+        <button class="btn btn-default btn-xs"
+                data-ng-click="clear()">
+          <span class="fa fa-trash-o fa-fw"></span>
+        </button>
+      </div>
     </div>
 
     <div class="col-sm-4">

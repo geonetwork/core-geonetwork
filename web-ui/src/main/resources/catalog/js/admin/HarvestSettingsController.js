@@ -647,7 +647,15 @@
       };
 
       $scope.addBatchEdits = function(e) {
-        var array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        var array;
+        try {
+          array = angular.fromJson($scope.harvesterSelected.content.batchEdits);
+        } catch (e) {
+          console.warn("Harvester batch edit config is not a valid JSON.",
+            $scope.harvesterSelected.content.batchEdits,
+            e);
+          array = [];
+        }
         if (angular.isArray(array)) {
           e.value = '<' + e.insertMode + '>' +
                     e.value +

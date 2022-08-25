@@ -109,6 +109,7 @@
     '$http',
     'wfsFilterService',
     '$q',
+    '$timeout',
     '$rootScope',
     '$translate',
     'gnIndexRequestManager',
@@ -120,7 +121,7 @@
     'gnAlertService',
     'gnWfsService',
     'gnOwsCapabilities',
-    function($http, wfsFilterService, $q, $rootScope, $translate,
+    function($http, wfsFilterService, $q, $timeout, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager, gnFeaturesTableService,
              gnAlertService, gnWfsService, gnOwsCapabilities) {
@@ -133,6 +134,7 @@
           featureTypeName: '@?',
           wfsUrl: '@',
           displayCount: '@',
+          displayTableOnLoad: '@',
           baseLayer: '=?baseLayer',
           layer: '=?layer',
           md: '=?',
@@ -159,7 +161,13 @@
           scope.showCount = angular.isDefined(attrs['showcount']);
 
           scope.ctrl = {
-            searchGeometry: undefined
+            searchGeometry: undefined,
+            query: {},
+            filter: {
+              params: {},
+              fullTextSearch: '',
+              geometry: ''
+            }
           };
 
           scope.output = {};
@@ -243,6 +251,8 @@
 
             scope.originalUrl = scope.wfsUrl;
             scope.wfsUrl = getWfsUrl(mode, scope.layer);
+            scope.enableHeatmap = false;
+            scope.featuresInMapExtent = false;
 
             angular.extend(scope, {
               fields: [],
@@ -250,7 +260,6 @@
               isFeatureTypeAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
-              // FIXME: On page reload the md is undefined and the filter does not work
               md: scope.layer ? scope.layer.get('md') : scope.md,
               mdUrl: scope.layer ? scope.layer.get('url') : null,
               url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
@@ -364,6 +373,9 @@
               docFields = indexObject.filteredDocTypeFieldsInfo;
               scope.countTotal = indexObject.totalCount;
 
+              if (scope.displayTableOnLoad) {
+                scope.showTable();
+              }
               if (scope.md) {
                 gnFeaturesTableService.loadFeatureCatalogue(scope.md.uuid, scope.md)
                   .then(function(catalogue) {
@@ -384,6 +396,10 @@
             }, function(error) {
               scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
+              $timeout(function() {
+                scope.status = null;
+                scope.statusTitle = null;
+              }, 2000);
               scope.checkFeatureTypeInWfs();
             });
           };
@@ -490,6 +506,39 @@
             scope.filterFacets(field.name);
           };
 
+          scope.featuresInMapExtent = false;
+
+          onMoveEnd = function(evt) {
+            var extent = scope.map.getView().calculateExtent(map.getSize());
+            var wgsExtent = ol.extent.applyTransform(extent,
+              ol.proj.getTransform(scope.map.getView().getProjection(), "EPSG:4326"));
+            scope.ctrl.searchGeometry = wgsExtent.join(',');
+            scope.filterFacets();
+          };
+
+          scope.setFeaturesInMapExtent = function() {
+            scope.featuresInMapExtent = !scope.featuresInMapExtent;
+            if (scope.featuresInMapExtent) {
+              scope.map.on('moveend', onMoveEnd);
+            } else {
+              scope.map.un('moveend', onMoveEnd);
+            }
+          };
+
+          function setSearchState(facetsState) {
+            if (scope.ctrl.filter.fullTextSearch != '') {
+              var param = {};
+              param[scope.ctrl.filter.fullTextSearch] = true;
+              facetsState.any = {
+                values: param
+              };
+            } else {
+              delete facetsState.any;
+            }
+            scope.ctrl.filter.params = facetsState;
+            scope.ctrl.filter.geometry = scope.filterGeometry;
+            scope.ctrl.query = indexObject.buildESParams(scope.ctrl.filter, {});
+          }
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
@@ -551,12 +600,10 @@
 
             addBboxAggregation(aggs);
 
-            //indexObject is only available if Elastic is configured
             if (indexObject) {
-              indexObject.searchWithFacets({
-                params: facetsState,
-                geometry: scope.filterGeometry
-              }, aggs).
+              setSearchState(facetsState);
+
+              indexObject.searchWithFacets(scope.ctrl.filter, aggs).
               then(function(resp) {
                 searchResponseHandler(resp, filterInputUpdate);
                 angular.forEach(scope.fields, function(f) {
@@ -564,6 +611,10 @@
                     f.expanded = true;
                   }
                 });
+
+                if (scope.displayTableOnLoad) {
+                  scope.showTable();
+                }
               });
             }
           };
@@ -589,7 +640,7 @@
 
           function setFeatureExtent(agg) {
             if (scope.layer) {
-              scope.autoZoomToExtent = true;
+              scope.autoZoomToExtent = scope.featuresInMapExtent === false;
               if (scope.autoZoomToExtent
                 && agg.bbox_xmin.value && agg.bbox_ymin.value
                 && agg.bbox_xmax.value && agg.bbox_ymax.value) {
@@ -615,11 +666,11 @@
             }
           };
 
-          // scope.$watch('featureExtent', function(n, o) {
-          //   if (n && n !== o) {
-          //     scope.zoomToResults();
-          //   }
-          // });
+          scope.$watch('featureExtent', function(n, o) {
+            if (n && n !== o) {
+              scope.zoomToResults();
+            }
+          });
 
 
           scope.accentify = function(str) {
@@ -654,6 +705,7 @@
           scope.resetFacets = function(init) {
             scope.output = {};
             scope.lastClickedField = null;
+            scope.ctrl.filter.fullTextSearch = '';
 
             if(!init) {
               scope.resetSLDFilters();
@@ -682,9 +734,15 @@
             addBboxAggregation(aggs);
             textInputsHistory = {};
 
+            setSearchState({});
+
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
             then(function(resp) {
+              if (scope.displayTableOnLoad) {
+                scope.showTable();
+              }
+
               searchResponseHandler(resp, false);
             });
           };
@@ -959,7 +1017,14 @@
             scope.$broadcast('FiltersChanged');
           });
 
+          scope.enableHeatmap = false;
+          scope.showHeatmap = function() {
+            scope.enableHeatmap = !scope.enableHeatmap;
+          }
+
+          scope.enableTable = false;
           scope.showTable = function() {
+            scope.enableTable = !scope.enableTable;
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
               name: scope.layer.get('label') || scope.layer.get('name'),
@@ -973,6 +1038,7 @@
 
           element.on('$destroy', function() {
             scope.$destroy();
+            gnFeaturesTableManager.clear();
           });
 
           // triggered when the filter state is changed

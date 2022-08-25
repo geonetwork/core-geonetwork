@@ -430,7 +430,7 @@
     "link-fcats": "Feature catalog",
     "link-associated": "Associated resources",
     "indexAccessError": "Error during index access.",
-    "applyFilter": "Apply Filter",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Confirm Action",
     "close": "Close",

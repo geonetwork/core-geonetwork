@@ -68,6 +68,7 @@
         gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus,
         gnGlobalSettings.gnCfg.mods.recordview.internalThesaurus,
         gnGlobalSettings.gnCfg.mods.recordview.locationThesaurus);
+      $scope.showDataBrowser = gnGlobalSettings.gnCfg.mods.map.disabledTools.filter === false;
       $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
       $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 

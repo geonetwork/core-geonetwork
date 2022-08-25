@@ -424,26 +424,8 @@
                 type: 'danger'});
             });
       };
-      $scope.processName = null;
-      $scope.processRecommended = function(processName) {
-        $scope.processName = processName;
-        $scope.processTitle =
-            $translate.instant('processRecommendedOnHostChange-help', {
-              old: buildUrl($scope.initalSettings),
-              by: buildUrl($scope.settings)
-            });
-      };
-      $scope.resourceIdProcessName = null;
-      $scope.processRecommendedForId = function(processName) {
-        $scope.resourceIdProcessName = processName;
-        $scope.processResourceTitle =
-            $translate.instant('processRecommendedOnHostChange-help', {
-              old: buildUrl($scope.initalSettings),
-              by: buildUrl($scope.settings)
-            });
-      };
-      $scope.filterForm = function(e,formId) {
 
+      $scope.filterForm = function(e,formId) {
         var filterValue = e.target.value.toLowerCase();
 
         $(formId + " .form-group").filter(function() {
@@ -460,8 +442,8 @@
           $scope.filterParent($(this));
         });
       };
-      $scope.resetFilter = function(formId) {
 
+      $scope.resetFilter = function(formId) {
         $(formId + " .form-group").each(function() {
           // clear filter
           $('#filter-settings').val('');
@@ -475,7 +457,6 @@
 
       // check the parent for visible children
       $scope.filterParent = function(element) {
-
         var doFilterMain = true;
         // go back to the fieldset
         var fieldsetParent = element.parent().parent();
@@ -547,25 +528,10 @@
       }
 
       /**
-       * Save settings and move to the batch process page
-       *
-       * TODO: set the process to use and select all
-       */
-      $scope.saveAndProcessSettings = function(formId, process) {
-        $scope.saveSettings(formId);
-
-        $location.path('/tools/batch/select/all/process/' + process)
-            .search(
-            'urlPrefix=' + buildUrl($scope.initalSettings) +
-            '&newUrlPrefix=' + buildUrl($scope.settings));
-      };
-
-
-      /**
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function() {
-        return $http.get('atomharvester?_content_type=json').success(function(data) {
+        return $http.get('../api/atom/scan').success(function(data) {
           $scope.loadTplReport = data;
 
           $('#atomHarvesterModal').modal();

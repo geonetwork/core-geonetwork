@@ -103,62 +103,95 @@
         },
         link: function(scope, element, attrs, controller) {
           var initSize = attrs['size'] ? parseInt(attrs['size']) : 4;
+          scope.maxSize = attrs['maxSize'] ? parseInt(attrs['maxSize']) : 12;
           scope.similarDocuments = [];
           scope.size = initSize;
           scope.pageSize = initSize;
-          scope.maxSize = 8;
+          scope.ofSameType = gnGlobalSettings.gnCfg.mods.search.moreLikeThisSameType === true;
+
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
-          var query = {
-            "_source": {
-              "include": ['id',
-                'uuid',
-                'overview.*',
-                'resource*',
-                'cl_status*'
-              ]
-            },
-            "size": scope.size,
-            "query": {
-              "bool": {
-                "must": [
-                  moreLikeThisQuery,
-                  {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
-                  {"terms": {"draft": ["n", "e"]}}
-                ],
-                "must_not" : [
-                  {"terms": {"uuid": []}}
-                ]}
-            }
+
+          var datasetTypes = ['nonGeographicDataset', 'dataset'],
+            resourceTypeMapping = {
+            'nonGeographicDataset': {label: 'dataset', types: datasetTypes},
+            'dataset': {label: 'dataset', types: datasetTypes},
+            'featureCatalog': {label: 'records', types: ['featureCatalog'].concat(datasetTypes)}
           };
 
+          function buildQuery() {
+            var query = {
+              '_source': {
+                'include': [
+                  'id',
+                  'uuid',
+                  'overview.*',
+                  'resourceTitle*',
+                  'resourceAbstract*',
+                  'resourceType',
+                  'cl_status*'
+                ]
+              },
+              'size': scope.size,
+              'query': {
+                'bool': {
+                  'must': [
+                    moreLikeThisQuery,
+                    {'terms': {'isTemplate': ['n']}},
+                    // TODO: We may want to use it for subtemplate
+                    {'terms': {'draft': ['n', 'e']}}
+                  ],
+                  // Exclude self and all related records
+                  'must_not' : [
+                    {'terms': {
+                      'uuid': [scope.md.uuid].concat(scope.md.related
+                                && scope.md.related.uuids
+                                ? scope.md.related.uuids : [])
+                    }}
+                  ]}
+              }
+            };
+            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
+
+            var resourceType = scope.md.resourceType ? scope.md.resourceType[0] : undefined;
+            if (scope.ofSameType
+                && resourceType) {
+              var mapping = resourceTypeMapping[resourceType];
+              scope.label = mapping ? mapping.label : resourceType;
+              query.query.bool.filter = [
+                {"terms": {"resourceType":
+                      mapping ? mapping.types : [resourceType]
+                }}
+              ];
+            }
+
+            return query;
+          }
+
           scope.moreRecords = function() {
-            query.size += scope.pageSize;
-            scope.size = query.size;
+            scope.size += scope.pageSize;
             loadMore();
           }
+
           function loadMore() {
             if (scope.md == null) {
               return;
             }
-            // Exclude self and all related records
-            query.query.bool.must_not[0].terms.uuid =
-              [scope.md.uuid].concat(scope.md.related && scope.md.related.uuids
-                ? scope.md.related.uuids : [])
-            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
-            $http.post('../api/search/records/_search', query).then(function (r) {
+
+            $http.post('../api/search/records/_search', buildQuery()).then(function (r) {
+              scope.total = r.data.hits.total.value;
               scope.similarDocuments = r.data.hits.hits.map(function(r) {
                 return new Metadata(r);
               });
             })
           }
+
           scope.$watch('md', function() {
             scope.similarDocuments = [];
             scope.size = initSize;
-            query.size = initSize;
+            scope.pageSize = initSize;
             loadMore();
           });
-
         }
       };
     }]);
@@ -173,30 +206,31 @@
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'datapreview.html',
         controller: ['$scope', '$timeout',
-          function ($scope, $timeout) {
-          $scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
-          $scope.hasExtent = false;
-          $scope.extentLayer = new ol.layer.Vector({
+          function (scope, $timeout) {
+          scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          scope.hasExtent = false;
+          scope.currentLayer = undefined;
+          scope.extentLayer = new ol.layer.Vector({
             source: new ol.source.Vector(),
-            map: $scope.map,
+            map: scope.map,
             style: gnSearchSettings.olStyles.mdExtent
           });
 
           this.addRecordsExtent = function(records) {
-            $scope.extentLayer.getSource().clear();
+            scope.extentLayer.getSource().clear();
 
             for (var i = 0; i < records.length; i++) {
               var feat = gnMap.getBboxFeatureFromMd(records[i],
-                $scope.map.getView().getProjection());
-              $scope.extentLayer.getSource().addFeature(feat);
-              $scope.hasExtent = !!feat.getGeometry();
+                scope.map.getView().getProjection());
+              scope.extentLayer.getSource().addFeature(feat);
+              scope.hasExtent = !!feat.getGeometry();
             }
 
-            if ($scope.hasExtent) {
+            if (scope.hasExtent) {
               $timeout(function() {
-                $scope.map.getView().fit(
-                  $scope.extentLayer.getSource().getExtent(),
-                  $scope.map.getSize());
+                scope.map.getView().fit(
+                  scope.extentLayer.getSource().getExtent(),
+                  scope.map.getSize());
               }, 100);
             }
           }
@@ -206,7 +240,11 @@
             scope.map.get('creationPromise').then(function() {
               ctrl.addRecordsExtent([scope.md]);
               scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
-                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md).then(function(layer) {
+                  if (!scope.currentLayer) {
+                    scope.currentLayer = layer;
+                  }
+                });
               });
             })
           }

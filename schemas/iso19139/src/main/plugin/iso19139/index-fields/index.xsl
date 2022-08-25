@@ -985,6 +985,7 @@
         </xsl:for-each>
       </xsl:for-each>
 
+      <xsl:variable name="atomProtocol" select="util:getSettingValue('system/inspire/atomProtocol')" />
 
       <xsl:for-each select="gmd:distributionInfo/*">
         <xsl:for-each
@@ -1019,6 +1020,9 @@
           <xsl:element name="linkUrlProtocol{replace($protocol[1], '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </xsl:element>
+          <xsl:if test="$protocol = $atomProtocol">
+            <atomfeed><xsl:value-of select="gmd:linkage/gmd:URL"/></atomfeed>
+          </xsl:if>
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape((gmd:protocol/*/text())[1])"/>",
             "mimeType":"<xsl:value-of select="if (*/gmx:MimeFileType)
@@ -1200,7 +1204,7 @@
         <xsl:variable name="getRecordByIdId">
           <xsl:if test="@xlink:href != ''">
             <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([\w\-\.\{{\}}]*).*">
+                                regex=".*[i|I][d|D]=([_\w\-\.\{{\}}]*).*">
               <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
               </xsl:matching-substring>
