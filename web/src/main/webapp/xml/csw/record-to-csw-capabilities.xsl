@@ -288,7 +288,7 @@
         <ows:Operation name="GetRecordById">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="${$endPointValue}"/>
+              <ows:Get xlink:href="{$endPointValue}"/>
               <ows:Post xlink:href="{$endPointValue}"/>
             </ows:HTTP>
           </ows:DCP>
@@ -347,7 +347,7 @@
 
           <inspire_ds:ExtendedCapabilities>
             <inspire_com:ResourceLocator>
-              <inspire_com:URL>{$endPointValue}?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+              <inspire_com:URL><xsl:value-of select="$endPointValue"/>?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
               <inspire_com:MediaType>application/xml</inspire_com:MediaType>
             </inspire_com:ResourceLocator>
 
