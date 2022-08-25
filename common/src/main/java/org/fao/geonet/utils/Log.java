@@ -43,50 +43,69 @@ import java.util.Enumeration;
  */
 public final class Log {
 
-    /** Jeeves base logging moodule. */
+    /**
+     * Jeeves base logging moodule.
+     */
     public static final String JEEVES = "jeeves";
 
     //---------------------------------------------------------------------------
     //--- Logging constants
     //---------------------------------------------------------------------------
-    /** Jeeves engine */
+    /**
+     * Jeeves engine
+     */
     public static final String ENGINE = JEEVES + ".engine";
-    /** Jeeves monitor */
+    /**
+     * Jeeves monitor
+     */
     public static final String MONITOR = JEEVES + ".monitor";
-    /** Jeeves application handler */
+    /**
+     * Jeeves application handler
+     */
     public static final String APPHAND = JEEVES + ".apphand";
-    /** Jeeves web application */
+    /**
+     * Jeeves web application
+     */
     public static final String WEBAPP = JEEVES + ".webapp";
-    /** Jeeves request handling */
+    /**
+     * Jeeves request handling
+     */
     public static final String REQUEST = JEEVES + ".request";
-    /** Jeeves service */
+    /**
+     * Jeeves service
+     */
     public static final String SERVICE = JEEVES + ".service";
 
-    /** Jeeves scheduler, used for {@code ScheduleContext}. */
+    /**
+     * Jeeves scheduler, used for {@code ScheduleContext}.
+     */
     public static final String SCHEDULER = JEEVES + ".scheduler";
 
-    /** Jeeves resources */
+    /**
+     * Jeeves resources
+     */
     public static final String RESOURCES = JEEVES + ".resources";
 
-    /** Jeeves xlink processor */
+    /**
+     * Jeeves xlink processor
+     */
     public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
 
-    /** Jeeves xml resolver */
+    /**
+     * Jeeves xml resolver
+     */
     public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
-    /** Jeeves transformer factory */
+    /**
+     * Jeeves transformer factory
+     */
     public static final String TRANSFORMER_FACTORY = JEEVES
         + ".transformerFactory";
+
     /**
      * Default constructor. Builds a Log.
      */
     private Log() {
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     public static void debug(String module, Object message) {
         Logger.getLogger(module).debug(message);
@@ -159,12 +178,11 @@ public final class Log {
 
     /**
      * Logger wrapper providing module logging services.
-     *
+     * <p>
      * The provided {@code fallbackModule} is used to indicate parent module to
      * assist in determing log file location.
      *
      * @param module
-     *
      * @return logger providing module logging services.
      */
     public static org.fao.geonet.Logger createLogger(final String module) {
@@ -173,13 +191,12 @@ public final class Log {
 
     /**
      * Logger wrapper providing module logging services.
-     *
+     * <p>
      * The provided {@code fallbackModule} is used to indicate parent module to
      * assist in determing log file location.
      *
      * @param module
      * @param fallbackModule
-     *
      * @return logger providing module logging services.
      */
     public static org.fao.geonet.Logger createLogger(final String module,
@@ -216,7 +233,7 @@ public final class Log {
 
             public void setAppender(FileAppender fa) {
                 Logger.getLogger(module).removeAllAppenders();
-                Logger.getLogger(module).addAppender( new AppenderWrapper(fa));
+                Logger.getLogger(module).addAppender(new AppenderWrapper(fa));
             }
 
             /**
@@ -254,18 +271,17 @@ public final class Log {
                         return file.getName();
                     }
                 }
-                if (System.getProperties().containsKey("log_dir")){
-                    File logDir = new File( System.getProperty("log_dir"));
-                    if( logDir.exists() && logDir.isDirectory()){
-                        File logFile = new File( logDir, "logs/geonetwork.log");
-                        if(logFile.exists()){
+                if (System.getProperties().containsKey("log_dir")) {
+                    File logDir = new File(System.getProperty("log_dir"));
+                    if (logDir.exists() && logDir.isDirectory()) {
+                        File logFile = new File(logDir, "logs/geonetwork.log");
+                        if (logFile.exists()) {
                             return logFile.getName();
                         }
                     }
-                }
-                else  {
+                } else {
                     File logFile = new File("logs/geonetwork.log");
-                    if(logFile.exists()){
+                    if (logFile.exists()) {
                         return logFile.getName();
                     }
                 }
@@ -285,28 +301,28 @@ public final class Log {
 
     /**
      * Looks up log file location from FileAppender or RollingFileAppender, and
-     * ensures the file exsists.
+     * ensures the file exists.
      *
      * @param appender
      * @return log file location (providing file exists).
      */
-    private static File toLogFile(Appender appender){
-        if( appender instanceof AppenderWrapper){
+    public static File toLogFile(Appender appender) {
+        if (appender instanceof AppenderWrapper) {
             AppenderWrapper wrapper = (AppenderWrapper) appender;
             org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
-            if( appender2 instanceof FileAppender){
+            if (appender2 instanceof FileAppender) {
                 FileAppender fileAppender = (FileAppender) appender2;
                 String fileName = fileAppender.getFileName();
                 File file = new File(fileName);
-                if(file.exists()){
+                if (file.exists()) {
                     return file;
                 }
             }
-            if( appender2 instanceof RollingFileAppender){
+            if (appender2 instanceof RollingFileAppender) {
                 RollingFileAppender fileAppender = (RollingFileAppender) appender2;
                 String fileName = fileAppender.getFileName();
                 File file = new File(fileName);
-                if(file.exists()){
+                if (file.exists()) {
                     return file;
                 }
             }
@@ -315,6 +331,3 @@ public final class Log {
     }
 
 }
-
-//=============================================================================
-
