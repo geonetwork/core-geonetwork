@@ -197,14 +197,14 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     /**
      * Used to configure Log4J to route harvester messages to an individual file.
-     *
+     * <p>
      * This method has the side effect of setting Log4J ThreadContext values:
      * <ul>
      *     <li>harvester</li>
      *     <li>logfile</li>
      *     <li>timeZone</li>
      * </ul>
-     *
+     * <p>
      * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
      * the logfile location.
      *
@@ -232,54 +232,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             timeZoneSetting = TimeZone.getDefault().getID();
         }
 
-        ThreadContext.put("harvest",harvesterName);
-        ThreadContext.putIfNull("logfile",logfile);
-        ThreadContext.put("timeZone",timeZoneSetting);
+        ThreadContext.put("harvest", harvesterName);
+        ThreadContext.putIfNull("logfile", logfile);
+        ThreadContext.put("timeZone", timeZoneSetting);
 
         return logfile;
-
-
-
-        // log = Log.createLogger(harvesterName, "geonetwork.harvester");
-
-        // String directoryPath = log.getFileAppender();
-
-//        if (directoryPath == null || directoryPath.isEmpty()) {
-//            directoryPath = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
-//        }
-//        File directoryFile = new File(directoryPath);
-//        if (!directoryFile.isDirectory()) {
-//            if( directoryFile.getParentFile() != null){
-//                directoryFile = directoryFile.getParentFile();
-//            }
-//        }
-
-
-
-
-//        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-
-//        PatternLayout layout = PatternLayout.newBuilder()
-//            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
-//            .build();
-
-//        Builder<FileAppender> fileBuilder = FileAppender.newBuilder()
-//            .setName(harvesterName)
-//            .withFileName(logPath)
-//            .setLayout(layout)
-//            .withAppend(true);
-//
-//        FileAppender fa = fileBuilder.build();
-
-        // log.setAppender(fa);
-
-//        return logPath;
     }
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
 
     public void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
@@ -297,7 +255,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
         initInfo(context);
 
-        // initializeLog();
         if (status == Status.ACTIVE) {
             doSchedule();
         }
@@ -333,6 +290,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     /**
      * Deletes the harvester job from the scheduler and schedule it again.
+     *
      * @throws SchedulerException
      */
     public void doReschedule() throws SchedulerException {
@@ -342,6 +300,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     /**
      * Get the timezone of the harvester cron trigger.
+     *
      * @return a time zone.
      * @throws SchedulerException
      */
@@ -706,7 +665,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 running = true;
                 cancelMonitor.set(false);
                 try {
-
                     String logfile = initializeLog();
 
                     this.log.info("Starting harvesting of " + this.getParams().getName());
@@ -808,7 +766,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             }
             Element logfile_ = new Element("logfile");
             logfile_.setText(logfile);
-
             result.addContent(logfile_);
 
             result.addContent(toElement(errors));
