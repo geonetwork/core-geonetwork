@@ -24,13 +24,17 @@
 package org.fao.geonet.utils;
 
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.apache.log4j.bridge.AppenderWrapper;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -108,70 +112,70 @@ public final class Log {
     }
 
     public static void debug(String module, Object message) {
-        Logger.getLogger(module).debug(message);
+        LogManager.getLogger(module).debug(message);
     }
 
     public static void debug(String module, Object message, Exception e) {
-        Logger.getLogger(module).debug(message, e);
+        LogManager.getLogger(module).debug(message, e);
     }
 
     public static boolean isDebugEnabled(String module) {
-        return Logger.getLogger(module).isDebugEnabled();
+        return LogManager.getLogger(module).isDebugEnabled();
     }
 
     @SuppressWarnings("deprecation")
-    public static boolean isEnabledFor(String module, int priority) {
-        return Logger.getLogger(module).isEnabledFor(Priority.toPriority(priority));
+    public static boolean isEnabledFor(String module, Level level) {
+        return LogManager.getLogger(module).isEnabled(level);
     }
     //---------------------------------------------------------------------------
 
     public static void trace(String module, Object message) {
-        Logger.getLogger(module).trace(message);
+        LogManager.getLogger(module).trace(message);
     }
 
     public static void trace(String module, Object message, Exception e) {
-        Logger.getLogger(module).trace(message, e);
+        LogManager.getLogger(module).trace(message, e);
     }
 
     public static boolean isTraceEnabled(String module) {
-        return Logger.getLogger(module).isTraceEnabled();
+        return LogManager.getLogger(module).isTraceEnabled();
     }
 
     //---------------------------------------------------------------------------
 
     public static void info(String module, Object message) {
-        Logger.getLogger(module).info(message);
+        LogManager.getLogger(module).info(message);
     }
 
     public static void info(String module, Object message, Throwable t) {
-        Logger.getLogger(module).info(message, t);
+        LogManager.getLogger(module).info(message, t);
     }
 
     //---------------------------------------------------------------------------
 
     public static void warning(String module, Object message) {
-        Logger.getLogger(module).warn(message);
+        LogManager.getLogger(module).warn(message);
     }
 
     public static void warning(String module, Object message, Throwable e) {
-        Logger.getLogger(module).warn(message, e);
+        LogManager.getLogger(module).warn(message, e);
     }
 
 
     //---------------------------------------------------------------------------
 
     public static void error(String module, Object message) {
-        Logger.getLogger(module).error(message);
+        LogManager.getLogger(module).error(message);
     }
 
     public static void error(String module, Object message, Throwable t) {
-        Logger.getLogger(module).error(message, t);
+        LogManager.getLogger(module).error(message, t);
     }
 
     //---------------------------------------------------------------------------
 
     public static void fatal(String module, Object message) {
-        Logger.getLogger(module).fatal(message);
+        LogManager.getLogger(module).fatal(message);
     }
 
     //--------------------------------------------------------------------------
@@ -232,8 +236,7 @@ public final class Log {
             }
 
             public void setAppender(FileAppender fa) {
-                Logger.getLogger(module).removeAllAppenders();
-                Logger.getLogger(module).addAppender(new AppenderWrapper(fa));
+                throw new IllegalStateException("Please use custom log4j2.xml to manage log4j behavior");
             }
 
             /**
@@ -248,27 +251,30 @@ public final class Log {
              * @return logfile location of {@code logs/geonetwork.log} file
              */
             public String getFileAppender() {
-                Logger log = Logger.getLogger(module);
-                // Set effective level to be sure it writes the log
-                log.setLevel(getThreshold());
+                Logger log = LogManager.getLogger(module);
 
-                @SuppressWarnings("rawtypes")
-                Enumeration appenders = log.getAllAppenders();
-                while (appenders.hasMoreElements()) {
-                    Appender appender = (Appender) appenders.nextElement();
-                    File file = toLogFile(appender);
-                    if (file != null && file.exists()) {
-                        return file.getName();
+                // Set effective level to be sure it writes the log
+                org.apache.logging.log4j.core.config.Configurator.setLevel(log, getThreshold());
+
+                LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+                Configuration configuration = loggerContext.getConfiguration();
+
+                LoggerConfig moduleConfig = configuration.getLoggers().get(module);
+                if (moduleConfig != null) {
+                    for (Appender appender : moduleConfig.getAppenders().values()) {
+                        File file = toLogFile(appender);
+                        if (file != null && file.exists()) {
+                            return file.getName();
+                        }
                     }
                 }
-
-                Logger fallback = Logger.getLogger(fallbackModule);
-                appenders = fallback.getAllAppenders();
-                while (appenders.hasMoreElements()) {
-                    Appender appender = (Appender) appenders.nextElement();
-                    File file = toLogFile(appender);
-                    if (file != null && file.exists()) {
-                        return file.getName();
+                LoggerConfig fallbackConfig = configuration.getLoggers().get(fallbackModule);
+                if( fallbackConfig != null) {
+                    for (Appender appender : fallbackConfig.getAppenders().values()) {
+                        File file = toLogFile(appender);
+                        if (file != null && file.exists()) {
+                            return file.getName();
+                        }
                     }
                 }
                 if (System.getProperties().containsKey("log_dir")) {
@@ -289,7 +295,7 @@ public final class Log {
             }
 
             public Level getThreshold() {
-                return Logger.getLogger(fallbackModule).getEffectiveLevel();
+                return LogManager.getLogger(fallbackModule).getLevel();
             }
 
             @Override
@@ -306,24 +312,20 @@ public final class Log {
      * @return log file location (providing file exists).
      */
     public static File toLogFile(Appender appender) {
-        if (appender instanceof AppenderWrapper) {
-            AppenderWrapper wrapper = (AppenderWrapper) appender;
-            org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
-            if (appender2 instanceof FileAppender) {
-                FileAppender fileAppender = (FileAppender) appender2;
-                String fileName = fileAppender.getFileName();
-                File file = new File(fileName);
-                if (file.exists()) {
-                    return file;
-                }
+        if (appender instanceof FileAppender) {
+            FileAppender fileAppender = (FileAppender) appender;
+            String fileName = fileAppender.getFileName();
+            File file = new File(fileName);
+            if (file.exists()) {
+                return file;
             }
-            if (appender2 instanceof RollingFileAppender) {
-                RollingFileAppender fileAppender = (RollingFileAppender) appender2;
-                String fileName = fileAppender.getFileName();
-                File file = new File(fileName);
-                if (file.exists()) {
-                    return file;
-                }
+        }
+        if (appender instanceof RollingFileAppender) {
+            RollingFileAppender fileAppender = (RollingFileAppender) appender;
+            String fileName = fileAppender.getFileName();
+            File file = new File(fileName);
+            if (file.exists()) {
+                return file;
             }
         }
         return null;

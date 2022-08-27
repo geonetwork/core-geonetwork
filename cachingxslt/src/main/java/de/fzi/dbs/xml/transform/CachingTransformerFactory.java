@@ -2,7 +2,8 @@ package de.fzi.dbs.xml.transform;
 
 import net.sf.saxon.TransformerFactoryImpl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.utils.CachedTransformer;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      * Factory logger.
      */
     protected static final Logger logger =
-        Logger.getLogger(CachingTransformerFactory.class);
+        LogManager.getLogger(CachingTransformerFactory.class);
     /**
      * Active readers count.
      */

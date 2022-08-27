@@ -26,7 +26,6 @@ package org.fao.geonet.api.site;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Setting;

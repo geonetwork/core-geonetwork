@@ -48,7 +48,8 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -242,7 +243,7 @@ public class CMISUtils {
                     doc = (Document) cmisConfiguration.getClient().getObjectByPath(key, oc);
                 }
                 // Avoid CMIS API call is info is not enabled.
-                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
                         String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
                 }
@@ -267,7 +268,7 @@ public class CMISUtils {
 
                 doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState());
                 // Avoid CMIS API call is info is not enabled.
-                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
                         String.format("Added resource '%s'.", doc.getPaths().get(0)));
                 }

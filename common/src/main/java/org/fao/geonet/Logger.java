@@ -115,7 +115,7 @@ public interface Logger {
      * Access to omodule logging level, providing
      * @return
      */
-    public org.apache.log4j.Level getThreshold();
+    public org.apache.logging.log4j.Level getThreshold();
 
 }
 
