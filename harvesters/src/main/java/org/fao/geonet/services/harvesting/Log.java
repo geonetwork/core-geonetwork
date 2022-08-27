@@ -35,6 +35,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Download a logfile from harvesting
@@ -72,15 +73,21 @@ public class Log implements Service {
 
 
         File mainLogFile = GeonetworkDataDirectory.getLogfile();
-        Path file = mainLogFile.toPath().getParent().resolve(logfile);
+        Path pathLogFile;
+        if (mainLogFile != null) {
+            pathLogFile = mainLogFile.toPath().getParent().resolve(logfile);
+        }
+        else {
+            pathLogFile = Paths.get(logfile);
+        }
 
-        if (!Files.exists(file) || !Files.isReadable(file)) {
+        if (!Files.exists(pathLogFile) || !Files.isReadable(pathLogFile)) {
             throw new NullPointerException(String.format(
                 "Couldn't find or read the logfile %s in catalogue log directory. Check log file configuration.",
                 logfile));
         }
 
-        return BinaryFile.encode(200, file.toAbsolutePath().normalize(), false).getElement();
+        return BinaryFile.encode(200, pathLogFile.toAbsolutePath().normalize(), false).getElement();
     }
 
 }

@@ -300,8 +300,7 @@ public final class Log {
     }
 
     /**
-     * Looks up log file location from FileAppender or RollingFileAppender, and
-     * ensures the file exists.
+     * Looks up log file location, and ensures the file exists.
      *
      * @param appender
      * @return log file location (providing file exists).
