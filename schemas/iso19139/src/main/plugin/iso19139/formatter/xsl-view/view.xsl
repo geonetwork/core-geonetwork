@@ -342,8 +342,11 @@
               </div>
               <div class="col-md-11">
                 <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-                  <xsl:value-of select="$schemaStrings/citationProposal"/>
-                </h2><br/>
+                  <xsl:call-template name="landingpage-label">
+                    <xsl:with-param name="key" select="'citationProposal'"/>
+                  </xsl:call-template>
+                </h2>
+
                 <xsl:apply-templates mode="citation" select="$citationInfo"/>
               </div>
             </div>
