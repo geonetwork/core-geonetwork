@@ -46,7 +46,7 @@ import java.util.zip.ZipFile;
 public class GeoFile implements Closeable {
     private FileSystem zipFile = null;
     private Path file = null;
-    private String _format = null;
+    private String format = null;
     private boolean _containsSld = false;
     private String _sldBody;
 
@@ -154,7 +154,7 @@ public class GeoFile implements Closeable {
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         String fileName = file.getFileName().toString();
                         if (fileIsShp(fileName)) {
-                            _format = "shp";
+                            format = "shp";
                             String base = getBase(fileName);
 
                             if (onlyOneFileAllowed) {
@@ -177,7 +177,7 @@ public class GeoFile implements Closeable {
                             }
                         }
                         if (fileIsGpkg(fileName)) {
-                            _format = "gpkg";
+                            format = "gpkg";
                             String base = getBase(fileName);
 
                             if (onlyOneFileAllowed) {
@@ -223,7 +223,7 @@ public class GeoFile implements Closeable {
         } else {
             String fileName = file.getFileName().toString();
             if (fileIsGpkg(fileName)) {
-                _format = "gpkg";
+                format = "gpkg";
                 layers.add(getBase(fileName));
             }
         }
@@ -245,7 +245,7 @@ public class GeoFile implements Closeable {
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         String fileName = file.getFileName().toString();
                         if (fileIsGeotif(fileName)) {
-                            _format = "tiff";
+                            format = "tiff";
                             layers.add(getBase(fileName));
                         }
                         return FileVisitResult.CONTINUE;
@@ -255,7 +255,7 @@ public class GeoFile implements Closeable {
         } else {
             String fileName = file.getFileName().toString();
             if (fileIsGeotif(fileName)) {
-                _format = "tiff";
+                format = "tiff";
                 layers.add(getBase(fileName));
             }
         }
@@ -290,7 +290,7 @@ public class GeoFile implements Closeable {
     }
 
     public String getFormat() {
-        return this._format;
+        return this.format;
     }
 
     @Override
