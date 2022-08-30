@@ -1,4 +1,4 @@
-<div class="row gn-row-main">
+<div class="row gn-row-main hidden-print">
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
 
     <div class="col-sm-offset-6"
@@ -151,7 +151,7 @@
     <div class="col-sm-12">
 
     <!-- toggle buttons -->
-    <div id="info-toggle-buttons" class="btn-group pull-right" data-toggle="buttons">
+    <div id="info-toggle-buttons" class="btn-group pull-right hidden-print" data-toggle="buttons">
       <button id="btn-toggle-blocks" type="button" class="btn btn-default"
               data-ng-click="toggleListType('blocks')"
               data-ng-model="type"
@@ -175,7 +175,7 @@
       </button>
     </div>
 
-    <tabset id="info-tabset pull-left" type="pills" justified="false" role="tablist">
+    <tabset id="info-tabset" type="pills" justified="false" role="tablist">
       <tab heading="{{'lastRecords' | translate}}"
            active="infoTabs.lastRecords.active">
         <form class="form-horizontal"
