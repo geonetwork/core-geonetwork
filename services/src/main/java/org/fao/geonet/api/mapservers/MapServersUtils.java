@@ -128,7 +128,7 @@ public class MapServersUtils {
             } catch (IllegalArgumentException e) {
                 throw new GeoPublisherException(String.format(
                     "Failed to publish vector file '%s'. Error is %s",
-                    f, gs.getErrorCode()
+                    f, e.getMessage()
                 ));
             }
 
@@ -154,7 +154,7 @@ public class MapServersUtils {
             } catch (IllegalArgumentException e) {
                 throw new GeoPublisherException(String.format(
                     "Failed to publish raster file '%s'. Error is %s",
-                    f, gs.getErrorCode()
+                    f, e.getMessage()
                 ));
             }
         }
