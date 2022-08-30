@@ -223,6 +223,10 @@
        * Callback when error uploading file.
        */
       loadFormatterError = function(e, data) {
+        if (data.jqXHR.status === 201) {
+          loadFormatter();
+          return;
+        }
         $rootScope.$broadcast('StatusUpdated', {
           title: $translate.instant('formatterUploadError'),
           error: data.jqXHR.responseJSON,
