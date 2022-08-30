@@ -2,8 +2,8 @@
   <li class="list-group-item panel panel-default gn-card"
       data-ng-repeat="md in searchResults.records"
       title="{{(md.resourceAbstract) | striptags}}"
-      ng-click="loadMap(maps[0], md)">
-
+      ng-click="loadMap(md.linksByType.maps[0], md)">
+    
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
         <a>
