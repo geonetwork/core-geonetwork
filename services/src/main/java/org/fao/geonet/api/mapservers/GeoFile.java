@@ -151,8 +151,8 @@ public class GeoFile implements Closeable {
             for (Path path : zipFile.getRootDirectories()) {
                 Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                     @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        String fileName = file.getFileName().toString();
+                    public FileVisitResult visitFile(Path vfile, BasicFileAttributes attrs) throws IOException {
+                        String fileName = vfile.getFileName().toString();
                         if (fileIsShp(fileName)) {
                             format = "shp";
                             String base = getBase(fileName);
@@ -164,7 +164,7 @@ public class GeoFile implements Closeable {
                                             + layers.size()
                                             + " shapefiles found.");
 
-                                if (base.equals(getBase(fileName))) {
+                                if (base.equals(getBase(file.getFileName().toString()))) {
                                     layers.add(base);
                                 } else
                                     throw new IllegalArgumentException(
@@ -187,7 +187,7 @@ public class GeoFile implements Closeable {
                                             + layers.size()
                                             + " geopackage found.");
 
-                                if (base.equals(getBase(fileName))) {
+                                if (base.equals(getBase(file.getFileName().toString()))) {
                                     layers.add(base);
                                 } else
                                     throw new IllegalArgumentException(
