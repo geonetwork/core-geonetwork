@@ -2,6 +2,7 @@
      data-runSearch="true">
 
   <div data-ng-if="!showHealthIndexError"
+       class="hidden-print"
        data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
   <div class="row gn-row-results">
@@ -43,7 +44,7 @@
       <!-- /.gn-search-facet -->
 
     <div class="col-md-9 container-fluid">
-      <div class="row gn-row-tools"
+      <div class="row gn-row-tools hidden-print"
            data-ng-show="searchResults.records.length > 0">
         <div class="col-xs-12 col-sm-6 col-sm-push-3 text-center">
           <div class=""
@@ -93,7 +94,7 @@
                data-map="searchObj.searchMap"></div>
 
           <button data-ng-show="searchResults.records.length > 9"
-                  class="btn btn-link"
+                  class="btn btn-link hidden-print"
                   onClick="window.scrollTo(0,0);"
                   title="{{'scrollTop' | translate}}">
             <i class="fa fa-fw fa-chevron-up"/>
@@ -103,7 +104,7 @@
     </div>
   </div>
 
-  <div ng-if="!showMapInFacet">
+  <div ng-if="!showMapInFacet" class="hidden-print">
     <div data-gn-map-field="searchObj.searchMap"
       data-gn-map-field-geom="searchObj.params.geometry"
       data-gn-map-field-opt="searchObj.mapfieldOption"

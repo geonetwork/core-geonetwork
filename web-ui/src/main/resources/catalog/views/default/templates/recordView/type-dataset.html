@@ -35,7 +35,7 @@
 <div class="row gn-section">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"/>
-    <div ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
+    <div class="gn-page-break-avoid" ng-include="'../../catalog/views/default/templates/recordView/constraints.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
   <div class="gn-md-side"
@@ -101,11 +101,11 @@
      data-ng-if="mdView.current.record.lineage
                  || mdView.current.record.sourceDescription
                  || mdView.current.record.supplementalInformation">
-  <div class="col-md-8 gn-record">
+  <div class="col-md-8 gn-record gn-page-break-avoid">
     <div ng-include="'../../catalog/views/default/templates/recordView/lineage.html'"/>
   </div>
   <!-- /.col-md-8 gn-record -->
-  <div class="gn-md-side">
+  <div class="gn-md-side gn-page-break-avoid">
     <div ng-include="'../../catalog/views/default/templates/recordView/sources.html'"/>
   </div>
 </div>
@@ -141,17 +141,17 @@
 <div class="gn-section row">
   <h2 class="col-md-12" data-translate="">metadataInformation</h2>
   <div class="col-md-8">
-    <div ng-include="'../../catalog/views/default/templates/recordView/metadatacontact.html'"/>
+    <div class="gn-page-break-avoid" ng-include="'../../catalog/views/default/templates/recordView/metadatacontact.html'"/>
   </div>
   <div class="col-md-4 gn-md-side">
-    <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
+    <div class="gn-page-break-avoid" ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"/>
   </div>
 </div>
 
-<div class="row">
+<div class="row hidden-print">
   <div class="col-md-8">
     <div ng-include="'../../catalog/views/default/templates/recordView/share.html'"/>
   </div>
 </div>
 
-<div ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
+<div class="hidden-print" ng-include="'../../catalog/views/default/templates/recordView/footer.html'"/>
