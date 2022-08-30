@@ -180,7 +180,8 @@
                 {"terms": {"isTemplate": ["t"]}}
               ]
             }
-          }}, {cache: true}).then(function(r) {
+          },
+          "size": 1000}, {cache: true}).then(function(r) {
           if (r.data.hits.total.value > 0) {
             $scope.templates = r.data.hits.hits.map(function(md) {
               return {
