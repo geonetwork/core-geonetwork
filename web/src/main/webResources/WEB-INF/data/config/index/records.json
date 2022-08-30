@@ -1833,6 +1833,9 @@
       },
       "statusWorkflow": {
         "type": "keyword"
+      },
+      "userSavedCount": {
+        "type": "long"
       }
     }
   }

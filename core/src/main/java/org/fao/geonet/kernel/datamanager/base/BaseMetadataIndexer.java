@@ -118,6 +118,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     private ApplicationEventPublisher publisher;
 
+    @Autowired
+    private UserSavedSelectionRepository userSavedSelectionRepository;
+
     public BaseMetadataIndexer() {
     }
 
@@ -529,6 +532,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         fields.put(Geonet.IndexFieldNames.VALID_INSPIRE, "-1");
                     }
                 }
+
+                int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid);
+                fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
 
                 fields.putAll(addExtraFields(fullMd));
 

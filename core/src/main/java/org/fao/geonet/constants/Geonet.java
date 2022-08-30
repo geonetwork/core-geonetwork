@@ -678,6 +678,7 @@ public final class Geonet {
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
         public static final String STATUS_WORKFLOW = "statusWorkflow";
+        public static final String USER_SAVED_COUNT = "userSavedCount";
     }
 
     public static class SearchConfig {
