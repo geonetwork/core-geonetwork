@@ -24,122 +24,185 @@
 package org.fao.geonet.utils;
 
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.apache.log4j.bridge.AppenderWrapper;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.appender.RollingFileAppender;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
+import java.io.File;
 import java.util.Enumeration;
 
 //=============================================================================
 
+/**
+ * Jeeves logging integration, defining functional logger categories by module
+ * (rather that strictly based on java package structure).
+ */
 public final class Log {
+
+    /**
+     * Jeeves base logging moodule.
+     */
     public static final String JEEVES = "jeeves";
 
     //---------------------------------------------------------------------------
     //--- Logging constants
     //---------------------------------------------------------------------------
+    /**
+     * Jeeves engine
+     */
     public static final String ENGINE = JEEVES + ".engine";
+    /**
+     * Jeeves monitor
+     */
     public static final String MONITOR = JEEVES + ".monitor";
+    /**
+     * Jeeves application handler
+     */
     public static final String APPHAND = JEEVES + ".apphand";
+    /**
+     * Jeeves web application
+     */
     public static final String WEBAPP = JEEVES + ".webapp";
+    /**
+     * Jeeves request handling
+     */
     public static final String REQUEST = JEEVES + ".request";
+    /**
+     * Jeeves service
+     */
     public static final String SERVICE = JEEVES + ".service";
+
+    /**
+     * Jeeves scheduler, used for {@code ScheduleContext}.
+     */
     public static final String SCHEDULER = JEEVES + ".scheduler";
+
+    /**
+     * Jeeves resources
+     */
     public static final String RESOURCES = JEEVES + ".resources";
+
+    /**
+     * Jeeves xlink processor
+     */
     public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
+
+    /**
+     * Jeeves xml resolver
+     */
     public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
+    /**
+     * Jeeves transformer factory
+     */
     public static final String TRANSFORMER_FACTORY = JEEVES
         + ".transformerFactory";
+
     /**
      * Default constructor. Builds a Log.
      */
     private Log() {
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
-
     public static void debug(String module, Object message) {
-        Logger.getLogger(module).debug(message);
+        LogManager.getLogger(module).debug(message);
     }
 
     public static void debug(String module, Object message, Exception e) {
-        Logger.getLogger(module).debug(message, e);
+        LogManager.getLogger(module).debug(message, e);
     }
 
     public static boolean isDebugEnabled(String module) {
-        return Logger.getLogger(module).isDebugEnabled();
+        return LogManager.getLogger(module).isDebugEnabled();
     }
 
     @SuppressWarnings("deprecation")
-    public static boolean isEnabledFor(String module, int priority) {
-        return Logger.getLogger(module).isEnabledFor(Priority.toPriority(priority));
+    public static boolean isEnabledFor(String module, Level level) {
+        return LogManager.getLogger(module).isEnabled(level);
     }
     //---------------------------------------------------------------------------
 
     public static void trace(String module, Object message) {
-        Logger.getLogger(module).trace(message);
+        LogManager.getLogger(module).trace(message);
     }
 
     public static void trace(String module, Object message, Exception e) {
-        Logger.getLogger(module).trace(message, e);
+        LogManager.getLogger(module).trace(message, e);
     }
 
     public static boolean isTraceEnabled(String module) {
-        return Logger.getLogger(module).isTraceEnabled();
+        return LogManager.getLogger(module).isTraceEnabled();
     }
 
     //---------------------------------------------------------------------------
 
     public static void info(String module, Object message) {
-        Logger.getLogger(module).info(message);
+        LogManager.getLogger(module).info(message);
     }
 
     public static void info(String module, Object message, Throwable t) {
-        Logger.getLogger(module).info(message, t);
+        LogManager.getLogger(module).info(message, t);
     }
 
     //---------------------------------------------------------------------------
 
     public static void warning(String module, Object message) {
-        Logger.getLogger(module).warn(message);
+        LogManager.getLogger(module).warn(message);
     }
 
     public static void warning(String module, Object message, Throwable e) {
-        Logger.getLogger(module).warn(message, e);
+        LogManager.getLogger(module).warn(message, e);
     }
 
 
     //---------------------------------------------------------------------------
 
     public static void error(String module, Object message) {
-        Logger.getLogger(module).error(message);
+        LogManager.getLogger(module).error(message);
     }
 
     public static void error(String module, Object message, Throwable t) {
-        Logger.getLogger(module).error(message, t);
+        LogManager.getLogger(module).error(message, t);
     }
 
     //---------------------------------------------------------------------------
 
     public static void fatal(String module, Object message) {
-        Logger.getLogger(module).fatal(message);
+        LogManager.getLogger(module).fatal(message);
     }
 
     //--------------------------------------------------------------------------
 
     /**
-     * Returns a simple logger object
+     * Logger wrapper providing module logging services.
+     * <p>
+     * The provided {@code fallbackModule} is used to indicate parent module to
+     * assist in determing log file location.
+     *
+     * @param module
+     * @return logger providing module logging services.
      */
     public static org.fao.geonet.Logger createLogger(final String module) {
         return createLogger(module, null);
     }
 
+    /**
+     * Logger wrapper providing module logging services.
+     * <p>
+     * The provided {@code fallbackModule} is used to indicate parent module to
+     * assist in determing log file location.
+     *
+     * @param module
+     * @param fallbackModule
+     * @return logger providing module logging services.
+     */
     public static org.fao.geonet.Logger createLogger(final String module,
                                                      final String fallbackModule) {
         return new org.fao.geonet.Logger() {
@@ -173,37 +236,66 @@ public final class Log {
             }
 
             public void setAppender(FileAppender fa) {
-                Logger.getLogger(module).removeAllAppenders();
-                Logger.getLogger(module).addAppender(fa);
+                throw new IllegalStateException("Please use custom log4j2.xml to manage log4j behavior");
             }
 
+            /**
+             * The log file name from the file appender for this module.
+             *
+             * Note both module and fallback module are provided allowing providing a better opportunity
+             * to learn the log file location. Harvesters use the log file name parent directory as a good
+             * location to create {@code /harvester_logs/} folder.
+             *
+             * Built-in configuration uses log file location {@code logs/geonetwork.log} relative to the current directory, or relative to system property {@code log_file}.
+             *
+             * @return logfile location of {@code logs/geonetwork.log} file
+             */
             public String getFileAppender() {
+                Logger log = LogManager.getLogger(module);
+
                 // Set effective level to be sure it writes the log
-                Logger.getLogger(module).setLevel(getThreshold());
+                org.apache.logging.log4j.core.config.Configurator.setLevel(log, getThreshold());
 
-                @SuppressWarnings("rawtypes")
-                Enumeration appenders = Logger.getLogger(module)
-                    .getAllAppenders();
-                while (appenders.hasMoreElements()) {
-                    Appender a = (Appender) appenders.nextElement();
-                    if (a instanceof FileAppender) {
-                        return ((FileAppender) a).getFile();
+                LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+                Configuration configuration = loggerContext.getConfiguration();
+
+                LoggerConfig moduleConfig = configuration.getLoggers().get(module);
+                if (moduleConfig != null) {
+                    for (Appender appender : moduleConfig.getAppenders().values()) {
+                        File file = toLogFile(appender);
+                        if (file != null && file.exists()) {
+                            return file.getName();
+                        }
                     }
                 }
-                appenders = Logger.getLogger(fallbackModule).getAllAppenders();
-                while (appenders.hasMoreElements()) {
-                    Appender a = (Appender) appenders.nextElement();
-                    if (a instanceof FileAppender) {
-                        return ((FileAppender) a).getFile();
+                LoggerConfig fallbackConfig = configuration.getLoggers().get(fallbackModule);
+                if( fallbackConfig != null) {
+                    for (Appender appender : fallbackConfig.getAppenders().values()) {
+                        File file = toLogFile(appender);
+                        if (file != null && file.exists()) {
+                            return file.getName();
+                        }
                     }
                 }
-
+                if (System.getProperties().containsKey("log_dir")) {
+                    File logDir = new File(System.getProperty("log_dir"));
+                    if (logDir.exists() && logDir.isDirectory()) {
+                        File logFile = new File(logDir, "logs/geonetwork.log");
+                        if (logFile.exists()) {
+                            return logFile.getName();
+                        }
+                    }
+                } else {
+                    File logFile = new File("logs/geonetwork.log");
+                    if (logFile.exists()) {
+                        return logFile.getName();
+                    }
+                }
                 return "";
-
             }
 
             public Level getThreshold() {
-                return Logger.getLogger(fallbackModule).getEffectiveLevel();
+                return LogManager.getLogger(fallbackModule).getLevel();
             }
 
             @Override
@@ -213,7 +305,30 @@ public final class Log {
         };
     }
 
+    /**
+     * Looks up log file location, and ensures the file exists.
+     *
+     * @param appender
+     * @return log file location (providing file exists).
+     */
+    public static File toLogFile(Appender appender) {
+        if (appender instanceof FileAppender) {
+            FileAppender fileAppender = (FileAppender) appender;
+            String fileName = fileAppender.getFileName();
+            File file = new File(fileName);
+            if (file.exists()) {
+                return file;
+            }
+        }
+        if (appender instanceof RollingFileAppender) {
+            RollingFileAppender fileAppender = (RollingFileAppender) appender;
+            String fileName = fileAppender.getFileName();
+            File file = new File(fileName);
+            if (file.exists()) {
+                return file;
+            }
+        }
+        return null;
+    }
+
 }
-
-//=============================================================================
-
