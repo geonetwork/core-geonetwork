@@ -73,10 +73,6 @@
     }
   }
 
-  .gn-map-layer {
-    word-break: break-all;
-  }
-
   .wrapper {
     width: 100%;
     height: 100%;
@@ -274,6 +270,23 @@
     .gn-layer-outofrange > label {
       color: #999;
     }
+    .gn-services-dropdown {
+      .dropdown {
+        .dropdown-menu {
+          li {
+            a {
+              padding: 6px 12px;
+              white-space: normal;
+              border-top: 1px solid @dropdown-border;
+              min-width: auto;
+              &:first-child {
+                border-top: 0;
+              }
+            }
+          }
+        }
+      }
+    }
     .gn-searchlayer-list {
       margin: 0;
       padding: 0;
@@ -343,17 +356,6 @@
     .flux, .context {
       margin: .2em;
     }
-    //.baselayer {
-    //  .dropdown-menu {
-    //    width: 100%;
-    //  }
-    //}
-    //.gn-layer-actions {
-    //  .btn-grou
-    //  //[gn-popover-anchor] {
-    //  //  text-decoration: none;
-    //  //}
-    //}
     .unfold {
       opacity: 0;
       transition: opacity @transition-params;
@@ -405,6 +407,10 @@
             white-space: nowrap;
             padding: 4px;
             opacity: 1;
+            &[disabled] {
+              color: @btn-link-disabled-color;
+              border-color: @input-bg-disabled;
+            }
             .caret {
               margin-right: 3px;
             }
