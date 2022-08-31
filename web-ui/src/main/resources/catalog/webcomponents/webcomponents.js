@@ -1,15 +1,34 @@
+function validURL(str) {
+  var urlPattern = new RegExp("^(https?:\\/\\/)?" +
+    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
+    "((\\d{1,3}\\.){3}\\d{1,3})|localhost)" +
+    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+    "(\\?[;&a-z\\d%_.~+=-]*)?" +
+    "(\\#[-a-z\\d_]*)?$", "i");
+  return !!urlPattern.test(str);
+}
+
+var DEFAULT_BASEURL = "http://localhost:8080/geonetwork";
+var DEFAULT_PORTAL = "srv";
+
 customElements.define("gn-app",
   class extends HTMLElement {
     constructor() {
       super();
 
-      var baseUrl = this.getAttribute("url") || "/geonetwork";
-      var portal = this.getAttribute("portal") || "srv";
+      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
+
+      if (!validURL(baseUrl + "/" + portal)) {
+        console.warn("Invalid configuration. Check URL");
+        return;
+      }
+
       var uiConfig = this.getAttribute("config");
       try {
         uiConfig = JSON.parse(uiConfig);
       } catch (e) {
-        console.warn('Invalid configuration: ' + uiConfig + '. Using default.');
+        console.warn("Invalid configuration: " + uiConfig + ". Using default.");
         console.warn(e);
         uiConfig = {};
       }
@@ -98,9 +117,19 @@ customElements.define("gn-app-frame",
     constructor() {
       super();
 
-      var baseUrl = this.getAttribute("url") || "/geonetwork";
-      var portal = this.getAttribute("portal") || "srv";
+      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
+
+      if (!validURL(baseUrl + "/" + portal)) {
+        console.warn("Invalid configuration. Check URL");
+        return;
+      }
+
       var language = this.getAttribute("language") || "eng";
+      if (language.match(/^[a-z]{3}$/) == null) {
+        console.warn("Invalid configuration. Check language");
+        return;
+      }
       var uiConfig = this.getAttribute("config") || "";
       var style = this.getAttribute("style") || "width:100%;height:80%;border:none";
 
@@ -109,11 +138,18 @@ customElements.define("gn-app-frame",
         app.setAttribute("name", "gn-app");
         app.setAttribute("style", style);
         var url = baseUrl + "/" + portal + "/" + language + "/catalog.search";
-        if (uiConfig != '') {
+        if (uiConfig != "") {
           if (uiConfig.match(/^[\w-]*$/) != null) {
-            url +=  "?ui=" + uiConfig.trim();
+            url += "?ui=" + uiConfig.trim();
           } else {
-            url +=  "?uiconfig=" + uiConfig;
+            try {
+              JSON.parse(uiConfig);
+            } catch (e) {
+              console.warn("Invalid configuration: " + uiConfig + ". Using default.");
+              console.warn(e);
+              return;
+            }
+            url += "?uiconfig=" + uiConfig;
           }
         }
         app.setAttribute("src", url);
