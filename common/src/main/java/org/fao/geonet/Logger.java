@@ -29,8 +29,10 @@ import org.apache.logging.log4j.core.appender.FileAppender;
 
 /**
  * GeoNetwork logger wrapper providing module based logging services.
+ *
+ * Use {@link org.fao.geonet.utils.Log#createLogger(String)} for instance creation.
  */
-public interface Logger {
+public interface Logger extends org.apache.logging.log4j.Logger {
     /**
      * Quick check to see if debug logging is available, used to avoid creating
      * expensive debug messages if they are not going to be used.
@@ -112,7 +114,7 @@ public interface Logger {
     public String getFileAppender();
 
     /**
-     * Access to omodule logging level, providing
+     * Access to module logging level.
      * @return
      */
     public org.apache.logging.log4j.Level getThreshold();

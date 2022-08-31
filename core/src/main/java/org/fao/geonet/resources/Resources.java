@@ -298,9 +298,9 @@ public abstract class Resources {
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 
-            context.warning("Cannot copy icon -> " + e.getMessage());
-            context.warning(" (C) Source : " + icon);
-            context.warning(" (C) Destin : " + logosDir);
+            context.getLogger().warning("Cannot copy icon -> " + e.getMessage());
+            context.getLogger().warning(" (C) Source : " + icon);
+            context.getLogger().warning(" (C) Destin : " + logosDir);
         }
         return filename;
     }

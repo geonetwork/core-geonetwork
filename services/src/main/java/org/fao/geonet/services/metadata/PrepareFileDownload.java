@@ -182,7 +182,7 @@ public class PrepareFileDownload implements Service {
                 elem.setAttribute("download", "true");
                 response.addContent(elem);
             } else {
-                context.info("Unknown download link: " + Xml.getString(elem));
+                context.getLogger().info("Unknown download link: " + Xml.getString(elem));
             }
         }
 

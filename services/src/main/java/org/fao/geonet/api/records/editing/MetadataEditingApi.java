@@ -721,8 +721,8 @@ public class MetadataEditingApi {
                         schemas.addContent(schemaElem);
                     }
                 } catch (Exception e) {
-                    context.error("Failed to load localization file for schema " + schema + ": " + e.getMessage());
-                    context.error(e);
+                    context.getLogger().error("Failed to load localization file for schema " + schema + ": " + e.getMessage());
+                    context.getLogger().error(e);
                 }
             }
         }

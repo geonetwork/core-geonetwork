@@ -224,7 +224,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService 
                     Element currentSC = loadSchemaComponent(context, tname, schema);
                     scElements.put(tname, currentSC);
                 } catch (Exception ex) {
-                    context.warning("Error while getting schema " + tname + " (" + schema+"): " + ex.getMessage());
+                    context.getLogger().warning("Error while getting schema " + tname + " (" + schema+"): " + ex.getMessage());
                 }
             }
         } else {

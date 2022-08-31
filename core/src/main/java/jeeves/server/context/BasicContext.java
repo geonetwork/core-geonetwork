@@ -45,11 +45,11 @@ import javax.persistence.EntityManager;
 /**
  * Contains a minimun context for a job execution (schedule, service etc...)
  */
-
-public class BasicContext implements Logger {
+public class BasicContext {
 
     private final ConfigurableApplicationContext jeevesApplicationContext;
-    protected Logger logger = Log.createLogger(Log.JEEVES);
+
+    protected Logger logger = Log.createLogger(BasicContext.class,Log.JEEVES_MARKER);
     protected Map<String, Object> htContexts;
     private String baseUrl;
     private EntityManager entityManager;
@@ -61,7 +61,6 @@ public class BasicContext implements Logger {
     //--------------------------------------------------------------------------
 
     public BasicContext(ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager) {
-
         this.jeevesApplicationContext = jeevesApplicationContext;
         htContexts = Collections.unmodifiableMap(contexts);
         this.entityManager = entityManager;
@@ -133,59 +132,59 @@ public class BasicContext implements Logger {
 
     //--------------------------------------------------------------------------
 
-    @Override
+    @Deprecated
     public boolean isDebugEnabled() {
-        return logger.isDebugEnabled();
+        return getLogger().isDebugEnabled();
     }
 
-    @Override
+    @Deprecated
     public void debug(final String message) {
-        logger.debug(message);
+        getLogger().debug(message);
     }
 
-    @Override
+    @Deprecated
     public void info(final String message) {
         logger.info(message);
     }
 
-    @Override
+    @Deprecated
     public void warning(final String message) {
         logger.warning(message);
     }
 
-    @Override
+    @Deprecated
     public void error(final String message) {
         logger.error(message);
     }
 
-    @Override
+    @Deprecated
     public void error(Throwable ex) {
         logger.error(ex);
     }
 
-    @Override
+    @Deprecated
     public void fatal(final String message) {
         logger.fatal(message);
     }
 
-    @Override
+    @Deprecated
     public String getModule() {
-        return logger.getModule();
+        return getLogger().getModule();
     }
 
-    @Override
+    @Deprecated
     public void setAppender(FileAppender fa) {
         logger.setAppender(fa);
     }
 
-    @Override
+    @Deprecated
     public String getFileAppender() {
-        return logger.getFileAppender();
+        return getLogger().getFileAppender();
     }
 
-    @Override
+    @Deprecated
     public Level getThreshold() {
-        return logger.getThreshold();
+        return getLogger().getThreshold();
     }
 
     /**

@@ -537,7 +537,7 @@ public class SearchController {
         Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
 
         if (!Files.exists(styleSheet)) {
-            context.warning(
+            context.getLogger().warning(
                 String.format(
                     "OutputSchema '%s' not supported for metadata with '%s' (%s). Corresponding XSL transformation '%s' does not exist. The record will not be returned in response.",
                     outputSchema, id, schema, styleSheet.toString()));

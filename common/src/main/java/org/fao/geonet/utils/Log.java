@@ -29,12 +29,15 @@ import org.apache.log4j.bridge.AppenderWrapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.util.StackLocator;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -49,61 +52,135 @@ public final class Log {
 
     /**
      * Jeeves base logging moodule.
+     *
+     * @deprecated Use {@link #JEEVES_MARKER}
      */
     public static final String JEEVES = "jeeves";
+    /**
+     * Jeeves marker for log messages.
+     */
+    public static final Marker JEEVES_MARKER = MarkerManager.getMarker("jeeves");
 
     //---------------------------------------------------------------------------
     //--- Logging constants
     //---------------------------------------------------------------------------
     /**
-     * Jeeves engine
-     */
-    public static final String ENGINE = JEEVES + ".engine";
-    /**
-     * Jeeves monitor
-     */
-    public static final String MONITOR = JEEVES + ".monitor";
-    /**
      * Jeeves application handler
+     *
+     * @deprecated Use {@link #APPHAND_MARKER}
      */
     public static final String APPHAND = JEEVES + ".apphand";
     /**
-     * Jeeves web application
+     * Application handler marker for log messages.
      */
-    public static final String WEBAPP = JEEVES + ".webapp";
+    public static final Marker APPHAND_MARKER = MarkerManager.getMarker("apphand").addParents(JEEVES_MARKER);
+    /**
+     * Jeeves engine
+     * @deprecated Use {@link #ENGINE_MARKER}
+     */
+    public static final String ENGINE = JEEVES + ".engine";
+    /**
+     * Engine marker for log messages.
+     */
+    public static final Marker ENGINE_MARKER = MarkerManager.getMarker("engine").addParents(JEEVES_MARKER);
+    /**
+     * Jeeves monitor
+     *
+     * @deprecated Use {@link #MONITOR_MARKER}
+     */
+    public static final String MONITOR = JEEVES + ".monitor";
+    /**
+     * Monitor marker for log messages.
+     */
+    public static final Marker MONITOR_MARKER = MarkerManager.getMarker("monitor").addParents(JEEVES_MARKER);
+
     /**
      * Jeeves request handling
+     *
+     * @deprecated Use {@link #REQUEST_MARKER}
      */
     public static final String REQUEST = JEEVES + ".request";
     /**
-     * Jeeves service
+     * Request handling marker for log messages.
      */
-    public static final String SERVICE = JEEVES + ".service";
-
-    /**
-     * Jeeves scheduler, used for {@code ScheduleContext}.
-     */
-    public static final String SCHEDULER = JEEVES + ".scheduler";
+    public static final Marker REQUEST_MARKER = MarkerManager.getMarker("request").addParents(JEEVES_MARKER);
 
     /**
      * Jeeves resources
+     * @deprecated Use {@link #RESOURCES_MARKER}
      */
     public static final String RESOURCES = JEEVES + ".resources";
+    /**
+     * Resources marker for log messages
+     */
+    public static final Marker RESOURCES_MARKER = MarkerManager.getMarker("resources").addParents(JEEVES_MARKER);
+
+    /**
+     * Jeeves scheduler, used for {@code ScheduleContext}.
+     *
+     * @deprecated Use {@link #SCHEDULER_MARKER}
+     */
+    public static final String SCHEDULER = JEEVES + ".scheduler";
+    /**
+     * Scheudler marker for log messages.
+     */
+    public static final Marker SCHEDULER_MARKER = MarkerManager.getMarker("scheduler").addParents(JEEVES_MARKER);
+
+    /**
+     * Jeeves service
+     *
+     * @deprecated Use {@link #SERVICE_MARKER}
+     */
+    public static final String SERVICE = JEEVES + ".service";
+    /**
+     * Service handling marker for log messages.
+     */
+    public static final Marker SERVICE_MARKER = MarkerManager.getMarker("service").addParents(JEEVES_MARKER);
+
+
+    /**
+     * Jeeves transformer factory
+     * @deprecated Use {{@link #TRANSFORMER_FACTORY_MARKER}
+     */
+    public static final String TRANSFORMER_FACTORY = JEEVES
+        + ".transformerFactory";
+    /**
+     * XML transformer factory marker for use with log events.
+     */
+    public static final Marker TRANSFORMER_FACTORY_MARKER = MarkerManager.getMarker("xmlresolver").addParents(JEEVES_MARKER);
+
+    /**
+     * Jeeves web application
+     *
+     * @deprecated Use {@link #WEBAPP_MARKER}
+     */
+    public static final String WEBAPP = JEEVES + ".webapp";
+    /**
+     * Web application marker for log messages.
+     */
+    public static final Marker WEBAPP_MARKER = MarkerManager.getMarker("webapp").addParents(JEEVES_MARKER);
 
     /**
      * Jeeves xlink processor
+     * @deprecated Use {@link #XLINK_MARKER}
      */
     public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
 
     /**
-     * Jeeves xml resolver
+     * Xlink processor marker for use with log messages
+     */
+    public static final Marker XLINK_MARKER = MarkerManager.getMarker("xlinkprocessor").addParents(JEEVES_MARKER);
+
+    /**
+     * Jeeves xml resolver/
+     *
+     * @deprecated Use {@link #XML_RESOLVER_MARKER}
      */
     public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
     /**
-     * Jeeves transformer factory
+     * Xml resolver marker for log messages.
      */
-    public static final String TRANSFORMER_FACTORY = JEEVES
-        + ".transformerFactory";
+    public static final Marker XML_RESOLVER_MARKER = MarkerManager.getMarker("xmlresolver").addParents(JEEVES_MARKER);
 
     /**
      * Default constructor. Builds a Log.
@@ -200,109 +277,74 @@ public final class Log {
      * assist in determing log file location.
      *
      * @param module
-     * @param fallbackModule
+     * @param fallback
      * @return logger providing module logging services.
      */
     public static org.fao.geonet.Logger createLogger(final String module,
-                                                     final String fallbackModule) {
-        return new org.fao.geonet.Logger() {
+                                                     final String fallback) {
+        // Class<?> caller = StackLocator.getInstance().getCallerClass(1);
+        String caller = toCaller();
+        Marker marker = toMarker(module,fallback);
+        return new LoggerWrapper(caller,marker);
+    }
 
-            public boolean isDebugEnabled() {
-                return Log.isDebugEnabled(module);
+    /**
+     * Logger wrapper providing module logging services.
+     * <p>
+     * The provided {@code fallbackModule} is used to indicate parent module to
+     * assist in determing log file location.
+     *
+     * @param clazz Class used for logger name
+     * @param marker Marker used to indicate jeeves module
+     * @return logger providing module logging services.
+     */
+    public static org.fao.geonet.Logger createLogger(Class clazz, Marker marker) {
+        if(clazz == null){
+            throw new NullPointerException("Class required to determine logger name");
+        }
+        if( marker == null){
+            throw new NullPointerException("Marker required to indicate geonetwork module");
+        }
+        return new LoggerWrapper(clazz,marker);
+    }
+
+    /**
+     * Module marker to use based on module and fallback names.
+     *
+     * @param module module name used in marker discovery
+     * @param fallback module parent used in marker discovery, {@link Log#JEEVES_MARKER} assumed.
+     * @return Marker determined from module and fallback, or {@link Log#JEEVES_MARKER} by default.
+     */
+    static Marker toMarker(String module, String fallback){
+        if(module == null){
+            return Log.JEEVES_MARKER;
+        }
+        Marker marker = MarkerManager.getMarker(module);
+        Marker parent = fallback != null ? MarkerManager.getMarker(fallback) : Log.JEEVES_MARKER;
+        if(!marker.isInstanceOf(parent)){
+            marker.addParents(parent);
+        }
+        return marker;
+    }
+
+    /**
+     * Determine caller of static logging methods (using an internal stack trace).
+     *
+     * Approach is inefficient and clients are encouraged to use their own logging instance if
+     * they have more than one logging message to share.
+     *
+     * @return caller
+     */
+    static String toCaller(){
+        Throwable t = new Throwable("logging context");
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        for( StackTraceElement element : stackTrace ){
+            if( element.getClassName().startsWith("org.fao.geonet.utils.Log")) {
+                continue;
             }
-
-            public void debug(String message) {
-                Log.debug(module, message);
-            }
-
-            public void info(String message) {
-                Log.info(module, message);
-            }
-
-            public void warning(String message) {
-                Log.warning(module, message);
-            }
-
-            public void error(String message) {
-                Log.error(module, message);
-            }
-
-            public void fatal(String message) {
-                Log.fatal(module, message);
-            }
-
-            public void error(Throwable t) {
-                Log.error(module, t.getMessage(), t);
-            }
-
-            public void setAppender(FileAppender fa) {
-                throw new IllegalStateException("Please use custom log4j2.xml to manage log4j behavior");
-            }
-
-            /**
-             * The log file name from the file appender for this module.
-             *
-             * Note both module and fallback module are provided allowing providing a better opportunity
-             * to learn the log file location. Harvesters use the log file name parent directory as a good
-             * location to create {@code /harvester_logs/} folder.
-             *
-             * Built-in configuration uses log file location {@code logs/geonetwork.log} relative to the current directory, or relative to system property {@code log_file}.
-             *
-             * @return logfile location of {@code logs/geonetwork.log} file
-             */
-            public String getFileAppender() {
-                Logger log = LogManager.getLogger(module);
-
-                // Set effective level to be sure it writes the log
-                org.apache.logging.log4j.core.config.Configurator.setLevel(log, getThreshold());
-
-                LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
-                Configuration configuration = loggerContext.getConfiguration();
-
-                LoggerConfig moduleConfig = configuration.getLoggers().get(module);
-                if (moduleConfig != null) {
-                    for (Appender appender : moduleConfig.getAppenders().values()) {
-                        File file = toLogFile(appender);
-                        if (file != null && file.exists()) {
-                            return file.getName();
-                        }
-                    }
-                }
-                LoggerConfig fallbackConfig = configuration.getLoggers().get(fallbackModule);
-                if( fallbackConfig != null) {
-                    for (Appender appender : fallbackConfig.getAppenders().values()) {
-                        File file = toLogFile(appender);
-                        if (file != null && file.exists()) {
-                            return file.getName();
-                        }
-                    }
-                }
-                if (System.getProperties().containsKey("log_dir")) {
-                    File logDir = new File(System.getProperty("log_dir"));
-                    if (logDir.exists() && logDir.isDirectory()) {
-                        File logFile = new File(logDir, "logs/geonetwork.log");
-                        if (logFile.exists()) {
-                            return logFile.getName();
-                        }
-                    }
-                } else {
-                    File logFile = new File("logs/geonetwork.log");
-                    if (logFile.exists()) {
-                        return logFile.getName();
-                    }
-                }
-                return "";
-            }
-
-            public Level getThreshold() {
-                return LogManager.getLogger(fallbackModule).getLevel();
-            }
-
-            @Override
-            public String getModule() {
-                return module;
-            }
-        };
+            return element.getClassName();
+        }
+        return JEEVES;
     }
 
     /**

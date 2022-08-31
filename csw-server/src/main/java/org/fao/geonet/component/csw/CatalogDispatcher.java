@@ -82,7 +82,7 @@ public class CatalogDispatcher {
     //---------------------------------------------------------------------------
 
     public Element dispatch(Element request, ServiceContext context) {
-        context.info("Received:\n" + Xml.getString(request));
+        context.getLogger().info("Received:\n" + Xml.getString(request));
 
         InputMethod im = context.getInputMethod();
         OutputMethod om = context.getOutputMethod();
@@ -105,7 +105,7 @@ public class CatalogDispatcher {
         } catch (CatalogException e) {
             exc = e;
         } catch (Exception e) {
-            context.info("Exception stack trace : \n" + Util.getStackTrace(e));
+            context.getLogger().info("Exception stack trace : \n" + Util.getStackTrace(e));
             // TODO what's this ?
             exc = new NoApplicableCodeEx(e.toString());
         }
@@ -151,9 +151,9 @@ public class CatalogDispatcher {
 
             request = cs.adaptGetRequest(params);
 
-            if (context.isDebugEnabled())
-                context.debug("Adapted GET request is:\n" + Xml.getString(request));
-            context.info("Dispatching operation : " + operation);
+            if (context.getLogger().isDebugEnabled())
+                context.getLogger().debug("Adapted GET request is:\n" + Xml.getString(request));
+            context.getLogger().info("Dispatching operation : " + operation);
 
             return cs.execute(request, context);
         }

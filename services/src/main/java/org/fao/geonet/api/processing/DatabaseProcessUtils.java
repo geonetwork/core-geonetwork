@@ -122,8 +122,8 @@ public class DatabaseProcessUtils {
                 // Using hash on processMd and metadata ?
             } catch (Exception e) {
                 report.addMetadataError(info, e);
-                context.error("  Processing failed with error " + e.getMessage());
-                context.error(e);
+                context.getLogger().error("  Processing failed with error " + e.getMessage());
+                context.getLogger().error(e);
             }
             return wellFormedXml;
         }
