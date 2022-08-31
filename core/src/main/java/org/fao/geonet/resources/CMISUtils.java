@@ -189,6 +189,7 @@ public class CMISUtils {
     public Document saveDocument(String key, CmisObject cmisObject, Map<String, Object> properties, InputStream is, final Date changeDate) throws IOException {
         // Don't use caching for this process.
         OperationContext oc = createOperationContext();
+        oc.setFilter(null);
         oc.setCacheEnabled(false);
 
         // Split the filename and parent folder from the key.
@@ -265,7 +266,7 @@ public class CMISUtils {
             try {
                 Folder parentFolder = getFolderCache(parentKey, true);
 
-                doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState());
+                doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState(), (List)null, (List)null, (List)null, oc);
                 // Avoid CMIS API call is info is not enabled.
                 if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
