@@ -50,6 +50,7 @@ goog.require('gn_alert');
   module.constant('gnGlobalSettings', function() {
     var sextantDownloadProtocols = [
       'WWW:DOWNLOAD',
+      'WWW:DOWNLOAD-1.0-link--download',
       'WWW:OPENDAP',
       'WWW:FTP',
       'OGC:WFS',
