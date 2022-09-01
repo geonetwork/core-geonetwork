@@ -37,6 +37,6 @@ public interface UserSavedSelectionRepository extends
     JpaSpecificationExecutor<UserSavedSelection>,
     UserSavedSelectionRepositoryCustom {
 
-    @Query("SELECT COUNT(DISTINCT u.user.id) FROM UserSavedSelection u WHERE u.metadataUuid = (:uuid)")
-    int countTimesUserSavedMetadata(@Param("uuid") String metadataUuid);
+    @Query("SELECT COUNT(DISTINCT u.user.id) FROM UserSavedSelection u WHERE u.metadataUuid = (:uuid) and u.selection.id = (:selectionId)")
+    int countTimesUserSavedMetadata(@Param("uuid") String metadataUuid, @Param("selectionId") int selectionId);
 }

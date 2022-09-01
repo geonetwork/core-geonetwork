@@ -533,7 +533,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
 
-                int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid);
+                // index the amount of users that have saved this record in the "Preferred Records" list (id=0)
+                int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid, 0);
                 fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
 
                 fields.putAll(addExtraFields(fullMd));
