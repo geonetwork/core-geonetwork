@@ -974,11 +974,6 @@
          <version>19.6.0.0</version>
         <!-- Oracle Free Use Terms and Conditions (FUTC) -->
       </dependency>
-      <dependency>
-        <groupId>org.codehaus.izpack</groupId>
-        <artifactId>izpack-standalone-compiler</artifactId>
-        <version>4.3.1</version>
-      </dependency>
       <!-- language detection -->
       <dependency>
         <groupId>com.cybozu.labs</groupId>
