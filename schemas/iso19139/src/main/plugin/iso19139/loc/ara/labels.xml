@@ -537,7 +537,7 @@
   <!-- ==================================================== -->
   <element name="gmd:compressionGenerationQuantity">
     <label>Compression generation quantity</label>
-    <description>Count of the number the number of lossy compression
+    <description>Count of the number of lossy compression
       cycles performed on the
       image
     </description>
@@ -2572,7 +2572,7 @@
   <!-- ==================================================== -->
   <element name="gmd:topicCategory">
     <label>Topic category</label>
-    <description>Main theme(s) of the datset</description>
+    <description>Main theme(s) of the dataset</description>
     <condition>mandatory</condition>
   </element>
   <!-- ==================================================== -->
@@ -3014,7 +3014,7 @@
   <element name="srv:name">
     <label>Name</label>
     <description>The name, as used by the service for this chain or
-      paramater
+      parameter
     </description>
   </element>
   <element name="srv:description">
