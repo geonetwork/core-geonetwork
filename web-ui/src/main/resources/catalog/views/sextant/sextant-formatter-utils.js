@@ -30,7 +30,7 @@
 
     var toggleBtn = element.querySelector('.sxt-collapse-toggle');
     toggleBtn.innerHTML = '<span class="fa fa-lg fa-minus-circle"></span>';
-    delete toggleBtn.style.removeProperty('left');
+    toggleBtn.style.removeProperty('left');
     element.removeAttribute('data-collapsed');
     toggleBtn.style.removeProperty('background');
   }
