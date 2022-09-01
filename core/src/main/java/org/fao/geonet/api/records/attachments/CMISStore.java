@@ -262,10 +262,11 @@ public class CMISStore extends AbstractStore {
                 setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
             }
 
-            // If cmisObject is empty and the property does not already exists in the current document then it is a new record. With new records, we need to set the default value for the status.
+            // If cmisObject is empty and the property does not already exist as an additional secondary property then it is a new record.
+            // With new records, we need to set the default value for the status.
             if (cmisObject==null &&
                 cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
-                getSecondaryProperty(doc, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())== null) {
+                !secondaryProperties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName().split(CMISConfiguration.CMIS_SECONDARY_PROPERTY_SEPARATOR)[1])) {
                 setCmisExternalManagementResourceStatusSecondary(doc, secondaryProperties, defaultStatus);
             }
 
