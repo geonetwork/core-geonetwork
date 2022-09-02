@@ -454,7 +454,7 @@
             nbOfComments: '@nbOfComments'
           },
           templateUrl: '../../catalog/components/userfeedback/partials/userfeedbacklasthome.html',
-          link: function(scope) {
+          link: function(scope, element, attrs) {
             var defaultSize = 6, increment = 6;
             scope.lastCommentsList = [];
             scope.allowDelete = attrs.allowDelete == 'true' || false;
