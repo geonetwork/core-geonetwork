@@ -26,6 +26,8 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.UserSavedSelection;
 import org.fao.geonet.domain.UserSavedSelectionId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Data Access object for accessing {@link UserSavedSelection} entities.
@@ -34,4 +36,7 @@ public interface UserSavedSelectionRepository extends
     GeonetRepository<UserSavedSelection, UserSavedSelectionId>,
     JpaSpecificationExecutor<UserSavedSelection>,
     UserSavedSelectionRepositoryCustom {
+
+    @Query("SELECT COUNT(DISTINCT u.user.id) FROM UserSavedSelection u WHERE u.metadataUuid = (:uuid) and u.selection.id = (:selectionId)")
+    int countTimesUserSavedMetadata(@Param("uuid") String metadataUuid, @Param("selectionId") int selectionId);
 }
