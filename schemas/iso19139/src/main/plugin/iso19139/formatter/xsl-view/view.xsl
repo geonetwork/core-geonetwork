@@ -338,7 +338,7 @@
           <blockquote>
             <div class="row">
               <div class="col-md-1">
-                <i class="fa fa-quote-left pull-right"><xsl:comment>Cite</xsl:comment></i>
+                <i class="fa fa-quote-left"><xsl:comment>Cite</xsl:comment></i>
               </div>
               <div class="col-md-11">
                 <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
