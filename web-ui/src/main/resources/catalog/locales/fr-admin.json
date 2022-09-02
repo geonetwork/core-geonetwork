@@ -939,6 +939,7 @@
     "system/userSelfRegistration/recaptcha/enable-help": "Activer le re-captcha vous protégera vous et les utilisateurs contre les spams et les abus. Ceci est fortement recommandé quand vous activer le retour ou l'auto-inscription. Créer votre clé de re-captcha sur <a href='https://www.google.com/recaptcha/'>https://www.google.com/recaptcha/</a>",
     "system/userSelfRegistration/recaptcha/publickey": "Clé publique reCAPTCHA",
     "system/userSelfRegistration/recaptcha/secretkey": "Clé secrète reCAPTCHA",
+    "userFeedbackList": "Derniers retours utilisateurs",
     "system/userFeedback": "Commentaires utilisateurs",
     "system/userFeedback/enable": "Autoriser les commentaires",
     "system/userFeedback/enable-help": "Lors de l'activation, il est important de s'assurer également de la bonne configuration du serveur mail.",
