@@ -1487,18 +1487,18 @@ html {
   overflow: scroll;
 }
 
-.external-resource-status-unknown,
-.external-resource-status-incomplete,
-.external-resource-status-valid {
+.external-resource-validation-status-unknown,
+.external-resource-validation-status-incomplete,
+.external-resource-validation-status-valid {
   position: relative;
 
 }
 
-/* CSS hex codes  https://www.fontawesomecheatsheet.com/font-awesome-cheatsheet-4x/ */
+/* CSS hex codes used in "content:" property below are located at https://www.fontawesomecheatsheet.com/font-awesome-cheatsheet-4x/ */
 
-.external-resource-status-unknown::before,
-.external-resource-status-incomplete::before,
-.external-resource-status-valid::before{
+.external-resource-validation-status-unknown::before,
+.external-resource-validation-status-incomplete::before,
+.external-resource-validation-status-valid::before{
   content: "\f15c";  /* fa-file-text */
   position: relative;
   font-size: 1.1em;
@@ -1507,7 +1507,7 @@ html {
   vertical-align: text-top;
 }
 
-.external-resource-status-incomplete::after {
+.external-resource-validation-status-incomplete::after {
   content: "\f071"; /* fa-exclamation-triangle */
   position: absolute;
   font-size: 0.5em;
@@ -1516,7 +1516,7 @@ html {
   color: darkorange;
 }
 
-.external-resource-status-valid::after {
+.external-resource-validation-status-valid::after {
   content: "\f14a";  /* fa-check-square */
   position: absolute;
   font-size: 0.5em;

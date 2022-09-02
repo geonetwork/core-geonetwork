@@ -29,7 +29,7 @@
       <a class="btn btn-link"
            title="{{'externalResourceManagement' | translate}}"
            data-ng-click="onlinesrcService.openExternalResourceManagement(r)">
-        <span class="fa" data-ng-class="{'external-resource-status-unknown': r.metadataResourceExternalManagementProperties.status=='UNKNOWN', 'external-resource-status-valid': r.metadataResourceExternalManagementProperties.status=='VALID', 'external-resource-status-incomplete': r.metadataResourceExternalManagementProperties.status=='INCOMPLETE'}"></span>
+        <span class="fa external-resource-validation-status-{{r.metadataResourceExternalManagementProperties.validationStatus | lowercase}}"></span>
         </a>
       </td>
       <td>
