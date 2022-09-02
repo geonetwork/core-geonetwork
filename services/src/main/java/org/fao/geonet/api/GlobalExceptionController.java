@@ -305,10 +305,22 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
-    public ApiError resourceAlreadyExistHandler(final Exception exception) {
+    public ApiError resourceAlreadyExistHandler(final HttpServletRequest request, final Exception exception) {
         storeApiErrorCause(exception);
 
-        return new ApiError("resource_already_exist", exception);
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceAlreadyExists");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceAlreadyExists.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("resource_already_exist", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -334,9 +346,17 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.unsatisfiedRequestParameter");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.unsatisfiedRequestParameter.description");
+            }
+            updateExceptionLocale(exception, request);
             return new ApiError("unsatisfied_request_parameter", exception);
+        } else {
+            return null;
         }
-        return null;
     }
 
     @ResponseBody
