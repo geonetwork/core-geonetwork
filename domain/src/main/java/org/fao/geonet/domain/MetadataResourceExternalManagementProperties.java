@@ -72,7 +72,7 @@ public class MetadataResourceExternalManagementProperties {
 
         public static ValidationStatus fromValue(int value) {
             for (ValidationStatus status : values()) {
-                if (status.statusValue ==value) {
+                if (status.statusValue == value) {
                     return status;
                 }
             }
