@@ -482,7 +482,8 @@
         $http.get('../api/tools/mail/test')
             .then(function(response) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: response.data});
+                title: response.data,
+                timeout: 2});
             }, function(response) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: response.data,
