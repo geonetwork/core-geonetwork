@@ -29,7 +29,7 @@ import org.jdom.Namespace;
 import javax.xml.XMLConstants;
 
 /**
- * TODO javadoc.
+ * GeoNetwork configuration constants including module names and file names.
  */
 public final class Geonet {
 

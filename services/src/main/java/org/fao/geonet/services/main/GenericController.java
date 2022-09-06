@@ -30,6 +30,7 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
@@ -77,25 +78,29 @@ public class GenericController {
         if (forwardedFor != null)
             ip = forwardedFor;
 
-        Log.info(Log.REQUEST, "==========================================================");
+        Logger LOGGER = Log.createLogger(GenericController.class, Log.REQUEST_MARKER);
 
-        Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + request.getRequestURI());
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Method       : " + request.getMethod());
-            Log.debug(Log.REQUEST, "Content type : " + request.getContentType());
+
+        LOGGER.info("==========================================================");
+
+        LOGGER.info("HTML Request (from " + ip + ") : " + request.getRequestURI());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Method       : {}",request.getMethod());
+            LOGGER.debug("Content type : {}",request.getContentType());
             // Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
             // Log.debug(Log.REQUEST, "Char encoding: "+
             // req.getCharacterEncoding());
-            Log.debug(Log.REQUEST, "Accept       : " + request.getHeader("Accept"));
+            LOGGER.debug( "Accept       : {}",request.getHeader("Accept"));
             // Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
             // Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
         }
 
-        if (Log.isDebugEnabled(Log.REQUEST)) {
+        if (LOGGER.isDebugEnabled()) {
             if (httpSession != null) {
-                Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
+
+                LOGGER.debug( "Session id is {0}",httpSession.getId());
             } else {
-                Log.debug(Log.REQUEST, "No session created");
+                LOGGER.debug( "No session created");
             }
         }
 
@@ -112,8 +117,7 @@ public class GenericController {
                 httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
                 session.setsHttpSession(httpSession);
 
-                if (Log.isDebugEnabled(Log.REQUEST))
-                    Log.debug(Log.REQUEST, "Session created for client : " + ip);
+                LOGGER.debug( "Session created for client : {}", ip);
             }
         }
 
@@ -134,7 +138,8 @@ public class GenericController {
             // now stick the stack trace on the end and log the whole lot
             sb.append("Stack :\n");
             sb.append(Util.getStackTrace(e));
-            Log.error(Log.REQUEST, sb.toString());
+
+            LOGGER.error(sb.toString());
 
         } catch (Exception e) {
             StringBuffer sb = new StringBuffer();
@@ -147,7 +152,8 @@ public class GenericController {
             // now stick the stack trace on the end and log the whole lot
             sb.append("Stack :\n");
             sb.append(Util.getStackTrace(e));
-            Log.error(Log.REQUEST, sb.toString());
+
+            LOGGER.error(sb.toString());
         }
 
         // --- execute request

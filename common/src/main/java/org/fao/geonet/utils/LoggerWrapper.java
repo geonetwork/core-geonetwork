@@ -1,7 +1,8 @@
-package org.fao.geonet.utils;/* (c) {{YEAR}} Open Source Geospatial Foundation - all rights reserved
+/* (c) {{YEAR}} Open Source Geospatial Foundation - all rights reserved
  * This code is licensed under the GPL 2.0 license, available at the root
  * application directory.
  */
+package org.fao.geonet.utils;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogBuilder;
@@ -72,31 +73,31 @@ public class LoggerWrapper implements Logger {
 
 
     public boolean isDebugEnabled() {
-        return LOGGER.isDebugEnabled();
+        return LOGGER.isDebugEnabled(MARKER);
     }
 
     public void debug(String message) {
-        LOGGER.debug(message);
+        LOGGER.debug(MARKER,message);
     }
 
     public void info(String message) {
-        LOGGER.info(message);
+        LOGGER.info(MARKER,message);
     }
 
     public void warning(String message) {
-        LOGGER.warn(message);
+        LOGGER.warn(MARKER,message);
     }
 
     public void error(String message) {
-        LOGGER.error(message);
+        LOGGER.error(MARKER,message);
     }
 
     public void fatal(String message) {
-        LOGGER.fatal(message);
+        LOGGER.fatal(MARKER,message);
     }
 
     public void error(Throwable t) {
-        LOGGER.error(t.getMessage(),t);
+        LOGGER.error(MARKER,t.getMessage(),t);
     }
 
     public void setAppender(FileAppender fa) {
@@ -1710,34 +1711,34 @@ public class LoggerWrapper implements Logger {
     }
 
     @Override public LogBuilder atTrace() {
-        return LOGGER.atTrace();
+        return LOGGER.atTrace().withMarker(MARKER);
     }
 
     @Override public LogBuilder atDebug() {
-        return LOGGER.atDebug();
+        return LOGGER.atDebug().withMarker(MARKER);
     }
 
     @Override public LogBuilder atInfo() {
-        return LOGGER.atInfo();
+        return LOGGER.atInfo().withMarker(MARKER);
     }
 
     @Override public LogBuilder atWarn() {
-        return LOGGER.atWarn();
+        return LOGGER.atWarn().withMarker(MARKER);
     }
 
     @Override public LogBuilder atError() {
-        return LOGGER.atError();
+        return LOGGER.atError().withMarker(MARKER);
     }
 
     @Override public LogBuilder atFatal() {
-        return LOGGER.atFatal();
+        return LOGGER.atFatal().withMarker(MARKER);
     }
 
     @Override public LogBuilder always() {
-        return LOGGER.always();
+        return LOGGER.always().withMarker(MARKER);
     }
 
     @Override public LogBuilder atLevel(Level level) {
-        return LOGGER.atLevel(level);
+        return LOGGER.atLevel(level).withMarker(MARKER);
     }
 }

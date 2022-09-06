@@ -316,15 +316,28 @@ public final class Log {
      * @return Marker determined from module and fallback, or {@link Log#JEEVES_MARKER} by default.
      */
     static Marker toMarker(String module, String fallback){
-        if(module == null){
-            return Log.JEEVES_MARKER;
+        if(module.contains(".") && fallback == null){
+            Marker marker = null;
+            for(String name : module.split("\\.")){
+                Marker m = MarkerManager.getMarker(name);
+                if( marker != null){
+                    m.addParents(marker);
+                }
+                marker = m;
+            }
+            return marker;
         }
-        Marker marker = MarkerManager.getMarker(module);
-        Marker parent = fallback != null ? MarkerManager.getMarker(fallback) : Log.JEEVES_MARKER;
-        if(!marker.isInstanceOf(parent)){
-            marker.addParents(parent);
+        else {
+            if (module == null) {
+                return Log.JEEVES_MARKER;
+            }
+            Marker marker = MarkerManager.getMarker(module);
+            Marker parent = fallback != null ? MarkerManager.getMarker(fallback) : Log.JEEVES_MARKER;
+            if (!marker.isInstanceOf(parent)) {
+                marker.addParents(parent);
+            }
+            return marker;
         }
-        return marker;
     }
 
     /**
@@ -339,7 +352,7 @@ public final class Log {
         Throwable t = new Throwable("logging context");
         StackTraceElement[] stackTrace = t.getStackTrace();
         for( StackTraceElement element : stackTrace ){
-            if( element.getClassName().startsWith("org.fao.geonet.utils.Log")) {
+            if( element.getClassName().equals("org.fao.geonet.utils.Log")) {
                 continue;
             }
             return element.getClassName();
