@@ -2037,7 +2037,7 @@
     <entry>
       <code>wayPoint</code>
       <label>Way Point</label>
-      <description>Event related to general collectio</description>
+      <description>Event related to general collection</description>
     </entry>
   </codelist>
   <codelist name="mac:MI_ObjectiveTypeCode">

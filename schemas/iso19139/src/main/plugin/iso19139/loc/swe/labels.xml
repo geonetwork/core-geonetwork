@@ -3101,7 +3101,7 @@
   </element>
   <element name="srv:name">
     <label>Name</label>
-    <description>The name, as used by the service for this chain or paramater</description>
+    <description>The name, as used by the service for this chain or parameter</description>
   </element>
   <element name="srv:description">
     <label>Description</label>

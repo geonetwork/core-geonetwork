@@ -443,7 +443,7 @@
   </element>
   <element name="gmd:compressionGenerationQuantity">
     <label>Compression generation quantity</label>
-    <description>count of the number the number of lossy compression
+    <description>count of the number of lossy compression
       cycles performed on the image
     </description>
   </element>
@@ -2635,7 +2635,7 @@
   <element name="srv:name">
     <label>Name</label>
     <description>The name, as used by the service for this chain or
-      paramater
+      parameter
     </description>
   </element>
   <element name="srv:description">
