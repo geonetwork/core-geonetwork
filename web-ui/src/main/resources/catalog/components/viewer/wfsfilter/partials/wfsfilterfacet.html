@@ -29,7 +29,7 @@
          class="gn-facet"
          data-ng-repeat="field in fields track by field.name">
       <h5 gn-collapsible="field.expanded">
-        <span class="fa fa-arrow-circle-right"
+        <span class="fa fa-arrow-circle-right text-primary"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}
       </h5>
@@ -79,7 +79,7 @@
     <div class="gn-facet"
          ng-if="isFeaturesIndexed && indexObject.geomField">
       <h5 gn-collapsible="indexObject.geomField.expanded">
-        <span class="fa fa-arrow-circle-right"
+        <span class="fa fa-arrow-circle-right text-primary"
               data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
         {{'gnbbox' | translate}}
       </h5>
