@@ -215,6 +215,7 @@
     }
     @media screen and (max-height: 768px) {
       left: @viewport-padding;
+      grid-template-columns: 0 2.8em;
       .badge-right {
         margin-top: -30px;
         display: inline-block;
@@ -425,6 +426,8 @@
       .dropdown {
         .dropdown-menu {
           min-width: 16em;
+          right: 0;
+          left: auto;
         }
         .gn-padding-left {
           padding-left: 20px !important;
