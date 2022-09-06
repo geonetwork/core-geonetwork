@@ -23,7 +23,10 @@
 
 package v3110;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.related.Related;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -56,7 +59,7 @@ import java.util.Map;
  * restarted to ensure that all JPA settings are applied correctly.
  */
 public class UpdateMetadataStatus extends DatabaseMigrationTask {
-
+    private static final Logger LOGGER = Log.createLogger(UpdateMetadataStatus.class, Geonet.DB_MARKER);
     private MetadataStatusRepository metadataStatusRepository;
     private IMetadataUtils metadataUtils;
 
@@ -84,7 +87,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             DialectResolutionInfo dialectResolutionInfo = new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getMetaData());
             Dialect dialect = new StandardDialectResolver().resolveDialect(dialectResolutionInfo);
 
-            Log.debug(Geonet.DB, "UpdateMetadataStatus");
+            LOGGER.debug(Geonet.DB_MARKER, "UpdateMetadataStatus");
 
             // First add the id and uuid as nullable.
             addMissingColumn(connection, dialect);
@@ -115,9 +118,14 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         } catch (Exception e) {
             // If there was an error then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
-            Log.error(Geonet.DB, "  Exception while adding new " + MetadataStatus_.id.getName() + " column to " + MetadataStatus.TABLE_NAME + ". " +
-                    "Error is: " + e.getMessage());
-            Log.debug(Geonet.DB, e);
+            LOGGER.error(
+                Geonet.DB_MARKER,
+                "  Exception while adding new {} column to {}. Error is: ",
+                MetadataStatus_.id.getName(),
+                MetadataStatus.TABLE_NAME,
+                e.getMessage()
+            );
+            LOGGER.debug(Geonet.DB_MARKER,e,e);
         }
         try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddColumnString() + "  " + MetadataStatus_.uuid.getName() + " VARCHAR(255) NULL");
@@ -314,9 +322,16 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop constraint " + pkName);
         } catch (Exception e) {
             connection.rollback();
-            Log.error(Geonet.DB, "  Exception while dropping old primary key constraint on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table." +
-                    "Error is: " + e.getMessage());
-            Log.debug(Geonet.DB, e, e);
+            LOGGER.error(
+                Geonet.DB_MARKER,
+                "  Exception while dropping old primary key constraint on table {}. "
+                    + "Restart application and check logs for database errors.  "
+                    + "If errors exists then may need to manually drop the primary key for this table."
+                    + "Error is: ",
+                MetadataStatus.TABLE_NAME,
+                e.getMessage()
+            );
+            LOGGER.debug(Geonet.DB_MARKER, e, e);
         }
 
         connection.commit();
@@ -326,9 +341,16 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop primary key");
         } catch (Exception e) {
             connection.rollback();
-            Log.error(Geonet.DB, "  Exception while dropping old primary key on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table. " +
-                    "Error is: " + e.getMessage());
-            Log.debug(Geonet.DB, e, e);
+            LOGGER.error(
+                Geonet.DB_MARKER,
+                "  Exception while dropping old primary key on table {}. "
+                    + "Restart application and check logs for database errors.  "
+                    + "If errors exists then may need to manually drop the primary key for this table. "
+                    + "Error is: ",
+                e.getMessage(),
+                MetadataStatus.TABLE_NAME
+            );
+            LOGGER.debug(Geonet.DB_MARKER, e, e);
         }
 
         connection.commit();
@@ -338,9 +360,14 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddPrimaryKeyConstraintString(MetadataStatus.TABLE_NAME + "Pk") + " (" + MetadataStatus_.id.getName() + ")");
         } catch (Exception e) {
             connection.rollback();
-            Log.error(Geonet.DB, "  Exception while adding primary key on " + MetadataStatus_.id.getName() + " column for " + MetadataStatus.TABLE_NAME + ". " +
-                    "Error is: " + e.getMessage());
-            Log.debug(Geonet.DB, e, e);
+            LOGGER.error(
+                Geonet.DB_MARKER,
+                "  Exception while adding primary key on {} column for {}. "
+                    + "Error is: ",
+                MetadataStatus_.id.getName(),
+                MetadataStatus.TABLE_NAME,
+                e.getMessage());
+            LOGGER.debug(Geonet.DB_MARKER, e, e);
         }
 
         connection.commit();
@@ -358,9 +385,13 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             connection.rollback();
             // If there was an error then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
-            Log.error(Geonet.DB, "  Exception while adding foreign key on relatedMetadataStatusId column of " + MetadataStatus.TABLE_NAME + ". " +
-                "Error is: " + e.getMessage());
-            Log.debug(Geonet.DB, e);
+            LOGGER.error(
+                Geonet.DB_MARKER,
+                "  Exception while adding foreign key on relatedMetadataStatusId column of {}. Error is: {}",
+                MetadataStatus.TABLE_NAME,
+                e.getMessage()
+            );
+            LOGGER.debug(Geonet.DB_MARKER, e, e);
         }
     }
 

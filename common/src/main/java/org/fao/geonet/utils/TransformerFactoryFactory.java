@@ -23,10 +23,10 @@
 
 package org.fao.geonet.utils;
 
+import org.apache.logging.log4j.Logger;
+
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
-
-import java.util.Properties;
 
 /**
  * This class is to prevent the situation that rogue applications running in the same JVM as does
@@ -40,13 +40,14 @@ import java.util.Properties;
  * @author heikki doeleman
  */
 public class TransformerFactoryFactory {
+    private static Logger LOGGER = Log.createLogger(TransformerFactoryFactory.class,Log.TRANSFORMER_FACTORY_MARKER);
     public final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
     public static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/" + SYSTEM_PROPERTY_NAME;
 
     private static TransformerFactory factory;
 
     public static void init(String implementationName) {
-        debug("Implementation name: " + implementationName);
+        LOGGER.debug(Log.TRANSFORMER_FACTORY_MARKER, "Implementation name: {}", implementationName);
         if (implementationName != null && implementationName.length() > 0) {
             factory = TransformerFactory.newInstance(implementationName, null);
         } else {
@@ -56,13 +57,15 @@ public class TransformerFactoryFactory {
 
     public static TransformerFactory getTransformerFactory() throws TransformerConfigurationException {
         if (factory == null) {
-            debug("TransformerFactoryFactory is null. Initializing ...");
+            LOGGER.debug(Log.TRANSFORMER_FACTORY_MARKER, "TransformerFactoryFactory is null. Initializing ...");
             init(null);
         }
-        debug("TransformerFactoryFactory: "
-            + factory.getClass().getName()
-            + " produces transformer implementation "
-            + factory.newTransformer().getClass().getName());
+        LOGGER.debug(
+            Log.TRANSFORMER_FACTORY_MARKER,
+            "TransformerFactoryFactory: {} produces transformer implementation ",
+            factory.getClass().getName(),
+            factory.newTransformer().getClass().getName()
+        );
         return factory;
     }
 
@@ -71,7 +74,4 @@ public class TransformerFactoryFactory {
         factory = _factory;
     }
 
-    private static void debug(String message) {
-        Log.debug(Log.TRANSFORMER_FACTORY, message);
-    }
 }

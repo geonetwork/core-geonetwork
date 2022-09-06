@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -65,6 +66,7 @@ import java.util.Map;
 @Controller("related")
 @ReadWriteController
 public class Related implements ApplicationContextAware {
+    private static final Logger LOGGER = Log.createLogger(Related.class,API.LOG_MARKER);
 
     @Autowired
     LanguageUtils languageUtils;
@@ -127,10 +129,10 @@ public class Related implements ApplicationContextAware {
                 RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
                 res.put(uuid, response);
             } catch (SecurityException e) {
-                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
                 throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
             } catch (Exception exception) {
-                Log.debug(API.LOG_MODULE_NAME, exception.getMessage(), exception);
+                LOGGER.debug(API.LOG_MARKER, exception.getMessage(), exception);
             }
 
         }

@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -64,6 +65,7 @@ import static org.fao.geonet.api.ApiParams.*;
 @Controller("associatedRecords")
 @ReadWriteController
 public class MetadataAssociatedApi {
+    private static Logger LOGGER = Log.createLogger(MetadataAssociatedApi.class,API.LOG_MARKER);
 
     @Autowired
     SchemaManager _schemaManager;
@@ -131,7 +133,7 @@ public class MetadataAssociatedApi {
         try {
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 

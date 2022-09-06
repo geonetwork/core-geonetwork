@@ -55,10 +55,12 @@ public interface Logger extends org.apache.logging.log4j.Logger {
      */
     public void info(String message);
 
-    /** Log warning message indicating potentially harmful situation, module
+    /**
+     * Log warning message indicating potentially harmful situation, module
      * will continue to try and complete current activity.
      *
      * @param message Warning message indicating potentially harmful situation
+     * @deprecated Use {@link #warn(String)}
      */
     public void warning(String message);
 
@@ -74,6 +76,7 @@ public interface Logger extends org.apache.logging.log4j.Logger {
      * current activity.
      *
      * @param ex Cause of error condition.
+     * @deprecated Use {@link #error(String, Throwable)}
      */
     public void error(Throwable ex);
 
@@ -85,7 +88,7 @@ public interface Logger extends org.apache.logging.log4j.Logger {
     public void fatal(String message);
 
     /**
-     * Functional module used for logging messages (for example {@code jeeves.engine}).
+     * Functional module used for logging messages (for example {@code jeeves}).
      *
      * @return functional module used for logging messages.
      */
@@ -97,6 +100,7 @@ public interface Logger extends org.apache.logging.log4j.Logger {
      * The file appender is also responsible for log file location provided by {@link #getFileAppender()}.
      *
      * @param fileAppender Log4j FileAppender
+     * @deprecated dynamic provision of file appender no longer supported
      */
     public void setAppender(FileAppender fileAppender);
 
@@ -115,7 +119,8 @@ public interface Logger extends org.apache.logging.log4j.Logger {
 
     /**
      * Access to module logging level.
-     * @return
+     * @return level
+     * @deprecated Use {@link #getLevel()}
      */
     public org.apache.logging.log4j.Level getThreshold();
 

@@ -51,7 +51,7 @@ import java.util.Enumeration;
 public final class Log {
 
     /**
-     * Jeeves base logging moodule.
+     * Jeeves base logging module name.
      *
      * @deprecated Use {@link #JEEVES_MARKER}
      */
@@ -188,80 +188,159 @@ public final class Log {
     private Log() {
     }
 
+    /**
+     * Log debug message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void debug(String module, Object message) {
-        LogManager.getLogger(module).debug(message);
+        createLogger(module).debug(message);
     }
 
+
+    /**
+     * Log debug exception for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void debug(String module, Object message, Exception e) {
-        LogManager.getLogger(module).debug(message, e);
+        createLogger(module).debug(message, e);
     }
 
+    /**
+     * Check if debug is enabled for module
+     * @param module
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static boolean isDebugEnabled(String module) {
-        return LogManager.getLogger(module).isDebugEnabled();
+        return createLogger(module).isDebugEnabled();
     }
 
-    @SuppressWarnings("deprecation")
+    /**
+     * Check if label enabled for module
+     * @param module
+     * @param level
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static boolean isEnabledFor(String module, Level level) {
-        return LogManager.getLogger(module).isEnabled(level);
+        return createLogger(module).isEnabled(level);
     }
     //---------------------------------------------------------------------------
 
+    /**
+     * Log trace message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void trace(String module, Object message) {
-        LogManager.getLogger(module).trace(message);
+        createLogger(module).trace(message);
     }
 
+    /**
+     * Log trace exception for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void trace(String module, Object message, Exception e) {
-        LogManager.getLogger(module).trace(message, e);
+        createLogger(module).trace(message, e);
     }
 
+    /**
+     * Check if trace enabled for module.
+     * @param module
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static boolean isTraceEnabled(String module) {
-        return LogManager.getLogger(module).isTraceEnabled();
+        return createLogger(module).isTraceEnabled();
     }
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Log info message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void info(String module, Object message) {
-        LogManager.getLogger(module).info(message);
+        createLogger(module).info(message);
     }
 
+    /**
+     * Log info exception for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void info(String module, Object message, Throwable t) {
-        LogManager.getLogger(module).info(message, t);
+        createLogger(module).info(message, t);
     }
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Log warning message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void warning(String module, Object message) {
-        LogManager.getLogger(module).warn(message);
+        createLogger(module).warn(message);
     }
 
+    /**
+     * Log warning exception for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void warning(String module, Object message, Throwable e) {
-        LogManager.getLogger(module).warn(message, e);
+        createLogger(module).warn(message, e);
     }
 
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Log error message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void error(String module, Object message) {
-        LogManager.getLogger(module).error(message);
+        createLogger(module).error(message);
     }
 
+    /**
+     * Log error exception for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void error(String module, Object message, Throwable t) {
-        LogManager.getLogger(module).error(message, t);
+        createLogger(module).error(message, t);
     }
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Log fatal message for module on behalf of calling class.
+     * @param module
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     public static void fatal(String module, Object message) {
-        LogManager.getLogger(module).fatal(message);
+        createLogger(module).fatal(message);
     }
 
     //--------------------------------------------------------------------------
 
     /**
      * Logger wrapper providing module logging services.
-     * <p>
-     * The provided {@code fallbackModule} is used to indicate parent module to
-     * assist in determing log file location.
      *
      * @param module
      * @return logger providing module logging services.
@@ -291,8 +370,7 @@ public final class Log {
     /**
      * Logger wrapper providing module logging services.
      * <p>
-     * The provided {@code fallbackModule} is used to indicate parent module to
-     * assist in determing log file location.
+     * The provided {@code fallbackModule} is used to indicate parent module.
      *
      * @param clazz Class used for logger name
      * @param marker Marker used to indicate jeeves module
@@ -316,7 +394,10 @@ public final class Log {
      * @return Marker determined from module and fallback, or {@link Log#JEEVES_MARKER} by default.
      */
     static Marker toMarker(String module, String fallback){
-        if(module.contains(".") && fallback == null){
+        if (module == null) {
+            return Log.JEEVES_MARKER;
+        }
+        else if(module.contains(".") && fallback == null){
             Marker marker = null;
             for(String name : module.split("\\.")){
                 Marker m = MarkerManager.getMarker(name);
@@ -328,9 +409,6 @@ public final class Log {
             return marker;
         }
         else {
-            if (module == null) {
-                return Log.JEEVES_MARKER;
-            }
             Marker marker = MarkerManager.getMarker(module);
             Marker parent = fallback != null ? MarkerManager.getMarker(fallback) : Log.JEEVES_MARKER;
             if (!marker.isInstanceOf(parent)) {

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -36,6 +37,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class ResumptionTokenCache extends Thread {
+    private static Logger LOGGER = Log.createLogger(ResumptionTokenCache.class, Geonet.OAI_MARKER);
 
 
     public final static int CACHE_EXPUNGE_DELAY = 10 * 1000; // 10 seconds
@@ -51,8 +53,9 @@ public class ResumptionTokenCache extends Thread {
     public ResumptionTokenCache(SettingManager sm) {
 
         this.settingMan = sm;
-        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::init timout:" + getTimeout());
+        if (LOGGER.isDebugEnabled(Geonet.OAI_HARVESTER_MARKER)) {
+            LOGGER.debug(Geonet.OAI_HARVESTER_MARKER, "OAI cache ::init timout:{}", getTimeout());
+        }
 
         map = Collections.synchronizedMap(new HashMap<String, GeonetworkResumptionToken>());
 
@@ -102,11 +105,11 @@ public class ResumptionTokenCache extends Thread {
                         expunge();
                     }
                 } catch (java.lang.InterruptedException ie) {
-                    Log.debug(Geonet.OAI_HARVESTER,"OAI execution error: " + ie.getMessage(), ie);
+                    LOGGER.debug(Geonet.OAI_HARVESTER_MARKER,"OAI execution error: {}",ie.getMessage(), ie);
                 }
             }
         }
-        Log.info(Geonet.OAI_HARVESTER, "ResumptionTokenCache thread end");
+        LOGGER.info(Geonet.OAI_HARVESTER_MARKER, "ResumptionTokenCache thread end");
     }
 
     private synchronized void expunge() {
@@ -116,17 +119,16 @@ public class ResumptionTokenCache extends Thread {
         for (Map.Entry entry : map.entrySet()) {
             if (((GeonetworkResumptionToken) entry.getValue()).getExpirDate().toDate().getTime() / 1000 < (now.getTime() / 1000)) {
                 map.remove(entry.getKey());
-                if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                    Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::expunge removing:" + entry.getKey());
+                if (LOGGER.isDebugEnabled(Geonet.OAI_HARVESTER_MARKER)) {
+                    LOGGER.debug(Geonet.OAI_HARVESTER_MARKER, "OAI cache ::expunge removing:{}", entry.getKey());
+                }
             }
         }
     }
 
     // remove oldest token from cache
     private void removeLast() {
-        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::removeLast");
-
+        LOGGER.debug(Geonet.OAI_HARVESTER_MARKER, "OAI cache ::removeLast");
 
         long oldest = Long.MAX_VALUE;
         Object oldkey = "";
@@ -140,10 +142,7 @@ public class ResumptionTokenCache extends Thread {
         }
 
         map.remove(oldkey);
-        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::removeLast removing:" + oldkey);
-
-
+        LOGGER.debug(Geonet.OAI_HARVESTER_MARKER, "OAI cache ::removeLast removing:{}", oldkey);
     }
 
     public synchronized GeonetworkResumptionToken getResumptionToken(String str) {
@@ -151,8 +150,9 @@ public class ResumptionTokenCache extends Thread {
     }
 
     public synchronized void storeResumptionToken(GeonetworkResumptionToken resumptionToken) {
-        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::store " + resumptionToken.getKey() + " size: " + map.size());
+        if (LOGGER.isDebugEnabled(Geonet.OAI_HARVESTER_MARKER)) {
+            LOGGER.debug(Geonet.OAI_HARVESTER_MARKER, "OAI cache ::store {} size: {}", resumptionToken.getKey(), map.size());
+        }
 
         if (map.size() == getCachemaxsize()) {
             removeLast();
@@ -169,7 +169,7 @@ public class ResumptionTokenCache extends Thread {
         }
         try {
             this.join();
-            Log.info(Geonet.OAI_HARVESTER, "ResumptionTokenCache thread stopped");
+            LOGGER.info(Geonet.OAI_HARVESTER_MARKER, "ResumptionTokenCache thread stopped");
         } catch (InterruptedException ignored) {
         }
     }

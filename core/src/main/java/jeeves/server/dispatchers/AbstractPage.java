@@ -27,7 +27,9 @@ import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.GuiService;
 
+import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.Vector;
 //=============================================================================
 
 public abstract class AbstractPage {
+    private static Logger LOGGER = Log.createLogger(AbstractPage.class,Log.SERVICE_MARKER);
     private String sheet;
     private String contentType;
     private String testCondition;
@@ -124,10 +127,8 @@ public abstract class AbstractPage {
                     root.addContent(elGui);
                 }
             } catch (Exception e) {
-                ServiceManager.error("Exception executing gui service : "
-                    + e.toString());
-                ServiceManager.error(" (C) Stack trace is :\n"
-                    + Util.getStackTrace(e));
+                LOGGER.error("Exception executing gui service : {}", e.toString());
+                LOGGER.error(" (C) Stack trace is :",e);
             }
         }
     }

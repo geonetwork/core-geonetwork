@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
@@ -74,6 +75,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author sppigot
  */
 public final class Processor {
+    private static Logger LOGGER = Log.createLogger(Processor.class,Log.XLINK_MARKER);
 
     public static final String XLINK_JCS = "xlink";
     private static final int MAX_FAILURES = 50;
@@ -198,7 +200,7 @@ public final class Processor {
                 JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
                 remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
                 if (remoteFragment == null) {
-                    Log.info(Log.XLINK_PROCESSOR, "cache MISS on " + uri.toLowerCase());
+                    LOGGER.info(Log.XLINK_MARKER, "cache MISS on " + uri.toLowerCase());
                     URL url = new URL(uri.replaceAll("&amp;", "&"));
 
                     URLConnection conn = url.openConnection();
@@ -207,26 +209,26 @@ public final class Processor {
                     BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
                     try {
                         remoteFragment = Xml.loadStream(in);
-                        if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                            Log.debug(Log.XLINK_PROCESSOR, "Read:\n" + Xml.getString(remoteFragment));
+                        if (LOGGER.isDebugEnabled(Log.XLINK_MARKER))
+                            LOGGER.debug(Log.XLINK_MARKER, "Read:\n{}", Xml.getString(remoteFragment));
                     } finally {
                         in.close();
                     }
                 } else {
-                    Log.debug(Log.XLINK_PROCESSOR, "cache HIT on " + uri.toLowerCase());
+                    LOGGER.debug(Log.XLINK_MARKER, "cache HIT on {}", uri.toLowerCase());
                 }
 
                 if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
                     xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
-                    if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                        Log.debug(Log.XLINK_PROCESSOR, "cache miss for " + uri);
+                    if (LOGGER.isDebugEnabled(Log.XLINK_MARKER))
+                        LOGGER.debug(Log.XLINK_MARKER, "cache miss for {}", uri);
                 } else {
                     return null;
                 }
 
             }
         } catch (Exception e) {    // MalformedURLException, IOException
-            Log.error(Log.XLINK_PROCESSOR, "Failed on " + uri, e);
+            LOGGER.error(Log.XLINK_MARKER, "Failed on {}", uri, e);
         }
 
         // search for and return only the xml fragment that has @id=idSearch
@@ -241,7 +243,7 @@ public final class Processor {
                     res.removeAttribute("id");
                 }
             } catch (Exception e) {
-                Log.warning(Log.XLINK_PROCESSOR, "Failed to search for remote fragment using " + xpath + ", error" + e.getMessage());
+                LOGGER.warn(Log.XLINK_MARKER, "Failed to search for remote fragment using {}, error {}", xpath, e.getMessage());
                 return null;
             }
         } else {
@@ -251,8 +253,8 @@ public final class Processor {
                 res = (Element) remoteFragment.clone();
             }
         }
-        if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-            Log.debug(Log.XLINK_PROCESSOR, "Read:" + Xml.getString(res));
+        if (LOGGER.isDebugEnabled(Log.XLINK_MARKER))
+            LOGGER.debug(Log.XLINK_MARKER, "Read:{}", Xml.getString(res));
         return res;
     }
 
@@ -298,7 +300,7 @@ public final class Processor {
         try {
             xlinks = (List<Attribute>) Xml.selectNodes(md, xpath, theNss);
         } catch (Exception e) {
-            Log.error(Log.XLINK_PROCESSOR, e.getMessage(), e);
+            LOGGER.error(Log.XLINK_MARKER, e.getMessage(), e);
         }
         return xlinks;
     }
@@ -317,15 +319,13 @@ public final class Processor {
     private static Set<String> searchXLink(Element md, String action, ServiceContext srvContext) {
         List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
-        if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-            Log.debug(Log.XLINK_PROCESSOR, "returned " + xlinks.size() + " elements");
+        LOGGER.debug(Log.XLINK_MARKER, "returned {} elements", xlinks.size());
 
         Set<String> errors = Sets.newHashSet();
         // process remote xlinks, skip local xlinks for later
         for (Attribute xlink : xlinks) {
             String hrefUri = xlink.getValue();
-            if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                Log.debug(Log.XLINK_PROCESSOR, "will resolve href '" + hrefUri + "'");
+            LOGGER.debug(Log.XLINK_MARKER, "will resolve href '{}'", hrefUri );
             String idSearch = null;
 
             String error = doXLink(hrefUri, idSearch, xlink, action, srvContext);
@@ -352,8 +352,7 @@ public final class Processor {
     private static Set<String> searchLocalXLink(Element md, String action) {
         List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href[starts-with(.,'#')]");
 
-        if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-            Log.debug(Log.XLINK_PROCESSOR, "local xlink search returned " + xlinks.size() + " elements");
+        LOGGER.debug(Log.XLINK_MARKER, "local xlink search returned {} elements", xlinks.size());
 
         Set<String> errors = Sets.newHashSet();
         // now all remote fragments have been added, process local xlinks (uncached)
@@ -365,8 +364,7 @@ public final class Processor {
                 element.removeContent();
             } else {
                 String idSearch = xlink.getValue().substring(1);
-                if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                    Log.debug(Log.XLINK_PROCESSOR, "process local xlink '" + idSearch + "'");
+                LOGGER.debug(Log.XLINK_MARKER, "process local xlink '{}'", idSearch );
                 Element localFragment = localIds.get(idSearch);
                 try {
                     if (localFragment == null) {
@@ -381,12 +379,13 @@ public final class Processor {
                     //  		+ "and count(descendant::*[@xlink:href='#" + idSearch + "'])=0]");
                     List<Attribute> subXlinks = getXLinksWithXPath(localFragment, "*//@xlink:href[.='#" + idSearch + "']");
                     if (subXlinks.size() != 0) {
-                        Log.warning(Log.XLINK_PROCESSOR, "found a fragment " + Xml.getString(localFragment) + " containing "
-                            + subXlinks.size() + " reference(s) to itself. Id: " + idSearch);
+                        LOGGER.warn(Log.XLINK_MARKER,
+                            "found a fragment {} containing {} reference(s) to itself. Id: {}",
+                            Xml.getString(localFragment), subXlinks.size(), idSearch);
                         continue;
                     }
                 } catch (Exception e) {
-                    Log.error(Log.XLINK_PROCESSOR, "Failed to look up localxlink " + idSearch + ": " + e.getMessage(), e);
+                    LOGGER.error(Log.XLINK_MARKER, "Failed to look up localxlink {}:{}", idSearch,e.getMessage(), e);
                 }
                 if (localFragment != null) {
                     localFragment = (Element) localFragment.clone();
@@ -438,7 +437,7 @@ public final class Processor {
                     try {
                         uncacheXLinkUri(hrefUri);
                     } catch (Exception e) {
-                        Log.error(Log.XLINK_PROCESSOR, "Uncaching failed: " + e.getMessage(), e);
+                        LOGGER.error(Log.XLINK_MARKER, "Uncaching failed: {}", e.getMessage(), e);
                     }
                 } else {
                     try {
@@ -465,12 +464,12 @@ public final class Processor {
                             element.addContent(remoteFragment);
                         }
                     } catch (Exception e) {
-                        Log.error(Log.XLINK_PROCESSOR, "doXLink " + action + " failed: " + e.getMessage(), e);
+                        LOGGER.error(Log.XLINK_MARKER, "doXLink {} failed: {}", action,e.getMessage(), e);
                     }
                 }
                 cleanXLinkAttributes(element, action);
             } else {
-                Log.error(Log.XLINK_PROCESSOR, "Invalid xlink:show attribute '" + show + "'");
+                LOGGER.error(Log.XLINK_MARKER, "Invalid xlink:show attribute '{}'", show);
             }
         }
 

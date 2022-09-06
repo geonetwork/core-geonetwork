@@ -39,6 +39,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.logging.log4j.Logger;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
@@ -124,6 +125,7 @@ import static org.fao.geonet.Constants.ENCODING;
  * General class of useful static methods.
  */
 public final class Xml {
+    private static final Logger LOGGER = Log.createLogger(Xml.class,Log.ENGINE_MARKER);
 
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
@@ -231,7 +233,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.error(Log.ENGINE, "Error loading URL " + url.getPath() + " .Threw exception " + e.getMessage(), e);
+            LOGGER.error(Log.ENGINE_MARKER, "Error loading URL {}. Threw exception {}", url.getPath(),e.getMessage(), e);
         }
         return result;
     }
@@ -287,7 +289,7 @@ public final class Xml {
             detector.reset();
             if (encoding != null) {
                 if (!encoding.equals(ENCODING)) {
-                    Log.error(Log.JEEVES, "Detected character set " + encoding + ", converting to UTF-8");
+                    LOGGER.error(Log.JEEVES_MARKER, "Detected character set {}, converting to UTF-8", encoding);
                     return convertByteArrayToUTF8ByteArray(buf, encoding);
                 }
             }
@@ -347,9 +349,11 @@ public final class Xml {
 
             return (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            Log.warning(Log.XML_RESOLVER,
-                String.format("Error loading string %s as XML. Error is: %s",
-                    data, e.getMessage())
+            LOGGER.warn(
+                Log.XML_RESOLVER_MARKER,
+                "Error loading string {} as XML. Error is: {}",
+                data,
+                e.getMessage()
             );
             throw e;
         }
@@ -461,7 +465,7 @@ public final class Xml {
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
-            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
+            LOGGER.warn(Log.ENGINE_MARKER, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
             if (xmlParam != null) {
@@ -508,7 +512,7 @@ public final class Xml {
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
+                LOGGER.warn(Log.ENGINE_MARKER, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 transFact.setURIResolver(new JeevesURIResolver());
                 Transformer t = transFact.newTransformer(srcSheet);
@@ -574,7 +578,7 @@ public final class Xml {
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
+                LOGGER.warn(Log.ENGINE_MARKER, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {
                 Transformer transformer = factory.newTransformer(xslt);
 
@@ -1147,6 +1151,7 @@ public final class Xml {
     }
 
     private static class JeevesURIResolver implements URIResolver {
+        private static final Logger LOGGER = Log.createLogger(JeevesURIResolver.class,Log.XML_RESOLVER_MARKER);
 
         /**
          *
@@ -1158,9 +1163,7 @@ public final class Xml {
         public Source resolve(String href, String base) throws TransformerException {
             Resolver resolver = ResolverWrapper.getInstance();
             CatalogResolver catResolver = resolver.getCatalogResolver();
-            if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                Log.debug(Log.XML_RESOLVER, "Trying to resolve " + href + ":" + base);
-            }
+            LOGGER.debug(Log.XML_RESOLVER_MARKER, "Trying to resolve {}:{}",href,base);
             Source s = catResolver.resolve(href, base);
 
             boolean isFile;
@@ -1176,31 +1179,26 @@ public final class Xml {
             String blankXSLFile = resolver.getBlankXSLFile();
             if (blankXSLFile != null && s.getSystemId().endsWith(".xsl") && !isFile) {
                 try {
-                    if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                        Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
-                    }
+                    LOGGER.debug(Log.XML_RESOLVER_MARKER, "  Check if exist {}", s.getSystemId());
 
                     Path f;
                     f = resolvePath(s);
-                    if (Log.isDebugEnabled(Log.XML_RESOLVER))
-                        Log.debug(Log.XML_RESOLVER, "Check on " + f + " exists returned: " + Files.exists(f));
+                    LOGGER.debug(Log.XML_RESOLVER_MARKER, "Check on {} exists returned: {}", f , Files.exists(f));
                     // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
                     if (!Files.exists(f)) {
-                        if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                            Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
-                        }
+                        LOGGER.debug(Log.XML_RESOLVER_MARKER, "  Resolved resource {} does not exist. blankXSLFile returned instead.", s.getSystemId());
                         s.setSystemId(blankXSLFile);
                     } else {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
+                    LOGGER.warn(Log.XML_RESOLVER_MARKER, "URI syntax problem: {}",e.getMessage(), e);
                 }
             }
 
-            if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
-                Log.debug(Log.XML_RESOLVER, "Resolved as " + s.getSystemId());
+            if (s != null) {
+                LOGGER.debug(Log.XML_RESOLVER_MARKER, "Resolved as {}", s.getSystemId() );
             }
             return s;
         }

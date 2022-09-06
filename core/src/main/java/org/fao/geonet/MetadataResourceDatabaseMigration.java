@@ -65,6 +65,8 @@ import javax.annotation.Nullable;
  */
 public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
 
+    private static Logger LOGGER = Log.createLogger(MetadataResourceDatabaseMigration.class,Geonet.DB_MARKER);
+
     private static final ArrayList<Namespace> NAMESPACES =
         Lists.newArrayList(
             ISO19139Namespaces.GMD,
@@ -168,7 +170,7 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
 
     @Override
     public void update(Connection connection) throws SQLException {
-        Log.debug(Geonet.DB, "MetadataResourceDatabaseMigration");
+        LOGGER.debug(Geonet.DB_MARKER, "MetadataResourceDatabaseMigration");
 
         final SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
@@ -201,10 +203,10 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                 }
                 update.executeBatch();
             } catch (java.sql.BatchUpdateException e) {
-                Log.error(Geonet.GEONETWORK, "Error occurred while updating resource links:" + e.getMessage(), e);
+                LOGGER.error(Geonet.GEONETWORK_MARKER, "Error occurred while updating resource links:" + e.getMessage(), e);
                 SQLException next = e.getNextException();
                 while (next != null) {
-                    Log.error(Geonet.GEONETWORK, "Next error: " + next.getMessage(), next);
+                    LOGGER.error(Geonet.GEONETWORK_MARKER, "Next error: " + next.getMessage(), next);
                     next = e.getNextException();
                 }
 

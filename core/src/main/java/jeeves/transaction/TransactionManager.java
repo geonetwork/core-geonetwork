@@ -23,6 +23,7 @@
 
 package jeeves.transaction;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -46,6 +47,8 @@ import javax.persistence.RollbackException;
  * Created by Jesse on 3/10/14.
  */
 public class TransactionManager {
+
+    private static Logger LOGGER = Log.createLogger(TransactionManager.class,Log.JEEVES_MARKER);
     public static <V> V runInTransaction(String name,
                                          ApplicationContext context,
                                          TransactionRequirement transactionRequirement,
@@ -77,7 +80,7 @@ public class TransactionManager {
 
 
         } catch (Throwable e) {
-            Log.error(Log.JEEVES, "Error occurred within a transaction", e);
+            LOGGER.error(Log.JEEVES_MARKER, "Error occurred within a transaction", e);
             if (exception[0] == null) {
                 exception[0] = e;
             }
@@ -106,13 +109,13 @@ public class TransactionManager {
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
-                    Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    LOGGER.error(Log.JEEVES_MARKER, "ERROR committing transaction, will try to rollback", e);
                     doRollback(context, transactionManager, transaction);
                 } else {
-                    Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    LOGGER.debug(Log.JEEVES_MARKER, "ERROR committing transaction, will try to rollback", e);
                 }
             } catch (Throwable t) {
-                Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
+                LOGGER.error(Log.JEEVES_MARKER, "ERROR committing transaction, will try to rollback", t);
                 doRollback(context, transactionManager, transaction);
             }
         }
@@ -166,7 +169,7 @@ public class TransactionManager {
             //what if the transaction is completed?
             //maybe then we shouldn't be here
         } catch (Throwable t) {
-            Log.error(Log.JEEVES, "ERROR rolling back transaction", t);
+            LOGGER.error(Log.JEEVES_MARKER, "ERROR rolling back transaction", t);
         }
     }
 

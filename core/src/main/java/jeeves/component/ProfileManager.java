@@ -26,6 +26,7 @@ package jeeves.component;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
@@ -51,6 +52,7 @@ import java.util.Set;
  * This class is a container for the user-profiles.xml file
  */
 public class ProfileManager {
+    private static Logger LOGGER = Log.createLogger(ProfileManager.class,Log.REQUEST_MARKER);
     //--------------------------------------------------------------------------
     //---
     //--- API methods
@@ -150,10 +152,10 @@ public class ProfileManager {
                 // ignore
             }
         }
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
-        }
-
+        LOGGER.debug(Log.REQUEST_MARKER,
+            "{} denied for {}",
+            fi,authentication
+        );
         return false;
     }
 

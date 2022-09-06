@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +50,8 @@ import java.util.List;
  * @author Jesse on 4/1/2015.
  */
 public class SchematronValidator extends AbstractSchematronValidator {
+
+    private static Logger LOGGER = Log.createLogger(SchematronValidator.class,Geonet.DATA_MANAGER_MARKER);
 
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
                                               String lang,
@@ -106,9 +109,7 @@ public class SchematronValidator extends AbstractSchematronValidator {
 
 
             if (applicable.requirement != SchematronRequirement.DISABLED) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
-                }
+                LOGGER.debug(Geonet.DATA_MANAGER_MARKER, " - rule:{}", schematron.getRuleName());
 
                 applicableSchematron.add(applicable);
             }
@@ -141,10 +142,12 @@ public class SchematronValidator extends AbstractSchematronValidator {
             }
 
             if (apply) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                        " for schematron: " + schematron.getRuleName());
-                }
+                LOGGER.debug(
+                    Geonet.DATA_MANAGER_MARKER,
+                    " - Schematron group is accepted: {} for schematron: {}",
+                    criteriaGroup.getId().getName(),
+                    schematron.getRuleName());
+
                 requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
             } else {
                 requirement = requirement.highestRequirement(SchematronRequirement.DISABLED);

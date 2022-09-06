@@ -30,7 +30,9 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.transaction.TransactionStatus;
@@ -44,6 +46,7 @@ import java.util.Vector;
  * A container class for a service. It collect the method and the filter
  */
 public class ServiceInfo {
+    private static Logger LOGGER = Log.createLogger(ServiceInfo.class,Log.SERVICE_MARKER);
 
     private String match;
     private String sheet;
@@ -199,21 +202,21 @@ public class ServiceInfo {
         GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path styleSheet = geonetworkDataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(sheet);
 
-        ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
+        LOGGER.info("Transforming input with stylesheet : {}", styleSheet);
 
         try {
             Element result = Xml.transform(request, styleSheet);
-            ServiceManager.info("End of input transformation");
+            LOGGER.info("End of input transformation");
 
             return result;
         } catch (Exception e) {
-            ServiceManager.error("Exception during transformation");
-            ServiceManager.error("  (C) message is : " + e.getMessage());
+            LOGGER.error("Exception during transformation");
+            LOGGER.error("  (C) message is : " + e.getMessage());
 
             Throwable t = e;
 
             while (t.getCause() != null) {
-                ServiceManager.error("  (C) message is : " + t.getMessage());
+                LOGGER.error("  (C) message is : {}", t.getMessage());
                 t = t.getCause();
             }
 
@@ -234,8 +237,8 @@ public class ServiceInfo {
             return response;
         } catch (Exception e) {
             //--- in case of exception we have to abort all resources
-            ServiceManager.error("Exception when executing service");
-            ServiceManager.error(" (C) Exc : " + e);
+            LOGGER.error("Exception when executing service");
+            LOGGER.error(" (C) Exc : {}", e);
 
             throw e;
         }

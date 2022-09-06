@@ -29,6 +29,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.fao.geonet.Constants;
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
@@ -55,6 +57,7 @@ import java.nio.file.Path;
  */
 
 public final class BinaryFile {
+    private static Logger LOGGER = Log.createLogger(BinaryFile.class,Log.RESOURCES_MARKER);
     private final static int BUF_SIZE = 8192;
     private Element element = new Element("response");
     private boolean remoteFile = false;
@@ -114,10 +117,10 @@ public final class BinaryFile {
             }
             while (c != '\n');
             if (b == 1) { // error
-                Log.error(Log.RESOURCES, "scp: Protocol error: " + sb.toString());
+                LOGGER.error("scp: Protocol error: {}",sb);
             }
             if (b == 2) { // fatal error
-                Log.error(Log.RESOURCES, "scp: Protocol error: " + sb.toString());
+                LOGGER.error("scp: Protocol error: {}",sb);
             }
         }
         return b;
@@ -164,8 +167,7 @@ public final class BinaryFile {
             }
 
             // now get file name from scp
-            if (Log.isDebugEnabled(Log.RESOURCES))
-                Log.debug(Log.RESOURCES, "scp: file returned has filesize=" + filesize + ", file=" + file);
+            LOGGER.debug(Log.RESOURCES_MARKER,"scp: file returned has filesize={}, file={}",filesize, file);
 
             // send '\0'
             buf[0] = 0;
@@ -271,7 +273,7 @@ public final class BinaryFile {
         try {
             return new String(Files.readAllBytes(path), Constants.CHARSET);
         } catch (IOException e) {
-            Log.error("geonetwork", "Error reading file: " + path);
+            LOGGER.error(MarkerManager.getMarker("geonetwork"), "Error reading file: {}", path);
             return null;
         }
     }
@@ -304,11 +306,9 @@ public final class BinaryFile {
                 remotePath = tokens[4].trim();
                 remoteProtocol = getRemoteProtocol(fileContents.toLowerCase());
                 remoteFile = true;
-                if (Log.isDebugEnabled(Log.RESOURCES))
-                    Log.debug(Log.RESOURCES, "REMOTE: " + remoteUser + ":********:" + remoteSite + ":" + remotePath + ":" + remoteProtocol);
+                LOGGER.debug(Log.RESOURCES_MARKER,"REMOTE: {} :********:{}:{}:{}",remoteUser,remoteSite,remotePath,remoteProtocol);
             } else {
-                if (Log.isDebugEnabled(Log.RESOURCES))
-                    Log.debug(Log.RESOURCES, "ERROR: remote file details were not valid");
+                LOGGER.debug(Log.RESOURCES_MARKER,"ERROR: remote file details were not valid");
                 remoteFile = false;
             }
         } else {
@@ -362,7 +362,7 @@ public final class BinaryFile {
             String path = element.getAttributeValue("path");
             File file = new File(path);
             if (!file.delete() && file.exists()) {
-                Log.warning(Log.JEEVES, "[" + BinaryFile.class.getName() + "#removeIfTheCase]" + "Unable to remove binary file after sending to user.");
+                LOGGER.warn(Log.JEEVES_MARKER, "Unable to remove binary file after sending to user.");
             }
         }
     }
@@ -484,7 +484,7 @@ public final class BinaryFile {
                         session.disconnect();
                     }
                 } catch (Exception e) {
-                    Log.error(Log.RESOURCES, "Problem with scp from site: " + remoteUser + "@" + remoteSite + ":" + remotePath, e);
+                    LOGGER.error("Problem with scp from site: {}@{}:{}", remoteUser,remoteSite,remotePath, e);
                 }
             } else if (remoteProtocol.equals("ftp")) {
                 // set up globus FTP client
@@ -495,10 +495,10 @@ public final class BinaryFile {
                     DataSinkStream outputSink = new DataSinkStream(output);
                     ftp.get(remotePath, outputSink, null);
                 } catch (Exception e) {
-                    Log.error(Log.RESOURCES, "Problem with ftp from site: " + remoteUser + "@" + remoteSite + ":" + remotePath, e);
+                    LOGGER.error("Problem with ftp from site: {}@{}:{}",remoteUser,remoteSite,remotePath, e);
                 }
             } else {
-                Log.error(Log.RESOURCES, "Unknown remote protocol in config file");
+                LOGGER.error("Unknown remote protocol in config file");
             }
         }
     }

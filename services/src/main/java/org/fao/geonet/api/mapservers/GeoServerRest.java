@@ -31,6 +31,9 @@ import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
@@ -60,7 +63,20 @@ public class GeoServerRest {
     public final static String METHOD_GET = "GET";
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_DELETE = "DELETE";
-    public final static String LOGGER_NAME = "geonetwork.geoserver.rest";
+
+    /**
+     * GeoServerREST logging module name.
+     *
+     * @deprecated Use {@link #LOGGER_MARKER}
+     */
+    // public final static String LOGGER_NAME = "geonetwork.geoserver.rest";
+
+    /**
+     * Marker {@code geoserver_rest} for log messages.
+     */
+    public final static Marker LOGGER_MARKER = MarkerManager.getMarker("geoserver_rest").addParents(Geonet.GEONETWORK_MARKER);
+
+    private static Logger LOGGER = Log.createLogger(GeoServerRest.class,LOGGER_MARKER);
 
     private final String password;
     private final String username;
@@ -90,7 +106,6 @@ public class GeoServerRest {
         this.nodeUrl = nodeUrl;
         this.pushStyleInWorkspace = pushStyleInWorkspace;
         this.factory = factory;
-        Log.createLogger(LOGGER_NAME);
         this.defaultWorkspace = defaultns;
     }
 
@@ -458,14 +473,14 @@ public class GeoServerRest {
                 checkResponseCode(status);
             }
             if (!sldbody.isEmpty()) {
-                if (Log.isDebugEnabled(Geonet.GEOPUBLISH))
-                    Log.debug(Geonet.GEOPUBLISH, "GeoFile contains an sld, trying to use it");
+                LOGGER.debug(Geonet.GEOPUBLISH_MARKER, "GeoFile contains an sld, trying to use it");
+
                 status = sendREST(GeoServerRest.METHOD_PUT, url + "/" + layer
                         + "_style", sldbody, null,
                     "application/vnd.ogc.sld+xml", true);
 
                 if (status != 200)
-                    Log.warning(Geonet.GEOPUBLISH, "The sld file was probably not valid, falling back to default");
+                    LOGGER.warn(Geonet.GEOPUBLISH_MARKER, "The sld file was probably not valid, falling back to default");
             }
             if (sldbody.isEmpty() || (!sldbody.isEmpty() && status != 200)) {
                 String info = getLayerInfo(layer);
@@ -473,7 +488,11 @@ public class GeoServerRest {
                 String styleName = layerProperties.getChild("defaultStyle")
                     .getChild("name").getText();
 
-                Log.debug(Geonet.GEOPUBLISH, "Getting default style for " + styleName + " to apply to layer " + layer + " in workspace " + ws);
+                LOGGER.debug(
+                    Geonet.GEOPUBLISH_MARKER,
+                    "Getting default style for {} to apply to layer {} in workspace {}",
+                    styleName,layer,ws
+                );
                 /* get the default style (polygon, line, point) from the global styles */
                 status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
                     + ".sld?quietOnNotFound=true", null, null, null, true);
@@ -484,7 +503,7 @@ public class GeoServerRest {
             }
             checkResponseCode(status);
 
-            Log.debug(Geonet.GEOPUBLISH, "Adding enable flag to layer");
+            LOGGER.debug(Geonet.GEOPUBLISH_MARKER, "Adding enable flag to layer");
             body = "<layer><defaultStyle><name>"
                 + layer
                 + "_style</name>";
@@ -505,9 +524,13 @@ public class GeoServerRest {
             throw e;
 
         } catch (Exception e) {
-            if (Log.isDebugEnabled(LOGGER_NAME))
-                Log.debug(LOGGER_NAME, "Failed to create style for layer: "
-                    + layer + " in workspace " + ws + ", error is: " + e.getMessage());
+            LOGGER.debug(
+                LOGGER_MARKER,
+                "Failed to create style for layer: {} in workspace {}, error is: ",
+                layer,
+                ws,
+                e.getMessage()
+            );
         }
 
         return status == 200;
@@ -515,9 +538,9 @@ public class GeoServerRest {
 
     private void checkResponseCode(int status2) {
         if (status2 > 399) {
-            Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:" + status2);
+            LOGGER.warn(Geonet.GEOPUBLISH_MARKER, "Warning a bad response code to message was returned:{}", status2);
             if (!response.isEmpty()) {
-                Log.warning(Geonet.GEOPUBLISH, "Response content:" + response);
+                LOGGER.warn(Geonet.GEOPUBLISH_MARKER, "Response content:{}", response);
                 setReport(response);
             }
         }
@@ -561,10 +584,15 @@ public class GeoServerRest {
             + "</title>" + "</featureType>";
 
         String url = "/workspaces/" + ws + "/datastores/" + ds + "/featuretypes";
-        Log.debug(Geonet.GEOPUBLISH, "Checking if a featuretype named " + ft + " already exists in workspace " + ws + ", datastore " + ds);
+        LOGGER.debug(
+            Geonet.GEOPUBLISH_MARKER,
+            "Checking if a featuretype named {} already exists in workspace {}, datastore {}",
+            ft,ws,ds
+        );
         status = sendREST(GeoServerRest.METHOD_GET, url + "/" + ft, null, null, null, true);
         if (status != 200) {
-            Log.debug(Geonet.GEOPUBLISH, "Creating featuretype " + ft + " in workspace " + ws + " within datastore " + ds);
+            LOGGER.debug(Geonet.GEOPUBLISH_MARKER, "Creating featuretype {} in workspace {} within datastore {}",
+                ft,ws,ds);
             status = sendREST(GeoServerRest.METHOD_POST, url, xml, null, "text/xml",
                 true);
             checkResponseCode(status);
@@ -626,10 +654,10 @@ public class GeoServerRest {
 
         response = "";
         String url = this.restUrl + urlParams;
-        if (Log.isDebugEnabled(LOGGER_NAME)) {
-            Log.debug(LOGGER_NAME, "url:" + url);
-            Log.debug(LOGGER_NAME, "method:" + method);
-            if (postData != null) Log.debug(LOGGER_NAME, "postData:" + postData);
+        if (LOGGER.isDebugEnabled(LOGGER_MARKER)) {
+            LOGGER.debug(LOGGER_MARKER, "url:{}",url);
+            LOGGER.debug(LOGGER_MARKER, "method:{}",method);
+            if (postData != null) LOGGER.debug(LOGGER_MARKER, "postData:{}", postData);
         }
 
         HttpRequestBase m;
@@ -667,16 +695,14 @@ public class GeoServerRest {
         try {
             m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
         } catch (AuthenticationException a) {
-            Log.warning(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
+            LOGGER.warn(LOGGER_MARKER, "Failed to add the authentication Header, error is: {}",a.getMessage());
         }
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
 
         try {
             status = httpResponse.getRawStatusCode();
-            if (Log.isDebugEnabled(LOGGER_NAME)) {
-                Log.debug(LOGGER_NAME, "status:" + status);
-            }
+            LOGGER.debug(LOGGER_MARKER, "status:{}", status);
             if (saveResponse) {
                 this.response = IOUtils.toString(httpResponse.getBody());
             }

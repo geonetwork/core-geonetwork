@@ -24,6 +24,8 @@
 package org.fao.geonet.constants;
 
 import jeeves.constants.Jeeves;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.jdom.Namespace;
 
 import javax.xml.XMLConstants;
@@ -42,51 +44,444 @@ public final class Geonet {
 
     public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
 
+    /**
+     * GeoNetwork base logging module name.
+     *
+     * @deprecated Use {@link #GEONETWORK_MARKER}
+     */
     public static final String GEONETWORK = "geonetwork";
-    public static final String HARVEST_MAN = GEONETWORK + ".harvest-man";
-    public static final String HARVESTER = GEONETWORK + ".harvester";
-    public static final String SETTINGS = GEONETWORK + ".settings";
-    public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
-    public static final String ACCESS_MANAGER = GEONETWORK + ".accessmanager";
-    public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
-    public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
-    public static final String DB = GEONETWORK + ".database";
-    public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
-    public static final String THESAURUS = GEONETWORK + ".thesaurus";
-    public static final String SEARCH_ENGINE = GEONETWORK + ".search";
-    public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
-    public static final String INDEX_ENGINE = GEONETWORK + ".index";
-    public static final String MEF = GEONETWORK + ".mef";
-    public static final String CSW = GEONETWORK + ".csw";
-    public static final String LDAP = GEONETWORK + ".ldap";
-    public static final String RESOURCES = GEONETWORK + ".resources";
-    public static final String EDITOR = GEONETWORK + ".editor";
-    public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
-    public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
-    public static final String EDITORFILLELEMENT = GEONETWORK + ".editorfillelement";
-    public static final String SPATIAL = GEONETWORK + ".spatial";
-    public static final String REGION = GEONETWORK + ".region";
-    public static final String CSW_SEARCH = CSW + ".search";
-    public static final String CSW_HARVEST = CSW + ".harvest";
-    public static final String SRU = GEONETWORK + ".sru";
-    public static final String SRU_SEARCH = SRU + ".search";
-    public static final String USER_WATCHLIST = GEONETWORK + ".userwatchlist";
-    public static final String OAI = GEONETWORK + ".oai";
-    public static final String SECURITY = GEONETWORK + ".security";
-    public static final String OAI_HARVESTER = OAI + ".provider";
-    // keys for logging search log
-    public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
-    public static final String THREADPOOL = GEONETWORK + ".threadpool";
-    public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
-    public static final String FEEDBACK = GEONETWORK + ".feedback";
-    public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
-    public static final String FORMATTER = GEONETWORK + ".formatter";
-    // key for inspire atom log
-    public static final String ATOM = GEONETWORK + ".atom";
-    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
-    public static final String CLASSIFIER = GEONETWORK + ".classifier";
-    public static final String CORS = GEONETWORK + ".cors";
+    /**
+     * GeoNetwork marker for log messages.
+     */
+    public static final Marker GEONETWORK_MARKER =  MarkerManager.getMarker("geonetwork");
 
+    /**
+     * Marker for {@code manager} log messages.
+     *
+     * Manager classes provide a facade orchestrating geonetwork module lifecycle and interaction.
+     */
+    public static final Marker MANAGER_MARKER =  MarkerManager.getMarker("manager");
+
+    /**
+     * Logging {@code accessmanager} module name.
+     *
+     * @deprecated Use {@link #ACCESS_MANAGER_MARKER}
+     */
+    public static final String ACCESS_MANAGER = GEONETWORK + ".accessmanager";
+
+    /**
+     * Marker for {@code access_manager} log messages.
+     */
+    public static final Marker ACCESS_MANAGER_MARKER =  MarkerManager.getMarker("access_manager").addParents(GEONETWORK_MARKER,MANAGER_MARKER);
+    /**
+     * Logging {@code atom} module name.
+     *
+     * @deprecated Use {@link #ATOM_MARKER}
+     */
+    public static final String ATOM = GEONETWORK + ".atom";
+    /**
+     * Marker {@code atom} for log messages.
+     */
+    public static final Marker ATOM_MARKER = MarkerManager.getMarker("atom").addParents(GEONETWORK_MARKER);
+
+    /**
+     * Logging {@code classifier} module name.
+     *
+     * @deprecated Use {@link #CLASSIFIER_MARKER}
+     */
+    public static final String CLASSIFIER = GEONETWORK + ".classifier";
+    /**
+     * Marker for {@code acceclassifierssmanager} log messages.
+     */
+    public static final Marker CLASSIFIER_MARKER =  MarkerManager.getMarker("classifier").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code cors} module name.
+     *
+     * @deprecated Use {@link #CORS_MARKER}
+     */
+    public static final String CORS = GEONETWORK + ".cors";
+    /**
+     * Marker for {@code cors} log messages.
+     */
+    public static final Marker CORS_MARKER =  MarkerManager.getMarker("cors").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code csw} module name.
+     *
+     * @deprecated Use {@link #CSW_MARKER}
+     */
+    public static final String CSW = GEONETWORK + ".csw";
+    /**
+     * Marker for {@code csw} log messages.
+     */
+    public static final Marker CSW_MARKER =  MarkerManager.getMarker("csw").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code csw.harvest} module name.
+     *
+     * @deprecated Use {@link #CSW_HARVEST_MARKER}
+     */
+    public static final String CSW_HARVEST = CSW + ".harvest";
+    /**
+     * Marker for {@code csw_harvest} log messages.
+     */
+    public static final Marker CSW_HARVEST_MARKER =  MarkerManager.getMarker("csw_harvest").addParents(CSW_MARKER);
+    /**
+     * Logging {@code csw.search} module name.
+     *
+     * @deprecated Use {@link #CSW_SEARCH_MARKER}
+     */
+    public static final String CSW_SEARCH = CSW + ".search";
+    /**
+     * Marker for {@code csw_search} log messages.
+     */
+    public static final Marker CSW_SEARCH_MARKER =  MarkerManager.getMarker("csw_search").addParents(CSW_MARKER);
+    /**
+     * Logging {@code customelementset}module name.
+     *
+     * @deprecated Use {@link #CUSTOM_ELEMENTSET_MARKER}
+     */
+    public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
+    /**
+     * Marker for {@code customelementset} log messages.
+     */
+    public static final Marker CUSTOM_ELEMENTSET_MARKER =  MarkerManager.getMarker("customelementset").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code data.directory} module name.
+     *
+     * @deprecated Use {@link #DATA_DIRECTORY_MARKER}
+     */
+    public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
+    /**
+     * Marker for {@code data_directory} log messages.
+     */
+    public static final Marker DATA_DIRECTORY_MARKER =  MarkerManager.getMarker("data_directory").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code datamanager} module name.
+     *
+     * @deprecated Use {@link #DATA_MANAGER_MARKER}
+     */
+    public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+    /**
+     * Marker for {@code data_manager} log messages.
+     */
+    public static final Marker DATA_MANAGER_MARKER =  MarkerManager.getMarker("data_manager").addParents(GEONETWORK_MARKER,MANAGER_MARKER);
+
+    /**
+     * Logging {@code database} module name.
+     *
+     * @deprecated Use {@link #DB_MARKER}
+     */
+    public static final String DB = GEONETWORK + ".database";
+    /**
+     * Marker for {@code database} log messages.
+     */
+    public static final Marker DB_MARKER =  MarkerManager.getMarker("database").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code editor} module name.
+     *
+     * @deprecated Use {@link #EDITOR_MARKER}
+     */
+    public static final String EDITOR = GEONETWORK + ".editor";
+    /**
+     * Marker for {@code editor} log messages.
+     */
+    public static final Marker EDITOR_MARKER =  MarkerManager.getMarker("editor").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code editoraddelement} module name.
+     *
+     * @deprecated Use {@link #EDITORADDELEMENT_MARKER}
+     */
+    public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
+    /**
+     * Marker for {@code editor_addelement} log messages.
+     */
+    public static final Marker EDITORADDELEMENT_MARKER = MarkerManager.getMarker("editor_addelement").addParents(EDITOR_MARKER);
+
+    /**
+     * Logging {@code editorexpandelement} module name.
+     *
+     * @deprecated Use {@link #EDITOREXPANDELEMENT_MARKER}
+     */
+    public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
+    /**
+     * Marker for {@code editor_expandelement} log messages.
+     */
+    public static final Marker EDITOREXPANDELEMENT_MARKER = MarkerManager.getMarker("editor_expandelement").addParents(EDITOR_MARKER);
+    /**
+     * Logging {@code editorfileelement} module name.
+     *
+     * @deprecated Use {@link #EDITORFILLELEMENT_MARKER}
+     */
+    public static final String EDITORFILLELEMENT = GEONETWORK + ".editorfillelement";
+    /**
+     * Marker for {@code editor_fillelement} log messages.
+     */
+    public static final Marker EDITORFILLELEMENT_MARKER = MarkerManager.getMarker("editor_fillelement").addParents(EDITOR_MARKER);
+    /**
+     * Logging {@code editor.session} module name.
+     *
+     * @deprecated Use {@link #EDITOR_SESSION_MARKER}
+     */
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
+    /**
+     * Marker for {@code editor_session} log messages.
+     */
+    public static final Marker EDITOR_SESSION_MARKER = MarkerManager.getMarker("editor_session").addParents(EDITOR_MARKER);
+
+    /**
+     * Logging {@code feedback} module name.
+     *
+     * @deprecated Use {@link #FEEDBACK_MARKER}
+     */
+    public static final String FEEDBACK = GEONETWORK + ".feedback";
+    /**
+     * Marker for {@code feedback} log messages.
+     */
+    public static final Marker FEEDBACK_MARKER = MarkerManager.getMarker("feedback").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code formatter} module name.
+     *
+     * @deprecated Use {@link #FORMATTER_MARKER}
+     */
+    public static final String FORMATTER = GEONETWORK + ".formatter";
+    /**
+     * Marker for {@code formatter} log messages.
+     */
+    public static final Marker FORMATTER_MARKER = MarkerManager.getMarker("formatter").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code geopublisher} module name.
+     *
+     * @deprecated Use {@link #GEOPUBLISH_MARKER}
+     */
+    public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
+    /**
+     * Marker for {@code geopublisher} log messages.
+     */
+    public static final Marker GEOPUBLISH_MARKER = MarkerManager.getMarker("geopublisher").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code harvester} module name.
+     *
+     * @deprecated Use {@link #HARVEST_MARKER}
+     */
+    public static final String HARVESTER = GEONETWORK + ".harvester";
+    /**
+     * Marker for {@code harvester} log messages.
+     */
+    public static final Marker HARVEST_MARKER =  MarkerManager.getMarker("harvester").addParents(GEONETWORK_MARKER);
+
+    /**
+     * Logging {@code harvest-man} module name.
+     *
+     * @deprecated Use {@link #HARVEST_MAN_MARKER}
+     */
+    @Deprecated
+    public static final String HARVEST_MAN = GEONETWORK + ".harvest-man";
+    /**
+     * Marker for {@code harvest_manager} log messages.
+     */
+    public static final Marker HARVEST_MAN_MARKER =  MarkerManager.getMarker("harvest_manager").addParents(HARVEST_MARKER,MANAGER_MARKER);
+
+
+    /**
+     * Logging {@code index} module name.
+     *
+     * @deprecated Use {@link #INDEX_MARKER}
+     */
+    public static final String INDEX_ENGINE = GEONETWORK + ".index";
+    /**
+     * Marker for {@code index} log messages.
+     */
+    public static final Marker INDEX_MARKER =  MarkerManager.getMarker("index").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code ldap} module name.
+     *
+     * @deprecated Use {@link #LDAP_MARKER}
+     */
+    public static final String LDAP = GEONETWORK + ".ldap";
+    /**
+     * Marker for {@code ldap} log messages.
+     */
+    public static final Marker LDAP_MARKER =  MarkerManager.getMarker("ldap").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code mef} module name.
+     *
+     * @deprecated Use {@link #MEF_MARKER}
+     */
+    public static final String MEF = GEONETWORK + ".mef";
+    /**
+     * Marker for {@code mef} log messages.
+     */
+    public static final Marker MEF_MARKER =  MarkerManager.getMarker("mef").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code oai} module name.
+     *
+     * @deprecated Use {@link #OAI_MARKER}
+     */
+    public static final String OAI = GEONETWORK + ".oai";
+    /**
+     * Marker for {@code oai} log messages.
+     */
+    public static final Marker OAI_MARKER =  MarkerManager.getMarker("oai").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code oai.provider} module name.
+     *
+     * @deprecated Use {@link #OAI_HARVESTER_MARKER}
+     */
+    public static final String OAI_HARVESTER = OAI + ".provider";
+    /**
+     * Marker for {@code oai.provider} log messages.
+     */
+    public static final Marker OAI_HARVESTER_MARKER =  MarkerManager.getMarker("oai.provider").addParents(OAI_MARKER);
+    /**
+     * Logging {@code region} module name.
+     *
+     * @deprecated Use {@link #REGION_MARKER}
+     */
+    public static final String REGION = GEONETWORK + ".region";
+    /**
+     * Marker for {@code region} log messages.
+     */
+    public static final Marker REGION_MARKER =  MarkerManager.getMarker("region").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code resources} module name.
+     *
+     * @deprecated Use {@link #RESOURCES_MARKER}
+     */
+    public static final String RESOURCES = GEONETWORK + ".resources";
+    /**
+     * Marker for {@code resources} log messages.
+     */
+    public static final Marker RESOURCES_MARKER =  MarkerManager.getMarker("resources").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code schemamanager} module name.
+     *
+     * @deprecated Use {@link #SCHEMA_MANAGER_MARKER}
+     */
+    public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
+    /**
+     * Marker for {@code schema_manager} log messages.
+     */
+    public static final Marker SCHEMA_MANAGER_MARKER =  MarkerManager.getMarker("schema_manager").addParents(GEONETWORK_MARKER,MANAGER_MARKER);
+    /**
+     * Logging {@code search} module name.
+     *
+     * @deprecated Use {@link #SEARCH_ENGINE_MARKER}
+     */
+    public static final String SEARCH_ENGINE = GEONETWORK + ".search";
+    /**
+     * Marker for {@code search} log messages.
+     */
+    public static final Marker SEARCH_ENGINE_MARKER =  MarkerManager.getMarker("search").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code search-logger} module name.
+     *
+     * @deprecated Use {@link #SEARCH_LOGGER_MARKER}
+     */
+    public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
+    /**
+     * Marker for {@code search-logger} log messages.
+     */
+    public static final Marker SEARCH_LOGGER_MARKER =  MarkerManager.getMarker("search-logger").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code security} module name.
+     *
+     * @deprecated Use {@link #SECURITY_MARKER}
+     */
+    public static final String SECURITY = GEONETWORK + ".security";
+    /**
+     * Marker for {@code security} log messages.
+     */
+    public static final Marker SECURITY_MARKER =  MarkerManager.getMarker("security").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code settings} module name.
+     *
+     * @deprecated Use {@link #SETTINGS_MARKER}
+     */
+    public static final String SETTINGS = GEONETWORK + ".settings";
+    /**
+     * Marker for {@code settings} log messages.
+     */
+    public static final Marker SETTINGS_MARKER =  MarkerManager.getMarker("settings").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code spatial} module name.
+     *
+     * @deprecated Use {@link #SPATIAL_MARKER}
+     */
+    public static final String SPATIAL = GEONETWORK + ".spatial";
+    /**
+     * Marker for {@code spatial} log messages.
+     */
+    public static final Marker SPATIAL_MARKER =  MarkerManager.getMarker("spatial").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code sru} module name.
+     *
+     * @deprecated Use {@link #SRU_MARKER}
+     */
+    public static final String SRU = GEONETWORK + ".sru";
+    /**
+     * Marker for {@code sru} log messages.
+     */
+    public static final Marker SRU_MARKER =  MarkerManager.getMarker("sru").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code sru.search} module name.
+     *
+     * @deprecated Use {@link #SRU_SEARCH_MARKER}
+     */
+    public static final String SRU_SEARCH = SRU + ".search";
+    /**
+     * Marker for {@code sru_search} log messages.
+     */
+    public static final Marker SRU_SEARCH_MARKER =  MarkerManager.getMarker("sru_search").addParents(SRU_MARKER);
+    /**
+     * Logging {@code svnmanager} module name.
+     *
+     * @deprecated Use {@link #SVN_MANAGER_MARKER}
+     */
+    public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
+    /**
+     * Marker for {@code svn_manager} log messages.
+     */
+    public static final Marker SVN_MANAGER_MARKER =  MarkerManager.getMarker("svn_manager").addParents(GEONETWORK_MARKER,MANAGER_MARKER);
+    /**
+     * Logging {@code thesaurus} module name.
+     *
+     * @deprecated Use {@link #THESAURUS_MARKER}
+     */
+    public static final String THESAURUS = GEONETWORK + ".thesaurus";
+    /**
+     * Marker for {@code thesaurus} log messages.
+     */
+    public static final Marker THESAURUS_MARKER =  MarkerManager.getMarker("thesaurus").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code thesaurus-man} module name.
+     *
+     * @deprecated Use {@link #THESAURUS_MAN_MARKER}
+     */
+    public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
+    /**
+     * Marker for {@code thesaurus_manager} log messages.
+     */
+    public static final Marker THESAURUS_MAN_MARKER =  MarkerManager.getMarker("thesaurus_manager").addParents(THESAURUS_MARKER,MANAGER_MARKER);
+    /**
+     * Logging {@code threadpool} module name.
+     *
+     * @deprecated Use {@link #THREADPOOL_MARKER}
+     */
+    public static final String THREADPOOL = GEONETWORK + ".threadpool";
+    /**
+     * Marker for {@code threadpool} log messages.
+     */
+    public static final Marker THREADPOOL_MARKER =  MarkerManager.getMarker("threadpool").addParents(GEONETWORK_MARKER);
+    /**
+     * Logging {@code userwatchlist} module name.
+     *
+     * @deprecated Use {@link #USER_WATCHLIST_MARKER}
+     */
+    public static final String USER_WATCHLIST = GEONETWORK + ".userwatchlist";
+
+    /**
+     * Marker for {@code userwatchlist} log messages.
+     */
+    public static final Marker USER_WATCHLIST_MARKER =  MarkerManager.getMarker("userwatchlist").addParents(GEONETWORK_MARKER);
 
     /**
      * Container for file names.
@@ -413,8 +808,8 @@ public final class Geonet {
         public static final String SIMILARITY = "similarity";
 
         /**
-         * Parameter name: {@value #OUTPUT} - Display results as text only {@value #TEXT} or with
-         * graphic overviews {@value #FULL} (default)
+         * Parameter name: {@value #OUTPUT} - Display results as text only {@value Output#TEXT} or with
+         * graphic overviews {@value Output#FULL} (default)
          */
         public static final String OUTPUT = "output";
 
@@ -521,7 +916,7 @@ public final class Geonet {
             public static final String DATE = "changeDate";
 
             /**
-             * Parameter name: {@value #_TITLE} - Title not tokenized mainly used for sorting
+             * Parameter name: {@value #TITLE} - Title not tokenized mainly used for sorting
              * purpose
              */
             public static final String TITLE = "title";
@@ -669,6 +1064,11 @@ public final class Geonet {
         public static final String FEATUREOFRECORD = "featureOfRecord";
         public static final String RECORDLINKFLAG = "record";
         public static final String RECORDLINK = "recordLink";
+        public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
+        public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+        public static final String STATUS_WORKFLOW = "statusWorkflow";
+        public static final String USER_SAVED_COUNT = "userSavedCount";
+
         public static class RecordLink {
             public static final String ORIGIN = "origin";
             public static final String TO = "to";
@@ -676,10 +1076,6 @@ public final class Geonet {
             public static final String TITLE = "title";
             public static final String URL = "url";
         }
-        public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
-        public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
-        public static final String STATUS_WORKFLOW = "statusWorkflow";
-        public static final String USER_SAVED_COUNT = "userSavedCount";
     }
 
     public static class SearchConfig {

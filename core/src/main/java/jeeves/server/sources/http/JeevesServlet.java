@@ -32,6 +32,7 @@ import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
@@ -59,6 +60,8 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  */
 
 public class JeevesServlet extends HttpServlet {
+    private static Logger LOGGER = Log.createLogger(JeevesServlet.class,Log.REQUEST_MARKER);
+
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
     private static final long serialVersionUID = 1L;
     private boolean initialized = false;
@@ -121,28 +124,26 @@ public class JeevesServlet extends HttpServlet {
             ip = forwardedFor;
         }
 
-        Log.info(Log.REQUEST, "==========================================================");
-        Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + req.getRequestURI());
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Method       : " + req.getMethod());
-            Log.debug(Log.REQUEST, "Content type : " + req.getContentType());
-            //		Log.debug(Log.REQUEST, "Context path : " + req.getContextPath());
-            //		Log.debug(Log.REQUEST, "Char encoding: " + req.getCharacterEncoding());
-            Log.debug(Log.REQUEST, "Accept       : " + req.getHeader("Accept"));
-            //		Log.debug(Log.REQUEST, "Server name  : " + req.getServerName());
-            //		Log.debug(Log.REQUEST, "Server port  : " + req.getServerPort());
+        LOGGER.info(Log.REQUEST_MARKER, "==========================================================");
+        LOGGER.info(Log.REQUEST_MARKER, "HTML Request (from " + ip + ") : " + req.getRequestURI());
+        if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
+            LOGGER.debug(Log.REQUEST_MARKER, "Method       : {}", req.getMethod());
+            LOGGER.debug(Log.REQUEST_MARKER, "Content type : {}",  req.getContentType());
+            //		LOGGER.debug(Log.REQUEST_MARKER, "Context path : {}",  req.getContextPath());
+            //		LOGGER.debug(Log.REQUEST_MARKER, "Char encoding: {}",  req.getCharacterEncoding());
+            LOGGER.debug(Log.REQUEST_MARKER, "Accept       : {}",  req.getHeader("Accept"));
+            //		LOGGER.debug(Log.REQUEST_MARKER, "Server name  : {}",  req.getServerName());
+            //		LOGGER.debug(Log.REQUEST_MARKER, "Server port  : {}",  req.getServerPort());
         }
 //		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
 //			String theHeader = (String)e.nextElement();
-//        if(Log.isDebugEnabled(Log.REQUEST)) {
-//			Log.debug(Log.REQUEST, "Got header: "+theHeader);
-//			Log.debug(Log.REQUEST, "With value: "+req.getHeader(theHeader));
+//        if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
+//			LOGGER.debug(Log.REQUEST_MARKER, "Got header: "+theHeader);
+//			LOGGER.debug(Log.REQUEST_MARKER, "With value: "+req.getHeader(theHeader));
 //        }
 //		}
         HttpSession httpSession = req.getSession();
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
-        }
+        LOGGER.debug(Log.REQUEST_MARKER, "Session id is {}", httpSession.getId());
         UserSession session = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
 
         //------------------------------------------------------------------------
@@ -156,9 +157,7 @@ public class JeevesServlet extends HttpServlet {
             httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
             session.setsHttpSession(httpSession);
 
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "Session created for client : " + ip);
-            }
+            LOGGER.debug(Log.REQUEST_MARKER, "Session created for client : {}", ip);
         }
 
         //------------------------------------------------------------------------
@@ -185,7 +184,7 @@ public class JeevesServlet extends HttpServlet {
             // now stick the stack trace on the end and log the whole lot
             sb.append("Stack :\n").append(Util.getStackTrace(e));
 
-            Log.error(Log.REQUEST, sb.toString());
+            LOGGER.error(Log.REQUEST_MARKER, sb.toString());
             return;
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder();
@@ -195,9 +194,8 @@ public class JeevesServlet extends HttpServlet {
 
             res.sendError(SC_BAD_REQUEST, sb.toString());
 
-            // now stick the stack trace on the end and log the whole lot
-            sb.append("Stack :\n").append(Util.getStackTrace(e));
-            Log.error(Log.REQUEST, sb.toString());
+            LOGGER.error(Log.REQUEST_MARKER, sb.toString(), e);
+
             return;
         }
 

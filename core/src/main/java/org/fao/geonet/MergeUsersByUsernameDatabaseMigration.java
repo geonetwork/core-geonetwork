@@ -47,18 +47,20 @@ import java.util.*;
  */
 public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
+    private static Logger LOGGER = Log.createLogger(MergeUsersByUsernameDatabaseMigration.class,Log.JEEVES_MARKER);
+
     @Transactional
     @Override
     public void run(ApplicationContext applicationContext) throws TaskExecutionException {
         UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         List<String> duplicatedUsernamesList = userRepository.findDuplicatedUsernamesCaseInsensitive();
-        Log.debug(Log.JEEVES, "Found these duplicated usernames: " + duplicatedUsernamesList);
+        LOGGER.debug(Log.JEEVES_MARKER, "Found these duplicated usernames: {}", duplicatedUsernamesList);
         try {
             for (String duplicatedUsername : duplicatedUsernamesList) {
                 mergeUsers(applicationContext, duplicatedUsername);
             }
         } catch (Exception e) {
-            Log.error(Log.JEEVES, "Exception merging users", e);
+            LOGGER.error(Log.JEEVES_MARKER, "Exception merging users", e);
             throw new TaskExecutionException(e);
         }
 
@@ -175,10 +177,14 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
             List<UserGroup> userGroupsToProcess = userGroupRepository.findAll(
                 UserGroupSpecs.hasUserId(userToProcess.getId()));
-            if (Log.isDebugEnabled(Log.JEEVES)) {
-                Log.debug(Log.JEEVES, "Groups of user {" + userToProcess.getId() + " - "
-                    + userToProcess.getUsername() + "}: " + userGroupsToProcess.size());
-                Log.debug(Log.JEEVES, userGroupsToProcess);
+            if (LOGGER.isDebugEnabled(Log.JEEVES_MARKER)) {
+                LOGGER.debug(Log.JEEVES_MARKER,
+                    "Groups of user {{} - {}}: {}",
+                    userToProcess.getId(),
+                    userToProcess.getUsername(),
+                    userGroupsToProcess.size()
+                );
+                LOGGER.debug(Log.JEEVES_MARKER, userGroupsToProcess);
             }
 
             for (UserGroup ug : userGroupsToProcess) {

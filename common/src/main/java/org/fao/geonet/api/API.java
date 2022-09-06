@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2016-2022 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -25,10 +25,29 @@
 
 package org.fao.geonet.api;
 
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
+
 /**
+ * GeoNetwork Application Programming Interface constants.
+ *
  * Created by francois on 08/01/16.
+ * @author Francois
  */
 public class API {
+
+    /**
+     * @deprecated unused
+     */
     public static final String CONTACT_EMAIL = "geonetwork@osgeo.org";
+    /**
+     * Logging {@code api} module name.
+     *
+     * @deprecated Use {@link #LOG_MARKER}
+     */
     public static final String LOG_MODULE_NAME = "geonetwork.api" ;
+    /**
+     * Marker for {@code api} log messages.
+     */
+    public static final Marker LOG_MARKER = MarkerManager.getMarker("api").addParents(MarkerManager.getMarker("geonetwork"));
 }

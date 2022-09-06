@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -35,6 +36,7 @@ import java.io.IOException;
  * A simple container class for some add methods in {@link EditLib} Created by Jesse on 12/10/13.
  */
 public class AddElemValue {
+    private static final Logger LOGGER = Log.createLogger(AddElemValue.class, Geonet.EDITORADDELEMENT_MARKER);
     private final String stringValue;
     private final Element nodeValue;
 
@@ -46,10 +48,10 @@ public class AddElemValue {
                 finalNodeVal = Xml.loadString(stringValue, false);
                 finalStringVal = null;
             } catch (JDOMException e) {
-                Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + stringValue + ". Error is: " + e.getMessage(), e);
+                LOGGER.debug(Geonet.EDITORADDELEMENT_MARKER, "Invalid XML fragment to insert {}. Error is: {}", stringValue, e.getMessage(), e);
                 throw e;
             } catch (IOException e) {
-                Log.error(Geonet.EDITORADDELEMENT, "Error with XML fragment to insert " + stringValue + ". Error is: " + e.getMessage(), e);
+                LOGGER.error(Geonet.EDITORADDELEMENT_MARKER, "Error with XML fragment to insert {}. Error is: {}", stringValue, e.getMessage(), e);
                 throw e;
             }
         }

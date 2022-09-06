@@ -31,6 +31,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -82,7 +84,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
 @Controller("records")
 @ReadWriteController
 public class MetadataApi {
-
+    private static Logger LOGGER = Log.createLogger(MetadataApi.class,API.LOG_MARKER);
     @Autowired
     SchemaManager _schemaManager;
 
@@ -155,7 +157,7 @@ public class MetadataApi {
         try {
             ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         List<String> accept = Arrays.asList(acceptHeader.split(","));
@@ -239,10 +241,10 @@ public class MetadataApi {
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -253,7 +255,7 @@ public class MetadataApi {
         } catch (Exception e) {
             // TODO: i18n
             // TODO: Report exception in JSON format
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
 
         }
@@ -382,7 +384,7 @@ public class MetadataApi {
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
@@ -426,8 +428,7 @@ public class MetadataApi {
                 uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHasfeaturecats()));
                 uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHassources()));
             }
-            Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
-                + " records.");
+            LOGGER.info(Geonet.MEF_MARKER, "Building MEF2 file with {} records.", uuidsToExport.size());
 
             file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
 
@@ -474,10 +475,10 @@ public class MetadataApi {
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -528,7 +529,7 @@ public class MetadataApi {
         try {
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
@@ -613,7 +614,7 @@ public class MetadataApi {
 
             return response;
         } catch (Exception e) {
-            Log.error(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.error(API.LOG_MARKER, e.getMessage(), e);
             throw new ResourceNotFoundException();
         }
 

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -43,6 +44,8 @@ import java.util.*;
  *
  */
 public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
+
+    private static final Logger LOGGER = Log.createLogger(SchematronValidatorExternalMd.class,Geonet.DATA_MANAGER_MARKER);
 
     public Element applyCustomSchematronRules(String schema, Element md,
                                               String lang, List<MetadataValidation> validations, Integer groupOwnerId) {
@@ -85,9 +88,7 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
             final ApplicableSchematron applicable = getApplicableSchematron(md, metadataSchema, schematron, groupOwnerId);
 
             if (applicable.requirement != SchematronRequirement.DISABLED) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
-                }
+                LOGGER.debug(Geonet.DATA_MANAGER_MARKER, " - rule:{}", schematron.getRuleName());
 
                 applicableSchematron.add(applicable);
             }
@@ -125,10 +126,12 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
             }
 
             if (apply) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                        " for schematron: " + schematron.getRuleName());
-                }
+                LOGGER.debug(
+                    Geonet.DATA_MANAGER_MARKER,
+                    " - Schematron group is accepted:{} for schematron: {}",
+                    criteriaGroup.getId().getName(),
+                    schematron.getRuleName());
+
                 requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
             } else {
                 requirement = requirement.highestRequirement(SchematronRequirement.DISABLED);

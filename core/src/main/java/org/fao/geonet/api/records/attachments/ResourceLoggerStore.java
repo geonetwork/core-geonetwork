@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -51,6 +52,7 @@ import javax.annotation.Nullable;
  * Decorate a store and record put/get/delete operations in database for reporting statistics.
  */
 public class ResourceLoggerStore extends AbstractStore {
+    private static Logger LOGGER = Log.createLogger(ResourceLoggerStore.class,Geonet.RESOURCES_MARKER);
 
     private Store decoratedStore;
 
@@ -188,10 +190,10 @@ public class ResourceLoggerStore extends AbstractStore {
                     metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.debug(Geonet.RESOURCES, String.format(
-                            "No references in FileNameNotDeleted repository for metadata '%s', resource id '%s'. Get request will not be "
+                    LOGGER.debug(Geonet.RESOURCES_MARKER,
+                            "No references in FileNameNotDeleted repository for metadata '{}', resource id '{}'. Get request will not be "
                                     + "saved.",
-                            metadataUuid, resourceId));
+                            metadataUuid, resourceId);
 
                     // No related upload is found
                     metadataFileUpload = null;

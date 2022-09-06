@@ -25,6 +25,7 @@ package jeeves.server.dispatchers.guiservices;
 
 import jeeves.XmlFileCacher;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -41,6 +42,8 @@ import java.util.WeakHashMap;
 import javax.servlet.ServletContext;
 
 public class XmlCacheManager {
+    private static Logger LOGGER = Log.createLogger(XmlCacheManager.class,Log.RESOURCES_MARKER);
+
     WeakHashMap<String, Map<String, XmlFileCacher>> xmlCaches = new WeakHashMap<String, Map<String, XmlFileCacher>>();
 
     private Map<String, XmlFileCacher> getCacheMap(boolean localized, Path base, String file) {
@@ -103,7 +106,7 @@ public class XmlCacheManager {
                 return xmlCache.get();
             }
         } catch (Exception e) {
-            Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: " + xmlFilePath + " but failed so falling back to default language", e);
+            LOGGER.debug(Log.RESOURCES_MARKER, "Error cloning the cached data.  Attempted to get: {} but failed so falling back to default language", xmlFilePath,e);
             Path xmlDefaultLangFilePath = rootPath.resolve(defaultLang).resolve(file);
             xmlCache = new XmlFileCacher(xmlDefaultLangFilePath, servletContext, appPath);
             cacheMap.put(preferedLanguage, xmlCache);

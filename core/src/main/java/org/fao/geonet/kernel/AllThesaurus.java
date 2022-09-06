@@ -28,6 +28,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.Constants;
@@ -66,6 +67,8 @@ import javax.annotation.Nullable;
  * @author Jesse on 2/27/2015.
  */
 public class AllThesaurus extends Thesaurus {
+    private static Logger LOGGER = Log.createLogger(AllThesaurus.class,Geonet.THESAURUS_MARKER);
+
     public static final String FNAME = "allThesaurus";
     public static final String SEPARATOR = "@@@";
     static final String TYPE = "external";
@@ -403,9 +406,7 @@ public class AllThesaurus extends Thesaurus {
             }
         }
 
-        if (Log.isDebugEnabled(Geonet.THESAURUS)) {
-            Log.debug(Geonet.THESAURUS, ALL_THESAURUS_KEY + " has lastModified of: " + lastModified);
-        }
+        LOGGER.debug(Geonet.THESAURUS_MARKER,  "{} has lastModified of: {}",ALL_THESAURUS_KEY,lastModified);
 
         return FileTime.fromMillis(lastModified);
     }

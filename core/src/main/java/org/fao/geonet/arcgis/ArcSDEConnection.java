@@ -22,7 +22,11 @@
  */
 package org.fao.geonet.arcgis;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +39,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * non-ISO ESRI elements they may contain.
  */
 public interface ArcSDEConnection {
-    String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
+
+    static String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
+    static Marker ARCSDE_LOG_MARKER = MarkerManager.getMarker("arcsde").addParents(Geonet.HARVEST_MARKER);
+
     String ISO_METADATA_IDENTIFIER = "MD_Metadata";
 
 

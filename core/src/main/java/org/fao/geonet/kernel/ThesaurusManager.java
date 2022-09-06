@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -556,6 +557,7 @@ public class ThesaurusManager implements ThesaurusFinder {
      * servlet is up before reading the thesauri and creating the thesaurus table.
      */
     final class InitThesauriTableTask implements Runnable {
+        private Logger LOGGER = Log.createLogger(InitThesauriTableTask.class,Geonet.THESAURUS_MAN_MARKER);
 
         private final ServiceContext context;
         private final Path thesauriDir;
@@ -570,18 +572,16 @@ public class ThesaurusManager implements ThesaurusFinder {
             try {
                 // poll context to see whether servlet is up yet
                 while (!context.isServletInitialized()) {
-                    if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
-                        Log.debug(Geonet.THESAURUS_MAN, "Waiting for servlet to finish initializing..");
-                    }
+                    LOGGER.debug(Geonet.THESAURUS_MAN_MARKER, "Waiting for servlet to finish initializing..");
                     Thread.sleep(10000); // sleep 10 seconds
                 }
                 try {
                     initThesauriTable(thesauriDir, context);
                 } catch (Exception e) {
-                    Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : " + e.getMessage() + "\n" + Util.getStackTrace(e));
+                    LOGGER.error(Geonet.THESAURUS_MAN_MARKER, "Error rebuilding thesaurus table : {}", e.getMessage(),e);
                 }
             } catch (Exception e) {
-                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception", e);
+                LOGGER.debug(Geonet.THESAURUS_MAN_MARKER, "Thesaurus table rebuilding thread threw exception", e);
             }
         }
     }

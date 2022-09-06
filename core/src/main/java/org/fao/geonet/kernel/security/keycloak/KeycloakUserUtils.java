@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.security.keycloak;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
@@ -51,6 +52,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 public class KeycloakUserUtils {
+    private static final Logger LOGGER = Log.createLogger(KeycloakUserUtils.class,Geonet.SECURITY_MARKER);
 
     @Autowired
     private UserRepository userRepository;
@@ -98,7 +100,7 @@ public class KeycloakUserUtils {
                 }
             });
         } catch (ExecutionException e) {
-            Log.debug(Geonet.SECURITY, "Error getting user details from token.", e);
+            LOGGER.debug(Geonet.SECURITY_MARKER, "Error getting user details from token.", e);
             return null;
         }
     }
@@ -125,7 +127,7 @@ public class KeycloakUserUtils {
                 user = new User();
                 user.setUsername(baselUser.getUsername());
                 newUserFlag = true;
-                Log.debug(Geonet.SECURITY, "Adding a new user: " + user);
+                LOGGER.debug(Geonet.SECURITY_MARKER, "Adding a new user: {}" ,user);
             }
 
             if (!StringUtils.isEmpty(baselUser.getSurname())) {
@@ -200,7 +202,7 @@ public class KeycloakUserUtils {
         if (accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()) != null) {
             for (String role : accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()).getRoles()) {
                 if (role.contains(roleGroupSeparator)) {
-                    Log.debug(Geonet.SECURITY, "Identified group:profile (" + role + ") from user token.");
+                    LOGGER.debug(Geonet.SECURITY_MARKER, "Identified group:profile ({}) from user token.",role);
                     roleGroupList.add(role);
                 } else {
                     // Only use the profiles we know of and don't add duplicates.
