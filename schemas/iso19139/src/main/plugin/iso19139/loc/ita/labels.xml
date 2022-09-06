@@ -1476,7 +1476,7 @@
   </element>
   <element name="gmd:name" context="gmd:CI_Series" id="404.0">
     <label>Nome</label>
-    <description>Nome della serie, o set di dati aggregati, di cui il datset è una parte
+    <description>Nome della serie, o set di dati aggregati, di cui il dataset è una parte
     </description>
   </element>
   <element name="gmd:name" context="gmd:MD_CodeDomain" id="537.0">
