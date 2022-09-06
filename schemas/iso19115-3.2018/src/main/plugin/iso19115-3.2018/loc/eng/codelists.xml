@@ -436,7 +436,7 @@
     <entry>
       <code>processor</code>
       <label>Processor</label>
-      <description>Party what has processed the data in a manner such that the
+      <description>Party that has processed the data in a manner such that the
         resource has been modified
       </description>
     </entry>
