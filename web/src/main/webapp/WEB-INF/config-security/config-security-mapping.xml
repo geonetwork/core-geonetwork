@@ -847,12 +847,6 @@
                            access="hasRole('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/source/.+"
                            access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thread/status"
-                           access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thread/trace/.+"
-                           access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thread/debugging/.+"
-                           access="hasRole('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/log/.+"
                            access="hasRole('Administrator')"/>
 
