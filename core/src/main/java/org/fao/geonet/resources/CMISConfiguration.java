@@ -492,7 +492,6 @@ public class CMISConfiguration {
                 this.externalResourceManagementValidationStatusSecondaryProperty = true;
             }
         }
-        this.externalResourceManagementValidationStatusPropertyName = externalResourceManagementValidationStatusPropertyName;
     }
 
 
