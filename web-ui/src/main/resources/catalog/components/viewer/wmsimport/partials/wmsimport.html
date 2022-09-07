@@ -1,7 +1,7 @@
 <div class="layerTree">
   <form role="form">
     <input type="hidden" name="_csrf" value="{{csrf}}"/>
-    <div data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
+    <div class="gn-services-dropdown" data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
       <div class="dropdown">
         <button data-ng-attr-id="addServiceChooseAServiceButton-{{format}}" class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
           <span data-ng-hide="serviceDesc"
@@ -17,8 +17,10 @@
           </li>
           <li data-ng-repeat="srv in catServicesList | orderBy: 'title'">
             <a href="" data-ng-click="setUrl(srv)"
-               title="{{srv.desc}} ({{srv.url}}) - {{srv.type}}">
-              {{srv.title}} ({{srv.url}}))
+               title="{{srv.title}} ({{srv.url}})"
+               class="flex-row flex-gap-10">
+              <span class="label label-success text-uppercase">{{srv.type}}</span>
+              <span>{{srv.title}} ({{srv.url}})</span>
             </a>
           </li>
         </ul>

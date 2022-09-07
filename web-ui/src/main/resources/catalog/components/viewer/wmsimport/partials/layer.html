@@ -15,32 +15,21 @@
         </a>
       </div>
       <div class="gn-layer-toolbar btn-group btn-group-xs">
-        <div class="gn-layer-actions"
+        <div class="gn-layer-actions pull-right"
             data-ng-if="!isParentNode && member.Style.length > 1">
-          <div gn-popover
-               gn-popover-placement="bottom">
-            <a gn-popover-anchor role="button"
-               tabindex="0"
-               class="btn btn-link btn-xs"
-              >
-              <i class="fa fa-paint-brush"></i>
-              <i class="fa fa-fw fa-caret-down"></i>
-            </a>
-
-            <div gn-popover-content>
-              <div data-gn-layer-styles="member.Style"
-                   data-gn-layer-styles-on-click="addLayer(style)"/>
-            </div>
-          </div>
+          <div data-gn-layer-styles="member.Style"
+               data-gn-layer-styles-on-click="addLayer(style)"/>
         </div>
-        <a href=""
-          class="btn btn-link btn-xs"
+        <button type="button"
+          class="btn btn-default"
           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
           data-ng-if="!isParentNode" class="btn btn-default btn-xs"
           title="{{(isParentNode ? 'showGroupLayers' : 'addToMap') | translate}}">
           <i class="fa fa-fw fa-plus"></i>
-        </a>
+        </button>
       </div>
+      <!-- /.gn-layer-toolbar -->
     </div>
+    <!-- /.flex-row width-100 flex-align-stretch -->
   </div>
 </li>
