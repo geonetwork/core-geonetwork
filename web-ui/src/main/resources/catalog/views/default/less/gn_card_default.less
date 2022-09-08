@@ -324,9 +324,16 @@ table.gn-resultview {
     padding: 0;
     margin: 0;
   }
-  .gn-md-links {
-    display: flex;
-    gap: 3px;
+  .gn-toolbar {
+    .gn-md-links {
+      display: flex;
+      gap: 3px;
+    }
+    // open sub menu to the left
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
   }
   .gn-status {
     position: inherit;
