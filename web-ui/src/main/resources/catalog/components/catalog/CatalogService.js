@@ -754,7 +754,7 @@
         return values;
       },
       getLinks: function() {
-        return this.link;
+        return this.link || [];
       },
       getLinkGroup: function(layer) {
         var links = this.getLinksByType('OGC');
