@@ -154,9 +154,10 @@ public class JCloudStore extends AbstractStore {
             return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 object.getMetadata(), metadataId, approved));
         } catch (ContainerNotFoundException e) {
-            Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
-                String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
     }
 
@@ -464,7 +465,7 @@ public class JCloudStore extends AbstractStore {
         }
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
-                = new MetadataResourceExternalManagementProperties(resourceId, metadataResourceExternalManagementPropertiesUrl);
+                = new MetadataResourceExternalManagementProperties(resourceId, metadataResourceExternalManagementPropertiesUrl, MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
 
         return metadataResourceExternalManagementProperties;
     }

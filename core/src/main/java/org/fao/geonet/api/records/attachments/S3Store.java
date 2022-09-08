@@ -112,7 +112,9 @@ public class S3Store extends AbstractStore {
                                                                             object.getObjectMetadata().getLastModified(), metadataId, approved));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
     }
 

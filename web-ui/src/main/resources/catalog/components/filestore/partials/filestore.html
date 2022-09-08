@@ -23,7 +23,7 @@
       <a class="btn btn-link"
            title="{{'externalResourceManagement' | translate}}"
            data-ng-click="onlinesrcService.openExternalResourceManagement(r)">
-          <i class="fa fa-file-text"></i>
+        <span class="fa external-resource-validation-status-{{r.metadataResourceExternalManagementProperties.validationStatus | lowercase}}"></span>
         </a>
       </td>
       <td>

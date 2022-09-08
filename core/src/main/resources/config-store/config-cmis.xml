@@ -99,6 +99,8 @@
         <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
         <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
         <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
+        <property name="externalResourceManagementValidationStatusPropertyName" value="${cmis.external.resource.status.property.name}"/>
+        <property name="externalResourceManagementValidationStatusDefaultValue" value="${cmis.external.resource.management.status.default.value}"/>
 
         <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
         <property name="versioningState" value="${cmis.versioning.state}"/>

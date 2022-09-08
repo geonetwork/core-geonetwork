@@ -1249,3 +1249,41 @@ html {
   max-height: 300px;
   overflow: scroll;
 }
+
+.external-resource-validation-status-unknown,
+.external-resource-validation-status-incomplete,
+.external-resource-validation-status-valid {
+  position: relative;
+
+}
+
+/* CSS hex codes used in "content:" property below are located at https://www.fontawesomecheatsheet.com/font-awesome-cheatsheet-4x/ */
+
+.external-resource-validation-status-unknown::before,
+.external-resource-validation-status-incomplete::before,
+.external-resource-validation-status-valid::before{
+  content: "\f15c";  /* fa-file-text */
+  position: relative;
+  font-size: 1.1em;
+  color: #3277B3;
+  left: 0;
+  vertical-align: text-top;
+}
+
+.external-resource-validation-status-incomplete::after {
+  content: "\f071"; /* fa-exclamation-triangle */
+  position: absolute;
+  font-size: 0.5em;
+  left: 1.75em;
+  top: 1.9em;
+  color: darkorange;
+}
+
+.external-resource-validation-status-valid::after {
+  content: "\f14a";  /* fa-check-square */
+  position: absolute;
+  font-size: 0.5em;
+  left: 1.75em;
+  top: 1.9em;
+  color: green;
+}
