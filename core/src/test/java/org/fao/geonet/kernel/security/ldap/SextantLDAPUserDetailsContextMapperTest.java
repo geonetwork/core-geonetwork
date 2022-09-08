@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Multimap;
-import com.itextpdf.text.List;
 
 public class SextantLDAPUserDetailsContextMapperTest {
 

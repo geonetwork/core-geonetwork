@@ -65,24 +65,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>plugin-assembly</id>
-            <phase>package</phase>
-            <goals><goal>single</goal></goals>
-            <inherited>false</inherited>
-            <configuration>
-             <appendAssemblyId>false</appendAssemblyId>
-             <descriptors>
-              <descriptor>src/assembly/schema-plugin.xml</descriptor>
-             </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 
