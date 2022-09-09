@@ -366,10 +366,12 @@ public class MailUtil {
         if (tls != null && tls) {
             email.setStartTLSEnabled(tls);
             email.setStartTLSRequired(tls);
+            email.setSSLCheckServerIdentity(true);
         }
 
         if (ssl != null && ssl) {
             email.setSSLOnConnect(ssl);
+            email.setSSLCheckServerIdentity(true);
             if (StringUtils.isNotBlank(smtpPort + "")) {
                 email.setSslSmtpPort(smtpPort + "");
             }
@@ -377,6 +379,8 @@ public class MailUtil {
 
         if (ignoreSslCertificateErrors != null && ignoreSslCertificateErrors) {
             try {
+                email.setSSLCheckServerIdentity(false);
+
                 Session mailSession = email.getMailSession();
                 Properties p = mailSession.getProperties();
                 p.setProperty("mail.smtp.ssl.trust", "*");
