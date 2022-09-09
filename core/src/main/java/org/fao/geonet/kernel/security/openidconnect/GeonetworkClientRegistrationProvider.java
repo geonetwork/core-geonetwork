@@ -28,6 +28,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.as.AuthorizationServerMetadata;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.springframework.core.io.Resource;
@@ -90,8 +91,8 @@ public class GeonetworkClientRegistrationProvider {
         this.oidcConfiguration = oidcConfiguration;
         String clientId = oidcConfiguration.clientId;
         String clientSecret = oidcConfiguration.clientSecret;
-        //50 is just to check if there's some text in the string
-        if ((serverMetadataJsonText != null) && (serverMetadataJsonText.trim().length() > 50)) {
+        //50 is just to check if there's some text in the string (not just the name of the environment var)
+        if (!StringUtils.isBlank(serverMetadataJsonText) && (serverMetadataJsonText.trim().length() > 50)) {
             Log.debug(Geonet.SECURITY, "OpenID Connect - using IDP server metadata config from text");
             clientRegistration = createClientRegistration(new ByteArrayInputStream(serverMetadataJsonText.getBytes()), clientId, clientSecret);
         } else {
@@ -120,7 +121,7 @@ public class GeonetworkClientRegistrationProvider {
     /**
      * given an inputstream, read its content and return it as a string
      */
-    public static String inputStreamToString(InputStream inputStream) throws IOException {
+    static String inputStreamToString(InputStream inputStream) throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
             return FileCopyUtils.copyToString(reader);
         } catch (Exception e) {

@@ -57,6 +57,6 @@ public class SubjectAccessTokenValidator implements AccessTokenValidator {
                     return;
             }
         }
-        throw new Exception("JWT Bearer token VS UserInfo - subjects dont match");
+        throw new Exception("JWT Bearer token VS UserInfo - subjects don't match");
     }
 }

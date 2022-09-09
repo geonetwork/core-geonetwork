@@ -156,8 +156,11 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
         return loginType.toString();
     }
 
-    public void setLoginType(String loginType) {
+    public void setLoginType(String loginType) throws Exception {
         this.loginType = LoginType.parse(loginType);
+        if ( !this.loginType.equals(LoginType.AUTOLOGIN) && !this.loginType.equals(LoginType.LINK)) {
+            throw new Exception("Configuration error - login type should only be LINK or AUTOLOGIN");
+        }
     }
 
     @Override

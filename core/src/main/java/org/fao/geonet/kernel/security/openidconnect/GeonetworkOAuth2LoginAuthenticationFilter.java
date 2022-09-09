@@ -82,16 +82,19 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                                             Authentication authResult)
         throws IOException, ServletException {
 
-        if (authResult == null)
+        if (authResult == null) {
             throw new IOException("authresult is null!"); // this shouldn't happen
+        }
 
-        if (!(authResult instanceof OAuth2AuthenticationToken))
+        if (!(authResult instanceof OAuth2AuthenticationToken)) {
             return; // this shouldnt happen
+        }
 
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authResult;
 
-        if ((oAuth2AuthenticationToken.getPrincipal() == null) || (!(oAuth2AuthenticationToken.getPrincipal() instanceof OidcUser)))
+        if ((oAuth2AuthenticationToken.getPrincipal() == null) || (!(oAuth2AuthenticationToken.getPrincipal() instanceof OidcUser))) {
             throw new IOException("problem with principle - null or incorrect type"); // this shouldn't happen
+        }
 
         OidcUser oidcUser = (OidcUser) oAuth2AuthenticationToken.getPrincipal();
 
@@ -142,16 +145,18 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     // given a request and URL parameter name, find its value.
     // returns null if not found.
-    public String findQueryParameter(HttpServletRequest request, String parmName) {
-        if (request.getQueryString() == null)
+    String findQueryParameter(HttpServletRequest request, String parmName) {
+        if (request.getQueryString() == null) {
             return null;
+        }
         try {
             String uri = request.getContextPath() + "?" + request.getQueryString();
             MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 
-            if (!parameters.containsKey(parmName))
+            if (!parameters.containsKey(parmName)) {
                 return null;
+            }
             String result = parameters.getFirst(parmName);
             return result;
         } catch (Exception e) {

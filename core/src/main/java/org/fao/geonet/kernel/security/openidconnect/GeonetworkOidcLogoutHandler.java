@@ -23,6 +23,8 @@
 package org.fao.geonet.kernel.security.openidconnect;
 
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
@@ -70,7 +72,7 @@ public class GeonetworkOidcLogoutHandler implements LogoutSuccessHandler {
             String path = servletContext.getContextPath();
             return new URI(protocol + "://" + host + ":" + port + path);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.error(Geonet.SECURITY,"ignored error parsing URI",e);
         }
         return null;
     }

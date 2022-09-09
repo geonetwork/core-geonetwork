@@ -101,29 +101,15 @@ class SimpleOidcUser {
             username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
         }
 
-        if (username != null && username.length() > 0) {
+        if (!StringUtils.isEmpty(username)) {
             surname = (String) attributes.get(StandardClaimNames.FAMILY_NAME);
             firstname = (String) attributes.get(StandardClaimNames.GIVEN_NAME);
-            ;
-            email = (String) attributes.get(StandardClaimNames.EMAIL);
-            ;
 
+            email = (String) attributes.get(StandardClaimNames.EMAIL);
 
             if (attributes.containsKey(oidcConfiguration.organizationProperty)) {
                 organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
             }
-
-
-//            if (attributes.get(StandardClaimNames.ADDRESS) != null) {
-//                Map _address =  (Map) attributes.get(StandardClaimNames.ADDRESS);
-//                address = new Address();
-//                address.setAddress(_address.getStreetAddress());
-//                address.setCity(idToken.getAddress().getLocality());
-//                address.setState(idToken.getAddress().getRegion());
-//                address.setZip(idToken.getAddress().getPostalCode());
-//                address.setCountry(idToken.getAddress().getCountry());
-//            }
-
 
             Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
             if (profileGroups != null && profileGroups.size() > 0) {
