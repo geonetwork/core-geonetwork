@@ -188,7 +188,9 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     }
                                 } else {
                                     if (state.equals(OrchestratedHarvestProcessState.ERROR)) {
-                                        log.error(String.format("Monitor harvester process progress (%s), error: %s" , harvesterProcessId, harvesterStatus.toString()));
+                                        OrchestratedHarvestProcessStatus harvesterStatusDetailed = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId, log, false);
+
+                                        log.error(String.format("Monitor harvester process progress (%s), error: %s" , harvesterProcessId, harvesterStatusDetailed.toString()));
                                     } else {
                                         log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
