@@ -87,6 +87,7 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String clientSecret;
     public String scopes = null; //null or empty -> all
     public String roleConverterString = null;
+    public LoginType loginType = LoginType.LINK;
 
     public String getScopes() {
         return scopes;
@@ -152,7 +153,11 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     @Override
     public String getLoginType() {
-        return LoginType.LINK.toString();
+        return loginType.toString();
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = LoginType.parse(loginType);
     }
 
     @Override
