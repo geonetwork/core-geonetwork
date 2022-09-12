@@ -34,6 +34,7 @@ import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -215,9 +216,18 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
+        String[] indicatorObjects = {"indicator_INDICATOR_VIEW_SERVICE_LINKED_RESOURCES",
+            "indicator_INDICATOR_DOWNLOAD_SERVICE_LINKED_RESOURCES"};
+
         fields.entries().forEach(e -> {
-            doc.addContent(new Element(e.getKey())
-                .setText(String.valueOf(e.getValue())));
+            if (ArrayUtils.indexOf(indicatorObjects, e.getKey()) > -1) {
+                doc.addContent(new Element(e.getKey()).setAttribute("type", "object")
+                    .setText(String.valueOf(e.getValue())));
+
+            } else {
+                doc.addContent(new Element(e.getKey())
+                    .setText(String.valueOf(e.getValue())));
+            }
         });
     }
 
