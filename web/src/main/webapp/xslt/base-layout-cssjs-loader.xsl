@@ -141,7 +141,7 @@
           src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 

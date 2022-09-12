@@ -60,26 +60,24 @@ customElements.define("gn-app",
         script.setAttribute("type", "text/javascript");
 
         script.textContent = "" +
-          "var root = document.getElementsByTagName('gn-app')[0].shadowRoot;\n" +
-          "function loadDependency() {" +
-          "  [\"" + baseUrl + "/static/gn_search_default.js\"].forEach(function(src) {\n" +
-          "    var script = document.createElement(\"script\");\n" +
-          "    script.setAttribute(\"src\", src);\n" +
-          "    script.setAttribute(\"onload\", \"bootstrap()\");\n" +
-          "    root.appendChild(script);\n" +
-          "  });\n" +
-          "};" +
-          "" +
-          "function bootstrap() {" +
+          "var gnShadowRoot = document.getElementsByTagName('gn-app')[0].shadowRoot;\n" +
+          "function gnBootstrap() {" +
           "    config = " + JSON.stringify(uiConfig) + " || {};\n" +
           "    var cfgModule = angular.module('gn_config', []);\n" +
           "    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',\n" +
           "      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {\n" +
           "        gnGlobalSettings.init(config, '" + baseUrl + "/" + portal + "/', gnViewerSettings, gnSearchSettings);\n" +
           "      }]);" +
-          "angular.bootstrap(root, ['gn_search_default']);" +
+          "angular.bootstrap(gnShadowRoot, ['gn_search_default']);" +
           "};" +
-          "";
+          "function loadDependency() {" +
+          "  [\"" + baseUrl + "/static/gn_search_default.js\"].forEach(function(src) {\n" +
+          "    var script = document.createElement(\"script\");\n" +
+          "    script.setAttribute(\"src\", src);\n" +
+          "    script.setAttribute(\"onload\", \"gnBootstrap()\");\n" +
+          "    gnShadowRoot.appendChild(script);\n" +
+          "  });\n" +
+          "};";
         app.appendChild(script);
 
 
