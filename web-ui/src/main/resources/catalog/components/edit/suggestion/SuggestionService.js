@@ -21,20 +21,18 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_suggestion_service');
+(function () {
+  goog.provide("gn_suggestion_service");
 
-  var module = angular.module('gn_suggestion_service', [
-  ]);
+  var module = angular.module("gn_suggestion_service", []);
 
-  module.factory('gnSuggestion', [
-    'gnBatchProcessing',
-    'gnHttp',
-    '$http',
-    'gnEditor',
-    'gnCurrentEdit',
-    function(gnBatchProcessing, gnHttp, $http, gnEditor, gnCurrentEdit) {
-
+  module.factory("gnSuggestion", [
+    "gnBatchProcessing",
+    "gnHttp",
+    "$http",
+    "gnEditor",
+    "gnCurrentEdit",
+    function (gnBatchProcessing, gnHttp, $http, gnEditor, gnCurrentEdit) {
       var reload = false;
       var current = undefined;
       var callbacks = [];
@@ -45,16 +43,15 @@
        *******************************************
        */
       return {
-
         /**
          * Called on suggestion click in the list.
          * Either open a popup with a form or directly
          * execute the process.
          */
-        onSuggestionClick: function(sugg) {
+        onSuggestionClick: function (sugg) {
           this.setCurrent(sugg);
           if (sugg.params) {
-            $('#runsuggestion-popup').modal('show');
+            $("#runsuggestion-popup").modal("show");
             this.dispatch();
           } else {
             this.runProcess(sugg.process);
@@ -67,10 +64,10 @@
          * This is use because the suggestion content is in
          * a popup, whom scope can't be accessed by gnSuggestionList
          */
-        register: function(cb) {
+        register: function (cb) {
           callbacks.push(cb);
         },
-        dispatch: function() {
+        dispatch: function () {
           for (var i = 0; i < callbacks.length; ++i) {
             callbacks[i]();
           }
@@ -80,10 +77,10 @@
          * Save current state to share suggestion between all
          * directives.
          */
-        setCurrent: function(sugg) {
+        setCurrent: function (sugg) {
           current = sugg;
         },
-        getCurrent: function() {
+        getCurrent: function () {
           return current;
         },
 
@@ -91,23 +88,27 @@
          * Call GN service to load all suggestion for the current
          * metadata
          */
-        load: function(lang, gurl) {
-          return $http.get('../api/records/' + gnCurrentEdit.id + '/processes');
+        load: function (lang, gurl) {
+          return $http.get("../api/records/" + gnCurrentEdit.id + "/processes");
         },
 
-        runProcess: function(service, params) {
+        runProcess: function (service, params) {
           var scope = this;
           if (angular.isUndefined(params)) {
             params = {};
           }
           params.process = service;
-          return gnBatchProcessing.runProcessMd(params).then(function(data) {
-            scope.reload = true;
-          }, function(error) {
-            console.warn(error);
-            scope.reload = true;
-          });
+          return gnBatchProcessing.runProcessMd(params).then(
+            function (data) {
+              scope.reload = true;
+            },
+            function (error) {
+              console.warn(error);
+              scope.reload = true;
+            }
+          );
         }
       };
-    }]);
+    }
+  ]);
 })();

@@ -1,27 +1,45 @@
 <div>
   <label class="control-label">
-    <input id="gn-harvest-settings-gn-advanced-remote-checkbox"
-           type="checkbox"
-           data-ng-model="harvester.site.account.use"/>
-    <span id="gn-harvest-settings-gn-advanced-remote-label" data-translate="">useAccount</span>
+    <input
+      id="gn-harvest-settings-gn-advanced-remote-checkbox"
+      type="checkbox"
+      data-ng-model="harvester.site.account.use"
+    />
+    <span id="gn-harvest-settings-gn-advanced-remote-label" data-translate=""
+      >useAccount</span
+    >
   </label>
 
   <fieldset data-ng-show="harvester.site.account.use">
     <div class="well">
       <div id="gn-harvest-settings-gn-advanced-remote-username-row">
-        <label id="gn-harvest-settings-gn-advanced-remote-username-label" class="control-label" data-translate="">username</label>
-        <input id="gn-harvest-settings-gn-advanced-remote-username-input"
-              type="text"
-              class="form-control"
-              data-ng-model="harvester.site.account.username"/>
+        <label
+          id="gn-harvest-settings-gn-advanced-remote-username-label"
+          class="control-label"
+          data-translate=""
+          >username</label
+        >
+        <input
+          id="gn-harvest-settings-gn-advanced-remote-username-input"
+          type="text"
+          class="form-control"
+          data-ng-model="harvester.site.account.username"
+        />
       </div>
       <div id="gn-harvest-settings-gn-advanced-remote-password-row">
-        <label id="gn-harvest-settings-gn-advanced-remote-password-label" class="control-label" data-translate="">password</label>
-        <input id="gn-harvest-settings-gn-advanced-remote-password-input"
-              type="password"
-              class="form-control"
-              autocomplete="new-password"
-              data-ng-model="harvester.site.account.password"/>
+        <label
+          id="gn-harvest-settings-gn-advanced-remote-password-label"
+          class="control-label"
+          data-translate=""
+          >password</label
+        >
+        <input
+          id="gn-harvest-settings-gn-advanced-remote-password-input"
+          type="password"
+          class="form-control"
+          autocomplete="new-password"
+          data-ng-model="harvester.site.account.password"
+        />
       </div>
     </div>
   </fieldset>
