@@ -21,50 +21,54 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_directoryassociatedmd_directive');
+(function () {
+  goog.provide("gn_directoryassociatedmd_directive");
 
+  goog.require("gn_mdtypewidget");
+  goog.require("gn_mdtypeinspirevalidationwidget");
+  goog.require("gn_draftvalidationwidget");
+  goog.require("gn_batchtask");
 
-  goog.require('gn_mdtypewidget');
-  goog.require('gn_mdtypeinspirevalidationwidget');
-  goog.require('gn_draftvalidationwidget');
-  goog.require('gn_batchtask');
-
-  var module = angular.module('gn_directoryassociatedmd_directive', [
-    'gn_mdtypewidget', 'gn_mdtypeinspirevalidationwidget',
-    'gn_draftvalidationwidget', 'gn_batchtask'
+  var module = angular.module("gn_directoryassociatedmd_directive", [
+    "gn_mdtypewidget",
+    "gn_mdtypeinspirevalidationwidget",
+    "gn_draftvalidationwidget",
+    "gn_batchtask"
   ]);
 
-  module.directive('gnDirectoryAssociatedMd', [
-    'gnGlobalSettings',
-    function() {
+  module.directive("gnDirectoryAssociatedMd", [
+    "gnGlobalSettings",
+    function () {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          entryUuid: '='
+          entryUuid: "="
         },
-        templateUrl: '../../catalog/components/edit/directoryassociatedmd/' +
-            'partials/associated-results.html',
-        controller: ['$scope', 'gnGlobalSettings',
-          function($scope, gnGlobalSettings) {
+        templateUrl:
+          "../../catalog/components/edit/directoryassociatedmd/" +
+          "partials/associated-results.html",
+        controller: [
+          "$scope",
+          "gnGlobalSettings",
+          function ($scope, gnGlobalSettings) {
             $scope.searchObj = {
               params: {
-                isTemplate: ['y', 'n'],
-                any: '',
-                sortBy: 'resourceTitleObject.default.keyword',
-                xlink: '*'
+                isTemplate: ["y", "n"],
+                any: "",
+                sortBy: "resourceTitleObject.default.keyword",
+                xlink: "*"
               },
               internal: true,
               sortbyValues: [
                 {
-                  sortBy: 'resourceTitleObject.default.keyword'
+                  sortBy: "resourceTitleObject.default.keyword"
                 },
                 {
-                  sortBy: 'owner'
+                  sortBy: "owner"
                 },
                 {
-                  sortBy: 'changeDate',
-                  sortOrder: 'desc'
+                  sortBy: "changeDate",
+                  sortOrder: "desc"
                 }
               ]
             };
@@ -75,17 +79,17 @@
             };
             $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
-            $scope.$watch('entryUuid', function(v) {
+            $scope.$watch("entryUuid", function (v) {
               if (v) {
                 $scope.searchObj.params.xlink =
-                    'local://srv/api/registries/entries/' + v + '*';
-                $scope.$broadcast('clearResults');
-                $scope.$broadcast('search');
+                  "local://srv/api/registries/entries/" + v + "*";
+                $scope.$broadcast("clearResults");
+                $scope.$broadcast("search");
               }
             });
-          }]
+          }
+        ]
       };
     }
   ]);
-
 })();

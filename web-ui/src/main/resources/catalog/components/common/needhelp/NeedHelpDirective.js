@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_needhelp_directive');
+(function () {
+  goog.provide("gn_needhelp_directive");
 
-  var module = angular.module('gn_needhelp_directive', []);
+  var module = angular.module("gn_needhelp_directive", []);
 
   /**
    * @ngdoc directive
@@ -45,42 +45,54 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['gnGlobalSettings', 'gnAlertService', '$http', '$q', '$translate',
-    function(gnGlobalSettings, gnAlertService, $http, $q, $translate) {
+  module.directive("gnNeedHelp", [
+    "gnGlobalSettings",
+    "gnAlertService",
+    "$http",
+    "$q",
+    "$translate",
+    function (gnGlobalSettings, gnAlertService, $http, $q, $translate) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/components/common/needhelp/partials/' +
-            'needhelp.html',
-        link: function(scope, element, attrs) {
-          scope.iconOnly = attrs.iconOnly === 'true';
-          var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'https://geonetwork-opensource.org/manuals/trunk/';
+        templateUrl:
+          "../../catalog/components/common/needhelp/partials/" + "needhelp.html",
+        link: function (scope, element, attrs) {
+          scope.iconOnly = attrs.iconOnly === "true";
+          var helpBaseUrl =
+            gnGlobalSettings.docUrl || "https://geonetwork-opensource.org/manuals/trunk/";
 
-          var testAndOpen = function(url) {
+          var testAndOpen = function (url) {
             var defer = $q.defer();
-            $http.head(url).then(function(data) {
-              window.open(url, 'gn-documentation');
-              defer.resolve(data);
-            }, function(data) {
-              gnAlertService.addAlert({
-                msg: $translate.instant('docPageNotFoundAtUrl') + ' ' + url,
-                type: 'warning'
-              });
-              defer.reject(data);
-            });
+            $http.head(url).then(
+              function (data) {
+                window.open(url, "gn-documentation");
+                defer.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: $translate.instant("docPageNotFoundAtUrl") + " " + url,
+                  type: "warning"
+                });
+                defer.reject(data);
+              }
+            );
             return defer.promise;
           };
 
-          scope.showHelp = function() {
+          scope.showHelp = function () {
             var page = attrs.gnNeedHelp;
-            var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
-            testAndOpen(helpPageUrl).then(function() {}, function() {
-              testAndOpen( helpBaseUrl + 'en/' + page)
-            });
+            var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + "/" + page;
+            testAndOpen(helpPageUrl).then(
+              function () {},
+              function () {
+                testAndOpen(helpBaseUrl + "en/" + page);
+              }
+            );
             return true;
           };
         }
       };
-    }]);
+    }
+  ]);
 })();

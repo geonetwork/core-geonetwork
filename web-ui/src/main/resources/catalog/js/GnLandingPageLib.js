@@ -23,60 +23,61 @@
 (function () {
   gnLandingPage = {};
   gnLandingPage.displayLanguage = function (lang, target) {
-    target.parentElement.parentElement.querySelectorAll('li').forEach(
-      function (li) {
-        li.classList.remove('active');
-      });
-    target.parentElement.classList.add('active');
+    target.parentElement.parentElement.querySelectorAll("li").forEach(function (li) {
+      li.classList.remove("active");
+    });
+    target.parentElement.classList.add("active");
 
-    var displayAll = lang === '';
-    
-    document.querySelectorAll(
-      'section.gn-md-side-access > div > a.btn-primary').forEach(
-      function (btn) {
-      btn.setAttribute('href',
-        btn.getAttribute('href')
-          .replace(/(.*\/srv\/)([a-z]{3})/, '$1' + lang))
+    var displayAll = lang === "";
+
+    document
+      .querySelectorAll("section.gn-md-side-access > div > a.btn-primary")
+      .forEach(function (btn) {
+        btn.setAttribute(
+          "href",
+          btn.getAttribute("href").replace(/(.*\/srv\/)([a-z]{3})/, "$1" + lang)
+        );
       });
 
-    document.querySelectorAll('div[xml\\:lang]').forEach(
-      function (div) {
-        if (displayAll) {
-          div.classList.remove('hidden');
+    document.querySelectorAll("div[xml\\:lang]").forEach(function (div) {
+      if (displayAll) {
+        div.classList.remove("hidden");
+      } else {
+        var isFirst = false;
+        if (div.previousElementSibling == null) {
+          isFirst = true;
         } else {
-          var isFirst = false;
-          if (div.previousElementSibling == null) {
+          if (div.previousElementSibling.getAttribute("xml:lang") === null) {
             isFirst = true;
-          } else {
-            if (div.previousElementSibling.getAttribute('xml:lang') === null) {
-              isFirst = true;
-            }
-          }
-
-          if (isFirst) {
-            var translationAvailable = false;
-            div.parentElement.querySelectorAll('div[xml\\:lang]').forEach(
-              function (child) {
-                // Last element is default lang.
-                var isLast = true;
-                if (child.nextElementSibling != null && child.nextElementSibling.getAttribute('xml:lang') !== null) {
-                  isLast = false;
-                }
-
-                if (child.getAttribute('xml:lang') === lang) {
-                  child.classList.remove('hidden');
-                  translationAvailable = true;
-                } else if (isLast) {
-                  child.classList.add('hidden');
-                  if (!translationAvailable) {
-                    div.classList.remove('hidden')
-                  }
-                } else {
-                  child.classList.add('hidden');
-                }
-              });
           }
         }
-      });
+
+        if (isFirst) {
+          var translationAvailable = false;
+          div.parentElement.querySelectorAll("div[xml\\:lang]").forEach(function (child) {
+            // Last element is default lang.
+            var isLast = true;
+            if (
+              child.nextElementSibling != null &&
+              child.nextElementSibling.getAttribute("xml:lang") !== null
+            ) {
+              isLast = false;
+            }
+
+            if (child.getAttribute("xml:lang") === lang) {
+              child.classList.remove("hidden");
+              translationAvailable = true;
+            } else if (isLast) {
+              child.classList.add("hidden");
+              if (!translationAvailable) {
+                div.classList.remove("hidden");
+              }
+            } else {
+              child.classList.add("hidden");
+            }
+          });
+        }
+      }
+    });
   };
 })();

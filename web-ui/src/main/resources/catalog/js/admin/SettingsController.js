@@ -21,124 +21,126 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_settings_controller');
+(function () {
+  goog.provide("gn_settings_controller");
 
+  goog.require("gn_cssstyle_settings_controller");
+  goog.require("gn_csw_settings_controller");
+  goog.require("gn_csw_test_controller");
+  goog.require("gn_logo_settings_controller");
+  goog.require("gn_mapserver_controller");
+  goog.require("gn_metadata_identifier_templates_controller");
+  goog.require("gn_scroll_spy");
+  goog.require("gn_sources_controller");
+  goog.require("gn_system_settings_controller");
+  goog.require("gn_languages_controller");
 
+  var module = angular.module("gn_settings_controller", [
+    "gn_system_settings_controller",
+    "gn_csw_settings_controller",
+    "gn_languages_controller",
+    "gn_mapserver_controller",
+    "gn_csw_test_controller",
+    "gn_logo_settings_controller",
+    "gn_sources_controller",
+    "gn_metadata_identifier_templates_controller",
+    "gn_cssstyle_settings_controller",
+    "gn_scroll_spy"
+  ]);
 
-
-
-
-
-
-
-
-
-  goog.require('gn_cssstyle_settings_controller');
-  goog.require('gn_csw_settings_controller');
-  goog.require('gn_csw_test_controller');
-  goog.require('gn_logo_settings_controller');
-  goog.require('gn_mapserver_controller');
-  goog.require('gn_metadata_identifier_templates_controller');
-  goog.require('gn_scroll_spy');
-  goog.require('gn_sources_controller');
-  goog.require('gn_system_settings_controller');
-  goog.require('gn_languages_controller');
-
-  var module = angular.module('gn_settings_controller',
-      ['gn_system_settings_controller',
-       'gn_csw_settings_controller',
-       'gn_languages_controller',
-       'gn_mapserver_controller',
-       'gn_csw_test_controller',
-       'gn_logo_settings_controller',
-       'gn_sources_controller',
-       'gn_metadata_identifier_templates_controller',
-       'gn_cssstyle_settings_controller',
-       'gn_scroll_spy']
-      );
-
-  module.controller('GnSettingsController', ['$scope',
-    function($scope) {
-
-      var userAdminTabs = [{
-        type: 'sources',
-        icon: 'fa-database',
-        label: 'manageSources',
-        href: '#/settings/sources'
-      }, {
-        type: 'ui',
-        label: 'ui',
-        icon: 'fa-puzzle-piece',
-        href: '#/settings/ui'
-      }];
+  module.controller("GnSettingsController", [
+    "$scope",
+    function ($scope) {
+      var userAdminTabs = [
+        {
+          type: "sources",
+          icon: "fa-database",
+          label: "manageSources",
+          href: "#/settings/sources"
+        },
+        {
+          type: "ui",
+          label: "ui",
+          icon: "fa-puzzle-piece",
+          href: "#/settings/ui"
+        }
+      ];
 
       $scope.pageMenu = {
-        folder: 'settings/',
-        defaultTab: 'system',
-        tabs:
-            [{
-              type: 'system',
-              label: 'settings',
-              icon: 'fa-cogs',
-              href: '#/settings/system'
-            },{
-              type: 'ui',
-              label: 'ui',
-              icon: 'fa-puzzle-piece',
-              href: '#/settings/ui'
-            },{
-              type: 'cssstyle',
-              label: 'cssstyle',
-              icon: 'fa-camera',
-              href: '#/settings/cssstyle'
-            },{
-              type: 'logo',
-              label: 'manageLogo',
-              icon: 'fa-picture-o',
-              href: '#/settings/logo'
-            },{
-              type: 'sources',
-              icon: 'fa-database',
-              label: 'manageSources',
-              href: '#/settings/sources'
-            },{
-              type: 'languages',
-              icon: 'fa-comments',
-              label: 'languagesAndTranslations.manage',
-              href: '#/settings/languages'
-            },{
-              type: 'csw',
-              label: 'manageCSW',
-              icon: 'fa-server',
-              href: '#/settings/csw'
-            },{
-              type: 'csw-test',
-              label: 'testCSW',
-              icon: 'fa-server',
-              href: '#/settings/csw-test'
-            },{
-              type: 'mapservers',
-              icon: 'fa-globe',
-              label: 'manageMapServers',
-              href: '#/settings/mapservers'
-            }]};
-
+        folder: "settings/",
+        defaultTab: "system",
+        tabs: [
+          {
+            type: "system",
+            label: "settings",
+            icon: "fa-cogs",
+            href: "#/settings/system"
+          },
+          {
+            type: "ui",
+            label: "ui",
+            icon: "fa-puzzle-piece",
+            href: "#/settings/ui"
+          },
+          {
+            type: "cssstyle",
+            label: "cssstyle",
+            icon: "fa-camera",
+            href: "#/settings/cssstyle"
+          },
+          {
+            type: "logo",
+            label: "manageLogo",
+            icon: "fa-picture-o",
+            href: "#/settings/logo"
+          },
+          {
+            type: "sources",
+            icon: "fa-database",
+            label: "manageSources",
+            href: "#/settings/sources"
+          },
+          {
+            type: "languages",
+            icon: "fa-comments",
+            label: "languagesAndTranslations.manage",
+            href: "#/settings/languages"
+          },
+          {
+            type: "csw",
+            label: "manageCSW",
+            icon: "fa-server",
+            href: "#/settings/csw"
+          },
+          {
+            type: "csw-test",
+            label: "testCSW",
+            icon: "fa-server",
+            href: "#/settings/csw-test"
+          },
+          {
+            type: "mapservers",
+            icon: "fa-globe",
+            label: "manageMapServers",
+            href: "#/settings/mapservers"
+          }
+        ]
+      };
 
       function loadConditionalTabs() {
-        if ($scope.user.profile === 'UserAdmin') {
+        if ($scope.user.profile === "UserAdmin") {
           $scope.pageMenu.tabs = userAdminTabs;
-          $scope.pageMenu.defaultTab = 'sources';
+          $scope.pageMenu.defaultTab = "sources";
         }
       }
 
       loadConditionalTabs();
 
-      $scope.$watchCollection('user', function (n, o) {
+      $scope.$watchCollection("user", function (n, o) {
         if (n !== o) {
           loadConditionalTabs();
         }
       });
-
-    }]);
+    }
+  ]);
 })();

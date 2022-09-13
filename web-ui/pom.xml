@@ -93,8 +93,11 @@
           <ignoreEditorConfig>true</ignoreEditorConfig>
           <inputGlobs>
             <inputGlob>src/main/resources/catalog/components/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/components/**/*.html</inputGlob>
             <inputGlob>src/main/resources/catalog/js/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/templates/**/*.html</inputGlob>
             <inputGlob>src/main/resources/catalog/views/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/views/**/*.html</inputGlob>
           </inputGlobs>
         </configuration>
         <executions>
