@@ -60,8 +60,9 @@
             }
           });
 
-          this.selectProcess = function(process) {
+          this.selectProcess = function(process, element) {
             $scope.selectedProcess = process;
+            element.hidePopover();
           }
 
           /**

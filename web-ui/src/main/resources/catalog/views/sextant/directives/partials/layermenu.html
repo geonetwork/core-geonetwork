@@ -116,7 +116,7 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-right text-left">
             <li data-ng-repeat="p in processes">
-              <a ng-click="ctrl.selectProcess(p)">
+              <a ng-click="ctrl.selectProcess(p, this)">
                 <span class="fa fa-cog"></span>
                 {{p.description}}
               </a>
