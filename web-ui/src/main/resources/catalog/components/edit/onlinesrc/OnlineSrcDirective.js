@@ -2131,11 +2131,11 @@
                         // Otherwise would need to change API
                         (obj.md.title === undefined
                           ? ""
-                          : obj.md.title.replace("#", "").replace(",", " ")) +
+                          : obj.md.title.replaceAll("#", "").replaceAll(",", " ")) +
                         "#" +
                         (obj.md.remoteUrl === undefined
                           ? ""
-                          : obj.md.remoteUrl.replace("#", "%23"));
+                          : obj.md.remoteUrl.replaceAll("#", "%23"));
                     uuids.push(parameter);
                   }
                   var params = {

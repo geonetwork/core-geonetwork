@@ -263,7 +263,7 @@
                       format: "gml"
                     })
                     .replace(
-                      /http:\/\/www.opengis.net\/gml"/g,
+                      /http:\/\/www\.opengis\.net\/gml"/g,
                       'http://www.opengis.net/gml/3.2"'
                     )
                 );

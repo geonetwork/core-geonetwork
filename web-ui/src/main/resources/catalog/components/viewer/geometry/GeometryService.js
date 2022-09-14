@@ -333,7 +333,7 @@
 
             var feature = format.readFeatures(
               fullXml.replace(
-                /http:\/\/www.opengis.net\/gml\/3.2/g,
+                /http:\/\/www\.opengis\.net\/gml\/3.2/g,
                 "http://www.opengis.net/gml"
               ),
               {
