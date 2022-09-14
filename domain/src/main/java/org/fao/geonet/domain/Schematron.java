@@ -56,7 +56,7 @@ import javax.persistence.UniqueConstraint;
     uniqueConstraints = @UniqueConstraint(columnNames = {"schemaName", "filename"}))
 @Cacheable
 @Access(AccessType.PROPERTY)
-@SequenceGenerator(name = Schematron.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Schematron.ID_SEQ_NAME, sequenceName = Schematron.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Schematron extends Localized {
     public static final Comparator<? super Schematron> DISPLAY_PRIORITY_COMPARATOR = new Comparator<Schematron>() {
         @Override

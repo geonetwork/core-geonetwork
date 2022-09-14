@@ -59,7 +59,7 @@ import java.util.TreeSet;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(LinkEntityListenerManager.class)
-@SequenceGenerator(name = Link.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = Link.ID_SEQ_NAME, sequenceName = Link.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
 public class Link implements Serializable {
     static final String ID_SEQ_NAME = "link_id_seq";
 

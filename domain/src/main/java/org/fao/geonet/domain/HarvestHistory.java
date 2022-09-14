@@ -62,7 +62,7 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 @Table(name = "HarvestHistory")
 @EntityListeners(HarvestHistoryEntityListenerManager.class)
-@SequenceGenerator(name = HarvestHistory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = HarvestHistory.ID_SEQ_NAME, sequenceName = HarvestHistory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class HarvestHistory extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvest_history_id_seq";
     private int _id;

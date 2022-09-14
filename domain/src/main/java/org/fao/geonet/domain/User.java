@@ -51,7 +51,7 @@ import java.util.*;
 @Table(name = "Users")
 @Cacheable
 @EntityListeners(value = {UserEntityListenerManager.class})
-@SequenceGenerator(name = User.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = User.ID_SEQ_NAME, sequenceName = User.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class User extends GeonetEntity implements UserDetails {
     public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     static final String ID_SEQ_NAME = "user_id_seq";

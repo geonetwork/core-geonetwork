@@ -38,7 +38,7 @@ import java.io.Serializable;
 @Entity
 @Access(AccessType.PROPERTY)
 @EntityListeners(AddressEntityListenerManager.class)
-@SequenceGenerator(name = Address.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Address.ID_SEQ_NAME, sequenceName = Address.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Address extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "address_id_seq";
 

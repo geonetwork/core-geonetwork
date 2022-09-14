@@ -42,7 +42,7 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "CswServerCapabilitiesInfo")
 @EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
-@SequenceGenerator(name = CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = CswCapabilitiesInfoField.ID_SEQ_NAME, sequenceName = CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class CswCapabilitiesInfoField extends GeonetEntity implements Serializable {
 
     static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";

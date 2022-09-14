@@ -45,7 +45,7 @@ import java.util.Set;
 @Cacheable
 @Table(name = "Categories")
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
-@SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, sequenceName = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataCategory extends Localized implements Serializable {
     private static final Set<String> EXCLUDE_FROM_XML = Sets.newHashSet("getRecords");
 

@@ -41,7 +41,7 @@ import org.fao.geonet.domain.GeonetEntity;
  */
 @Entity(name = "GUF_Keywords")
 @Table(name = "GUF_Keywords")
-@SequenceGenerator(name = Keyword.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Keyword.ID_SEQ_NAME, sequenceName = Keyword.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Keyword extends GeonetEntity implements Serializable {
 
     /** The sequence name */
@@ -56,7 +56,7 @@ public class Keyword extends GeonetEntity implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Keyword.ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public long getId() {
         return id;
     }
