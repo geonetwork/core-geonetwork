@@ -4,11 +4,11 @@
   overflow: hidden;
   height: @ellipsis-height;
   line-height: 18px;
-  margin: 0 0 .5em;
+  margin: 0 0 0.5em;
 }
 
 .ellipsis:before {
-  content:"";
+  content: "";
   float: left;
   width: 5px;
   height: @ellipsis-height;
@@ -33,8 +33,20 @@
   margin-left: -3em;
   padding-right: 5px;
   text-align: right;
-  background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(#efefef), color-stop(50%, #efefef));
-  background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), #efefef 50%, #efefef);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(rgba(255, 255, 255, 0)),
+    to(#efefef),
+    color-stop(50%, #efefef)
+  );
+  background: -moz-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    #efefef 50%,
+    #efefef
+  );
   background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), #efefef 50%, #efefef);
   background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), #efefef 50%, #efefef);
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #efefef 50%, #efefef);

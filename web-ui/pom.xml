@@ -92,6 +92,7 @@
           <ignoreConfigFile>false</ignoreConfigFile>
           <ignoreEditorConfig>true</ignoreEditorConfig>
           <inputGlobs>
+            <inputGlob>src/main/resources/catalog/style/**/*.less</inputGlob>
             <inputGlob>src/main/resources/catalog/components/**/*.js</inputGlob>
             <inputGlob>src/main/resources/catalog/components/**/*.html</inputGlob>
             <inputGlob>src/main/resources/catalog/js/**/*.js</inputGlob>
