@@ -109,8 +109,13 @@
     <ant dir="." target="war"/>
   </target>
 
+  <target name="log-lib">
+    <get src="https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar" dest="target/slf4j-api-1.7.36.jar" usetimestamp="true"/>
+  </target>
+
+
   <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
-  <target name="zip">
+  <target name="zip" depends="log-lib">
     <mkdir dir="target/${appName}-${version}"/>
 
     <echo message="Creating ZIP file for ${appName} ${version}..."/>
@@ -124,6 +129,8 @@
       <zipfileset src="../web/target/geonetwork.war" prefix="web/geonetwork" />
       <zipfileset dir="./data" prefix="web/geonetwork/data" />
       <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
+      <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
+      <zipfileset dir="./target" includes="slf4j-api-1.7.36.jar" prefix="web/geonetwork/WEB-INF/lib" />
     </zip>
 
     <checksum
