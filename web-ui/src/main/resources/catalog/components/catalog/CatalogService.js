@@ -200,7 +200,7 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource) {
+            isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource, redirectUrl) {
 
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
@@ -211,7 +211,7 @@
                 }
                 $location.path(path)
                 .search('justcreated')
-                .search('redirectUrl', 'catalog.edit');
+                .search('redirectUrl', redirectUrl || 'catalog.edit');
               });
         },
 

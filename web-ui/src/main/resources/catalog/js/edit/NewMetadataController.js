@@ -33,14 +33,14 @@
    * Controller to create new metadata record.
    */
   module.controller('GnNewMetadataController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
+    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile', '$location',
     'gnSearchManagerService',
     'gnUtilityService',
     'gnMetadataManager',
     'gnConfigService',
     'gnConfig',
     'Metadata',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+    function($scope, $routeParams, $http, $rootScope, $translate, $compile, $location,
             gnSearchManagerService,
             gnUtilityService,
             gnMetadataManager,
@@ -89,7 +89,8 @@
               $routeParams.template,
               false,
               $routeParams.tab,
-              true);
+              true,
+              $location.search()['redirectUrl']);
         } else {
 
           // Metadata creation could be on a template
@@ -288,7 +289,8 @@
             $routeParams.childOf ? true : false,
             undefined,
             metadataUuid,
-            true
+            true,
+            $location.search()['redirectUrl']
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),
