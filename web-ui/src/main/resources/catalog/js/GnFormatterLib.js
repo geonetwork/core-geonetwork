@@ -188,7 +188,7 @@
           linkBlockEl.html(
             "<h3>Error loading related metadata</h3><p><pre>" +
               "<code>" +
-              error.replace("<", "&lt;") +
+              error.replaceAll("<", "&lt;") +
               "</code></pre></p>"
           );
           linkBlockEl.show();
