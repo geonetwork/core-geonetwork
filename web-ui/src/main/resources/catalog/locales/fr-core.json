@@ -430,7 +430,7 @@
     "link-fcats": "Catalogue d'attributs",
     "link-associated": "Ressources associées",
     "indexAccessError": "Erreur lors de l'accès à l'index.",
-    "applyFilter": "Filtrer",
+    "applyFilter": "Appliquer le filtre actuel à la carte (construit un filtre SLD à appliquer à la couche WMS)",
     "confirm": "OK",
     "confirmDialogTitle": "Confirmer cette action",
     "close": "Fermer",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Approuver un lot de fiches",
     "batchApproveInfo": "Cette option permet d'approuver une sélection de fiches de l'utilisateur. Par défaut, seules les fiches soumises sont approuvées. Sélectionner l'option ci-dessous pour approuver directement les fiches qui n'ont pas été soumises.",
     "batchApproveDirect": "Approuver les fiches directement sans qu'elles aient étés soumises.",
-    "facet-mdStatus": "Cycle de vie de la fiche"
+    "facet-mdStatus": "Cycle de vie de la fiche",
+    "skipLink": "Passer et aller au contenu"
 }
