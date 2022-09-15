@@ -1739,6 +1739,7 @@
                   scope.btn = {};
 
 
+
                   // Append * for like search
                   scope.updateParams = function() {
                     var addWildcard = scope.searchObj.any.indexOf('"') === -1
@@ -1758,7 +1759,7 @@
                     var searchParams = {};
                     if (scope.mode === 'fcats') {
                       searchParams = {
-                        documentStandard: 'iso19110',
+                        resourceType: "featureCatalog",
                         isTemplate: 'n'
                       };
                       scope.btn = {

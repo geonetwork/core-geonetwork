@@ -477,6 +477,7 @@
         <for name="mrd:distributor"/>
         <for name="mdb:contact"/>
         <for name="mcc:processor"/>
+        <for name="gfc:carrierOfCharacteristics"/>
         <for name="cit:party"/>
         <for name="cit:CI_Individual"/>
         <for name="cit:CI_Organisation"/>

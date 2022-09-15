@@ -25,6 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
@@ -276,6 +277,7 @@
         <xsl:copy-of select="gn-fn-index:add-codelist-field(
                                   $fieldName, ., $allLanguages)"/>
       </xsl:for-each-group>
+
 
 
       <!-- Indexing resource information
@@ -945,6 +947,36 @@
       </xsl:for-each-group>
 
 
+      <!-- ISO19115-3 records can be only a feature catalogue description.
+       In this case,
+       * add the resourceType=featureCatalog to enable search when linking records
+       * (TODO: Check which scopeCode is more appropriate eg. featureType ?)
+       * Index feature catalogue name as title, fieldOfApplication as abstract.
+       -->
+      <xsl:variable name="isOnlyFeatureCatalog"
+                    select="not(mdb:identificationInfo)
+                            and exists(mdb:contentInfo/*/mrc:featureCatalogue)"
+                    as="xs:boolean"/>
+
+      <xsl:if test="exists(mdb:contentInfo/*/mrc:featureCatalogue//gfc:FC_FeatureCatalogue/gfc:featureType)">
+        <resourceType>featureCatalog</resourceType>
+      </xsl:if>
+
+      <xsl:if test="$isOnlyFeatureCatalog">
+        <resourceType>featureCatalog</resourceType>
+
+        <xsl:for-each select="mdb:contentInfo/*/mrc:featureCatalogue/*">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle',
+                                cat:name, $allLanguages)"/>
+
+          <xsl:for-each select="cat:versionNumber/*">
+            <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
+          </xsl:for-each>
+
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract',
+                                cat:fieldOfApplication, $allLanguages)"/>
+        </xsl:for-each>
+      </xsl:if>
 
       <xsl:variable name="jsonFeatureTypes">[
         <xsl:for-each select="mdb:contentInfo//gfc:FC_FeatureCatalogue/gfc:featureType">{
