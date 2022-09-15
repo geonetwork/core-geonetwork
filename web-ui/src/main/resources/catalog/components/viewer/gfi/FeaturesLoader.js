@@ -478,7 +478,8 @@
           queryObject.sort.push(sort);
         }
         if (coordinates) {
-          var radius = map.getView().getResolution() / 0.4; // meters
+          var resolution = map.getView().getResolution() / 0.4; // meters
+          var radius = resolution < 10 ? 10 : resolution; // when zoomed in make sure to have a minimum of 10
           var minLonMaxLat = ol.proj.transform(
             [coordinates[0] - radius, coordinates[1] + radius],
             map.getView().getProjection(),
