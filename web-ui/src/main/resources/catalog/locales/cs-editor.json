@@ -34,7 +34,7 @@
     "assignToCategory": "Přiřadit ke kategorii",
     "assignToGroup": "Přiřadit ke skupině",
     "associationType": "Typ spojení",
-    "chooseContactRole": "nebo vyberte roli",
+    "chooseContactRole": "Vyberte roli kontaktu",
     "chooseEntry": "Prohledat adresář",
     "clickToAddResource": "Klepnutím vyberte tento zdroj",
     "externalResourceManagement": "Kliknutím přejdete na externího správce prostředků",
@@ -302,7 +302,7 @@
     "suggestions": "Návrhy",
     "removeThumbnail": "Odstranit náhled",
     "thumbnailMaker": "Vytvořit náhled",
-    "thumbnailMaker-help": "Všechny vrstvy WMS uvedené v metadatovém záznamu se přidávají do mapy. Vyberte rozvržení (doporučuje se náhled), měřítko, přiblížení oblasti zájmu, aby bylo možné vytvořit náhled.",
+    "thumbnailMaker-help": "Do mapy se přidají všechny vrstvy WMS registrované v záznamu metadat. Chcete-li vytvořit miniaturu, vyberte rozvržení, měřítko, přibližte oblast zájmu.",
     "to-iso19139-keyword": "text (doporučeno)",
     "to-iso19139-keyword-as-xlink": "odkaz",
     "to-iso19139-keyword-as-xlink-help": "Užitečné pro propojení záznamu a tezauru. Atribut xlink:href se přidává k prvku gmd:descriptiveKeywords.",
@@ -422,5 +422,7 @@
     "draft": "Pracovní kopie",
     "link": "Odkaz",
     "link-text": "Text odkazu",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Chcete zrušit všechny změny a zavřít editor?",
+    "wmsSelectedLayers": "Vybrané vrstvy",
+    "wmsSelectedLayersNone": "Nevybrány žádné vrstvy"
 }

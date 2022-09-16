@@ -422,5 +422,7 @@
     "draft": "Working copy",
     "link": "LInkki",
     "link-text": "Link text",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
+    "wmsSelectedLayers": "Selected layers",
+    "wmsSelectedLayersNone": "No layers selected"
 }

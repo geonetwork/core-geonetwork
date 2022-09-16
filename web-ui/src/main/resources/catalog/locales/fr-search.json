@@ -529,5 +529,12 @@
     "GUForganization": "Organisation",
     "printUnsupportedLayerTypes": "Le format des couches suivantes n'est pas supporté par l'impression PDF :",
     "rssFeed": "Flux RSS",
-    "approve": "Approuver"
+    "approve": "Approuver",
+    "fieldRequired": "Champ requis",
+    "fieldTooLong": "La valeur est trop longue",
+    "fieldTooLongMax": "La valeur est trop longue (max {{maxChar}})",
+    "fieldTooShort": "La valeur est trop courte",
+    "fieldEmailNotValid": "Un email valide est requis",
+    "addLayerPrefix": "Ajouter une couche",
+    "addLayerPostfix": "à la carte"
 }

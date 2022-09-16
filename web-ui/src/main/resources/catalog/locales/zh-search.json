@@ -174,7 +174,7 @@
     "listOfCategories": "分类",
     "formats": "格式",
     "addLayers": "添加图层",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "服务网址",
     "CurrentLayers": "图层集",
     "SearchLayer": "搜索",
@@ -529,5 +529,10 @@
     "GUForganization": "Your Organization",
     "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
     "rssFeed": "RSS feed",
-    "approve": "Approve"
+    "approve": "Approve",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required"
 }

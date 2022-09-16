@@ -174,7 +174,7 @@
     "listOfCategories": "Categorías",
     "formats": "Formatos",
     "addLayers": "Añadir capas",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "URL del Servicio",
     "CurrentLayers": "Capas",
     "SearchLayer": "Buscar",
@@ -529,5 +529,12 @@
     "GUForganization": "Su organización",
     "printUnsupportedLayerTypes": "Los siguientes tipos de capas están presentes pero no se pueden imprimir ",
     "rssFeed": "RSS feed",
-    "approve": "Aprobar"
+    "approve": "Aprobar",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required",
+    "addLayerPrefix": "Add layer",
+    "addLayerPostfix": "to the map"
 }
