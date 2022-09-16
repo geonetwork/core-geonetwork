@@ -137,7 +137,7 @@
     "gmd:CI_ResponsibleParty": "Organizácie a kontakty",
     "cit:CI_Responsibility": "Organizácie a kontakty (ISO19115-3)",
     "mrd:MD_Format": "Formáty",
-    "gmd:MD_Format": "Formats",
+    "gmd:MD_Format": "Formáty",
     "gmd:EX_Extent": "Extents",
     "gex:EX_Extent": "Extents",
     "mcc:MD_BrowseGraphic": "Logá",
@@ -378,7 +378,7 @@
     "directoryEntryFromScratch": "Create an entry from scratch",
     "directoryEntryInfo": "Owner: {{ownerName}}, updated on {{updateDate}}",
     "directoryEntryPermissions": "Permissions",
-    "directoryEntryValidate": "Validate",
+    "directoryEntryValidate": "Validovať",
     "directoryEntryReject": "Reject",
     "directoryEntryToTemplate": "Convert to template",
     "directoryEntryAssociatedMetadata": "Associated Metadata",
@@ -422,5 +422,7 @@
     "draft": "Working copy",
     "link": "Link",
     "link-text": "Link text",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
+    "wmsSelectedLayers": "Selected layers",
+    "wmsSelectedLayersNone": "No layers selected"
 }

@@ -174,7 +174,7 @@
     "listOfCategories": "Kategorie",
     "formats": "Formáty",
     "addLayers": "Přidat vrstvy",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "Služba URL",
     "CurrentLayers": "Vrstvy",
     "SearchLayer": "Vyhledat",
@@ -529,5 +529,10 @@
     "GUForganization": "Vaše Organizace",
     "printUnsupportedLayerTypes": "Následující typy vrstev jsou k dispozici, ale nelze je vytisknout",
     "rssFeed": "RSS kanál",
-    "approve": "Schválit"
+    "approve": "Schválit",
+    "fieldRequired": "Hodnota je povinná",
+    "fieldTooLong": "Hodnota je příliš dlouhá",
+    "fieldTooLongMax": "Hodnota je příliš dlouhá (max. {{maxChar}} znaků)",
+    "fieldTooShort": "Hodnota je příliš krátká",
+    "fieldEmailNotValid": "Je vyžadována platná e-mailová adresa"
 }
