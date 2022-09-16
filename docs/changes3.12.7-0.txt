@@ -1,0 +1,38 @@
+================================================================================
+===
+=== GeoNetwork 3.12.7: List of changes
+===
+================================================================================
+- Update transifex (#6549)
+- [BP] Status change / Improvements (#5676)
+- [BP] Enable server hostname verification on this SSL/TLS connection. (#6403)
+- [BP] Adjust side bar thickness to 12px (#6293)
+- [BP] Display successful test mail sent message
+- [BP] Add validation status to cmis store and configuration (#6511)
+- [BP] Update Threads API (#6537)
+- [BP] Fix typos in metadata schema element labels and descriptions (#6524)
+- [BP] Add missing French messages for DOI and remove double quotes for texts used in mails
+- [BP] Update DOI manager with multilingual exceptions (#6472)
+- [BP] Add Message.properties files to core tests, causing failure of test that uses code retrieving messages from that files (#6532)
+- [BP] Upgrade keycloak dependency to 18.0.2 (#6531)
+- [BP] Move messages property files to web module. This should make it easier to maintain the files, as they are not embedded in a jar file.
+- [BP] Fix links not generated properly in schema docs
+- [BP] Remove unused izpack-standalone-compiler dependency (#6515)
+- [BP] Keycloak client upgrade to 16.1.1
+- [BP] Admin / MapServers / Fix button label. (#6491)
+- [BP] DOI / Only manage DOI from registered prefix (#6489)
+- [BP] Record view / Full / Display temporal range using gml:end/begin element (#6510)
+- [BP] Metadata import - store the validation status when the validation option is selected
+-  [BP] Add OGC API protocols support for online resources (OGC API - Records)
+- [BP] Fix inconsistent metadata status when requesting the DOI publication after the metadata approval and publication.
+- [BP] Increase the number of users displayed in the users dropdown in the versioning log page.
+- [BP] Move xsd validation to the bottom of the mandatory rules, displaying first the schematron rules (#6456)
+- [BP] Block filename contains semicolon. (#6429)
+- Update French email messages.
+- [BP] Fix lookup of data directory sub-properties (#6461)
+- Missing files related to [BP] Use multilingual texts in metadata sharing API exceptions (#6334)
+- [BP] Use multilingual texts in metadata sharing API exceptions (#6334)
+- Add missing dependency, related to backport of #6195
+- Remote INSPIRE Atom - A metadata should be referenced by 1 feed. If referenced by more than 1 feed, ignore the other feeds. (#6420)
+- [BP] Configuration option to display the application version and links to the About, GitHub and API pages in the footer (#6436)
+- [BP] Fix slovenian language code for INSPIRE Registry thesaurus (#6427)
