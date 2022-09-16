@@ -360,9 +360,12 @@
         addMdLayerToMap: function (link, md) {
           // This is probably only a service
           // Open the add service layer tab
-          $location.path('map').search({
-            add: encodeURIComponent(angular.toJson(
-              [buildAddToMapConfig(link, md)]))});
+          var config = buildAddToMapConfig(link, md);
+          if (angular.isObject(config)) {
+            $location.path('map').search({
+              add: encodeURIComponent(angular.toJson(
+                [config]))});
+          }
           return;
         },
         addAllMdLayersToMap: function (layers, md) {
