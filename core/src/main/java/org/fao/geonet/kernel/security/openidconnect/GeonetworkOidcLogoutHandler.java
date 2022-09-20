@@ -65,14 +65,17 @@ public class GeonetworkOidcLogoutHandler implements LogoutSuccessHandler {
     }
 
     private URI createPostLogoutRedirectUri(HttpServletRequest request) {
+        String uri = "";
         try {
             String protocol = request.getScheme();
             String host = request.getServerName();
             int port = request.getServerPort();
             String path = servletContext.getContextPath();
-            return new URI(protocol + "://" + host + ":" + port + path);
+            uri = protocol + "://" + host + ":" + port + path;
+            return new URI(uri);
         } catch (URISyntaxException e) {
-            Log.error(Geonet.SECURITY,"ignored error parsing URI",e);
+            Log.debug(Geonet.SECURITY,"OIDC Post Logout Redirect Uri is invalid.  Likely you can ignore this -"
+                +uri,e);
         }
         return null;
     }

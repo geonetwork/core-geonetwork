@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -79,23 +81,36 @@ public class GeonetworkClientRegistrationProvider {
      *
      * @param metadataResource       - reference to a file (spring will convert a fname to Resource for us)
      * @param serverMetadataJsonText - text of JSON file
-     * @param clientId               - server's clientid
-     * @param clientSecret           - server's clientsecret
+     * @param oidcMetadataConfigURL  - URL to the OIDC configuration JSON document (/.well-known/openid-configuration)
      * @param oidcConfiguration      - GN's oidc configuration
      * @throws IOException
      * @throws ParseException
      */
     public GeonetworkClientRegistrationProvider(Resource metadataResource,
                                                 String serverMetadataJsonText,
+                                                String oidcMetadataConfigURL,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
         String clientId = oidcConfiguration.clientId;
         String clientSecret = oidcConfiguration.clientSecret;
+        if ( (oidcMetadataConfigURL !=null) && (oidcMetadataConfigURL.toLowerCase().startsWith("http")) ) {
+            //they provided a URL to the JSON - lets get it and use that
+            Log.debug(Geonet.SECURITY,"Download OIDC Configuration from -"+oidcMetadataConfigURL);
+            URL url = new URL(oidcMetadataConfigURL);
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            try {
+                clientRegistration = createClientRegistration(http.getInputStream(), clientId, clientSecret);
+            }
+            finally {
+                http.disconnect();
+            }
+        }
         //50 is just to check if there's some text in the string (not just the name of the environment var)
-        if (!StringUtils.isBlank(serverMetadataJsonText) && (serverMetadataJsonText.trim().length() > 50)) {
+        else if (!StringUtils.isBlank(serverMetadataJsonText) && (serverMetadataJsonText.trim().length() > 50)) {
             Log.debug(Geonet.SECURITY, "OpenID Connect - using IDP server metadata config from text");
             clientRegistration = createClientRegistration(new ByteArrayInputStream(serverMetadataJsonText.getBytes()), clientId, clientSecret);
-        } else {
+        }
+        else {
             Log.debug(Geonet.SECURITY, "OpenID Connect - using IDP server metadata config from resource file");
             clientRegistration = createClientRegistration(metadataResource, clientId, clientSecret);
         }
