@@ -1,1 +1,6 @@
-<a tabindex="-1" bind-html-unsafe="match.label | sanitizeHtmlFilter | typeaheadHighlight:query"></a>
+<a tabindex="-1">
+  <span data-ng-if="match.model.record.resourceType"
+        class="fa gn-icon-{{match.model.record.resourceType[0]}}"
+        title="{{match.model.record.resourceType[0] | translate}}"></span>
+  <span bind-html-unsafe="match.label | sanitizeHtmlFilter | typeaheadHighlight:query"></span>
+</a>

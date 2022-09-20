@@ -107,8 +107,11 @@
       /* Default contact to display */
       $scope.searchResultContact =  gnSearchSettings.searchResultContact;
 
-      $scope.getAnySuggestions = function(val, searchObj) {
-        return suggestService.getAnySuggestions(val, searchObj);
+      /**
+       * @returns {Array.<Metadata>}
+       */
+      $scope.getAnySuggestions = function(val, searchObj, field) {
+        return suggestService.getAnySuggestions(val, searchObj, field);
       };
 
       $scope.keywordsOptions = {

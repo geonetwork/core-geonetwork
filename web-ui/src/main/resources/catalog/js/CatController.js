@@ -227,6 +227,10 @@ goog.require('gn_alert');
             // }
             "boost": "5",
             "functions": [
+              {
+                "filter": { "match": { "resourceType": "series" } },
+                "weight": 1.5
+              },
               // Boost down member of a series
               {
                 "filter": { "exists": { "field": "parentUuid" } },
@@ -278,20 +282,7 @@ goog.require('gn_alert');
                 }]
               }
             },
-            '_source': ['resourceTitleObject'],
-            // Fuzzy autocomplete
-            // {
-            //   query: {
-            //     // match_phrase_prefix: match
-            //     "multi_match" : {
-            //       "query" : query,
-            //         // "type":       "phrase_prefix",
-            //         "fields" : [ field + "^3", "tag" ]
-            //     }
-            //   },
-            //   _source: [field]
-            // }
-            "from": 0,
+            "_source": ['resourceTitle*', 'resourceType'],
             "size": 20
           },
           'moreLikeThisSameType': true,
@@ -1696,7 +1687,7 @@ goog.require('gn_alert');
         var statusToApply = {};
         $.extend(statusToApply, defaultStatus, status);
 
-        
+
         if ($scope.showHealthIndexError !== true) {
           gnAlertService.addAlert(statusToApply, statusToApply.timeout);
         }

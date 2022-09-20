@@ -453,6 +453,12 @@
             queryHook, currentSearch.params,
             luceneQueryString, currentSearch.state);
 
+          params._source = field ? [field + '*']
+              : (gnGlobalSettings.gnCfg.mods.search.autocompleteConfig._source
+                || ['resourceTitle*']);
+
+          params.size = gnGlobalSettings.gnCfg.mods.search.autocompleteConfig.size || 10;
+
           return params;
         } catch (e) {
           console.warn("Suggestion query error. Could not find a query.bool.must[0].multi_match.query or query.bool.must in your autocompleteConfig query. Check your configuration.", e)

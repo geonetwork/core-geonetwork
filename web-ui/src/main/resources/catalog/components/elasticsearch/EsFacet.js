@@ -212,7 +212,7 @@
         }
       },
       recordsWithErrors: {
-        
+
         facets: {
           'indexingErrorType': {
             'filters': {
