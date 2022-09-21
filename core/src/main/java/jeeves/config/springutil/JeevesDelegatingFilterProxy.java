@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<>();
-    private final Map<String, Filter> _nodeIdToFilterMap = new HashMap<>();
+    private final Map<String, Filter> nodeIdToFilterMap = new HashMap<>();
 
     public static ServletContext getServletContext(ServletContext fallback) {
         if (ApplicationContextHolder.get() != null) {
@@ -82,11 +82,11 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
 
 
     private synchronized Filter getDelegateFilter(String nodeId, WebApplicationContext context) {
-        Filter filter = this._nodeIdToFilterMap.get(nodeId);
+        Filter filter = this.nodeIdToFilterMap.get(nodeId);
 
         if (filter == null) {
             filter = new DelegatingFilterProxy(getFilterName(), context);
-            this._nodeIdToFilterMap.put(nodeId, filter);
+            this.nodeIdToFilterMap.put(nodeId, filter);
         }
 
         return filter;
