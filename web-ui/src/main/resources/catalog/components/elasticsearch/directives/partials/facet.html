@@ -47,6 +47,8 @@
       ng-click="ctrl.toggleInvert()"
     >
       <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus-circle'">
+      </span>
+      <span>
         {{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}
       </span>
     </a>
