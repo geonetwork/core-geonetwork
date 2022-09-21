@@ -239,6 +239,11 @@
 
   <filter-mapping>
     <filter-name>resources</filter-name>
+    <url-pattern>/config/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>resources</filter-name>
     <url-pattern>/images/harvesting/*</url-pattern>
   </filter-mapping>
 

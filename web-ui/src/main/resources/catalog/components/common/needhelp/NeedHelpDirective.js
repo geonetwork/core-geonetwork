@@ -54,8 +54,46 @@
             'needhelp.html',
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
+          scope.documentationLinks = null;
+
+          scope.$watch('documentationLinks', function (n, o) {
+            if (n !== o && n != null) {
+             scope.checkUrl();
+            }
+          });
+
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'https://geonetwork-opensource.org/manuals/trunk/';
+            'https://geonetwork-opensource.org/manuals/trunk/';
+
+          /**
+           * load the JSON file with all the documentation links and put the links in the scope
+           */
+          var loadManualUrls = function () {
+            if (!scope.documentationLinks) {
+              $http({
+                url: '../../config/manual.json',
+                method: 'GET',
+                cache: true
+              }).success(function (data) {
+                scope.documentationLinks = data;
+              });
+            }
+          };
+
+          /**
+           * Check if the URL to the help page is found, if not, hide the `help` button
+           *
+           * @returns {boolean} the url is found or not
+           */
+          scope.checkUrl = function() {
+            var pageId = attrs.gnNeedHelp;
+            if (scope.documentationLinks !== null) {
+              var page = scope.documentationLinks[pageId];
+
+              return page !== undefined;
+            }
+            return false;
+          };
 
           var testAndOpen = function(url) {
             var defer = $q.defer();
@@ -72,14 +110,22 @@
             return defer.promise;
           };
 
+          /**
+           * Get the URL of the corresponding help page and open it in a new tab
+           * @returns {boolean}
+           */
           scope.showHelp = function() {
-            var page = attrs.gnNeedHelp;
-            var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
+            var pageId = attrs.gnNeedHelp;
+            var page = scope.documentationLinks[pageId];
+            var helpPageUrl = helpBaseUrl + 'en/' + page;
+
             testAndOpen(helpPageUrl).then(function() {}, function() {
-              testAndOpen( helpBaseUrl + 'en/' + page)
+              testAndOpen(helpPageUrl);
             });
             return true;
           };
+
+          loadManualUrls();
         }
       };
     }]);
