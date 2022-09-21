@@ -4,7 +4,10 @@
   data-ng-class="isInspire ? ('bg-iti-' + (facet.key | facetCssClassCode: isInspire)) : ''"
   class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic"
 >
-  <div class="panel panel-default gn-facet-{{key}}">
+  <div
+    class="panel panel-default gn-facet-{{facet.key}} gn-facet-type-{{decorator.type}}"
+    style="background-image:url('{{decorator.map[facet.key]}}')"
+  >
     <div class="panel-body">
       <a
         class="clearfix"
