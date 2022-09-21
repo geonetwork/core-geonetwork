@@ -25,6 +25,11 @@
         ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'"
       >
       </span>
+      <span
+        data-ng-if="ctrl.facet.meta && ctrl.facet.meta.decorator"
+        data-es-facet-decorator="ctrl.facet.meta.decorator"
+        data-key="ctrl.item.value"
+      />
       <span class="gn-facet-label flex-shrink text-ellipsis">
         {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
       </span>
@@ -41,7 +46,9 @@
       title="{{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
       ng-click="ctrl.toggleInvert()"
     >
-      <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus'"></span>
+      <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus-circle'">
+        {{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}
+      </span>
     </a>
   </div>
   <div class="gn-facet-children" ng-show="!ctrl.item.collapsed">

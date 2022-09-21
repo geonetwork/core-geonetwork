@@ -121,12 +121,25 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
                   size: 20
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               },
               // 'OrgForResource': {
@@ -141,6 +154,12 @@
                 terms: {
                   field: "resourceType",
                   size: 10
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               }
             },
@@ -328,6 +347,12 @@
                       field: "format"
                     }
                   }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
+                  }
                 }
               },
               // Use .default for not multilingual catalogue with one language only UI.
@@ -359,6 +384,16 @@
                       query_string: {
                         query: "+linkProtocol:/OGC:WFS.*/"
                       }
+                    }
+                  }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      availableInViewService: "fa-globe",
+                      availableInDownloadService: "fa-download"
                     }
                   }
                 }
@@ -415,6 +450,13 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
               "tag.default": {
@@ -501,6 +543,12 @@
                   // with a large size and you want to provide filtering.
                   // 'displayFilter': true,
                   caseInsensitiveInclude: true
+                  // decorator: {
+                  //   type: 'img',
+                  //   map: {
+                  //     'EEA': 'https://upload.wikimedia.org/wikipedia/en/thumb/7/79/EEA_agency_logo.svg/220px-EEA_agency_logo.svg.png'
+                  //   }
+                  // }
                 }
               },
               "cl_maintenanceAndUpdateFrequency.key": {
