@@ -168,18 +168,21 @@
       });
 
       // Refresh list when metadata statuses are updated
-      $scope.$on('metadataStatusUpdated', function(event, data) {
-        if(data && data===true) {
-          $rootScope.$broadcast('search');
+      $scope.$on("metadataStatusUpdated", function (event, data) {
+        if (data && data === true) {
+          $rootScope.$broadcast("search");
         }
       });
 
-      gnSearchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/' +
-            'partials/viewtemplates/editor.html',
-        tooltip: 'List',
-        icon: 'fa-list'
-      }];
+      gnSearchSettings.resultViewTpls = [
+        {
+          tplUrl:
+            "../../catalog/components/search/resultsview/" +
+            "partials/viewtemplates/editor.html",
+          tooltip: "List",
+          icon: "fa-list"
+        }
+      ];
 
       gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
 
