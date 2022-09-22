@@ -1,40 +1,46 @@
-<form name="harvesterForm"
-      data-ng-keypress="updatingHarvester()">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+<form name="harvesterForm" data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang="" />
 
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected" />
   </div>
 
-
   <fieldset>
-    <legend><i class="fa fa-fw fa-plug"></i><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
+    <legend>
+      <i class="fa fa-fw fa-plug"></i
+      ><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
       <label class="control-label" data-translate="">serviceUrl</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.url"
+      />
       <p class="help-block" data-translate="">thredds-serviceUrlHelp</p>
     </div>
-
   </fieldset>
 
-
   <fieldset>
-    <legend><i class="fa fa-fw fa-cogs"></i><span data-translate="">harvesterResponseProcessing</span>
+    <legend>
+      <i class="fa fa-fw fa-cogs"></i
+      ><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-
     <!-- <div data-gn-harvester-account="harvesterSelected"/> -->
-
 
     <!-- TODO: Could be nicer to have a list of languages -->
     <div>
       <label class="control-label" data-translate="">thredds-metadataLanguage</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.lang"
+      />
     </div>
 
     <div>
@@ -43,13 +49,16 @@
         data-schema-info-combo="codelist"
         data-selected-info="harvesterSelected.options.topic"
         data-gn-schema-info="gmd:MD_TopicCategoryCode"
-        lang="lang"></div>
+        lang="lang"
+      ></div>
     </div>
-
 
     <div>
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.createServiceMd"/>
+        <input
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.createServiceMd"
+        />
         <span data-translate="">thredds-createServiceMd</span>
       </label>
       <p class="help-block" data-translate="">thredds-createServiceMdHelp</p>
@@ -57,34 +66,45 @@
 
     <div>
       <label class="control-label" data-translate="">thredds-outputSchema</label>
-      <input type="text" class="form-control"
-             data-ng-model="harvesterSelected.options.outputSchema"/>
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.outputSchema"
+      />
     </div>
 
     <div>
       <label class="control-label" data-translate="">thredds-datasetTitle</label>
-      <input type="text" class="form-control"
-             data-ng-model="harvesterSelected.options.datasetTitle"/>
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.datasetTitle"
+      />
       <p class="help-block" data-translate="">thredds-datasetTitleHelp</p>
     </div>
 
     <div>
       <label class="control-label" data-translate="">thredds-datasetAbstract</label>
-      <input type="text" class="form-control"
-             data-ng-model="harvesterSelected.options.datasetAbstract"/>
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.datasetAbstract"
+      />
       <p class="help-block" data-translate="">thredds-datasetAbstractHelp</p>
     </div>
 
-    <div data-gn-category="harvesterSelected.options.serviceCategory" data-lang="{{lang}}"
-         data-label="thredds-serviceCategory"/>
+    <div
+      data-gn-category="harvesterSelected.options.serviceCategory"
+      data-lang="{{lang}}"
+      data-label="thredds-serviceCategory"
+    />
 
-
-    <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
-         data-label="thredds-datasetCategory"/>
-
-
+    <div
+      data-gn-category="harvesterSelected.options.datasetCategory"
+      data-lang="{{lang}}"
+      data-label="thredds-datasetCategory"
+    />
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}" />
 </form>

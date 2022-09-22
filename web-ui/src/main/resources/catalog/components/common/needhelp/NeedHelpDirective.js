@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_needhelp_directive');
+(function () {
+  goog.provide("gn_needhelp_directive");
 
-  var module = angular.module('gn_needhelp_directive', []);
+  var module = angular.module("gn_needhelp_directive", []);
 
   /**
    * @ngdoc directive
@@ -45,25 +45,30 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['gnGlobalSettings', 'gnAlertService', '$http', '$q', '$translate',
-    function(gnGlobalSettings, gnAlertService, $http, $q, $translate) {
+  module.directive("gnNeedHelp", [
+    "gnGlobalSettings",
+    "gnAlertService",
+    "$http",
+    "$q",
+    "$translate",
+    function (gnGlobalSettings, gnAlertService, $http, $q, $translate) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/components/common/needhelp/partials/' +
-            'needhelp.html',
-        link: function(scope, element, attrs) {
-          scope.iconOnly = attrs.iconOnly === 'true';
+        templateUrl:
+          "../../catalog/components/common/needhelp/partials/" + "needhelp.html",
+        link: function (scope, element, attrs) {
+          scope.iconOnly = attrs.iconOnly === "true";
           scope.documentationLinks = null;
 
-          scope.$watch('documentationLinks', function (n, o) {
+          scope.$watch("documentationLinks", function (n, o) {
             if (n !== o && n != null) {
-             scope.checkUrl();
+              scope.checkUrl();
             }
           });
 
-          var helpBaseUrl = gnGlobalSettings.docUrl ||
-            'https://geonetwork-opensource.org/manuals/trunk/';
+          var helpBaseUrl =
+            gnGlobalSettings.docUrl || "https://geonetwork-opensource.org/manuals/trunk/";
 
           /**
            * load the JSON file with all the documentation links and put the links in the scope
@@ -71,8 +76,8 @@
           var loadManualUrls = function () {
             if (!scope.documentationLinks) {
               $http({
-                url: '../../config/manual.json',
-                method: 'GET',
+                url: "../../config/manual.json",
+                method: "GET",
                 cache: true
               }).success(function (data) {
                 scope.documentationLinks = data;
@@ -85,7 +90,7 @@
            *
            * @returns {boolean} the url is found or not
            */
-          scope.checkUrl = function() {
+          scope.checkUrl = function () {
             var pageId = attrs.gnNeedHelp;
             if (scope.documentationLinks !== null) {
               var page = scope.documentationLinks[pageId];
@@ -95,18 +100,21 @@
             return false;
           };
 
-          var testAndOpen = function(url) {
+          var testAndOpen = function (url) {
             var defer = $q.defer();
-            $http.head(url).then(function(data) {
-              window.open(url, 'gn-documentation');
-              defer.resolve(data);
-            }, function(data) {
-              gnAlertService.addAlert({
-                msg: $translate.instant('docPageNotFoundAtUrl') + ' ' + url,
-                type: 'warning'
-              });
-              defer.reject(data);
-            });
+            $http.head(url).then(
+              function (data) {
+                window.open(url, "gn-documentation");
+                defer.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: $translate.instant("docPageNotFoundAtUrl") + " " + url,
+                  type: "warning"
+                });
+                defer.reject(data);
+              }
+            );
             return defer.promise;
           };
 
@@ -114,19 +122,23 @@
            * Get the URL of the corresponding help page and open it in a new tab
            * @returns {boolean}
            */
-          scope.showHelp = function() {
+          scope.showHelp = function () {
             var pageId = attrs.gnNeedHelp;
             var page = scope.documentationLinks[pageId];
-            var helpPageUrl = helpBaseUrl + 'en/' + page;
+            var helpPageUrl = helpBaseUrl + "en/" + page;
 
-            testAndOpen(helpPageUrl).then(function() {}, function() {
-              testAndOpen(helpPageUrl);
-            });
+            testAndOpen(helpPageUrl).then(
+              function () {},
+              function () {
+                testAndOpen(helpPageUrl);
+              }
+            );
             return true;
           };
 
           loadManualUrls();
         }
       };
-    }]);
+    }
+  ]);
 })();

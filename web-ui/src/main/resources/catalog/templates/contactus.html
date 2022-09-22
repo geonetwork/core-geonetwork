@@ -1,13 +1,19 @@
 <div class="container" data-ng-controller="GnContactUsController">
   <div class="col-lg-6">
-    <div class="panel panel-default" data-ng-show="gnConfig[gnConfig.key.isFeedbackEnabled]">
+    <div
+      class="panel panel-default"
+      data-ng-show="gnConfig[gnConfig.key.isFeedbackEnabled]"
+    >
       <div class="panel-heading" data-translate="">sendAComment</div>
       <div class="panel-body">
-        <div data-gn-contact-us-form="" data-user="user"/>
+        <div data-gn-contact-us-form="" data-user="user" />
       </div>
     </div>
-    <div data-ng-hide="gnConfig[gnConfig.key.isFeedbackEnabled]" class="alert alert-info"
-         data-translate="">
+    <div
+      data-ng-hide="gnConfig[gnConfig.key.isFeedbackEnabled]"
+      class="alert alert-info"
+      data-translate=""
+    >
       feedbackNotEnable
     </div>
   </div>

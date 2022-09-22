@@ -1,24 +1,25 @@
 <div class="row">
   <div class="col-md-12" data-ng-show="userGroupDefined">
-    <select class="form-control"
-            data-ng-model="selectedUserGroup"
-            data-ng-options="g.userName group by g.groupNameTranslated
-                    for (key, g) in userGroups">
-    </select>
-    <br/>
+    <select
+      class="form-control"
+      data-ng-model="selectedUserGroup"
+      data-ng-options="g.userName group by g.groupNameTranslated
+                    for (key, g) in userGroups"
+    ></select>
+    <br />
   </div>
 
   <div class="btn-toolbar col-md-12" data-ng-show="userGroupDefined">
-    <button type="button"
-            class="btn btn-primary pull-right"
-            data-gn-click-and-spin="save()"
-            data-ng-disabled="!selectedUserGroup">
+    <button
+      type="button"
+      class="btn btn-primary pull-right"
+      data-gn-click-and-spin="save()"
+      data-ng-disabled="!selectedUserGroup"
+    >
       <i class="fa fa-save"></i>&nbsp
-      <span data-translate=""
-            class="ng-scope">Save</span>
+      <span data-translate="" class="ng-scope">Save</span>
     </button>
   </div>
-
 
   <div class="col-md-12" data-ng-show="!groupsLoaded">
     <p class="text-center">
