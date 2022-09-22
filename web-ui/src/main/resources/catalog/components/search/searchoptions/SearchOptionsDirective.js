@@ -21,140 +21,144 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_searchoptions_directive');
+(function () {
+  goog.provide("gn_searchoptions_directive");
 
-  var module = angular.module('gn_searchoptions_directive', []);
+  var module = angular.module("gn_searchoptions_directive", []);
 
-  module.directive('gnSearchOptions', [
-    '$rootScope', '$http', 'gnGlobalSettings',
-    function($rootScope, $http, gnGlobalSettings) {
-
+  module.directive("gnSearchOptions", [
+    "$rootScope",
+    "$http",
+    "gnGlobalSettings",
+    function ($rootScope, $http, gnGlobalSettings) {
       return {
-        restrict: 'E',
-        require: '^ngSearchForm',
-        scope: {
-        },
-        templateUrl: '../../catalog/components/search/searchoptions/partials/' +
-            'searchoptions.html',
-        link: function(scope, element, attrs, controller) {
+        restrict: "E",
+        require: "^ngSearchForm",
+        scope: {},
+        templateUrl:
+          "../../catalog/components/search/searchoptions/partials/" +
+          "searchoptions.html",
+        link: function (scope, element, attrs, controller) {
           scope.user = $rootScope.user;
           scope.optionsConfig = gnGlobalSettings.gnCfg.mods.search.searchOptions;
-          scope.init = function() {
+          scope.init = function () {
             scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
-            scope.languageStrategy = controller.getLanguageStrategy()
-              || gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+            scope.languageStrategy =
+              controller.getLanguageStrategy() ||
+              gnGlobalSettings.gnCfg.mods.search.languageStrategy;
             scope.forcedLanguage = controller.getForcedLanguage();
             scope.languagesAvailable = [];
             scope.languagesStats = {};
 
             var configWhiteList = gnGlobalSettings.gnCfg.mods.search.languageWhitelist;
-            if (configWhiteList
-              && configWhiteList.length > 0) {
+            if (configWhiteList && configWhiteList.length > 0) {
               scope.languagesAvailable = configWhiteList;
               controller.setLanguageWhiteList(configWhiteList);
             } else {
-              $http.post('../api/search/records/_search', {
-                size: 0,
-                query: {
-                  terms: {isTemplate: ['n']}
-                },
-                aggregations: {
-                  mainLanguage: {
-                    terms: {
-                      field: 'mainLanguage',
-                      size: 10,
-                      exclude: ''
-                    }
+              $http
+                .post("../api/search/records/_search", {
+                  size: 0,
+                  query: {
+                    terms: { isTemplate: ["n"] }
                   },
-                  otherLanguage: {
-                    terms: {
-                      field: 'otherLanguage',
-                      size: 10,
-                      exclude: ''
+                  aggregations: {
+                    mainLanguage: {
+                      terms: {
+                        field: "mainLanguage",
+                        size: 10,
+                        exclude: ""
+                      }
+                    },
+                    otherLanguage: {
+                      terms: {
+                        field: "otherLanguage",
+                        size: 10,
+                        exclude: ""
+                      }
                     }
                   }
-                }
-              }).success(function (data) {
-                angular.forEach(data.aggregations.mainLanguage.buckets, function (i) {
-                  scope.languagesStats[i.key] = i.doc_count;
+                })
+                .success(function (data) {
+                  angular.forEach(data.aggregations.mainLanguage.buckets, function (i) {
+                    scope.languagesStats[i.key] = i.doc_count;
+                  });
+                  angular.forEach(data.aggregations.otherLanguage.buckets, function (i) {
+                    scope.languagesStats[i.key] = i.doc_count;
+                  });
+                  scope.languagesAvailable = Object.keys(scope.languagesStats);
+                  controller.setLanguageWhiteList(scope.languagesAvailable);
                 });
-                angular.forEach(data.aggregations.otherLanguage.buckets, function (i) {
-                  scope.languagesStats[i.key] = i.doc_count;
-                });
-                scope.languagesAvailable = Object.keys(scope.languagesStats);
-                controller.setLanguageWhiteList(scope.languagesAvailable);
-              });
             }
           };
 
           // this enables to keep the dropdown active when we click on the label
-          element.find('label > span').each(function(i, e) {
-            $(e).on('click', function () {
-              $(e).parent().find('input').focus();
+          element.find("label > span").each(function (i, e) {
+            $(e).on("click", function () {
+              $(e).parent().find("input").focus();
             });
           });
-          Object.defineProperty(scope, 'exactMatch', {
-            get: function() {
+          Object.defineProperty(scope, "exactMatch", {
+            get: function () {
               return controller.getExactMatch();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setExactMatch(value);
             }
           });
 
-          Object.defineProperty(scope, 'titleOnly', {
-            get: function() {
+          Object.defineProperty(scope, "titleOnly", {
+            get: function () {
               return controller.getTitleOnly();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setTitleOnly(value);
             }
           });
 
-          Object.defineProperty(scope, 'languageStrategy', {
-            get: function() {
+          Object.defineProperty(scope, "languageStrategy", {
+            get: function () {
               return controller.getLanguageStrategy();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setLanguageStrategy(value);
             }
           });
 
-          Object.defineProperty(scope, 'forcedLanguage', {
-            get: function() {
+          Object.defineProperty(scope, "forcedLanguage", {
+            get: function () {
               return controller.getForcedLanguage();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setForcedLanguage(value);
             }
           });
 
-          Object.defineProperty(scope, 'languageWhiteList', {
-            get: function() {
+          Object.defineProperty(scope, "languageWhiteList", {
+            get: function () {
               return controller.getLanguageWhiteList();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setLanguageWhiteList(value);
             }
           });
 
-          Object.defineProperty(scope, 'onlyMyRecord', {
-            get: function() {
+          Object.defineProperty(scope, "onlyMyRecord", {
+            get: function () {
               return controller.getOnlyMyRecord();
             },
-            set: function(value) {
+            set: function (value) {
               controller.setOnlyMyRecord(value);
             }
           });
 
-          scope.$watch('languageStrategy', function(n, o) {
-            if (o === 'forceALanguage') {
+          scope.$watch("languageStrategy", function (n, o) {
+            if (o === "forceALanguage") {
               controller.setForcedLanguage(undefined);
             }
-          })
+          });
           scope.init();
         }
       };
-    }]);
+    }
+  ]);
 })();
