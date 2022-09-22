@@ -21,48 +21,48 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_logo_settings_controller');
+(function () {
+  goog.provide("gn_logo_settings_controller");
 
-
-  var module = angular.module('gn_logo_settings_controller',
-      ['blueimp.fileupload']);
-
+  var module = angular.module("gn_logo_settings_controller", ["blueimp.fileupload"]);
 
   /**
    * GnLogoSettingsController provides management interface
    * for catalog logo and harvester logo.
    *
    */
-  module.controller('GnLogoSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+  module.controller("GnLogoSettingsController", [
+    "$scope",
+    "$http",
+    "$rootScope",
+    "$translate",
+    function ($scope, $http, $rootScope, $translate) {
       /**
-         * The list of catalog logos
-         */
+       * The list of catalog logos
+       */
       $scope.logos = [];
 
       /**
        * Load list of logos
        */
-      loadLogo = function() {
+      loadLogo = function () {
         $scope.logos = [];
-        $http.get('../api/logos').
-            success(function(data) {
-              $scope.logos = data;
-            });
+        $http.get("../api/logos").success(function (data) {
+          $scope.logos = data;
+        });
       };
 
       /**
        * Callback when error uploading file.
        */
-      loadLogoError = function(e, data) {
+      loadLogoError = function (e, data) {
         if (data.jqXHR.status !== 201) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('logoUploadError'),
+          $rootScope.$broadcast("StatusUpdated", {
+            title: $translate.instant("logoUploadError"),
             error: data.jqXHR.responseJSON,
             timeout: 0,
-            type: 'danger'});
+            type: "danger"
+          });
         } else {
           loadLogo();
         }
@@ -77,68 +77,70 @@
         fail: loadLogoError
       };
 
-
       /**
        * Set the catalog logo and optionnaly the favicon
        * if favicon parameter is set to true.
        */
-      $scope.setCatalogLogo = function(logoName, asFavicon) {
-        $http.put('../api/site/logo?file=' + logoName +
-            '&asFavicon=' + asFavicon)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('logoUpdated'),
-                timeout: 2,
-                type: 'success'});
-              $rootScope.$broadcast('loadCatalogInfo');
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('logoUpdateError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-              loadLogo();
+      $scope.setCatalogLogo = function (logoName, asFavicon) {
+        $http
+          .put("../api/site/logo?file=" + logoName + "&asFavicon=" + asFavicon)
+          .success(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("logoUpdated"),
+              timeout: 2,
+              type: "success"
             });
+            $rootScope.$broadcast("loadCatalogInfo");
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("logoUpdateError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
+            });
+            loadLogo();
+          });
       };
 
       /**
        * Ask for confirmation to delete a logo
        */
-      $scope.removeLogo = function(logoName) {
+      $scope.removeLogo = function (logoName) {
         $scope.remLogoName = logoName;
-        $('#gn-confirm-remove-logo').modal('show');
-      }
+        $("#gn-confirm-remove-logo").modal("show");
+      };
 
       /**
        * Remove the logo and refresh the list when done.
        */
-      $scope.confirmRemoveLogo = function(logoName) {
-        $http.delete('../api/logos/' + $scope.remLogoName)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('logoRemoved'),
-                timeout: 2,
-                type: 'success'});
-              loadLogo();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('logoRemoveError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-              loadLogo();
+      $scope.confirmRemoveLogo = function (logoName) {
+        $http
+          .delete("../api/logos/" + $scope.remLogoName)
+          .success(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("logoRemoved"),
+              timeout: 2,
+              type: "success"
             });
+            loadLogo();
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("logoRemoveError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
+            });
+            loadLogo();
+          });
       };
 
-      $scope.filterLogoList = function(e,formId) {
-
+      $scope.filterLogoList = function (e, formId) {
         var filterValue = e.target.value.toLowerCase();
 
-        $(formId + " .list-group-item").filter(function() {
-
-          var filterText = $(this).find('label').text().toLowerCase();
+        $(formId + " .list-group-item").filter(function () {
+          var filterText = $(this).find("label").text().toLowerCase();
           var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
 
           if (matchStart > -1) {
@@ -149,26 +151,24 @@
         });
       };
 
-      $scope.resetFilter = function(formId) {
-
-        $(formId + " .list-group-item").each(function() {
+      $scope.resetFilter = function (formId) {
+        $(formId + " .list-group-item").each(function () {
           // clear filter
-          $('#filter-settings').val('');
+          $("#filter-settings").val("");
           // show the element
           $(this).show();
         });
-
       };
 
       /**
        * Toggle the logo height
        * @param  {String} type Type of logo height selected
        */
-      $scope.toggleLogoHeight = function(type) {
+      $scope.toggleLogoHeight = function (type) {
         $scope.logoheightType = type;
       };
 
       loadLogo();
-    }]);
-
+    }
+  ]);
 })();

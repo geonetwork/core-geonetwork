@@ -1,6 +1,6 @@
 <div>
   <h2>Download</h2>
-  <hr/>
+  <hr />
 
   <table class="table">
     <tbody>
@@ -9,12 +9,15 @@
         <td>{{md.cl_status[0].default}}</td>
         <td>{{md.licenseObject.default}} {{md.licenseObject[0].default}}</td>
         <td>
-            <a href="{{l.url}}"
-               rel="noopener noreferrer"
-               target="_blank"
-               class="btn btn-default"
-               style="margin-right: 5px;"
-               data-ng-repeat="l in md.link">{{l.protocol}}</a>
+          <a
+            href="{{l.url}}"
+            rel="noopener noreferrer"
+            target="_blank"
+            class="btn btn-default"
+            style="margin-right: 5px"
+            data-ng-repeat="l in md.link"
+            >{{l.protocol}}</a
+          >
         </td>
       </tr>
     </tbody>

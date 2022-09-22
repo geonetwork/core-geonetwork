@@ -3,88 +3,115 @@
     <div class="row">
       <div class="col-md-12">
         <h1 translate>wfsIndexingTitle</h1>
-        <p class="text-muted" translate>
-          wfsIndexingSubtitle
-        </p>
+        <p class="text-muted" translate>wfsIndexingSubtitle</p>
       </div>
     </div>
   </div>
 
   <div class="row">
     <div class="input col-md-12 flex-row flex-end">
-      <input type="text" class="index-wfs-search form-control" ng-model="wfsFilterValue"
-             ng-model-options="{ debounce: 500 }"
-             ng-change="filterWfsBsWithInput()" placeholder="{{'filter' | translate}}" aria-describedby="basic-addon1">
+      <input
+        type="text"
+        class="index-wfs-search form-control"
+        ng-model="wfsFilterValue"
+        ng-model-options="{ debounce: 500 }"
+        ng-change="filterWfsBsWithInput()"
+        placeholder="{{'filter' | translate}}"
+        aria-describedby="basic-addon1"
+      />
       <div class="flex-spacer flex-grow"></div>
       <button type="button" class="btn btn-default" ng-click="refreshJobList()">
-        <i class="fa" ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
-           ng-disabled="loading"/>&nbsp;
+        <i
+          class="fa"
+          ng-class="loading ? 'fa-spinner fa-spin' : 'fa-refresh'"
+          ng-disabled="loading"
+        />&nbsp;
         <span translate>refresh</span>
       </button>
       <div class="flex-spacer"></div>
       <button type="button" class="btn btn-primary" ng-click="openScheduleSettings()">
-        <i class="fa fa-plus"/>&nbsp;
+        <i class="fa fa-plus" />&nbsp;
         <span translate>wfsIndexingNewSchedule</span>
       </button>
     </div>
   </div>
 
-  <br>
+  <br />
 
   <div class="row">
     <div class="col-md-12">
       <div ng-if="error" class="row">
         <div class="alert alert-danger" role="alert">
-          <i class="fa fa-exclamation-triangle"/>
+          <i class="fa fa-exclamation-triangle" />
           <span translate>wfsIndexingRefreshError</span>
           <span>{{error}}</span>
         </div>
       </div>
 
-      <table ng-if="bsTableControl" bs-table-control="bsTableControl">
-      </table>
+      <table ng-if="bsTableControl" bs-table-control="bsTableControl"></table>
     </div>
   </div>
 
-  <div class="modal fade" tabindex="-1" role="dialog"
-       aria-labelledby="{{'indexingScheduleSettings' | translate}}" aria-hidden="true"
-       id="gn-indexing-schedule">
+  <div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="{{'indexingScheduleSettings' | translate}}"
+    aria-hidden="true"
+    id="gn-indexing-schedule"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          >&times;
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
           </button>
           <h4 class="modal-title" translate>harvesterSchedule</h4>
         </div>
         <div class="modal-body">
           <form class="form-horizontal" name="scheduleSettingsForm">
-            <input type="hidden" name="_csrf" value="{{csrf}}"/>
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
 
             <div class="form-group gn-required">
               <label class="control-label col-sm-3" translate>wfsurl</label>
               <div class="col-sm-8">
-                <input type="text" class="form-control" required
-                       ng-model="currentJob.url"
-                       ng-disabled="!currentJob.isNew"/>
+                <input
+                  type="text"
+                  class="form-control"
+                  required
+                  ng-model="currentJob.url"
+                  ng-disabled="!currentJob.isNew"
+                />
               </div>
             </div>
 
             <div class="form-group gn-required">
-              <label class="control-label col-sm-3" translate>wfsIndexingFeatureType</label>
+              <label class="control-label col-sm-3" translate
+                >wfsIndexingFeatureType</label
+              >
               <div class="col-sm-6">
-                <input type="text" class="form-control" required
-                       ng-model="currentJob.featureType"
-                       ng-disabled="!currentJob.isNew"/>
+                <input
+                  type="text"
+                  class="form-control"
+                  required
+                  ng-model="currentJob.featureType"
+                  ng-disabled="!currentJob.isNew"
+                />
               </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-sm-3" translate>wfsIndexingMetadataUuid</label>
+              <label class="control-label col-sm-3" translate
+                >wfsIndexingMetadataUuid</label
+              >
               <div class="col-sm-6">
-                <input type="text" class="form-control" required
-                       ng-model="currentJob.mdUuid"
-                       ng-disabled="!currentJob.isNew"/>
+                <input
+                  type="text"
+                  class="form-control"
+                  required
+                  ng-model="currentJob.mdUuid"
+                  ng-disabled="!currentJob.isNew"
+                />
               </div>
             </div>
 
@@ -92,25 +119,38 @@
               <label class="control-label col-sm-3" translate>frequency</label>
               <div class="col-sm-6">
                 <div class="input-group">
-                  <input type="text" class="form-control"
-                         ng-model="currentJob.cronScheduleExpression"/>
+                  <input
+                    type="text"
+                    class="form-control"
+                    ng-model="currentJob.cronScheduleExpression"
+                  />
                   <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"/>
+                    <button
+                      type="button"
+                      class="btn btn-default dropdown-toggle"
+                      data-toggle="dropdown"
+                    >
+                      <i class="fa fa-clock-o"></i>&nbsp;<span class="caret" />
                     </button>
                     <ul class="dropdown-menu pull-right">
                       <li ng-repeat="exp in cronExp">
-                        <a href="" title="{{exp}}"
-                           ng-click="currentJob.cronScheduleExpression = exp">
+                        <a
+                          href=""
+                          title="{{exp}}"
+                          ng-click="currentJob.cronScheduleExpression = exp"
+                        >
                           {{('cron-' + exp) | translate}}
                         </a>
                       </li>
                       <li class="divider"></li>
                       <li>
-                        <a class="btn btn-link"
-                           href="http://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger"
-                           target="_blank"
-                           translate="">moreExamples</a>
+                        <a
+                          class="btn btn-link"
+                          href="http://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger"
+                          target="_blank"
+                          translate=""
+                          >moreExamples</a
+                        >
                       </li>
                     </ul>
                   </div>
@@ -121,7 +161,7 @@
           </form>
 
           <div class="alert alert-danger" role="alert" ng-if="settingsError">
-            <i class="fa fa-exclamation-triangle"/>
+            <i class="fa fa-exclamation-triangle" />
             <span translate>wfsIndexingScheduleSettingsError</span>
             <span>{{settingsError}}</span>
           </div>
@@ -130,18 +170,30 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">
             <span class="fa fa-times"></span>&nbsp;{{"cancel"|translate}}
           </button>
-          <button type="button" class="btn btn-primary"
-                  ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
-                  ng-if="currentJob.cronScheduleProducerId"
-                  ng-click="updateSchedule(currentJob)">
-            <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"></span>
+          <button
+            type="button"
+            class="btn btn-primary"
+            ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
+            ng-if="currentJob.cronScheduleProducerId"
+            ng-click="updateSchedule(currentJob)"
+          >
+            <span
+              class="fa"
+              ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-save'"
+            ></span>
             <span translate>wfsIndexingUpdateSchedule</span>
           </button>
-          <button type="button" class="btn btn-success"
-                  ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
-                  ng-if="!currentJob.cronScheduleProducerId"
-                  ng-click="updateSchedule(currentJob)">
-            <span class="fa" ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"></span>
+          <button
+            type="button"
+            class="btn btn-success"
+            ng-disabled="settingsLoading || !scheduleSettingsForm.$valid"
+            ng-if="!currentJob.cronScheduleProducerId"
+            ng-click="updateSchedule(currentJob)"
+          >
+            <span
+              class="fa"
+              ng-class="settingsLoading ? 'fa-spinner fa-spin' : 'fa-plus'"
+            ></span>
             <span translate>wfsIndexingCreateSchedule</span>
           </button>
         </div>

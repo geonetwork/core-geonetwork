@@ -21,19 +21,18 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_import_controller');
+(function () {
+  goog.provide("gn_import_controller");
 
+  goog.require("gn_category");
+  goog.require("gn_formfields_directive");
+  goog.require("gn_importxsl");
 
-  goog.require('gn_category');
-  goog.require('gn_formfields_directive');
-  goog.require('gn_importxsl');
-
-  var module = angular.module('gn_import_controller', [
-    'gn_importxsl',
-    'gn_category',
-    'blueimp.fileupload',
-    'gn_formfields_directive'
+  var module = angular.module("gn_import_controller", [
+    "gn_importxsl",
+    "gn_category",
+    "blueimp.fileupload",
+    "gn_formfields_directive"
   ]);
 
   /**
@@ -42,48 +41,55 @@
    * TODO: Add other type of import
    * TODO: Init form from route parameters
    */
-  module.controller('GnImportController', [
-    '$scope',
-    '$rootScope',
-    'gnMetadataManager',
-    'gnConfigService',
-    'gnConfig',
-    'gnUtilityService',
-    '$window',
-    function($scope,  $rootScope, gnMetadataManager,
-             gnConfigService, gnConfig, gnUtilityService, $window) {
-      $scope.importMode = 'uploadFile';
-      $scope.file_type = 'single';
+  module.controller("GnImportController", [
+    "$scope",
+    "$rootScope",
+    "gnMetadataManager",
+    "gnConfigService",
+    "gnConfig",
+    "gnUtilityService",
+    "$window",
+    function (
+      $scope,
+      $rootScope,
+      gnMetadataManager,
+      gnConfigService,
+      gnConfig,
+      gnUtilityService,
+      $window
+    ) {
+      $scope.importMode = "uploadFile";
+      $scope.file_type = "single";
       $scope.queue = [];
       $scope.params = {
-        metadataType: 'METADATA',
-        uuidProcessing: 'NOTHING',
-        xml: '',
-        file: '',
-        url: '',
-        serverFolder: '',
+        metadataType: "METADATA",
+        uuidProcessing: "NOTHING",
+        xml: "",
+        file: "",
+        url: "",
+        serverFolder: "",
         recursiveSearch: false,
         rejectIfInvalid: false,
         publishToAll: false,
         assignToCatalog: true,
-        transformWith: '_none_',
+        transformWith: "_none_",
         group: null,
         category: null
       };
       $scope.importing = false;
 
-      gnConfigService.load().then(function(c) {
-        $scope.params.group = gnConfig['system.metadatacreate.preferredGroup'];
+      gnConfigService.load().then(function (c) {
+        $scope.params.group = gnConfig["system.metadatacreate.preferredGroup"];
       });
 
       /** Upload management */
-      $scope.action = '../api/records';
-      var uploadImportMdDone = function(evt, data) {
+      $scope.action = "../api/records";
+      var uploadImportMdDone = function (evt, data) {
         $scope.importing = false;
         $scope.clear($scope.queue);
         $scope.reports.push(data.jqXHR.responseJSON);
       };
-      var uploadImportMdError = function(evt, data, o) {
+      var uploadImportMdError = function (evt, data, o) {
         $scope.importing = false;
         $scope.reports.push(data.jqXHR.responseJSON);
       };
@@ -93,19 +99,17 @@
         autoUpload: false,
         done: uploadImportMdDone,
         fail: uploadImportMdError,
-        headers: {'X-XSRF-TOKEN': $rootScope.csrf, 'Accept-Language': $scope.lang}
+        headers: { "X-XSRF-TOKEN": $rootScope.csrf, "Accept-Language": $scope.lang }
       };
 
-
-      var formatExceptionArray = function() {
+      var formatExceptionArray = function () {
         if (!angular.isArray($scope.report.exceptions.exception)) {
-          $scope.report.exceptions.exception =
-              [$scope.report.exceptions.exception];
+          $scope.report.exceptions.exception = [$scope.report.exceptions.exception];
         }
 
         $scope.reports.push($scope.report);
       };
-      var onSuccessFn = function(response) {
+      var onSuccessFn = function (response) {
         $scope.importing = false;
         if (response.data.exceptions) {
           $scope.report = response.data;
@@ -114,26 +118,31 @@
           $scope.reports.push(response.data);
         }
         if (response.data.records) {
-          $scope.reports.push({success: parseInt(response.data.records) -
-                parseInt((response.data.exceptions &&
-                response.data.exceptions['@count']) || 0)});
+          $scope.reports.push({
+            success:
+              parseInt(response.data.records) -
+              parseInt(
+                (response.data.exceptions && response.data.exceptions["@count"]) || 0
+              )
+          });
         }
       };
-      var onErrorFn = function(error) {
+      var onErrorFn = function (error) {
         $scope.importing = false;
         $scope.reports = error;
       };
 
-      $scope.uploadScope = angular.element('#md-import-file').scope();
+      $scope.uploadScope = angular.element("#md-import-file").scope();
       $scope.unsupportedFile = false;
-      $scope.$watchCollection('uploadScope.queue', function(n, o) {
+      $scope.$watchCollection("uploadScope.queue", function (n, o) {
         if (n != o && n.length == 1) {
           if (n[0].name.match(/.xml$/i) !== null) {
-            $scope.file_type = 'single';
+            $scope.file_type = "single";
           } else if (
-              n[0].name.match(/.zip$/i) !== null ||
-              n[0].name.match(/.mef$/i) !== null) {
-            $scope.file_type = 'mef';
+            n[0].name.match(/.zip$/i) !== null ||
+            n[0].name.match(/.mef$/i) !== null
+          ) {
+            $scope.file_type = "mef";
           } else {
             $scope.unsupportedFile = true;
             return;
@@ -142,29 +151,30 @@
         $scope.unsupportedFile = false;
       });
 
-      $scope.cancelImportRecords = function (){
+      $scope.cancelImportRecords = function () {
         gnUtilityService.goBack("/board");
       };
 
-      $scope.importRecords = function(formId) {
+      $scope.importRecords = function (formId) {
         $scope.reports = [];
         $scope.error = null;
 
-        if ($scope.importMode == 'uploadFile') {
+        if ($scope.importMode == "uploadFile") {
           if ($scope.uploadScope.queue.length > 0) {
             $scope.importing = true;
             $scope.uploadScope.submit();
-          }
-          else {
-            $scope.reports = [{
-              message: 'noFileSelected'
-            }];
+          } else {
+            $scope.reports = [
+              {
+                message: "noFileSelected"
+              }
+            ];
           }
         } else {
           $scope.importing = true;
-          gnMetadataManager.importFromXml(
-              $(formId).serialize(), $scope.params.xml).then(
-              onSuccessFn, onErrorFn);
+          gnMetadataManager
+            .importFromXml($(formId).serialize(), $scope.params.xml)
+            .then(onSuccessFn, onErrorFn);
         }
         // scroll to top
         $window.scrollTo(0, 0);
