@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_bounding_directive');
+(function () {
+  goog.provide("gn_bounding_directive");
 
-
-  var module = angular.module('gn_bounding_directive', []);
+  var module = angular.module("gn_bounding_directive", []);
 
   /**
    * @ngdoc directive
@@ -43,45 +42,46 @@
    * @attribute {string} outputCrs EPSG:XXXX ref to use for geometry output;
    * if undefined, the current projection selected by the user will be used
    */
-  module.directive('gnBoundingPolygon', [
-    'gnMap',
-    function(gnMap) {
+  module.directive("gnBoundingPolygon", [
+    "gnMap",
+    function (gnMap) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          polygonXml: '@',
-          identifier: '@',
+          polygonXml: "@",
+          identifier: "@",
           // default is <gmd:polygon xmlns:gmd...>${geom}</gmd:polygon>
-          geomwrapper: '@'
+          geomwrapper: "@"
         },
-        templateUrl: '../../catalog/components/edit/bounding/' +
-            'partials/boundingpolygon.html',
-        controllerAs: 'ctrl',
+        templateUrl:
+          "../../catalog/components/edit/bounding/" + "partials/boundingpolygon.html",
+        controllerAs: "ctrl",
         bindToController: true,
         controller: [
-          '$scope',
-          '$attrs',
-          '$http',
-          'gnMap',
-          'gnMapsManager',
-          'olDecorateInteraction',
-          'gnGeometryService',
+          "$scope",
+          "$attrs",
+          "$http",
+          "gnMap",
+          "gnMapsManager",
+          "olDecorateInteraction",
+          "gnGeometryService",
           function BoundingPolygonController(
-              $scope,
-              $attrs,
-              $http,
-              gnMap,
-              gnMapsManager,
-              olDecorateInteraction,
-              gnGeometryService) {
+            $scope,
+            $attrs,
+            $http,
+            gnMap,
+            gnMapsManager,
+            olDecorateInteraction,
+            gnGeometryService
+          ) {
             var ctrl = this;
 
             // set read only
-            ctrl.readOnly = $scope.$eval($attrs['readOnly']);
+            ctrl.readOnly = $scope.$eval($attrs["readOnly"]);
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('sizePromise').then(function() {
+            ctrl.map.get("sizePromise").then(function () {
               ctrl.initValue();
             });
 
@@ -90,11 +90,11 @@
             var source = layer.getSource();
 
             ctrl.drawInteraction = new ol.interaction.Draw({
-              type: 'MultiPolygon',
+              type: "MultiPolygon",
               source: source
             });
             ctrl.drawLineInteraction = new ol.interaction.Draw({
-              type: 'LineString',
+              type: "LineString",
               source: source
             });
             ctrl.modifyInteraction = new ol.interaction.Modify({
@@ -103,7 +103,7 @@
 
             // this is used to deactivate zoom on draw end
             ctrl.zoomInteraction = null;
-            ctrl.map.getInteractions().forEach(function(interaction) {
+            ctrl.map.getInteractions().forEach(function (interaction) {
               if (interaction instanceof ol.interaction.DoubleClickZoom) {
                 ctrl.zoomInteraction = interaction;
               }
@@ -135,16 +135,16 @@
               // see https://github.com/openlayers/openlayers/issues/3610
               if (ctrl.zoomInteraction) {
                 ctrl.zoomInteraction.setActive(false);
-                setTimeout(function() {
+                setTimeout(function () {
                   ctrl.zoomInteraction.setActive(true);
                 }, 251);
               }
             }
-            ctrl.drawInteraction.on('drawend', handleDrawEnd);
-            ctrl.drawLineInteraction.on('drawend', handleDrawEnd);
+            ctrl.drawInteraction.on("drawend", handleDrawEnd);
+            ctrl.drawLineInteraction.on("drawend", handleDrawEnd);
 
             // update output on modify end
-            ctrl.modifyInteraction.on('modifyend', function(event) {
+            ctrl.modifyInteraction.on("modifyend", function (event) {
               ctrl.fromTextInput = false;
               ctrl.updateOutput(event.features.item(0));
               $scope.$digest();
@@ -156,12 +156,12 @@
             // projection list
             ctrl.projections = gnMap.getMapConfig().projectionList;
             ctrl.currentProjection = ctrl.projections[0].code;
-            ctrl.dataProjection = 'EPSG:4326';
+            ctrl.dataProjection = "EPSG:4326";
 
             // available input formats
             // GML is not available as it cannot be parsed
             // without namespace info
-            ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
+            ctrl.formats = ["WKT", "GeoJSON", "GML"];
             ctrl.currentFormat = ctrl.formats[0];
 
             function isProjAvailable(code) {
@@ -171,25 +171,24 @@
                 }
               }
               return false;
-            };
+            }
 
             function getEnlargedExtent(feature) {
               var extent = feature.getGeometry().getExtent();
               var buffer = Math.min.apply(ol.extent.getSize(extent)) * 0.1;
               return ol.extent.buffer(extent, buffer);
-            };
+            }
 
             // parse initial input coordinates to display shape
-            ctrl.initValue = function() {
+            ctrl.initValue = function () {
               if (ctrl.polygonXml) {
-                var srsName = ctrl.polygonXml.match(
-                    new RegExp('srsName=\"([^"]*)\"'));
-                ctrl.dataProjection = srsName && srsName.length === 2 ?
-                    srsName[1] : 'EPSG:4326';
+                var srsName = ctrl.polygonXml.match(new RegExp('srsName="([^"]*)"'));
+                ctrl.dataProjection =
+                  srsName && srsName.length === 2 ? srsName[1] : "EPSG:4326";
 
-                ctrl.dataOlProjection = ol.proj.get(ctrl.dataProjection)
+                ctrl.dataOlProjection = ol.proj.get(ctrl.dataProjection);
 
-                if(ctrl.dataOlProjection) {
+                if (ctrl.dataOlProjection) {
                   if (!isProjAvailable(ctrl.dataProjection)) {
                     ctrl.projections.push({
                       code: ctrl.dataProjection,
@@ -206,16 +205,16 @@
                       ctrl.polygonXml,
                       {
                         crs: ctrl.currentProjection,
-                        format: 'gml'
+                        format: "gml"
                       }
                     );
                   } catch (e) {
-                    console.warn('Could not parse geometry');
+                    console.warn("Could not parse geometry");
                     console.warn(e);
                   }
 
                   if (!geometry) {
-                    console.warn('Could not parse geometry from extent polygon');
+                    console.warn("Could not parse geometry from extent polygon");
                     return;
                   }
 
@@ -232,23 +231,24 @@
             };
 
             // update output with gml
-            ctrl.updateOutput = function(feature, forceFitView) {
-
+            ctrl.updateOutput = function (feature, forceFitView) {
               if (!feature) return;
 
               // fit view if geom is valid & not empty
-              if ((forceFitView || ctrl.fromTextInput) && feature.getGeometry() &&
-                !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
+              if (
+                (forceFitView || ctrl.fromTextInput) &&
+                feature.getGeometry() &&
+                !ol.extent.isEmpty(feature.getGeometry().getExtent())
+              ) {
                 var extent = getEnlargedExtent(feature);
                 if (gnMap.isValidExtent(extent)) {
-                  ctrl.map.getView().fit(
-                    extent,
-                    ctrl.map.getSize(), {nearest: true});
+                  ctrl.map.getView().fit(extent, ctrl.map.getSize(), { nearest: true });
                 }
               }
 
-              var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
-                  ctrl.currentProjection;
+              var outputCrs = $attrs["outputCrs"]
+                ? $attrs["outputCrs"]
+                : ctrl.currentProjection;
 
               ctrl.dataOlProjection = ol.proj.get(outputCrs);
 
@@ -256,23 +256,23 @@
               if (!ctrl.readOnly) {
                 // GML 3.2.1 is used for ISO19139:2007
                 // TODO: ISO19115-3:2018
-                ctrl.outputPolygonXml = surroundWithWrapper(gnGeometryService.printGeometryOutput(
-                  ctrl.map,
-                  feature,
-                  {
-                    crs: outputCrs,
-                    format: 'gml'
-                  }
-                ).replace(
-                  /http:\/\/www.opengis.net\/gml"/g,
-                  'http://www.opengis.net/gml/3.2"'))
+                ctrl.outputPolygonXml = surroundWithWrapper(
+                  gnGeometryService
+                    .printGeometryOutput(ctrl.map, feature, {
+                      crs: outputCrs,
+                      format: "gml"
+                    })
+                    .replace(
+                      /http:\/\/www\.opengis\.net\/gml"/g,
+                      'http://www.opengis.net/gml/3.2"'
+                    )
+                );
               }
 
               // update text field (unless geometry was entered manually)
               if (!ctrl.fromTextInput) {
                 ctrl.updateInputTextFromGeometry(feature);
               }
-
             };
 
             // this will receive errors from the geometry tool input parsing
@@ -280,7 +280,7 @@
             ctrl.fromTextInput = false;
 
             // handle input change & outputs gml for the editor
-            ctrl.handleInputChange = function() {
+            ctrl.handleInputChange = function () {
               if (!ctrl.inputGeometry) {
                 return;
               }
@@ -290,13 +290,13 @@
               // parse geometry
               try {
                 var geometry = gnGeometryService.parseGeometryInput(
-                    ctrl.map,
-                    ctrl.inputGeometry,
-                    {
-                      crs: ctrl.currentProjection,
-                      format: ctrl.currentFormat
-                    }
-                    );
+                  ctrl.map,
+                  ctrl.inputGeometry,
+                  {
+                    crs: ctrl.currentProjection,
+                    format: ctrl.currentFormat
+                  }
+                );
               } catch (e) {
                 ctrl.parseError = e.message;
               }
@@ -312,7 +312,7 @@
 
             // options (proj, format) change:
             // either update text or try a new parse
-            ctrl.handleInputOptionsChange = function() {
+            ctrl.handleInputOptionsChange = function () {
               if (ctrl.fromTextInput) {
                 ctrl.handleInputChange();
               } else {
@@ -323,30 +323,32 @@
             };
 
             // update text in input according to displayed feature
-            ctrl.updateInputTextFromGeometry = function(feature) {
+            ctrl.updateInputTextFromGeometry = function (feature) {
               var feature = feature || source.getFeatures()[0];
               if (!feature) {
-                ctrl.inputGeometry = '';
+                ctrl.inputGeometry = "";
                 return;
               }
 
               ctrl.inputGeometry = gnGeometryService.printGeometryOutput(
-                  ctrl.map,
-                  feature,
-                  {
-                    crs: ctrl.currentProjection,
-                    format: ctrl.currentFormat
-                  }
-                  );
+                ctrl.map,
+                feature,
+                {
+                  crs: ctrl.currentProjection,
+                  format: ctrl.currentFormat
+                }
+              );
             };
 
             function surroundWithWrapper(gmlString) {
-              var geomwrapper = ctrl.geomwrapper
-                || '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">${geom}</gmd:polygon>';
-              return geomwrapper.replace('${geom}', gmlString);
+              var geomwrapper =
+                ctrl.geomwrapper ||
+                '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">${geom}</gmd:polygon>';
+              return geomwrapper.replace("${geom}", gmlString);
             }
           }
         ]
       };
-    }]);
+    }
+  ]);
 })();

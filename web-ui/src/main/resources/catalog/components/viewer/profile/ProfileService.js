@@ -21,15 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_profile_service');
+(function () {
+  goog.provide("gn_profile_service");
 
-
-
-
-
-
-  var module = angular.module('gn_profile_service', []);
+  var module = angular.module("gn_profile_service", []);
 
   /**
    * @ngdoc service
@@ -45,9 +40,8 @@
    * in the viewer. It can be used to pass data to render from anywhere in
    * the app.
    */
-  module.service('gnProfileService', [
-    function() {
-
+  module.service("gnProfileService", [
+    function () {
       this._layer = null;
 
       /**
@@ -61,7 +55,7 @@
        * @param {ol.Map} map open layers map
        * @return {ol.layer.Vector} vector layer
        */
-      this.getOverlayLayer = function(map) {
+      this.getOverlayLayer = function (map) {
         if (this._layer) {
           return this._layer;
         }
@@ -73,29 +67,30 @@
         });
         this._layer = new ol.layer.Vector({
           source: source,
-          name: 'profile-overlay-layer',
+          name: "profile-overlay-layer",
           style: [
-            new ol.style.Style({  // this is the default editing style
+            new ol.style.Style({
+              // this is the default editing style
               fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.5)'
+                color: "rgba(255, 255, 255, 0.5)"
               }),
               stroke: new ol.style.Stroke({
-                color: 'white',
+                color: "white",
                 width: 5
               })
             }),
             new ol.style.Style({
               stroke: new ol.style.Stroke({
-                color: 'rgba(0, 255, 80, 1)',
+                color: "rgba(0, 255, 80, 1)",
                 width: 3
               }),
               image: new ol.style.Circle({
                 radius: 6,
                 fill: new ol.style.Fill({
-                  color: 'rgba(0, 255, 80, 1)'
+                  color: "rgba(0, 255, 80, 1)"
                 }),
                 stroke: new ol.style.Stroke({
-                  color: 'white',
+                  color: "white",
                   width: 1.5
                 })
               })
@@ -119,17 +114,17 @@
        * @param {Object} jsonData raw JSON graph data
        * @param {Object} graphOptions options used for rendering the graph
        */
-      this.displayProfileGraph = function(jsonData, graphOptions) {
+      this.displayProfileGraph = function (jsonData, graphOptions) {
         // TODO: check validity
         this._profileGraph = jsonData;
         this._profileGraphOptions = graphOptions;
       };
 
       // getters; these will be watched by the gnProfile directive
-      this.getProfileGraphData = function() {
+      this.getProfileGraphData = function () {
         return this._profileGraph;
       };
-      this.getProfileGraphOptions = function() {
+      this.getProfileGraphOptions = function () {
         return this._profileGraphOptions;
       };
     }

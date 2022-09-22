@@ -1,22 +1,37 @@
 <div class="context">
   <a href="" class="hidden download-element"></a>
 
-  <div class="btn-group" role="group"  aria-label="{{'load' | translate}}, {{'download' | translate}}, {{'save' | translate}}">
+  <div
+    class="btn-group"
+    role="group"
+    aria-label="{{'load' | translate}}, {{'download' | translate}}, {{'save' | translate}}"
+  >
     <!-- upload -->
-    <div class="btn-group" role="group" aria-label="{{'load' | translate}}" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div
+      class="btn-group dropdown"
+      role="group"
+      aria-label="{{'load' | translate}}"
+      data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'"
+    >
+      <button
+        type="button"
+        class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
         <span data-translate="">load</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a class="import">
+          <a href="" class="import">
             <i class="fa fa-upload"></i>&nbsp;
             <span data-translate="">uploadContext</span>
           </a>
         </li>
         <li>
-          <a data-ng-click="reset()">
+          <a href="" data-ng-click="reset()">
             <i class="fa fa-map-o"></i>&nbsp;
             <span data-translate="">resetContext</span>
           </a>
@@ -24,21 +39,31 @@
       </ul>
     </div>
     <!-- download -->
-    <div class="btn-group" role="group" aria-label="{{'download' | translate}}" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div
+      class="btn-group dropdown"
+      role="group"
+      aria-label="{{'download' | translate}}"
+      data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'"
+    >
+      <button
+        type="button"
+        class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
         <span data-translate="">download</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a data-ng-click="save($event)"
-              title="{{'downloadContext'|translate}}">
+          <a data-ng-click="save($event)" href="" title="{{'downloadContext'|translate}}">
             <i class="fa fa-file-code-o"></i>&nbsp;
             <span data-translate="">saveMapAsContext</span>
           </a>
         </li>
         <li data-ng-if="isExportMapAsImageEnabled">
-          <a data-ng-click="saveMapAsImage($event)">
+          <a href="" data-ng-click="saveMapAsImage($event)">
             <i class="fa fa-file-image-o"></i>&nbsp;
             <span data-translate="">saveMapAsImage</span>
           </a>
@@ -46,78 +71,92 @@
       </ul>
     </div>
     <!-- save -->
-    <button type="button"
-            class="btn btn-default width-33"
-            data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()"
-            data-toggle="collapse"
-            data-target="#saveform"
-            aria-expanded="false"
-            aria-controls="saveform">
+    <button
+      type="button"
+      class="btn btn-default width-33"
+      data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()"
+      data-toggle="collapse"
+      data-target="#saveform"
+      aria-expanded="false"
+      aria-controls="saveform"
+    >
       <span data-translate="">Save</span>
     </button>
   </div>
 
   <!-- save form -->
   <form data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()">
-
     <div class="collapse" id="saveform">
       <h4 data-translate="">saveMapInCatalog</h4>
-      <p data-ng-if="mapUuid != null"
-          data-translate=""
-          data-translate-values="{uuid: '{{mapUuid}}'}">mapSavedInCatalog</p>
-      <input type="hidden" name="_csrf" value="{{csrf}}"/>
+      <p
+        data-ng-if="mapUuid != null"
+        data-translate=""
+        data-translate-values="{uuid: '{{mapUuid}}'}"
+      >
+        mapSavedInCatalog
+      </p>
+      <input type="hidden" name="_csrf" value="{{csrf}}" />
       <div class="form-group">
-        <label for="mapTitle"
-              data-translate="">mapTitle</label>
-        <input type="text"
-              class="form-control"
-              name="mapTitle"
-              data-ng-model="mapProps.title"
-              data-ng-required=""
-              id="mapTitle">
+        <label for="mapTitle" data-translate="">mapTitle</label>
+        <input
+          type="text"
+          class="form-control"
+          name="mapTitle"
+          data-ng-model="mapProps.title"
+          data-ng-required=""
+          id="mapTitle"
+        />
       </div>
       <div class="form-group">
-        <label for="mapAbstract"
-              data-translate="">mapAbstract</label>
-        <textarea class="form-control"
-                  name="mapAbstract"
-                  data-ng-model="mapProps.recordAbstract"
-                  id="mapAbstract"></textarea>
+        <label for="mapAbstract" data-translate="">mapAbstract</label>
+        <textarea
+          class="form-control"
+          name="mapAbstract"
+          data-ng-model="mapProps.recordAbstract"
+          id="mapAbstract"
+        ></textarea>
       </div>
-      <div class="form-group"
-          data-ng-show="groups && groups.length > 1">
+      <div class="form-group" data-ng-show="groups && groups.length > 1">
         <label data-translate="">group</label>
-        <div data-groups-combo=""
-             data-optional="false"
-             data-owner-group="mapProps.group"
-             lang="lang"
-             data-groups="groups"
-             data-profile="Editor"
-             data-exclude-special-groups="true"/>
+        <div
+          data-groups-combo=""
+          data-optional="false"
+          data-owner-group="mapProps.group"
+          lang="lang"
+          data-groups="groups"
+          data-profile="Editor"
+          data-exclude-special-groups="true"
+        />
       </div>
-      <input type="hidden"
-            name="publishedToAll"
-            data-ng-model="mapProps.publishToAll"/>
+      <input type="hidden" name="publishedToAll" data-ng-model="mapProps.publishToAll" />
       <div class="btn-group dropup">
-        <button type="button" class="btn btn-default width-75"
-                data-gn-click-and-spin="saveInCatalog($event)"
-                title="{{'saveInCatalog'|translate}}">
-          <i class="fa fa-save"/>
+        <button
+          type="button"
+          class="btn btn-default width-75"
+          data-gn-click-and-spin="saveInCatalog($event)"
+          title="{{'saveInCatalog'|translate}}"
+        >
+          <i class="fa fa-save" />
           <span data-translate="">saveMapInCatalogAction</span>
         </button>
-        <button type="button"
-                class="btn btn-default dropdown-toggle width-25"
-                data-toggle="dropdown">
+        <button
+          type="button"
+          class="btn btn-default dropdown-toggle width-25"
+          data-toggle="dropdown"
+        >
           <span class="caret"></span>&nbsp;
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-          <li><a
-            title="{{'saveInCatalogAndPublish-help' | translate}}"
-            data-gn-click-and-spin="saveInCatalog($event, true)"
-            href="">
-            <i class="fa fa-unlock"/>
-            <span data-translate="">saveMapInCatalogActionAndPublish</span>
-          </a></li>
+          <li>
+            <a
+              title="{{'saveInCatalogAndPublish-help' | translate}}"
+              data-gn-click-and-spin="saveInCatalog($event, true)"
+              href=""
+            >
+              <i class="fa fa-unlock" />
+              <span data-translate="">saveMapInCatalogActionAndPublish</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -126,36 +165,42 @@
   <!-- /saveform -->
 
   <!-- search form -->
-  <form class="form-horizontal clearfix"
-        role="form"
-        data-ng-controller="gnsMapSearchController"
-        data-ng-search-form=""
-        data-runSearch="true">
-
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <form
+    class="form-horizontal clearfix"
+    role="form"
+    data-ng-controller="gnsMapSearchController"
+    data-ng-search-form=""
+    data-runSearch="true"
+  >
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
 
     <h4>
-        <span data-translate="">loadAMap</span>
-        <a class="btn btn-default btn-xs pull-right"
-            data-ng-click="triggerSearch(); $event.stopPropagation();">
-          <i class="fa fa-refresh"/>
+      <span data-translate="">loadAMap</span>
+      <a
+        class="btn btn-default btn-xs pull-right"
+        data-ng-click="triggerSearch(); $event.stopPropagation();"
+      >
+        <i class="fa fa-refresh" />
       </a>
     </h4>
     <div data-ng-show="searchResults.records.length == 0">
       <span data-translate="">noMaps</span>
     </div>
-    <div data-ng-show="searchResults.records.length > 0"
-        data-gn-results-container=""
-        data-search-results="searchResults"
-        data-template-url="resultTemplate"></div>
+    <div
+      data-ng-show="searchResults.records.length > 0"
+      data-gn-results-container=""
+      data-search-results="searchResults"
+      data-template-url="resultTemplate"
+    ></div>
 
-    <div data-ng-show="searchResults.records.length > 0"
-        class="text-center"
-        data-gn-pagination="paginationInfo"
-        data-hits-values="searchObj.hitsperpageValues"></div>
+    <div
+      data-ng-show="searchResults.records.length > 0"
+      class="text-center"
+      data-gn-pagination="paginationInfo"
+      data-hits-values="searchObj.hitsperpageValues"
+    ></div>
   </form>
   <!-- /search form -->
 </div>
 
-<input class="hidden" type="file"
-       accept="text/xml" id="owc-file-input"/>
+<input class="hidden" type="file" accept="text/xml" id="owc-file-input" />

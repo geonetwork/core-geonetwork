@@ -1,51 +1,81 @@
-<header class="gn-header"
-        data-ng-show="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader">
+<div
+  data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'"
+  data-ng-controller="gnsScrollController"
+>
+  <button
+    class="btn btn-warning gn-skiplink"
+    type="button"
+    data-ng-click="gotoAnchor('main-content')"
+    data-ng-class="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader ? 'gn-skiplink-top' : 'gn-skiplink-nav'"
+  >
+    <span translate="">skipLink</span>
+  </button>
+</div>
+
+<header
+  class="gn-header"
+  data-ng-show="gnCfg.mods.header.enabled && gnCfg.mods.header.isLogoInHeader"
+>
   <div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
-    <div class=row>
+    <div class="row">
       <div class="col-md-12 text-{{gnCfg.mods.header.logoInHeaderPosition}}">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
-          <img class="{{gnCfg.mods.header.logoInHeaderPosition}}"
-               alt="{{'siteLogo' | translate}}"
-               data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-          </a>
+          <img
+            class="{{gnCfg.mods.header.logoInHeaderPosition}}"
+            alt="{{'siteLogo' | translate}}"
+            data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"
+          />
+        </a>
       </div>
     </div>
   </div>
 </header>
-<nav class="navbar navbar-default gn-top-bar"
-     role="navigation"
-     data-ng-show="gnCfg.mods.header.enabled"
-     data-ng-include="isMenubarAccessible ? '../../catalog/templates/top-toolbar-accessible.html' : '../../catalog/templates/top-toolbar.html'"
-     xmlns="http://www.w3.org/1999/html">
-</nav>
+<nav
+  class="navbar navbar-default gn-top-bar"
+  role="navigation"
+  data-ng-show="gnCfg.mods.header.enabled"
+  data-ng-include="isMenubarAccessible ? '../../catalog/templates/top-toolbar-accessible.html' : '../../catalog/templates/top-toolbar.html'"
+  xmlns="http://www.w3.org/1999/html"
+></nav>
 
-<div class="gn-search-page"
-     role="main"
-     data-ng-controller="GnSearchController">
+<main class="gn-search-page" id="main-content" data-ng-controller="GnSearchController">
   <cookiewarning></cookiewarning>
-  <div class=""
-       data-ng-controller="gnsDefault">
+  <div class="" data-ng-controller="gnsDefault">
     <gn-extend-mainctrl></gn-extend-mainctrl>
 
     <div data-gn-saved-selections="">
-      <div data-ng-include="'../../catalog/views/default/templates/home.html'"
-           data-ng-if="activeTab == '/home'"/>
-      <div data-ng-include="'../../catalog/views/default/templates/results.html'"
-           data-ng-show="activeTab == '/search'"/>
-      <div data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled && activeTab == '/map'"
-           data-ng-include="'../../catalog/views/default/templates/map.html'"/>
-      <div data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
-           data-ng-if="activeTab == '/metadata'" class="gn-view-approved"/>
-      <div data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
-           data-ng-if="activeTab == '/metadraf'" class="gn-view-not-approved"/>
-      <div data-ng-include="'../../catalog/views/default/templates/page.html'"
-           data-ng-if="activeTab == '/page'"/>
+      <div
+        data-ng-include="'../../catalog/views/default/templates/home.html'"
+        data-ng-if="activeTab == '/home'"
+      />
+      <div
+        data-ng-include="'../../catalog/views/default/templates/results.html'"
+        data-ng-show="activeTab == '/search'"
+      />
+      <div
+        data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled && activeTab == '/map'"
+        data-ng-include="'../../catalog/views/default/templates/map.html'"
+      />
+      <div
+        data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
+        data-ng-if="activeTab == '/metadata'"
+        class="gn-view-approved"
+      />
+      <div
+        data-ng-include="'../../catalog/views/default/templates/recordView/recordView.html'"
+        data-ng-if="activeTab == '/metadraf'"
+        class="gn-view-not-approved"
+      />
+      <div
+        data-ng-include="'../../catalog/views/default/templates/page.html'"
+        data-ng-if="activeTab == '/page'"
+      />
     </div>
   </div>
-</div>
+</main>
 
-
-<footer class="navbar navbar-default gn-bottom-bar"
-     data-ng-show="gnCfg.mods.footer.enabled"
-     data-ng-include="'../../catalog/views/default/templates/footer.html'">
-</footer>
+<footer
+  class="navbar navbar-default gn-bottom-bar"
+  data-ng-show="gnCfg.mods.footer.enabled"
+  data-ng-include="'../../catalog/views/default/templates/footer.html'"
+></footer>

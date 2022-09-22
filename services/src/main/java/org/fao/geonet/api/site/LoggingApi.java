@@ -26,14 +26,9 @@ package org.fao.geonet.api.site;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Logger;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.site.model.ListLogFilesResponse;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.util.FileUtil;
-import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -70,12 +65,14 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 @Controller("logging")
 @PreAuthorize("hasAuthority('Administrator')")
 public class LoggingApi {
-    private static final String fileAppenderName = "fileAppender";
-    private static final int maxLines = 20000;
-    private final String regexp = "log4j(-(.*?))?\\.xml";
+    private static final int MAX_LINES = 20000;
+
+    /**
+     * List log4j2 configuration files.
+     */
+    private final String regexp = "log4j2(-(.*?))?\\.xml";
     @Autowired
     GeonetworkDataDirectory dataDirectory;
-    private FileAppender fileAppender = null;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get log files",
@@ -138,9 +135,9 @@ public class LoggingApi {
             int lines) {
         String lastActivity = null;
 
-        if (isAppenderLogFileLoaded()) {
-            lastActivity = FileUtil.readLastLines(new File(fileAppender.getFile()),
-                Math.min(lines, maxLines));
+        File logfile = GeonetworkDataDirectory.getLogfile();
+        if (logfile != null) {
+            lastActivity = FileUtil.readLastLines(logfile, Math.min(lines, MAX_LINES));
         } else {
             throw new RuntimeException("No log file found. Check logger configuration.");
         }
@@ -158,9 +155,8 @@ public class LoggingApi {
         })
     @ResponseBody
     public void getLastActivityInAZip(HttpServletResponse response) throws IOException {
-        if (isAppenderLogFileLoaded()) {
-            File file = new File(fileAppender.getFile());
-
+        File logfile = GeonetworkDataDirectory.getLogfile();
+        if (logfile != null) {
             // create ZIP FILE
 
             String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
@@ -182,9 +178,9 @@ public class LoggingApi {
             InputStream in = null;
             try {
                 zos = new ZipOutputStream(response.getOutputStream());
-                ze = new ZipEntry(file.getName());
+                ze = new ZipEntry(logfile.getName());
                 zos.putNextEntry(ze);
-                in = new FileInputStream(file);
+                in = new FileInputStream(logfile);
                 while ((read = in.read(bytes)) != -1) {
                     zos.write(bytes, 0, read);
                 }
@@ -199,37 +195,4 @@ public class LoggingApi {
             );
         }
     }
-
-    private boolean isAppenderLogFileLoaded() {
-        if (fileAppender == null || fileAppender.getFile() == null) {
-            // First, try the fileappender from the logger named "geonetwork"
-            fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
-            // If still not found, try the one from the logger named "jeeves"
-            if (fileAppender == null) {
-                fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
-            }
-            // Still null ? Give up
-            if (fileAppender == null) {
-                Log.error(Geonet.GEONETWORK,
-                    "Error when getting appender named 'fileAppender'. " +
-                        "Check your log configuration file. " +
-                        "No appender found.");
-                return false;
-            } else {
-                String logFileName = fileAppender.getFile();
-                // fileAppender found, but no file available ?
-                if (logFileName == null) {
-                    Log.error(Geonet.GEONETWORK,
-                        "Error when getting logger file for the " +
-                            "appender named 'fileAppender'. " +
-                            "Check your log configuration file. " +
-                            "A FileAppender is required to return last activity to the user interface." +
-                            "Appender file not found.");
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 }

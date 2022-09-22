@@ -2494,7 +2494,7 @@
   <!-- ==================================================== -->
   <element name="gmd:topicCategory">
     <label>Categoria de tópico</label>
-    <description>Tema(s) principal do datset</description>
+    <description>Tema(s) principal do dataset</description>
     <condition>Obrigatório</condition>
   </element>
   <!-- ==================================================== -->

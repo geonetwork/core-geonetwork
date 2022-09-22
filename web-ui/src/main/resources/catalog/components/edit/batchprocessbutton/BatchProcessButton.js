@@ -21,46 +21,48 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_batch_process_button');
+(function () {
+  goog.provide("gn_batch_process_button");
 
-  var module = angular.module('gn_batch_process_button', []);
+  var module = angular.module("gn_batch_process_button", []);
 
   /**
    * Create a batch processing button.
    *
    * TODO: Add process parameters when needed ?
    */
-  module.directive('gnBatchProcessButton',
-      ['gnEditor', 'gnBatchProcessing',
-        function(gnEditor, gnBatchProcessing) {
+  module.directive("gnBatchProcessButton", [
+    "gnEditor",
+    "gnBatchProcessing",
+    function (gnEditor, gnBatchProcessing) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          processId: "@gnBatchProcessButton",
+          params: "@",
+          name: "@",
+          help: "@",
+          icon: "@"
+        },
+        templateUrl:
+          "../../catalog/components/edit/" +
+          "batchprocessbutton/partials/" +
+          "batchprocessbutton.html",
+        link: function (scope, element, attrs) {
+          // TODO: handle process parameters.
+          scope.paramList = scope.params && angular.fromJson(scope.params);
+          scope.name = scope.name || scope.processId;
+          scope.process = function () {
+            var params = {
+              process: scope.processId
+            };
+            angular.extend(params, scope.paramList);
 
-         return {
-           restrict: 'A',
-           replace: true,
-           scope: {
-             processId: '@gnBatchProcessButton',
-             params: '@',
-             name: '@',
-             help: '@',
-             icon: '@'
-           },
-           templateUrl: '../../catalog/components/edit/' +
-           'batchprocessbutton/partials/' +
-           'batchprocessbutton.html',
-           link: function(scope, element, attrs) {
-             // TODO: handle process parameters.
-             scope.paramList = scope.params && angular.fromJson(scope.params);
-             scope.name = scope.name || scope.processId;
-             scope.process = function() {
-               var params = {
-                 process: scope.processId
-               };
-               angular.extend(params, scope.paramList);
-
-               return gnBatchProcessing.runProcessMd(params);
-             };
-           }
-         };
-       }]);
+            return gnBatchProcessing.runProcessMd(params);
+          };
+        }
+      };
+    }
+  ]);
 })();
