@@ -51,7 +51,10 @@
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default
     legend according to the matching element. -->
-  <xsl:template mode="form-builder" match="section[@name]|fieldset">
+  <xsl:template mode="form-builder"
+                match="section[@name]
+                      |section[count(@*) = 1 and @displayIfRecord]
+                      |fieldset">
     <xsl:param name="base" as="node()"/>
 
     <xsl:variable name="isDisplayed"
