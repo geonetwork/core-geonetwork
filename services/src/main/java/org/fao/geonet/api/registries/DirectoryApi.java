@@ -118,7 +118,7 @@ public class DirectoryApi {
         "Scan one or more records for element matching the XPath provided " +
             "and then check if this element is available in the directory. " +
             "If Found, the element from the directory update the element " +
-            "in the record and optionally properties are preserved.<br/><br/>" +
+            "in the record and optionally text or attribute value properties are preserved using propertiesToCopy. Elements can be lost if not existing in the directory entry (eg. from an gex:Extent directory containing only description and bounding polygon, the update can remove temporal element).<br/><br/>" +
             "The identifier XPath is used to find a match. An optional filter" +
             "can be added to restrict search to a subset of the directory. " +
             "If no identifier XPaths is provided, the UUID " +
@@ -136,7 +136,7 @@ public class DirectoryApi {
             "a random UUID is generated and analysis will not check " +
             "for duplicates.";
     public static final String APIPARAM_PROPERTIESTOCOPY =
-        "List of XPath of properties to copy from record to matching entry.";
+        "List of XPath of properties to copy from record to matching entry. Only support text or attribute eg. ./gmd:role/*/@codeListValue";
     public static final String APIPARAM_REPLACEWITHXLINK =
         "Replace entry by XLink.";
     public static final String APIPARAM_DIRECTORYFILTERQUERY =
@@ -144,7 +144,9 @@ public class DirectoryApi {
     private static final String API_COLLECT_ENTRIES_NOTE =
         "Scan one or more records for element matching the XPath provided " +
             "and save them as directory entries (ie. subtemplate).<br/><br/>" +
-            "Only records that the current user can edit are analyzed.";
+            "Only records that the current user can edit are analyzed.<br/><br/>" +
+            "Examples:<br/>" +
+            "For ISO19115-3 records, use .//cit:CI_Responsibility and compute identifier based on email with .//cit:electronicMailAddress/*/text() to create a contact directory.";
 
 
     @Autowired
@@ -199,7 +201,8 @@ public class DirectoryApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Extracts directory entries from records",
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Extracts directory entries from records",
 //        authorizations = {
 //            @Authorization(value = "basicAuth")
 //        },
@@ -307,7 +310,7 @@ public class DirectoryApi {
         if (save) {
             dataManager.flush();
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfEntriesInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
             report.close();
             return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
@@ -496,7 +499,7 @@ public class DirectoryApi {
             dataManager.flush();
             BatchOpsMetadataReindexer r =
                 new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
             report.close();
             return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
@@ -714,7 +717,7 @@ public class DirectoryApi {
             ));
 
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
 
             errors.forEach((k, v) ->
                 report.addError(v)

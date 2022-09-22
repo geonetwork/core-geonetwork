@@ -156,11 +156,9 @@
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
   <include>config/config-service-admin-schematron.xml</include>
-  <include>config/config-service-admin-formatter.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>
   <include>config/config-service-monitoring.xml</include>
-  <include>config/config-service-inspireatom.xml</include>
 </geonet>

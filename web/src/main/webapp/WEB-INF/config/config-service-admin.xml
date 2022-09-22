@@ -37,12 +37,13 @@
       Used by integration test.
 
       ]]></documentation>
-      <class name=".services.config.SetSystemProperties"/>
+      <!-- SetSystemProperties is no longer present in 4.x  -->
+      <!--class name=".services.config.SetSystemProperties"/-->
     </service>
 
     <service name="versioning.logdata">
       <documentation><![CDATA[
-      Return versionning history.
+      Return versioning history.
 
       Parameters:
       * id: (optional) metadata id.

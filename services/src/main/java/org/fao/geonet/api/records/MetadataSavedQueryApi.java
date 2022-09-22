@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -153,7 +154,8 @@ public class MetadataSavedQueryApi {
         if (query == null) {
             throw new ResourceNotFoundException(String.format(
                 "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
-                savedQuery, schemaIdentifier, schemaPlugin.getSavedQueries()));
+                savedQuery, schemaIdentifier,
+                schemaPlugin.getSavedQueries().stream().map(SavedQuery::getId).collect(Collectors.joining(", "))));
         }
 
 

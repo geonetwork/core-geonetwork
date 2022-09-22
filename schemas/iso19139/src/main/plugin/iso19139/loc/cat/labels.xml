@@ -1870,6 +1870,10 @@
       <option value="ESRI:AIMS--http-get-feature">Servei d'Objectes Geogràfics d'ArcIMS</option>
       <option value="ESRI:AIMS--http-get-image">Servei d'imatges d'ArcIMS</option>
       <option value="GLG:KML-2.0-http-get-map">Servei KML de Google Earth (versió 2.0)</option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option value="OGC:CSW">OGC-CSW Servei de catàleg per a la Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Llenguatge de Marcat Geogràfic</option>

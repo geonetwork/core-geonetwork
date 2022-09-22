@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -187,7 +187,7 @@ public class SettingManager {
 
     public String getValue(String path, boolean nullable) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
-            Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
+            Log.trace(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
 
         Optional<Setting> se = repo.findById(path);
@@ -305,6 +305,13 @@ public class SettingManager {
         String value = getValue(key);
         if (value == null || value.trim().length() == 0)
             return null;
+        return Integer.valueOf(value);
+    }
+
+    public Integer getValueAsInt(String key, Integer defaultValue) {
+        String value = getValue(key);
+        if (value == null || value.trim().length() == 0)
+            return defaultValue;
         return Integer.valueOf(value);
     }
 
@@ -456,9 +463,9 @@ public class SettingManager {
     }
 
     static public boolean isPortRequired(String protocol, String port) {
-        if("http".equals(protocol) && "80".equals(port)) {
+        if(Geonet.HttpProtocol.HTTP.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTP).equals(port)) {
             return false;
-        } else if("https".equals(protocol) && "443".equals(port)) {
+        } else if(Geonet.HttpProtocol.HTTPS.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTPS).equals(port)) {
             return false;
         } else {
             return true;

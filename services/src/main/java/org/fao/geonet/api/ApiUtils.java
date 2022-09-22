@@ -53,6 +53,7 @@ import org.springframework.validation.ObjectError;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -270,20 +271,6 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can review this record.
-     */
-    static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
-            throw new SecurityException(String.format(
-                "You can't review or edit record with UUID %s", metadataUuid));
-        }
-        return metadata;
-    }
-
-    /**
      * Check if the current user can change status of this record.
      */
     static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
@@ -334,6 +321,20 @@ public class ApiUtils {
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, type, out);
         }
+    }
+
+    /**
+     * Avoid browser cache issue when the same API Path serving various formats.
+     *
+     * eg. go to the API path serving HTML, then go to the main app
+     * which is using the same API path but processing the JSON response.
+     * Browser history back will return to the JSON output instead of the HTML one.
+     *
+     * Use the Vary header to indicate to the browser that the cache depends
+     * on Accept header.
+     */
+    public static void setHeaderVaryOnAccept(HttpServletResponse response) {
+        response.setHeader("Vary", "Accept");
     }
 
     /**

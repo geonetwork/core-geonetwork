@@ -91,9 +91,34 @@ public interface SecurityProviderConfiguration {
 			}
 			return securityProviderConfigurations.get(securityProviderConfigurations.keySet().toArray()[0]);
 		}
-		// If we cannot find SecurityProviderConfiguration then default to false.
+		// If we cannot find SecurityProviderConfiguration then default to null.
 		return null;
 	}
+
+    /**
+     * Check if the user profile should be updatable.
+     * If the data is coming from the security providers then the security provider then it may make sense to disable the profile update
+     */
+    boolean isUserProfileUpdateEnabled();
+
+    /**
+     * Check if the user group should be updatable.
+     * If the data is coming from the security providers then the security provider then it may make sense to disable the user group updates
+     */
+    boolean isUserGroupUpdateEnabled();
+
+    static SecurityProviderUtil getSecurityProviderUtil() {
+        Map<String, SecurityProviderUtil> SecurityProviderUtils = ApplicationContextHolder.get().getBeansOfType(SecurityProviderUtil.class);
+
+        if (SecurityProviderUtils != null && SecurityProviderUtils.size() != 0) {
+            if (SecurityProviderUtils.size() != 1) {
+                throw new RuntimeException("Too many security providers utils");
+            }
+            return SecurityProviderUtils.get(SecurityProviderUtils.keySet().toArray()[0]);
+        }
+        // If we cannot find SecurityProviderUtil then default to null.
+        return null;
+    }
 }
 
 

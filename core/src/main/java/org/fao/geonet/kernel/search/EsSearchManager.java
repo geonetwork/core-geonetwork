@@ -82,8 +82,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import static org.elasticsearch.rest.RestStatus.*;
+import static org.elasticsearch.rest.RestStatus.CREATED;
+import static org.elasticsearch.rest.RestStatus.OK;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
+import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_FIELD;
+import static org.fao.geonet.kernel.search.IndexFields.INDEXING_ERROR_MSG;
 
 
 public class EsSearchManager implements ISearchManager {
@@ -99,6 +102,7 @@ public class EsSearchManager implements ISearchManager {
 
     public static Map<String, String> relatedIndexFields;
     public static Set<String> FIELDLIST_CORE;
+    public static Set<String> FIELDLIST_RELATED;
     public static Set<String> FIELDLIST_UUID;
 
     static {
@@ -125,6 +129,23 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.UUID)
             .add(Geonet.IndexFieldNames.RESOURCETITLE)
             .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
+            .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
+            .add("operatesOn")
+            .build();
+
+        FIELDLIST_RELATED = ImmutableSet.<String>builder()
+            .add(Geonet.IndexFieldNames.ID)
+            .add(Geonet.IndexFieldNames.UUID)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE)
+            .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
+            .add("overview.*")
+            .add("link")
+            .add("format")
+            .add("resourceType")
+            .add("cl_status.key")
+            .add(Geonet.IndexFieldNames.OP_PREFIX + "*")
+            .add(Geonet.IndexFieldNames.GROUP_OWNER)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
             .add("operatesOn")
@@ -190,27 +211,9 @@ public class EsSearchManager implements ISearchManager {
             }
         } catch (Exception e) {
             LOGGER.error("Indexing stylesheet contains errors: {} \n  Marking the metadata as _indexingError=1 in index", e.getMessage());
-            doc.addContent(new Element(IndexFields.INDEXING_ERROR_FIELD).setText("true"));
-            doc.addContent(new Element(IndexFields.INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
+            doc.addContent(new Element(INDEXING_ERROR_FIELD).setText("true"));
+            doc.addContent(new Element(INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
             doc.addContent(new Element(IndexFields.DRAFT).setText("n"));
-
-            StringBuilder sb = new StringBuilder();
-            allText(metadata, sb);
-            doc.addContent(new Element("_text_").setText(sb.toString()));
-        }
-    }
-
-    private void allText(Element metadata, StringBuilder sb) {
-        String text = metadata.getText().trim();
-        if (text.length() > 0) {
-            if (sb.length() > 0)
-                sb.append(" ");
-            sb.append(text);
-        }
-        @SuppressWarnings("unchecked")
-        List<Element> children = metadata.getChildren();
-        for (Element aChildren : children) {
-            allText(aChildren, sb);
         }
     }
 
@@ -359,14 +362,12 @@ public class EsSearchManager implements ISearchManager {
     public UpdateResponse updateField(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(getPropertyName(field), value);
-        updates.put("indexingDate", new Date());
         return updateFields(id, updates);
     }
 
     public void updateFieldAsynch(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(getPropertyName(field), value);
-        updates.put("indexingDate", new Date());
         updateFieldsAsynch(id, updates);
     }
 
@@ -393,6 +394,11 @@ public class EsSearchManager implements ISearchManager {
         doc.remove("source");
         if (StringUtils.isNotEmpty(catalog)) {
             doc.put("sourceCatalogue", catalog);
+        }
+
+        JsonNode errors = doc.get(INDEXING_ERROR_MSG);
+        if (errors != null) {
+            doc.put(INDEXING_ERROR_FIELD, "true");
         }
 
         String jsonDocument = mapper.writeValueAsString(doc);
@@ -442,6 +448,7 @@ public class EsSearchManager implements ISearchManager {
                     ObjectNode docWithErrorInfo = mapper.createObjectNode();
                     String resourceTitle = String.format("Document #%s", e.getId());
                     String id = "";
+                    String uuid = "";
                     String isTemplate = "";
 
                     String failureDoc = documents.get(e.getId());
@@ -449,15 +456,18 @@ public class EsSearchManager implements ISearchManager {
                         JsonNode node = mapper.readTree(failureDoc);
                         resourceTitle = node.get("resourceTitleObject").get("default").asText();
                         id = node.get(IndexFields.DBID).asText();
+                        uuid = node.get("uuid").asText();
                         isTemplate = node.get(IS_TEMPLATE).asText();
                     } catch (Exception ignoredException) {
                     }
                     docWithErrorInfo.put(IndexFields.DBID, id);
+                    docWithErrorInfo.put("uuid", uuid);
                     docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
                     docWithErrorInfo.put(IS_TEMPLATE, isTemplate);
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
-                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, "true");
-                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.getFailureMessage());
+                    docWithErrorInfo.put(INDEXING_ERROR_FIELD, true);
+                    ArrayNode errors = docWithErrorInfo.putArray(INDEXING_ERROR_MSG);
+                    errors.add(e.getFailureMessage());
                     // TODO: Report the JSON which was causing the error ?
 
                     LOGGER.error("Document with error #{}: {}.",
@@ -503,6 +513,7 @@ public class EsSearchManager implements ISearchManager {
             .add("inspireThemeUri")
             .add("inspireTheme_syn")
             .add("inspireAnnex")
+            .add("indexingErrorMsg")
             .add("status")
             .add("status_text")
             .add("coordinateSystem")
@@ -519,6 +530,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
             .add("overview")
+            .add("sourceDescription")
             .add("MD_ConstraintsUseLimitation")
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")
@@ -527,21 +539,25 @@ public class EsSearchManager implements ISearchManager {
             .add("link")
             .add("crsDetails")
             .add("format")
+            .add("orderingInstructionsObject")
             .add("contact")
             .add("contactForResource")
             .add("contactForDistribution")
             .add("OrgForResource")
+            .add("specificationConformance")
+            .add("measure")
             .add("resourceProviderOrgForResource")
             .add("resourceVerticalRange")
             .add("resourceTemporalDateRange")
             .add("resourceTemporalExtentDateRange")
+            .add("resourceTemporalExtentDetails")
             .build();
         booleanFields = ImmutableSet.<String>builder()
             .add("hasxlinks")
             .add("hasInspireTheme")
             .add("hasOverview")
-            .add(IndexFields.HAS_ATOM)
             .add(Geonet.IndexFieldNames.HASXLINKS)
+            .add(INDEXING_ERROR_FIELD)
             .add("isHarvested")
             .add("isPublishedToAll")
             .add("isSchemaValid")
@@ -620,24 +636,21 @@ public class EsSearchManager implements ISearchManager {
                 continue;
             }
 
-            if (!name.startsWith("conformTo_")) { // Skip some fields causing errors / TODO
-                if (isObject) {
-                    try {
-                        doc.set(propertyName,
-                            mapper.readTree(
-                                nodeElements.get(0).getTextNormalize()
-                            ));
-                    } catch (IOException e) {
-                        LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                            new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
-                    }
-                } else {
-                    doc.put(propertyName,
-                        booleanFields.contains(propertyName) ?
-                            parseBoolean(nodeElements.get(0).getTextNormalize()) :
-                            nodeElements.get(0).getText());
+            if (isObject) {
+                try {
+                    doc.set(propertyName,
+                        mapper.readTree(
+                            nodeElements.get(0).getTextNormalize()
+                        ));
+                } catch (IOException e) {
+                    LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
+                        new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
                 }
-
+            } else {
+                doc.put(propertyName,
+                    booleanFields.contains(propertyName) ?
+                        parseBoolean(nodeElements.get(0).getTextNormalize()) :
+                        nodeElements.get(0).getText());
             }
         }
         return doc;
@@ -904,27 +917,6 @@ public class EsSearchManager implements ISearchManager {
         return response.getHits().getTotalHits().value;
     }
 
-//    public List<FacetField.Count> getDocFieldValues(String indexField,
-//                                                    String query,
-//                                                    boolean missing,
-//                                                    Integer limit,
-//                                                    String sort) throws IOException {
-//        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query)
-//            .setFilterQueries(DOC_TYPE + ":metadata")
-//            .setRows(0)
-//            .setFacet(true)
-//            .setFacetMissing(missing)
-//            .setFacetLimit(limit != null ? limit : 1000)
-//            .setFacetSort(sort != null ? sort : "count") // or index
-//            .addFacetField(indexField);
-//        QueryResponse response = client.query(solrQuery);
-//        return response.getFacetField(indexField).getValues();
-//    }
-//
-//    public void updateRating(int metadataId, int newValue) throws IOException, SolrServerException {
-//        updateField(metadataId, Geonet.IndexFieldNames.RATING, newValue, "set");
-//    }
-
     public EsRestClient getClient() {
         return client;
     }
@@ -934,47 +926,6 @@ public class EsSearchManager implements ISearchManager {
      */
     void setClient(EsRestClient client) {
         this.client = client;
-    }
-
-    public List<Element> getDocs(String query, long start, long rows) throws IOException, JDOMException {
-        final List<String> result = getDocIds(query, start, rows);
-        List<Element> xmlDocs = new ArrayList<>(result.size());
-        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        for (String id : result) {
-            AbstractMetadata metadata = metadataRepository.findOne(id);
-            xmlDocs.add(metadata.getXmlData(false));
-        }
-        return xmlDocs;
-    }
-
-    public List<String> getDocIds(String query, long start, long rows) throws IOException, JDOMException {
-//        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
-//        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
-//        solrQuery.setFields(SolrSearchManager.ID);
-//        if (start != null) {
-//            solrQuery.setStart(start);
-//        }
-//        if (rows != null) {
-//            solrQuery.setRows(rows);
-//        }
-//        QueryResponse response = client.query(solrQuery);
-//        SolrDocumentList results = response.getResults();
-//        List<String> idList = new ArrayList<>(results.size());
-//        for (SolrDocument document : results) {
-//            idList.add(document.getFieldValue(SolrSearchManager.ID).toString());
-//        }
-//        return idList;
-        return null;
-    }
-
-    public List<Element> getAllDocs(String query) throws Exception {
-        long hitsNumber = getNumDocs(query);
-        return getDocs(query, 0, hitsNumber);
-    }
-
-    public List<String> getAllDocIds(String query) throws Exception {
-        long hitsNumber = getNumDocs(query);
-        return getDocIds(query, 0, hitsNumber);
     }
 
     public void setIndexList(Map<String, String> indexList) {

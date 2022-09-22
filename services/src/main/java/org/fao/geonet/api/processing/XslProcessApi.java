@@ -33,14 +33,19 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.Diff;
+import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -59,6 +64,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
@@ -94,6 +100,9 @@ public class XslProcessApi {
     @Autowired
     SchemaManager schemaMan;
 
+    @Autowired
+    SettingManager settingManager;
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Preview process result applied to one or more records",
         description = ApiParams.API_OP_NOTE_PROCESS_PREVIEW +
@@ -121,6 +130,14 @@ public class XslProcessApi {
         )
         @PathVariable
             String process,
+        @Parameter(
+            description = "Return differences with diff, diffhtml or patch",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            DiffType diffType,
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -183,17 +200,25 @@ public class XslProcessApi {
                     mergedDocuments.addContent(dataMan.getMetadata(id));
                 } else {
                     // Save processed metadata
+                    ServiceContext serviceContext = ApiUtils.createServiceContext(request);
                     if (isText) {
-                        output.append(XslProcessUtils.processAsText(ApiUtils.createServiceContext(request),
+                        output.append(XslProcessUtils.processAsText(serviceContext,
                             id, process, false,
                             xslProcessingReport, siteURL, request.getParameterMap())
                         );
                     } else {
-                        Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
+                        Element record = XslProcessUtils.process(serviceContext,
                             id, process, false, false,
                             false, xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
-                            preview.addContent(record.detach());
+                            if (diffType != null) {
+                                IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
+                                AbstractMetadata metadata = metadataUtils.findOne(id);
+                                preview.addContent(
+                                    Diff.diff(metadata.getData(), Xml.getString(record), diffType));
+                            } else {
+                                preview.addContent(record.detach());
+                            }
                         }
                     }
                 }
@@ -299,7 +324,7 @@ public class XslProcessApi {
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
                 xslProcessingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
-            m.process();
+            m.process(settingManager.getSiteId());
 
         } catch (Exception exception) {
             xslProcessingReport.addError(exception);
@@ -346,26 +371,37 @@ public class XslProcessApi {
         }
 
         @Override
-        public void process() throws Exception {
+        public void process(String catalogueId) throws Exception {
             DataManager dataMan = context.getBean(DataManager.class);
+            IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+
             ApplicationContext appContext = ApplicationContextHolder.get();
             for (String uuid : this.records) {
-                String id = getDataManager().getMetadataId(uuid);
-                Log.info("org.fao.geonet.services.metadata",
-                    "Processing metadata with id:" + id);
+                List<Integer> idList = metadataUtils.findAllIdsBy(MetadataSpecs.hasMetadataUuid(uuid));
 
-                Element beforeMetadata = dataMan.getMetadata(context, id, false, false, false);
+                // Increase the total records counter when processing a metadata with approved and working copies
+                // as the initial counter doesn't take in account this case
+                if (idList.size() > 1) {
+                    xslProcessingReport.setTotalRecords(xslProcessingReport.getNumberOfRecords() + 1);
+                }
 
-                XslProcessUtils.process(context, id, process,
-                    true, index, updateDateStamp, xslProcessingReport,
-                    siteURL, request.getParameterMap());
+                for (Integer id : idList) {
+                    Log.info("org.fao.geonet.services.metadata",
+                        "Processing metadata with id:" + id);
 
-                Element afterMetadata = dataMan.getMetadata(context, id, false, false, false);
+                    Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
 
-                XMLOutputter outp = new XMLOutputter();
-                String xmlAfter = outp.outputString(afterMetadata);
-                String xmlBefore = outp.outputString(beforeMetadata);
-                new RecordProcessingChangeEvent(Long.parseLong(id), this.userId, xmlBefore, xmlAfter, process).publish(appContext);
+                    XslProcessUtils.process(context, String.valueOf(id), process,
+                        true, index, updateDateStamp, xslProcessingReport,
+                        siteURL, request.getParameterMap());
+
+                    Element afterMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
+
+                    XMLOutputter outp = new XMLOutputter();
+                    String xmlAfter = outp.outputString(afterMetadata);
+                    String xmlBefore = outp.outputString(beforeMetadata);
+                    new RecordProcessingChangeEvent(id, this.userId, xmlBefore, xmlAfter, process).publish(appContext);
+                }
             }
         }
     }

@@ -4,7 +4,7 @@
 
 // general
 @gn-border-radius: 3px;
-@gn-outline: 5px auto -webkit-focus-ring-color;
+@gn-outline: 2px auto @brand-primary;
 
 // override bootstrap variables
 @badge-bg: @gray;
@@ -21,10 +21,11 @@
 @navbar-default-link-hover-color: @gray-dark;
 @text-muted: #707070;
 // width of modal dialog
-@modal-md: 700px;
+@modal-md: 760px;
 @navbar-default-color: #333;
 // slightly darker primary color, now color contrast on light gray backgrounds is high enough
-@brand-primary: #3277B3;
+@brand-success: #198754;
+@brand-warning: #ffc107;
 @dropdown-border: @navbar-default-border;
 
 // header
@@ -52,10 +53,10 @@
 //
 // ----- search input
 @gn-search-background-color: @body-bg;
-
 @gn-search-outline-color: @brand-primary;
-@gn-search-button-background-color: @brand-primary;
-@gn-search-button-color: @btn-primary-color;
+@gn-search-button-background-color: @btn-default-bg;
+@gn-search-button-color: @btn-default-color;
+@gn-search-button-border-color: @btn-default-border;
 
 @gn-search-outline-color-red: red(@gn-search-outline-color);
 @gn-search-outline-color-green: green(@gn-search-outline-color);

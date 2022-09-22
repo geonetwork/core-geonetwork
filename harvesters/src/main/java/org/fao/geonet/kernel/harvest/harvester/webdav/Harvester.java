@@ -136,7 +136,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             Log.info(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
             rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
-            if (log.isDebugEnabled()) log.debug("Remote files found : " + files.size());
+            log.info("Number of remote files found : " + files.size());
             align(files);
         } finally {
             rr.destroy();
@@ -282,9 +282,6 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                 return;
             }
         }
-
-        log.debug("  - Adding metadata with remote path : " + rf.getPath());
-
 
         if (log.isDebugEnabled())
             log.debug("  - Adding metadata with remote path : " + rf.getPath());

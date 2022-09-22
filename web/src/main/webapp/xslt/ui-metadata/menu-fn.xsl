@@ -29,44 +29,44 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
+  <xsl:function name="gn-fn-metadata:check-condition" as="xs:boolean">
+    <xsl:param name="schema" as="xs:string"/>
+    <xsl:param name="base"/>
+    <xsl:param name="condition" as="xs:string?"/>
+
+    <xsl:choose>
+      <xsl:when test="$condition">
+        <xsl:variable name="prefixPath"
+                      select="if (local-name($base) = 'gui') then '/' else '/../'"/>
+        <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in" select="concat($prefixPath, $condition)"/>
+        </saxon:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="false()"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
   <!-- Evaluate XPath expression to
-                    see if view should be displayed
-                    according to the metadata record or
-                    the session information. -->
-  <xsl:function name="gn-fn-metadata:check-viewtab-visibility" as="xs:boolean">
+       see if view should be displayed
+       according to the metadata record or
+       the session information. -->
+  <xsl:function name="gn-fn-metadata:check-elementandsession-visibility" as="xs:boolean">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="metadata"/>
     <xsl:param name="serviceInfo"/>
     <xsl:param name="displayIfRecord" as="xs:string?"/>
     <xsl:param name="displayIfServiceInfo" as="xs:string?"/>
 
-    <xsl:variable name="isInRecord" as="xs:boolean">
-      <xsl:choose>
-        <xsl:when test="$displayIfRecord">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$metadata"/>
-            <xsl:with-param name="in" select="concat('/../', $displayIfRecord)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="false()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="isInRecord"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-condition($schema, $metadata, $displayIfRecord)"/>
 
-    <xsl:variable name="isInServiceInfo" as="xs:boolean">
-      <xsl:choose>
-        <xsl:when test="$displayIfServiceInfo">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$serviceInfo"/>
-            <xsl:with-param name="in" select="concat('/', $displayIfServiceInfo)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="false()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="isInServiceInfo"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-condition($schema, $serviceInfo, $displayIfServiceInfo)"/>
 
     <xsl:choose>
       <xsl:when test="$displayIfServiceInfo and $displayIfRecord">

@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
+
 /**
  * Creates a report for metadata file downloads.
  *
@@ -53,9 +55,7 @@ public class ReportDownloads implements IReport {
 
         try {
             // Initialize CSVPrinter object
-            CSVFormat csvFileFormat =
-                CSVFormat.DEFAULT.withRecordSeparator("\n");
-            csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
+            csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT);
 
             // Retrieve metadata file downloads
             final MetadataFileDownloadRepository downloadRepository =
@@ -142,7 +142,8 @@ public class ReportDownloads implements IReport {
 
                 Optional<Metadata> metadata = metadataRepository.findById(fileDownload.getMetadataId());
                 String metadataUuid = metadata.get().getUuid();
-                String metadataTitle = ReportUtils.retrieveMetadataTitle(metadataUuid);
+                String metadataTitle = ReportUtils.retrieveMetadataIndex(
+                    metadataUuid, "resourceTitleObject", "default");
 
                 List<String> record = new ArrayList<>();
                 record.add(metadataUuid);

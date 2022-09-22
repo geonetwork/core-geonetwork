@@ -111,6 +111,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
+
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
      * bundle's loc directory)
@@ -240,10 +243,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-
-        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         if (StringUtils.isNotEmpty(iso3lang)) {
-            language = LanguageUtils.locale2gnCode(iso3lang);
+            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
         }
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
@@ -302,7 +304,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,
-                LanguageUtils.locale2gnCode(locale.getISO3Language()),
+                isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
@@ -376,6 +378,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * up-to-date and if maximum performance is required.
      */
     @RequestMapping(value = "/{portal}/{lang}/md.format.public.{type}")
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public HttpEntity<byte[]> getCachedPublicMetadata(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -524,7 +527,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.itextpdf.text.DocumentException {
+    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.lowagie.text.DocumentException {
         final String htmlContent = new String(bytes, Constants.CHARSET);
         try {
             XslUtil.setNoScript();

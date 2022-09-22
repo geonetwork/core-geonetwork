@@ -210,7 +210,7 @@ public class ServiceRequest {
 
     //---------------------------------------------------------------------------
 
-    public void beginStream(String contentType, int contentLength, String contentDisp,
+    public void beginStream(String contentType, long contentLength, String contentDisp,
                             boolean cache) {
     }
 

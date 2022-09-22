@@ -46,7 +46,6 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 /**
  * Decorate a store and record put/get/delete operations in database for reporting statistics.
@@ -54,6 +53,7 @@ import javax.resource.NotSupportedException;
 public class ResourceLoggerStore extends AbstractStore {
 
     private Store decoratedStore;
+
 
     @Autowired private ThreadPool threadPool;
 
@@ -91,7 +91,7 @@ public class ResourceLoggerStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("ResourceLoggerStore does not support getResourceInternal.");
+        throw new UnsupportedOperationException("ResourceLoggerStore does not support getResourceInternal.");
     }
 
     @Override
@@ -257,5 +257,14 @@ public class ResourceLoggerStore extends AbstractStore {
         metadataFileUpload.setUserName(context.getUserSession().getUsername());
 
         repo.save(metadataFileUpload);
+    }
+
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid,
+                              MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.copyResources(context, sourceUuid, targetUuid, metadataResourceVisibility, sourceApproved, targetApproved);
+        }
+
     }
 }

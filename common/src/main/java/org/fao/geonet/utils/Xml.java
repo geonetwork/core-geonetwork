@@ -136,14 +136,14 @@ public final class Xml {
         + "\ud800\udc00-\udbff\udfff"
         + "]";
 
-    //--------------------------------------------------------------------------
+    public static SAXBuilder getSAXBuilder(boolean validate) {
+        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
+        Resolver resolver = ResolverWrapper.getInstance();
+        builder.setEntityResolver(resolver.getXmlResolver());
+        return builder;
+    }
 
-    /**
-     *
-     * @param validate
-     * @return
-     */
-    private static SAXBuilder getSAXBuilder(boolean validate, Path base) {
+    public static SAXBuilder getSAXBuilder(boolean validate, Path base) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, base);
         Resolver resolver = ResolverWrapper.getInstance();
         builder.setEntityResolver(resolver.getXmlResolver());
@@ -153,6 +153,10 @@ public final class Xml {
     private static SAXBuilder getSAXBuilderWithPathXMLResolver(boolean validate, Path base) {
         SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+
+        // To avoid CVE-2021-33813
+        builder.setExpandEntities(false);
 
         if (base != null) {
             NioPathHolder.setBase(base);

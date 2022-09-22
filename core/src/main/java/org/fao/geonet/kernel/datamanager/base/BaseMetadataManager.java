@@ -238,7 +238,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
                 new BatchOpsMetadataReindexer(
                     context.getBean(DataManager.class),
-                    integerList).process(false);
+                    integerList).process(settingManager.getSiteId(), false);
             } else {
                 metadataIndexer.batchIndexInThreadPool(context, toIndex);
             }
@@ -417,6 +417,8 @@ public class BaseMetadataManager implements IMetadataManager {
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
+
+            xml = duplicateMetadata(schema, xml, context);
         } else if (type == MetadataType.SUB_TEMPLATE
                    || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
@@ -726,15 +728,17 @@ public class BaseMetadataManager implements IMetadataManager {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
+
+        String uuidBeforeUfo = null;
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
 
             final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
-            String uuid = findUuid(metadataXml, schema, metadata);
+            uuidBeforeUfo = findUuid(metadataXml, schema, metadata);
 
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid,
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuidBeforeUfo, metadataXml, parentUuid,
                 (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
@@ -758,7 +762,10 @@ public class BaseMetadataManager implements IMetadataManager {
             }
         } finally {
             if (index) {
-                // --- update search criteria
+                // Delete old record if UUID changed
+                if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
+                    getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
+                }
                 metadataIndexer.indexMetadata(metadataId, true);
             }
         }
@@ -1214,6 +1221,38 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
+     * Applies a xslt process when duplicating a metadata, typically to remove identifiers
+     * or other information like DOI (Digital Object Identifiers) and returns the updated metadata.
+     *
+     * @param schema        Metadata schema.
+     * @param md            Metadata to duplicate.
+     * @param srvContext
+     * @return              If the xslt process exists, the metadata processed, otherwise the original metadata.
+     * @throws Exception
+     */
+    private Element duplicateMetadata(String schema,  Element md, ServiceContext srvContext) throws Exception {
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
+            Geonet.File.DUPLICATE_METADATA);
+
+        if (Files.exists(styleSheet)) {
+            // --- setup environment
+            Element env = new Element("env");
+            env.addContent(new Element("lang").setText(srvContext.getLanguage()));
+
+            // add original metadata to result
+            Element result = new Element("root");
+            result.addContent(md);
+            result.addContent(env);
+
+            result = Xml.transform(result, styleSheet);
+
+            return result;
+        } else {
+            return md;
+        }
+    }
+
+    /**
      * @param root
      * @param name
      * @param value
@@ -1276,5 +1315,20 @@ public class BaseMetadataManager implements IMetadataManager {
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
         }
+    }
+
+    @Override
+    public boolean isValid(Integer id) {
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            return false;
+        }
+        for (Object elem : validationInfo) {
+            MetadataValidation vi = (MetadataValidation) elem;
+            if (!vi.isValid() && vi.isRequired()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

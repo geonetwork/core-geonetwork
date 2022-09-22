@@ -54,11 +54,11 @@
       <!-- Collect the all thesaurus keywords which contains
            the new keyword added by users. -->
       <xsl:variable name="allThesaurusEl"
-                    select="../(gmd:descriptiveKeywords|srv:keywords)[
+                    select="(../(gmd:descriptiveKeywords|srv:keywords)[
                                 contains(@xlink:href, 'thesaurus=external.none.allThesaurus') or
                                 contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
                                   'external.none.allThesaurus')
-                                ]"/>
+                                ])[1]"/>
 
       <!-- Check if we are in xlink mode or not.
            WARNING: We don't support a mix of keyword in xlink mode
@@ -66,7 +66,6 @@
       -->
       <xsl:variable name="isAllThesaurusXlinked"
                     select="count($allThesaurusEl/@xlink:href) > 0"/>
-
 
 
       <!-- Collect all XLink parameters from the all thesaurus -->
@@ -132,7 +131,7 @@
 
         <xsl:if test="$isNotAllThesaurus">
           <xsl:choose>
-            <xsl:when test="@xlink:href != ''">
+            <xsl:when test="starts-with(@xlink:href, 'local://')">
               <!-- Insert identifiers from the all thesaurus in the existing XLink.
               -->
               <xsl:variable name="currentThesaurus"

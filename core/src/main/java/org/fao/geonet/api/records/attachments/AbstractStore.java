@@ -27,6 +27,7 @@ package org.fao.geonet.api.records.attachments;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -108,7 +109,9 @@ public abstract class AbstractStore implements Store {
             metadata = _appContext.getBean(IMetadataUtils.class).findOneByUuid(metadataUuid);
         }
         if (metadata == null) {
-            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
         }
         return metadata.getId();
     }
@@ -162,6 +165,10 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        if (org.apache.commons.lang3.StringUtils.contains(file.getOriginalFilename(),';')) {
+            throw new NotAllowedException(String.format(
+                "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
+        }
         return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, approved);
     }
 
@@ -204,6 +211,16 @@ public abstract class AbstractStore implements Store {
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
             final MetadataResourceVisibility metadataResourceVisibility) throws Exception {
         return patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, true);
+    }
+
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
+        for (MetadataResource resource: resources) {
+            try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
+                putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
+            }
+        }
     }
 
     protected String getFilename(final String metadataUuid, final String resourceId) {

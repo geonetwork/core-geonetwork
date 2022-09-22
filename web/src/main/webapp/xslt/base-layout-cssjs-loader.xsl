@@ -40,24 +40,23 @@
   </xsl:variable>
 
   <xsl:template name="css-load">
-    <!--
-            TODO : less compilation
-            <link href="style/app.css" rel="stylesheet" media="screen" />
--->
     <link href="{/root/gui/url}/static/gn_fonts.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
 
     <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
+
+    <link href="{/root/gui/url}/static/gn_print_default.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="print"/>
 
     <link href="{/root/gui/url}/static/bootstrap-table.min.css?v={$buildNumber}" rel="stylesheet"
-          media="screen"></link>
+          media="all"></link>
 
     <link href="{/root/gui/url}/static/gn_pickers.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
     <link href="{/root/gui/url}/static/gn_inspire.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
 
     <xsl:if test="$withD3">
       <link href="{/root/gui/url}/static/nv.d3.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
@@ -66,12 +65,13 @@
 
     <link href="{/root/gui/url}/static/ng-skos.css?v={$buildNumber}" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css?v={$buildNumber}&amp;{$minimizedParam}"
-          rel="stylesheet" media="screen"/>
+          rel="stylesheet" media="all"/>
   </xsl:template>
 
   <xsl:template name="css-load-nojs">
     <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
+
     <link href="{/root/gui/url}/static/gn_metadata_pdf.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="print"/>
   </xsl:template>
@@ -86,9 +86,23 @@
     </xsl:if>
 
 
-    <xsl:if test="$isRecaptchaEnabled and $service = 'new.account'">
-      <script src="https://www.google.com/recaptcha/api.js"></script>
-    </xsl:if>
+    <!-- Load recaptcha api if recaptcha is enabled:
+          - in the new account service.
+          - in the search application if metadaat user feedback is enabled
+    -->
+    <xsl:choose>
+      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled))">
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- Add dummy object to prevent angularjs-recaptcha to load recaptcha api.js file in other cases.
+             If angularjs-recaptcha doesn't find the grecaptcha object with the function render, request the api.js file
+             adding some extra cookies that can cause issues with EU directive.
+        -->
+        <script>var grecaptcha = {render: function() {}};
+        </script>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:choose>
       <xsl:when test="$isDebugMode">
@@ -100,13 +114,14 @@
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/franc-min/franc-min.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-gettext.min.js?v={$buildNumber}"/>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-messages.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-translate.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-filter.min.js?v={$buildNumber}"></script>
@@ -184,7 +199,7 @@
 
         <!--</xsl:if>-->
 
-        <script src="{$uiResourcesPath}lib/underscore/underscore-min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/lodash/lodash.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
 
@@ -238,13 +253,18 @@
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login'">
+    <script type="text/javascript">
+      var module = angular.module('<xsl:value-of select="$angularApp"/>');
+    </script>
+
+    <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login' or $angularApp = 'gn_admin'">
       <script type="text/javascript">
-        var module = angular.module('<xsl:value-of select="$angularApp"/>');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
         gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
         gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink"/>;
+        gnGlobalSettings.isUserProfileUpdateEnabled = <xsl:value-of select="$isUserProfileUpdateEnabled"/>;
+        gnGlobalSettings.isUserGroupUpdateEnabled = <xsl:value-of select="$isUserGroupUpdateEnabled"/>;
         }]);
       </script>
 
@@ -278,13 +298,12 @@
     <!-- XML highlighter JS dependency. -->
     <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
+      <script type="text/javascript" src="{$uiResourcesPath}lib/ace/snippets/gn.js?v={$buildNumber}"></script>
+      <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ext-language_tools.js?v={$buildNumber}"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js?v={$buildNumber}"></script>
     </xsl:if>
 
-
     <script type="text/javascript">
-      var module = angular.module('<xsl:value-of select="$angularApp"/>');
-
       // Init GN config which is a dependency of gn
       // in order to be initialized quite early
       var cfgModule = angular.module('gn_config', []);

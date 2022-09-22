@@ -50,6 +50,7 @@ import static com.google.common.io.Files.getFileExtension;
 public class Resource extends AbstractFormatService {
 
     @RequestMapping(value = "/{portal}/{lang}/md.formatter.resource")
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public void exec(
         @RequestParam(Params.ID) String xslid,
         @RequestParam(Params.FNAME) String fileName,

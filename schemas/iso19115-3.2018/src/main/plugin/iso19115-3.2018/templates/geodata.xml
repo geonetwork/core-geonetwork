@@ -317,7 +317,9 @@
                   <gfc:definition>
                     <gco:CharacterString>Definition</gco:CharacterString>
                   </gfc:definition>
-                  <gfc:cardinality></gfc:cardinality>
+                  <gfc:cardinality gco:nilReason="missing">
+                    <gco:CharacterString/>
+                  </gfc:cardinality>
                 </gfc:FC_FeatureAttribute>
               </gfc:carrierOfCharacteristics>
               <gfc:featureCatalogue/>

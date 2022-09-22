@@ -55,13 +55,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -424,6 +420,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
+
                         if (finalGroupId == null || finalGroupId.equals("")) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
@@ -435,9 +432,20 @@ public class Importer {
                                 Integer.valueOf(finalGroupId));
                             allowedRepository.saveAll(allowedSet);
                         }
-
                     }
                 });
+
+                if (validate) {
+                    java.util.Optional<Metadata> md = context.getBean(MetadataRepository.class).findById(iMetadataId);
+
+                    if (md.isPresent()) {
+                        // Persist the validation status
+                        IMetadataValidator metadataValidator = context.getBean(IMetadataValidator.class);
+
+                        metadataValidator.doValidate(md.get(), context.getLanguage());
+                    }
+                }
+
                 dm.indexMetadata(metadataIdMap.get(index), true);
             }
 

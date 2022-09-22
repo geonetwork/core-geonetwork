@@ -54,7 +54,7 @@
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlines"/>
+                   data-types="onlinesrc|thumbnail|parent"/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
@@ -64,11 +64,11 @@
         <for name="dc:subject"/>
       </flatModeExceptions>
     </view>
-    <view name="advanced">
+    <view name="advanced" upAndDownControlHidden="true">
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlines"/>
+                   data-types="onlinesrc|thumbnail|parent"/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="advanced" default="true">
@@ -79,7 +79,7 @@
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlines"/>
+                   data-types="onlinesrc|thumbnail|parent"/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="xml" default="true"/>

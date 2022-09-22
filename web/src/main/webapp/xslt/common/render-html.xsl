@@ -51,7 +51,9 @@
 
     <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
-        <title><xsl:value-of select="$title"/></title>
+        <title><xsl:value-of select="if($title != '')
+                  then $title
+                  else /root/gui/systemConfig/settings/system/site/name"/></title>
         <meta charset="utf-8"/>
 
         <xsl:copy-of select="$meta"/>
@@ -104,5 +106,3 @@
     </html>
   </xsl:template>
 </xsl:stylesheet>
-
-

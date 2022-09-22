@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_session_service');
+(function () {
+  goog.provide("gn_session_service");
 
-  var module = angular.module('gn_session_service',
-      ['ngCookies', 'ngSanitize']);
+  var module = angular.module("gn_session_service", ["ngCookies", "ngSanitize"]);
 
   /**
    * Session check & warning service
@@ -40,10 +39,12 @@
    * cancelled on the server. Anonymous user will not have
    * warnings. Session timeout is set in web.xml.
    */
-  module.factory('gnSessionService', [
-    '$rootScope', '$translate', '$timeout', '$cookies',
-    function($rootScope, $translate, $timeout, $cookies) {
-
+  module.factory("gnSessionService", [
+    "$rootScope",
+    "$translate",
+    "$timeout",
+    "$cookies",
+    function ($rootScope, $translate, $timeout, $cookies) {
       var session = {
         remainingTime: null,
         start: null,
@@ -56,65 +57,69 @@
       };
       function getSession() {
         return session;
-      };
+      }
       function getRemainingTime() {
-        session.start = moment(parseInt($cookies.get('serverTime')));
+        session.start = moment(parseInt($cookies.get("serverTime")));
         // 0 session length means user is not authenticated.
         session.length =
-            ($cookies.get('sessionExpiry') - $cookies.get('serverTime')) / 1000;
-        session.remainingTime =
-            Math.round(
-            moment(parseInt($cookies.get('sessionExpiry'))).diff(
-            moment()) / 1000);
+          ($cookies.get("sessionExpiry") - $cookies.get("serverTime")) / 1000;
+        session.remainingTime = Math.round(
+          moment(parseInt($cookies.get("sessionExpiry"))).diff(moment()) / 1000
+        );
 
         return session.remainingTime;
-      };
+      }
       function check(user) {
         // User is not yet authenticated
-        if ($cookies.get('sessionExpiry') === $cookies.get('serverTime')) {
+        if ($cookies.get("sessionExpiry") === $cookies.get("serverTime")) {
           return;
         }
 
         getRemainingTime();
 
-        if (user.isConnected &&
-            user.isConnected() &&
-            session.remainingTime < session.alertWhen) {
+        if (
+          user.isConnected &&
+          user.isConnected() &&
+          session.remainingTime < session.alertWhen
+        ) {
           if (session.remainingTime < 0) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('sessionIsProbablyCancelled'),
-              msg: $translate.instant('sessionAlertDisconnectedMsg', {
-                startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("sessionIsProbablyCancelled"),
+              msg: $translate.instant("sessionAlertDisconnectedMsg", {
+                startedAt: session.start.format("YYYY-MM-DD HH:mm:ss"),
                 length: session.length
               }),
-              id: 'session-alert',
+              id: "session-alert",
               timeout: session.checkInterval,
-              type: 'danger'});
+              type: "danger"
+            });
           } else {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('sessionIsAboutToBeCancelled'),
-              msg: $translate.instant('sessionAlertMsg', {
-                startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("sessionIsAboutToBeCancelled"),
+              msg: $translate.instant("sessionAlertMsg", {
+                startedAt: session.start.format("YYYY-MM-DD HH:mm:ss"),
                 willBeCancelledIn: session.remainingTime,
                 length: session.length
               }),
-              id: 'session-alert',
+              id: "session-alert",
               timeout: session.checkInterval,
-              type: 'danger'});
+              type: "danger"
+            });
           }
         }
-      };
+      }
       function scheduleCheck(user, interval) {
-        $timeout(function() {
+        $timeout(function () {
           check(user);
           scheduleCheck(user, interval);
         }, interval || session.checkInterval);
-      };
+      }
       return {
         getSession: getSession,
         getRemainingTime: getRemainingTime,
         check: check,
         scheduleCheck: scheduleCheck
       };
-    }]);
+    }
+  ]);
 })();

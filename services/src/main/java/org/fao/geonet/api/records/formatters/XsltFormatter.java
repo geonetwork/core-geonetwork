@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -101,9 +101,13 @@ public class XsltFormatter implements FormatterImpl {
         // Some XSLT are used by both formatters and Jeeves and Spring MVC services
         Element translations = new Element("translations");
         Element gui = new Element("gui");
-        gui.addContent(new Element("url").setText(fparams.url + "../.."));
+        String baseUrl = settingManager.getBaseURL();
+        String context = baseUrl.replace(settingManager.getServerURL(), "");
+        gui.addContent(new Element("url").setText(
+            context.substring(0, context.length() - 1)
+        ));
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
-        gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
+        gui.addContent(new Element("baseUrl").setText(baseUrl));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("language").setText(fparams.context.getLanguage()));
         gui.addContent(new Element("reqService").setText("md.format.html"));
@@ -146,9 +150,6 @@ public class XsltFormatter implements FormatterImpl {
                 schemas.addContent(e);
             }
         }
-        if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
-            return Xml.getString(root);
-        }
 
         // Create a map of request parameters to be passed to the XSL transformation
         // For a formatter to retrieve a request parameter
@@ -165,7 +166,7 @@ public class XsltFormatter implements FormatterImpl {
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
         return "textResponse".equals(transformed.getName()) ?
-            transformed.getTextNormalize() :
+            transformed.getText() :
             Xml.getString(transformed);
     }
 }

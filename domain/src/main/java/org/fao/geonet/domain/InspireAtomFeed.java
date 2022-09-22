@@ -94,7 +94,11 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         List<Element> entryList = atomDoc.getChildren("entry", ns);
         for (Element entry : entryList) {
             for (Element linkEl : (List<Element>) entry.getChildren("link", ns)) {
-                if (linkEl.getAttributeValue("rel", "").equals("alternate")) {
+                // Process data feed download links:
+                //  - alternate: single download files/links per datafeed entry
+                //  - section: multiple download files/links per datafeed entry
+                if (linkEl.getAttributeValue("rel", "").equals("alternate") ||
+                    linkEl.getAttributeValue("rel", "").equals("section")) {
                     InspireAtomFeedEntry inspireAtomFeedEntry = new InspireAtomFeedEntry();
 
                     inspireAtomFeedEntry.setTitle(entry.getChildText("title", ns));

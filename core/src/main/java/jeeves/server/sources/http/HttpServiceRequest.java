@@ -50,25 +50,29 @@ public class HttpServiceRequest extends ServiceRequest {
 
     //---------------------------------------------------------------------------
 
+    @Override
     public void beginStream(String contentType, boolean cache) {
         beginStream(contentType, -1, null, cache);
     }
 
     //---------------------------------------------------------------------------
 
-    public void beginStream(String contentType, int contentLength,
+    @Override
+    public void beginStream(String contentType, long contentLength,
                             String contentDisposition, boolean cache) {
         httpRes.setStatus(statusCode);
 
-        if (contentType != null)
+        if (contentType != null) {
             httpRes.setContentType(contentType);
+        }
 
-        if (contentLength != -1)
-            httpRes.setContentLength(contentLength);
+        if (contentLength != -1) {
+            httpRes.setContentLengthLong(contentLength);
+        }
 
-        if (contentDisposition != null)
+        if (contentDisposition != null) {
             httpRes.addHeader("Content-disposition", contentDisposition);
-        else {
+        } else {
             //--- this else is needed by IExplorer6
             //--- maybe we can use the <meta> tag instead of these lines
 
@@ -82,6 +86,7 @@ public class HttpServiceRequest extends ServiceRequest {
 
     //---------------------------------------------------------------------------
 
+    @Override
     public void endStream() throws IOException {
         httpRes.flushBuffer();
     }

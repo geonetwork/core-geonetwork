@@ -32,6 +32,7 @@ import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -56,7 +57,6 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,11 +71,13 @@ public class CMISStore extends AbstractStore {
     @Autowired
     CMISUtils cmisUtils;
 
+    @Autowired
+    SettingManager settingManager;
+
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
                                                final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
-        final SettingManager settingManager = context.getBean(SettingManager.class);
 
         final String resourceTypeDir = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
 
@@ -90,7 +92,13 @@ public class CMISStore extends AbstractStore {
         try {
             Folder parentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(resourceTypeDir);
 
-            Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(parentFolder, null);
+            OperationContext oc = cmisUtils.createOperationContext();
+            if (cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty()) {
+                // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+                oc.setFilter(null);
+            }
+
+            Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(parentFolder, null, oc);
             for (Map.Entry<String, Document> entry : documentMap.entrySet()) {
                 Document object = entry.getValue();
                 String cmisFilePath = entry.getKey();
@@ -99,7 +107,7 @@ public class CMISStore extends AbstractStore {
                     Path keyPath = new File(cmisFilePath).toPath().getFileName();
                     if (matcher.matches(keyPath)) {
                         final String filename = getFilename(cmisFilePath);
-                        MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object, metadataId, approved);
+                        MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, object, metadataId, approved);
                         resourceList.add(resource);
                     }
                 }
@@ -114,7 +122,7 @@ public class CMISStore extends AbstractStore {
         return resourceList;
     }
 
-    private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
+    protected MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId,
                                                        Document document, int metadataId, boolean approved) {
 
@@ -125,14 +133,38 @@ public class CMISStore extends AbstractStore {
             versionValue = document.getVersionLabel();
         }
 
+        MetadataResourceExternalManagementProperties.ValidationStatus validationStatus = MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN;
+        if (!StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            Object propertyValue = null;
+            if (cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty()) {
+                propertyValue = getSecondaryProperty(document, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName());
+            } else {
+                Property property = document.getProperty(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName());
+                if (property != null) {
+                    propertyValue = property.getValue();
+                }
+            }
+            if (propertyValue != null) {
+                int propertyInt;
+                // If the fields is a string field then try to convert it to a integer
+                if (propertyValue instanceof String) {
+                    propertyInt = Integer.valueOf((String) (propertyValue));
+                } else {
+                    propertyInt = ((Number)propertyValue).intValue();
+                }
+
+                validationStatus = MetadataResourceExternalManagementProperties.ValidationStatus.fromValue(propertyInt);
+            }
+        }
+
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType());
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType(), validationStatus);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
     }
 
-    private static String getFilename(final String key) {
+    protected static String getFilename(final String key) {
         final String[] splittedKey = key.split("/");
         return splittedKey[splittedKey.length - 1];
     }
@@ -144,22 +176,22 @@ public class CMISStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
-            final SettingManager settingManager = context.getBean(SettingManager.class);
-            return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
+            return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 (Document) object, metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
-            Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
-                String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
     }
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("CMISStore does not support getResourceInternal.");
+        throw new UnsupportedOperationException("CMISStore does not support getResourceInternal.");
     }
 
-    private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + cmisConfiguration.getFolderDelimiter() + visibility.toString() + cmisConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
@@ -169,17 +201,50 @@ public class CMISStore extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
-        final SettingManager settingManager = context.getBean(SettingManager.class);
+        return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
+    }
+
+    protected MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
+                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> additionalProperties)
+        throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
-        Map<String, Object> properties = new HashMap<String, Object>();
-        setCmisMetadataUUIDPrimary(properties, metadataUuid);
+        OperationContext oc = cmisUtils.createOperationContext();
+        // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+        oc.setFilter(null);
+
         CmisObject cmisObject;
         try {
-            cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
+            cmisObject = cmisConfiguration.getClient().getObjectByPath(key, oc);
         } catch (Exception e) {
             cmisObject = null;
+        }
+
+        Map<String, Object> properties = new HashMap<String, Object>();
+        if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) && !cmisConfiguration.existMetadataUUIDSecondaryProperty()) {
+            setCmisMetadataUUIDPrimary(properties, metadataUuid);
+        }
+
+        // If cmisObject is empty then it is a new record. With new records, we need to set the default value for the status.
+        MetadataResourceExternalManagementProperties.ValidationStatus defaultStatus = null;
+        // We only need to set the default if there is a status property supplied.
+        if (!StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            if (cmisConfiguration.getExternalResourceManagementValidationStatusDefaultValue() != null) {
+                // If a default property name does exist then use it
+                defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(cmisConfiguration.getExternalResourceManagementValidationStatusDefaultValue());
+            } else {
+                // Otherwise lets default to incomplete.
+                // Reason - as the administrator decided to use the status, it most likely means that there are extra properties that need to be set after a file is uploaded so defaulting it to
+                // incomplete seems reasonable.
+                defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.INCOMPLETE;
+            }
+            if (cmisObject==null &&
+                !cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
+                !properties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())
+                ) {
+                setCmisExternalManagementResourceStatusPrimary(properties, defaultStatus);
+            }
         }
 
         Document doc = cmisUtils.saveDocument(key, cmisObject, properties, is, changeDate);
@@ -189,8 +254,22 @@ public class CMISStore extends AbstractStore {
         // CMIS Secondary properties cannot be set in the same call that creates the document and sets it's properties,
         // so this is done in the following call after the document is created
         if (cmisConfiguration.existSecondaryProperty()) {
-            Map<String, Object> secondaryProperties = new HashMap<String, Object>();
-            setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
+            Map<String, Object> secondaryProperties = new HashMap<>();
+            if (MapUtils.isNotEmpty(additionalProperties)) {
+                secondaryProperties.putAll(additionalProperties);
+            }
+            if (cmisConfiguration.existMetadataUUIDSecondaryProperty()) {
+                setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
+            }
+
+            // If cmisObject is empty and the property does not already exist as an additional secondary property then it is a new record.
+            // With new records, we need to set the default value for the status.
+            if (cmisObject==null &&
+                cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
+                !secondaryProperties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName().split(CMISConfiguration.CMIS_SECONDARY_PROPERTY_SEPARATOR)[1])) {
+                setCmisExternalManagementResourceStatusSecondary(doc, secondaryProperties, defaultStatus);
+            }
+
             try {
                 doc.updateProperties(secondaryProperties);
             } catch (Exception e) {
@@ -199,21 +278,37 @@ public class CMISStore extends AbstractStore {
             }
         }
 
-        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename,
-             doc, metadataId, approved);
+        return createResourceDescription(context, metadataUuid, visibility, filename,
+            doc, metadataId, approved);
     }
 
-    private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
-        if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) &&
-            !cmisConfiguration.getCmisMetadataUUIDPropertyName().contains(cmisConfiguration.getSecondaryPropertySeparator())) {
-            properties.put(cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
+    protected void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
+        setCmisPrimaryProperty(properties, cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
+    }
+
+    protected void setCmisExternalManagementResourceStatusPrimary(Map<String, Object> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
+        setCmisPrimaryProperty(properties, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName(), status.getValue());
+    }
+
+    protected void setCmisPrimaryProperty(Map<String, Object> properties, String propertyName, Object value) {
+        if (!StringUtils.isEmpty(propertyName) &&
+            !propertyName.contains(cmisConfiguration.getSecondaryPropertySeparator())) {
+            properties.put(propertyName, value);
         }
     }
 
-    private void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
-        if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) &&
-            cmisConfiguration.getCmisMetadataUUIDPropertyName().contains(cmisConfiguration.getSecondaryPropertySeparator())) {
-            String[] splitPropertyNames = cmisConfiguration.getCmisMetadataUUIDPropertyName().split(Pattern.quote(cmisConfiguration.getSecondaryPropertySeparator()));
+    protected void setCmisExternalManagementResourceStatusSecondary(Document doc, Map<String, Object> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
+        setCmisSecondaryProperty(doc, properties, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName(), status.getValue());
+    }
+
+    protected void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
+        setCmisSecondaryProperty(doc, properties, cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
+    }
+
+    protected void setCmisSecondaryProperty(Document doc, Map<String, Object> properties, String propertyName, Object value) {
+        if (!StringUtils.isEmpty(propertyName) &&
+            propertyName.contains(cmisConfiguration.getSecondaryPropertySeparator())) {
+            String[] splitPropertyNames = propertyName.split(Pattern.quote(cmisConfiguration.getSecondaryPropertySeparator()));
             String aspectName = splitPropertyNames[0];
             String secondaryPropertyName = splitPropertyNames[1];
             List<Object> aspects = null;
@@ -230,14 +325,13 @@ public class CMISStore extends AbstractStore {
             }
 
             properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, aspects);
-            properties.put(secondaryPropertyName, metadataUuid);
+            properties.put(secondaryPropertyName, value);
         }
     }
 
     @Override
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
                                                 final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        SettingManager settingManager = context.getBean(SettingManager.class);
         int metadataId = canEdit(context, metadataUuid, approved);
 
         // Don't use caching for this process.
@@ -256,7 +350,7 @@ public class CMISStore extends AbstractStore {
                     break;
                 } else {
                     // already the good visibility
-                    return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
+                    return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
                 }
             } catch (CmisObjectNotFoundException ignored) {
                 // ignored
@@ -290,7 +384,7 @@ public class CMISStore extends AbstractStore {
                         "No permissions to modify metadata resource '%s' for metadata '%s'.", resourceId, metadataUuid));
             }
 
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
+            return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
         } else {
             Log.warning(Geonet.RESOURCES,
                     String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -367,7 +461,7 @@ public class CMISStore extends AbstractStore {
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
-    private boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
+    protected boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
                                    final String resourceId) throws Exception {
         final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
@@ -395,10 +489,10 @@ public class CMISStore extends AbstractStore {
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
-        SettingManager settingManager = context.getBean(SettingManager.class);
+
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
+            return createResourceDescription(context, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
@@ -410,7 +504,6 @@ public class CMISStore extends AbstractStore {
 
         final String key = getMetadataDir(context, metadataId);
 
-        SettingManager settingManager = context.getBean(SettingManager.class);
         try {
             String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
             if (folderRoot == null) {
@@ -418,7 +511,7 @@ public class CMISStore extends AbstractStore {
             }
             Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
             MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType());
+                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
 
             return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
                 settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
@@ -428,8 +521,72 @@ public class CMISStore extends AbstractStore {
         }
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
+        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        try {
+            Folder sourceParentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
 
-    private String getMetadataDir(ServiceContext context, final int metadataId) {
+            OperationContext oc = cmisUtils.createOperationContext();
+            // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
+            oc.setFilter(null);
+
+            Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null, oc);
+
+
+            for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
+                Document sourceDocument = sourceEntry.getValue();
+
+                // Get cmis properties from the source document
+                Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
+                putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
+
+            }
+        } catch (CmisObjectNotFoundException  e) {
+            Log.warning("Cannot find folder object from CMIS ... Abort copping resources from "+sourceResourceTypeDir, e);
+        }
+    }
+
+    protected Map<String, Object> getSecondaryProperties(Document document) {
+        String aspectId=null;
+        Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+        if (aspectProperty != null) {
+            aspectId = aspectProperty.getValueAsString();
+        }
+
+        Map<String, Object> properties = new HashMap<>();
+        if (!StringUtils.isEmpty(aspectId)) {
+            for (Property<?> property:document.getProperties()) {
+                if (property.getId().startsWith(aspectId) && property.getValue()!=null) {
+                    properties.put(property.getId(), property.getValue());
+                }
+            }
+        }
+
+        return properties;
+    }
+
+    protected Object getSecondaryProperty(Document document, String propertyName) {
+        Object propertyValue = null;
+
+        String aspectId = null;
+        Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+        if (aspectProperty != null) {
+            aspectId = aspectProperty.getValueAsString();
+        }
+
+        if (!StringUtils.isEmpty(aspectId)) {
+            Property<?> property = document.getProperty(propertyName.split(CMISConfiguration.CMIS_SECONDARY_PROPERTY_SEPARATOR)[1]);
+            if (property != null && property.getValue() != null) {
+                propertyValue = property.getValue();
+            }
+        }
+
+        return propertyValue;
+    }
+
+    protected String getMetadataDir(ServiceContext context, final int metadataId) {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);
@@ -448,7 +605,7 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    private Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
+    protected Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
         //If we not already figured out the base metadata dir then lets figure it out.
         if (baseMetadataDir == null) {
             Path systemFullDir = getDataDirectory(context).getSystemDataDir();
@@ -493,7 +650,7 @@ public class CMISStore extends AbstractStore {
      * http://localhost:8080/livelink/cs?func=ll&objaction=overview&objid={cmisobjectid}&vernum={version}
      */
 
-    private MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
+    protected MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
                                                                                                          int metadataId,
                                                                                                          final String metadataUuid,
                                                                                                          final MetadataResourceVisibility visibility,
@@ -501,7 +658,8 @@ public class CMISStore extends AbstractStore {
                                                                                                          String filename,
                                                                                                          String version,
                                                                                                          String cmisObjectId,
-                                                                                                         ObjectType type
+                                                                                                         ObjectType type,
+                                                                                                         MetadataResourceExternalManagementProperties.ValidationStatus validationStatus
     ) {
         String metadataResourceExternalManagementPropertiesUrl = cmisConfiguration.getExternalResourceManagementUrl();
         if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
@@ -565,7 +723,7 @@ public class CMISStore extends AbstractStore {
         }
 
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
-                = new MetadataResourceExternalManagementProperties(cmisObjectId, metadataResourceExternalManagementPropertiesUrl);
+                = new MetadataResourceExternalManagementProperties(cmisObjectId, metadataResourceExternalManagementPropertiesUrl, validationStatus);
 
         return metadataResourceExternalManagementProperties;
     }
@@ -604,7 +762,7 @@ public class CMISStore extends AbstractStore {
         };
     }
 
-    private static class ResourceHolderImpl implements ResourceHolder {
+    protected static class ResourceHolderImpl implements ResourceHolder {
         private CmisObject cmisObject;
         private Path tempFolderPath;
         private Path path;

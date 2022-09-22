@@ -21,8 +21,6 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-
-
 /*
  * This directive allows for a single metadata-field to be broken up into multiple fields on the add online resource
  * dialog.
@@ -211,244 +209,295 @@
  *        "multilingualFields": ["name", "desc"]
  *      }
  *    }
-*/
+ */
 
-(function() {
-  goog.provide('gn_multientry_combiner_onlineresourcesdescription');
+(function () {
+  goog.provide("gn_multientry_combiner_onlineresourcesdescription");
 
-  var module = angular.module('gn_multientry_combiner_onlineresourcesdescription',
-    ['pascalprecht.translate']);
+  var module = angular.module("gn_multientry_combiner_onlineresourcesdescription", [
+    "pascalprecht.translate"
+  ]);
 
-  module
-    .directive('gnMultientryCombinerOnlineResourcesDescription',
-      ['gnCurrentEdit','gnGlobalSettings', 'gnLangs', '$log',
-        function(gnCurrentEdit,gnGlobalSettings, gnLangs, $log) {
-          return {
-            restrict: 'A',
-            transclude: true,
-            replace: true,
-            templateUrl: '../../catalog/components/edit/multientrycombiner/partials/multientrycombiner_onlineresourcesdescription.html',
-            scope: {
-              configuration: '@gnMultientryCombinerOnlineResourcesDescription'
-            },
-            link: function (scope, element, attrs) {
-              scope.config = JSON.parse(scope.configuration);
+  module.directive("gnMultientryCombinerOnlineResourcesDescription", [
+    "gnCurrentEdit",
+    "gnGlobalSettings",
+    "gnLangs",
+    "$log",
+    function (gnCurrentEdit, gnGlobalSettings, gnLangs, $log) {
+      return {
+        restrict: "A",
+        transclude: true,
+        replace: true,
+        templateUrl:
+          "../../catalog/components/edit/multientrycombiner/partials/multientrycombiner_onlineresourcesdescription.html",
+        scope: {
+          configuration: "@gnMultientryCombinerOnlineResourcesDescription"
+        },
+        link: function (scope, element, attrs) {
+          scope.config = JSON.parse(scope.configuration);
 
-              if (angular.isUndefined(scope.config.fieldName) || scope.config.fieldName === '') {
-                $log.error("MultiEntryCombinerOnlineResourceDescription: The fieldName configuration option is mandatory" );
-                throw "The fieldName configuration option is mandatory";
-              }
-              var emptyLangs = {};
-              _.each(_.keys(gnCurrentEdit.allLanguages.code2iso), function (code) {
-                var lang = code.replace("#", "");
-                emptyLangs[lang] = "";
-              });
-              scope.config.values = angular.extend({}, scope.$parent.params[scope.config.fieldName], emptyLangs);
+          if (
+            angular.isUndefined(scope.config.fieldName) ||
+            scope.config.fieldName === ""
+          ) {
+            $log.error(
+              "MultiEntryCombinerOnlineResourceDescription: The fieldName configuration option is mandatory"
+            );
+            throw "The fieldName configuration option is mandatory";
+          }
+          var emptyLangs = {};
+          _.each(_.keys(gnCurrentEdit.allLanguages.code2iso), function (code) {
+            var lang = code.replace("#", "");
+            emptyLangs[lang] = "";
+          });
+          scope.config.values = angular.extend(
+            {},
+            scope.$parent.params[scope.config.fieldName],
+            emptyLangs
+          );
 
-
-              // helper function - fix up values
-              // if its a fixed values, but the user hasn't put anything in, put the fixed value in the correct location
-              var fix_values = function() {
-                //first, make sure missing items are ''
-                var nExpectedNumber = scope.config.config.length;
-                scope.individualValues = _.mapObject(scope.individualValues, function(val, key) {
-                  val.length = nExpectedNumber; //extend array
-                  //set any undefined to ''
-                  val = _.map(val, function(v) {
-                    if (v === undefined)
-                      return '';
-                    return v.trim();//remove leading/trailing spaces
-                  });
-                  //put in any fixedValue
-                  for (var idx =0; idx < nExpectedNumber; idx++) {
-                    var meta = scope.config.config[idx];
-                    if (meta.type === 'fixedValue') {  // fixed values are always the same
-                      val[idx] = meta.values[key];
-                    } else {  // default values -- put in if its not set (only do this at start)
-                      if ( (val[idx] === '') && (meta.defaultValues) && (meta.defaultValues[key]) ) {
-                        val[idx] = meta.defaultValues[key];
-                      }
+          // helper function - fix up values
+          // if its a fixed values, but the user hasn't put anything in, put the fixed value in the correct location
+          var fix_values = function () {
+            //first, make sure missing items are ''
+            var nExpectedNumber = scope.config.config.length;
+            scope.individualValues = _.mapObject(
+              scope.individualValues,
+              function (val, key) {
+                val.length = nExpectedNumber; //extend array
+                //set any undefined to ''
+                val = _.map(val, function (v) {
+                  if (v === undefined) return "";
+                  return v.trim(); //remove leading/trailing spaces
+                });
+                //put in any fixedValue
+                for (var idx = 0; idx < nExpectedNumber; idx++) {
+                  var meta = scope.config.config[idx];
+                  if (meta.type === "fixedValue") {
+                    // fixed values are always the same
+                    val[idx] = meta.values[key];
+                  } else {
+                    // default values -- put in if its not set (only do this at start)
+                    if (
+                      val[idx] === "" &&
+                      meta.defaultValues &&
+                      meta.defaultValues[key]
+                    ) {
+                      val[idx] = meta.defaultValues[key];
                     }
                   }
-                  return val;
-                } );
+                }
+                return val;
               }
+            );
+          };
 
-              scope.currentLang = gnCurrentEdit.mdLanguage;
-              //get the current UI lang
-              // will be "eng" or "fra"
+          scope.currentLang = gnCurrentEdit.mdLanguage;
+          //get the current UI lang
+          // will be "eng" or "fra"
 
-              scope.initCurrentLang = function() {
-                var detectedLang = gnCurrentEdit.allLanguages.iso2code[gnLangs.detectLang(
+          scope.initCurrentLang = function () {
+            var detectedLang =
+              gnCurrentEdit.allLanguages.iso2code[
+                gnLangs.detectLang(gnGlobalSettings.gnCfg.langDetector, gnGlobalSettings)
+              ];
+
+            if (angular.isUndefined(detectedLang)) {
+              $log.warn(
+                "The current UI language is not present in the metadata document: " +
+                  gnLangs.detectLang(
                     gnGlobalSettings.gnCfg.langDetector,
                     gnGlobalSettings
-                )];
+                  ) +
+                  ". Defaulting to " +
+                  scope.currentLang
+              );
+              scope.currentUILang = scope.currentLang;
+            } else {
+              scope.currentUILang = detectedLang.replace("#", "");
+            }
+          };
 
-                if (angular.isUndefined(detectedLang)) {
-                  $log.warn("The current UI language is not present in the metadata document: " +
-                      gnLangs.detectLang(gnGlobalSettings.gnCfg.langDetector, gnGlobalSettings) + ". Defaulting to " + scope.currentLang)
-                  scope.currentUILang = scope.currentLang;
-                } else {
-                  scope.currentUILang = detectedLang.replace("#", "");
+          scope.showFieldsAfterDomRendered = function () {
+            //runs after dom renders!
+            // hide all language-based inputs except the current language
+            setTimeout(function () {
+              if (scope.$parent.isMdMultilingual) {
+                var inputs = scope.element.find(
+                  "input[lang='" + scope.currentLang + "']"
+                );
+                if (inputs.length === 0) {
+                  inputs = scope.element.find(
+                    "input[lang='" +
+                      gnCurrentEdit.allLanguages.iso2code[scope.currentLang].substring(
+                        1
+                      ) +
+                      "']"
+                  );
                 }
-              };
-
-              scope.showFieldsAfterDomRendered = function () {
-                //runs after dom renders!
-                // hide all language-based inputs except the current language
-                setTimeout(function () {
-                  if (scope.$parent.isMdMultilingual) {
-                    var inputs = scope.element.find("input[lang='" + scope.currentLang + "']");
-                    if (inputs.length === 0) {
-                      inputs = scope.element.find("input[lang='" + gnCurrentEdit.allLanguages.iso2code[scope.currentLang].substring(1) + "']")
-                    }
-                    _.each(inputs, function (input) {
-                      $(input).removeClass("hidden");
-                    });
-                  } else {
-                    var inputs = scope.element.find("input");
-                    _.each(inputs, function (input) {
-                      $(input).removeClass("hidden");
-                    });
-                  }
-                }, 0);
-              };
-
-              scope.initCurrentValues = function() {
-                scope.currentLang = gnCurrentEdit.mdLanguage;
-                scope.initCurrentLang();
-                var parentParam = scope.$parent.params[scope.config.fieldName];
-                if (angular.isObject(parentParam)) {
-                  // multilingual
-                  scope.config.values = angular.extend({}, scope.$parent.params[scope.config.fieldName], emptyLangs);
-                  scope.individualValues = _.mapObject(scope.$parent.params[scope.config.fieldName], function(val, key){
-                    return val.split(scope.combinerSimple); // split on simple one, then we will "fix up" trailing spaces
-                  });
-                } else {
-                  // single language
-                  scope.individualValues = {};
-                  _.mapObject(emptyLangs, function (val, key) {
-                    scope.individualValues[key] = parentParam.split(scope.combinerSimple);
-                  });
-                }
-                fix_values();
-                scope.showFieldsAfterDomRendered();
-
-                //lang list [{lang:'eng',isolang:'eng'},{lang:'fra',isolang:'fre'}]
-                scope.langs = _.map(_.keys(scope.config.values), function(l){
-                  return {'lang': l, 'isolang': gnCurrentEdit.allLanguages.code2iso['#' + l]};
-                } );
-                if (scope.langs.length === 0) {
-                  scope.langs = {'lang': scope.currentLang, 'isolang': gnCurrentEdit.allLanguages.code2iso['#' + scope.currentLang]};
-                }
-              };
-
-              scope.initCurrentLang();
-
-              scope.element = element;
-              //we need to do this because GN trims a trailing "; ", which causes problems
-              scope.combinerSimple = scope.config.combiner.trim(); //"; " -> ";"
-
-              scope.$on('onlineSrcDialogInited', function(event, args) {
-                scope.initCurrentValues();
-                scope.$broadcast('resetValue', {reset: "true"});
-
-              });
-
-              scope.$on('onlineSrcDialogHidden', function(evt, msg) {
-                // nothing to do
-              })
-              //values that the user has actually selected
-              scope.initCurrentValues();
-
-
-
-              //because the type-ahead control makes a lot of changes to the DOM, hiding the non-active language
-              // is a bit more complicated that you would expect.
-              //what we do is find the <input> for the language, and then find its <span> parent.
-              // We then control the visibility of that span.
-              scope.$watch('currentLang', function(newValue, oldValue) {
-                if (scope.$parent.isMdMultilingual) {
-                  //hide all inputs
-                  var inputs = scope.element.find("input[lang]"); // all lang inputs
-                  _.each(inputs, function (input) {
-                    $(input).addClass("hidden");
-                  });
-
-                  //show language-appropriate inputs
-                  if (newValue) {
-                    var inputs = scope.element.find("input[lang='" + newValue + "']");
-                    if (inputs.length === 0) {
-                      inputs = scope.element.find("input[lang='" + gnCurrentEdit.allLanguages.iso2code[newValue].substring(1) + "']")
-                    }
-                    _.each(inputs, function (input) {
-                      $(input).removeClass("hidden");
-                    });
-                  }
-                } else {
-                  var inputs = scope.element.find("input");
-                  _.each(inputs, function (input) {
-                    $(input).removeClass("hidden");
-                  });
-                }
-              });
-
-
-              //deep watch a model change
-              scope.$watch('individualValues', function(newval, oldval){
-                //build the master values...
-                _.each(_.keys(scope.config.values), function(lang){
-                  //values for this lang
-                  //filter out blank values -- or you'll get stuff like "org; ;" or "; abc;"
-                  var vs = scope.individualValues[lang].slice();
-                  while (vs[vs.length - 1] === '') {  // remove trailing ones only
-                    vs.pop();
-                  }
-                  var v = vs.join(scope.config.combiner); // use full value
-                  scope.config.values[lang] = v;
-
-
-                  if (scope.$parent.isMdMultilingual) {
-                    //scope.$parent.params.desc[lang] = v;
-                    scope.$parent.params[scope.config.fieldName][lang] = v;
-                  } else {
-                    //scope.$parent.params.desc = v;
-                    scope.$parent.params[scope.config.fieldName] = v;
-                  }
+                _.each(inputs, function (input) {
+                  $(input).removeClass("hidden");
                 });
-              }, true);
+              } else {
+                var inputs = scope.element.find("input");
+                _.each(inputs, function (input) {
+                  $(input).removeClass("hidden");
+                });
+              }
+            }, 0);
+          };
 
-              //nav pill clicked - change language
-              scope.changeLang = function(newLang) {
-                scope.currentLang = newLang;
-              };
-
-              scope.$watch("config.values", function(newVal, oldVal, localScope) {
-                var tempArray = [];
-                var inputValue = '';
-                if (angular.isDefined(newVal)) {
-                 if (angular.isObject(newVal)) {
-                   _.mapObject(newVal, function(value, lang) {
-                     var item = lang + "#" + value;
-                     tempArray.push(item);
-                   });
-                   inputValue = tempArray.join("|");
-                 } else {
-                   inputValue = newVal;
-                 }
-                } else {
-                  $log.info("config.values newValue is undefined");
+          scope.initCurrentValues = function () {
+            scope.currentLang = gnCurrentEdit.mdLanguage;
+            scope.initCurrentLang();
+            var parentParam = scope.$parent.params[scope.config.fieldName];
+            if (angular.isObject(parentParam)) {
+              // multilingual
+              scope.config.values = angular.extend(
+                {},
+                scope.$parent.params[scope.config.fieldName],
+                emptyLangs
+              );
+              scope.individualValues = _.mapObject(
+                scope.$parent.params[scope.config.fieldName],
+                function (val, key) {
+                  return val.split(scope.combinerSimple); // split on simple one, then we will "fix up" trailing spaces
                 }
-                scope.hiddenFieldValue = inputValue;
-              }, true);
+              );
+            } else {
+              // single language
+              scope.individualValues = {};
+              _.mapObject(emptyLangs, function (val, key) {
+                scope.individualValues[key] = parentParam.split(scope.combinerSimple);
+              });
+            }
+            fix_values();
+            scope.showFieldsAfterDomRendered();
 
-              scope.$on('$destroy', function() {
-                $log.debug("destroy multientrycombiner");
+            //lang list [{lang:'eng',isolang:'eng'},{lang:'fra',isolang:'fre'}]
+            scope.langs = _.map(_.keys(scope.config.values), function (l) {
+              return { lang: l, isolang: gnCurrentEdit.allLanguages.code2iso["#" + l] };
+            });
+            if (scope.langs.length === 0) {
+              scope.langs = {
+                lang: scope.currentLang,
+                isolang: gnCurrentEdit.allLanguages.code2iso["#" + scope.currentLang]
+              };
+            }
+          };
+
+          scope.initCurrentLang();
+
+          scope.element = element;
+          //we need to do this because GN trims a trailing "; ", which causes problems
+          scope.combinerSimple = scope.config.combiner.trim(); //"; " -> ";"
+
+          scope.$on("onlineSrcDialogInited", function (event, args) {
+            scope.initCurrentValues();
+            scope.$broadcast("resetValue", { reset: "true" });
+          });
+
+          scope.$on("onlineSrcDialogHidden", function (evt, msg) {
+            // nothing to do
+          });
+          //values that the user has actually selected
+          scope.initCurrentValues();
+
+          //because the type-ahead control makes a lot of changes to the DOM, hiding the non-active language
+          // is a bit more complicated that you would expect.
+          //what we do is find the <input> for the language, and then find its <span> parent.
+          // We then control the visibility of that span.
+          scope.$watch("currentLang", function (newValue, oldValue) {
+            if (scope.$parent.isMdMultilingual) {
+              //hide all inputs
+              var inputs = scope.element.find("input[lang]"); // all lang inputs
+              _.each(inputs, function (input) {
+                $(input).addClass("hidden");
               });
 
-            } //link
-          }
-        }//fn
-      ]);
+              //show language-appropriate inputs
+              if (newValue) {
+                var inputs = scope.element.find("input[lang='" + newValue + "']");
+                if (inputs.length === 0) {
+                  inputs = scope.element.find(
+                    "input[lang='" +
+                      gnCurrentEdit.allLanguages.iso2code[newValue].substring(1) +
+                      "']"
+                  );
+                }
+                _.each(inputs, function (input) {
+                  $(input).removeClass("hidden");
+                });
+              }
+            } else {
+              var inputs = scope.element.find("input");
+              _.each(inputs, function (input) {
+                $(input).removeClass("hidden");
+              });
+            }
+          });
 
+          //deep watch a model change
+          scope.$watch(
+            "individualValues",
+            function (newval, oldval) {
+              //build the master values...
+              _.each(_.keys(scope.config.values), function (lang) {
+                //values for this lang
+                //filter out blank values -- or you'll get stuff like "org; ;" or "; abc;"
+                var vs = scope.individualValues[lang].slice();
+                while (vs[vs.length - 1] === "") {
+                  // remove trailing ones only
+                  vs.pop();
+                }
+                var v = vs.join(scope.config.combiner); // use full value
+                scope.config.values[lang] = v;
+
+                if (scope.$parent.isMdMultilingual) {
+                  //scope.$parent.params.desc[lang] = v;
+                  scope.$parent.params[scope.config.fieldName][lang] = v;
+                } else {
+                  //scope.$parent.params.desc = v;
+                  scope.$parent.params[scope.config.fieldName] = v;
+                }
+              });
+            },
+            true
+          );
+
+          //nav pill clicked - change language
+          scope.changeLang = function (newLang) {
+            scope.currentLang = newLang;
+          };
+
+          scope.$watch(
+            "config.values",
+            function (newVal, oldVal, localScope) {
+              var tempArray = [];
+              var inputValue = "";
+              if (angular.isDefined(newVal)) {
+                if (angular.isObject(newVal)) {
+                  _.mapObject(newVal, function (value, lang) {
+                    var item = lang + "#" + value;
+                    tempArray.push(item);
+                  });
+                  inputValue = tempArray.join("|");
+                } else {
+                  inputValue = newVal;
+                }
+              } else {
+                $log.info("config.values newValue is undefined");
+              }
+              scope.hiddenFieldValue = inputValue;
+            },
+            true
+          );
+
+          scope.$on("$destroy", function () {
+            $log.debug("destroy multientrycombiner");
+          });
+        } //link
+      };
+    } //fn
+  ]);
 })();

@@ -22,119 +22,131 @@
  */
 
 (function () {
+  goog.provide("gn_map_field_directive");
 
-  goog.provide('gn_map_field_directive');
+  goog.require("gn_geometry_service");
 
-  goog.require('gn_geometry_service');
-
-  angular.module('gn_map_field_directive', [
-    'gn_geometry_service'
-  ]).directive('gnMapField', [
-    'gnMap',
-    function (gnMap) {
-      return {
-        restrict: 'A',
-        scope: true,
-        templateUrl: function (elem, attrs) {
-          return attrs.template || '../../catalog/components/search/map/' +
-            'partials/mapfield.html';
-        },
-        compile: function compile(tElement, tAttrs, transclude) {
-          return {
-            pre: function preLink(scope, iElement, iAttrs, controller) {
-
-              scope.map = scope.$eval(iAttrs['gnMapField']);
-              scope.gnDrawBboxBtn = iAttrs['gnMapFieldGeom'];
-              scope.gnDrawBboxExtent = iAttrs['gnMapFieldExtent'];
-
-              // get list of relation types
-              // [overlaps encloses fullyOutsideOf fullyEnclosedWithin
-              // intersection crosses touches within]
-
-              var opt = scope.$eval(iAttrs['gnMapFieldOpt']) || {};
-              scope.relations = opt.relations;
-
-              scope.autoTriggerSearch = true;
-              if (angular.isDefined(opt.autoTriggerSearch)) {
-                scope.autoTriggerSearch = opt.autoTriggerSearch;
-              }
-
-              scope.gnMap = gnMap;
-
-              /**
-               * Fit map view to map projection max extent
-               */
-              scope.maxExtent = function () {
-                scope.map.getView().fit(scope.map.getView().
-                  getProjection().getExtent(), scope.map.getSize());
-              };
-
-              /**
-               * When the geomtry is updated, set this value in
-               * scope.currentExtent and remove relation param if
-               * geometry is null.
-               */
-              scope.$watch(scope.gnDrawBboxBtn, function (v) {
-                if (!v) {
-                  delete scope.searchObj.params.relation;
-                }
-                scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
-              });
-
-              /**
-               * Set active relation (intersect, within, etc..). Run search
-               * when changed.
-               */
-              scope.setRelation = function (rel) {
-                scope.searchObj.params.relation = rel;
-                if (scope.autoTriggerSearch && !!scope.searchObj.params.geometry) {
-                  scope.triggerSearch();
-                }
-              };
-
-              scope.renderMap = function() {
-                scope.map.renderSync();
-              };
-
-              var loadPromise = scope.map.get('sizePromise');
-              if (loadPromise) {
-                loadPromise.then(function() {
-                  scope.renderMap();
-                });
-              }
-            }
-          };
-        }
-      };
-    }
-  ])
-
-    .directive('gnDrawBboxBtn', [
-      'olDecorateInteraction',
-      '$parse',
-      '$translate',
-      'gnSearchSettings',
-      'gnGeometryService',
-      'gnMap',
-      function (olDecorateInteraction, $parse, $translate, gnSearchSettings, gnGeometryService) {
+  angular
+    .module("gn_map_field_directive", ["gn_geometry_service"])
+    .directive("gnMapField", [
+      "gnMap",
+      function (gnMap) {
         return {
-          restrict: 'A',
+          restrict: "A",
           scope: true,
-          controller: ['$scope', function ($scope) {
-            var dragbox = new ol.interaction.DragBox({
-              style: gnSearchSettings.olStyles.drawBbox
-            });
-            olDecorateInteraction(dragbox, $scope.map);
-            dragbox.active = false;
-            $scope.map.addInteraction(dragbox);
-            $scope.interaction = dragbox;
-          }],
-          link: function (scope, element, attrs) {
+          templateUrl: function (elem, attrs) {
+            return (
+              attrs.template ||
+              "../../catalog/components/search/map/" + "partials/mapfield.html"
+            );
+          },
+          compile: function compile(tElement, tAttrs, transclude) {
+            return {
+              pre: function preLink(scope, iElement, iAttrs, controller) {
+                scope.map = scope.$eval(iAttrs["gnMapField"]);
+                scope.gnDrawBboxBtn = iAttrs["gnMapFieldGeom"];
+                scope.gnDrawBboxExtent = iAttrs["gnMapFieldExtent"];
 
+                // get list of relation types
+                // [overlaps encloses fullyOutsideOf fullyEnclosedWithin
+                // intersection crosses touches within]
+
+                var opt = scope.$eval(iAttrs["gnMapFieldOpt"]) || {};
+                scope.relations = opt.relations;
+
+                scope.autoTriggerSearch = true;
+                if (angular.isDefined(opt.autoTriggerSearch)) {
+                  scope.autoTriggerSearch = opt.autoTriggerSearch;
+                }
+
+                scope.gnMap = gnMap;
+
+                /**
+                 * Fit map view to map projection max extent
+                 */
+                scope.maxExtent = function () {
+                  scope.map
+                    .getView()
+                    .fit(
+                      scope.map.getView().getProjection().getExtent(),
+                      scope.map.getSize()
+                    );
+                };
+
+                /**
+                 * When the geomtry is updated, set this value in
+                 * scope.currentExtent and remove relation param if
+                 * geometry is null.
+                 */
+                scope.$watch(scope.gnDrawBboxBtn, function (v) {
+                  if (!v) {
+                    delete scope.searchObj.params.relation;
+                  }
+                  scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
+                });
+
+                /**
+                 * Set active relation (intersect, within, etc..). Run search
+                 * when changed.
+                 */
+                scope.setRelation = function (rel) {
+                  scope.searchObj.params.relation = rel;
+                  if (scope.autoTriggerSearch && !!scope.searchObj.params.geometry) {
+                    scope.triggerSearch();
+                  }
+                };
+
+                scope.renderMap = function () {
+                  scope.map.renderSync();
+                };
+
+                var loadPromise = scope.map.get("sizePromise");
+                if (loadPromise) {
+                  loadPromise.then(function () {
+                    scope.renderMap();
+                  });
+                }
+              }
+            };
+          }
+        };
+      }
+    ])
+
+    .directive("gnDrawBboxBtn", [
+      "olDecorateInteraction",
+      "$parse",
+      "$translate",
+      "gnSearchSettings",
+      "gnGeometryService",
+      "gnMap",
+      function (
+        olDecorateInteraction,
+        $parse,
+        $translate,
+        gnSearchSettings,
+        gnGeometryService
+      ) {
+        return {
+          restrict: "A",
+          scope: true,
+          controller: [
+            "$scope",
+            function ($scope) {
+              var dragbox = new ol.interaction.DragBox({
+                style: gnSearchSettings.olStyles.drawBbox
+              });
+              olDecorateInteraction(dragbox, $scope.map);
+              dragbox.active = false;
+              $scope.map.addInteraction(dragbox);
+              $scope.interaction = dragbox;
+            }
+          ],
+          link: function (scope, element, attrs) {
             var parent = scope.$parent.$parent;
 
             // Assign drawn extent to given scope property
-            var bboxGet = $parse(attrs['gnDrawBboxBtn']);
+            var bboxGet = $parse(attrs["gnDrawBboxBtn"]);
             var bboxSet = bboxGet.assign;
 
             // Create overlay to persist the bbox
@@ -168,18 +180,18 @@
 
             // If given extent coords are given through attributes,
             // display the bbox on the map
-            var coords = scope.$eval(attrs['gnDrawBboxExtent']);
+            var coords = scope.$eval(attrs["gnDrawBboxExtent"]);
             if (coords) {
               updateField(new ol.geom.Polygon(coords));
             }
             scope.getButtonTitle = function () {
               if (scope.interaction.active) {
-                return $translate.instant('clickToRemoveSpatialFilter');
+                return $translate.instant("clickToRemoveSpatialFilter");
               } else {
-                return $translate.instant('drawAnExtentToFilter');
+                return $translate.instant("drawAnExtentToFilter");
               }
             };
-            scope.interaction.on('boxend', function () {
+            scope.interaction.on("boxend", function () {
               scope.$apply(function () {
                 updateField(scope.interaction.getGeometry());
                 if (scope.autoTriggerSearch) {
@@ -190,11 +202,11 @@
 
             function resetSpatialFilter() {
               feature.setGeometry(null);
-              bboxSet(parent, '');
+              bboxSet(parent, "");
               scope.map.render();
             }
             // Remove the bbox when the interaction is not active
-            scope.$watch('interaction.active', function (v, o) {
+            scope.$watch("interaction.active", function (v, o) {
               if (!v && o) {
                 resetSpatialFilter();
                 if (scope.autoTriggerSearch && !!scope.searchObj.params.geometry) {
@@ -204,7 +216,7 @@
             });
 
             // When search form is reset, remove the geom
-            scope.$on('beforeSearchReset', function (event, preserveGeometrySearch) {
+            scope.$on("beforeSearchReset", function (event, preserveGeometrySearch) {
               if (!preserveGeometrySearch) {
                 resetSpatialFilter();
                 scope.interaction.active = false;

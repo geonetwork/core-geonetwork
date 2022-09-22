@@ -29,9 +29,6 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Created by francois on 22/10/15.
- */
 @XmlRootElement(name = "edit")
 public class BatchEditParameter implements Serializable {
     private String xpath;

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Override
     public void deleteMetadataOper(String metadataId, boolean skipAllReservedGroup) throws Exception {
         if (skipAllReservedGroup) {
-            int[] exclude = new int[]{ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId()};
+            List<Integer> exclude = Arrays.asList(ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId());
             opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
         } else {
             opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
@@ -298,7 +299,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
     /**
      * Unset operation without checking if user privileges allows the operation. This may be useful when a user is an editor and internal
-     * operations needs to update privilages for reserved group. eg. {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
+     * operations needs to update privileges for reserved group. eg. {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
      */
     @Override
     public void forceUnsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {

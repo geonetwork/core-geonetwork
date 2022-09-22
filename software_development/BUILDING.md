@@ -71,32 +71,76 @@ Maven Profiles
 
 Maven profiles are used to enable additional build configuration.
 
-Some components (eg. WFS feature indexing) of the application rely on an Elasticsearch instance. To enable those options, build the application with the ```es``` profile.
+Run Elasticsearch
+-----------------
 
-```
-mvn clean install -Pes
-```
+GeoNetwork requires an Elasticsearch instance as an index.
+
+1. To run, download using maven:
+
+   ```
+   cd es
+   mvn install -Pes-download
+   ```
+
+2. And run locally:
+   ```
+   mvn exec:exec -Des-start
+   ```
+
+3. For alternatives see [es/readme](../es/README.md).
+
+
+Run Kibana
+----------
+
+1. To run, download using maven:
+
+   ```
+   cd es/es-dashboard
+   mvn install -Pkb-download
+   ```
+   
+2. Run locally:
+
+   ```
+   mvn exec:exec -Dkb-start
+   ```
+   
+3. For alternatives see [es/es-dashboard/readme](../es/es-dashboard/README.md).
 
 Run embedded Jetty server
 -------------------------
 
 Maven comes with built-in support for Jetty via a [jetty-maven-plugin](https://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html).
 
-To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the **web** module,
-and then execute the following maven command:
+To run GeoNetwork with the embedded Jetty server:
 
-```
-cd web
-mvn jetty:run -Penv-dev
-```
+1. Change directory to the root of the **web** module, and then execute the following maven command:
 
-After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
+   ```
+   cd web
+   mvn jetty:run -Penv-dev
+   ```
 
-For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module:
+2. After a moment, GeoNetwork is available at: http://localhost:8080/geonetwork
 
-```
-mvn process-resources
-```
+3. The default `h2` database is located in your home folder `~/gn.mv.db` and `~/gn.trace.db` (based on system property ``db.name``).
+
+4. For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module:
+
+   ```
+   mvn process-resources -PschemasCopy
+   ```
+
+5. To reset all caches and database use:
+   
+   ```
+   cd web
+   mvn clean:clean@reset
+   ```
+
+5. For more information see [web/README.md](../web/README.md).
 
 Tool chain
 ----------

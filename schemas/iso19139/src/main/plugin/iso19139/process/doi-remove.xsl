@@ -16,6 +16,9 @@
                               */gmd:linkage/gmd:URL = $doi]"
                 priority="2"/>
 
+  <xsl:template match="gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = $doi]"
+                priority="2"/>
+
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
     <xsl:copy>

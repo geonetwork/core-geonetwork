@@ -35,18 +35,20 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Diff;
+import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -82,6 +84,44 @@ public class BatchEditsApi implements ApplicationContextAware {
         this.context = context;
     }
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Preview edits made by XPath expressions.")
+    @RequestMapping(value = "/batchediting/preview",
+        method = RequestMethod.POST,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Processed records."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @PreAuthorize("hasAuthority('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object previewBatchEdit(
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false)
+        @RequestParam(required = false) String[] uuids,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @Parameter(
+            description = "Return differences with diff, diffhtml or patch",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            DiffType diffType,
+        @RequestBody BatchEditParameter[] edits,
+        HttpServletRequest request)
+        throws Exception {
+        boolean previewOnly = true;
+        return applyBatchEdits(uuids, bucket, false, edits, request, previewOnly, diffType).two();
+    }
 
     /**
      * The service edits to the current selection or a set of uuids.
@@ -102,8 +142,7 @@ public class BatchEditsApi implements ApplicationContextAware {
     @ResponseBody
     public IProcessingReport batchEdit(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false,
-            example = "iso19139")
+            required = false)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
@@ -125,6 +164,14 @@ public class BatchEditsApi implements ApplicationContextAware {
         HttpServletRequest request)
         throws Exception {
 
+        return applyBatchEdits(uuids, bucket, updateDateStamp, edits, request, false, null).one();
+    }
+
+    private Pair<SimpleMetadataProcessingReport, Element> applyBatchEdits(
+        String[] uuids, String bucket,
+        boolean updateDateStamp, BatchEditParameter[] edits,
+        HttpServletRequest request,
+        boolean previewOnly, DiffType diffType) throws Exception {
         List<BatchEditParameter> listOfUpdates = Arrays.asList(edits);
         if (listOfUpdates.size() == 0) {
             throw new IllegalArgumentException("At least one edit must be defined.");
@@ -164,6 +211,8 @@ public class BatchEditsApi implements ApplicationContextAware {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         String changeDate = null;
+        Element preview = new Element("preview");
+
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String recordUuid : setOfUuidsToEdit) {
             AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
@@ -177,6 +226,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                     EditLib editLib = new EditLib(_schemaManager);
                     MetadataSchema metadataSchema = _schemaManager.getSchema(record.getDataInfo().getSchemaId());
                     Element metadata = record.getXmlData(false);
+                    String original = Xml.getString(metadata);
                     boolean metadataChanged = false;
 
                     Iterator<BatchEditParameter> listOfUpdatesIterator = listOfUpdates.iterator();
@@ -205,7 +255,15 @@ public class BatchEditsApi implements ApplicationContextAware {
                             ) || metadataChanged;
                         }
                     }
-                    if (metadataChanged) {
+                    if (previewOnly) {
+                        if (diffType == null) {
+                            preview.addContent(metadata);
+                        } else {
+                            preview.addContent(
+                                Diff.diff(original, Xml.getString(metadata), diffType)
+                            );
+                        }
+                    } else if (metadataChanged) {
                         boolean validate = false;
                         boolean ufo = true;
                         boolean index = true;
@@ -224,6 +282,8 @@ public class BatchEditsApi implements ApplicationContextAware {
                         String xmlBefore = outp.outputString(beforeMetadata);
                         String xmlAfter = outp.outputString(afterMetadata);
                         new RecordUpdatedEvent(record.getId(), userSession.getUserIdAsInt(), xmlBefore, xmlAfter).publish(appContext);
+                    } else {
+                        report.incrementUnchangedRecords();
                     }
                 } catch (Exception e) {
                     report.addMetadataError(record, e);
@@ -232,6 +292,6 @@ public class BatchEditsApi implements ApplicationContextAware {
             }
         }
         report.close();
-        return report;
+        return Pair.write(report, preview);
     }
 }

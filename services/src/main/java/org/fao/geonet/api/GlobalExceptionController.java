@@ -27,11 +27,14 @@ import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.fao.geonet.api.exception.*;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.doi.client.DoiClientException;
+import org.fao.geonet.exceptions.ILocalizedException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
@@ -46,6 +49,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
@@ -62,6 +67,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @ControllerAdvice
 public class GlobalExceptionController {
 
+    private final static String API_EXCEPTION_MESSAGE_PREFIX = "api.exception.";
+    private final static String API_EXCEPTION_MESSAGE_POSTFIX = ".message";
+    private final static String API_EXCEPTION_DESCRIPTION_POSTFIX = ".description";
+
+    @Autowired
+    private LanguageUtils languageUtils;
+
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
@@ -69,11 +81,18 @@ public class GlobalExceptionController {
         NotAllowedException.class
     })
     public ApiError notAllowedHandler(final Exception exception, final HttpServletRequest request) {
-        ApiError response = null;
+        storeApiErrorCause(exception);
+
         if (contentTypeNeedsBody(request)) {
-            response = new ApiError("forbidden", exception.getMessage());
+            updateExceptionLocale(exception, request);
+            ApiError apiError = new ApiError("forbidden", exception);
+            //FIXME not sure why exception message is stored in the message for this exception but stored in the description for the other exceptions.
+            //    to fix, would need to identify all usages and change it to use the description.
+            apiError.setMessage(exception.getMessage());
+            return apiError;
+        } else {
+            return null;
         }
-        return response;
     }
 
     @ResponseBody
@@ -83,7 +102,9 @@ public class GlobalExceptionController {
         ServiceNotAllowedEx.class
     })
     public Object unauthorizedHandler(final Exception exception) {
-        return new ApiError("unauthorized", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("unauthorized", exception);
     }
 
     @ResponseBody
@@ -91,10 +112,36 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         SecurityException.class,
-        AccessDeniedException.class
     })
     public Object securityHandler(final Exception exception) {
-        return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("forbidden", exception);
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
+    @ExceptionHandler({
+        AccessDeniedException.class
+    })
+    public Object securityHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
+
+        if (contentTypeNeedsBody(request)) {
+                ApiError response = null;
+            try {
+                // Create a ForbiddenException with the required message keys so that the error contains is based on the request locale
+                throw new ForbiddenException(exception)
+                    .withMessageKey("api.exception.forbidden")
+                    .withDescriptionKey("api.exception.forbidden.description");
+            } catch (ForbiddenException forbiddenException) {
+                updateExceptionLocale(forbiddenException, request);
+                return new ApiError("forbidden", forbiddenException);
+            }
+        } else {
+            return null;
+        }
     }
 
     @ResponseBody
@@ -104,7 +151,9 @@ public class GlobalExceptionController {
         MaxUploadSizeExceededException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception) {
-        return new ApiError("max_file_exceeded", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("max_file_exceeded", exception);
     }
 
     @ResponseBody
@@ -115,8 +164,15 @@ public class GlobalExceptionController {
         Exception.class,
         RuntimeException.class
     })
-    public ApiError runtimeExceptionHandler(final Exception exception) {
-        return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
+    public ApiError runtimeExceptionHandler(final Exception exception, final HttpServletRequest request) {
+        storeApiErrorCause(exception);
+
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("runtime_exception", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -125,8 +181,21 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         FeatureNotEnabledException.class
     })
-    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
-        return new ApiError("feature_disabled", exception.getClass().getSimpleName(), exception.getMessage());
+    public ApiError runtimeExceptionHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
+
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("feature_disabled", exception);
+        } else {
+            return null;
+        }
     }
 
 
@@ -137,7 +206,9 @@ public class GlobalExceptionController {
         WebApplicationException.class
     })
     public ApiError webappExceptionHandler(final Exception exception) {
-        return new ApiError("webapplication_exception", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("webapplication_exception", exception);
     }
 
     @ResponseBody
@@ -148,7 +219,9 @@ public class GlobalExceptionController {
         GeoPublisherException.class,
         NoResultsFoundException.class})
     public ApiError NotFoundHandler(final Exception exception) {
-        return new ApiError("not_found", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("not_found", exception);
     }
 
     @ResponseBody
@@ -158,11 +231,33 @@ public class GlobalExceptionController {
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
     public ApiError resourceNotFoundHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
-            return new ApiError("resource_not_found", exception.getClass().getSimpleName(), exception.getMessage());
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("resource_not_found", exception);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * If exception implements the ILocalizedException then update the locale based on the request.
+     *
+     * @param exception exception to be updated
+     * @param request   containing locale information
+     */
+    private void updateExceptionLocale(Exception exception, HttpServletRequest request) {
+        if (exception instanceof ILocalizedException) {
+            if (((ILocalizedException) exception).getLocale() == null) {
+                ((ILocalizedException) exception).setLocale(languageUtils.parseAcceptLanguage(request.getLocales()));
+            }
         }
     }
 
@@ -191,7 +286,7 @@ public class GlobalExceptionController {
             // Intersect allowed mediatypes + text/html with requested
             // media types to check if text/html has precedence.
             List<MediaType> allowedContentTypesAndHtml =
-                Arrays.asList( MediaType.APPLICATION_XML,
+                Arrays.asList(MediaType.APPLICATION_XML,
                     MediaType.APPLICATION_XHTML_XML,
                     MediaType.APPLICATION_JSON,
                     MediaType.TEXT_HTML);
@@ -227,8 +322,22 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
-    public ApiError resourceAlreadyExistHandler(final Exception exception) {
-        return new ApiError("resource_already_exist", exception.getClass().getSimpleName(), exception.getMessage());
+    public ApiError resourceAlreadyExistHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
+
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceAlreadyExists");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceAlreadyExists.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("resource_already_exist", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -236,7 +345,9 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiError missingParameterHandler(final Exception exception) {
-        return new ApiError("required_parameter_missing", exception.getClass().getSimpleName(), exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("required_parameter_missing", exception);
     }
 
     @ResponseBody
@@ -250,9 +361,21 @@ public class GlobalExceptionController {
         MultipartException.class,
         DoiClientException.class
     })
-    public ApiError unsatisfiedParameterHandler(final Exception exception) {
-        return new ApiError("unsatisfied_request_parameter", exception.getClass().getSimpleName(),
-            exception.getMessage());
+    public ApiError unsatisfiedParameterHandler(final Exception exception, final HttpServletRequest request) {
+        storeApiErrorCause(exception);
+
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.unsatisfiedRequestParameter");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.unsatisfiedRequestParameter.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("unsatisfied_request_parameter", exception);
+        } else {
+            return null;
+        }
     }
 
     @ResponseBody
@@ -262,7 +385,18 @@ public class GlobalExceptionController {
         MissingResourceException.class
     })
     public ApiError missingResourceHandler(final Exception exception) {
-        return new ApiError("missing_resource_parameter", exception.getClass().getSimpleName(),
-            exception.getMessage());
+        storeApiErrorCause(exception);
+
+        return new ApiError("missing_resource_parameter", exception);
+    }
+
+    /**
+     * Stores the exception in the request attributes to be processed by the TransactionManager and
+     * rollback the transaction.
+     *
+     * @param exception
+     */
+    private void storeApiErrorCause(final Exception exception) {
+        RequestContextHolder.currentRequestAttributes().setAttribute("exception", exception, RequestAttributes.SCOPE_REQUEST);
     }
 }

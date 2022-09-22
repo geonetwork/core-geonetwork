@@ -1,8 +1,8 @@
-## Install, configure and start Kibana
+# Install, configure and start Kibana
 
-### Manual installation
+## Manual installation
 
-Download Kibana from https://www.elastic.co/fr/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
+Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
 
 Set Kibana base path and index name in config/kibana.yml:
 
@@ -15,8 +15,6 @@ kibana.index: ".dashboards"
 
 Adapt if needed ```elasticsearch.url``` and ```server.host```.
 
-
-
 Start Kibana manually:
 
 ```
@@ -24,35 +22,56 @@ cd kibana/bin
 ./kibana
 ```
 
-### Maven installation
+## Maven installation
 
-Maven can take care of the installation steps:
-* download
-* initialize collection
-* start
+1. Maven can take care of the installation steps:
 
-Use the following commands:
+   * download
+   * initialize collection
+   * start
 
-```
-cd es/es-dashboard
-mvn install -Pkb-download
-mvn exec:exec -Dkb-start
-```
+2. Use maven to download:
 
-### Import Configuration
+   ```
+   cd es/es-dashboard
+   mvn install -Pkb-download
+   ```
 
-Kibana should be running from:
+3. Run locally:
 
-```
-http://localhost:5601
+   ```
+   mvn exec:exec -Dkb-start
+   ```
 
-```
- and should be visible within the geonetwork interface at:
+## Docker compose installation
+
+1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
+
+   ```
+   cd es
+   docker-compose up
+   ```
+
+3. Check that it is running using your browser:
+   
+   * Elasticsearch: http://localhost:9200
+   * Kabana: http://localhost:5601
+   
+## Import Configuration
+
+1. Kibana should be running from:
+
+   ```
+   http://localhost:5601
+   ```
+
+2. And should be visible within the geonetwork interface at:
  
-```
-http://localhost:8080/geonetwork/dashboards
+   ```
+   http://localhost:8080/geonetwork/dashboards
+   ```
 
-```
+## Troubleshoot
 
 If it does not start properly, check Kibana log files (eg. it may fail if Elasticsearch version
 is not compatible with Kibana version).
