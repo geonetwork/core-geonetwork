@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,8 +24,6 @@
 package org.fao.geonet.repository.reports;
 
 import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.SortUtils;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
@@ -74,17 +72,21 @@ public class MetadataReportsQueries {
         final Path<ISODate> changeDate = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
         Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo), cb.greaterThanOrEqualTo(changeDate, dateFrom));
 
+        // Template filter (only metadata)
+        final Path<Character> template = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
+        Predicate templatePredicate = cb.equal(template, Constants.YN_FALSE);
+
         // Groups query
         if (!groups.isEmpty()) {
             Predicate inGroups = groupOwnerPath.in(groups);
 
             cbQuery.select(metadataRoot)
-                .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
+                .where(cb.and(cb.and(ownerPredicate, datePredicate, templatePredicate), inGroups));
 
         } else {
 
             cbQuery.select(metadataRoot)
-                .where(cb.and(cb.and(ownerPredicate, datePredicate)));
+                .where(cb.and(cb.and(ownerPredicate, datePredicate, templatePredicate)));
         }
 
 
@@ -98,7 +100,7 @@ public class MetadataReportsQueries {
      * Optionally filters metadata in groups.
      */
     public List<? extends AbstractMetadata> getInternalMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups,
-                                              @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
+                                                                @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Metadata> cbQuery = cb.createQuery(Metadata.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -124,17 +126,21 @@ public class MetadataReportsQueries {
         final Path<ISODate> createDate = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.createDate);
         Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(createDate, dateTo), cb.greaterThanOrEqualTo(createDate, dateFrom));
 
+        // Template filter (only metadata)
+        final Path<Character> template = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
+        Predicate templatePredicate = cb.equal(template, Constants.YN_FALSE);
+
         // Groups query
         if (!groups.isEmpty()) {
             Predicate inGroups = groupOwnerPath.in(groups);
 
             cbQuery.select(metadataRoot)
-                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate), inGroups)));
+                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate, templatePredicate), inGroups)));
 
         } else {
 
             cbQuery.select(metadataRoot)
-                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate))));
+                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate, templatePredicate))));
         }
 
         cbQuery.orderBy(cb.asc(createDate));

@@ -31,7 +31,6 @@ import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.LogManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -117,8 +116,8 @@ public class MonitorManager {
 
         }
 
-
-        LogManager.getRootLogger().addAppender(new InstrumentedAppender(metricsRegistry));
+        // This is using the Log4j 1.2 API bridge (check for log4j 2 compatible update)
+        org.apache.log4j.LogManager.getRootLogger().addAppender(new InstrumentedAppender(metricsRegistry));
     }
 
     private HealthCheckRegistry lookUpHealthCheckRegistry(ServletContext context, String attributeKey) {

@@ -1,8 +1,12 @@
 <div class="gn-alerts">
-  <div class="alert fade in" role="alert" data-ng-class="'alert-' + a.type"
-       data-ng-repeat="a in alerts">
+  <div
+    class="alert fade in"
+    role="alert"
+    data-ng-class="'alert-' + a.type"
+    data-ng-repeat="a in alerts"
+  >
     <button type="button" class="close" data-ng-click="closeAlert($index)">
-      <i class="fa fa-times"/>
+      <i class="fa fa-times" />
     </button>
 
     <h4 data-ng-show="a.title">{{a.title}}</h4>
@@ -10,13 +14,16 @@
 
     <p data-ng-show="a.error['class']"><i>{{a.error['class'] | translate}}</i></p>
     <!-- alert has msg or error, error sometimes is a direct string, or has message, description & stack properties -->
-    <p  ng-bind-html="a.msg||a.error.message||a.error"></p>
+    <p ng-bind-html="a.msg||a.error.message||a.error"></p>
     <p data-ng-show="a.error.description">{{a.error.description}}</p>
     <code data-ng-show="a.error.stack" class="gn-stack">{{a.error.stack}}</code>
 
-    <button type="button" class="btn btn-danger"
-            data-ng-click="closeAlert($index)"
-            data-ng-show="a.type === 'danger'">
+    <button
+      type="button"
+      class="btn btn-danger"
+      data-ng-click="closeAlert($index)"
+      data-ng-show="a.type === 'danger'"
+    >
       {{'close' | translate}}
     </button>
   </div>

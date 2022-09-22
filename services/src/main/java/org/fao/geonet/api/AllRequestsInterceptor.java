@@ -48,7 +48,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
      * List of bots to avoid.
      */
     private final String BOT_REGEXP_FILTER_DEFAULT =
-        ".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*";
+        ".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot|heritrix).*";
 
     @Value("${bot.regexpFilter}")
     public String botRegexpFilter = null;

@@ -1,51 +1,59 @@
 <form>
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
   <div data-ng-show="layersWithWhiteSpaces" class="alert alert-warning">
     <span data-translate="">layersWithWhiteSpaces</span>
   </div>
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">mapTitle</label>
+    <label class="control-label" data-translate="">mapTitle</label>
     <div class="">
-      <input class="form-control" type="text" aria-label="{{'mapTitle'|translate}}" data-ng-model="mapTitle"/>
+      <input
+        class="form-control"
+        type="text"
+        aria-label="{{'mapTitle'|translate}}"
+        data-ng-model="mapTitle"
+      />
     </div>
   </div>
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">print_layout</label>
+    <label class="control-label" data-translate="">print_layout</label>
     <div class="">
-      <select class="form-control"
-              data-ng-model="config.layout"
-              aria-label="{{'print_layout'|translate}}"
-              data-ng-options="l.name | translate for l in config.layouts"></select>
+      <select
+        class="form-control"
+        data-ng-model="config.layout"
+        aria-label="{{'print_layout'|translate}}"
+        data-ng-options="l.name | translate for l in config.layouts"
+      ></select>
     </div>
   </div>
   <div class="form-group" role="group" aria-label="{{'Auto'|translate}}">
-
-    <label class="control-label"
-           data-translate="">print_scale</label>
+    <label class="control-label" data-translate="">print_scale</label>
     <div class="checkbox">
       <label>
-        <input type="checkbox" aria-label="{{'print_scale'|translate}}" ng-model="auto"> {{'Auto'|translate}}
+        <input type="checkbox" aria-label="{{'print_scale'|translate}}" ng-model="auto" />
+        {{'Auto'|translate}}
       </label>
     </div>
 
     <div class="" ng-hide="auto">
-      <select class="form-control"
-              data-ng-model="config.scale"
-              data-ng-change="refreshComp()"
-              aria-label="{{'print_scale'|translate}}"
-              data-ng-options="l.name for l in config.scales"></select>
+      <select
+        class="form-control"
+        data-ng-model="config.scale"
+        data-ng-change="refreshComp()"
+        aria-label="{{'print_scale'|translate}}"
+        data-ng-options="l.name for l in config.scales"
+      ></select>
     </div>
   </div>
 
   <div class="form-group">
     <label class="control-label" data-translate="">print_format</label>
     <div class="">
-      <select class="form-control"
-              data-ng-model="config.format"
-              aria-label="{{'print_format'|translate}}"
-              data-ng-options="f.name for f in config.formats"></select>
+      <select
+        class="form-control"
+        data-ng-model="config.format"
+        aria-label="{{'print_format'|translate}}"
+        data-ng-options="f.name for f in config.formats"
+      ></select>
     </div>
   </div>
 
@@ -53,20 +61,32 @@
     <label class="control-label" data-translate="">print_legend</label>
     <div class="checkbox">
       <label>
-        <input type="checkbox" aria-label="{{'print_legend'|translate}}" ng-model="enableLegends"> {{'print_legend_field'|translate}}
+        <input
+          type="checkbox"
+          aria-label="{{'print_legend'|translate}}"
+          ng-model="enableLegends"
+        />
+        {{'print_legend_field'|translate}}
       </label>
     </div>
   </div>
 
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">mapComment</label>
+    <label class="control-label" data-translate="">mapComment</label>
     <div class="">
-      <textarea class="form-control" aria-label="{{'mapComment'|translate}}" data-ng-model="mapComment"></textarea>
+      <textarea
+        class="form-control"
+        aria-label="{{'mapComment'|translate}}"
+        data-ng-model="mapComment"
+      ></textarea>
     </div>
   </div>
 
-  <div class="alert alert-warning flex-row flex-align-center small" role="alert" ng-if="unsupportedLayers.length > 0">
+  <div
+    class="alert alert-warning flex-row flex-align-center small"
+    role="alert"
+    ng-if="unsupportedLayers.length > 0"
+  >
     <span class="fa fa-warning"></span>
     <div class="flex-spacer"></div>
     <div>
@@ -75,8 +95,11 @@
     </div>
   </div>
 
-  <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
-          data-ng-click="submit()">
+  <button
+    class="btn btn-default btn-block"
+    ng-class="{'disabled': printing}"
+    data-ng-click="submit()"
+  >
     <i class="fa fa-print" ng-if="!printing"></i>
     <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
     &nbsp;

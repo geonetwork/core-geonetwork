@@ -56,6 +56,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_EDITING;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT;
 
 @Deprecated
 public class Info implements Service {
@@ -173,7 +175,9 @@ public class Info implements Service {
                     }));
             } else if (type.equals(HARVESTER)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                    new String[]{"system/harvester/enableEditing"}));
+                    new String[]{
+                        SYSTEM_HARVESTER_ENABLE_EDITING,
+                        SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT}));
 
             } else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(

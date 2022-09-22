@@ -1,28 +1,40 @@
 <div gi-btn-group>
-
   <div class="btn-group flux gn-margin-bottom">
     <div class="btn-group" role="group" aria-label="{{getActiveDrawLabel() | translate}}">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
+      <button
+        type="button"
+        class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
         <i class="fa fa-plus"></i>&nbsp;
         <span>{{getActiveDrawLabel() | translate}}</span>&nbsp;
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li data-ng-repeat="int in interactions"><a gi-btn="active"
-                                                    ng-model="int.interaction.active" href=""
-                                                    data-translate="">{{int.label}}</a></li>
+        <li data-ng-repeat="int in interactions">
+          <a gi-btn="active" ng-model="int.interaction.active" href="" data-translate=""
+            >{{int.label}}</a
+          >
+        </li>
       </ul>
     </div>
 
-    <button gi-btn="active" class="btn btn-default"
-            data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
-            ng-model="modifying">
-      <i class="fa fa-pencil"></i>&nbsp;
-      <span data-translate="">Modify</span></button>
-    <button gi-btn="active" class="btn btn-default"
-            data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
-            ng-model="deleteF.active">
+    <button
+      gi-btn="active"
+      class="btn btn-default"
+      data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
+      ng-model="modifying"
+    >
+      <i class="fa fa-pencil"></i>&nbsp; <span data-translate="">Modify</span>
+    </button>
+    <button
+      gi-btn="active"
+      class="btn btn-default"
+      data-ng-class="{disabled:vector.getSource().getFeatures().length <= 0}"
+      ng-model="deleteF.active"
+    >
       <i class="fa fa-eraser"></i>&nbsp;
       <span data-translate="">Remove</span>
     </button>
@@ -38,15 +50,25 @@
   -->
 
   <div class="btn-group flux">
-    <a class="btn btn-default" data-ng-click="save()" id="export-geom" download="export.json"
-       data-ng-class="{disabled:!saveCallback && vector.getSource().getFeatures().length <= 0}">
-      <i class="fa fa-fw fa-save"></i> {{"save"|translate}}</a>
+    <a
+      class="btn btn-default"
+      data-ng-click="save()"
+      id="export-geom"
+      download="export.json"
+      data-ng-class="{disabled:!saveCallback && vector.getSource().getFeatures().length <= 0}"
+    >
+      <i class="fa fa-fw fa-save"></i> {{"save"|translate}}</a
+    >
 
     <a class="btn btn-default import" data-ng-click="save()" id="import-geom">
-      <i class="fa fa-fw fa-upload"></i> {{"load"|translate}}</a>
+      <i class="fa fa-fw fa-upload"></i> {{"load"|translate}}</a
+    >
 
-    <input class="hidden" type="file"
-           accept="application/json" id="features-file-input"/>
-
+    <input
+      class="hidden"
+      type="file"
+      accept="application/json"
+      id="features-file-input"
+    />
   </div>
 </div>

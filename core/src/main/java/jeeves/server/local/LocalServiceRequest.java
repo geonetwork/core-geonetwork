@@ -184,11 +184,12 @@ public class LocalServiceRequest extends ServiceRequest {
         return result;
     }
 
+
     public void beginStream(String contentType, boolean cache) {
         beginStream(contentType, -1, null, cache);
     }
 
-    public void beginStream(String contentType, int contentLength,
+    public void beginStream(String contentType, long contentLength,
                             String contentDisposition, boolean cache) {
     }
 

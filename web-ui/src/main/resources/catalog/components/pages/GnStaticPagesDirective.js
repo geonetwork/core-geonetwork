@@ -21,78 +21,90 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_static_pages_directive');
+(function () {
+  goog.provide("gn_static_pages_directive");
 
-  var module = angular.module('gn_static_pages_directive', ['ngSanitize']);
+  var module = angular.module("gn_static_pages_directive", ["ngSanitize"]);
 
-  module.directive(
-      'gnStaticPagesViewer', ['$http', '$location', '$sce',
-        function($http, $location, $sce) {
-        return {
-          restrict: 'AEC',
-          replace: true,
-          scope: {
-            language: '@language'
-          },
-          templateUrl: '../../catalog/components/pages/partials/content.html',
-          link: function($scope) {
-            $scope.loadPageContent = function() {
-              var page = $location.search().page;
+  module.directive("gnStaticPagesViewer", [
+    "$http",
+    "$location",
+    "$sce",
+    function ($http, $location, $sce) {
+      return {
+        restrict: "AEC",
+        replace: true,
+        scope: {
+          language: "@language"
+        },
+        templateUrl: "../../catalog/components/pages/partials/content.html",
+        link: function ($scope) {
+          $scope.loadPageContent = function () {
+            var page = $location.search().page;
 
-              $http({
-                method: 'GET',
-                url: '../api/pages/' + $scope.language + '/' + page + '/content'
-              }).then(function mySuccess(response) {
+            $http({
+              method: "GET",
+              url: "../api/pages/" + $scope.language + "/" + page + "/content"
+            }).then(
+              function mySuccess(response) {
                 $scope.content = $sce.trustAsHtml(response.data);
-              }, function myError(response) {
-                $scope.content = 'Page not available';
+              },
+              function myError(response) {
+                $scope.content = "Page not available";
                 console.log(response.statusText);
-              });
+              }
+            );
+          };
 
-            };
-
-            function reloadPageContent() {
-              $scope.loadPageContent();
-            }
-
-            $scope.$on('$locationChangeSuccess', reloadPageContent);
-
+          function reloadPageContent() {
             $scope.loadPageContent();
           }
-        };
-      }]);
 
-  module.directive(
-      'gnStaticPagesListViewer', ['$http', '$location',
-        function($http, $location) {
-        return {
-          restrict: 'AEC',
-          replace: true,
-          scope: {
-            language: '@language',
-            section: '@section'
-          },
-          templateUrl: function(elem, attr) {
-            return '../../catalog/components/pages/partials/' + attr.section + '.html';
-          },
-          link: function($scope) {
+          $scope.$on("$locationChangeSuccess", reloadPageContent);
 
-            $scope.loadPages = function() {
-              $http({
-                method: 'GET',
-                url: '../api/pages/list?language=' + $scope.language + '&section=' + $scope.section.toUpperCase()
-              }).then(function mySuccess(response) {
-                  $scope.pagesList = response.data;
-              }, function myError(response) {
+          $scope.loadPageContent();
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnStaticPagesListViewer", [
+    "$http",
+    "$location",
+    function ($http, $location) {
+      return {
+        restrict: "AEC",
+        replace: true,
+        scope: {
+          language: "@language",
+          section: "@section"
+        },
+        templateUrl: function (elem, attr) {
+          return "../../catalog/components/pages/partials/" + attr.section + ".html";
+        },
+        link: function ($scope) {
+          $scope.loadPages = function () {
+            $http({
+              method: "GET",
+              url:
+                "../api/pages/list?language=" +
+                $scope.language +
+                "&section=" +
+                $scope.section.toUpperCase()
+            }).then(
+              function mySuccess(response) {
+                $scope.pagesList = response.data;
+              },
+              function myError(response) {
                 $scope.pagesList = null;
                 console.log(response.statusText);
-              });
-            };
+              }
+            );
+          };
 
-            $scope.loadPages();
-
-          }
-        };
-      }]);
+          $scope.loadPages();
+        }
+      };
+    }
+  ]);
 })();

@@ -13,7 +13,7 @@ public class EmptySlotBatch implements SelfNaming {
 
     public EmptySlotBatch(String name, int i) {
         try {
-            objectName = new ObjectName(String.format("geonetwork:name=%s,idx=empty-slot-%d", name, i));
+            objectName = new ObjectName(String.format("geonetwork-%s:idx=empty-slot-%d", name, i));
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }

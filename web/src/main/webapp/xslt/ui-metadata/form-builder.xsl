@@ -211,7 +211,7 @@
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>
-              <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
+              <xsl:attribute name="data-main-language" select="java-xsl-util:iso639_2T_to_iso639_2B($metadataLanguage)"/>
               <xsl:attribute name="data-expanded" select="$toggleLang"/>
             </xsl:if>
 
@@ -1386,6 +1386,7 @@
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo" required="no"/>
     <xsl:param name="isRequired" required="no"/>
+
     <xsl:if
       test="(($parentEditInfo and (
               $parentEditInfo/@del = 'true' or

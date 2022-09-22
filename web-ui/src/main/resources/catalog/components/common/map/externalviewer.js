@@ -21,15 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_external_viewer');
+(function () {
+  goog.provide("gn_external_viewer");
 
-  goog.require('gn_ows');
+  goog.require("gn_ows");
 
-
-  var module = angular.module('gn_external_viewer', [
-    'gn_ows'
-  ]);
+  var module = angular.module("gn_external_viewer", ["gn_ows"]);
 
   /**
    * @ngdoc service
@@ -40,18 +37,18 @@
    * The `gnExternalViewer` service is responsible for redirecting users to
    * a third party viewer app when this feature is enabled in the UI settings.
    */
-  module.service('gnExternalViewer', [
-    '$window',
-    'gnGlobalSettings',
-    'gnLangs',
-    '$filter',
-    '$location',
-    function($window, gnGlobalSettings, gnLangs, $filter, $location) {
+  module.service("gnExternalViewer", [
+    "$window",
+    "gnGlobalSettings",
+    "gnLangs",
+    "$filter",
+    "$location",
+    function ($window, gnGlobalSettings, gnLangs, $filter, $location) {
       /**
        * Url pattern for metadata page
        * @type {string}
        */
-      var baseMdUrl = $location.absUrl().split('#')[0] + '#/metadata/';
+      var baseMdUrl = $location.absUrl().split("#")[0] + "#/metadata/";
 
       /**
        * Settings related to external viewer
@@ -71,11 +68,10 @@
          *
          * @return {boolean} true if enabled
          */
-        isEnabled: function() {
-          return !!settings.enabled && !!settings.baseUrl &&
-            !!settings.urlTemplate;
+        isEnabled: function () {
+          return !!settings.enabled && !!settings.baseUrl && !!settings.urlTemplate;
         },
-        isEnabledViewAction: function() {
+        isEnabledViewAction: function () {
           return !!settings.enabledViewAction && !!settings.urlTemplate;
         },
 
@@ -90,8 +86,8 @@
          *
          * @return {string} empty if disabled
          */
-        getBaseUrl: function() {
-          return this.isEnabled() ? settings.baseUrl : '';
+        getBaseUrl: function () {
+          return this.isEnabled() ? settings.baseUrl : "";
         },
 
         /**
@@ -105,10 +101,12 @@
          * @param {Object} md expected properties: uuid, id, url
          * @param {Object} service expected properties: url, name, type, title
          */
-        viewService: function(md, service) {
-          if (!(this.isEnabled() || this.isEnabledViewAction())) { return; }
+        viewService: function (md, service) {
+          if (!(this.isEnabled() || this.isEnabledViewAction())) {
+            return;
+          }
 
-          md.url = md.uuid ? baseMdUrl + md.uuid : '';
+          md.url = md.uuid ? baseMdUrl + md.uuid : "";
 
           this._toView.push({
             md: md,
@@ -125,29 +123,34 @@
         /**
          * internal method: called once all services have been requested
          */
-        _commit: function() {
-          if (!this._toView.length) { return; }
+        _commit: function () {
+          if (!this._toView.length) {
+            return;
+          }
 
-          var getValues = function(object, key) {
-            return this._toView.map(function (entry) {
-              var value = entry[object][key];
-              return encodeURIComponent($filter('gnLocalized')(value) || value || '');
-            }).join(settings.valuesSeparator || ',') || ''
+          var getValues = function (object, key) {
+            return (
+              this._toView
+                .map(function (entry) {
+                  var value = entry[object][key];
+                  return encodeURIComponent($filter("gnLocalized")(value) || value || "");
+                })
+                .join(settings.valuesSeparator || ",") || ""
+            );
           }.bind(this);
           var url = settings.urlTemplate
-            .replace('${iso2lang}', gnLangs.getIso2Lang())
-            .replace('${iso3lang}', gnLangs.getIso3Lang())
-            .replace('${md.id}', getValues('md', 'id'))
-            .replace('${md.uuid}', getValues('md', 'uuid'))
-            .replace('${md.defaultTitle}', getValues('md', 'defaultTitle'))
-            .replace('${md.url}', getValues('md', 'url'))
-            .replace('${service.url}', getValues('service', 'url'))
-            .replace('${service.type}', getValues('service', 'type'))
-            .replace('${service.name}', getValues('service', 'name'))
-            .replace('${service.title}', getValues('service', 'title'));
+            .replace("${iso2lang}", gnLangs.getIso2Lang())
+            .replace("${iso3lang}", gnLangs.getIso3Lang())
+            .replace("${md.id}", getValues("md", "id"))
+            .replace("${md.uuid}", getValues("md", "uuid"))
+            .replace("${md.defaultTitle}", getValues("md", "defaultTitle"))
+            .replace("${md.url}", getValues("md", "url"))
+            .replace("${service.url}", getValues("service", "url"))
+            .replace("${service.type}", getValues("service", "type"))
+            .replace("${service.name}", getValues("service", "name"))
+            .replace("${service.title}", getValues("service", "title"));
 
-          settings.openNewWindow ? $window.open(url, '_blank') :
-            $window.location = url;
+          settings.openNewWindow ? $window.open(url, "_blank") : ($window.location = url);
 
           // reset list of services to view
           this._toView.length = 0;

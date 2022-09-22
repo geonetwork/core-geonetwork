@@ -59,6 +59,8 @@ public class ServletPathFinder {
                 baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1);
             } catch (java.net.MalformedURLException e) { // unlikely
                 baseUrl = servletContext.getServletContextName();
+            } catch (NullPointerException e) { // in test using GeonetMockServletContext
+                baseUrl = "/";
             }
         }
 

@@ -32,6 +32,7 @@ import org.fao.geonet.domain.Metadata;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -74,4 +75,31 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
+
+
+
+    @Query(value = "SELECT replace(data, :search, :replace) FROM metadata m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithSearchAndReplace(
+        @Param("uuid") String uuid,
+        @Param("search") String search,
+        @Param("replace") String replace);
+
+    @Query(value = "SELECT regexp_replace(data, :pattern, :replace) FROM metadata m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithRegexSearchAndReplace(
+        @Param("uuid") String uuid,
+        @Param("pattern") String search,
+        @Param("replace") String replace);
+
+    @Query(value = "SELECT regexp_replace(data, :pattern, :replace, :flags) FROM metadata m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithRegexSearchAndReplaceWithFlags(
+        @Param("uuid") String uuid,
+        @Param("pattern") String search,
+        @Param("replace") String replace,
+        @Param("flags") String flags);
 }

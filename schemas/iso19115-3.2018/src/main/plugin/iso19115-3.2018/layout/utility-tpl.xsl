@@ -76,7 +76,7 @@
         $pattern) and
         normalize-space(cit:CI_OnlineResource/cit:linkage/gco:CharacterString) != '']">
 
-        <xsl:variable name="protocol" select="cit:CI_OnlineResource/cit:protocol/gco:CharacterString"/>
+        <xsl:variable name="protocol" select="cit:CI_OnlineResource/cit:protocol/*/text()"/>
 
         <xsl:variable name="fileName">
           <xsl:choose>
@@ -103,7 +103,7 @@
               mri:citation/cit:CI_Citation/cit:title/gco:CharacterString)"/></title>
             <abstract><xsl:value-of select="normalize-space($metadata/
               mdb:identificationInfo/*/mri:abstract)"/></abstract>
-            <protocol><xsl:value-of select="cit:CI_OnlineResource/cit:protocol/gco:CharacterString"/></protocol>
+            <protocol><xsl:value-of select="cit:CI_OnlineResource/cit:protocol/*/text()"/></protocol>
           </resource>
         </xsl:if>
       </xsl:for-each>

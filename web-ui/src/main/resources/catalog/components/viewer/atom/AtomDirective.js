@@ -21,16 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
+(function () {
+  goog.require("gn_atom_service");
 
+  var module = angular.module("gn_atom_directive", ["gn_atom_service"]);
 
-(function() {
-  goog.require('gn_atom_service');
-
-  var module = angular.module('gn_atom_directive', [
-    'gn_atom_service'
-  ]);
-
-  goog.provide('gn_atom_directive');
+  goog.provide("gn_atom_directive");
 
   /**
 
@@ -115,18 +111,20 @@
               label="ETRS89"/>
    </entry>
    */
-  module.directive('gnAtomDownload', ['gnAtomService', 'gnGlobalSettings',
-    function(gnAtomService, gnGlobalSettings) {
+  module.directive("gnAtomDownload", [
+    "gnAtomService",
+    "gnGlobalSettings",
+    function (gnAtomService, gnGlobalSettings) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          layer: '=gnAtomDownload',
-          map: '=',
-          md: '='
+          layer: "=gnAtomDownload",
+          map: "=",
+          md: "="
         },
-        templateUrl: '../../catalog/components/' +
-            'viewer/atom/partials/atomDownload.html',
-        link: function(scope, element, attrs, ctrls) {
+        templateUrl:
+          "../../catalog/components/" + "viewer/atom/partials/atomDownload.html",
+        link: function (scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.atomLinks = null; // file links from dataset feed
           scope.datasetLinks = null; // datasetfeed links in service feed
@@ -135,58 +133,60 @@
           scope.isAtomAvailable = false; // if $http.get fails
           scope.isLayerInAtom = false; // dataset is found in service feed
           scope.atomChecked = false; // request to atom is running
-          var init = function() {
+          var init = function () {
             try {
               // Get WMS URL from attrs or try by getting the url layer property
-              scope.url = attrs.url || scope.layer.get('url');
+              scope.url = attrs.url || scope.layer.get("url");
               scope.layerName = attrs.layerName;
-              scope.checkAtom(attrs.url).then(scope.setLinks, function() {
-              }).finally(function() {
-                scope.atomChecked = true;
-              });
+              scope
+                .checkAtom(attrs.url)
+                .then(scope.setLinks, function () {})
+                .finally(function () {
+                  scope.atomChecked = true;
+                });
             } catch (e) {
               scope.problemContactingServer = true;
               scope.atomChecked = true;
             }
           };
 
-
-          scope.update = function(atom) {
+          scope.update = function (atom) {
             scope.layerSelected = atom;
             if (atom && atom.url) {
               scope.atomChecked = false;
-              scope.checkAtom(atom.url).then(scope.setLinks, function() {
-              }).finally(function() {
-                scope.atomChecked = true;
-              });
+              scope
+                .checkAtom(atom.url)
+                .then(scope.setLinks, function () {})
+                .finally(function () {
+                  scope.atomChecked = true;
+                });
             } else {
               scope.atomLinks = [];
             }
           };
 
-          scope.checkAtom = function(url) {
-            return gnAtomService.parseFeed(url)
-                .then(function(atom) {
-                  scope.atom = atom;
-                });
+          scope.checkAtom = function (url) {
+            return gnAtomService.parseFeed(url).then(function (atom) {
+              scope.atom = atom;
+            });
           };
 
-          scope.setLinks = function() {
+          scope.setLinks = function () {
             var atomLinks = [];
             var datasetLinks = [];
             var isService = false;
 
             // Pre-defined Dataset Download Service implementations shall publish separate
             // datasets as individual entries within an Atom feed
-            scope.atom.find('entry').each(function() {
+            scope.atom.find("entry").each(function () {
               var atomLink = {};
               try {
                 atomLink = {
-                  id: $(this).find('id').text(),
-                  title: $(this).find('title').first().text(),
+                  id: $(this).find("id").text(),
+                  title: $(this).find("title").first().text(),
                   //check if entry has inspire extension
-                  uuid: $(this).find('spatial_dataset_identifier_code').text(),
-                  namespace: $(this).find('spatial_dataset_identifier_namespace').text(),
+                  uuid: $(this).find("spatial_dataset_identifier_code").text(),
+                  namespace: $(this).find("spatial_dataset_identifier_namespace").text(),
                   links: []
                 };
 
@@ -195,52 +195,57 @@
                 // of the ‗rel‘ attribute of this element shall be ―self,
                 // the ‗hreflang‘ attribute shall use the appropriate language code
                 // and the value of the ‗type‘ attribute shall be application/atom+xml.
-                $(this).find('link').each(function() {
-                  if ($(this).attr('type') === 'application/atom+xml') {
-                    atomLink.url = $(this).attr('href');
-                    isService = true;
-                  }
-                });
+                $(this)
+                  .find("link")
+                  .each(function () {
+                    if ($(this).attr("type") === "application/atom+xml") {
+                      atomLink.url = $(this).attr("href");
+                      isService = true;
+                    }
+                  });
 
                 if (angular.isUndefined(atomLink.uuid)) {
                   isService = true;
                 }
               } catch (e) {
-                console.warn('Error while parsing ATOM entry.');
+                console.warn("Error while parsing ATOM entry.");
               }
-
 
               if (isService) {
                 datasetLinks.push(atomLink);
               } else {
                 try {
-                  var defaultCrs = $(this).find('category').attr('label'),
-                    defaultGeom = $(this).find('georss:polygon').text();
-                  $(this).find('link').each(function() {
-                    var link = {
-                      title: $(this).attr('title') || atomLink.title,
-                      url: $(this).attr('href'),
-                      type: $(this).attr('type'),
-                      length: Math.round(($(this).attr('length') || 0) / 10485.76) / 100,
-                      crs: defaultCrs,
-                      geom: $(this).attr('bbox') || defaultGeom
-                    }
-                    atomLink.links.push(link);
-                    atomLinks.push(link);
-                  });
+                  var defaultCrs = $(this).find("category").attr("label"),
+                    defaultGeom = $(this).find("georss:polygon").text();
+                  $(this)
+                    .find("link")
+                    .each(function () {
+                      var link = {
+                        title: $(this).attr("title") || atomLink.title,
+                        url: $(this).attr("href"),
+                        type: $(this).attr("type"),
+                        length:
+                          Math.round(($(this).attr("length") || 0) / 10485.76) / 100,
+                        crs: defaultCrs,
+                        geom: $(this).attr("bbox") || defaultGeom
+                      };
+                      atomLink.links.push(link);
+                      atomLinks.push(link);
+                    });
                 } catch (e) {
-                  console.warn('Error while parsing ATOM entry link.');
+                  console.warn("Error while parsing ATOM entry link.");
                 }
               }
             });
 
-
             if (isService) {
               //check if layer in feed (by name=id or uuid=uuid)
               scope.layerSelected = null;
-              $(datasetLinks).each(function() {
-                if (scope.layerName === $(this).id ||
-                    ($(this).uuid && scope.md.source === $(this).uuid)) {
+              $(datasetLinks).each(function () {
+                if (
+                  scope.layerName === $(this).id ||
+                  ($(this).uuid && scope.md.source === $(this).uuid)
+                ) {
                   scope.layerSelected = $(this);
                   scope.isLayerInAtom = true;
                 }

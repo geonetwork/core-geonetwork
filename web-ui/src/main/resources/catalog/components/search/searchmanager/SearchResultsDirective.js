@@ -21,33 +21,32 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_search_form_results_directive');
+(function () {
+  goog.provide("gn_search_form_results_directive");
 
-  var module = angular.module('gn_search_form_results_directive', []);
+  var module = angular.module("gn_search_form_results_directive", []);
 
-  module.directive('gnSearchFormResults', [
-    'gnSearchManagerService',
-    function(gnSearchManagerService) {
-
-      var activeClass = 'active';
+  module.directive("gnSearchFormResults", [
+    "gnSearchManagerService",
+    function (gnSearchManagerService) {
+      var activeClass = "active";
 
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/components/search/searchmanager/partials/' +
-            'searchresults.html',
+        templateUrl:
+          "../../catalog/components/search/searchmanager/partials/" +
+          "searchresults.html",
         scope: {
-          searchResults: '=',
-          paginationInfo: '=paginationInfo',
-          selection: '=selectRecords',
-          selectionBucket: '@',
-          onMdClick: '='
+          searchResults: "=",
+          paginationInfo: "=paginationInfo",
+          selection: "=selectRecords",
+          selectionBucket: "@",
+          onMdClick: "="
         },
-        link: function(scope, element, attrs) {
-
+        link: function (scope, element, attrs) {
           if (angular.isUndefined(scope.selectionBucket)) {
-            scope.selectionBucket = (Math.random() + '').replace('.', '');
+            scope.selectionBucket = (Math.random() + "").replace(".", "");
           }
 
           // get init options
@@ -65,7 +64,7 @@
            * If this function is not defined, then call the select method
            * if the directive has a selection model.
            */
-          scope.onClick = function(md) {
+          scope.onClick = function (md) {
             if (angular.isFunction(scope.onMdClick)) {
               scope.onMdClick(md);
             } else if (angular.isFunction(scope.select)) {
@@ -76,46 +75,41 @@
           // Manage selection
           if (scope.options.selection.mode) {
             scope.selection = [];
-            if (scope.options.selection.mode.indexOf('local') >= 0) {
-
+            if (scope.options.selection.mode.indexOf("local") >= 0) {
               /**
                * Define local select function
                * Manage an array scope.selection containing
                * all selected MD
                */
-              scope.select = function(md) {
-                if (scope.options.selection.mode.indexOf('multiple') >= 0) {
+              scope.select = function (md) {
+                if (scope.options.selection.mode.indexOf("multiple") >= 0) {
                   if (scope.selection.indexOf(md) < 0) {
                     scope.selection.push(md);
-                  }
-                  else {
+                  } else {
                     scope.selection.splice(scope.selection.indexOf(md), 1);
                   }
-                }
-                else {
+                } else {
                   scope.selection.pop();
                   scope.selection.push(md);
                 }
               };
             } else {
-              scope.select = function(md) {
-                if (scope.options.selection.mode.indexOf('multiple') >= 0) {
+              scope.select = function (md) {
+                if (scope.options.selection.mode.indexOf("multiple") >= 0) {
                   if (md.selected === false) {
                     md.selected = true;
-                    gnSearchManagerService.select(
-                        md.uuid, scope.selectionBucket)
-                        .then(updateSelectionNumber);
+                    gnSearchManagerService
+                      .select(md.uuid, scope.selectionBucket)
+                      .then(updateSelectionNumber);
                   } else {
                     md.selected = false;
-                    gnSearchManagerService.unselect(
-                        md.uuid, scope.selectionBucket)
-                        .then(updateSelectionNumber);
+                    gnSearchManagerService
+                      .unselect(md.uuid, scope.selectionBucket)
+                      .then(updateSelectionNumber);
                   }
-                }
-                else {
+                } else {
                   // TODO: clear selection ?
-                  console.log('Single selection is not ' +
-                      'supported in remote mode.');
+                  console.log("Single selection is not " + "supported in remote mode.");
                   //  md.selected = true;
                   //  gnSearchManagerService.select(md.uuid)
                   //  .then(updateSelectionNumber);
@@ -124,22 +118,24 @@
             }
           }
 
-          var updateSelectionNumber = function(data) {
+          var updateSelectionNumber = function (data) {
             scope.selection = {
               length: data[0]
             };
           };
 
-          scope.selectAll = function(all) {
-            angular.forEach(scope.searchResults.records, function(md) {
+          scope.selectAll = function (all) {
+            angular.forEach(scope.searchResults.records, function (md) {
               md.selected = all;
             });
             if (all) {
-              gnSearchManagerService.selectAll(
-                  scope.selectionBucket).then(updateSelectionNumber);
+              gnSearchManagerService
+                .selectAll(scope.selectionBucket)
+                .then(updateSelectionNumber);
             } else {
-              gnSearchManagerService.selectNone(
-                  scope.selectionBucket).then(updateSelectionNumber);
+              gnSearchManagerService
+                .selectNone(scope.selectionBucket)
+                .then(updateSelectionNumber);
             }
           };
 
@@ -148,14 +144,14 @@
            * if not, selection is handled on server side and
            * search results contains information if a record is selected or not.
            */
-          scope.isSelected = function(md) {
+          scope.isSelected = function (md) {
             if (!scope.options.selection || !scope.options.selection.mode) {
               return false;
             }
             var targetUuid = md.uuid;
             var selected = false;
-            if (scope.options.selection.mode.indexOf('local') >= 0) {
-              angular.forEach(scope.selection, function(md) {
+            if (scope.options.selection.mode.indexOf("local") >= 0) {
+              angular.forEach(scope.selection, function (md) {
                 if (md.uuid === targetUuid) {
                   selected = true;
                 }
@@ -166,7 +162,7 @@
             return selected;
           };
 
-          scope.$on('resetSelection', function(evt) {
+          scope.$on("resetSelection", function (evt) {
             if (scope.selection) {
               scope.selection = [];
             }
@@ -183,5 +179,6 @@
           }
         }
       };
-    }]);
+    }
+  ]);
 })();

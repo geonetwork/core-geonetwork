@@ -21,83 +21,90 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_gfi_directive');
+(function () {
+  goog.provide("gn_gfi_directive");
 
+  var module = angular.module("gn_gfi_directive", ["angular.filter"]);
 
-  var module = angular.module('gn_gfi_directive', [
-    'angular.filter'
-  ]);
+  var gfiTemplateURL = "../../catalog/components/viewer/gfi/partials/" + "gfi-popup.html";
 
-  var gfiTemplateURL = '../../catalog/components/viewer/gfi/partials/' +
-      'gfi-popup.html';
+  module.value("gfiTemplateURL", gfiTemplateURL);
 
-  module.value('gfiTemplateURL', gfiTemplateURL);
+  module.directive("gnVectorFeatureToolTip", [
+    "gnDebounce",
+    function (gnDebounce) {
+      return {
+        restrict: "A",
+        scope: {
+          map: "=gnVectorFeatureToolTip"
+        },
+        link: function (scope, element, attrs) {
+          $("body").append(
+            '<div id="feature-info" data-content=""' +
+              'style="position: absolute; z-index: 100;"/>'
+          );
+          var info = $("#feature-info");
+          info.popover({
+            animation: false,
+            trigger: "manual",
+            placement: "top",
+            html: true,
+            title: "Feature info"
+          });
 
-  module.directive('gnVectorFeatureToolTip',
-      ['gnDebounce', function(gnDebounce) {
-        return {
-          restrict: 'A',
-          scope: {
-            map: '=gnVectorFeatureToolTip'
-          },
-          link: function(scope, element, attrs) {
-            $('body').append('<div id="feature-info" data-content=""' +
-             'style="position: absolute; z-index: 100;"/>');
-            var info = $('#feature-info');
-            info.popover({
-              animation: false,
-              trigger: 'manual',
-              placement: 'top',
-              html: true,
-              title: 'Feature info'
+          var displayFeatureInfo = function (pixel) {
+            var mapTop = scope.map.getTarget().getBoundingClientRect().top;
+            info.css({
+              left: pixel[0] + "px",
+              top: pixel[1] + mapTop + "px"
             });
 
-            var displayFeatureInfo = function(pixel) {
-              var mapTop = scope.map.getTarget().getBoundingClientRect().top;
-              info.css({
-                left: pixel[0] + 'px',
-                top: (pixel[1] + mapTop) + 'px'
-              });
-
-              var feature = scope.map.forEachFeatureAtPixel(pixel,
-               function(feature, layer) {
-                 if (layer && layer.get('featureTooltip')) {
-                   return feature;
-                 }
-               }.bind(this), {
-                layerFilter: function(layer) {
+            var feature = scope.map.forEachFeatureAtPixel(
+              pixel,
+              function (feature, layer) {
+                if (layer && layer.get("featureTooltip")) {
+                  return feature;
+                }
+              }.bind(this),
+              {
+                layerFilter: function (layer) {
                   return layer instanceof ol.layer.Vector;
-              }});
-              if (feature) {
-                var props = feature.getProperties();
-                var tooltipContent = '<ul>';
-                $.each(props, function(key, values) {
-                  if (typeof values !== 'object') {
-                    tooltipContent += '<li>' + key + ': ' + values + '</li>';
-                  }
-                });
-                tooltipContent += '</ul>';
-                info.popover('hide');
-                info.data('bs.popover').options.content = tooltipContent;
-                info.popover('show');
-              } else {
-                info.popover('hide');
+                }
               }
-            };
+            );
+            if (feature) {
+              var props = feature.getProperties();
+              var tooltipContent = "<ul>";
+              $.each(props, function (key, values) {
+                if (typeof values !== "object") {
+                  tooltipContent += "<li>" + key + ": " + values + "</li>";
+                }
+              });
+              tooltipContent += "</ul>";
+              info.popover("hide");
+              info.data("bs.popover").options.content = tooltipContent;
+              info.popover("show");
+            } else {
+              info.popover("hide");
+            }
+          };
 
-            scope.map.on('pointermove', gnDebounce(function(evt) {
+          scope.map.on(
+            "pointermove",
+            gnDebounce(function (evt) {
               if (evt.dragging) {
                 //info.hide();
-                info.popover('hide');
+                info.popover("hide");
                 return;
               }
 
               displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            }, 500));
-          }
-        };
-      }]);
+            }, 500)
+          );
+        }
+      };
+    }
+  ]);
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnGfi
@@ -108,20 +115,22 @@
    * GFI results as an array in a popup.
    * The template could be overriden using `gfiTemplateURL` constant.
    */
-  module.directive('gnGfi', ['$http', 'gfiTemplateURL',
-    function($http, gfiTemplateURL) {
+  module.directive("gnGfi", [
+    "$http",
+    "gfiTemplateURL",
+    function ($http, gfiTemplateURL) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          map: '='
+          map: "="
         },
-        controller: 'gnGfiController',
+        controller: "gnGfiController",
         templateUrl: gfiTemplateURL
       };
-    }]);
+    }
+  ]);
 
-  geonetwork.GnGfiController = function($scope, gnFeaturesTableManager) {
-
+  geonetwork.GnGfiController = function ($scope, gnFeaturesTableManager) {
     this.gnFeaturesTableManager = gnFeaturesTableManager;
 
     this.$scope = $scope;
@@ -130,88 +139,101 @@
     var coordinates;
 
     this.overlay = new ol.Overlay({
-      positioning: 'center-center',
+      positioning: "center-center",
       position: undefined,
       element: $('<span class="marker">+</span>')[0]
     });
     map.addOverlay(this.overlay);
 
-    map.on('singleclick', function(e) {
-      if (!this.canApply()) {
-        return;
-      }
-      this.$scope.$apply(function() {
-        var layers = map.getLayers().getArray().filter(function(layer) {
-          return layer.background != true
-            && (layer.getSource() instanceof ol.source.ImageWMS ||
-              layer.getSource() instanceof ol.source.TileWMS ||
-              layer.getSource() instanceof ol.source.ImageArcGISRest)
-            && layer.getVisible();
-        }).reverse();
+    map.on(
+      "singleclick",
+      function (e) {
+        if (!this.canApply()) {
+          return;
+        }
+        this.$scope.$apply(
+          function () {
+            var layers = map
+              .getLayers()
+              .getArray()
+              .filter(function (layer) {
+                return (
+                  layer.background != true &&
+                  (layer.getSource() instanceof ol.source.ImageWMS ||
+                    layer.getSource() instanceof ol.source.TileWMS ||
+                    layer.getSource() instanceof ol.source.ImageArcGISRest) &&
+                  layer.getVisible()
+                );
+              })
+              .reverse();
 
-        coordinates = e.coordinate;
-        this.registerTables(layers, e.coordinate);
+            coordinates = e.coordinate;
+            this.registerTables(layers, e.coordinate);
+          }.bind(this)
+        );
+      }.bind(this)
+    );
 
-      }.bind(this));
-    }.bind(this));
-
-    $scope.$watch(function() {
-      return this.gnFeaturesTableManager.getCount();
-    }.bind(this), function(newVal, oldVal) {
-      this.overlay.setPosition(
-          (newVal == 0) ? undefined : coordinates
-      );
-    }.bind(this));
+    $scope.$watch(
+      function () {
+        return this.gnFeaturesTableManager.getCount();
+      }.bind(this),
+      function (newVal, oldVal) {
+        this.overlay.setPosition(newVal == 0 ? undefined : coordinates);
+      }.bind(this)
+    );
   };
 
-  geonetwork.GnGfiController.prototype.canApply = function() {
+  geonetwork.GnGfiController.prototype.canApply = function () {
     var map = this.map;
-    if (map.get('disable-gfi')) {
+    if (map.get("disable-gfi")) {
       return;
     }
     for (var i = 0; i < map.getInteractions().getArray().length; i++) {
       var interaction = map.getInteractions().getArray()[i];
-      if ((interaction instanceof ol.interaction.Draw ||
+      if (
+        (interaction instanceof ol.interaction.Draw ||
           interaction instanceof ol.interaction.Select) &&
-          interaction.getActive()) {
+        interaction.getActive()
+      ) {
         return false;
       }
     }
     return true;
   };
 
-  geonetwork.GnGfiController.prototype.registerTables =
-      function(layers, coordinates) {
-
+  geonetwork.GnGfiController.prototype.registerTables = function (layers, coordinates) {
     this.gnFeaturesTableManager.clear();
-    layers.forEach(function(layer) {
+    layers.forEach(
+      function (layer) {
+        var indexObject = layer.get("indexObject");
+        var isArcGis = layer.getSource() instanceof ol.source.ImageArcGISRest;
+        var type = "gfi";
+        if (!!indexObject) {
+          type = "index";
+        } else if (isArcGis) {
+          type = "esri";
+        }
 
-      var indexObject = layer.get('indexObject');
-      var isArcGis = layer.getSource() instanceof ol.source.ImageArcGISRest;
-      var type = 'gfi';
-      if (!!indexObject) {
-        type = 'index';
-      } else if (isArcGis) {
-        type = 'esri';
-      }
-
-      this.gnFeaturesTableManager.addTable({
-        name: layer.get('label') || layer.get('name'),
-        type: type
-      }, {
-        map: this.map,
-        indexObject: indexObject,
-        layer: layer,
-        coordinates: coordinates
-      });
-    }.bind(this));
+        this.gnFeaturesTableManager.addTable(
+          {
+            name: layer.get("label") || layer.get("name"),
+            type: type
+          },
+          {
+            map: this.map,
+            indexObject: indexObject,
+            layer: layer,
+            coordinates: coordinates
+          }
+        );
+      }.bind(this)
+    );
   };
 
-
-  module.controller('gnGfiController', [
-    '$scope',
-    'gnFeaturesTableManager',
-    geonetwork.GnGfiController]);
-
-
+  module.controller("gnGfiController", [
+    "$scope",
+    "gnFeaturesTableManager",
+    geonetwork.GnGfiController
+  ]);
 })();

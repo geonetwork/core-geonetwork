@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_geometry_directive');
+(function () {
+  goog.provide("gn_geometry_directive");
 
-
-  var module = angular.module('gn_geometry_directive', []);
+  var module = angular.module("gn_geometry_directive", []);
 
   /**
    * @ngdoc directive
@@ -40,38 +39,39 @@
    * If 'outputAsFeatures' is true, a FeatureCollection object will be output
    * instead of a single feature
    */
-  module.directive('gnGeometryTool', [
-    function() {
+  module.directive("gnGeometryTool", [
+    function () {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          map: '<',
-          geometryType: '@',
-          output: '=',
-          outputFormat: '@',
-          outputCrs: '@',
-          allowReset: '@',
-          allowModify: '@',
-          outputAsFeatures: '@',
-          input: '=',
-          inputFormat: '@',
-          inputCrs: '@',
-          inputErrorHandler: '='
+          map: "<",
+          geometryType: "@",
+          output: "=",
+          outputFormat: "@",
+          outputCrs: "@",
+          allowReset: "@",
+          allowModify: "@",
+          outputAsFeatures: "@",
+          input: "=",
+          inputFormat: "@",
+          inputCrs: "@",
+          inputErrorHandler: "="
         },
-        templateUrl: '../../catalog/components/viewer/geometry/' +
-            'partials/geometrytool.html',
-        controllerAs: 'ctrl',
+        templateUrl:
+          "../../catalog/components/viewer/geometry/" + "partials/geometrytool.html",
+        controllerAs: "ctrl",
         bindToController: true,
         controller: [
-          '$scope',
-          '$attrs',
-          'olDecorateInteraction',
-          'gnGeometryService',
+          "$scope",
+          "$attrs",
+          "olDecorateInteraction",
+          "gnGeometryService",
           function GeometryToolController(
-              $scope,
-              $attrs,
-              olDecorateInteraction,
-              gnGeometryService) {
+            $scope,
+            $attrs,
+            olDecorateInteraction,
+            gnGeometryService
+          ) {
             var ctrl = this;
             var layer = gnGeometryService.getCommonLayer(ctrl.map);
             var source = layer.getSource();
@@ -87,7 +87,7 @@
 
             // this is used to deactivate zoom on draw end
             ctrl.zoomInteraction = null;
-            ctrl.map.getInteractions().forEach(function(interaction) {
+            ctrl.map.getInteractions().forEach(function (interaction) {
               if (interaction instanceof ol.interaction.DoubleClickZoom) {
                 ctrl.zoomInteraction = interaction;
               }
@@ -102,7 +102,7 @@
             olDecorateInteraction(ctrl.modifyInteraction);
 
             // cleanup when scope is destroyed
-            $scope.$on('$destroy', function() {
+            $scope.$on("$destroy", function () {
               removeMyFeatures();
               ctrl.map.removeInteraction(ctrl.drawInteraction);
               ctrl.map.removeInteraction(ctrl.modifyInteraction);
@@ -110,8 +110,10 @@
 
             // remove all my features from the map
             function removeMyFeatures() {
-              var func = function(f) { return f.ol_uid; };
-              ctrl.features.forEach(function(feature) {
+              var func = function (f) {
+                return f.ol_uid;
+              };
+              ctrl.features.forEach(function (feature) {
                 source.removeFeature(feature);
               });
               ctrl.features.clear();
@@ -125,20 +127,16 @@
                 return;
               }
 
-              ctrl.output = gnGeometryService.printGeometryOutput(
-                  ctrl.map,
-                  feature,
-                  {
-                    crs: ctrl.outputCrs,
-                    format: ctrl.outputFormat,
-                    outputAsWFSFeaturesCollection: ctrl.outputAsFeatures
-                    // TODO: make sure this works everytime?
-                  }
-                  );
-            };
+              ctrl.output = gnGeometryService.printGeometryOutput(ctrl.map, feature, {
+                crs: ctrl.outputCrs,
+                format: ctrl.outputFormat,
+                outputAsWFSFeaturesCollection: ctrl.outputAsFeatures
+                // TODO: make sure this works everytime?
+              });
+            }
 
             // clear existing features on draw end & save feature
-            ctrl.drawInteraction.on('drawend', function(event) {
+            ctrl.drawInteraction.on("drawend", function (event) {
               removeMyFeatures();
               updateOutput(event.feature);
               ctrl.drawInteraction.active = false;
@@ -148,25 +146,25 @@
               // see https://github.com/openlayers/openlayers/issues/3610
               if (ctrl.zoomInteraction) {
                 ctrl.zoomInteraction.setActive(false);
-                setTimeout(function() {
+                setTimeout(function () {
                   ctrl.zoomInteraction.setActive(true);
                 }, 251);
               }
 
               // prevent interference from GFI
-              ctrl.map.set('disable-gfi', true);
-              setTimeout(function() {
-                ctrl.map.set('disable-gfi', false);
+              ctrl.map.set("disable-gfi", true);
+              setTimeout(function () {
+                ctrl.map.set("disable-gfi", false);
               }, 1000);
             });
 
             // update output on modify end
-            ctrl.modifyInteraction.on('modifyend', function(event) {
+            ctrl.modifyInteraction.on("modifyend", function (event) {
               updateOutput(event.features.item(0));
             });
 
             // reset drawing
-            ctrl.reset = function() {
+            ctrl.reset = function () {
               removeMyFeatures();
               updateOutput();
             };
@@ -180,20 +178,20 @@
               // parse geometry from text
               try {
                 var geometry = gnGeometryService.parseGeometryInput(
-                    ctrl.map,
-                    ctrl.input,
-                    {
-                      crs: ctrl.inputCrs,
-                      format: ctrl.inputFormat
-                    }
-                    );
+                  ctrl.map,
+                  ctrl.input,
+                  {
+                    crs: ctrl.inputCrs,
+                    format: ctrl.inputFormat
+                  }
+                );
 
                 // clear features & add a new one
                 removeMyFeatures();
                 var feature = new ol.Feature({
                   geometry: geometry
                 });
-                feature.setId('geometry-tool-output');
+                feature.setId("geometry-tool-output");
                 source.addFeature(feature);
                 ctrl.features.push(feature);
               } catch (e) {
@@ -203,11 +201,12 @@
                 }
               }
             }
-            $scope.$watch(function() {
+            $scope.$watch(function () {
               return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
             }, handleInputUpdate);
           }
         ]
       };
-    }]);
+    }
+  ]);
 })();

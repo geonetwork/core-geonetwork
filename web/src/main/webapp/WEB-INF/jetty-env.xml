@@ -21,7 +21,7 @@
         <!--<Set name="driverClassName">org.postgis.DriverWrapper</Set>
         <Set name="url">jdbc:postgresql_postGIS://localhost:5432/gndb</Set>-->
         <Set name="driverClassName">org.h2.Driver</Set>
-        <Set name="url">jdbc:h2:gn;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</Set>
+        <Set name="url">jdbc:h2:gn;NON_KEYWORDS=VALUE;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</Set>
         <Set name="username">www-data</Set>
         <Set name="password">www-data</Set>
         <Set name="validationQuery">SELECT 1</Set>

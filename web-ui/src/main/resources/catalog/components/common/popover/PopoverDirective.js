@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_popover_directive');
+(function () {
+  goog.provide("gn_popover_directive");
 
-  var module = angular.module('gn_popover_directive', []);
+  var module = angular.module("gn_popover_directive", []);
 
   /**
    * Provides a directive used to display a Bootstrap popover.
@@ -44,47 +44,49 @@
    * @ngname gnPopover
    * @return {angular.Directive} The Directive Definition Object.
    */
-  module.directive('gnPopover', [function() {
-    return {
-      restrict: 'A',
-      scope: true,
-      controller: 'GnPopoverController',
-      controllerAs : 'popoverCtrl',
-      link: function(scope, elem, attrs, gnPopoverCtrl) {
-        gnPopoverCtrl.anchorElm.on('hidden.bs.popover', function() {
-          /**
-           * @type {{inState : Object}}
-           */
-          var popover = gnPopoverCtrl.anchorElm.data('bs.popover');
-          popover['inState'].click = false;
-        });
+  module.directive("gnPopover", [
+    function () {
+      return {
+        restrict: "A",
+        scope: true,
+        controller: "GnPopoverController",
+        controllerAs: "popoverCtrl",
+        link: function (scope, elem, attrs, gnPopoverCtrl) {
+          gnPopoverCtrl.anchorElm.on("hidden.bs.popover", function () {
+            /**
+             * @type {{inState : Object}}
+             */
+            var popover = gnPopoverCtrl.anchorElm.data("bs.popover");
+            popover["inState"].click = false;
+          });
 
-        gnPopoverCtrl.anchorElm.on('inserted.bs.popover', function() {
-          gnPopoverCtrl.bodyElm.show();
-          gnPopoverCtrl.shown = true;
-        });
+          gnPopoverCtrl.anchorElm.on("inserted.bs.popover", function () {
+            gnPopoverCtrl.bodyElm.show();
+            gnPopoverCtrl.shown = true;
+          });
 
-        gnPopoverCtrl.anchorElm.popover({
-          container: 'body',
-          html: true,
-          content: gnPopoverCtrl.bodyElm,
-          placement : attrs['gnPopoverPlacement'] || 'right'
-        });
+          gnPopoverCtrl.anchorElm.popover({
+            container: "body",
+            html: true,
+            content: gnPopoverCtrl.bodyElm,
+            placement: attrs["gnPopoverPlacement"] || "right"
+          });
 
-        if (attrs['gnPopoverDismiss']) {
-          $(attrs['gnPopoverDismiss']).on('scroll', function() {
-            gnPopoverCtrl.dismissPopover();
+          if (attrs["gnPopoverDismiss"]) {
+            $(attrs["gnPopoverDismiss"]).on("scroll", function () {
+              gnPopoverCtrl.dismissPopover();
+            });
+          }
+
+          scope.$on("$destroy", function () {
+            gnPopoverCtrl.anchorElm.popover("destroy");
+            gnPopoverCtrl.anchorElm.unbind("inserted.bs.popover");
+            gnPopoverCtrl.anchorElm.unbind("hidden.bs.popover");
           });
         }
-
-        scope.$on('$destroy', function() {
-          gnPopoverCtrl.anchorElm.popover('destroy');
-          gnPopoverCtrl.anchorElm.unbind('inserted.bs.popover');
-          gnPopoverCtrl.anchorElm.unbind('hidden.bs.popover');
-        });
-      }
-    };
-  }]);
+      };
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -92,15 +94,17 @@
    * @ngname gnPopoverAnchor
    * @return {angular.Directive} The Directive Definition Object
    */
-  module.directive('gnPopoverAnchor', [function() {
-    return {
-      restrict: 'A',
-      require: '^^gnPopover',
-      link: function(scope, elem, attrs, gnPopoverCtrl) {
-        gnPopoverCtrl.anchorElm = elem;
-      }
-    };
-  }]);
+  module.directive("gnPopoverAnchor", [
+    function () {
+      return {
+        restrict: "A",
+        require: "^^gnPopover",
+        link: function (scope, elem, attrs, gnPopoverCtrl) {
+          gnPopoverCtrl.anchorElm = elem;
+        }
+      };
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -108,16 +112,18 @@
    * @ngname gnPopoverContent
    * @return {angular.Directive} The Directive Definition Object
    */
-  module.directive('gnPopoverContent', [function() {
-    return {
-      restrict: 'A',
-      require: '^^gnPopover',
-      link : function(scope, elem, attrs, gnPopoverCtrl) {
-        gnPopoverCtrl.bodyElm = elem;
-        elem.hide();
-      }
-    };
-  }]);
+  module.directive("gnPopoverContent", [
+    function () {
+      return {
+        restrict: "A",
+        require: "^^gnPopover",
+        link: function (scope, elem, attrs, gnPopoverCtrl) {
+          gnPopoverCtrl.bodyElm = elem;
+          elem.hide();
+        }
+      };
+    }
+  ]);
 
   /**
    * The controller for the 'popover' directive.
@@ -129,7 +135,7 @@
    * @ngname GnPopoverController
    * @param {angular.Scope} $scope Scope.
    */
-  var PopoverController = function($scope) {
+  var PopoverController = function ($scope) {
     /**
      * The state of the popover (displayed or not)
      * @type {boolean}
@@ -150,35 +156,33 @@
     this.bodyElm = undefined;
 
     function onMouseDown(clickEvent) {
-      if (this.anchorElm[0] !== clickEvent.target &&
-        this.bodyElm.parent()[0] !== clickEvent.target &
-        this.bodyElm.parent().find(clickEvent.target).length === 0 && this.shown) {
+      if (
+        this.anchorElm[0] !== clickEvent.target &&
+        (this.bodyElm.parent()[0] !== clickEvent.target) &
+          (this.bodyElm.parent().find(clickEvent.target).length === 0) &&
+        this.shown
+      ) {
         this.dismissPopover();
       }
     }
 
-    angular.element('body').on('mousedown', onMouseDown.bind(this));
+    angular.element("body").on("mousedown", onMouseDown.bind(this));
 
-    $scope.$on('$destroy', function() {
-      angular.element('body').off('mousedown', onMouseDown);
+    $scope.$on("$destroy", function () {
+      angular.element("body").off("mousedown", onMouseDown);
     });
-
   };
 
-  PopoverController['$inject'] = [
-    '$scope'
-  ];
-
+  PopoverController["$inject"] = ["$scope"];
 
   /**
    * Dissmiss popover function
    * @export
    */
-  PopoverController.prototype.dismissPopover = function() {
+  PopoverController.prototype.dismissPopover = function () {
     this.shown = false;
-    this.anchorElm.popover('hide');
+    this.anchorElm.popover("hide");
   };
 
-  module.controller('GnPopoverController', PopoverController);
-
+  module.controller("GnPopoverController", PopoverController);
 })();

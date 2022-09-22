@@ -1,94 +1,89 @@
 <div>
-  <form role="form"
-        data-ng-search-form=""
-        data-runSearch="true">
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <form role="form" data-ng-search-form="" data-runSearch="true">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
     <div class="form-group">
-      <div class="input-group">
-        <span class="input-group-addon"><i
-          class="fa fa-search"/></span>
-        <input class="form-control"
-               data-ng-change="triggerSearch()"
-               type="text"
-               data-ng-model="searchObj.params.any"
-               data-ng-model-options="modelOptions"
-               aria-label="{{'search' | translate}}"
-               placeholder="{{'search' | translate}}" autofocus=""/>
+      <div class="input-group gn-margin-bottom">
+        <span class="input-group-addon">
+          <i class="fa fa-search" />
+        </span>
+        <input
+          class="form-control"
+          data-ng-change="triggerSearch()"
+          type="text"
+          data-ng-model="searchObj.params.any"
+          data-ng-model-options="modelOptions"
+          aria-label="{{'search' | translate}}"
+          placeholder="{{'search' | translate}}"
+          autofocus=""
+        />
       </div>
 
-      <div data-sortby-combo=""
-           data-params="searchObj.params"
-           data-gn-sortby-values="searchObj.sortbyValues"></div>
+      <div
+        data-sortby-combo=""
+        data-params="searchObj.params"
+        data-gn-sortby-values="searchObj.sortbyValues"
+      ></div>
     </div>
 
-    <!--
-        <div class="btn-group btn-group-xs" role="group" aria-label="...">
-          <button data-ng-repeat="(key, facet) in searchResults.facet['topicCats']"
-                  type="button"
-                  class="btn btn-default"
-                  data-ng-click="filterTopic(facet['@name'])"
-                  title="{{facet['@name']}}">
-            <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
-          </button>
-        </div>
-    -->
-
-
-    <div data-ng-show="searchResults.count >= 0 && searchResults.records.length === 0"
-         class="alert alert-warning"
-         data-translate="">
-        {{('noRecordFoundWithResourceRegistered' + mode) | translate}}
+    <div
+      data-ng-show="searchResults.count >= 0 && searchResults.records.length === 0"
+      class="alert alert-warning"
+      data-translate=""
+    >
+      {{('noRecordFoundWithResourceRegistered' + mode) | translate}}
     </div>
 
     <ul class="gn-searchlayer-list list-group">
-      <li class="gn-searchlayer list-group-item"
-          data-ng-repeat="m in searchResults.records"
-          data-ng-init="md = getMetadata(m)">
+      <li
+        class="gn-searchlayer list-group-item"
+        data-ng-repeat="m in searchResults.records"
+        data-ng-init="md = getMetadata(m)"
+      >
         <h3>
-          <a data-ng-if="mode === 'map'"
-             data-ng-click="loadMap(md.relevantMapLinks[0], md)"
-             title="{{'addToMap' | translate}}">
+          <a
+            data-ng-if="mode === 'map'"
+            href=""
+            data-ng-click="loadMap(md.relevantMapLinks[0], md)"
+            title="{{'addToMap' | translate}}"
+          >
             {{md.resourceTitle}}
           </a>
-          <span data-ng-if="mode !== 'map'">
-            {{md.resourceTitle}}
-          </span>
+          <span data-ng-if="mode !== 'map'"> {{md.resourceTitle}} </span>
           -
-          <a class=""
-             ng-href="#/metadata/{{md.uuid}}"
-             title="{{'openRecord' | translate}}" translate>
+          <a
+            class=""
+            ng-href="#/metadata/{{md.uuid}}"
+            title="{{'openRecord' | translate}}"
+            translate
+          >
             openRecord
           </a>
         </h3>
+
         <div class="row">
-          <div class="col-md-2 gn-md-thumbnail">
-            <img class="gn-img-thumbnail"
-                  alt="{{md.resourceTitle}}"
-                  data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
-                  data-ng-if="md.overview[0]"/>
-          </div>
-          <div class="col-md-10">
-            <ul>
-                <li data-ng-repeat="link in md.relevantLinks">
-                  <a data-ng-click="addToMap(link)">
-                    {{link.desc || link.name}}&nbsp;
-                  </a>
-                  <a data-ng-click="addToMap(link)"
-                     href=""
-                     class="btn btn-default btn-xs">
-                    <span data-translate="">addToMap</span>
-                  </a>
-                </li>
-              </ul>
-          </div>
+          <ul class="gn-nopadding-left">
+            <li data-ng-repeat="link in md.relevantLinks">
+              <a
+                data-ng-click="addToMap(link, md)"
+                href=""
+                title="{{'addLayerPrefix' | translate}} {{link.desc || link.name}} {{'addLayerPostfix' | translate}}"
+                class="flex-row"
+              >
+                <span class="fa fa-fw fa-plus"></span>
+                <span>{{link.desc || link.name}}&nbsp;</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </li>
     </ul>
-    <br/>
+    <br />
     <div data-ng-show="searchResults.records.length > 0">
-      <div class="pull-right"
-            data-gn-pagination="paginationInfo"
-            data-hits-values="searchObj.hitsperpageValues"></div>
+      <div
+        class="pull-right"
+        data-gn-pagination="paginationInfo"
+        data-hits-values="searchObj.hitsperpageValues"
+      ></div>
     </div>
   </form>
 </div>

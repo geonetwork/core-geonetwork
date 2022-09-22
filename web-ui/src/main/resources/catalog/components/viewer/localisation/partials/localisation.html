@@ -1,24 +1,33 @@
-<div class="search-container"
-     data-ng-class="{open : !collapsed, 'hidden': locToolDisabled}">
-  <span class="fa fa-times-circle clear"
-        data-ng-click="clearInput()"
-        data-ng-hide="query==''"
-        title="{{'clear'|translate}}"></span>
+<div
+  class="search-container"
+  data-ng-class="{open : !collapsed, 'hidden': locToolDisabled}"
+>
+  <span
+    class="fa fa-times-circle clear"
+    data-ng-click="clearInput()"
+    data-ng-hide="query==''"
+    title="{{'clear'|translate}}"
+  ></span>
   <div class="input-group">
     <span class="input-group-addon">
-      <i class="fa fa-map-signs"/>
+      <i class="fa fa-map-signs" />
     </span>
-    <input data-ng-model="query"
-           data-ng-model-options="modelOptions"
-           data-ng-change="locCtrl.search(query)"
-           type="search"
-           class="form-control"
-           aria-label="{{'searchPlaces' | translate}}"
-           placeholder="{{'searchPlaces' | translate}}">
+    <input
+      data-ng-model="query"
+      data-ng-model-options="modelOptions"
+      data-ng-change="locCtrl.search(query)"
+      type="search"
+      class="form-control"
+      aria-label="{{'searchPlaces' | translate}}"
+      placeholder="{{'searchPlaces' | translate}}"
+    />
     <span class="input-group-btn">
-      <button class="btn btn-default" type="submit"
-              data-ng-click="zoomToYou(map)"
-              aria-label="{{'ZoomToYourLocation' | translate}}">
+      <button
+        class="btn btn-default"
+        type="submit"
+        data-ng-click="zoomToYou(map)"
+        aria-label="{{'ZoomToYourLocation' | translate}}"
+      >
         <span class="fa fa-crosshairs"></span>
         <span role="tooltip" data-translate="">ZoomToYourLocation</span>
       </button>
@@ -34,8 +43,9 @@
     <h5 ng-if="results.length>0" data-translate="">Results</h5>
     <ul class="loc-geonames list-group">
       <li data-ng-repeat="loc in results" class="list-group-item">
-        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}
-          <em>{{loc.formattedName}}</em></a>
+        <a href="" data-ng-click="locCtrl.onClick(loc, map)"
+          >{{loc.name}} <em>{{loc.formattedName}}</em></a
+        >
       </li>
     </ul>
   </div>

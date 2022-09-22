@@ -21,7 +21,6 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-
 /**
  * @ngdoc directive
  * @name ng-skos.directive:skosConcept
@@ -76,69 +75,81 @@
  * @param {string} template-url URL of a template to display the concept
  *
  */
-(function() {
-  goog.provide('ngSkos_concept_directive');
+(function () {
+  goog.provide("ngSkos_concept_directive");
 
-  var module = angular.module('ngSkos_concept_directive', []);
+  var module = angular.module("ngSkos_concept_directive", []);
 
-  module.directive('skosConcept',
-      ['$compile', '$translate',
-       function($compile, $translate) {
+  module.directive("skosConcept", [
+    "$compile",
+    "$translate",
+    function ($compile, $translate) {
+      return {
+        restrict: "AE",
+        scope: {
+          concept: "=skosConcept",
+          language: "=",
+          navigateConcept: "=skosNavigateConcept",
+          addConceptToList: "=skosAddConcept",
+          topConcept: "=skosTopConcept"
+        },
+        templateUrl: "../../catalog/components/ng-skos/" + "templates/skos-concept.html",
+        link: function link(scope, element, attr) {
+          scope.mainLanguage = scope.language.split(",")[0];
+          scope.isEmptyObject = function (object) {
+            var keys = Object.keys;
+            return !(keys && keys.length);
+          };
+          scope.addConcept = function (c) {
+            var label =
+              c.prefLabel[scope.mainLanguage] || c.prefLabel[Object.keys(c.prefLabel)[0]];
+            scope.addConceptToList(c.uri, label);
+          };
 
-         return {
-           restrict: 'AE',
-           scope: {
-             concept: '=skosConcept',
-             language: '=',
-             navigateConcept: '=skosNavigateConcept',
-             addConceptToList: '=skosAddConcept',
-             topConcept: '=skosTopConcept'
-           },
-           templateUrl: '../../catalog/components/ng-skos/' +
-           'templates/skos-concept.html',
-           link: function link(scope, element, attr) {
-              scope.mainLanguage = scope.language.split(',')[0];
-             scope.isEmptyObject = function(object) {
-                var keys = Object.keys;
-                return !(keys && keys.length);
-             };
-             scope.addConcept = function(c) {
-               var label = c.prefLabel[scope.mainLanguage] ||
-                           c.prefLabel[Object.keys(c.prefLabel)[0]];
-               scope.addConceptToList(c.uri, label);
-             };
-
-
-             scope.initConceptNavigationHelp = function(c) {
-               if (c.help) {
-                 return;
-               }
-               var label = c.prefLabel[scope.mainLanguage] ||
-                           c.prefLabel[Object.keys(c.prefLabel)[0]],
-                   labelAncestor = c.ancestor.prefLabel[scope.mainLanguage] ||
-                                   c.ancestor.prefLabel[
-                                     Object.keys(c.ancestor.prefLabel)[0]];
-               c.help = {
-                 broader: label + ' ' + $translate.instant('conceptBroader') +
-                 ' ' + labelAncestor,
-                 narrower: label + ' ' + $translate.instant('conceptNarrower') +
-                 ' ' + labelAncestor,
-                 related: label + ' ' + $translate.instant('conceptRelated') +
-                 ' ' + labelAncestor
-               };
-             };
-             scope.$watch('concept', function(concept) {
-                angular.forEach([
-                 'uri', 'inScheme', 'ancestors', 'prefLabel',
-                 'altLabel', 'note', 'notation', 'narrower',
-                  'broader', 'related'
-               ],
-               function(field) {
-                 scope[field] = concept ? concept[field] : null;
-               });
-             },true);
-           }
-         };
-       }]);
-
+          scope.initConceptNavigationHelp = function (c) {
+            if (c.help) {
+              return;
+            }
+            var label =
+                c.prefLabel[scope.mainLanguage] ||
+                c.prefLabel[Object.keys(c.prefLabel)[0]],
+              labelAncestor =
+                c.ancestor.prefLabel[scope.mainLanguage] ||
+                c.ancestor.prefLabel[Object.keys(c.ancestor.prefLabel)[0]];
+            c.help = {
+              broader:
+                label + " " + $translate.instant("conceptBroader") + " " + labelAncestor,
+              narrower:
+                label + " " + $translate.instant("conceptNarrower") + " " + labelAncestor,
+              related:
+                label + " " + $translate.instant("conceptRelated") + " " + labelAncestor
+            };
+          };
+          scope.$watch(
+            "concept",
+            function (concept) {
+              angular.forEach(
+                [
+                  "uri",
+                  "inScheme",
+                  "ancestors",
+                  "prefLabel",
+                  "altLabel",
+                  "note",
+                  "notation",
+                  "narrower",
+                  "broader",
+                  "related"
+                ],
+                function (field) {
+                  scope[field] = concept ? concept[field] : null;
+                }
+              );
+            },
+            true
+          );
+        }
+      };
+    }
+  ]);
 })();

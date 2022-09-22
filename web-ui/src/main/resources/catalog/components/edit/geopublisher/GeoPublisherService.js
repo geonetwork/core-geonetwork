@@ -21,50 +21,56 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_geopublisher_service');
+(function () {
+  goog.provide("gn_geopublisher_service");
 
+  var module = angular.module("gn_geopublisher_service", []);
 
-  var module = angular.module('gn_geopublisher_service', [
-  ]);
-
-  module.factory('gnGeoPublisher', [
-    'gnCurrentEdit',
-    '$http',
-    function(gnCurrentEdit, $http) {
-
+  module.factory("gnGeoPublisher", [
+    "gnCurrentEdit",
+    "$http",
+    function (gnCurrentEdit, $http) {
       return {
-
-        getList: function() {
-          return $http.get('../api/mapservers');
+        getList: function () {
+          return $http.get("../api/mapservers");
         },
 
-        checkNode: function(node, fileName) {
-          return $http.get('../api/mapservers/' + node +
-              '/records/' + gnCurrentEdit.uuid, {
-                params: {
-                  resource: fileName
-                }});
+        checkNode: function (node, fileName) {
+          return $http.get(
+            "../api/mapservers/" + node + "/records/" + gnCurrentEdit.uuid,
+            {
+              params: {
+                resource: fileName
+              }
+            }
+          );
         },
 
-        publishNode: function(node, fileName,
-                              title, moreInfo) {
-          return $http.put('../api/mapservers/' + node +
-              '/records/' + gnCurrentEdit.uuid, null, {
-                params: {
-                  metadataTitle: title,
-                  metadataAbstract: moreInfo,
-                  resource: fileName
-                }});
+        publishNode: function (node, fileName, title, moreInfo) {
+          return $http.put(
+            "../api/mapservers/" + node + "/records/" + gnCurrentEdit.uuid,
+            null,
+            {
+              params: {
+                metadataTitle: title,
+                metadataAbstract: moreInfo,
+                resource: fileName
+              }
+            }
+          );
         },
 
-        unpublishNode: function(node, fileName) {
-          return $http.delete('../api/mapservers/' + node +
-              '/records/' + gnCurrentEdit.uuid, {
-                params: {
-                  resource: fileName
-                }});
+        unpublishNode: function (node, fileName) {
+          return $http.delete(
+            "../api/mapservers/" + node + "/records/" + gnCurrentEdit.uuid,
+            {
+              params: {
+                resource: fileName
+              }
+            }
+          );
         }
       };
-    }]);
+    }
+  ]);
 })();

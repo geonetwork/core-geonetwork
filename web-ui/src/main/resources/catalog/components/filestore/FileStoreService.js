@@ -21,34 +21,39 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_filestore_service');
+(function () {
+  goog.provide("gn_filestore_service");
 
-  var module = angular.module('gn_filestore_service', []);
-  module.filter('decodeURIComponent', function() {
+  var module = angular.module("gn_filestore_service", []);
+  module.filter("decodeURIComponent", function () {
     return window.decodeURIComponent;
   });
-  module.factory('gnFileStoreService',
-      ['$http',
-       function($http) {
-         return {
-           get: function(metadataUuid, filter) {
-             return $http.get('../api/records/' +
-                                  metadataUuid + '/attachments', {
-               params: {
-                 filter: filter,
-                 _random: Math.floor(Math.random() * 10000),
-                 approved: 'false'
-               }
-             });
-           },
-           updateStatus: function(resource) {
-             return $http.patch(resource.url + '?approved=' + resource.approved + '&visibility=' +
-             (resource.visibility == 'PRIVATE' ? 'public' : 'private'));
-           },
-           delete: function(resource) {
-             return $http.delete(resource.url);
-           }
-         };
-       }]);
+  module.factory("gnFileStoreService", [
+    "$http",
+    function ($http) {
+      return {
+        get: function (metadataUuid, filter) {
+          return $http.get("../api/records/" + metadataUuid + "/attachments", {
+            params: {
+              filter: filter,
+              _random: Math.floor(Math.random() * 10000),
+              approved: "false"
+            }
+          });
+        },
+        updateStatus: function (resource) {
+          return $http.patch(
+            resource.url +
+              "?approved=" +
+              resource.approved +
+              "&visibility=" +
+              (resource.visibility == "PRIVATE" ? "public" : "private")
+          );
+        },
+        delete: function (resource) {
+          return $http.delete(resource.url);
+        }
+      };
+    }
+  ]);
 })();

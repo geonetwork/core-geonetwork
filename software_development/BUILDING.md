@@ -123,15 +123,24 @@ To run GeoNetwork with the embedded Jetty server:
    mvn jetty:run -Penv-dev
    ```
 
-2. After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
+2. After a moment, GeoNetwork is available at: http://localhost:8080/geonetwork
 
-3. For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module:
+3. The default `h2` database is located in your home folder `~/gn.mv.db` and `~/gn.trace.db` (based on system property ``db.name``).
+
+4. For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module:
 
    ```
    mvn process-resources -PschemasCopy
    ```
 
-4. For more information see [web/README.md](../web/README.md).
+5. To reset all caches and database use:
+   
+   ```
+   cd web
+   mvn clean:clean@reset
+   ```
+
+5. For more information see [web/README.md](../web/README.md).
 
 Tool chain
 ----------

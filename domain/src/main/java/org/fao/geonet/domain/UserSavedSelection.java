@@ -34,6 +34,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -45,7 +46,10 @@ import java.io.Serializable;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "UserSavedSelections")
+@Table(
+    name = "UserSavedSelections",
+    indexes = {@Index(name = "idx_usersavedselections_metadatauuid", columnList = "metadataUuid")}
+)
 @EntityListeners(UserMetadataSelectionEntityListenerManager.class)
 public class UserSavedSelection extends GeonetEntity implements Serializable {
     private UserSavedSelectionId _id = new UserSavedSelectionId();

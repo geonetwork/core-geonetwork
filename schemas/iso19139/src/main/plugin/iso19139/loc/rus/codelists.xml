@@ -110,7 +110,7 @@
       <code>documentHardcopy</code>
       <label>бумажная форма документа</label>
       <description>representation of a primarily textual item (can contain illustrations also) on
-        paper, photograhic material, or other media
+        paper, photographic material, or other media
       </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -204,7 +204,7 @@
     <entry>
       <code>custodian</code>
       <label>хранитель</label>
-      <description>party that accepts accountability and responsability for the data and ensures
+      <description>party that accepts accountability and responsibility for the data and ensures
         appropriate care and maintenance of the resource
       </description>
     </entry>

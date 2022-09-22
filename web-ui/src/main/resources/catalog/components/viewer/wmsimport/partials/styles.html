@@ -1,38 +1,49 @@
 <div data-ng-show="styles.length > 1">
-  <div data-ng-hide="layout === 'select'">
-    <label>{{styles.length + '&nbsp;' + ('layerStylesAvailable' | translate)}}</label>
-    <ul>
-      <li data-ng-repeat="s in styles | orderBy:'Title'"
-          class="flex-row width-100">
-        <div class="btn-group" role="group">
-          <div class="flex-row">
-            <div class="flex-col">
-              <a data-ng-click="clickFn(s)"
-                 data-ng-disabled="current.Name === s.Name"
-                 title="{{::'addToMap' | translate}}">
-                {{::s.Title || s.Name}}
-                <i class="fa fa-plus"></i>
-              </a>
-            </div>
-            <div class="flex-col">
-              <a class="btn btn-xs btn-link"
-                 data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
-                 title="{{'previewLegend' | translate}}">
-                <i class="fa fa-image"/>
-              </a>
-            </div>
+  <!-- dropdown -->
+  <div data-ng-hide="layout === 'select'" class="dropdown">
+    <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+      <span class="fa fa-paint-brush"></span>
+      <span class="caret"></span>
+    </button>
+
+    <ul class="dropdown-menu">
+      <li class="dropdown-header" data-translate="">selectStyle</li>
+      <li data-ng-repeat="s in styles | orderBy:'Title'">
+        <div class="flex-row">
+          <div class="flex-col flex-grow-4">
+            <a
+              href=""
+              data-ng-click="clickFn(s)"
+              class="gn-padding-left gn-padding-right"
+              data-ng-disabled="current.Name === s.Name"
+              title="{{::'addToMap' | translate}}"
+            >
+              {{::s.Title || s.Name}}
+            </a>
+          </div>
+          <div class="flex-col gn-padding-right">
+            <a
+              href=""
+              class="btn btn-xs btn-link"
+              data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
+              title="{{'previewLegend' | translate}}"
+            >
+              <i class="fa fa-image" />
+            </a>
           </div>
         </div>
       </li>
     </ul>
   </div>
 
-
-  <select class="form-control"
-          data-ng-show="layout === 'select'"
-          data-ng-model="data.currentStyle"
-          data-ng-options="(s.Title || s.Name) for s in styles track by s.Name"
-          title="{{styles.length + ('layerStylesAvailable' | translate)}}">
+  <!-- (traditional) select -->
+  <select
+    class="form-control"
+    data-ng-show="layout === 'select'"
+    data-ng-model="data.currentStyle"
+    data-ng-options="(s.Title || s.Name) for s in styles track by s.Name"
+    title="{{styles.length + ('layerStylesAvailable' | translate)}}"
+  >
     <option value="" disabled="disabled">
       {{styles.length + ('layerStylesAvailable' | translate)}}
     </option>

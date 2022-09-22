@@ -47,6 +47,8 @@ public interface IMetadataStatus {
      */
     boolean isUserMetadataStatus(int userId) throws Exception;
 
+    void transferMetadataStatusOwnership(int oldUserId, int newUserId) throws Exception;
+
     /**
      * If groupOwner match regular expression defined in setting metadata/workflow/draftWhenInGroup, then set status to draft to enable
      * workflow.

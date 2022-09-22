@@ -19,6 +19,7 @@ public class InspireValidatorUtilsTest
     extends AbstractServiceIntegrationTest {
 
     private static String URL = "http://inspire-sandbox.jrc.ec.europa.eu/etf-webapp";
+    private static String URL_QUERY = "http://inspire-sandbox.jrc.ec.europa.eu/etf-webapp";
 
     @Autowired
     InspireValidatorUtils inspireValidatorUtils;
@@ -58,7 +59,7 @@ public class InspireValidatorUtilsTest
 
             try {
                 // No file
-                inspireValidatorUtils.submitFile(context, URL, null, "Metadata (TG version 1.3)", "GN UNIT TEST ");
+                inspireValidatorUtils.submitFile(context, URL, URL_QUERY, null, "Metadata (TG version 1.3)", "GN UNIT TEST ");
             } catch (IllegalArgumentException e) {
                 // RIGHT EXCEPTION
             } catch (Exception e) {

@@ -64,6 +64,7 @@ public class Settings {
     public static final String SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS =
         "system/feedback/mailServer/ignoreSslCertificateErrors";
     public static final String SYSTEM_ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
+    public static final String SYSTEM_METADATA_THESAURUS_NAMESPACE = "system/metadata/thesaurusNamespace";
     public static final String SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION = "system/metadata/validation/removeSchemaLocation";
     public static final String SYSTEM_METADATA_HISTORY_ENABLED = "system/metadata/history/enabled";
     public static final GNSetting SYSTEM_SITE_SVNUUID = new GNSetting("system/site/svnUuid", true);
@@ -83,6 +84,7 @@ public class Settings {
     public static final String SYSTEM_USERFEEDBACK_ENABLE = "system/userFeedback/enable";
     public static final String SYSTEM_USER_LASTNOTIFICATIONDATE = "system/userFeedback/lastNotificationDate";
     public static final String SYSTEM_LOCALRATING_ENABLE = "system/localrating/enable";
+    public static final String SYSTEM_LOCALRATING_NOTIFICATIONLEVEL = "system/localrating/notificationLevel";
     public static final String SYSTEM_XLINK_RESOLVER_IGNORE = "system/xlinkResolver/ignore";
     public static final String SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING = "system/hidewithheldelements/enableLogging";
     public static final String SYSTEM_AUTOFIXING_ENABLE = "system/autofixing/enable";
@@ -91,8 +93,10 @@ public class Settings {
     public static final String SYSTEM_OAI_TOKENTIMEOUT = "system/oai/tokentimeout";
     public static final String SYSTEM_OAI_CACHESIZE = "system/oai/cachesize";
     public static final String SYSTEM_HARVESTER_ENABLE_EDITING = "system/harvester/enableEditing";
+    public static final String SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT = "system/harvester/enablePrivilegesManagement";
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
     public static final String SYSTEM_HARVESTING_MAIL_RECIPIENT = "system/harvesting/mail/recipient";
     public static final String SYSTEM_HARVESTING_MAIL_LEVEL3 = "system/harvesting/mail/level3";
@@ -108,6 +112,7 @@ public class Settings {
     public static final String SYSTEM_INDEX_INDEXINGTIMERECORDLINK = "system/index/indexingTimeRecordLink";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL = "system/inspire/remotevalidation/url";
+    public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY = "system/inspire/remotevalidation/urlquery";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY = "system/inspire/remotevalidation/apikey";
     public static final String REGION_GETMAP_BACKGROUND = "region/getmap/background";
     public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
@@ -118,8 +123,10 @@ public class Settings {
     public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
-
+    public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
+    public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
+    public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
@@ -131,6 +138,8 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_MAXLENGH = "system/security/passwordEnforcement/maxLength";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_USEPATTERN = "system/security/passwordEnforcement/usePattern";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
+    public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
+
 
     public static class GNSetting {
         private String name;

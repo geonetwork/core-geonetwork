@@ -342,7 +342,7 @@
   <!-- ==================================================== -->
   <element name="cmpGenQuan">
     <label>Compression generation quantity</label>
-    <description>count of the number the number of lossy compression cycles performed on the
+    <description>count of the number of lossy compression cycles performed on the
       image
     </description>
   </element>
@@ -2617,7 +2617,7 @@
   <!-- ==================================================== -->
   <element name="tpCat">
     <label>Topic category</label>
-    <description>main theme(s) of the datset</description>
+    <description>main theme(s) of the dataset</description>
     <condition>Zorunlu</condition>
   </element>
   <!-- ==================================================== -->

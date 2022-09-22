@@ -3,7 +3,9 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:utils="java:org.fao.geonet.util.XslUtil"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -12,6 +14,7 @@
   <xsl:import href="common/render-html.xsl"/>
   <xsl:import href="common/functions-core.xsl"/>
   <xsl:import href="common/utility-tpl.xsl"/>
+  <xsl:import href="common/menu-fn.xsl"/>
 
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
@@ -163,6 +166,7 @@
               <xsl:if test="$related != ''">
                 <div gn-related="md"
                      data-user="user"
+                     data-layout="card"
                      data-types="{$related}"><xsl:comment select="'icon'"/></div>
               </xsl:if>
             </header>
@@ -299,6 +303,7 @@
                 </h2>
                 <div gn-related="md"
                      data-user="user"
+                     data-layout="card"
                      data-types="{$sideRelated}">
                   Not available
                 </div>
@@ -389,35 +394,48 @@
   -->
   <xsl:template mode="render-view"
                 match="section[@xpath]">
-    <div id="gn-view-{generate-id()}" class="gn-tab-content">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
-      <xsl:comment select="'icon'"/>
-    </div>
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
+
+    <xsl:if test="$isDisplayed">
+      <div id="gn-view-{generate-id()}" class="gn-tab-content">
+        <xsl:apply-templates mode="render-view" select="@xpath"/>
+        <xsl:comment select="'icon'"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 
   <xsl:template mode="render-view"
                 match="section[not(@xpath)]">
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
 
-    <xsl:variable name="content">
-      <xsl:apply-templates mode="render-view"
-                           select="section|field|xsl"/>&#160;
-    </xsl:variable>
+    <xsl:if test="$isDisplayed">
+      <xsl:variable name="content">
+        <xsl:apply-templates mode="render-view"
+                             select="section|field|xsl"/>&#160;
+      </xsl:variable>
 
-    <xsl:if test="count($content/*) > 0">
-      <div id="gn-section-{generate-id()}" class="gn-tab-content">
-        <xsl:if test="@name">
-          <xsl:variable name="title"
-                        select="
-                        if (contains( @name, ':'))
-                        then gn-fn-render:get-schema-labels($schemaLabels, @name)
-                        else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
-          <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
-            <xsl:value-of select="$title"/>
-          </xsl:element>
-        </xsl:if>
-        <xsl:copy-of select="$content"/>
-      </div>
+      <xsl:if test="count($content/*) > 0">
+        <div id="gn-section-{generate-id()}" class="gn-tab-content">
+          <xsl:if test="@name">
+            <xsl:variable name="title"
+                          select="
+                          if (contains( @name, ':'))
+                          then gn-fn-render:get-schema-labels($schemaLabels, @name)
+                          else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
+            <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
+              <xsl:value-of select="$title"/>
+            </xsl:element>
+          </xsl:if>
+          <xsl:copy-of select="$content"/>
+        </div>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -601,16 +619,21 @@
 
     <xsl:variable name="root"
                   select="."/>
-    <xsl:for-each select="$tableConfig/row/col[@xpath]">
-      <xsl:variable name="node">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$root/*"/>
-          <xsl:with-param name="in" select="concat('/', @xpath)"/>
-        </saxon:call-template>
-      </xsl:variable>
-      <td><xsl:apply-templates mode="render-value"
-                               select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>
-    </xsl:for-each>
+
+    <!-- Only if child context. eg. <gmd:pointOfContact xlink:href=
+    may not have children if xlink fails to resolve. -->
+    <xsl:if test="$root/*">
+      <xsl:for-each select="$tableConfig/row/col[@xpath]">
+        <xsl:variable name="node">
+          <saxon:call-template name="{concat('evaluate-', $schema)}">
+            <xsl:with-param name="base" select="$root/*"/>
+            <xsl:with-param name="in" select="concat('/', @xpath)"/>
+          </saxon:call-template>
+        </xsl:variable>
+        <td><xsl:apply-templates mode="render-value"
+                                 select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>
+      </xsl:for-each>
+    </xsl:if>
   </xsl:template>
 
 

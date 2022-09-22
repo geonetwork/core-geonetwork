@@ -39,6 +39,74 @@ Before you start check out [software development building](../software_developme
      mvn process-resources -DschemasCopy=true
      ```
 
+## Clean
+
+The build generates, processes and compile files into:
+
+* ``src/main/webapp/WEB-INF/data/config/schema_plugins``
+* ``target/``
+
+Use ``mvn clean`` to remove these files.
+
+In addition running jetty makes use of a database:
+
+* ``~/gn.mv.db``
+* ``~/gn.trace.db``
+* ``*.db`` (based on geonetwork 3.x use)
+
+Along with data directory and cache, notably: 
+
+* ``images/`` ...
+* ``jcs_caching/`` ...
+* ``logs/`` ...
+* ``src/main/webapp/WEB-INF/data/config/schema_plugins/`` ...
+* ``src/main/webapp/WEB-INF/data/data/`` ...
+* ``src/main/webapp/WEB-INF/data/wro4j*.db``
+* ``src/main/webapp/WEB-INF/doc/en/`` ...
+* ``src/main/webapp/WEB-INF/doc/fn/`` ...
+
+Use `mvn clean:clean@reset` to remove these files.
+
+## Managing Schema Plugins
+
+The web application `src/main/webapp` contains `WEB-INF/data/config/schema_plugins` used
+by the application.
+
+If your plugin is in the `schemas` folder:
+
+1. The `web/pom.xml` is setup to run jetty and automatically include any additional
+   schema plugins in the `schemas` folder.
+
+If your plugin is not in the `schemas` folder:
+
+2. If you are building a metadata101 plugin separately, or working with your own plugin:
+
+   ```
+   cd iso19139.xyz
+   mvn install
+   ```
+
+3. Use `jetty:run` with an additional profile to test your plugin:
+   
+   ```
+   mvn install -Pschema-iso19139.xyz
+   mvn jetty:run -Pschema-iso19139.xyz
+   ```
+
+2. In the example above the profile `-Pschema-iso19139.xyz`:
+   
+   * Includes `schema-iso19139.xyz` artifact as a dependency, making the schema plugin bean is available on the CLASSPATH.
+   * Unpacks the `schema-iso19139.xyz` artifact `plugin` folder into `WEB-INF/data/config/schema_plugins`
+
+4. The profile can also be used with `process-resources` while jetty is running:
+   
+   ```
+   cd web
+   mvn process-resources -Pschema-iso19139.xyz
+   ```
+
+5. Tip: If work with a set series of plugins you can manage via [settings.xml](https://maven.apache.org/settings.html).
+
 # Managing Schema Plugins
 
 The web application `src/main/webapp` contains `WEB-INF/data/config/schema_plugins` used

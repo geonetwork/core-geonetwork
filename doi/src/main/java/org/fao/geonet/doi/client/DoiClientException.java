@@ -22,12 +22,16 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
+import org.fao.geonet.exceptions.LocalizedException;
+
+import java.util.Locale;
+
 /**
  * Class to model DoiClient exceptions.
  *
  * @author Jose García
  */
-public class DoiClientException extends Exception {
+public class DoiClientException extends LocalizedException {
     public DoiClientException(String message) {
         super(message);
     }
@@ -36,4 +40,42 @@ public class DoiClientException extends Exception {
         super(message, throwable);
     }
 
+    public DoiClientException(Throwable cause) {
+        super(cause);
+    }
+
+    @Override
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
+    }
+
+    @Override
+    public DoiClientException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public DoiClientException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public DoiClientException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public DoiClientException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public DoiClientException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
+    }
 }

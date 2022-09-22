@@ -36,7 +36,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.zone.ZoneRules;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import static java.util.Calendar.YEAR;
 import static org.junit.Assert.assertEquals;
@@ -280,6 +282,8 @@ public class ISODateTest {
         cal.set(Calendar.MINUTE, 2);
         cal.set(Calendar.SECOND, 3);
         cal.set(Calendar.MILLISECOND, 0);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
 
         ISODate date = new ISODate(cal.getTimeInMillis(), false);
         Instant instant = Instant.ofEpochMilli(cal.getTimeInMillis());
@@ -289,12 +293,48 @@ public class ISODateTest {
         assertEquals(expectedDateTime, date.getDateAndTime());
         assertEquals("1990-12-05", date.getDateAsString());
 
-        date = new ISODate(cal.getTimeInMillis(), true);
+        // the date is forced into UTC (so it is stable across timezones)
+        ISODate shortDate = new ISODate(cal.getTimeInMillis(), true);
 
-        assertEquals("1990-12-05", date.getDateAndTime());
-        assertEquals("1990-12-05", date.getDateAsString());
+        // The calendar entry of 23:02:03:00 has 3483 seconds left in the day
+        assertEquals("1990-12-05", shortDate.getDateAsString());
+
+        TimeZone timeZone = TimeZone.getDefault();
+        try {
+            TimeZone PDT = TimeZone.getTimeZone("Canada/Pacific");
+            TimeZone.setDefault(PDT);
+
+            ISODate west = new ISODate(cal.getTimeInMillis(), true);
+            assertEquals("1990-12-05", date.getDateAsString());
+
+            // not really expected to call this methood on a shortDate
+            assertEquals("1990-12-05", west.getDateAndTime());
+        }
+        finally {
+            TimeZone.setDefault(timeZone);
+        }
+
+        try {
+            TimeZone CEST = TimeZone.getTimeZone("CET");
+            TimeZone.setDefault(CEST);
+
+            ISODate west = new ISODate(cal.getTimeInMillis(), true);
+            assertEquals("1990-12-05", date.getDateAsString());
+
+            // not really expected to call this methood on a shortDate
+            assertEquals("1990-12-05", west.getDateAndTime());
+        }
+        finally {
+            TimeZone.setDefault(timeZone);
+        }
     }
 
+    private ZoneOffset localOffset(final long timeInEpochMilli){
+        ZoneRules rules = ZoneId.systemDefault().getRules();
+        Instant instant = Instant.ofEpochMilli(timeInEpochMilli);
+        ZoneOffset offset = rules.getOffset(instant);
+        return offset;
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateISODateExceptionBecauseOfNull() throws Exception {

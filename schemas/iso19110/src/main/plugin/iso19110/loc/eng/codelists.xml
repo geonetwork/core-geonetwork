@@ -31,7 +31,7 @@
     <entry>
       <code>custodian</code>
       <label>Custodian</label>
-      <description>Party that accepts accountability and responsability for the data and ensures
+      <description>Party that accepts accountability and responsibility for the data and ensures
         appropriate care and maintenance of the resource
       </description>
     </entry>
@@ -72,7 +72,7 @@
     <entry>
       <code>processor</code>
       <label>Processor</label>
-      <description>Party wha has processed the data in a manner such that the resource has been
+      <description>Party that has processed the data in a manner such that the resource has been
         modified
       </description>
     </entry>

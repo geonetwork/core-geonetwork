@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -47,6 +48,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
@@ -72,6 +74,9 @@ import jeeves.server.context.ServiceContext;
  * Handles the access to a metadata depending on the metadata/group.
  */
 public class AccessManager {
+
+    @Autowired
+    SettingManager settingManager;
 
     @Autowired
     SettingRepository settingRepository;
@@ -252,8 +257,11 @@ public class AccessManager {
     }
 
     /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has edit rights over the metadata</li> </ul>
+     * Returns true if, and only if, at least one of these conditions is satisfied:
+     * <ul>
+     *     <li>the user is owner (@see #isOwner)</li>
+     *     <li>the user has edit rights over the metadata</li>
+     * </ul>
      *
      * @param id The metadata internal identifier
      */
@@ -262,34 +270,12 @@ public class AccessManager {
     }
 
     /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over the metadata</li> </ul>
-     *
-     * @param id The metadata internal identifier
-     */
-    public boolean canReview(final ServiceContext context, final String id) throws Exception {
-        if (!isUserAuthenticated(context.getUserSession())) {
-            return false;
-        }
-
-        //--- retrieve metadata info
-        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
-
-        if (info == null)
-            return false;
-        final MetadataSourceInfo sourceInfo = info.getSourceInfo();
-
-        return isOwner(context, sourceInfo) || hasReviewPermission(context, info);
-    }
-
-    /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
+     * Returns true if user is reviewer
      *
      * @param id The metadata internal identifier
      */
     public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
-        return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
+        return hasReviewPermission(context, id);
     }
 
     /**
@@ -357,20 +343,6 @@ public class AccessManager {
                 return true;
         }
         return false;
-    }
-
-    /**
-     * TODO javadoc.
-     */
-    private String join(Set<Integer> set, String delim) {
-        StringBuilder sb = new StringBuilder();
-        String loopDelim = "";
-        for (Integer s : set) {
-            sb.append(loopDelim);
-            sb.append(s + "");
-            loopDelim = delim;
-        }
-        return sb.toString();
     }
 
     /**
@@ -464,28 +436,36 @@ public class AccessManager {
     }
 
     /**
-     * Check if current user can review the metadata if
-     * the user is a reviewer in the metadata owners group.
-     *
-     * @param id The metadata internal identifier
+     * See {@link #hasReviewPermission(ServiceContext, AbstractMetadata)}
      */
     public boolean hasReviewPermission(final ServiceContext context, final String id) throws Exception {
         if (!isUserAuthenticated(context.getUserSession())) {
             return false;
         }
-
-        //--- retrieve metadata info
         AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
-
-        if (info == null)
+        if (info == null) {
             return false;
-
+        }
         return hasReviewPermission(context, info);
+    }
+
+    private String GROUPOWNERONLY_STRATEGY =
+        "api.metadata.share.strategy.groupOwnerOnly";
+    private String REVIEWERINGROUP_STRATEGY =
+        "api.metadata.share.strategy.reviewerInGroup";
+
+    public String getReviewerRule() {
+        return settingManager.getValueAsBool(
+            SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY, true) ?
+            GROUPOWNERONLY_STRATEGY :
+            REVIEWERINGROUP_STRATEGY;
     }
 
     /**
      * Check if current user can review the metadata if
-     * the user is a reviewer in the metadata owners group.
+     * the user is a reviewer in the metadata owners group if
+     * SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY is true
+     * otherwise, check also if user can edit in a group with a reviewer profile.
      *
      * @param context Service context.
      * @param metadata The metadata info.
@@ -495,6 +475,9 @@ public class AccessManager {
         if (!isUserAuthenticated(us)) {
             return false;
         }
+        if (Profile.Administrator == us.getProfile()) {
+            return true;
+        }
 
         // Check if the user is a reviewer in the metadata owners group.
         Specification<UserGroup> hasUserIdAndGroupAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
@@ -502,9 +485,17 @@ public class AccessManager {
             .and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
-        long count = userGroupRepo.count(hasUserIdAndGroupAndProfile);
+        boolean userIsReviewerOfOwnerGroup =
+            !userGroupRepo.findAll(hasUserIdAndGroupAndProfile).isEmpty();
 
-        return  (count > 0);
+        if (settingManager.getValueAsBool(
+                SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY, true)) {
+            return userIsReviewerOfOwnerGroup;
+        } else {
+            return userIsReviewerOfOwnerGroup
+                || hasEditingPermissionWithProfile(
+                    context, String.valueOf(metadata.getId()), Profile.Reviewer);
+        }
     }
 
     /**
@@ -536,30 +527,6 @@ public class AccessManager {
 
         return (!userGroupRepository.findAll(spec).isEmpty());
 
-    }
-
-    /**
-     * Check if current user is reviewer of the owner group for this metadata
-     *
-     * @param id The metadata internal identifier
-     */
-    public boolean hasOnwershipReviewPermission(final ServiceContext context, final String id) throws Exception {
-        UserSession us = context.getUserSession();
-        if (!isUserAuthenticated(us)) {
-            return false;
-        }
-
-        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-
-        Specification spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
-
-        List<Integer> opAlloweds = new ArrayList<Integer>();
-        opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
-
-        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
-
-        return (!userGroupRepository.findAll(spec).isEmpty());
     }
 
     public int getPrivilegeId(final String name) {

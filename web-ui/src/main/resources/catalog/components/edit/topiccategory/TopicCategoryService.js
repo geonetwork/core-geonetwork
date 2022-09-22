@@ -21,22 +21,22 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_topiccategory_service');
+(function () {
+  goog.provide("gn_topiccategory_service");
 
-  var module = angular.module('gn_topiccategory_service', []);
+  var module = angular.module("gn_topiccategory_service", []);
 
-  module.factory('TopicCategory', function() {
+  module.factory("TopicCategory", function () {
     function TopicCategory(k) {
       this.props = $.extend(true, {}, k);
       this.label = this.getLabel();
-      this.tagClass = 'label label-info gn-line-height';
-    };
+      this.tagClass = "label label-info gn-line-height";
+    }
     TopicCategory.prototype = {
-      getId: function() {
+      getId: function () {
         return this.props.id;
       },
-      getLabel: function() {
+      getLabel: function () {
         return this.props.value;
       }
     };
@@ -44,98 +44,100 @@
     return TopicCategory;
   });
 
-  module.provider('gnTopicCategoryService',
-      function() {
-        this.$get = [
-          '$q',
-          '$rootScope',
-          '$http',
-          'gnUrlUtils',
-          'TopicCategory',
-          function($q, $rootScope, $http, gnUrlUtils, TopicCategory) {
-            var getTopicCategoriesSearchUrl = function(schema) {
-              return '../api/standards/' + (schema || 'iso19139') +
-                     '/codelists/topicCategory';
-            };
+  module.provider("gnTopicCategoryService", function () {
+    this.$get = [
+      "$q",
+      "$rootScope",
+      "$http",
+      "gnUrlUtils",
+      "TopicCategory",
+      function ($q, $rootScope, $http, gnUrlUtils, TopicCategory) {
+        var getTopicCategoriesSearchUrl = function (schema) {
+          return (
+            "../api/standards/" + (schema || "iso19139") + "/codelists/topicCategory"
+          );
+        };
 
-            var parseTopicCategoriesResponse = function(data, dataToExclude) {
-              var listOfTopicCategories = [];
-              angular.forEach(data, function(value, key) {
-                if (value) {
-                  listOfTopicCategories.push(new TopicCategory({id: key, value: value}));
+        var parseTopicCategoriesResponse = function (data, dataToExclude) {
+          var listOfTopicCategories = [];
+          angular.forEach(data, function (value, key) {
+            if (value) {
+              listOfTopicCategories.push(new TopicCategory({ id: key, value: value }));
+            }
+          });
+
+          if (dataToExclude && dataToExclude.length > 0) {
+            // Remove from search already selected topic categories
+            listOfTopicCategories = $.grep(listOfTopicCategories, function (n) {
+              var isSelected = false;
+              isSelected =
+                $.grep(dataToExclude, function (s) {
+                  return s.getLabel() === n.getLabel();
+                }).length !== 0;
+              return !isSelected;
+            });
+          }
+          return listOfTopicCategories;
+        };
+
+        return {
+          /**
+           * Number of topic categories to display in autocompletion list
+           */
+          getTopicCategoryAutocompleter: function (config) {
+            var topicCategoryAutocompleter = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace("label"),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              identify: function (obj) {
+                return obj.getLabel();
+              },
+              sorter: function (a, b) {
+                var nameA = a.getLabel().toUpperCase();
+                var nameB = b.getLabel().toUpperCase();
+                if (nameA < nameB) {
+                  return -1;
                 }
-              });
+                if (nameA > nameB) {
+                  return 1;
+                }
+                return 0;
+              },
+              limit: 100,
+              prefetch: {
+                url: getTopicCategoriesSearchUrl(config.schema),
+                prepare: function (settings) {
+                  settings.headers = {
+                    "Accept-Language": config.lang
+                  };
 
-              if (dataToExclude && dataToExclude.length > 0) {
-                // Remove from search already selected topic categories
-                listOfTopicCategories = $.grep(listOfTopicCategories, function(n) {
-                  var isSelected = false;
-                  isSelected = $.grep(dataToExclude, function(s) {
-                    return s.getLabel() === n.getLabel();
-                  }).length !== 0;
-                  return !isSelected;
-                });
+                  return settings;
+                },
+                cache: false,
+                transform: function (response) {
+                  var r = parseTopicCategoriesResponse(response, config.dataToExclude);
+                  return r;
+                }
               }
-              return listOfTopicCategories;
-            };
+            });
+            topicCategoryAutocompleter.initialize();
+            return topicCategoryAutocompleter;
+          },
 
+          getTopicCategories: function (schema) {
+            var defer = $q.defer();
+            var url = getTopicCategoriesSearchUrl(schema);
+            $http
+              .get(url, { cache: true })
+              .success(function (data) {
+                defer.resolve(parseTopicCategoriesResponse(data));
+              })
+              .error(function (data, status) {});
+            return defer.promise;
+          },
 
-            return {
-              /**
-             * Number of topic categories to display in autocompletion list
-             */
-              getTopicCategoryAutocompleter: function(config) {
-                var topicCategoryAutocompleter = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('label'),
-                  queryTokenizer: Bloodhound.tokenizers.whitespace,
-                  identify: function(obj) { return obj.getLabel(); },
-                  sorter:
-                  function(a, b) {
-                    var nameA = a.getLabel().toUpperCase();
-                    var nameB = b.getLabel().toUpperCase();
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
-                    return 0;
-                  },
-                  limit: 100,
-                  prefetch: {
-                    url: getTopicCategoriesSearchUrl(config.schema),
-                    prepare: function (settings) {
-                      settings.headers = {
-                        'Accept-Language': config.lang
-                      };
-
-                      return settings;
-                    },
-                    cache: false,
-                    transform: function(response) {
-                      var r = parseTopicCategoriesResponse(response, config.dataToExclude);
-                      return r;
-                    }
-                  }
-                });
-                topicCategoryAutocompleter.initialize();
-                return topicCategoryAutocompleter;
-              },
-
-              getTopicCategories: function(schema) {
-                var defer = $q.defer();
-                var url = getTopicCategoriesSearchUrl(schema);
-                $http.get(url, { cache: true }).
-                success(function(data) {
-                  defer.resolve(parseTopicCategoriesResponse(data));
-                }).
-                error(function(data, status) {
-                });
-                return defer.promise;
-              },
-
-              suggest: null
-            };
-          }];
-      });
+          suggest: null
+        };
+      }
+    ];
+  });
 })();

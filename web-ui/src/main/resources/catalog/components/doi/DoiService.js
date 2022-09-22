@@ -22,25 +22,24 @@
  */
 
 (function () {
-  goog.provide('gn_doi_service');
+  goog.provide("gn_doi_service");
 
-  var module = angular.module('gn_doi_service', []);
+  var module = angular.module("gn_doi_service", []);
 
   /**
    * Service to deal with DOI.
    */
-  module
-    .service(
-      'gnDoiService', [
-        '$http',
-        function ($http) {
-          return {
-            check: function (id) {
-              return $http.get('../api/records/' + id + '/doi/checkPreConditions');
-            },
-            create: function (id) {
-              return $http.put('../api/records/' + id + '/doi');
-            }
-          };
-        }]);
+  module.service("gnDoiService", [
+    "$http",
+    function ($http) {
+      return {
+        check: function (id) {
+          return $http.get("../api/records/" + id + "/doi/checkPreConditions");
+        },
+        create: function (id) {
+          return $http.put("../api/records/" + id + "/doi");
+        }
+      };
+    }
+  ]);
 })();

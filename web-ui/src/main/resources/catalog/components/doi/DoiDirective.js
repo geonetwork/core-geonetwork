@@ -21,51 +21,58 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_doi_directive');
-  goog.require('gn_doi_service');
+(function () {
+  goog.provide("gn_doi_directive");
+  goog.require("gn_doi_service");
 
-  var module = angular.module('gn_doi_directive',
-    ['gn_doi_service']);
+  var module = angular.module("gn_doi_directive", ["gn_doi_service"]);
 
-  module.directive('gnDoiWizard', ['gnDoiService',
-    function(gnDoiService) {
+  module.directive("gnDoiWizard", [
+    "gnDoiService",
+    function (gnDoiService) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
         scope: {
-          uuid: '=gnDoiWizard',
-          doiUrl: '=?',
-          xsMode: '@?'
+          uuid: "=gnDoiWizard",
+          doiUrl: "=?",
+          xsMode: "@?"
         },
-        templateUrl: '../../catalog/components/doi/partials/doiwidget.html',
-        link: function(scope, element, attrs) {
+        templateUrl: "../../catalog/components/doi/partials/doiwidget.html",
+        link: function (scope, element, attrs) {
           scope.gnDoiService = gnDoiService;
           scope.response = {};
           scope.isUpdate = angular.isDefined(scope.doiUrl);
 
-          scope.check = function() {
+          scope.check = function () {
             scope.response = {};
-            scope.response['check'] = null;
-            return gnDoiService.check(scope.uuid).then(function (r) {
-              scope.response['check'] = r;
-              scope.isUpdate = angular.isDefined(scope.doiUrl);
-            }, function (r) {
-              scope.response['check'] = r;
-              scope.isUpdate = r.data.code === 'resource_already_exist';
-            });
+            scope.response["check"] = null;
+            return gnDoiService.check(scope.uuid).then(
+              function (r) {
+                scope.response["check"] = r;
+                scope.isUpdate = angular.isDefined(scope.doiUrl);
+              },
+              function (r) {
+                scope.response["check"] = r;
+                scope.isUpdate = r.data.code === "resource_already_exist";
+              }
+            );
           };
 
-          scope.create = function(){
-            return gnDoiService.create(scope.uuid).then(function(r) {
-              scope.response['create'] = r;
-              delete scope.response['check'];
-              scope.doiUrl = r.data.doiUrl;
-            }, function(r) {
-              scope.response['create'] = r;
-            });
+          scope.create = function () {
+            return gnDoiService.create(scope.uuid).then(
+              function (r) {
+                scope.response["create"] = r;
+                delete scope.response["check"];
+                scope.doiUrl = r.data.doiUrl;
+              },
+              function (r) {
+                scope.response["create"] = r;
+              }
+            );
           };
         }
       };
-    }]);
+    }
+  ]);
 })();

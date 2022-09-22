@@ -25,6 +25,7 @@
 
 package org.fao.geonet.domain;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,21 +33,56 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "metadataResourceExternalManagementProperties")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MetadataResourceExternalManagementProperties {
-        private final String id;
-        private final String url;
+    private final String id;
+    private final String url;
+    private ValidationStatus validationStatus = ValidationStatus.UNKNOWN;
 
-        public MetadataResourceExternalManagementProperties(String id, String url) {
-            this.id = id;
-            this.url = url;
+    public MetadataResourceExternalManagementProperties(@Nonnull String id, @Nonnull String url, @Nonnull ValidationStatus validationStatus) {
+        this.id = id;
+        this.url = url;
+        if (validationStatus != null) {
+            this.validationStatus = validationStatus;
         }
+    }
 
-        public String getUrl() {
+    public String getUrl() {
             return url;
         }
 
-        public String getId() {
+    public String getId() {
             return id;
         }
+
+    public ValidationStatus getValidationStatus() {
+        return validationStatus;
     }
+
+    public static enum ValidationStatus {
+        // Unknown status - this is the default when null or unknown
+        UNKNOWN(0),
+        // valid status - indicates that validation was successfull
+        VALID(1),
+        // incomplete status - indicates that the metadata is incomplete or has validation issues.
+        INCOMPLETE(2);
+        private int statusValue;
+
+        private ValidationStatus (int statusValue) {
+            this.statusValue = statusValue;
+        }
+
+        public static ValidationStatus fromValue(int value) {
+            for (ValidationStatus status : values()) {
+                if (status.statusValue == value) {
+                    return status;
+                }
+            }
+            return null;
+        }
+
+        public int getValue () {
+            return statusValue;
+        }
+    }
+}
 
 

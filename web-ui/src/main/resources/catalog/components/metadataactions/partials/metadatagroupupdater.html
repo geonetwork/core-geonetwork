@@ -1,30 +1,42 @@
 <div class="btn-group">
-  <button type="button"
-          class="btn btn-default navbar-btn dropdown-toggle"
-          data-ng-mouseover="init()"
-          data-toggle="dropdown">
+  <button
+    type="button"
+    class="btn btn-default navbar-btn dropdown-toggle"
+    data-ng-mouseover="init()"
+    data-toggle="dropdown"
+  >
     <i class="fa fa-group"></i>
-    <span data-translate="" class="visible-lg">group</span>&nbsp;<span class="caret"></span>
+    <span data-translate="" class="visible-lg">group</span>&nbsp;<span
+      class="caret"
+    ></span>
   </button>
-  <ul class="dropdown-menu"
-      role="menu">
-    <li role="presentation" class="dropdown-header"
-        data-translate="">setMetadataGroup
+  <ul class="dropdown-menu" role="menu">
+    <li role="presentation" class="dropdown-header" data-translate="">
+      setMetadataGroup
     </li>
     <li data-ng-show="groups.length > 10">
-      <input class="form-control"
-             data-ng-model="groupSearch.$"
-             placeholder="{{'filter' | translate}}"/>
+      <input
+        class="form-control"
+        data-ng-model="groupSearch.$"
+        placeholder="{{'filter' | translate}}"
+      />
     </li>
-    <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:sortByLabel"
-        role="menuitem">
+    <li
+      data-ng-repeat="g in groups | filter:groupSearch | orderBy:sortByLabel"
+      role="menuitem"
+    >
       <a data-ng-click="assignGroup(g, $event)" href="">
-        <i class="fa" data-ng-class="g.id == groupOwner ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
+        <i
+          class="fa"
+          data-ng-class="g.id == groupOwner ? 'fa-dot-circle-o' : 'fa-circle-o'"
+        ></i>
         &#160;
         <span data-translate="">{{g.label[lang]}}</span>
-        <img data-ng-if="g.logo"
-             data-ng-src="../../images/harvesting/{{g.logo}}"
-             class="pull-right gn-logo" />
+        <img
+          data-ng-if="g.logo"
+          data-ng-src="../../images/harvesting/{{g.logo}}"
+          class="pull-right gn-logo"
+        />
       </a>
     </li>
   </ul>

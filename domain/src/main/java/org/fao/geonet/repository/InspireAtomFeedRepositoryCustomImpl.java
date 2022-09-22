@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,10 +28,9 @@ import org.fao.geonet.domain.InspireAtomFeed_;
 import org.fao.geonet.domain.Metadata;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.util.List;
 
 
 public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepositoryCustom {
@@ -41,8 +40,6 @@ public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepos
 
     @Override
     public String retrieveDatasetUuidFromIdentifierNs(String datasetIdCode, String datasetIdNs) {
-
-        String metadataUuid = "";
 
         /*
         "SELECT m.uuid FROM Metadata m " +
@@ -61,25 +58,11 @@ public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepos
 
         cbQuery.where(cb.and(datasetIdCodePredicate, datasetIdNsPredicate));
 
-        InspireAtomFeed feed = null;
-
-        try {
-            feed = _entityManager.createQuery(cbQuery).getSingleResult();
-        } catch (NoResultException nre) {
-            //Ignore this
-        }
-
-        if (feed != null) {
-            Metadata md = _entityManager.find(Metadata.class, feed.getMetadataId());
-            metadataUuid = md.getUuid();
-        }
-
-        return metadataUuid;
+        return executeQueryAndGetMetadataUuid(cbQuery);
     }
 
     @Override
     public String retrieveDatasetUuidFromIdentifier(final String datasetIdCode) {
-        String metadataUuid = "";
 
         /*
         "SELECT m.uuid FROM Metadata m " +
@@ -97,15 +80,22 @@ public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepos
 
         cbQuery.where(datasetIdCodePredicate);
 
-        InspireAtomFeed feed = null;
-        try {
-            feed = _entityManager.createQuery(cbQuery).getSingleResult();
-        } catch (NoResultException nre) {
-            //Ignore this
-        }
+        return executeQueryAndGetMetadataUuid(cbQuery);
+    }
 
-        if (feed != null) {
-            Metadata md = _entityManager.find(Metadata.class, feed.getMetadataId());
+    /**
+     * Execute the query and return the metadata UUID of the first result found.
+     *
+     * @param cbQuery the query.
+     * @return a metadata UUID or the empty string if no InspireAtomFeed instances matching the query are found.
+     */
+    private String executeQueryAndGetMetadataUuid(CriteriaQuery<InspireAtomFeed> cbQuery) {
+        String metadataUuid = "";
+        List<InspireAtomFeed> feeds = _entityManager.createQuery(cbQuery).getResultList();
+
+        if (!feeds.isEmpty()) {
+            // Several feeds can point to the same dataset, use the first
+            Metadata md = _entityManager.find(Metadata.class, feeds.get(0).getMetadataId());
             metadataUuid = md.getUuid();
         }
 

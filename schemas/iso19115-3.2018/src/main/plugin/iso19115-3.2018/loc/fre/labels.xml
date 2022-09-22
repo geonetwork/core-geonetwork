@@ -217,11 +217,6 @@
     <description></description>
     <condition></condition>
   </element>
-  <element name="mac:prority">
-    <label>Prorité</label>
-    <description></description>
-    <condition></condition>
-  </element>
   <element name="mac:requestedDate">
     <label>Date souhaitée</label>
     <description></description>
@@ -6301,6 +6296,10 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
     <helper>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -9144,7 +9143,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="mac:objectiveOccurence">
-    <label>Objective occurence</label>
+    <label>Objective occurrence</label>
     <description></description>
   </element>
   <element name="mac:trigger">

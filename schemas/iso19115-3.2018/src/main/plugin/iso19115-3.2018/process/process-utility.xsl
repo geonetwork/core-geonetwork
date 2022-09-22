@@ -29,17 +29,17 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 version="2.0" exclude-result-prefixes="#all">
-  
+
   <!-- Language of the GUI -->
   <xsl:param name="guiLang" select="'eng'"/>
-  
+
   <!-- Webapp name-->
   <xsl:param name="baseUrl" select="''"/>
-  
+
   <!-- Catalog URL from protocol to lang -->
   <xsl:param name="catalogUrl" select="''"/>
   <xsl:param name="nodeId" select="''"/>
-  
+
   <!-- Search for any of the searchStrings provided -->
   <xsl:function name="gn:parseBoolean" as="xs:boolean">
     <xsl:param name="arg"/>
@@ -57,16 +57,16 @@
       select="if ($loc/msg[@id=$id and @xml:lang=$lang]) then $loc/msg[@id=$id and @xml:lang=$lang] else $loc/msg[@id=$id and @xml:lang='en']"/>
   </xsl:function>
 
-  <!-- 
+  <!--
   Retrive a WMS capabilities document.
   -->
   <xsl:function name="gn:get-wms-capabilities" as="node()">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="version" as="xs:string"/>
-    
+
     <xsl:copy-of
       select="gn:get-wxs-capabilities($url, 'WMS', $version)"/>
-    
+
   </xsl:function>
 
   <xsl:function name="gn:get-wxs-capabilities" as="node()">
@@ -74,25 +74,29 @@
     <xsl:param name="type" as="xs:string"/>
     <xsl:param name="version" as="xs:string"/>
     <xsl:variable name="sep" select="if (contains($url, '?')) then '&amp;' else '?'"/>
+
     <xsl:copy-of
-      select="document(concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities'))"/>
-    
+      select="document(concat($url, $sep,
+      if (contains(upper-case($url), 'SERVICE=')) then '' else concat('SERVICE=', $type),
+      if (contains(upper-case($url), 'VERSION=')) then '' else concat('&amp;VERSION=', $version),
+      if (contains(upper-case($url), 'REQUEST=')) then '' else '&amp;REQUEST=GetCapabilities'))"/>
+
   </xsl:function>
 
   <!-- Create a GetMap request for the layer which could be used to set a thumbnail.
-  TODO : add projection, width, heigth
+  TODO : add projection, width, height
   -->
   <xsl:function name="gn:get-wms-thumbnail-url" as="xs:string">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="version" as="xs:string"/>
     <xsl:param name="layer" as="xs:string"/>
     <xsl:param name="bbox" as="xs:string"/>
-    
+
     <xsl:value-of
       select="concat($url, '?SERVICE=WMS&amp;VERSION=', $version, '&amp;REQUEST=GetMap&amp;SRS=EPSG:4326&amp;WIDTH=400&amp;HEIGHT=400&amp;FORMAT=image/png&amp;STYLES=&amp;LAYERS=', $layer, '&amp;BBOX=', $bbox)"/>
-    
+
   </xsl:function>
-  
+
 
   <!-- Create an ISO 19139 extent fragment -->
   <xsl:function name="gn:make-iso-extent" as="node()">

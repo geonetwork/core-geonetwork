@@ -23,16 +23,25 @@
 
 package org.fao.geonet.kernel.schema;
 
-/**
- * Created by francois on 8/19/14.
- */
+import org.springframework.util.StringUtils;
+
 public class AssociatedResource {
     private String uuid;
+    private String title;
+    private String url;
     private String initiativeType;
     private String associationType;
 
     public AssociatedResource(String uuid, String initiativeType, String associationType) {
         this.uuid = uuid;
+        this.initiativeType = initiativeType;
+        this.associationType = associationType;
+    }
+
+    public AssociatedResource(String uuid, String initiativeType, String associationType, String url, String title) {
+        this.uuid = uuid;
+        this.url = url;
+        this.title = title;
         this.initiativeType = initiativeType;
         this.associationType = associationType;
     }
@@ -71,4 +80,21 @@ public class AssociatedResource {
         this.associationType = associationType;
         return this;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }

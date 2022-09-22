@@ -40,7 +40,7 @@
 
   <bean id="jdbcURL" class="java.lang.String">
     <constructor-arg
-      value="jdbc:h2:${jdbc.database};${jdbc.connectionProperties:LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE}"/>
+      value="jdbc:h2:${jdbc.database};NON_KEYWORDS=VALUE;${jdbc.connectionProperties:LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE}"/>
   </bean>
 
 </beans>

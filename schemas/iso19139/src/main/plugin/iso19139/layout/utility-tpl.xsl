@@ -82,9 +82,10 @@
     <config>
       <xsl:for-each select="$metadata/descendant::gmd:onLine[
         matches(
-        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
+        gmd:CI_OnlineResource/gmd:protocol/*/text(),
         $pattern) and
         normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) != '']">
+
         <xsl:variable name="protocol"
                       select="string(gmd:CI_OnlineResource/gmd:protocol)"/>
         <xsl:variable name="fileName">
@@ -129,7 +130,7 @@
               gmd:identificationInfo/*/gmd:abstract)"/>
             </abstract>
             <protocol>
-              <xsl:value-of select="gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString"/>
+              <xsl:value-of select="gmd:CI_OnlineResource/gmd:protocol/*/text()"/>
             </protocol>
           </resource>
         </xsl:if>

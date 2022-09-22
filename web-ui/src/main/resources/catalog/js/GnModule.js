@@ -21,29 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_module');
+(function () {
+  goog.provide("gn_module");
 
-
-  goog.require('gn');
-  goog.require('gn_admin_menu');
-  goog.require('gn_alert');
-  goog.require('gn_cat_controller');
-  goog.require('gn_cors_interceptor');
-  goog.require('gn_formfields');
-  goog.require('gn_indexingtask');
-  goog.require('gn_batchtask');
-  goog.require('gn_language_switcher');
-  goog.require('gn_locale');
-  goog.require('gn_map');
-  goog.require('gn_metadata_manager');
-  goog.require('gn_needhelp');
-  goog.require('gn_pagination');
-  goog.require('gn_search_form_controller');
-  goog.require('gn_search_manager');
-  goog.require('gn_utility');
-  goog.require('gn_openlayers');
-  goog.require('gn_searchoptions');
+  goog.require("gn");
+  goog.require("gn_admin_menu");
+  goog.require("gn_alert");
+  goog.require("gn_cat_controller");
+  goog.require("gn_cors_interceptor");
+  goog.require("gn_formfields");
+  goog.require("gn_indexingtask");
+  goog.require("gn_batchtask");
+  goog.require("gn_language_switcher");
+  goog.require("gn_locale");
+  goog.require("gn_map");
+  goog.require("gn_metadata_manager");
+  goog.require("gn_needhelp");
+  goog.require("gn_pagination");
+  goog.require("gn_search_form_controller");
+  goog.require("gn_search_manager");
+  goog.require("gn_utility");
+  goog.require("gn_openlayers");
+  goog.require("gn_searchoptions");
 
   /**
    * GnModule just manage angular injection with
@@ -53,26 +52,25 @@
    *
    * @type {module|*}
    */
-  var module = angular.module('gn_module', [
-    'gn',
-    'ngRoute',
-    'gn_language_switcher',
-    'gn_utility',
-    'gn_search_manager',
-    'gn_metadata_manager',
-    'gn_pagination',
-    'gn_cat_controller',
-    'gn_formfields',
-    'gn_map',
-    'gn_search_form_controller',
-    'gn_needhelp',
-    'gn_alert',
-    'gn_admin_menu',
-    'gn_cors_interceptor',
-    'gn_openlayers',
-    'gn_indexingtask',
-    'gn_batchtask',
-    'gn_searchoptions'
+  var module = angular.module("gn_module", [
+    "gn",
+    "ngRoute",
+    "gn_language_switcher",
+    "gn_utility",
+    "gn_search_manager",
+    "gn_metadata_manager",
+    "gn_pagination",
+    "gn_cat_controller",
+    "gn_formfields",
+    "gn_map",
+    "gn_search_form_controller",
+    "gn_needhelp",
+    "gn_alert",
+    "gn_admin_menu",
+    "gn_cors_interceptor",
+    "gn_openlayers",
+    "gn_indexingtask",
+    "gn_batchtask",
+    "gn_searchoptions"
   ]);
-
 })();

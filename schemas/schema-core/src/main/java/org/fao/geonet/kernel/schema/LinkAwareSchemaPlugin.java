@@ -27,5 +27,5 @@ import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 
 public interface LinkAwareSchemaPlugin {
 
-    <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder);
+    <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder, String excludePattern);
 }

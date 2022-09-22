@@ -7,10 +7,16 @@
         </div>
         <div class="panel-body">
           <p data-translate="">loginText</p>
-          <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
-                method="post" role="form" data-ng-if="::user"
-                data-ng-show="!isDisableLoginForm && !isShowLoginAsLink">
-            <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <form
+            class="form-horizontal"
+            name="gnSigninForm"
+            action="{{formAction}}"
+            method="post"
+            role="form"
+            data-ng-if="::user"
+            data-ng-show="!isDisableLoginForm && !isShowLoginAsLink"
+          >
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
 
             <!-- username -->
             <div class="form-group">
@@ -19,14 +25,16 @@
                 <span class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </span>
-                <input type="text"
-                       class="form-control"
-                       id="inputUsername"
-                       name="username"
-                       autofocus=""
-                       placeholder="{{'username' | translate}}"
-                       data-ng-model="signinUsername"
-                       required=""/>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputUsername"
+                  name="username"
+                  autofocus=""
+                  placeholder="{{'username' | translate}}"
+                  data-ng-model="signinUsername"
+                  required=""
+                />
               </div>
             </div>
             <!-- password -->
@@ -36,34 +44,42 @@
                 <span class="input-group-addon">
                   <i class="fa fa-lock"></i>
                 </span>
-                <input type="password"
-                       class="form-control"
-                       id="inputPassword"
-                       name="password"
-                       autocomplete="off"
-                       data-ng-model="signinPassword"
-                       placeholder="{{'password' | translate}}"
-                       required=""/>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="inputPassword"
+                  name="password"
+                  autocomplete="off"
+                  data-ng-model="signinPassword"
+                  placeholder="{{'password' | translate}}"
+                  required=""
+                />
               </div>
             </div>
 
-            <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" value="{{redirectUrl}}"/>
+            <input
+              type="hidden"
+              name="redirectUrl"
+              data-ng-model="redirectUrl"
+              value="{{redirectUrl}}"
+            />
             <!--<div class="checkbox">
                       <label class="checkbox">
                           <input type="checkbox"/><span translate>rememberMe</span>
                       </label>
                   </div>-->
 
-            <button type="submit"
-                    class="btn btn-primary btn-block"
-                    data-ng-disabled="!gnSigninForm.$valid">
-              <i class="fa fa-fw fa-sign-in"/>
+            <button
+              type="submit"
+              class="btn btn-primary btn-block"
+              data-ng-disabled="!gnSigninForm.$valid"
+            >
+              <i class="fa fa-fw fa-sign-in" />
               <span data-translate="">signIn</span>
             </button>
           </form>
 
-          <p class="text-danger"
-            data-ng-show="signinFailure">
+          <p class="text-danger" data-ng-show="signinFailure">
             <strong data-translate="">signinFailure</strong>
             <!-- <span data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined']">
               <a type="submit"
@@ -84,43 +100,60 @@
     <div class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
       <div class="panel panel-default">
         <div class="panel-body text-muted">
-
           <!-- register -->
-          <div data-ng-show="gnConfig[gnConfig.key.isSelfRegisterEnabled] && isUserProfileUpdateEnabled">
+          <div
+            data-ng-show="gnConfig[gnConfig.key.isSelfRegisterEnabled] && isUserProfileUpdateEnabled"
+          >
             <b data-translate="">needAnAccount</b>
             <p data-translate="">needAnAccountInfo</p>
             <p>
-              <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
+              <a class="btn btn-default" href="new.account" data-translate=""
+                >createAnAccount</a
+              >
             </p>
           </div>
 
           <!-- forgot passpword -->
-          <div data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined'] && isUserProfileUpdateEnabled">
+          <div
+            data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined'] && isUserProfileUpdateEnabled"
+          >
             <b data-translate="">forgetDetails</b>
             <span data-ng-show="sendPassword === false">
               <p data-translate="">forgetDetailsInfo</p>
               <p>
-                <a type="submit" class="btn btn-default" data-ng-click="setSendPassword(true)"
-                  data-translate="">recoverPassword</a>
+                <a
+                  type="submit"
+                  class="btn btn-default"
+                  data-ng-click="setSendPassword(true)"
+                  data-translate=""
+                  >recoverPassword</a
+                >
               </p>
             </span>
 
             <div data-ng-show="sendPassword === true">
               <div>
                 <form class="form-horizontal" id="userinfo" name="gnUserinfo">
-                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                  <input type="hidden" name="_csrf" value="{{csrf}}" />
                   <div class="form-group">
                     <label data-translate="">username</label>
-                    <input type="text" name="username" id="username"
-                          aria-label="{{'username' | translate}}"
-                          data-ng-model="usernameToRemind"
-                          data-ng-required="" class="form-control"/>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      aria-label="{{'username' | translate}}"
+                      data-ng-model="usernameToRemind"
+                      data-ng-required=""
+                      class="form-control"
+                    />
                   </div>
-                  <a type="submit"
-                     class="btn btn-default btn-block"
-                     data-ng-disabled="usernameToRemind == ''"
-                     data-ng-click="remindMyPassword('#userinfo')">
-                    <i class="fa fa-question-sign"/>
+                  <a
+                    type="submit"
+                    class="btn btn-default btn-block"
+                    data-ng-disabled="usernameToRemind == ''"
+                    data-ng-click="remindMyPassword('#userinfo')"
+                  >
+                    <i class="fa fa-question-sign" />
                     <span data-translate="">sendPasswordLinkToMyEmail</span>
                   </a>
                   <div class="clearfix"></div>
@@ -128,12 +161,10 @@
               </div>
             </div>
           </div>
-
         </div>
         <!-- /.panel-body -->
       </div>
       <!-- /.panel -->
-
     </div>
   </div>
   <!-- /.row -->

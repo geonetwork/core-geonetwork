@@ -26,12 +26,14 @@ package org.fao.geonet.camelPeriodicProducer;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.CronTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.Serializable;
@@ -49,8 +51,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/camel-test-config.xml"})
-public class MessageProducerTest {
+@ContextConfiguration(locations = {
+    "/camel-test-config.xml",
+    "/domain-repository-test-context.xml",
+    "/config-spring-geonetwork.xml"
+})
+public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
 
     private static final String EVERY_SIX_SECOND = "/6 * * ? * * *";
     private static final String EVERY_THREE_SECOND = "/3 * * ? * * *";
@@ -60,7 +66,13 @@ public class MessageProducerTest {
     @Autowired
     private TestCamelNetwork testCamelNetwork;
 
-    private  QuartzComponent quartzComponent;
+    @Autowired
+    private SettingManager settingManager;
+
+    @Autowired
+    MessageProducerFactory toTest;
+
+    private QuartzComponent quartzComponent;
 
     @Before
     public void init() throws Exception {
@@ -71,7 +83,6 @@ public class MessageProducerTest {
     @Test
     public void registerAndStart() throws Exception {
         testCamelNetwork.getContext().start();
-        MessageProducerFactory toTest = new MessageProducerFactory();
         toTest.routeBuilder = testCamelNetwork;
         toTest.quartzComponent = quartzComponent;
 
@@ -127,7 +138,6 @@ public class MessageProducerTest {
     @Test
     public void registerAndStartWithoutCronExpression() throws Exception {
         testCamelNetwork.getContext().start();
-        MessageProducerFactory toTest = new MessageProducerFactory();
         toTest.routeBuilder = testCamelNetwork;
         toTest.quartzComponent = quartzComponent;
 
@@ -140,7 +150,8 @@ public class MessageProducerTest {
         toTest.registerAndStart(messageProducer);
 
         QuartzEndpoint endpoint = (QuartzEndpoint) toTest.routeBuilder.getContext().getEndpoints().stream()
-            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
+            .filter(x -> x.getEndpointKey().compareTo(
+                "quartz2://" + settingManager.getSiteId() + "-" + messageProducer.getId()) == 0).findFirst().get();
 
         CronTrigger trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(NEVER, trigger.getCronExpression());
@@ -155,7 +166,7 @@ public class MessageProducerTest {
     }
 
 
-    private class TestMessage  implements Serializable {
+    private class TestMessage implements Serializable {
 
         private String content;
 

@@ -21,14 +21,15 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_index_requestmanager');
+(function () {
+  goog.provide("gn_index_requestmanager");
 
-  goog.require('gn_index_request');
-  goog.require('gn_index_request_config');
+  goog.require("gn_index_request");
+  goog.require("gn_index_request_config");
 
-  var module = angular.module('gn_index_requestmanager', [
-    'gn_index_request', 'gn_index_request_config'
+  var module = angular.module("gn_index_requestmanager", [
+    "gn_index_request",
+    "gn_index_request_config"
   ]);
 
   /**
@@ -38,8 +39,7 @@
    * @param {object} $injector angular injector
    * @constructor
    */
-  var gnIndexRequestManager = function($injector) {
-
+  var gnIndexRequestManager = function ($injector) {
     var pool_ = [];
 
     /**
@@ -53,27 +53,27 @@
      * @param {string} name identify the object in the pool
      * @return {*}
      */
-    this.register = function(type, name) {
-
+    this.register = function (type, name) {
       if (!(type && name)) {
-        console.error(
-          'You can\'t register an index object without identifiers');
+        console.error("You can't register an index object without identifiers");
         return;
       }
 
       var objId = this.getObjectId_(type, name);
-      var configName = 'gnIndex' + type + 'Config';
+      var configName = "gnIndex" + type + "Config";
 
       // Retrieve the angular value config object
       if (!$injector.has(configName)) {
-        console.error('The index config is not defined: ' + configName);
+        console.error("The index config is not defined: " + configName);
         return;
       }
 
       // Instanciate the index request object
       if (!pool_[objId]) {
         var indexObj = new geonetwork.gnIndexRequest(
-          $injector.get(configName), $injector);
+          $injector.get(configName),
+          $injector
+        );
         pool_[objId] = indexObj;
       }
       return pool_[objId];
@@ -87,7 +87,7 @@
      * @return {*} the index request object.
      */
 
-    this.get = function(type, name) {
+    this.get = function (type, name) {
       if (!(type && name)) {
         return;
       }
@@ -100,19 +100,17 @@
      * @param {string} type
      * @param {string} name
      */
-    this.unregister = function(type, name) {
-      var objId = type + '_' + name;
+    this.unregister = function (type, name) {
+      var objId = type + "_" + name;
       if (pool_[objId]) {
         delete pool_[objId];
       }
     };
 
-    this.getObjectId_ = function(type, name) {
-      return type + '_' + name;
+    this.getObjectId_ = function (type, name) {
+      return type + "_" + name;
     };
   };
 
-  module.service('gnIndexRequestManager', ['$injector', gnIndexRequestManager]);
-
-
+  module.service("gnIndexRequestManager", ["$injector", gnIndexRequestManager]);
 })();

@@ -299,7 +299,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
     /**
      * Unset operation without checking if user privileges allows the operation. This may be useful when a user is an editor and internal
-     * operations needs to update privilages for reserved group. eg. {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
+     * operations needs to update privileges for reserved group. eg. {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
      */
     @Override
     public void forceUnsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {

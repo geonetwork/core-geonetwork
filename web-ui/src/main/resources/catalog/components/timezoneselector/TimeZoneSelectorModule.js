@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_timezone_selector');
+(function () {
+  goog.provide("gn_timezone_selector");
 
+  goog.require("gn_timezone_selector_directive");
 
-  goog.require('gn_timezone_selector_directive');
-
-  angular.module('gn_timezone_selector', ['gn_timezone_selector_directive']);
+  angular.module("gn_timezone_selector", ["gn_timezone_selector_directive"]);
 })();

@@ -806,7 +806,7 @@
   </element>
   <element name="gmd:compressionGenerationQuantity" id="250.0">
     <label>Compression generation quantity</label>
-    <description>Count of the number the number of lossy compression cycles performed on the
+    <description>Count of the number of lossy compression cycles performed on the
       image
     </description>
   </element>
@@ -831,7 +831,7 @@
     <btnLabel>Add maintainer</btnLabel>
     <btnClass>fa fa-user-plus</btnClass>
     <description>Identification of, and means of communication with, person(s) and
-      organization(s) with responsability for maintaining the metadata
+      organization(s) with responsibility for maintaining the metadata
     </description>
   </element>
   <element name="gmd:contact" id="8.0">
@@ -2269,6 +2269,10 @@
     <helper sort="true">
       <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -2584,7 +2588,7 @@
   </element>
   <element name="gmd:topicCategory" id="41.0">
     <label>Topic category</label>
-    <description>Main theme(s) of the datset</description>
+    <description>Main theme(s) of the dataset</description>
     <condition>mandatory</condition>
   </element>
   <element name="gmd:MD_TopicCategoryCode">
@@ -3101,7 +3105,7 @@
   </element>
   <element name="srv:name">
     <label>Name</label>
-    <description>The name, as used by the service for this chain or paramater</description>
+    <description>The name, as used by the service for this chain or parameter</description>
   </element>
   <element name="srv:description">
     <label>Description</label>

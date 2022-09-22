@@ -128,11 +128,16 @@
             </xsl:for-each>
           </xsl:variable>
           <xsl:for-each select="mri:keyword">
-            <tag thesaurus="{$thesaurusTitle}">
+            <xsl:variable name="keyword">
               <xsl:call-template name="get-iso19115-3.2018-localised">
                 <xsl:with-param name="langId" select="$langId"/>
               </xsl:call-template>
-            </tag>
+            </xsl:variable>
+            <xsl:if test="$keyword != ''">
+              <tag thesaurus="{$thesaurusTitle}">
+                <xsl:value-of select="$keyword"/>
+              </tag>
+            </xsl:if>
           </xsl:for-each>
         </xsl:for-each>
       </xsl:variable>
@@ -153,7 +158,7 @@
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                  <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                     <span class="badge"><xsl:copy-of select="."/></span>
                   </a>
                 </xsl:otherwise>
@@ -173,7 +178,7 @@
                 <span class="badge"><xsl:copy-of select="."/></span>
               </xsl:when>
               <xsl:otherwise>
-                <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </a>
               </xsl:otherwise>
@@ -203,12 +208,12 @@
       </h2>
 
       <xsl:choose>
-        <xsl:when test=".//gex:EX_BoundingPolygon">
+        <xsl:when test=".//mdb:identificationInfo/*/mri:extent//gex:EX_BoundingPolygon">
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates mode="render-field"
-                               select=".//gex:EX_GeographicBoundingBox">
+                               select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
@@ -431,12 +436,16 @@
 
     <xsl:variable name="name"
                   select="name()"/>
+
+    <xsl:variable name="context"
+                  select="name(..)"/>
+
     <xsl:choose>
       <!-- eg. for codelist, display label in all record languages -->
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -457,7 +466,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//mdb:otherLocale/*[@id = $id]/lan:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -465,7 +474,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, null)"/>
+                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -821,7 +830,7 @@
                 match="mri:descriptiveKeywords[
                         */mri:thesaurusName/cit:CI_Citation/cit:title]"
                 priority="100">
-    <xsl:param name="fieldName"/>
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
 
     <dl class="gn-keyword">
       <dt>
@@ -857,16 +866,26 @@
   <xsl:template mode="render-field"
                 match="mri:descriptiveKeywords[not(*/mri:thesaurusName/cit:CI_Citation/cit:title)]"
                 priority="100">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
     <dl class="gn-keyword">
       <dt>
-        <xsl:value-of select="$schemaStrings/noThesaurusName"/>
-        <xsl:if test="*/mri:type/*[@codeListValue != '']">
-          <xsl:variable name="thesaurusType">
-            <xsl:apply-templates mode="render-value"
-                                 select="*/mri:type/*/@codeListValue"/>
-          </xsl:variable>
-          (<xsl:value-of select="normalize-space($thesaurusType)"/>)
-        </xsl:if>
+        <xsl:variable name="thesaurusType">
+          <xsl:apply-templates mode="render-value"
+                               select="*/mri:type/*/@codeListValue[. != '']"/>
+        </xsl:variable>
+
+        <xsl:choose>
+          <xsl:when test="$fieldName != ''">
+            <xsl:value-of select="$fieldName"/>
+          </xsl:when>
+          <xsl:when test="$thesaurusType != ''">
+            <xsl:copy-of select="$thesaurusType"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </dt>
       <dd>
         <div>
@@ -976,7 +995,7 @@
 
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="*[@uuidref]"
+                match="srv:operatesOn[@uuidref]|mrc:featureCatalogueCitation[@uuidref]|mrl:source[@uuidref]|mri:metadataReference[@uuidref]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 

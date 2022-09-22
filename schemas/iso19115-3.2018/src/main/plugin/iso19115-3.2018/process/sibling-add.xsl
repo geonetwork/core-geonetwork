@@ -11,6 +11,8 @@ Stylesheet used to add a reference to a related record using aggregation info.
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all" version="2.0">
 
+  <xsl:import href="sibling-utility.xsl"/>
+
   <!-- The uuid of the target record -->
   <xsl:param name="uuidref"/>
   <xsl:param name="nodeUrl"/>
@@ -89,6 +91,7 @@ Stylesheet used to add a reference to a related record using aggregation info.
               <xsl:with-param name="initiativeType" select="$tokens[3]"/>
               <xsl:with-param name="title" select="$tokens[4]"/>
               <xsl:with-param name="remoteUrl" select="$tokens[5]"/>
+              <xsl:with-param name="nodeUrl" select="$nodeUrl"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
@@ -97,60 +100,12 @@ Stylesheet used to add a reference to a related record using aggregation info.
             <xsl:call-template name="make-aggregate">
               <xsl:with-param name="uuid" select="."/>
               <xsl:with-param name="context" select="$context"/>
+              <xsl:with-param name="nodeUrl" select="$nodeUrl"/>
             </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
 
       </xsl:for-each>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="make-aggregate">
-    <xsl:param name="uuid"/>
-    <xsl:param name="context"/>
-    <xsl:param name="initiativeType" select="$initiativeType" required="no"/>
-    <xsl:param name="associationType" select="$associationType" required="no"/>
-    <xsl:param name="title" select="''" required="no"/>
-    <xsl:param name="remoteUrl" select="''" required="no"/>
-
-    <xsl:variable name="notExist" select="count($context/mri:associatedResource/mri:MD_AssociatedResource[
-			mri:metadataReference/@uuidref = $uuid
-			and mri:associationType/mri:DS_AssociationTypeCode/@codeListValue = $associationType
-			and mri:initiativeType/mri:DS_InitiativeTypeCode/@codeListValue = $initiativeType
-			]) = 0"/>
-    <xsl:if test="$notExist">
-
-      <mri:associatedResource>
-        <mri:MD_AssociatedResource>
-          <mri:associationType>
-            <mri:DS_AssociationTypeCode
-                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode"
-                codeListValue="{$associationType}"/>
-          </mri:associationType>
-
-          <xsl:if test="$initiativeType != ''">
-            <mri:initiativeType>
-              <mri:DS_InitiativeTypeCode
-                  codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_InitiativeTypeCode"
-                  codeListValue="{$initiativeType}"/>
-            </mri:initiativeType>
-          </xsl:if>
-          <mri:metadataReference uuidref="{$uuid}">
-            <xsl:choose>
-              <xsl:when test="$remoteUrl != ''">
-                <xsl:attribute name="xlink:href" select="$remoteUrl"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:attribute name="xlink:href"
-                               select="concat($nodeUrl, 'api/records/', $uuid)"/>
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="$title != ''">
-              <xsl:attribute name="xlink:title" select="$title"/>
-            </xsl:if>
-          </mri:metadataReference>
-        </mri:MD_AssociatedResource>
-      </mri:associatedResource>
     </xsl:if>
   </xsl:template>
 

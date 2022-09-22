@@ -248,14 +248,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- ================================================================= -->
-
-  <xsl:template
-    match="gmd:topicCategory[not(gmd:MD_TopicCategoryCode)]"
-    priority="10" />
-
-  <!-- ================================================================= -->
-
   <xsl:template match="@gml:id|@gml320:id">
     <xsl:choose>
       <xsl:when test="normalize-space(.)=''">
@@ -737,7 +729,7 @@
 
 
   <!-- Remove geographic/temporal extent if doesn't contain child elements.
-       Used to clean up the element, for example when removing the the temporal extent
+       Used to clean up the element, for example when removing the temporal extent
        in the editor, to avoid an element like <gmd:extent><gmd:EX_Extent></gmd:EX_Extent></gmd:extent>,
        that causes a validation error in schematron iso: [ISOFTDS19139:2005-TableA1-Row23] - Extent element required
   -->

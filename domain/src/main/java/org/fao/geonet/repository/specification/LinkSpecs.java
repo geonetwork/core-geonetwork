@@ -55,7 +55,7 @@ public class LinkSpecs {
 
     public static Specification<Link> filter(String urlPartToContain,
                                              Integer state,
-                                             String associatedRecord,
+                                             List<String> associatedRecords,
                                              Integer[] groupPublishedIds,
                                              Integer[] groupOwnerIds,
                                              Integer[] editingGroupIds) {
@@ -77,12 +77,9 @@ public class LinkSpecs {
                             cb.literal(String.format("%%%s%%", urlPartToContain))));
                 }
 
-                if (associatedRecord != null) {
+                if (associatedRecords != null) {
                     Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
-                    predicates.add(
-                        cb.like(
-                            metadataJoin.get("metadataUuid"),
-                            cb.literal(String.format("%%%s%%", associatedRecord))));
+                    predicates.add(metadataJoin.get("metadataUuid").in(associatedRecords));
                 }
 
                 if (editingGroupIds != null && editingGroupIds.length > 0) {

@@ -61,6 +61,8 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * User: jeichar Date: 1/17/12 Time: 5:51 PM
  */
 public abstract class Resources {
+    public static final String BLANK_LOGO = "blank.png";
+    public static final String DEFAULT_LOGO_EXTENSION = ".png";
 
     protected final static Set<String> IMAGE_READ_SUFFIXES;
     protected final static Set<String> IMAGE_WRITE_SUFFIXES;
@@ -271,21 +273,22 @@ public abstract class Resources {
      *                 for example harvesting/defaultHarvester.png
      * @param destName the name of the final image (in logos directory) so just the name.
      */
-    public void copyLogo(ServiceContext context, String icon,
+    public String copyLogo(ServiceContext context, String icon,
                          String destName) {
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
         Path appDir = context.getAppPath();
+        String filename = null;
 
         final Path logosDir = locateLogosDir(context);
         try {
             Path srcPath = locateResource(locateResourcesDir(context), servletContext, appDir, icon);
             String extension = Files.getFileExtension(srcPath.getFileName().toString());
+            filename = destName + "." + extension;
             try(ResourceHolder src = getImage(context, srcPath.getFileName().toString(), srcPath.getParent());
-                ResourceHolder des = getWritableImage(context, destName + "." + extension,
-                                                      logosDir)) {
+                ResourceHolder des = getWritableImage(context, filename, logosDir)) {
                 if (src != null) {
                     java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
                 } else {
@@ -299,6 +302,7 @@ public abstract class Resources {
             context.warning(" (C) Source : " + icon);
             context.warning(" (C) Destin : " + logosDir);
         }
+        return filename;
     }
 
     // ---------------------------------------------------------------------------
@@ -310,7 +314,7 @@ public abstract class Resources {
      * @param destName the filename prefix to copy the unknown filename to.
      */
     public void copyUnknownLogo(ServiceContext context, String destName) {
-        copyLogo(context, "unknown-filename.png", destName);
+        copyLogo(context, BLANK_LOGO, destName);
     }
 
     /**

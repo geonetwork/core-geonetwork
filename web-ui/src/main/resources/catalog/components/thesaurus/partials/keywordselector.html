@@ -1,63 +1,86 @@
 <div>
   <div data-ng-show="invalidKeywordMatch" class="alert alert-danger">
-    <p data-translate="notFoundInThesaurus"
-       data-translate-values="{invalid: invalidKeywords.join(', '), found: foundKeywords.join(', ')}"></p>
+    <p
+      data-translate="notFoundInThesaurus"
+      data-translate-values="{invalid: invalidKeywords.join(', '), found: foundKeywords.join(', ')}"
+    ></p>
     <button class="btn btn-danger pull-right" data-ng-click="resetKeywords()">
       <i class="fa fa-times"></i>&nbsp;<span data-translate="">resetKeywordsAnyway</span>
     </button>
-    <button data-ng-if="invalidKeywords.length > 0"
-            class="btn btn-danger pull-right"
-            data-ng-click="resetInvalidKeywords()">
+    <button
+      data-ng-if="invalidKeywords.length > 0"
+      class="btn btn-danger pull-right"
+      data-ng-click="resetInvalidKeywords()"
+    >
       <i class="fa fa-times"></i>&nbsp;<span data-translate="">resetInvalidKeywords</span>
     </button>
   </div>
 
   <span data-ng-show="!invalidKeywordMatch">
     <div class="row">
-      <label class="col-sm-2 control-label">
-        {{thesaurusTitle}}
-      </label>
-      <div class="col-sm-9"
-           data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
-           title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
-        <input type="text" id="tagsinput_{{elementRef}}"
-               class="form-control"></input>
+      <label class="col-sm-2 control-label"> {{thesaurusTitle}} </label>
+      <div
+        class="col-sm-9"
+        data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
+        title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}"
+      >
+        <input type="text" id="tagsinput_{{elementRef}}" class="form-control" />
       </div>
       <div class="col-sm-1">
         <!-- TODO: improve transformation drop down is duplicated -->
-        <div class="btn-group pull-right"
-             data-ng-show="transformationLists.length > 1">
-          <button type="button" class="btn btn-link dropdown-toggle pull-right"
-                  data-toggle="dropdown">
-            <i class="fa fa-cog"/>
-            <span class="caret"/>
+        <div class="btn-group pull-right" data-ng-show="transformationLists.length > 1">
+          <button
+            type="button"
+            class="btn btn-link dropdown-toggle pull-right"
+            data-toggle="dropdown"
+          >
+            <i class="fa fa-cog" />
+            <span class="caret" />
           </button>
           <ul class="dropdown-menu">
-            <li role="presentation" class="dropdown-header" data-translate="">keywordInsertMode</li>
-            <li data-ng-repeat="tr in transformationLists"
-                data-ng-class="isCurrent(tr) ? 'disabled' : ''">
-              <a href="" data-ng-click="setTransformation(tr)"
-                 title="{{(tr + '-help') | translate}}">{{tr | translate}}</a>
+            <li role="presentation" class="dropdown-header" data-translate="">
+              keywordInsertMode
+            </li>
+            <li
+              data-ng-repeat="tr in transformationLists"
+              data-ng-class="isCurrent(tr) ? 'disabled' : ''"
+            >
+              <a
+                href=""
+                data-ng-click="setTransformation(tr)"
+                title="{{(tr + '-help') | translate}}"
+                >{{tr | translate}}</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </div>
 
-		<div class="row" ng-show="concept && thesaurusKey != 'external.none.allThesaurus'">
+    <div class="row" ng-show="concept && thesaurusKey != 'external.none.allThesaurus'">
       <div class="col-sm-9 col-md-offset-2">
-        <skos-browser class="tmpl-border" concept="concept" add-concept="addThesaurusConcept"
-                      language="langs"></skos-browser>
+        <skos-browser
+          class="tmpl-border"
+          concept="concept"
+          add-concept="addThesaurusConcept"
+          language="langs"
+        ></skos-browser>
       </div>
     </div>
 
     <!-- The thesaurus snippet to insert once received -->
     <div>
-      <input name="{{elementRef}}{{elementXpath && elementXpath != '' ? '_xml' : ''}}"
-             type="hidden" value="{{snippet}}"/>
-      <input data-ng-if="elementXpath"
-             name="{{elementRefXpath}}"
-             type="hidden" value="{{elementXpath}}"/>
+      <input
+        name="{{elementRef}}{{elementXpath && elementXpath != '' ? '_xml' : ''}}"
+        type="hidden"
+        value="{{snippet}}"
+      />
+      <input
+        data-ng-if="elementXpath"
+        name="{{elementRefXpath}}"
+        type="hidden"
+        value="{{elementXpath}}"
+      />
     </div>
   </span>
 </div>

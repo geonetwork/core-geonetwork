@@ -28,11 +28,14 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import opendap.servlet.BadURLException;
 
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Download a logfile from harvesting
@@ -62,20 +65,29 @@ public class Log implements Service {
                     + logfile);
         }
 
-        if (!logfile.contains("/harvester_")) {
+        if (!logfile.contains("harvester_")) {
             throw new BadURLException(
                 "This doesn't seem like a harvester log file. Stopping possible hacking attempt to uri: "
                     + logfile);
         }
 
-        File file = new File(logfile);
 
-        if (!file.exists() || !file.canRead()) {
-            throw new NullPointerException(
-                "Couldn't find or read the logfile. Somebody moved it? " + file.getAbsolutePath());
+        File mainLogFile = GeonetworkDataDirectory.getLogfile();
+        Path pathLogFile;
+        if (mainLogFile != null) {
+            pathLogFile = mainLogFile.toPath().getParent().resolve(logfile);
+        }
+        else {
+            pathLogFile = Paths.get(logfile);
         }
 
-        return BinaryFile.encode(200, file.toPath().toAbsolutePath().normalize(), false).getElement();
+        if (!Files.exists(pathLogFile) || !Files.isReadable(pathLogFile)) {
+            throw new NullPointerException(String.format(
+                "Couldn't find or read the logfile %s in catalogue log directory. Check log file configuration.",
+                logfile));
+        }
+
+        return BinaryFile.encode(200, pathLogFile.toAbsolutePath().normalize(), false).getElement();
     }
 
 }

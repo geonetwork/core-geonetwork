@@ -20,8 +20,7 @@
     <xsl:param name="lang"/>
 
     <xsl:variable name="languageIdentifier"
-                  select="$md/lan:locale/lan:PT_Locale[
-          lan:languageCode/lan:LanguageCode/@codeListValue = $lang]/@id"/>
+                  select="$md/*/lan:PT_Locale[lan:language/*/@codeListValue = $lang]/@id"/>
     <xsl:choose>
       <xsl:when
         test="$languageIdentifier">

@@ -318,6 +318,12 @@ ul.gn-resultview li.list-group-item {
       }
       .panel {
         .panel-heading {
+          line-height: 34px !important;
+          padding: 6px 15px;
+          height: auto !important;
+          p {
+            line-height: 1.5;
+          }
           .btn-toolbar {
             float: right;
           }
@@ -403,6 +409,7 @@ ul.gn-resultview li.list-group-item {
                     border: 1px solid @list-group-border;
                     text-align: center;
                     flex-direction: column-reverse;
+                    flex-flow: wrap-reverse;
                     &:hover {
                       text-decoration: none;
                     }

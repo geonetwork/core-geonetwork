@@ -60,7 +60,7 @@ public class GeoServerRest {
     public final static String METHOD_GET = "GET";
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_DELETE = "DELETE";
-    public final static String LOGGER_NAME = "geonetwork.GeoServerRest";
+    public final static String LOGGER_NAME = "geonetwork.geoserver.rest";
 
     private final String password;
     private final String username;

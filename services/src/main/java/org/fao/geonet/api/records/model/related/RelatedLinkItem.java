@@ -47,6 +47,7 @@ import java.util.List;
     "protocol",
     "description",
     "function",
+    "mimeType",
     "applicationProfile"
 })
 public class RelatedLinkItem
@@ -56,6 +57,7 @@ public class RelatedLinkItem
     @XmlElement(required = true)
     protected RelatedLinkItem.Description description;
     protected String function;
+    protected String mimeType;
     protected String applicationProfile;
 
     /**
@@ -74,6 +76,14 @@ public class RelatedLinkItem
      */
     public void setProtocol(String value) {
         this.protocol = value;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     /**

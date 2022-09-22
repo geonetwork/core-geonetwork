@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <accept>Acceptar</accept>
-  <atom>
-    <results>
-      <header>Atom feeds</header>
-      <noresults>No atom feed available</noresults>
-      <title>Title</title>
-      <content>Content</content>
-      <id>Identifier</id>
-      <rights>Rights</rights>
-      <describedby>Described by</describedby>
-      <author>Author</author>
-      <updated>Updated</updated>
-    </results>
-  </atom>
   <bookmarkDelicious>Afegir als favorits de Delicious</bookmarkDelicious>
   <bookmarkDigg>Afegir als favorits de Digg</bookmarkDigg>
   <bookmarkEmail>Enviar una referència d'aquest registre per correu</bookmarkEmail>

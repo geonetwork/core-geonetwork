@@ -82,6 +82,9 @@ public class SearchController {
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";
 
     @Autowired
+    NodeInfo node;
+
+    @Autowired
     IMetadataUtils metadataUtils;
 
     @Autowired
@@ -347,7 +350,7 @@ public class SearchController {
                         }
 
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
-                        for (Element match : elementsInContextMatching) {
+                        for (Element match : elementsMatching) {
                             Element parent = match.getParentElement();
                             while (parent != null) {
                                 parent.removeContent();
@@ -445,7 +448,7 @@ public class SearchController {
         JsonNode esJsonQuery;
 
         try {
-            String filterQueryString = esFilterBuilder.build(context, "metadata");
+            String filterQueryString = esFilterBuilder.build(context, "metadata", false, node);
             String jsonQuery = String.format(elasticSearchQuery, filterQueryString);
 
             ObjectMapper objectMapper = new ObjectMapper();

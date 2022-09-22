@@ -40,7 +40,6 @@ public class IndexFields {
     public static final String TYPE = "type";
     public static final String UUID = "_uuid";
     public static final String VALID = "_valid";
-    public static final String HAS_ATOM = "has_atom";
     public static final String RESOURCE_TITLE = "resourceTitle";
     public static final String ROOT = "_root";
     public static final String INDEXING_ERROR_MSG = "indexingErrorMsg";

@@ -56,7 +56,7 @@
     "noRecordFoundWithResourceRegistered": "Engin færsla fannst með eitt eða fleiri WMS lög skráð.",
     "noRecordFoundWithResourceRegisteredmap": "Engin færsla fannst með eitt eða fleiri kort skráð. ",
     "tmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (TMS) sem finna má hér  <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
-    "esriRestLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
+    "esri:restLinkDetails": "ESRI REST service <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér<a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMS) sem finna má hér <a href='{{url}}' target='_blank'> {{url}}</a>.",
     "wmtsLinkDetails": "Þetta gagnasett er birt í skoðunarþjónustunni (WMTS) sem finna má hér <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
@@ -174,7 +174,7 @@
     "listOfCategories": "Flokkar",
     "formats": "Snið",
     "addLayers": "Bæta við lögum",
-    "serviceUrl": "http://...",
+    "serviceUrl": "https://...",
     "serviceUrlLabel": "Þjónustu URL",
     "CurrentLayers": "Lög",
     "SearchLayer": "Leit",
@@ -532,5 +532,10 @@
     "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
     "copyMousePosition": "Copy mouse position to clipboard",
     "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS feed",
+    "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
+    "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
+    "seriesComposedOf": "Composed of",
+    "seriesCoveringPeriod": "Covering period",
+    "approve": "Samþykkja"
 }

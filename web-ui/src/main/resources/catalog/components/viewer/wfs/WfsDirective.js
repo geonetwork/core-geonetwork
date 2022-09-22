@@ -21,42 +21,48 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wfs_directive');
+(function () {
+  goog.provide("gn_wfs_directive");
 
-  var module = angular.module('gn_wfs_directive', [
-  ]);
+  var module = angular.module("gn_wfs_directive", []);
 
-  module.directive('gnWfsDownload', ['gnWfsService', 'gnSearchSettings', 'gnGlobalSettings',
-    function(gnWfsService, gnSearchSettings, gnGlobalSettings) {
+  module.directive("gnWfsDownload", [
+    "gnWfsService",
+    "gnSearchSettings",
+    "gnGlobalSettings",
+    function (gnWfsService, gnSearchSettings, gnGlobalSettings) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          layer: '=gnWfsDownload',
-          map: '=',
-          isWfsAvailable: '=?hasDownload',
+          layer: "=gnWfsDownload",
+          map: "=",
+          isWfsAvailable: "=?hasDownload",
           // When you've secured WFS, you may want the popup
           // opened for basic authentication to only appear
           // when user request the download
-          initOnDemand: '@',
-          mode: '@'
+          initOnDemand: "@",
+          mode: "@"
         },
-        templateUrl: '../../catalog/components/' +
-            'viewer/wfs/partials/download.html',
-        link: function(scope, element, attrs, ctrls) {
-          scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
+        templateUrl: "../../catalog/components/" + "viewer/wfs/partials/download.html",
+        link: function (scope, element, attrs, ctrls) {
+          scope.initOnDemand = attrs["initOnDemand"] == "true" || false;
           scope.isWfsAvailable = scope.initOnDemand ? true : false;
           scope.isInitialized = false;
           scope.downloadFormat = undefined;
 
-          scope.init = function() {
+          scope.init = function () {
             if (!scope.layer) {
               return;
             }
 
             var source = scope.layer.getSource();
-            if (!source || !(source instanceof ol.source.ImageWMS ||
-                source instanceof ol.source.TileWMS)) {
+            if (
+              !source ||
+              !(
+                source instanceof ol.source.ImageWMS ||
+                source instanceof ol.source.TileWMS
+              )
+            ) {
               return;
               // TODO add WFS layer download support
               // || (source instanceof ol.source.Vector &&
@@ -65,75 +71,93 @@
 
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
             try {
-              scope.url = attrs['url'] ||
-                  scope.layer.get('url').replace(/wms/i, 'wfs');
-              scope.typename = attrs['typename'] ||
-                  (scope.layer.getSource().getParams &&
+              scope.url = attrs["url"] || scope.layer.get("url").replace(/wms/i, "wfs");
+              scope.typename =
+                attrs["typename"] ||
+                (scope.layer.getSource().getParams &&
                   scope.layer.getSource().getParams().LAYERS);
               scope.formats = [];
               scope.checkWFSUrl();
             } catch (e) {
-              console.log('Error initialising wfs: ' + e.message);
+              console.log("Error initialising wfs: " + e.message);
               scope.problemContactingServer = true;
-            }
-          }
-
-          // TODO: Choose a projection ?
-          scope.download = function(format, mapExtentOnly) {
-            if (mapExtentOnly) {
-              var extent = map ?
-                  scope.map.getView().calculateExtent(scope.map.getSize()) :
-                  [-90, -180, 90, 180];
-              // Use layer default SRS
-              var p = scope.featureType.defaultSRS;
-              var e = map ? ol.proj.transformExtent(extent,
-                  scope.map.getView().getProjection().getCode(),
-                  p) : 'epsg:4326';
-              gnWfsService.download(scope.url, scope.capabilities.version, scope.typename, format,
-                  e[1] + ',' + e[0] + ',' + e[3] + ',' + e[2],
-                  p);
-            } else {
-              gnWfsService.download(scope.url, scope.capabilities.version, scope.typename, format);
             }
           };
 
-          scope.isLayerProtocol = function(mainType) {
+          // TODO: Choose a projection ?
+          scope.download = function (format, mapExtentOnly) {
+            if (mapExtentOnly) {
+              var extent = map
+                ? scope.map.getView().calculateExtent(scope.map.getSize())
+                : [-90, -180, 90, 180];
+              // Use layer default SRS
+              var p = scope.featureType.defaultSRS;
+              var e = map
+                ? ol.proj.transformExtent(
+                    extent,
+                    scope.map.getView().getProjection().getCode(),
+                    p
+                  )
+                : "epsg:4326";
+              gnWfsService.download(
+                scope.url,
+                scope.capabilities.version,
+                scope.typename,
+                format,
+                e[1] + "," + e[0] + "," + e[3] + "," + e[2],
+                p
+              );
+            } else {
+              gnWfsService.download(
+                scope.url,
+                scope.capabilities.version,
+                scope.typename,
+                format
+              );
+            }
+          };
+
+          scope.isLayerProtocol = function (mainType) {
             return gnSearchSettings.mapProtocols.layers.indexOf(mainType) > -1;
           };
 
           /**
            * Check if the WFS url provided return a response.
            */
-          scope.checkWFSUrl = function() {
-            if (scope.url && scope.url != '') {
-              return gnWfsService.getCapabilities(gnGlobalSettings.getNonProxifiedUrl(scope.url))
-                  .then(function(capabilities) {
+          scope.checkWFSUrl = function () {
+            if (scope.url && scope.url != "") {
+              return gnWfsService
+                .getCapabilities(gnGlobalSettings.getNonProxifiedUrl(scope.url))
+                .then(
+                  function (capabilities) {
                     scope.isInitialized = true;
                     scope.isWfsAvailable = true;
                     scope.capabilities = capabilities;
-                    scope.featureType =
-                      gnWfsService.getTypeName(capabilities, scope.typename);
+                    scope.featureType = gnWfsService.getTypeName(
+                      capabilities,
+                      scope.typename
+                    );
                     if (scope.featureType) {
-                      scope.formats =
-                      gnWfsService.getOutputFormat(capabilities);
+                      scope.formats = gnWfsService.getOutputFormat(capabilities);
                     }
-                  }, function (r) {
+                  },
+                  function (r) {
                     console.warn(r);
                     scope.isInitialized = true;
                     scope.isWfsAvailable = false;
-                  });
+                  }
+                );
             }
           };
 
           scope.downloadFormatChange = function (o) {
             var df = o.downloadFormat;
             if (df) {
-              scope.download(df.split('#')[0],
-                df.split('#')[1] == 'true');
+              scope.download(df.split("#")[0], df.split("#")[1] == "true");
             }
           };
 
-          if (!scope.initOnDemand){
+          if (!scope.initOnDemand) {
             scope.init();
           }
         }
@@ -141,115 +165,139 @@
     }
   ]);
 
-  module.directive('gnNoMapWfsDownload', ['gnWfsService',
-    function(gnWfsService) {
+  module.directive("gnNoMapWfsDownload", [
+    "gnWfsService",
+    function (gnWfsService) {
       return {
-        restrict: 'A',
-        scope: {
-        },
-        templateUrl: '../../catalog/components/' +
-            'viewer/wfs/partials/download.html',
-        link: function(scope, element, attrs, ctrls) {
-          scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
+        restrict: "A",
+        scope: {},
+        templateUrl: "../../catalog/components/" + "viewer/wfs/partials/download.html",
+        link: function (scope, element, attrs, ctrls) {
+          scope.initOnDemand = attrs["initOnDemand"] == "true" || false;
           scope.isWfsAvailable = false;
           scope.isInitialized = false;
-          scope.mode = 'dropdown';
+          scope.mode = "dropdown";
 
-          scope.init = function() {
+          scope.init = function () {
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
-            scope.url = attrs['url'];
-            scope.typename = attrs['typename'];
+            scope.url = attrs["url"];
+            scope.typename = attrs["typename"];
             scope.formats = [];
             scope.checkWFSUrl();
-          }
-
-          // TODO: Choose a projection ?
-          scope.download = function(format, mapExtentOnly) {
-            scope.downloadFeatureType(format, scope.featureType,
-                scope.typename, mapExtentOnly);
           };
 
-          scope.downloadFeatureType = function(format, featureType,
-                                               featureTypeName, mapExtentOnly) {
+          // TODO: Choose a projection ?
+          scope.download = function (format, mapExtentOnly) {
+            scope.downloadFeatureType(
+              format,
+              scope.featureType,
+              scope.typename,
+              mapExtentOnly
+            );
+          };
+
+          scope.downloadFeatureType = function (
+            format,
+            featureType,
+            featureTypeName,
+            mapExtentOnly
+          ) {
             if (mapExtentOnly) {
-              var extent = map ?
-                  scope.map.getView().calculateExtent(scope.map.getSize()) :
-                  [-90, -180, 90, 180];
+              var extent = map
+                ? scope.map.getView().calculateExtent(scope.map.getSize())
+                : [-90, -180, 90, 180];
               // Use layer default SRS
               var p = featureType.defaultSRS;
-              var e = map ? ol.proj.transformExtent(extent,
-                  scope.map.getView().getProjection().getCode(),
-                  p) : 'epsg:4326';
-              gnWfsService.download(scope.url, scope.capabilities.version, featureTypeName, format,
-                  e[1] + ',' + e[0] + ',' + e[3] + ',' + e[2],
-                  p);
+              var e = map
+                ? ol.proj.transformExtent(
+                    extent,
+                    scope.map.getView().getProjection().getCode(),
+                    p
+                  )
+                : "epsg:4326";
+              gnWfsService.download(
+                scope.url,
+                scope.capabilities.version,
+                featureTypeName,
+                format,
+                e[1] + "," + e[0] + "," + e[3] + "," + e[2],
+                p
+              );
             } else {
-              gnWfsService.download(scope.url, scope.capabilities.version, featureTypeName, format);
+              gnWfsService.download(
+                scope.url,
+                scope.capabilities.version,
+                featureTypeName,
+                format
+              );
             }
           };
 
           /**
-            * Check if the WFS url provided return a response.
-            */
-          scope.checkWFSUrl = function() {
-            return gnWfsService.getCapabilities(scope.url)
-                .then(function(capabilities) {
-                  scope.isInitialized = true;
-                  scope.isWfsAvailable = true;
-                  scope.capabilities = capabilities;
-                  scope.featureType =
-                      gnWfsService.getTypeName(capabilities, scope.typename);
-                  scope.formats = gnWfsService.getOutputFormat(capabilities);
-                }, function (r) {
-                  console.warn(r);
-                  scope.isInitialized = true;
-                  scope.isWfsAvailable = false;
-                });
+           * Check if the WFS url provided return a response.
+           */
+          scope.checkWFSUrl = function () {
+            return gnWfsService.getCapabilities(scope.url).then(
+              function (capabilities) {
+                scope.isInitialized = true;
+                scope.isWfsAvailable = true;
+                scope.capabilities = capabilities;
+                scope.featureType = gnWfsService.getTypeName(
+                  capabilities,
+                  scope.typename
+                );
+                scope.formats = gnWfsService.getOutputFormat(capabilities);
+              },
+              function (r) {
+                console.warn(r);
+                scope.isInitialized = true;
+                scope.isWfsAvailable = false;
+              }
+            );
           };
 
-          if (!scope.initOnDemand){
+          if (!scope.initOnDemand) {
             scope.init();
           }
         }
       };
     }
   ]);
-  module.directive('gnWFS', [
-    function() {
-
+  module.directive("gnWFS", [
+    function () {
       var inputTypeMapping = {
-        string: 'text',
-        float: 'number'
+        string: "text",
+        float: "number"
       };
 
-      var defaultValue = function(literalData) {
+      var defaultValue = function (literalData) {
         var value = undefined;
         if (literalData.defaultValue != undefined) {
           value = literalData.defaultValue;
         }
-        if (literalData.dataType.value == 'float') {
+        if (literalData.dataType.value == "float") {
           value = parseFloat(value);
         }
-        if (literalData.dataType.value == 'string') {
-          value = value || '';
+        if (literalData.dataType.value == "string") {
+          value = value || "";
         }
         return value;
       };
 
       return {
-        restrict: 'AE',
+        restrict: "AE",
         scope: {
-          uri: '=',
-          processId: '='
+          uri: "=",
+          processId: "="
         },
-        templateUrl: function(elem, attrs) {
-          return attrs.template ||
-              '../../catalog/components/viewer/wps/partials/processform.html';
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/viewer/wps/partials/processform.html"
+          );
         },
 
-        link: function(scope, element, attrs) {
-
-        }
+        link: function (scope, element, attrs) {}
       };
     }
   ]);

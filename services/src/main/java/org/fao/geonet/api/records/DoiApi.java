@@ -101,6 +101,37 @@ public class DoiApi {
         return new ResponseEntity<>(reportStatus, HttpStatus.OK);
     }
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Check the DOI URL created based on current configuration and pattern.")
+    @RequestMapping(value = "/{metadataUuid}/doi/checkDoiUrl",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.TEXT_PLAIN_VALUE
+        }
+    )
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "DOI URL created."),
+        @ApiResponse(responseCode = "404", description = "Metadata not found."),
+        @ApiResponse(responseCode = "500", description = "Service unavailable."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    public
+    @ResponseBody
+    ResponseEntity<String> checkDoiUrl(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @Parameter(hidden = true)
+            HttpServletRequest request
+    ) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+
+        return new ResponseEntity<>(doiManager.checkDoiUrl(metadata), HttpStatus.OK);
+    }
+
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Submit a record to the Datacite metadata store in order to create a DOI.")

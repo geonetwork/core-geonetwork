@@ -51,6 +51,11 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
     @XmlAttribute
     protected int processedRecords = 0;
     /**
+     * The number of records processed when the report was generated
+     */
+    @XmlAttribute
+    protected int unchangedRecords = 0;
+    /**
      * The number of records when a null metadata identifier is processed (may happen when a record
      * is in the selection but was deleted after the selection)
      */
@@ -199,6 +204,14 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
 
     public synchronized void incrementProcessedRecords() {
         this.processedRecords++;
+    }
+
+    public synchronized int getNumberOfRecordsUnchanged() {
+        return unchangedRecords;
+    }
+
+    public synchronized void incrementUnchangedRecords() {
+        this.unchangedRecords++;
     }
 
     public synchronized void addMetadataId(int metadataId) {

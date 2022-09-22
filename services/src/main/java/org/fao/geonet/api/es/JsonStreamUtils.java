@@ -33,6 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class JsonStreamUtils {
     public static final JsonFactory jsonFactory = new JsonFactory(new ObjectMapper());
@@ -51,35 +54,89 @@ public class JsonStreamUtils {
 
     public static void filterObjectInPath(JsonParser parser, JsonGenerator generator,
                                           JsonFilter callback,
-                                          String... path) throws Exception {
-        if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
-            throw new RuntimeException("Expecting an object");
-        }
-        generator.writeStartObject();
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            final String name = parser.getCurrentName();
-            if (name.equals(path[0])) {
-                generator.writeFieldName(name);
-                parser.nextToken();
-                if (path.length == 1) {
-                    callback.apply(parser, generator);
+                                           List<JsonPathItem> path) throws Exception {
+        if (parser.getCurrentToken() == JsonToken.START_OBJECT) {
+            generator.writeStartObject();
+
+            while (parser.nextToken() != JsonToken.END_OBJECT) {
+                final String name = parser.getCurrentName();
+
+                Optional<JsonPathItem> pathFound = path
+                    .stream()
+                    .filter(p -> (p.getName().equals(name) || p.getName().equals("*"))).findFirst();
+
+                if (pathFound.isPresent()) {
+                    generator.writeFieldName(name);
+                    parser.nextToken();
+
+                    if (pathFound.get().getSubitems().isEmpty()) {
+                        // Is the last item in the path? --> execute the callback
+                        callback.apply(parser, generator);
+                    } else {
+                        // Otherwise process the path subitems
+                        filterObjectInPath(parser, generator, callback, pathFound.get().getSubitems());
+                    }
                 } else {
-                    final String[] sub = Arrays.copyOfRange(path, 1, path.length);
-                    filterObjectInPath(parser, generator, callback, sub);
+                    generator.copyCurrentStructure(parser);
                 }
-            } else {
-                generator.copyCurrentStructure(parser);
             }
+            generator.writeEndObject();
+
+        } else  if (parser.getCurrentToken() == JsonToken.START_ARRAY) {
+            // Process the array elements
+            generator.writeStartArray();
+
+            while (parser.nextToken() != JsonToken.END_ARRAY) {
+                filterObjectInPath(parser, generator, callback, path);
+            }
+
+            generator.writeEndArray();
+        } else {
+            throw new RuntimeException("Unexpected element: " + parser.getCurrentName());
         }
-        generator.writeEndObject();
     }
 
     public static void addInfoToDocs(JsonParser parser, JsonGenerator generator, TreeFilter callback) throws Exception {
+        /* ES response for hits
+            hits
+              hits
+         */
+        JsonPathItem hitsItem =  JsonPathItem.create("hits").addSubitem("hits");
+
         JsonStreamUtils.filterObjectInPath(parser, generator,
             (par, gen) ->
                 JsonStreamUtils.filterArrayElements(par, gen, (par1, gen1) ->
                     filterTree(parser, generator, callback)),
-            "hits", "hits");
+            Collections.singletonList(hitsItem));
+    }
+
+    public static void addInfoToDocsMSearch(JsonParser parser, JsonGenerator generator, TreeFilter callback) throws Exception {
+        /* ES response for hits and agreggation hits
+         *  responses
+         *    hits
+         *      hits
+         *    aggregations
+         *      *   (special value used to process all children of an element)
+         *        buckets
+         *          docs
+         *            hits
+         *              hits
+         */
+        JsonPathItem responsesItem =  JsonPathItem.create("responses").addSubitem("hits").addSubitem("aggregations");
+        responsesItem.getSubitem("hits").addSubitem("hits");
+        responsesItem.getSubitem("aggregations").addSubitem("*");
+        JsonPathItem aggregationChildrenItem = responsesItem.getSubitem("aggregations").getSubitem("*");
+        aggregationChildrenItem.addSubitem("buckets");
+        aggregationChildrenItem.getSubitem("buckets").addSubitem("docs");
+        aggregationChildrenItem.getSubitem("buckets").getSubitem("docs").addSubitem("hits");
+        aggregationChildrenItem.getSubitem("buckets").getSubitem("docs").getSubitem("hits").addSubitem("hits");
+
+
+        JsonStreamUtils.filterObjectInPath(parser, generator,
+            (par, gen) ->
+                JsonStreamUtils.filterArrayElements(par, gen, (par1, gen1) ->
+                    filterTree(parser, generator, callback)),
+            Collections.singletonList(responsesItem));
     }
 
     private static void filterTree(JsonParser parser, JsonGenerator generator, TreeFilter callback) throws Exception {

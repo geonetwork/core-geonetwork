@@ -21,26 +21,26 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_pagination_directive');
+(function () {
+  goog.provide("gn_pagination_directive");
 
-  var module = angular.module('gn_pagination_directive', []);
+  var module = angular.module("gn_pagination_directive", []);
 
-  module.directive('gnPagination', ['hotkeys', '$translate',
-                                    function(hotkeys, $translate) {
-
+  module.directive("gnPagination", [
+    "hotkeys",
+    "$translate",
+    function (hotkeys, $translate) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        require: '^ngSearchForm',
+        require: "^ngSearchForm",
         scope: {
-          config: '=gnPagination',
-          values: '=hitsValues'
+          config: "=gnPagination",
+          values: "=hitsValues"
         },
-        templateUrl: '../../catalog/components/search/pagination/partials/' +
-            'pagination.html',
-        link: function(scope, element, attrs, controller) {
-
+        templateUrl:
+          "../../catalog/components/search/pagination/partials/" + "pagination.html",
+        link: function (scope, element, attrs, controller) {
           // Init config from default and eventual given one
           var defaultConfig = {
             pages: -1,
@@ -49,13 +49,13 @@
           };
           angular.extend(defaultConfig, scope.config);
           scope.config = defaultConfig;
-          delete defaultConfig;
+
           /**
            * If an object {paginationInfo} is defined inside the
            * SearchFormController, then add from and to  params
            * to the search.
            */
-          var getPaginationParams = function(customPageOptions) {
+          var getPaginationParams = function (customPageOptions) {
             var pageOptions = scope.config;
             angular.extend(pageOptions, customPageOptions);
             return {
@@ -65,7 +65,7 @@
           };
           controller.getPaginationParams = getPaginationParams;
 
-          scope.updateSearch = function(hitsPerPage) {
+          scope.updateSearch = function (hitsPerPage) {
             if (hitsPerPage) {
               scope.config.hitsPerPage = hitsPerPage;
             }
@@ -73,31 +73,31 @@
             controller.triggerSearch(true);
           };
 
-          scope.previous = function() {
+          scope.previous = function () {
             if (scope.config.currentPage > 1) {
               scope.config.currentPage -= 1;
               scope.updateSearch();
             }
           };
-          scope.next = function() {
+          scope.next = function () {
             if (scope.config.currentPage < scope.config.pages) {
               scope.config.currentPage += 1;
               scope.updateSearch();
             }
           };
-          scope.first = function() {
+          scope.first = function () {
             scope.config.currentPage = 1;
             scope.updateSearch();
           };
-          scope.last = function() {
+          scope.last = function () {
             scope.config.currentPage = scope.config.pages;
             scope.updateSearch();
           };
 
           if (angular.isDefined(attrs.enableEvents)) {
-            var events = ['first', 'previous', 'next', 'last'];
-            angular.forEach(events, function(key) {
-              scope.$on(key + 'Page', function(evt, cbFn) {
+            var events = ["first", "previous", "next", "last"];
+            angular.forEach(events, function (key) {
+              scope.$on(key + "Page", function (evt, cbFn) {
                 scope[key]();
                 if (angular.isFunction(cbFn)) {
                   cbFn();
@@ -108,26 +108,31 @@
           controller.activatePagination();
 
           if (angular.isDefined(attrs.enableHotKeys)) {
-            hotkeys.bindTo(scope)
-                .add({
-                  combo: 'ctrl+left',
-                  description: $translate.instant('hotkeyFirstPage'),
-                  callback: scope.first
-                }).add({
-                  combo: 'left',
-                  description: $translate.instant('hotkeyPreviousPage'),
-                  callback: scope.previous
-                }).add({
-                  combo: 'right',
-                  description: $translate.instant('hotkeyNextPage'),
-                  callback: scope.next
-                }).add({
-                  combo: 'ctrl+right',
-                  description: $translate.instant('hotkeyLastPage'),
-                  callback: scope.last
-                });
+            hotkeys
+              .bindTo(scope)
+              .add({
+                combo: "ctrl+left",
+                description: $translate.instant("hotkeyFirstPage"),
+                callback: scope.first
+              })
+              .add({
+                combo: "left",
+                description: $translate.instant("hotkeyPreviousPage"),
+                callback: scope.previous
+              })
+              .add({
+                combo: "right",
+                description: $translate.instant("hotkeyNextPage"),
+                callback: scope.next
+              })
+              .add({
+                combo: "ctrl+right",
+                description: $translate.instant("hotkeyLastPage"),
+                callback: scope.last
+              });
           }
         }
       };
-    }]);
+    }
+  ]);
 })();

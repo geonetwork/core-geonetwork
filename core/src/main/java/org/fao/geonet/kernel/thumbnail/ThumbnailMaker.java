@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.thumbnail;
 
 import jeeves.server.context.ServiceContext;
 
-import org.dom4j.DocumentException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -150,7 +149,7 @@ public class ThumbnailMaker {
     }
 
     public Path generateThumbnail(String jsonConfig, Integer rotationAngle)
-        throws IOException, DocumentException, com.itextpdf.text.DocumentException {
+        throws IOException {
 
         PJsonObject specJson = MapPrinter.parseSpec(jsonConfig);
         if (Log.isDebugEnabled(LOGGER_NAME)) {

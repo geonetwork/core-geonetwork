@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.regions.MetadataRegionDAO;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -35,6 +36,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.XPath;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -78,7 +80,7 @@ public class MetadataExtentApi {
     public static final String WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE =
         String.format("Only one of %s and %s can be defined currently.  Future versions may support this but it is not supported at the moment", WIDTH_PARAM, HEIGHT_PARAM);
     public static final String WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE =
-        String.format("One of $s or $s parameters must be included in the request", WIDTH_PARAM, HEIGHT_PARAM);
+        String.format("One of %s or %s parameters must be included in the request", WIDTH_PARAM, HEIGHT_PARAM);
 
     private static final String API_EXTENT_DESCRIPTION = "A rendering of the geometry as a png. If no background is specified the image will be " +
         "transparent. In getMap the envelope of the geometry is calculated then it is expanded by a " +
@@ -92,9 +94,11 @@ public class MetadataExtentApi {
         "Named backgrounds allow the background parameter to be a simple key and the complete URL will " +
         "be looked up from this list of named backgrounds\n";
 
+    private static final String API_PARAM_MAP_SRS_DESCRIPTION = "(optional) the background map projection. "
+        + "If not passed uses the region/getmap/mapproj setting. If the setting is not set defaults to EPSG:4326";
     private static final String API_PARAM_WIDTH_DESCRIPTION = "(optional) width of the image that is created. Only one of width and height are permitted";
     private static final String API_PARAM_HEIGHT_DESCRIPTION = "(optional) height of the image that is created. Only one of width and height are permitted";
-    private static final String API_PARAM_BG_DESCRIPTION = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height";
+    private static final String API_PARAM_BG_DESCRIPTION = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS GetMap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height";
     private static final String API_PARAM_FILL_DESCRIPTION = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA";
     private static final String API_PARAM_STROKE_DESCRIPTION = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA";
 
@@ -103,12 +107,10 @@ public class MetadataExtentApi {
 
     @Autowired
     private MetadataRegionDAO metadataRegionDAO;
-
     @Autowired
-    SchemaManager schemaManager;
-
+    private SchemaManager schemaManager;
     @Autowired
-    SettingManager settingManager;
+    private SettingManager settingManager;
 
     @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
     private boolean disableFullUrlBackgroundMapServices;
@@ -128,7 +130,8 @@ public class MetadataExtentApi {
             required = true)
         @PathVariable(value = "metadataUuid")
             String metadataUuid,
-        @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
+        @Parameter(description = API_PARAM_MAP_SRS_DESCRIPTION)
+        @RequestParam(value = MAP_SRS_PARAM, required = false) String mapSrs,
         @Parameter(description = API_PARAM_WIDTH_DESCRIPTION)
         @RequestParam(value = WIDTH_PARAM, required = false, defaultValue = "300") Integer width,
         @Parameter(description = API_PARAM_HEIGHT_DESCRIPTION)
@@ -145,6 +148,14 @@ public class MetadataExtentApi {
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
+
+        String srs = mapSrs;
+        if (StringUtils.isBlank(srs)) {
+            // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
+            // to EPSG:4326
+            srs = StringUtils.defaultIfBlank(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+                "EPSG:4326");
+        }
 
         return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, null, nativeWebRequest, request);
     }
@@ -231,7 +242,8 @@ public class MetadataExtentApi {
         @Parameter(description = "Index of the geometry or bounding box to display. Starts at 1.")
         @PathVariable(value = "geometryIndex")
             Integer geometryIndex,
-        @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
+        @Parameter(description = API_PARAM_MAP_SRS_DESCRIPTION)
+        @RequestParam(value = MAP_SRS_PARAM, required = false) String mapSrs,
         @Parameter(description = API_PARAM_WIDTH_DESCRIPTION)
         @RequestParam(value = WIDTH_PARAM, required = false, defaultValue = "300") Integer width,
         @Parameter(description = API_PARAM_HEIGHT_DESCRIPTION)
@@ -249,10 +261,18 @@ public class MetadataExtentApi {
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
 
+        String srs = mapSrs;
+        if (StringUtils.isBlank(srs)) {
+            // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
+            // to EPSG:4326
+            srs = StringUtils.defaultIfBlank(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+                "EPSG:4326");
+        }
+
         return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, geometryIndex, nativeWebRequest, request);
     }
 
-    private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearence, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
+    private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearance, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -270,11 +290,11 @@ public class MetadataExtentApi {
         }
 
         String regionId;
-        if (extentOrderOfAppearence == null) {
+        if (extentOrderOfAppearance == null) {
             regionId = String.format("metadata:@id%s", metadata.getId());
         } else {
             regionId = String.format("metadata:@id%s:@xpath(%s)[%d]",
-                metadata.getId(), EXTENT_XPATH, extentOrderOfAppearence);
+                metadata.getId(), EXTENT_XPATH, extentOrderOfAppearance);
         }
 
         Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
@@ -296,9 +316,9 @@ public class MetadataExtentApi {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", out);
             MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
-            headers.add("Cache-Control", "no-cache");
-            headers.add("Content-Type", "image/png");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
+            headers.add(HttpHeaders.CACHE_CONTROL, "no-cache");
+            headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
         }
     }

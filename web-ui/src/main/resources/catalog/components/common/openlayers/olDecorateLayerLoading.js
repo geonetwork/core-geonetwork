@@ -22,10 +22,9 @@
  */
 
 (function () {
+  goog.provide("gn_olDecorateLayerLoading");
 
-  goog.provide('gn_olDecorateLayerLoading')
-
-  var module = angular.module('gn_olDecorateLayerLoading', [])
+  var module = angular.module("gn_olDecorateLayerLoading", []);
 
   /**
    * Provides a function that adds a 'loading 'property (using
@@ -46,8 +45,7 @@
    * @param {ol.layer.Base} layer Layer to decorate.
    * @param {angular.Scope} $scope Scope.
    */
-  var decorateLayerLoading = function(layer, $scope) {
-
+  var decorateLayerLoading = function (layer, $scope) {
     var source;
 
     /**
@@ -72,12 +70,12 @@
      */
     var decrementLoadCount_ = decrement_;
 
-    layer.set('load_count', 0, true);
+    layer.set("load_count", 0, true);
 
     if (layer instanceof ol.layer.Group) {
-      layer.getLayers().on('add', function(olEvent) {
+      layer.getLayers().on("add", function (olEvent) {
         var newLayer = olEvent.element;
-        newLayer.set('parent_group', layer);
+        newLayer.set("parent_group", layer);
       });
     }
 
@@ -86,34 +84,34 @@
       if (source === null) {
         return;
       } else if (source instanceof ol.source.Tile) {
-        incrementEvents = ['tileloadstart'];
-        decrementEvents = ['tileloadend', 'tileloaderror'];
+        incrementEvents = ["tileloadstart"];
+        decrementEvents = ["tileloadend", "tileloaderror"];
       } else if (source instanceof ol.source.Image) {
-        incrementEvents = ['imageloadstart'];
-        decrementEvents = ['imageloadend', 'imageloaderror'];
+        incrementEvents = ["imageloadstart"];
+        decrementEvents = ["imageloadend", "imageloaderror"];
       } else {
-        throw 'Unsupported source type ' + source.toString() + '.';
+        throw "Unsupported source type " + source.toString() + ".";
       }
 
-      source.on(incrementEvents, function() {
+      source.on(incrementEvents, function () {
         incrementLoadCount_(layer);
         $scope.$applyAsync();
       });
 
-      source.on(decrementEvents, function() {
+      source.on(decrementEvents, function () {
         decrementLoadCount_(layer);
         $scope.$applyAsync();
       });
     }
 
-    Object.defineProperty(layer, 'loading', {
+    Object.defineProperty(layer, "loading", {
       configurable: true,
       get:
         /**
          * @return {boolean} Loading.
          */
-        function() {
-          return /** @type {number} */ (layer.get('load_count')) > 0;
+        function () {
+          return /** @type {number} */ (layer.get("load_count")) > 0;
         }
     });
 
@@ -123,9 +121,9 @@
      * @private
      */
     function increment_(layer) {
-      var load_count = layer.get('load_count');
-      var parent = layer.get('parent_group');
-      layer.set('load_count', ++load_count, true);
+      var load_count = layer.get("load_count");
+      var parent = layer.get("parent_group");
+      layer.set("load_count", ++load_count, true);
       if (parent) {
         increment_(parent);
       }
@@ -137,14 +135,14 @@
      * @private
      */
     function decrement_(layer) {
-      var load_count = layer.get('load_count');
-      var parent = layer.get('parent_group');
-      layer.set('load_count', --load_count, true);
+      var load_count = layer.get("load_count");
+      var parent = layer.get("parent_group");
+      layer.set("load_count", --load_count, true);
       if (parent) {
         decrement_(parent);
       }
     }
   };
 
-  module.value('olDecorateLayerLoading', decorateLayerLoading)
-})()
+  module.value("olDecorateLayerLoading", decorateLayerLoading);
+})();

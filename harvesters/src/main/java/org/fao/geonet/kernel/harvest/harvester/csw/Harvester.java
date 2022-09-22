@@ -25,13 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.collect.ImmutableSet;
@@ -115,7 +109,7 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- perform all searches
 
         boolean error = false;
-        HarvestResult result = null;
+        HarvestResult result = new HarvestResult();
     	Set<String> uuids = new HashSet<String>();
         try {
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
@@ -205,6 +199,7 @@ class Harvester implements IHarvester<HarvestResult> {
         return true;
     }
 
+
     /**
      * Does CSW GetRecordsRequest
      * @param server
@@ -221,6 +216,9 @@ class Harvester implements IHarvester<HarvestResult> {
 
         request.setResultType(ResultType.RESULTS);
         //request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
+        if (StringUtils.isNotEmpty(params.sortBy)) {
+            request.addSortBy(params.sortBy);
+        }
         request.setElementSetName(ElementSetName.SUMMARY);
         request.setMaxRecords(GETRECORDS_REQUEST_MAXRECORDS);
         request.setDistribSearch(params.queryScope.equalsIgnoreCase("distributed"));
@@ -285,7 +283,7 @@ class Harvester implements IHarvester<HarvestResult> {
             int foundCnt = 0;
 
             log.debug("Extracting all elements in the csw harvesting response");
-            Set<RecordInfo> records = new HashSet<RecordInfo>();
+            Set<RecordInfo> records = new LinkedHashSet<RecordInfo>();
             for (Element record : list) {
                 try {
                     RecordInfo recInfo = getRecordInfo((Element) record.clone());

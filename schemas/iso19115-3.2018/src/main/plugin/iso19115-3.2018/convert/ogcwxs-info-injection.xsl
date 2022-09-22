@@ -554,7 +554,12 @@
                              select="."/>
       </xsl:for-each>
 
-      <xsl:apply-templates mode="copy" select="mri:resourceConstraints"/>
+      <!-- If no '<AccessConstraints>' in "getCapabilities" response then 
+           copy constraints from template record -->
+      <xsl:if test="not($constraints)">
+        <xsl:apply-templates mode="copy" select="mri:resourceConstraints"/>
+      </xsl:if>
+
       <xsl:apply-templates mode="copy" select="mri:associatedResource"/>
       <xsl:apply-templates mode="copy" select="mri:defaultLocale"/>
       <xsl:apply-templates mode="copy" select="mri:otherLocale"/>
@@ -611,7 +616,7 @@
 
 
   <!-- Insert GetCapabilities URL.
-   A transfertOptions (even empty) section MUST be set. -->
+   A transferOptions (even empty) section MUST be set. -->
   <xsl:template mode="copy"
                 match="mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions">
     <xsl:copy>
@@ -792,14 +797,25 @@
     </mri:descriptiveKeywords>
   </xsl:template>
 
-
-
+  <!-- Resource constraints -->
+  <!-- If there is 'AccessConstraints' in getCapabilities response -->
   <xsl:template mode="convert"
                 match="wms:AccessConstraints">
+    <xsl:variable name="resConstraints"
+                  select="$record//mri:resourceConstraints"/>
+    <xsl:variable name="useLimitation"
+                  select="$resConstraints/mco:MD_LegalConstraints/mco:useLimitation/gco:CharacterString"/>
+    <xsl:variable name="legalConstraints"
+                  select="$resConstraints/mco:MD_LegalConstraints/(mco:useLimitation|mco:accessConstraints|mco:useConstraints)"/>
+    <xsl:variable name="securityConstraints"
+                  select="$resConstraints/mco:MD_SecurityConstraints"/>
+    <xsl:variable name="generalConstraints"
+                  select="$resConstraints/mco:MD_Constraints"/>
     <mri:resourceConstraints>
-      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <!-- Legal Constraints -->
       <mco:MD_LegalConstraints>
         <xsl:choose>
+          <!-- First option: look for a standard code word in GetCaps '<AccessConstraints>' response and use that -->
           <xsl:when test=". = 'copyright'
               or . = 'patent'
               or . = 'patentPending'
@@ -807,30 +823,49 @@
               or . = 'license'
               or . = 'intellectualPropertyRight'
               or . = 'restricted'
+              or . = 'otherRestrictions'
+              or . = 'unrestricted'
+              or . = 'licenceUnrestricted'
+              or . = 'licenceEndUser'
+              or . = 'licenceDistributor'
+              or . = 'private'
+              or . = 'statutory'
+              or . = 'confidential'
+              or . = 'SBU'
+              or . = 'in-confidence'
               ">
             <mco:accessConstraints>
+              <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
               <mco:MD_RestrictionCode
-                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
                 codeListValue="{.}"/>
             </mco:accessConstraints>
           </xsl:when>
+          <!-- Second option: if there is a legal constraints entry in the template record use that -->
+          <xsl:when test="$useLimitation != ''">
+            <xsl:apply-templates mode="copy" select="$legalConstraints"/>
+          </xsl:when>
+          <!-- Third option: if GetCaps response has "<AccessConstraints>" set to "NONE" then output 'no conditions apply' -->
           <xsl:when test="lower-case(.) = 'none'">
             <mco:accessConstraints>
               <mco:MD_RestrictionCode
-                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </mco:accessConstraints>
             <mco:otherConstraints>
+              <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
               <gco:CharacterString>no conditions apply</gco:CharacterString>
             </mco:otherConstraints>
           </xsl:when>
+          <!-- Else copy the value from GetCaps "<AccessConstraints>"  -->
           <xsl:otherwise>
             <mco:accessConstraints>
               <mco:MD_RestrictionCode
-                codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
+                codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
                 codeListValue="otherRestrictions"/>
             </mco:accessConstraints>
             <mco:otherConstraints>
+              <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
               <gco:CharacterString>
                 <xsl:value-of select="."/>
               </gco:CharacterString>
@@ -839,18 +874,28 @@
         </xsl:choose>
       </mco:MD_LegalConstraints>
     </mri:resourceConstraints>
-
-    <xsl:if test="lower-case(.) = 'none'">
+    <!-- If they exist copy security constraints & general constraints from the template record -->
+    <xsl:if test="$securityConstraints">
       <mri:resourceConstraints>
-        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-        <mco:MD_Constraints>
-          <mco:useLimitation>
-            <gco:CharacterString>no conditions apply</gco:CharacterString>
-          </mco:useLimitation>
-        </mco:MD_Constraints>
+        <xsl:apply-templates mode="copy" select="$securityConstraints"/>
       </mri:resourceConstraints>
     </xsl:if>
-
+    <xsl:if test="$generalConstraints">
+      <mri:resourceConstraints>
+        <xsl:apply-templates mode="copy" select="$generalConstraints"/>
+      </mri:resourceConstraints>
+    </xsl:if>
+      <!-- If general constraints not in template record and GetCaps "<AccessConstraints>" is "NONE" output 'no conditions apply' -->
+      <xsl:if test="not($generalConstraints) and lower-case(.) = 'none'">
+        <mri:resourceConstraints>
+          <mco:MD_Constraints>
+            <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+            <mco:useLimitation>
+              <gco:CharacterString>no conditions apply</gco:CharacterString>
+            </mco:useLimitation>
+          </mco:MD_Constraints>
+        </mri:resourceConstraints>
+      </xsl:if>
   </xsl:template>
 
 

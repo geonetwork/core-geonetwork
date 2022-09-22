@@ -80,7 +80,7 @@ public class MEF2Visitor implements IVisitor {
 
                             if (IO.isEmptyDir(metadataDir)) {
                                 throw new BadFormatEx(
-                                    "Missing XML document in metadata folder " + metadataDir + "in MEF file "
+                                    "Missing XML document in metadata folder " + metadataDir + " in MEF file "
                                         + mefFile + ".");
                             }
 

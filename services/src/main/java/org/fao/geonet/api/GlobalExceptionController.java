@@ -164,10 +164,15 @@ public class GlobalExceptionController {
         Exception.class,
         RuntimeException.class
     })
-    public ApiError runtimeExceptionHandler(final Exception exception) {
+    public ApiError runtimeExceptionHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
 
-        return new ApiError("runtime_exception", exception);
+        if (contentTypeNeedsBody(request)) {
+            return new ApiError("runtime_exception", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -176,10 +181,21 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         FeatureNotEnabledException.class
     })
-    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+    public ApiError runtimeExceptionHandler(final HttpServletRequest request, final Exception exception) {
         storeApiErrorCause(exception);
 
-        return new ApiError("feature_disabled", exception);
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceNotFound.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("feature_disabled", exception);
+        } else {
+            return null;
+        }
     }
 
 
@@ -306,10 +322,22 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
-    public ApiError resourceAlreadyExistHandler(final Exception exception) {
+    public ApiError resourceAlreadyExistHandler(final HttpServletRequest request, final Exception exception) {
         storeApiErrorCause(exception);
 
-        return new ApiError("resource_already_exist", exception);
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.resourceAlreadyExists");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.resourceAlreadyExists.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("resource_already_exist", exception);
+        } else {
+            return null;
+        }
+
     }
 
     @ResponseBody
@@ -333,10 +361,21 @@ public class GlobalExceptionController {
         MultipartException.class,
         DoiClientException.class
     })
-    public ApiError unsatisfiedParameterHandler(final Exception exception) {
+    public ApiError unsatisfiedParameterHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
 
-        return new ApiError("unsatisfied_request_parameter", exception);
+        if (contentTypeNeedsBody(request)) {
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
+                ((ILocalizedException) exception).setMessageKey("api.exception.unsatisfiedRequestParameter");
+            }
+            if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getDescriptionKey())) {
+                ((ILocalizedException) exception).setDescriptionKey("api.exception.unsatisfiedRequestParameter.description");
+            }
+            updateExceptionLocale(exception, request);
+            return new ApiError("unsatisfied_request_parameter", exception);
+        } else {
+            return null;
+        }
     }
 
     @ResponseBody

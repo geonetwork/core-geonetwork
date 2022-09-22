@@ -1,46 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
- xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
- xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
- xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
- xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
- xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
- xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
- xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
- xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
- xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
- xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
- xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
- xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
- xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
- xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
- xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
- xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
- xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0"
- xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
- xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
- xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/2.0"
- xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
- xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
- xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
- xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
- xmlns:xlink="http://www.w3.org/1999/xlink"
- xmlns:gml="http://www.opengis.net/gml/3.2">
+<mdb:MD_Metadata xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+>
   <mdb:metadataIdentifier>
     <mcc:MD_Identifier>
       <mcc:code>
         <gco:CharacterString>cdecfe47-1780-4dda-9fdf-e0a099e4ba9b</gco:CharacterString>
       </mcc:code>
+      <mcc:codeSpace>
+        <gco:CharacterString>urn:uuid</gco:CharacterString>
+      </mcc:codeSpace>
     </mcc:MD_Identifier>
   </mdb:metadataIdentifier>
   <mdb:defaultLocale>
-    <lan:PT_Locale>
+    <lan:PT_Locale id="EN">
       <lan:language>
-        <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="eng"/>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </lan:language>
       <lan:characterEncoding>
-        <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
           codeListValue="utf8"/>
       </lan:characterEncoding>
     </lan:PT_Locale>
@@ -48,11 +38,12 @@
   <mdb:contact>
     <cit:CI_Responsibility>
       <cit:role>
-        <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+        <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+                         codeListValue="pointOfContact"/>
       </cit:role>
       <cit:party>
         <cit:CI_Organisation>
-          <cit:name>
+          <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString/>
           </cit:name>
           <cit:contactInfo>
@@ -68,10 +59,10 @@
           </cit:contactInfo>
           <cit:individual>
             <cit:CI_Individual>
-              <cit:name>
+              <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString/>
               </cit:name>
-              <cit:positionName>
+              <cit:positionName gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString/>
               </cit:positionName>
             </cit:CI_Individual>
@@ -80,69 +71,88 @@
       </cit:party>
     </cit:CI_Responsibility>
   </mdb:contact>
-  <mdb:dateInfo>
-    <cit:CI_Date>
-      <cit:date>
-        <gco:DateTime>2009-07-02T14:46:24</gco:DateTime>
-      </cit:date>
-      <cit:dateType>
-        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
-      </cit:dateType>
-    </cit:CI_Date>
-  </mdb:dateInfo>
   <mdb:metadataStandard>
     <cit:CI_Citation>
-      <cit:title>
+      <cit:title xsi:type="lan:PT_FreeText_PropertyType">
         <gco:CharacterString>ISO 19115-3</gco:CharacterString>
+        <lan:PT_FreeText>
+          <lan:textGroup>
+            <lan:LocalisedCharacterString locale="#EN">ISO 19115-3</lan:LocalisedCharacterString>
+          </lan:textGroup>
+        </lan:PT_FreeText>
       </cit:title>
     </cit:CI_Citation>
   </mdb:metadataStandard>
   <mdb:otherLocale>
     <lan:PT_Locale id="FR">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="fre"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:otherLocale>
-    <lan:PT_Locale id="GE">
+    <lan:PT_Locale id="DE">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="ger"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:otherLocale>
-    <lan:PT_Locale id="CH">
+    <lan:PT_Locale id="ZH">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="chi"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="chi"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:otherLocale>
-    <lan:PT_Locale id="SP">
+    <lan:PT_Locale id="ES">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="spa"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="spa"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:otherLocale>
     <lan:PT_Locale id="AR">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="ara"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ara"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:otherLocale>
     <lan:PT_Locale id="RU">
       <lan:language>
-        <lan:LanguageCode codeList="" codeListValue="rus"></lan:LanguageCode>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="rus"/>
       </lan:language>
-      <lan:characterEncoding></lan:characterEncoding>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:otherLocale>
   <mdb:referenceSystemInfo>
@@ -164,32 +174,43 @@
             <gco:CharacterString>Template for Vector data (multilingual)</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#FR">Modèle pour les données vecteur (multilingue)</lan:LocalisedCharacterString>
+                <lan:LocalisedCharacterString locale="#EN">Template for Vector data (multilingual)
+                </lan:LocalisedCharacterString>
               </lan:textGroup>
               <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#GE">Vorlage für die Vektor-Daten (mehrsprachig)</lan:LocalisedCharacterString>
+                <lan:LocalisedCharacterString locale="#FR">Modèle pour les données vecteur (multilingue)
+                </lan:LocalisedCharacterString>
               </lan:textGroup>
               <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#SP">De plantilla para el vector de datos (multilingüe)</lan:LocalisedCharacterString>
-              </lan:textGroup>
-              <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#RU">Шаблон для векторных данных (многоязычное)</lan:LocalisedCharacterString>
-              </lan:textGroup>
-              <lan:textGroup>
-                <lan:LocalisedCharacterString locale="#AR">نموذج البيانات الموجهة  (متعددة اللغات)</lan:LocalisedCharacterString>
+                <lan:LocalisedCharacterString locale="#GE">Vorlage für die Vektor-Daten (mehrsprachig)
+                </lan:LocalisedCharacterString>
               </lan:textGroup>
               <lan:textGroup>
                 <lan:LocalisedCharacterString locale="#CH">模板矢量数据（多种语言）</lan:LocalisedCharacterString>
+              </lan:textGroup>
+              <lan:textGroup>
+                <lan:LocalisedCharacterString locale="#SP">De plantilla para el vector de datos (multilingüe)
+                </lan:LocalisedCharacterString>
+              </lan:textGroup>
+              <lan:textGroup>
+                <lan:LocalisedCharacterString locale="#AR">نموذج البيانات الموجهة (متعددة اللغات)
+                </lan:LocalisedCharacterString>
+              </lan:textGroup>
+              <lan:textGroup>
+                <lan:LocalisedCharacterString locale="#RU">Шаблон для векторных данных (многоязычное)
+                </lan:LocalisedCharacterString>
               </lan:textGroup>
             </lan:PT_FreeText>
           </cit:title>
           <cit:date>
             <cit:CI_Date>
               <cit:date>
-                <gco:DateTime/>
+                <gco:Date/>
               </cit:date>
               <cit:dateType>
-                <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+                <cit:CI_DateTypeCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                  codeListValue="creation"/>
               </cit:dateType>
             </cit:CI_Date>
           </cit:date>
@@ -198,23 +219,27 @@
           </cit:edition>
         </cit:CI_Citation>
       </mri:citation>
-      <mri:abstract>
-        <gco:CharacterString></gco:CharacterString>
+      <mri:abstract gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
+        <gco:CharacterString/>
       </mri:abstract>
-      <mri:purpose>
+      <mri:purpose gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
         <gco:CharacterString/>
       </mri:purpose>
       <mri:status>
-        <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue=""/>
+        <mcc:MD_ProgressCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ProgressCode"
+          codeListValue=""/>
       </mri:status>
       <mri:pointOfContact>
         <cit:CI_Responsibility>
           <cit:role>
-            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">originator</cit:CI_RoleCode>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="originator"/>
           </cit:role>
           <cit:party>
             <cit:CI_Organisation>
-              <cit:name>
+              <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString/>
               </cit:name>
               <cit:contactInfo>
@@ -230,10 +255,10 @@
               </cit:contactInfo>
               <cit:individual>
                 <cit:CI_Individual>
-                  <cit:name>
+                  <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                     <gco:CharacterString/>
                   </cit:name>
-                  <cit:positionName>
+                  <cit:positionName gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                     <gco:CharacterString/>
                   </cit:positionName>
                 </cit:CI_Individual>
@@ -243,8 +268,9 @@
         </cit:CI_Responsibility>
       </mri:pointOfContact>
       <mri:spatialRepresentationType>
-        <mcc:MD_SpatialRepresentationTypeCode codeList=""
-                                              codeListValue="vector"/>
+        <mcc:MD_SpatialRepresentationTypeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_SpatialRepresentationTypeCode"
+          codeListValue="vector"/>
       </mri:spatialRepresentationType>
       <mri:spatialResolution>
         <mri:MD_Resolution>
@@ -265,16 +291,16 @@
           <gex:geographicElement>
             <gex:EX_GeographicBoundingBox>
               <gex:westBoundLongitude>
-                <gco:Decimal>-180</gco:Decimal>
+                <gco:Decimal>-180.00</gco:Decimal>
               </gex:westBoundLongitude>
               <gex:eastBoundLongitude>
-                <gco:Decimal>180</gco:Decimal>
+                <gco:Decimal>180.00</gco:Decimal>
               </gex:eastBoundLongitude>
               <gex:southBoundLatitude>
-                <gco:Decimal>-90</gco:Decimal>
+                <gco:Decimal>-90.00</gco:Decimal>
               </gex:southBoundLatitude>
               <gex:northBoundLatitude>
-                <gco:Decimal>90</gco:Decimal>
+                <gco:Decimal>90.00</gco:Decimal>
               </gex:northBoundLatitude>
             </gex:EX_GeographicBoundingBox>
           </gex:geographicElement>
@@ -285,7 +311,7 @@
           <gex:temporalElement>
             <gex:EX_TemporalExtent>
               <gex:extent>
-                <gml:TimePeriod id="A1234">
+                <gml:TimePeriod gml:id="d12853e296" id="A1234">
                   <gml:beginPosition/>
                   <gml:endPosition/>
                 </gml:TimePeriod>
@@ -298,29 +324,34 @@
         <mmi:MD_MaintenanceInformation>
           <mmi:maintenanceAndUpdateFrequency>
             <mmi:MD_MaintenanceFrequencyCode codeListValue="asNeeded"
-              codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_MaintenanceFrequencyCode"/>
+                                             codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_MaintenanceFrequencyCode"/>
           </mmi:maintenanceAndUpdateFrequency>
         </mmi:MD_MaintenanceInformation>
       </mri:resourceMaintenance>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
-          <mri:keyword gco:nilReason="missing">
+          <mri:keyword gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString/>
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeListValue="theme"
-              codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_KeywordTypeCode"/>
+                                    codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"/>
           </mri:type>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
-          <mri:keyword>
+          <mri:keyword gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>World</gco:CharacterString>
+            <lan:PT_FreeText>
+              <lan:textGroup>
+                <lan:LocalisedCharacterString locale="#EN">World</lan:LocalisedCharacterString>
+              </lan:textGroup>
+            </lan:PT_FreeText>
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeListValue="place"
-              codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_KeywordTypeCode"/>
+                                    codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"/>
           </mri:type>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
@@ -328,13 +359,13 @@
         <mco:MD_LegalConstraints>
           <mco:accessConstraints>
             <mco:MD_RestrictionCode codeListValue="copyright"
-              codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_RestrictionCode"/>
+                                    codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"/>
           </mco:accessConstraints>
           <mco:useConstraints>
             <mco:MD_RestrictionCode codeListValue=""
-              codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_RestrictionCode"/>
+                                    codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"/>
           </mco:useConstraints>
-          <mco:otherConstraints gco:nilReason="missing">
+          <mco:otherConstraints gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString/>
           </mco:otherConstraints>
         </mco:MD_LegalConstraints>
@@ -342,36 +373,34 @@
       <mri:defaultLocale>
         <lan:PT_Locale>
           <lan:language>
-            <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="eng"/>
+            <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
           </lan:language>
           <lan:characterEncoding>
-            <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
+            <lan:MD_CharacterSetCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
               codeListValue="utf8"/>
           </lan:characterEncoding>
         </lan:PT_Locale>
       </mri:defaultLocale>
-      <mri:supplementalInformation>
+      <mri:supplementalInformation gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
         <gco:CharacterString/>
       </mri:supplementalInformation>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
   <mdb:distributionInfo>
-    <mrd:MD_Distribution>
-      <mrd:transferOptions>
-        <mrd:MD_DigitalTransferOptions>
-        </mrd:MD_DigitalTransferOptions>
-      </mrd:transferOptions>
-    </mrd:MD_Distribution>
+    <mrd:MD_Distribution/>
   </mdb:distributionInfo>
   <mdb:resourceLineage>
     <mrl:LI_Lineage>
-      <mrl:statement>
+      <mrl:statement gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
         <gco:CharacterString/>
       </mrl:statement>
       <mrl:scope>
         <mcc:MD_Scope>
           <mcc:level>
-            <mcc:MD_ScopeCode codeList="codeListLocation#MD_ScopeCode" codeListValue="dataset"/>
+            <mcc:MD_ScopeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+              codeListValue="dataset"/>
           </mcc:level>
         </mcc:MD_Scope>
       </mrl:scope>

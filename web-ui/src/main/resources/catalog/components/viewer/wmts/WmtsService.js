@@ -21,23 +21,25 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wmts_service');
+(function () {
+  goog.provide("gn_wmts_service");
 
+  goog.require("gn_map_service");
+  goog.require("gn_ows_service");
+  goog.require("gn_urlutils_service");
 
+  var module = angular.module("gn_wmts_service", [
+    "gn_map_service",
+    "gn_ows_service",
+    "gn_urlutils_service"
+  ]);
 
-
-  goog.require('gn_map_service');
-  goog.require('gn_ows_service');
-  goog.require('gn_urlutils_service');
-
-  var module = angular.module('gn_wmts_service', ['gn_map_service',
-    'gn_ows_service', 'gn_urlutils_service']);
-
-  module.service('gnWmtsService', ['gnOwsCapabilities', '$q',
-    'gnUrlUtils', 'gnMap',
-    function(gnOwsCapabilities, $q, gnUrlUtils, gnMap) {
-
+  module.service("gnWmtsService", [
+    "gnOwsCapabilities",
+    "$q",
+    "gnUrlUtils",
+    "gnMap",
+    function (gnOwsCapabilities, $q, gnUrlUtils, gnMap) {
       /**
        * Do a getCapabilities request to the URL given in parameter.
        *
@@ -45,18 +47,19 @@
        * @return {Promise} a promise that resolves into the parsed
        *                   capabilities document.
        */
-      this.getCapabilities = function(url) {
+      this.getCapabilities = function (url) {
         var defer = $q.defer();
         if (gnUrlUtils.isValid(url)) {
-
           gnOwsCapabilities.getWMTSCapabilities(url).then(
-              function(capabilities) {
-                defer.resolve(capabilities);
-              }, function(rejectedData) {
-                defer.reject(rejectedData);
-              });
+            function (capabilities) {
+              defer.resolve(capabilities);
+            },
+            function (rejectedData) {
+              defer.reject(rejectedData);
+            }
+          );
         } else {
-          defer.reject('invalid_url');
+          defer.reject("invalid_url");
         }
         return defer.promise;
       };
@@ -69,16 +72,16 @@
        *                 layer names separated by commas.
        * @return {boolean} true if all layers are present in the capabilities.
        */
-      this.isLayerInCapabilities = function(capabilities, layers) {
+      this.isLayerInCapabilities = function (capabilities, layers) {
         if (!capabilities || !layers) {
           return false;
         }
 
-        var layersArray = layers.split(',');
+        var layersArray = layers.split(",");
         var capabilitiesLayers = capabilities.Layer;
         var allLayersFound = capabilitiesLayers.length != 0;
-        angular.forEach(layersArray, function(layerName, index) {
-          var result = $.grep(capabilitiesLayers, function(capLayer) {
+        angular.forEach(layersArray, function (layerName, index) {
+          var result = $.grep(capabilitiesLayers, function (capLayer) {
             return layerName === capLayer.Name;
           });
           allLayersFound = allLayersFound && result.length != 0;
@@ -93,17 +96,15 @@
        *                 capabilities document.
        * @param {gnMap} map a GeoNetwork map where the layer will be added.
        */
-      this.addLayerToMap = function(layer, map, capabilities) {
+      this.addLayerToMap = function (layer, map, capabilities) {
         gnMap.addWmtsToMapFromCap(map, layer, capabilities);
       };
 
-      this.addWMTSToMap = function(layerName, url, md, map) {
+      this.addWMTSToMap = function (layerName, url, md, map) {
         if (layerName) {
           gnMap.addWmtsFromScratch(map, url, layerName, false, md);
         }
       };
-
-
-    }]);
-
+    }
+  ]);
 })();

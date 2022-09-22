@@ -11,9 +11,11 @@ public class EmptySlot implements SelfNaming {
 
     private ObjectName objectName;
 
-    public EmptySlot(int i) {
+    public EmptySlot(String catalogueId, int i) {
         try {
-            objectName = new ObjectName(String.format("geonetwork:name=url-check,idx=empty-slot-%d", i));
+            objectName = new ObjectName(String.format(
+                "geonetwork-%s:name=url-check,idx=empty-slot-%d",
+                catalogueId, i));
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }

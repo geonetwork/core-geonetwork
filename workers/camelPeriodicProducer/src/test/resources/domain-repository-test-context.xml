@@ -89,4 +89,9 @@
   <bean id="savedQuery" class="org.fao.geonet.api.records.MetadataSavedQueryApi"/>
   <bean id="schemaManager" class="org.fao.geonet.kernel.SchemaManager"/>
 
+  <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" />
+  <bean id="settingsManager" class="org.fao.geonet.kernel.setting.SettingManager"/>
+
 </beans>

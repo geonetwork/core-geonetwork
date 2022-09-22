@@ -226,7 +226,7 @@
           </xsl:for-each>
           <xsl:value-of select="gndoc:nl(2)"/>
 
-          <xsl:value-of select="$t/cf"/><xsl:value-of
+          <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
           select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($name)), true())"/>
         </xsl:when>
         <xsl:when test="$name != ''">
@@ -294,7 +294,7 @@
 
       <xsl:value-of select="gndoc:writelnfield($t/xpath, @xpath)"/>
       <xsl:value-of select="gndoc:nl(2)"/>
-      <xsl:value-of select="$t/cf"/><xsl:value-of
+      <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
       select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
     </xsl:if>
   </xsl:template>
@@ -360,7 +360,7 @@
         </xsl:for-each>
         <xsl:value-of select="gndoc:nl(2)"/>
 
-        <xsl:value-of select="$t/cf"/><xsl:value-of
+        <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
         select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($sectionName)), true())"/>
       </xsl:when>
       <xsl:when test="$sectionName != ''">
@@ -406,7 +406,7 @@
       </xsl:for-each>
       <xsl:value-of select="gndoc:nl(2)"/>
 
-      <xsl:value-of select="$t/cf"/><xsl:value-of
+      <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
       select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
       <xsl:value-of select="gndoc:nl(2)"/>
     </xsl:if>

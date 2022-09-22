@@ -23,9 +23,10 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
-import org.apache.log4j.Logger;
-import org.geotools.data.ows.HTTPClient;
-import org.geotools.data.ows.HTTPResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.geotools.http.HTTPClient;
+import org.geotools.http.HTTPResponse;
 import org.geotools.data.wfs.internal.WFSClient;
 import org.geotools.data.wfs.internal.WFSConfig;
 import org.geotools.data.wfs.internal.WFSGetCapabilities;
@@ -44,7 +45,7 @@ import java.net.URL;
  */
 public class WFSClientWithStrategyInvestigator extends WFSClient {
     private String describeFeatureTypeUrl;
-    private transient Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, String describeFeatureTypeUrl) throws IOException, ServiceException {
         this(capabilitiesURL, httpClient, config, (WFSGetCapabilities) null, describeFeatureTypeUrl);

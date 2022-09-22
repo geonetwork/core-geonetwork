@@ -344,6 +344,24 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         }
 
         connection.commit();
+
+        // lets add the FK relatedMetadataStatusId
+        try (Statement statement = connection.createStatement()) {
+            String[] fkColumns = new String[] {"relatedMetadataStatusId"};
+            String[] pkColumns = new String[] {MetadataStatus_.id.getName()};
+
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " +
+                dialect.getAddForeignKeyConstraintString(MetadataStatus.TABLE_NAME + "RelMdStatusIdFk",
+                    fkColumns, MetadataStatus.TABLE_NAME, pkColumns, true));
+            connection.commit();
+        } catch (Exception e) {
+            connection.rollback();
+            // If there was an error then we will log the error and continue.
+            // Most likely cause is that the column already exists which should be fine.
+            Log.error(Geonet.DB, "  Exception while adding foreign key on relatedMetadataStatusId column of " + MetadataStatus.TABLE_NAME + ". " +
+                "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e);
+        }
     }
 
     private String getDatabaseObjectName(final Connection connection, String objectName) throws SQLException {

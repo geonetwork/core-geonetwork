@@ -2580,6 +2580,10 @@
       <option value="WWW:LINK-1.0-http--download">Webadresse zum Download</option>
       <option value="WWW:DOWNLOAD-1.0-http--download">Datei zum download</option>
       <option value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</option>
       <option value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</option>

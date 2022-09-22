@@ -43,7 +43,7 @@
   <xsl:function name="gn-fn-rel:translate">
     <xsl:param name="el"/>
     <xsl:param name="lang"/>
-    <xsl:variable name="textVal" select="$el/gco:CharacterString|$el/gmx:Anchor/text()"/>
+    <xsl:variable name="textVal" select="$el/gco:CharacterString|$el/gmx:Anchor/text()|$el/gmx:MimeFileType/text()"/>
     <xsl:choose>
       <xsl:when test="$textVal!=''">
         <xsl:value-of select="$textVal"/>
@@ -151,6 +151,13 @@
             <protocol>
               <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
             </protocol>
+            <mimeType>
+              <xsl:value-of select="if (*/gmx:MimeFileType)
+                                then */gmx:MimeFileType/@type
+                                else if (starts-with(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
+                                then replace(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', '')
+                                else ''"/>
+            </mimeType>
             <type>onlinesrc</type>
           </item>
         </xsl:for-each>

@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.itextpdf.text.Image;
+import com.lowagie.text.Image;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiUtils;

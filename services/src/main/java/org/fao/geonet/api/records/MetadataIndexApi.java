@@ -37,6 +37,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,6 +62,9 @@ public class MetadataIndexApi {
 
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    SettingManager settingManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Index a set of records",
@@ -123,7 +127,8 @@ public class MetadataIndexApi {
             }
         }
         index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids).process(false);
+        new BatchOpsMetadataReindexer(dataManager, ids)
+            .process(settingManager.getSiteId(), false);
 
         JSONObject res = new JSONObject();
         res.put("success", true);

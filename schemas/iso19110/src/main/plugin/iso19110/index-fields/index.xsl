@@ -22,17 +22,17 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gfc="http://www.isotc211.org/2005/gfc"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 version="2.0">
-
-
 
   <xsl:import href="common/index-utils.xsl"/>
 
@@ -42,11 +42,20 @@
     <doc>
       <docType>metadata</docType>
       <resourceType>featureCatalog</resourceType>
-      <resourceTitle>
-        <xsl:value-of select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
-        /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
-        /gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
-      </resourceTitle>
+
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+      /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+      /gfc:FC_FeatureType/gfc:typeName/gco:LocalName">
+
+        <xsl:variable name="resourceTitleObject" as="xs:string"
+                      select="concat('{',
+                          $doubleQuote, 'default', $doubleQuote, ':',
+                          $doubleQuote, gn-fn-index:json-escape(.) ,$doubleQuote,
+                        '}')"/>
+
+        <xsl:copy-of select="gn-fn-index:add-object-field(
+                               'resourceTitleObject', $resourceTitleObject)"/>
+      </xsl:for-each>
 
       <resourceAbstract>
         <xsl:value-of select="/gfc:FC_FeatureCatalogue/gmx:scope/gco:CharacterString|

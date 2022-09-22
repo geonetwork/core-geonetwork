@@ -36,21 +36,26 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.nio.charset.StandardCharsets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.MetadataApi;
+import org.fao.geonet.api.records.MetadataUtils;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +75,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DeflaterInputStream;
@@ -98,6 +104,9 @@ public class EsHTTPProxy {
         "       \t\t\"query\": \"%s\"\n" +
         "       \t}\n" +
         "}";
+
+    private static final String SEARCH_ENDPOINT = "_search";
+    private static final String MULTISEARCH_ENDPOINT = "_msearch";
 
     @Autowired
     AccessManager accessManager;
@@ -148,9 +157,29 @@ public class EsHTTPProxy {
         doc.put(Edit.Info.Elem.SELECTED, selections.contains(uuid));
     }
 
-    private static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
+    private static void addRelatedTypes(ObjectNode doc,
+                                        RelatedItemType[] relatedTypes,
+                                        ServiceContext context) {
+        Map<RelatedItemType, List<AssociatedRecord>> related = null;
+        try {
+            related = MetadataUtils.getAssociated(
+                context,
+                context.getBean(IMetadataUtils.class)
+                    .findOneByUuid(doc.get("_id").asText()),
+                relatedTypes, 0, 100);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load related types for {}. Error is: {}",
+                getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                e.getMessage()
+                );
+        }
+        doc.putPOJO("related", related);
+    }
+
+    public static void addUserInfo(ObjectNode doc, ServiceContext context) throws Exception {
         final Integer owner = getSourceInteger(doc, Geonet.IndexFieldNames.OWNER);
         final Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
+        final String id = getSourceString(doc, Geonet.IndexFieldNames.ID);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -196,6 +225,8 @@ public class EsHTTPProxy {
             }
         }
         doc.put(Edit.Info.Elem.EDIT, isOwner || canEdit);
+        doc.put(Edit.Info.Elem.REVIEW,
+            id != null ? accessManager.hasReviewPermission(context, id) : false);
         doc.put(Edit.Info.Elem.OWNER, isOwner);
         doc.put(Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
         addReservedOperation(doc, operations, ReservedOperation.view);
@@ -244,6 +275,11 @@ public class EsHTTPProxy {
     public void search(
         @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
             String bucket,
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
+            required = false
+        )
+        @RequestParam(name = "relatedType", defaultValue = "")
+            RelatedItemType[] relatedTypes,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -255,7 +291,39 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, "_search", httpEntity.getBody(), bucket);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Search endpoint",
+        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+    @RequestMapping(value = "/search/records/_msearch",
+        method = {
+            RequestMethod.POST
+        })
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public void msearch(
+        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+            String bucket,
+        @Parameter(description = "Type of related resource. If none, no associated resource returned.",
+            required = false
+        )
+        @RequestParam(name = "relatedType", defaultValue = "")
+            RelatedItemType[] relatedTypes,
+        @Parameter(hidden = true)
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
+            HttpServletResponse response,
+        @RequestBody(description = "JSON request based on Elasticsearch API.")
+            String body,
+        @Parameter(hidden = true)
+        HttpEntity<String> httpEntity) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
     }
 
 
@@ -289,16 +357,18 @@ public class EsHTTPProxy {
             HttpEntity<String> httpEntity) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket);
+        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket, null);
     }
 
     public void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                      HttpServletResponse response,
-                     String endPoint, String body, String selectionBucket) throws Exception {
+                     String endPoint, String body,
+                     String selectionBucket,
+                     RelatedItemType[] relatedTypes) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
-        if ("_search".equals(endPoint)) {
+        if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode nodeQuery = objectMapper.readTree(body);
@@ -323,20 +393,35 @@ public class EsHTTPProxy {
                     }
                     final JsonNode sourceNode = node.get("_source");
                     if (sourceNode != null) {
-                        final JsonNode sourceIncludes = sourceNode.get("includes");
-                        if (sourceIncludes != null && sourceIncludes.isArray()) {
-                            ((ArrayNode) sourceIncludes).add("op*");
+                        if (sourceNode.isArray()) {
+                            addRequiredField((ArrayNode) sourceNode);
+                        } else {
+                            final JsonNode sourceIncludes = sourceNode.get("includes");
+                            if (sourceIncludes != null && sourceIncludes.isArray()) {
+                                addRequiredField((ArrayNode) sourceIncludes);
+                            }
                         }
                     }
                 }
                 requestBody.append(node.toString()).append(System.lineSeparator());
             }
-            handleRequest(context, httpSession, request, response, url,
-                requestBody.toString(), true, selectionBucket);
+            handleRequest(context, httpSession, request, response, url, endPoint,
+                requestBody.toString(), true, selectionBucket, relatedTypes);
         } else {
-            handleRequest(context, httpSession, request, response, url,
-                body, true, selectionBucket);
+            handleRequest(context, httpSession, request, response, url, endPoint,
+                body, true, selectionBucket, relatedTypes);
         }
+    }
+
+    /**
+     * {@link #addUserInfo(ObjectNode, ServiceContext)}
+     * rely on fields from the index. Add them to the source.
+     */
+    private void addRequiredField(ArrayNode source) {
+        source.add("op*");
+        source.add(Geonet.IndexFieldNames.GROUP_OWNER);
+        source.add(Geonet.IndexFieldNames.OWNER);
+        source.add(Geonet.IndexFieldNames.ID);
     }
 
     private void addFilterToQuery(ServiceContext context,
@@ -391,67 +476,9 @@ public class EsHTTPProxy {
      * Add search privilege criteria to a query.
      */
     private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
-        StringBuilder query = new StringBuilder();
-        query.append(buildPermissionsFilter(context).trim());
+        return String.format(filterTemplate,
+            EsFilterBuilder.build(context, type, isSearchingForDraft, node));
 
-        if (type.equalsIgnoreCase("metadata")) {
-            query.append(" AND (isTemplate:n)");
-        } else if (type.equalsIgnoreCase("template")) {
-            query.append(" AND (isTemplate:y)");
-        } else if (type.equalsIgnoreCase("subtemplate")) {
-            query.append(" AND (isTemplate:s)");
-        }
-
-        if (!isSearchingForDraft) {
-            query.append(" AND (draft:n OR draft:e)");
-        }
-
-        final String portalFilter = buildPortalFilter();
-        if (!"".equals(portalFilter)) {
-            query.append(" ").append(portalFilter);
-        }
-        return String.format(filterTemplate, query);
-
-    }
-
-    private String buildPortalFilter() {
-        // If the requested portal define a filter
-        // Add it to the request.
-        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            final Optional<Source> portal = sourceRepository.findById(node.getId());
-            if (!portal.isPresent()) {
-                LOGGER.warn("Null portal " + node);
-            } else if (StringUtils.isNotEmpty(portal.get().getFilter())) {
-                LOGGER.debug("Applying portal filter: {}", portal.get().getFilter());
-                return portal.get().getFilter().replace("\"", "\\\"");
-            }
-        }
-        return "";
-    }
-
-    public String buildPermissionsFilter(ServiceContext context) throws Exception {
-        final UserSession userSession = context.getUserSession();
-
-        // If admin you can see all
-        if (Profile.Administrator.equals(userSession.getProfile())) {
-            return "*";
-        } else {
-            // op0 (ie. view operation) contains one of the ids of your groups
-            Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
-            final String ids = groups.stream().map(Object::toString).map(e -> e.replace("-", "\\\\-"))
-                .collect(Collectors.joining(" OR "));
-            String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
-
-
-            String ownerFilter = "";
-            if (userSession.getUserIdAsInt() > 0) {
-                // OR you are owner
-                ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
-                // OR member of groupOwner
-                // TODOES
-            }
-            return String.format("(%s %s)", operationFilter, ownerFilter).trim();
-        }
     }
 
     private String buildDocTypeFilter(String type) {
@@ -463,9 +490,11 @@ public class EsHTTPProxy {
                                HttpServletRequest request,
                                HttpServletResponse response,
                                String sUrl,
+                               String endPoint,
                                String requestBody,
                                boolean addPermissions,
-                               String selectionBucket) throws Exception {
+                               String selectionBucket,
+                               RelatedItemType[] relatedTypes) throws Exception {
         try {
             URL url = new URL(sUrl);
 
@@ -564,7 +593,7 @@ public class EsHTTPProxy {
                 }
 
                 try {
-                    processResponse(context, httpSession, streamFromServer, streamToClient, selectionBucket, addPermissions);
+                    processResponse(context, httpSession, streamFromServer, streamToClient, endPoint, selectionBucket, addPermissions, relatedTypes);
                     streamToClient.flush();
                 } finally {
                     IOUtils.closeQuietly(streamFromServer);
@@ -588,7 +617,10 @@ public class EsHTTPProxy {
 
     private void processResponse(ServiceContext context, HttpSession httpSession,
                                  InputStream streamFromServer, OutputStream streamToClient,
-                                 String bucket, boolean addPermissions) throws Exception {
+                                 String endPoint,
+                                 String bucket,
+                                 boolean addPermissions,
+                                 RelatedItemType[] relatedTypes) throws Exception {
         JsonParser parser = JsonStreamUtils.jsonFactory.createParser(streamFromServer);
         JsonGenerator generator = JsonStreamUtils.jsonFactory.createGenerator(streamToClient);
         parser.nextToken();  //Go to the first token
@@ -596,21 +628,48 @@ public class EsHTTPProxy {
         final Set<String> selections = (addPermissions ?
             SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket) : new HashSet<>());
 
-        JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
-            if (addPermissions) {
-                addUserInfo(doc, context);
-                addSelectionInfo(doc, selections);
-            }
-
-            // Remove fields with privileges info
-            if (doc.has("_source")) {
-                ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                for (ReservedOperation o : ReservedOperation.values()) {
-                    sourceNode.remove("op" + o.getId());
+        if (endPoint.equals(SEARCH_ENDPOINT)) {
+            JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
+                if (addPermissions) {
+                    addUserInfo(doc, context);
+                    addSelectionInfo(doc, selections);
                 }
-            }
-        });
+
+                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                    addRelatedTypes(doc, relatedTypes, context);
+                }
+
+                // Remove fields with privileges info
+                if (doc.has("_source")) {
+                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+                    for (ReservedOperation o : ReservedOperation.values()) {
+                        sourceNode.remove("op" + o.getId());
+                    }
+                }
+            });
+        } else {
+            JsonStreamUtils.addInfoToDocsMSearch(parser, generator, doc -> {
+                if (addPermissions) {
+                    addUserInfo(doc, context);
+                    addSelectionInfo(doc, selections);
+                }
+
+                if ((relatedTypes != null ) && (relatedTypes.length > 0)) {
+                    addRelatedTypes(doc, relatedTypes, context);
+                }
+
+                // Remove fields with privileges info
+                if (doc.has("_source")) {
+                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+                    for (ReservedOperation o : ReservedOperation.values()) {
+                        sourceNode.remove("op" + o.getId());
+                    }
+                }
+            });
+        }
+
         generator.flush();
         generator.close();
     }

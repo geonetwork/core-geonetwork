@@ -1,23 +1,26 @@
-<div class="btn-group"
-     data-ng-show="listOfResultTemplate.length > 1">
-  <button type="button"
-          class="btn btn-default dropdown-toggle"
-          data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-    <i data-ng-repeat="t in listOfResultTemplate"
-       data-ng-show="t.tplUrl == resultTemplate"
-       title="{{t.tooltip | translate}}"
-       class="fa {{t.icon}}"/>
+<div class="btn-group" data-ng-show="listOfResultTemplate.length > 1">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <i
+      data-ng-repeat="t in listOfResultTemplate"
+      data-ng-show="t.tplUrl == resultTemplate"
+      title="{{t.tooltip | translate}}"
+      class="fa {{t.icon}}"
+    />
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
-    <li data-ng-repeat="t in listOfResultTemplate"
-        data-ng-hide="t.tplUrl == resultTemplate">
-      <a href=""
-         data-ng-click="setResultTemplate(t);"
-         title="{{t.tooltip | translate}}">
-        <i class="fa {{t.icon}}"/>&nbsp;
-        {{t.tooltip | translate}}
+    <li
+      data-ng-repeat="t in listOfResultTemplate"
+      data-ng-hide="t.tplUrl == resultTemplate"
+    >
+      <a href="" data-ng-click="setResultTemplate(t);" title="{{t.tooltip | translate}}">
+        <i class="fa {{t.icon}}" />&nbsp; {{t.tooltip | translate}}
       </a>
     </li>
   </ul>

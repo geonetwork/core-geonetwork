@@ -1,19 +1,26 @@
 <div>
   <form data-ng-search-form ng-click="$event.stopPropagation()">
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
 
     <div class="form-controls">
-      <input class="form-control filter-text" type="search"
+      <input
+        class="form-control filter-text"
+        type="search"
         data-ng-change="triggerSearch()"
         data-ng-model-options="modelOptions"
-        placeholder="{{'filter' | translate}}" autofocus=""
-        data-ng-model="searchObj.params.any"/>
+        placeholder="{{'filter' | translate}}"
+        autofocus=""
+        data-ng-model="searchObj.params.any"
+      />
       <div class="spacer"></div>
-      <div data-gn-pagination="paginationInfo"/>
+      <div data-gn-pagination="paginationInfo" />
     </div>
 
-    <div translate ng-show="searchResults.count == 0 && !searching"
-      class="text-muted disabled">
+    <div
+      translate
+      ng-show="searchResults.count == 0 && !searching"
+      class="text-muted disabled"
+    >
       noRecordFound
     </div>
 
@@ -22,24 +29,27 @@
     </div>
 
     <div class="associated-md-list" ng-show="!searching">
-      <li class="associated-md flex-row"
-        data-ng-repeat="e in searchResults.records">
-          <gn-md-type-widget metadata="e"></gn-md-type-widget>
+      <li class="associated-md flex-row" data-ng-repeat="e in searchResults.records">
+        <gn-md-type-widget metadata="e"></gn-md-type-widget>
 
-          <a href="catalog.search#/metadata/{{e.uuid}}"
-            class="flex-shrink text-ellipsis"
-            title="{{e.resourceTitle}}">
-            {{e.resourceTitle}}</a>
+        <a
+          href="catalog.search#/metadata/{{e.uuid}}"
+          class="flex-shrink text-ellipsis"
+          title="{{e.resourceTitle}}"
+        >
+          {{e.resourceTitle}}</a
+        >
 
-          <div class="flex-spacer flex-grow"></div>
+        <div class="flex-spacer flex-grow"></div>
 
-          <a class="btn btn-primary btn-sm"
-             data-ng-href="#/metadata/{{e.id}}"
-             title="{{'edit' | translate}}">
-            <i class="fa fa-pencil" />
-          </a>
+        <a
+          class="btn btn-primary btn-sm"
+          data-ng-href="#/metadata/{{e.id}}"
+          title="{{'edit' | translate}}"
+        >
+          <i class="fa fa-pencil" />
+        </a>
       </li>
     </div>
-
   </form>
 </div>

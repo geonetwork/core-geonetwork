@@ -1,90 +1,132 @@
 <div data-ng-hide="metadataFound">
-  <div class="alert alert-warning"
-       data-translate=""
-       data-translate-values="{ id: '{{metadataNotFoundId}}'}">metadataNotFound
+  <div
+    class="alert alert-warning"
+    data-translate=""
+    data-translate-values="{ id: '{{metadataNotFoundId}}'}"
+  >
+    metadataNotFound
   </div>
 </div>
 
 <div data-ng-show="metadataFound">
-
-  <div
-    data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
-  </div>
-  <div class="row gn-editor-container"
-       role="main">
+  <div data-ng-include="'../../catalog/templates/editor/top-toolbar.html'"></div>
+  <div class="row gn-editor-container" role="main">
     <div class="modal-backdrop fade in" data-ng-show="gnCurrentEdit.working"></div>
 
-    <div class="alert alert-danger" data-ng-if="unsupportedSchema"
-         data-translate=""
-         data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}">
+    <div
+      class="alert alert-danger"
+      data-ng-if="unsupportedSchema"
+      data-translate=""
+      data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}"
+    >
       unsupportedSchemaAlert
     </div>
 
     <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
       <div id="gn-editor-container-{{id}}"></div>
     </div>
-
   </div>
 </div>
 
-
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'addOnlinesrcTitle'}"
-     id="addonlinesrc-popup">
-  <div data-gn-add-onlinesrc="" class="add-onlinesrc"
-       data-gn-popupid="#addonlinesrc-popup"
-       data-clear-form-on-protocol-change="false"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'addOnlinesrcTitle'}"
+  id="addonlinesrc-popup"
+>
+  <div
+    data-gn-add-onlinesrc=""
+    class="add-onlinesrc"
+    data-gn-popupid="#addonlinesrc-popup"
+    data-clear-form-on-protocol-change="false"
+  ></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToParentTitle'}"
-     id="linktoparent-popup">
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToParentTitle'}"
+  id="linktoparent-popup"
+>
   <div data-gn-link-to-metadata="parent" class="link-parent-md"></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToServiceTitle'}"
-     id="linktoservice-popup">
-  <div data-gn-link-service-to-dataset="service"
-       id="link-to-service" class="link-service-md"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToServiceTitle'}"
+  id="linktoservice-popup"
+>
+  <div
+    data-gn-link-service-to-dataset="service"
+    id="link-to-service"
+    class="link-service-md"
+  ></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToDatasetTitle'}"
-     id="linktodataset-popup">
-  <div data-gn-link-service-to-dataset="dataset"
-       id="link-to-dataset" class="link-dataset-md"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToDatasetTitle'}"
+  id="linktodataset-popup"
+>
+  <div
+    data-gn-link-service-to-dataset="dataset"
+    id="link-to-dataset"
+    class="link-dataset-md"
+  ></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToSourceTitle'}"
-     id="linktosource-popup">
-  <div data-gn-link-to-metadata="source" id="link-to-source"
-       class="link-source-md"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToSourceTitle'}"
+  id="linktosource-popup"
+>
+  <div data-gn-link-to-metadata="source" id="link-to-source" class="link-source-md"></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToFeatureCatalogTitle'}"
-     id="linktofcats-popup">
-  <div data-gn-link-to-metadata="fcats" id="link-to-fcatalog"
-       class="link-fcatalog-md" data-gn-parent-id="#gnLinkToMetadata"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToFeatureCatalogTitle'}"
+  id="linktofcats-popup"
+>
+  <div
+    data-gn-link-to-metadata="fcats"
+    id="link-to-fcatalog"
+    class="link-fcatalog-md"
+    data-gn-parent-id="#gnLinkToMetadata"
+  ></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'applySuggestion'}"
-     id="runsuggestion-popup">
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'applySuggestion'}"
+  id="runsuggestion-popup"
+>
   <div data-gn-run-suggestion="" id="runsuggestion"></div>
 </div>
 
-<div data-gn-modal="" class="onlinesrc-popup"
-     data-gn-popup-options="{title:'linkToSiblingTitle'}"
-     id="linktosibling-popup">
-  <div data-gn-link-to-sibling="#linktosibling-popup" id="link-to-sibling"
-       class="link-sibling-md"></div>
+<div
+  data-gn-modal=""
+  class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToSiblingTitle'}"
+  id="linktosibling-popup"
+>
+  <div
+    data-gn-link-to-sibling="#linktosibling-popup"
+    id="link-to-sibling"
+    class="link-sibling-md"
+  ></div>
 </div>
 
-<div data-gn-modal="" class="gn-save-invalid-modal"
-     data-gn-popup-options="{title:'confirmCloseInvalidTitle', confirmCallback: confirmClose}"
-     id="confirm-editor-close">
+<div
+  data-gn-modal=""
+  class="gn-save-invalid-modal"
+  data-gn-popup-options="{title:'confirmCloseInvalidTitle', confirmCallback: confirmClose}"
+  id="confirm-editor-close"
+>
   <p translate>confirmCloseInvalidMetadata</p>
 </div>

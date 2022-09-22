@@ -23,14 +23,21 @@
 package org.fao.geonet.services.inspireatom;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
@@ -41,15 +48,39 @@ import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
+
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Service to get Atom feed.
  *
  * @author Jose García
  */
-public class AtomDescribe implements Service {
+@RequestMapping(value = {
+    "/{portal}/api/atom"
+})
+@Tag(name = "atom",
+    description = "ATOM")
+@RestController
+public class AtomDescribe {
+
+    @Autowired
+    InspireAtomService service;
+
+    @Autowired
+    SettingManager sm;
+
+    @Autowired
+    DataManager dm;
+
+    @Autowired
+    InspireAtomFeedRepository inspireAtomFeedRepository;
 
     /**
      * Dataset identifier param name
@@ -66,18 +97,39 @@ public class AtomDescribe implements Service {
      **/
     private final static String SERVICE_IDENTIFIER = "fileIdentifier";
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-
-    }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
-
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        SettingManager sm = context.getBean(SettingManager.class);
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Describe resource",
+        description = "")
+    @GetMapping(
+        value = "/describe/resource",
+        produces = MediaType.APPLICATION_ATOM_XML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Feeds."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(OK)
+    @ResponseBody
+    public Element describeResource(
+        @Parameter(
+            description = "fileIdentifier",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String fileIdentifier,
+        @Parameter(
+            description = "spatial_dataset_identifier_code",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String spatial_dataset_identifier_code,
+        @Parameter(
+            description = "spatial_dataset_identifier_namespace",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String spatial_dataset_identifier_namespace,
+        @Parameter(hidden = true)
+            HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
@@ -86,27 +138,20 @@ public class AtomDescribe implements Service {
             throw new Exception("Inspire is disabled");
         }
 
-        // Get request parameters: depending on parameters manage as service feed (fileIdentifier)
-        // or a dataset feed (spatial_dataset_identifier_code, spatial_dataset_identifier_namespace)
-        String fileIdentifier = Util.getParam(params, SERVICE_IDENTIFIER, "");
+        Element response =
+            StringUtils.isEmpty(fileIdentifier)
+                ? processDatasetFeed(spatial_dataset_identifier_code, spatial_dataset_identifier_namespace, context)
+                : processServiceFeed(fileIdentifier, context);
 
-        if (StringUtils.isEmpty(fileIdentifier)) {
-            return processDatasetFeed(params, context);
-        } else {
-            return processServiceFeed(params, context);
-        }
+        return new XsltResponseWriter(null, "atom-describe")
+            .withXml(response)
+            .withXsl("xslt/services/inspire-atom/describe.xsl")
+            .asElement();
     }
 
-    /**
-     * Process a dataset feed.
-     */
-    private Element processDatasetFeed(Element params, ServiceContext context) throws Exception {
+    private Element processDatasetFeed(String datasetIdCode, String datasetIdNs, ServiceContext context) throws Exception {
         DataManager dm = context.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
-
-        // Get request parameters
-        String datasetIdCode = Util.getParam(params, DATASET_IDENTIFIER_CODE_PARAM);
-        String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
 
         Log.debug(Geonet.ATOM, "Processing dataset feed  (" + DATASET_IDENTIFIER_CODE_PARAM + ": " +
             datasetIdCode + ", " + DATASET_IDENTIFIER_NS_PARAM + ": " + datasetIdNs + " )");
@@ -125,11 +170,7 @@ public class AtomDescribe implements Service {
         return service.retrieveFeed(context, Integer.parseInt(id));
     }
 
-    /**
-     * Process a service feed.
-     */
-    private Element processServiceFeed(Element params, ServiceContext context) throws Exception {
-        String fileIdentifier = Util.getParam(params, SERVICE_IDENTIFIER);
+    private Element processServiceFeed(String fileIdentifier, ServiceContext context) throws Exception {
         Log.debug(Geonet.ATOM, "Processing service feed  (" + SERVICE_IDENTIFIER + ": " + fileIdentifier + " )");
 
         InspireAtomService service = context.getBean(InspireAtomService.class);

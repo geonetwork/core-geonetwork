@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.security.keycloak;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
@@ -37,14 +35,20 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
-import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.AdapterDeploymentContext;
+import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 public class KeycloakUserUtils {
 
@@ -68,33 +72,52 @@ public class KeycloakUserUtils {
 
     @Autowired
     AdapterDeploymentContext adapterDeploymentContext;
+
+    // User details of 1000 to help quickly retrieve userDetails from the token.
+    // Access tokens are short-lived so 5 minutes should be long enough.
+    private final Cache<String, UserDetails> UserDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).maximumSize(1000).build();
+
     /**
-     * @return the inserted/updated user or null if no valid user found or any error
-     * happened
+     * Get the userDetail from the access token
+     * It will cache the process for faster access.
+     * Note: Accessing a web page may cause multiple noCache calls due to bearer token calls from the page being called.
+     *       caching will only work when the same token is being used.
+     * @param accessToken - Access token to get the user details from
+     * @param withDbUpdate - As we don't want to update the database everytime we convert the token to userDetails
+     *                     This flag is used to indicate that db updates can be applied or not.
+     *                     Note: that this will only work on first request for the token due to caching.
+     *                           It should be ok as we generally only want to write the data on the first request.
+     * @return the userDetails object or null if no valid user found or any error happened
      */
-    @Transactional(value = TxType.REQUIRES_NEW)
-    protected UserDetails setupUser(ServletRequest request, KeycloakPrincipal keycloakPrincipal) {
-        BaselUser baselUser = new BaselUser(request, keycloakPrincipal, keycloakConfiguration);
-
-        String roleGroupSeparator = keycloakConfiguration.getRoleGroupSeparator();
-
-        Set<String> roleGroupList = new HashSet<>();
-        // Get role that are in the format of group:role format access
-        // Todo Reevaluate to see if this is how we want to get role groups. It may not be a good idea to place separator in group name and parse it this way.
-        if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()) != null) {
-            for (String role : keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()).getRoles()) {
-                // Only use the profiles we know off
-                if (role.contains(roleGroupSeparator)) {
-                    Log.debug(Geonet.SECURITY, "Identified role " + role + " from user token.");
-                    roleGroupList.add(role);
+    public UserDetails getUserDetails(AccessToken accessToken, boolean withDbUpdate) {
+        try {
+            return UserDetailsCache.get(accessToken.getId(), new Callable<UserDetails>() {
+                @Override
+                public UserDetails call()  {
+                    return getUserDetailsNoCache(accessToken, withDbUpdate);
                 }
-            }
+            });
+        } catch (ExecutionException e) {
+            Log.debug(Geonet.SECURITY, "Error getting user details from token.", e);
+            return null;
         }
+    }
 
+   /**
+    * Get the userDetail from the access token
+    * No cache is used by this version
+    * @param accessToken - Access token to get the user details from
+    * @param withDbUpdate - As we don't want to update the database everytime we convert the token to userDetails
+    *                     This flag is used to indicate that db updates can be applied or not.
+    * @return the userDetails object or null if no valid user found or any error happened
+    */
+    @Transactional(value = TxType.REQUIRES_NEW)
+    protected UserDetails getUserDetailsNoCache(AccessToken accessToken, boolean withDbUpdate) {
+        BaselUser baselUser = new BaselUser(accessToken, keycloakConfiguration);
 
         if (!StringUtils.isEmpty(baselUser.getUsername())) {
             // Create or update the user
-            User user = null;
+            User user;
             boolean newUserFlag = false;
             try {
                 user = (User) geonetworkAuthenticationProvider.loadUserByUsername(baselUser.getUsername());
@@ -115,7 +138,7 @@ public class KeycloakUserUtils {
                 user.setOrganisation(baselUser.getOrganisation());
             }
 
-            // Only update email if it does not already exists and email is not empty
+            // Only update email if it does not already exist and email is not empty
             if (!StringUtils.isEmpty(baselUser.getEmail()) && !user.getEmailAddresses().contains(baselUser.getEmail())) {
                 // If updating profile then assume emails are in sync with keycloak so replace first email which is all there should be.
                 if (keycloakConfiguration.isUpdateProfile()) {
@@ -124,31 +147,35 @@ public class KeycloakUserUtils {
                 user.getEmailAddresses().add(baselUser.getEmail());
             }
 
-            // Assign the highest profile available
-            assignProfile(baselUser.getProfile(), roleGroupList, roleGroupSeparator, user);
-            if (newUserFlag || keycloakConfiguration.isUpdateProfile()) {
-                // We only get the address information if updating the profile.
-                Address address;
-                if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress() != null) {
-                    if (user.getAddresses().size() > 0) {
-                        address = user.getAddresses().iterator().next();
-                    } else {
-                        address = new Address();
-                    }
-                    address.setAddress(keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress().getStreetAddress());
-                    address.setCity(keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress().getLocality());
-                    address.setState(keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress().getRegion());
-                    address.setZip(keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress().getPostalCode());
-                    address.setCountry(keycloakPrincipal.getKeycloakSecurityContext().getToken().getAddress().getCountry());
-                    user.getAddresses().clear();
-                    user.getAddresses().add(address);
+            Address address;
+            if (accessToken.getAddress() != null) {
+                if (user.getAddresses().size() > 0) {
+                    address = user.getAddresses().iterator().next();
+                } else {
+                    address = new Address();
                 }
-
-                userRepository.save(user);
+                address.setAddress(accessToken.getAddress().getStreetAddress());
+                address.setCity(accessToken.getAddress().getLocality());
+                address.setState(accessToken.getAddress().getRegion());
+                address.setZip(accessToken.getAddress().getPostalCode());
+                address.setCountry(accessToken.getAddress().getCountry());
+                user.getAddresses().clear();
+                user.getAddresses().add(address);
             }
 
-            if (newUserFlag || keycloakConfiguration.isUpdateGroup()) {
-                updateGroups(roleGroupList, roleGroupSeparator, user);
+            // Assign the highest profile available
+            Map<Profile, List<String>> profileGroups = getProfileGroups(accessToken);
+            user.setProfile(getMaxProfile(baselUser.getProfile(), profileGroups));
+
+            //Apply changes to database is required.
+            if (withDbUpdate) {
+                if (newUserFlag || keycloakConfiguration.isUpdateProfile()) {
+                    userRepository.save(user);
+                }
+
+                if (newUserFlag || keycloakConfiguration.isUpdateGroup()) {
+                    updateGroups(profileGroups, user);
+                }
             }
 
             return user;
@@ -157,46 +184,98 @@ public class KeycloakUserUtils {
         return null;
     }
 
-    private void updateGroups(Set<String> roleGroupList, String separator, User user) {
+    /**
+     * Get the profiles, and the list of groups for that profile, from the access token.
+     * @param accessToken - keycloak access token to get profile and group information from.
+     * @return map object with the profile and related groups.
+     */
+    private Map<Profile, List<String>> getProfileGroups(AccessToken accessToken) {
+
+        String roleGroupSeparator = keycloakConfiguration.getRoleGroupSeparator();
+        Map<Profile, List<String>> profileGroups = new HashMap<>();
+
+        Set<String> roleGroupList = new HashSet<>();
+        // Get role that are in the format of group:role format access
+        // Todo Reevaluate to see if this is how we want to get role groups. It may not be a good idea to place separator in group name and parse it this way.
+        if (accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()) != null) {
+            for (String role : accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()).getRoles()) {
+                if (role.contains(roleGroupSeparator)) {
+                    Log.debug(Geonet.SECURITY, "Identified group:profile (" + role + ") from user token.");
+                    roleGroupList.add(role);
+                } else {
+                    // Only use the profiles we know of and don't add duplicates.
+                    Profile p = Profile.findProfileIgnoreCase(role);
+                    if (p != null && !profileGroups.containsKey(p)) {
+                        profileGroups.put(p, new ArrayList<>());
+                    }
+                }
+            }
+        }
+
+        for (String rg : roleGroupList) {
+            String[] rg_role_groups = rg.split(roleGroupSeparator);
+
+            if (rg_role_groups.length == 0 || StringUtils.isEmpty(rg_role_groups[0])) {
+                continue;
+            }
+
+            Profile p = null;
+            if (rg_role_groups.length >= 1) {
+                p = Profile.findProfileIgnoreCase(rg_role_groups[1]);
+            }
+            // If we cannot find the profile then lets ignore this entry.
+            if (p == null) {
+                continue;
+            }
+
+            List<String> groups;
+            if (profileGroups.containsKey(p)) {
+                groups = profileGroups.get(p);
+            } else {
+                groups =  new ArrayList<>();
+            }
+            if (rg_role_groups.length > 1) {
+                groups.add(rg_role_groups[0]);
+            }
+            profileGroups.put(p, groups);
+        }
+
+        return profileGroups;
+    }
+
+    /**
+     * Update users group information in the database.
+     * @param profileGroups object containing the profile and related groups.
+     * @param user to apply the changes to.
+     */
+    private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
         // First we remove all previous groups
         userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
 
         // Now we add the groups
-        int i = 0;
+        for (Profile p : profileGroups.keySet()) {
+            List<String> groups = profileGroups.get(p);
+            for (String rgGroup : groups) {
 
-        for (String rg : roleGroupList) {
-            String[] rgSplitArray = rg.split(separator);
+                Group group = groupRepository.findByName(rgGroup);
 
-            if (rgSplitArray.length == 0 || StringUtils.isEmpty(rgSplitArray[0])) {
-                continue;
-            }
+                if (group == null) {
+                    group = new Group();
+                    group.setName(rgGroup);
 
-            String rgGroup = rgSplitArray[0];
+                    // Populate languages for the group
+                    for (Language l : langRepository.findAll()) {
+                        group.getLabelTranslations().put(l.getId(), group.getName());
+                    }
 
-            Group group = groupRepository.findByName(rgGroup);
-
-            if (group == null) {
-                group = new Group();
-                group.setName(rgGroup);
-
-                // Populate languages for the group
-                for (Language l : langRepository.findAll()) {
-                    group.getLabelTranslations().put(l.getId(), group.getName());
+                    groupRepository.save(group);
                 }
 
-                groupRepository.save(group);
-            }
+                UserGroup usergroup = new UserGroup();
+                usergroup.setGroup(group);
+                usergroup.setUser(user);
 
-            UserGroup usergroup = new UserGroup();
-            usergroup.setGroup(group);
-            usergroup.setUser(user);
-            if (rgSplitArray.length > 1) {
-                String rgProfile = rgSplitArray[1];
-                Profile profile = Profile.findProfileIgnoreCase(rgProfile);
-                // If we cannot find the profile then lets ignore this entry.
-                if (profile == null) {
-                    continue;
-                }
+                Profile profile = p;
                 if (profile.equals(Profile.Administrator)) {
                     // As we are assigning to a group, it is UserAdmin instead
                     profile = Profile.UserAdmin;
@@ -214,39 +293,37 @@ public class KeycloakUserUtils {
                     ug.setProfile(Profile.Editor);
                     userGroupRepository.save(ug);
                 }
-            } else {
-                // Failback if no profile
-                usergroup.setProfile(Profile.Guest);
+
+                userGroupRepository.save(usergroup);
             }
-            userGroupRepository.save(usergroup);
         }
     }
 
-    private void assignProfile(String profile, Set<String> roleGroupList, String roleGroupSeparator, User user) {
-        // Assign the highest profile to the user
-        user.setProfile(Profile.findProfileIgnoreCase(profile));
+    /**
+     * Assign the best profile for the user based on the profileGroups available.
+     * @param defaultProfile default profile used if nothing found.  If null then Guest will be used.
+     * @param profileGroups profile to scan for best profile.
+     */
+    private Profile getMaxProfile(String defaultProfile, Map<Profile, List<String>> profileGroups) {
+        Profile maxProfile = null;
+        if (defaultProfile != null) {
+            maxProfile = Profile.findProfileIgnoreCase(defaultProfile);
+        }
 
-        for (String rg : roleGroupList) {
-            String[] rg_role_groups = rg.split(roleGroupSeparator);
-            Profile p = null;
-            if (rg_role_groups.length > 1) {
-                p = Profile.findProfileIgnoreCase(rg_role_groups[1]);
-            }
-            // If we cannot find the profile then lets ignore this entry.
-            if (p == null) {
-                continue;
-            }
-            if (user.getProfile() == null) {
-                user.setProfile(p);
-            } else if (user.getProfile().compareTo(p) >= 0) {
-                user.setProfile(p);
+        for (Profile p : profileGroups.keySet()) {
+
+            if (maxProfile == null) {
+                maxProfile = p;
+            } else if (maxProfile.compareTo(p) >= 0) {
+                maxProfile = p;
             }
         }
 
-        // Failback if no profile
-        if (user.getProfile() == null) {
-            user.setProfile(Profile.Guest);
+        // Fallback if no profile
+        if (maxProfile == null) {
+            maxProfile = Profile.Guest;
         }
+        return maxProfile;
     }
 
     private class BaselUser {
@@ -258,14 +335,11 @@ public class KeycloakUserUtils {
         private String profile;
         private String email;
 
-        BaselUser(ServletRequest request, KeycloakPrincipal keycloakPrincipal, KeycloakConfiguration keycloakConfiguration) {
+        BaselUser(AccessToken accessToken, KeycloakConfiguration keycloakConfiguration) {
 
-            // Read in the data from the headers
-            HttpServletRequest req = (HttpServletRequest) request;
-
-            username = keycloakPrincipal.getKeycloakSecurityContext().getToken().getPreferredUsername();
+            username = accessToken.getPreferredUsername();
             if (username == null) {
-                username = keycloakPrincipal.getKeycloakSecurityContext().getToken().getName();
+                username = accessToken.getName();
             }
             if (username != null) {
                 // FIXME: needed? only accept the first 256 chars
@@ -274,41 +348,20 @@ public class KeycloakUserUtils {
                 }
             }
 
-            if (username.length() > 0) {
-                surname = keycloakPrincipal.getKeycloakSecurityContext().getToken().getFamilyName();
-                firstname = keycloakPrincipal.getKeycloakSecurityContext().getToken().getGivenName();
-                email = keycloakPrincipal.getKeycloakSecurityContext().getToken().getEmail();
+            if (username != null && username.length() > 0) {
+                surname = accessToken.getFamilyName();
+                firstname = accessToken.getGivenName();
+                email = accessToken.getEmail();
 
                 organisation = null;
-                if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getOtherClaims() != null &&
-                        keycloakPrincipal.getKeycloakSecurityContext().getToken().getOtherClaims().containsKey(keycloakConfiguration.getOrganisationKey())) {
-                    organisation = (String) keycloakPrincipal.getKeycloakSecurityContext().getToken().getOtherClaims().get(keycloakConfiguration.getOrganisationKey());
+                if (accessToken.getOtherClaims() != null &&
+                    accessToken.getOtherClaims().containsKey(keycloakConfiguration.getOrganisationKey())) {
+                    organisation = (String) accessToken.getOtherClaims().get(keycloakConfiguration.getOrganisationKey());
                 }
 
-                Set<String> profileSet = new HashSet<>();
-
-                // Get role access
-                if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()) != null) {
-                    for (String role : keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()).getRoles()) {
-                        // Only use the profiles we know off
-                        if (Profile.findProfileIgnoreCase(role) != null) {
-                            profileSet.add(role);
-                        }
-                    }
-                }
-
-                // We only want the max profile in this case.
-                if (profileSet.size() > 0) {
-                    Profile maxProfile = null;
-                    for (String singleProfile : profileSet) {
-                        Profile p = Profile.findProfileIgnoreCase(singleProfile);
-                        if (p != null && maxProfile == null) {
-                            maxProfile = p;
-                        } else if (p != null && maxProfile.compareTo(p) >= 0) {
-                            maxProfile = p;
-                        }
-                    }
-                    profile = maxProfile.name();
+                Map<Profile, List<String>> profileGroups = getProfileGroups(accessToken);
+                if (profileGroups != null && profileGroups.size() > 0) {
+                    profile = getMaxProfile(null, profileGroups).name();
                 }
             }
         }

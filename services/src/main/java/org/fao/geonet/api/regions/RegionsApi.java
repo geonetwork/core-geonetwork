@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,8 +29,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.regions.model.Category;
@@ -41,7 +41,10 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -64,10 +67,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 
-/**
- *
- */
-
 @RequestMapping(value = {
     "/{portal}/api/regions"
 })
@@ -77,7 +76,12 @@ import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 public class RegionsApi {
 
     @Autowired
-    LanguageUtils languageUtils;
+    private LanguageUtils languageUtils;
+    @Autowired
+    private SettingManager settingManager;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     public static Request createRequest(String label, String categoryId,
                                         int maxRecords, ServiceContext context,
@@ -207,7 +211,9 @@ public class RegionsApi {
         },
         method = RequestMethod.GET)
     public HttpEntity<byte[]> getGeomAsImage(
-        @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
+        @Parameter(description = "(optional) the background map projection. If not passed uses the region/getmap/mapproj"
+            + " setting. If the setting is not set defaults to EPSG:4326")
+        @RequestParam(value = MAP_SRS_PARAM, required = false) String mapSrs,
         @Parameter(description = "(optional) width of the image that is created. Only one of width and height are permitted")
         @RequestParam(value = WIDTH_PARAM, required = false, defaultValue = "300") Integer width,
         @Parameter(description = "(optional) height of the image that is created. Only one of width and height are permitted")
@@ -225,6 +231,14 @@ public class RegionsApi {
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
         final ServiceContext context = ApiUtils.createServiceContext(request);
+        String srs = mapSrs;
+        if (StringUtils.isBlank(srs)) {
+            // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
+            // to EPSG:4326
+             srs = StringUtils.defaultString(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+                "EPSG:4326");
+        }
+
         if (width != null && height != null) {
             throw new BadParameterEx(
                 WIDTH_PARAM,
@@ -239,6 +253,11 @@ public class RegionsApi {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
                 + " parameters must be included in the request");
 
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+            throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         String outputFileName = "geom.png";
@@ -256,9 +275,9 @@ public class RegionsApi {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", out);
             MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
-            headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
-            headers.add("Content-Type", "image/png");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + outputFileName + "\"");
+            headers.add(HttpHeaders.CACHE_CONTROL, "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
+            headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
         }
     }

@@ -1,0 +1,591 @@
+================================================================================
+===
+=== GeoNetwork 4.2.0: List of changes
+===
+================================================================================
+- Transifex updates.
+- Search results / Draft / Improve edit action layout.
+- Merge branch 'pmauduit-properly-shutdown-quartz'
+- Merge branch 'properly-shutdown-quartz' of https://github.com/pmauduit/core-geonetwork into pmauduit-properly-shutdown-quartz
+- Harvester / Logo may not be a png. (#6305)
+- Metadata workflow: update edit button to use in the link the metadata identifier of the working copy when a metadata has a working copy (#6321)
+- Translations / Missing key
+- New metadata / Hide map static
+- Editor / Avoid JS error when no language defined
+- Minor fixes.
+- Standard / Dublin core / Association API / Return empty list when type is not supported.
+- Dublin core / Do not propose associations not supported
+- Fix ESAPI Logger configuration (#6322)
+-  Standard / ISO19115-3 / Suggestion / Add info from WMS / Adjust URL based on existing params.
+- Standard / ISO19115-3 / Suggestion / Add WMS and legend when ESRI-REST service defined
+- Editor / Suggestions / Add info from WMS.
+- Version / 4.2.0-SNAPSHOT.
+- Editor board / Display import action based on configuration (#32) (#6200)
+- Make consistent the date set in metadata status change date.
+- Metadata workflow: cancelling the metadata editor when editing a working copy always removes the working copy - related issue when the working copy was saved clicking 'Save & close' only. Related to #6295 (#6317)
+- Editor board / Display import action based on configuration.
+- Merge branch 'GeoCat-metadata-import-profile'
+- Metadata workflow: fix save and approve action in the metadata editor, that wasn't replacing the approved version with the working copy changes
+- Use SAXBuilder in XslUtil method to retrieve the xml content from an URL
+- Transifex updates.
+- Translations / Remove duplicated keys.
+- Merge branch 'metadata-import-profile' of https://github.com/GeoCat/core-geonetwork into GeoCat-metadata-import-profile
+- Lib / Load ehcache version from hibernate-cache and exclude old version from edu.ucar.
+- Update log4j.xml
+- DB / H2 / Update / Fix test db url and examples.
+- Security / Library update.
+- Bump esapi from 2.1.0 to 2.3.0.0 in /core
+- XSL / improve log messages #5751
+- New metadata / Fix filter when lot of templates.
+- Admin / Thesaurus / By default use suggested namespace. (#6306)
+- Harvester / WFS features / Fix sort by date.
+- Harvester / WFS features / Load title efficiently. Update time title, Translations
+- Harvester / WFS features / Infinite loop
+- Harvester / WFS features / Restore null attribute title handling.
+- Harvester / WFS features / Improvements
+- Subtemplate / Improve ISO19115-3 support. (#6292)
+- Harvester / OGC / SOS / Do not add version parameter and improve error reporting
+- Update multicombiner directive to allow to configure the number of suggestions for the elements that use the thesaurus keyWord picker component (#6297)
+- Standard / ISO19115-3 / Suggestion / Add contact / Fix JSON configuration.
+- Standard / ISO19115-3 / Service availability using Spatineo registration
+- Standard / ISO19115-3 / Suggestion / Add WMS and legend when ESRI-REST service defined (#6302)
+- Metadata workflow: metadata save and submit was displaying the metadata in a wrong status. (#6299)
+- Standard / ISO19115-3 / Mapping ISO19139 / Datestamp is revision date
+- Metadata workflow: cancelling the metadata editor when editing a working copy always removes the working copy. Fixes #6294 (#6295)
+- Remote ATOM feeds: fix atom describe output to remove a wrong empty namespace in some elements - handle additional namespaces. Related to #6288 (#6300)
+- Harvester / LocalFileSystem / Report file name on error.
+- Harvester / LocalFileSystem / JSON file import and better log on error.
+- XSL / Utility / Get source name by UUID
+- Remote ATOM feeds: fix atom describe output to remove a wrong empty namespace in some elements. (#6288)
+- Portal / Fix operation with permission filter (#6291)
+- Merge pull request #6269 from geonetwork/410-apiassociated
+- Thesaurus / Local / Add description and improve form (#6283)
+- Update ResourceFilter to return a 404 for xml resources if not found. Previously was returning an image even for xml documents
+- Support context map files per UI language
+- NumberFormatException handling (#6279)
+- Standard / ISO19139 / Fix remote link in some cases.
+- Standards / ISO19115-3 / Avoid exception on geographicIdentifier
+- Keycloak client upgrade to 16.1.1
+- Associated resources / Search results / Add a label above list.
+- Associated resources / Collection updater / Wrong comment.
+- Associated resources / Add children even in dataset. Fix overview manager API call. Fix ISO19139 parent encoded in Anchor.
+- Associated resource / Search results / Add child icon and tooltip (#6278)
+- Cancelling from import or add new record results in a blank editor board (#6274)
+- Associated resource / Add missing labels.
+- Process / Collection updater / Parent to Child relation use isComposedOf by default.
+- Selection / Do not change s101 bucket content when viewing a record.
+- Associated resource / Add revisionOf / Fix for wro4j.
+- Associated resource / Add revisionOf.
+- Associated resource / Children can also be linked using isComposedOf.
+- Check userIdentifier with userSession before the transactions in User… (#6257)
+- check content type for runtime exception (#6267)
+- Batch edit / Improvements (#6239)
+- Ensure that keycloak login redirects only go the the current server. (#6270)
+- CSW / Bbox is always WGS84. Adapt & fix coordinate order. (#5545) (#6260)
+- Associated resource / Avoid duplicates when relation are created in both direction.
+- Editor / Associated resources / Use associated API.
+- Associated resources fixes
+- Associated resource / Remove gn_gridrelated_directive which can be more efficient by doing a search with related. Cleaning.
+- Associated resource / Record view / Cleaning.
+- Associated resource / Record view / Properly disable link based on user and record info.
+- Merge remote-tracking branch 'origin/main' into 410-apiassociated
+- Associated resource / Record view / Use link for distribution and related from search response for associated records.
+- API / Associated records / Add field list for related record response.
+- API / Associated records / Add all types of relations.
+- Admin / Link analysis / Status details (#6255)
+- Associated resource / Feature catalogue / Display related records when editing a feature catalogue.
+- Search / Remove duplicated code between CSW and ES proxy.
+- API / Associated records / Properly filter remote records. They may be found in local catalog too.
+- API / Associated records / Add remote record info and filter based on current user session.
+- Add Heritrix to the list of bot that shouldn't create a session (#6263)
+- Metadata editor / Fix initialise the default configuration to handle WMS resources, when it's not defined in the schema configuration. Related to #6195
+- API / Associated records / Refactor to use enum for origin.
+- Admin / Harvester / Properly set group in scope property
+- Editor / Associated resource / Don't allow removal of siblings relation.
+- Record view / Fix missing closing tag
+- Add menu to switch (sub)portals (#6256)
+- Reorder the elements for the `series` and `dataset` pages. (#6252)
+- Replace 'Replace by Selected' with 'Update'
+- Update DraftValidationWidget to use ES query
+- Reordering elements on search page and editor board
+- Fix list filtering (ex. users / groups lists) to reset the pagination to the first page when the filtered results have less results than the ones needed to be displayed the current page
+- Point jcs DiskPath to a dir where java can write (fixes #87)
+- New search result list type: Table (#6242)
+- Batch editing / Search and replace allow one change at a time.
+- New record / Hide panel when user is not editor in any group.
+- CSW / Fix mapping for protocol. (#6245)
+- Admin / Link analysis / Fix translation (#6243)
+- Configuration of the user profile allowed to import metadata - use role hierarchy
+- Merge branch 'main' into metadata-import-profile
+- [FP] Support for non-editable settings
+- [FP] Bulk publish cancels working copy. Fixes #5419 (#6049)
+- Standard / ISO19115-3 / Indexing / Add resourceTypeName (#6237)
+- Admin / Password reset by admin.
+- Record view / Series / Table of links use filter.  (#6229)
+- Metadata editor - allow to add WMS layer names in the URL (#6195)
+- Import / MEF / Add missing space in message. (#6234)
+- Admin / Harvester / Properly set group on page load (#6232)
+- XSLT / Utility to parse HTML (#6227)
+- Import / After import, add link to view record (#6233)
+- Harvester of type Geonetwork using MEF format doesn't update the server in the online resource links for uploaded files/thumbnails. Fixes #2785
+- Update metadata import API to use multilingual texts for the import report and exceptions (#6220)
+- Transifex update (#6225)
+- Harvester / CSW / Add sortby option / Fix default and empty value save
+- Admin / Harvesting / Order options according to processing.
+- Sort tags and operations so that it produces consistent layout.
+- [FP] Fix bug in signin link (#5630) (#6222)
+- [FP] Use long instead of int to retrieve file size in Jeeves ServiceManager. See #5534 (#6047)
+- Merge branch 'main' into metadata-import-profile
+- Fix for the alert info message accidentally falling partly outside the popup (#6218)
+- Merge pull request #6188 from titellus/4.1.x
+- Codelist selector / Properly add blank value and avoid exception
+- Editor / Associated resources / Add missing translation for association type.
+- Standards / ISO19115-3 / Fix multilingual anchor conversion. Remove unused resources.
+- Record view / More like this / Add parameter to customize size
+- Merge remote-tracking branch 'origin/main' into 4.1.x
+- External workflow assist app links. (#6201)
+- [FP] Record to CSW Capabilities - Handle dates with gco:Date for INSPIRE MetadataDate element (#6099)
+- Update French translations for iso19139 topic categories (#6209)
+- Home url instead of generic appUrl in ui setting home (#6214)
+- Set version to 4.0.7
+- Merge remote-tracking branch 'origin/main' into 4.1.x
+- Search / Each values selected in facet makes an OR search whatever the default operator is for the main search box
+- Metadata create page - allow to configure the metadata template / group to select by default (#108) - fix display title for the selected metadata
+- Metadata detail page - sort keywords / topic categories - fix sort of topic categories
+- [FP] Metadata workflow - Bulk metadata approval (#6204)
+- [FP] Improve workflow process facet in editor board (#6175)
+- Merge pull request #6164 from jahow/sextant-backports-2
+- [a11y] Improve the accessibility of the facet tree in the search result page (#6186)
+- [a11y] Make search and footer a11y compliant on the homepage (#6185)
+- [a11y] Fix for making the tabs on the homepage a11y compliant by adding/removing WAI-ARIA roles (#6184)
+- Standards / ISO / Citation / Author name duplicated for  multilingual records. (#156)
+- Merge remote-tracking branch 'origin/main' into 4.1.x
+- Search / Search on all titles.
+- Editor board / Clean up facet configuration.
+- Search / Add query_string options.
+- Search / Boost by status. Obsolete records are even less important than superseded ones.
+- Search / Add specific configuration for each query types
+- API / Associated records
+- Map / Feature table improvements (#155)
+- Fixed issue with getting keycloak token from upgraded security context. (#6207)
+- remove Thumbnail recommended text (#6197)
+- Fix for the `View Previous Version` button for viewing Metadata history (#6206)
+- Editor / Associated / Siblings / Fix column order in list of association.
+- [a11y] Adding/Removing the correct WAI-ARIA roles to the menu (#6183)
+- API / XSLT service can fail when JSON key is an invalid XML tag name
+- DOI / Remove both online source and/or identifier if needed. Add ISO19115-3 support.
+- Search / Related / Missing if no id in source
+- Standard / ISO19115-3 / Processing / Language refactor (#142)
+- Standards / Indexing improvements (#152)
+- Add Accept-Language header in login controller requests, to set the correct language in the requests done in the login page (#6196)
+- Modify CSV export download so that it behaves the same as PDF and Zip download. (#6178)
+- Update index synchronized with database service to count metadata working copies when the metadata workflow is enabled (#6192)
+- Users form - add button to toggle password fields visibility - fix initial button icon using the related control type (#6162)
+- Preserve harvester last run date when updating the harvester configuration (#6166)
+- Configuration of the user profile allowed to import metadata
+- Fix the thumbnail generator using the metadata view services for metadata working copies (#6179)
+- Reindex the working copy when transferred the ownership of a single metadata. Related to #6144 (#6190)
+- Don't allow transfer ownership to reserved groups. (#6193)
+- Add French message. Related to #6015 (#6191)
+- CodeQL analysis feedbacks.
+- Add multilingual exceptions in metadata workflow API (#6182)
+- Merge pull request #151 from titellus/410-conflicts
+- Merge remote-tracking branch 'origin/main' into 410-conflicts
+- API / XSLT service using JSON translation may failed when : is used in key
+- Record view / Improve various type of feature catalogue - embeded or remote.
+- Record view / Constraint / Directive to handle object with Anchor or not.
+- Record view improvements / Update freq with dates.
+- Record view improvements / Alignement, constraint as p.
+- Index / Ordering instruction can be an array.
+- Record view improvements / Series and fix filter by and some JS errors.
+- Record view improvements.
+- Record view / Associated / Check if records are in current portal or main catalogue.
+- Record view improvements.
+- Configuration of the INSPIRE API endpoint to use instead of the INSPIRE API gateway URL for all endpoints except /v2/TestRuns to preserve quotas (#6146)
+- Standard / ISO19115-3 / To ISO19139 / Better aggregate mapping
+- Merge pull request #148 from titellus/410-merge-20220228
+- Map / Layer / Fix attached md
+- Merge remote-tracking branch 'origin/main' into 410-merge-20220228
+- UI config / Search results / Open choice for contact field to use
+- Update UtilityDirective.js
+- Record view / Contact / Use mail domain for logos.
+- API / Logo / SendRedirect in https forward to http
+- Fix authentication type property name in user form (#5817)
+- Fix for the copy2clipboard function (#6171)
+- Configure HttpOnly for language cookie and fix the cookie path. Fixes #6151
+- Map / WFS / Failed to load layer when feature type has no prefix
+- Search / Request aggs only if search change
+- Search / use search filters for suggest params
+- Editor / fix subtemplate editing
+- Processing / Add unchanged record count.
+- Editor / Directory / Add search configuration.
+- Directory / Move config to dedicated module (to easily reuse configuration widgets). Add missing translations.
+- Directory / Allow ZIP export of subtemplates.
+- Directory / Add search configuration.
+- Record view / Filter associated / Display only if filter available.
+- Manage record / Add add to selection and index actions / Don't show count.
+- Standards / ISO19115-3 / Processing / Add collection builder mechanism.
+- Search / Facet / Load more buckets preserve filters
+- Import metadata - option to allow to edit the metadata to the group owner editors, not only the metadata owner
+- Configure HttpOnly for session timeout cookies and fix the cookie path. Fixes #6151
+- wfs-harvesters - properly shutdown quartz
+- Standards / ISO19115-3 / Associated resources / Add description in document not in distribution.
+- Manage record / Add add to selection and index actions.  (#131)
+- Directory / Fix editing
+- Bump hibernate deps from 5.4.24.Final to 5.4.33.Final (#6165)
+- Merge pull request #129 from titellus/410-mergemain-20220215
+- Fix translation API tests.
+- Merge fixes.
+- Record view / Remove duplicated filters. https://github.com/titellus/core-geonetwork/pull/127.
+- Dependency update. Remove unused web-ui-docs module (grunt security update needed).
+- Merge remote-tracking branch 'tit/4.1.x' into 4.1.x
+- Merge remote-tracking branch 'origin/main' into 4.1.x
+- Editor / Associated resource / Better match and default in choices
+- Editor / Readwrite UUID / Remove old UUID document if UUID change.
+- Record view improvements (#127)
+- Merge pull request #6158 from geonetwork/dependabot/maven/org.hibernate-hibernate-core-5.4.24.Final
+- Bump hibernate-core from 5.4.17.Final to 5.4.24.Final
+- Map / avoid race condition where metadata uuid of a layer was reset
+- Map / call feedLayerMd when only a md uuid is present
+- Map / correctly identify WPS processes linked to a layer
+- Search / avoid reloading search when coming from elsewhere if not needed
+- Switch to Fontawesome v4.7.0 (latest commit)
+- WPS / invert lat/lon values in bbox data since we're using EPSG:4326
+- Date picker / avoid running init multiple times
+- Print / fix legend URL sanitizing
+- [FP] Batchreport improvements (#6013)
+- Add event allowing to  index additional information (#6117)
+- New utility function for copying text to the clipboard (#6103)
+- Users form - add button to toggle password fields visibility (#6140)
+- Add German translations for Datacite schematron rules (#6159)
+- i18n / Messages.properties / French / Doubled quote
+- Index / Ordering instruction can be an array.
+- MetadataResourceDatabaseMigration / Catalogue editing harvested records may require this
+- Standard / ISO19115-3 / Add online source / Create one link per CSV's name only for OGC
+- Indexing / Do not index empty formats.
+- Metadata status dialog - disable button until receiving the current metadata status value (#6149)
+- Fix bug with Keycloak backchannel logout not working due to CSRF issue. (#6132)
+- Merge pull request #6147 from jahow/fix-editor-avoid-id-uuid-conflicts
+- Editor / Quick workaround to avoid conflicts between ID and UUID
+- [FP] Add register and lost password option to accessible login menu - port to main branch (#5968)
+- Metadata publish - check if the metadata owner group has the workflow enabled (#6141)
+- Metadata detail page - fix trigger metadata tab selection (#6142)
+- Update transfer ownership to handle when the metadata workflow is enabled the approved version of the metadata with a working copy (#6144)
+- Update version to 4.0.7-SNAPSHOT
+- Build / Remove duplicated dependency.
+- Indexing / DQ measures for ISO19139.
+- Associated resource / Restore remote record icon.
+- Indexing / Add utility to build valid ES field name
+- Indexing / Conforms to spec field and DQ measures.
+- Record view / Add quality reports / 3 states boolean.
+- Record view / Add quality reports.
+- Multilingual support / Translate keywords according to UI language.
+- Standards / ISO19115-3 / Associated resources / Add additional documentation to links.
+- Associated resources / Inject associated resources in search response when requested.
+- Associated resources / Improve link classification / Sort by title.
+- Associated resources / Improve link classification / Reuse filter code.
+- Associated resources / Improve link classification.
+- Formatter / Avoid exception on empty text
+- API / Share / Avoid NPE on null status.
+- Harvested records / Add settings to allow privilges management. (#98)
+- Thesaurus / Local / Set concept scheme defined as namespace.
+- Indexing / Thesaurus / Add possibility to configure fieldname mapping
+- Version is now 4.1.x with experiments...
+- Indexing / 19115-3 / Add ordering instructions (#113)
+- Record view / Resource type icon in cards. Translate codelist. Avoid error on null url.
+- Improvements / Looks like translate takes time dealing with large objects. Give it what it only needs.
+- Map / Do not notify on tile load error in small maps.
+- Record view / Series / Fix sort, disable filter if one value only, use all filters defined in config in stats.
+- Metadata create page - allow to configure the metadata template / group to select by default (#108)
+- Editor / DOI check / Use doi.org.
+- Admin / UI config / Properly render boolean options.
+- Standard / 19115-3 / More robust when encoding code with multilingual form.
+- Harvester / CSW / After XSLT conversion check if the schema changed.
+- Map / Add WMS and metadata link
+- Duration field / Translation improvement.
+- User feedback / Add email notification and admin console (#102)
+- Merge pull request #81 from titellus/406-collection-builder
+- Process / Collection updater / Merge element having context only.
+- Record view / More readable links in top block. Mosaic below title.
+- Record view / Avoid double call to related API.
+- Record view / Improvements following user feedbacks.
+- Merge remote-tracking branch 'tit/4.0.x' into 406-collection-builder
+- Merge pull request #103 from titellus/406-merge20220121
+- Merge remote-tracking branch 'origin/main' into 4.0.x
+- UI / Config / Tabset mode example.
+- API / Formatter / Fix line feed on CSV output.
+- Record view / Links / Cleanup and focus.
+- Record view / Use same directive for all keywords. Drop next/previous actions which does not work well.
+- Record view / Links / Move to configuration.
+- Record view / Series / Filter / Fix translation.
+- Record view / Feature catalogue is rendered in associated panel. Use full width.
+- Record view / Parent record and utility directive for status.
+- Record view / Center thumbnails.
+- Standards / ISO19115-3 / Remove project specific labels.
+- Record view / Series / Add configuration for table summary columns.
+- Record view / Series / Add configuration for table summary columns.
+- API / Logo / Encode file name in redirect.
+- Background colour for 'Similar records' block
+- Map / ESRI / Layers can be CSV of integers. Save them in context.
+- Admin / Harvester / Add possibility to copy/paste a config.
+- Admin / Harvester / Properly sort by label.
+- Thesaurus / Regions of the world / Add EU changes, UK constituent countries.
+- Add a full width coloured block to the dataset page, and add padding and margins to the blocks
+- Decreasing whitespace between items in the sidebar
+- More focus on link.
+- Refactor utility to create search link to focus on. Fix word break on long constraints with links.
+- Associated resource / Add a size parameter for card layout. Improve contact mode with right side description.
+- Record view / Side block take full width when lot of items. Improve blend modes in gallery when image has white background.
+- re-add the styles for the 'provided by' thumbnail in the sidebar
+- Small UI changes: - strong > h3 - increase font size for keywords - additional styles for interchanges between sidebar and main column - reordering some blocks - copy to clipboard in button group
+- Bump log4j2 from 2.17.0 to 2.17.1
+- UI settings / Add show map settings.
+- Record view improvements for services and series.
+- Associated resource / Add possibility to pass HTML block for title.
+- Record view / Card / min width in case we use cards in sidebar.
+- Record view / Contact / Cursor. Fix missing translation.
+- Export / Add all associated records to MEF.
+- Record view improvements.
+- gnRelatedContainer directive to display a panel with different types of relations available in the metadata object
+- Fix for adding thumbnails
+- Small style change for contact list
+- Samples / Update FAO one with a working WMS server.
+- Finish restyling and reordering dataset metadata
+- Reordering elements for the dataset metadata page
+- Map / Do not try to add a layer not found in capabilities.
+- Map / Do not mix layer queue for all maps.
+- Record view / Contact / Escape id for image pattern.
+- Record view / Contact / Unique id for image pattern.
+- Record view / Contact / Add possibility to use a logo for contact based on orgName.png. If none found, use the first letter.
+- API / Add GET logo operation which returns 404 if not found (instead of a default image with the resource filter).
+- Record view / associated resources filter - collect stats per type - fix array loop
+- Record view / associated resources filter - collect stats per type
+- Record view / Contact / Add popup and align when more than 4.
+- Record view / Contact / Add card mode.
+- Related directive / remove empty filters and allow to hide display toggle buttons
+- Merge remote-tracking branch 'origin/main' into 406-collection-builder
+- Facet / Use resourceType instead of hierarchyLevel which is 19139 only field.
+- Associated resources / Sort by title - make long list more readable.
+- Record view / Move history and indexing error to the bottom.
+- Record view / Move history and indexing error to the bottom.
+- Admin / Ui configuration / Remove some duplication and add new settings for keywords.
+- Merge remote-tracking branch 'tit/4.0.x' into 406-collection-builder
+- Lib / Update to angularjs 1.5.11.
+- Record view / Keyword / Add spatial type keywords and internal keywords. Add color code for application and non geographic dataset
+- Build / Fix JS error.
+- Merge remote-tracking branch 'tit/4.0.x' into 406-collection-builder
+- CSW harvester add typeahead support for filter field names
+- Facet / Publication group / Translate group properly.
+- Security / Do not expose internal settings.
+- Formatter / Avoid blank page due to self closing tag
+- Associated resource / Make distinction between remote record and local one
+- Editor / Associated resource / Feature catalogue / Fix index field name for search.
+- Translation / Improve
+- Record view / Move template to a dedicated directory.
+- Dataset view / Add simple WMS preview.
+- Related directive / Add doc for filter attribute and add support for negative filter and regex. Follow up of https://github.com/geonetwork/core-geonetwork/issues/1983.
+- Merge remote-tracking branch 'tit/4.0.x' into 4.0.x
+- Merge remote-tracking branch 'origin/main' into 4.0.x
+- UI config / Remove duplicated option.
+- CSW / Portal capabilities should not use the default
+- Harvester / CSW / Do not report last harvesting changes if early failure
+- CSW / Fix escapeChar usage
+- Home / Type of resource / Use resourceType instead of hierarchyLevel which is ISO19139 only.
+- Dates / Most users are using a day precision. Remove time by default.
+- Associated resource / Add layout parameter. More like this use card and move to bottom of the view.
+- Associated resource / Add card layout - TODO: need a parameter to choose the layout list or card.
+- Finish styling for dataset, series and service
+- WIP: styling of series and record views
+- WIP - Restyling `recordView` pages and series
+- Metadata related - extract metadata card to a custom directive
+- Metadata series directive / Sort key. If no children use siblings - depends on the encoding.
+- Record view / Add possibility to highlight keyword / Admin config.
+- Processing / Collection builder / Error reporting and more robust on nationaalgeoregister records.
+- Record view / Keyword badge directive / Remove scope to allow access to controller fn.
+- Record view / Add possibility to highlight keywords from a particular thesaurus. Create template for title to be common.
+- Record table / Render format like in related link panel.
+- Metadata series directive / Add support for multiple filters.
+-  Metadata series - move aggregations to configuration - ui changes
+-  Metadata series - move aggregations to configuration - simplify configuration and fix UI configuration editing
+- Metadata series - move aggregations to configuration
+- Metadata series directive - add sort by property
+- Link button directive.
+- Split the large recordView in smaller better reusable files/templates
+- Refactor metadata series directives to support rendering with/without aggregations and use a configurable title
+- Privileges / Fix button privileges on dropdown and single button.
+- Record view / Link table / Sort rows by first column.
+- Series metadata - remove unused directive
+- Series metadata - use aggregations for children metadata
+- Record view / Add directive to display record as table.
+- Search / Restore possibility to have a facet as a tab.
+- Home / Show mosaic is an option.
+- Search / Restore possibility to have a facet as a tab.
+- Record view / Extract template for about section.
+- Home page / Cards / Fix abstract field.
+- Record view / Mosaic / Cover the area.
+- Record view / Member search / Limit source fields.
+- Page load / Try to use ng-if to reduce number of API calls on load eg. when accessing recordView _search is called 3 times instead of 16.
+- Record view / Use the preloaded related for dataset view too.
+- Record view / On load, load all related and collect details about records. Then related object are displayed as search results.
+- Record view / Split template for series and others.
+- Editor / Related records / Clarify type of relations.
+- Initial changes for metadata detail page for series metadata
+- Collection / Builder directive.
+- Editor / Menu / If no label, use the id - to avoid empty tab name.
+- Collection / Process to update a serie from its members / Combine overviews.
+- Layout / Add a record mosaic directive / Can be apply to a Metadata object.
+- Layout / Add a record mosaic directive.
+- Editor / Tabs / If no label, use the id - to avoid empty tab name.
+- Collection / Process to update a serie from its members / Add support for mix of schema in members. eg. ISO19139 and ISO19115-3.
+- Merge remote-tracking branch 'tit/4.0.x' into 406-collection-builder
+- Record view / Add supplemental information.
+- Merge remote-tracking branch 'origin/main' into 4.0.x
+- Java message / French translations
+- Editor board / Facet / Resource type
+- Record view / Back to search / Fix tag filter on advanced view.
+- Editor / Online source / Config / Add choices for URL
+- Editor / Collapse directive
+- New record / Restore custom label depending on type of creation.
+- DOI / Add public URL settings.
+- Collection / Add menu to build a collection from a selection.
+- Collection / Add process to update a serie from its members.
+- XSL / Add utility to get text from HTML
+- Import / Group list is restricted to user profile
+- Elasticsearch / Add _msearch API support
+- Dependency updates / Related to security / SAXBuilder workaround.
+- Dependency updates / Related to security warnings.
+- Index / Specification conformance is nested field
+- Formatter / Table rendering / Fix error when no child in element
+- UI / Config / Add some other group of options
+- Search / Current filters / Fix display of any and uuid.
+- Translation / FR.
+- Indexing / More robust.
+- Merge pull request #71 from titellus/406-merge-main
+- Fix the display of the service metadata title for CSW and portals
+- Merge remote-tracking branch 'geocat/mapcontext-metadata-config' into 406-merge-main
+- Dashboards / Update field names and move to 7.15.
+- Elasticsearch / Update to 7.15.1
+- Allow to configure the map context files for maps (viewer / search / editor) from map context files defined in the metadata online resources
+- XLink / Do not swallow all elements having uuidref eg. internal xlinks (#69)
+- Directory / List of records related / Fix search by xlink.
+- Batch edit / Add search and replace and preview.
+- API / Batch / Add preview mode.
+- Utility / Add diff match patch.
+- INSPIRE / Remove usage of specific field.
+- Indexing / Keyword / Add URI and group regions by type / Fix keyword field name.
+- Indexing / Display error in record view when user can edit record.
+- Indexing improvements / Keywords and thesaurus.
+- More like this / Use current title for the search
+- Indexing / Date range / More robust when date is not a date.
+- Indexing / Keyword / Add URI and group regions by type.
+- Indexing / In case of error, add the UUID in document.
+- Editor board / Fix JS error on page load.
+- Portal / Service abstract / Support hyperlink
+- Portal / Fix service retrieval once the portal has translations
+- Merge pull request #60 from titellus/GeoCat-improve-information-portals
+- Merge branch 'improve-information-portals' of https://github.com/GeoCat/core-geonetwork into GeoCat-improve-information-portals
+- Admin / Thesaurus / Fix keyword init when browsing relation. (#57)
+- Aggregation / Add meta property to define a custom thesaurus id
+- API / Processes / Search and replace with database
+- Indexing / Use final index field name in Java constant
+- Citation / Add dublin core support / Fix keyword path.
+- Citation / Add dublin core support.
+- Citation / Add keyword to RIS. Improve layout.
+- Citation / Add copy to clipboard.
+- Map / Add layer / Improve search in capabilities
+- Portal / Add abstract and contact point in home page. (#21)
+- Indexing / Thesaurus / Make field name more consistent. (#52)
+- Update usage of portal service metadata - code refactor and update home pag styling
+- Update usage of portal service metadata:
+- Progress bar / In prod mode sometimes does not load properly
+- Admin / Thesaurus / Improve thesaurus origin and type
+- Validation / INSPIRE / Fix when setting is 'null'
+- UI configuration / Do not display all details in config option list.
+- Citation / Add admin configuration.
+- ISO19115-3 / DOI / Add missing saved query.
+- Saved query / Improve error message.
+- Merge remote-tracking branch 'origin/main' into 4.0.x
+- Dataset citation (#41)
+- Dublin core / Adding element has no label
+- Harvester / CSW / SortBy / Set default to empty.
+- WFS Harvester / Improve layout.
+- WFS harvester / Avoid NPE when retrieving title from a null attribute.
+- WFS harvester / Avoid SQL exception when starting existing process.
+- Progress bar / In prod mode sometimes does not load properly
+- API / Sources / PUT is failing.
+- Build / Warning fix
+- Dublin core / When not flat eg. advanced view, all elements can be removed in DC.
+- MBean registration / Ignore existing, fix OpenAPI & links analysis issue (#39)
+- Dublin Core / Editor / Fix autocomplete for subtemplates (#37)
+- API / Attachements / Do not allow file upload with '..'
+- Subtemplate / Avoid JS error when isHarvested is undefined.
+- Dublin core / Subtemplate search / Fix API call.
+- CSW / ISO19139 / Add ISO19115-3 output.
+- Search / Facet / Remove untranslated title
+- Search / Facet / Fix highlight class
+- API / Dates are missing
+- Admin / Report / Add last change date in reports.
+- Record view / Associated resource with no name and description
+- ISO19115-3 / Mapping from ISO19139 / Add support for aggregate linked with xlink (#28)
+- Search / Related / quote UUID in all case
+- Elasticsearch / Log error details in case of invalid query.
+- Record view / Fix full view formatter path.
+- Facet / Load translations using POST to avoid too long URI.
+- Search / Facet reload can be the same for terms and tree
+- Search / Facet usually do not reload if selected (the time they are selected)
+- Harvester / CSW / Preserve order when processing records
+- Record view / Add links and newlines in identifier and constraints
+- Formatter / Avoid JS error when property does not exist in object
+- Search wit ] works
+- Search / Escape /
+- Update codelists.xml
+- Update codelists.xml
+- ISO19115-3 / Contact / Index identifiers.
+- Admin / Thesaurus / LD-Registry / Add sub-register support.
+- Harvester / CSW / Add sortby option.
+- Remove online resource - fix resource name comparison
+- 5927 review (#5932)
+- test: SortByParser test suite
+- refactor: externalize CSW SortBy parsing in a dedicated class SortByParser
+- fix CSW ES sortBy mapping
+- fix CSW ES envelope order
+- Search / Match all docs
+- Harvester / CSW / Add ISO19115-3 outputSchema choice (#12)
+- ISO19115-3 / Feature catalogue / Fix column name path
+- ISO19115-3 / Template / Feature catalogue default cardinality
+- Admin / User / Cannot delete user with status
+- Map viewer - support to add layers from ESRI Rest services
+- Record view / Keywords sort (#7)
+- Update menu-builder.xsl
+- Editor / Directory / Choose group like for other types of records
+- Admin / Languages and translations (#2)
+- Merge branch 'fxprunayre-406-index-perfieldanalyzer' into 4.0.x
+- Merge branch '406-index-perfieldanalyzer' of https://github.com/fxprunayre/core-geonetwork into fxprunayre-406-index-perfieldanalyzer
+- Merge remote-tracking branch 'origin/main' into 4.0.x
+- Index / Multilingual / Per field analyzer config improvements - add Spanish analyzer
+- Merge pull request #1 from geonetwork/406-configoverlay
+- Update EsService.js
+- Update README.md
+- User configuration / use angular.isObject.
+- Indexing / ISO / Add supplementalInformation and purpose fields.
+- Indexing / Add entry point for synonyms configuration.
+- User configuration / Easier config with overlay mechanism.
+- Search / Multilingual / Missing translation. Fix detection.
+- Search / Multilingual / Suggestion support multilingual.
+- Search / Multilingual / Admin config and permalink.
+- Search / On title only should not skip facet params (and must take care of language config).
+- Search / Multilingual / Allow whitelist to be configured by admin (instead of based on catalogue content).
+- Search / Multilingual / Cleanup.
+- Search / Multilingual / Cleanup layout and fix user only record option in batch editing.
+- Search / Multilingual / Add franc-min lib in prod mode.
+- Search / Multilingual / Add search options.
+- Search / Multilingual / Add default config and example for french.
+- CSW / Fix some field mapping. Needs improvement in multilingual conditions.
+- Subtemplate / Improve indexing.
+- Index / Multilingual / Per field analyzer config improvements.
+- Remove fields that are too much.
+- WIP: CatController.js: Change quryBase to FRE.
+- Add more language fields to es index.
+- Add translation fields to es-index.
+- WIP: Use the anyfre field for Queries. Testing french stopwords.
+- web: Add french fields to the index.

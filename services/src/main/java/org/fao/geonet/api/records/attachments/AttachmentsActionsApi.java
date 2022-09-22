@@ -31,14 +31,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
-import org.fao.geonet.lib.Lib;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -122,13 +120,12 @@ public class AttachmentsActionsApi {
         throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        String metadataId = dataMan.getMetadataId(metadataUuid);
-        Lib.resource.checkEditPrivilege(context, metadataId);
+        ApiUtils.canEditRecord(metadataUuid, request);
 
         Path thumbnailFile = thumbnailMaker.generateThumbnail(
             jsonConfig,
             rotationAngle);
 
-        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC, false);
     }
 }

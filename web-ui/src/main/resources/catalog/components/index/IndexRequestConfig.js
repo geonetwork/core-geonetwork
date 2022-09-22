@@ -21,37 +21,51 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_index_request_config');
+(function () {
+  goog.provide("gn_index_request_config");
 
-  var module = angular.module('gn_index_request_config', []);
+  var module = angular.module("gn_index_request_config", []);
 
-  module.factory('gnIndexWfsFilterConfig', ['gnHttp', function(gnHttp) {
+  module.factory("gnIndexWfsFilterConfig", [
+    "gnHttp",
+    function (gnHttp) {
+      return {
+        url: gnHttp.getService("featureindexproxy"),
+        docTypeIdField: "id",
+        docIdField: "featureTypeId",
+        idDoc: function (config) {
+          this.params = config;
+          return encodeURIComponent(config.wfsUrl + "#" + config.featureTypeName);
+          // config.featureTypeName.replace(':', '\\:');
+        },
+        facets: true,
+        stats: true,
+        excludedFields: [
+          "geom",
+          "the_geom",
+          "ms_geometry",
+          "msgeometry",
+          "bbox_xmin",
+          "bbox_ymin",
+          "bbox_xmax",
+          "bbox_ymax",
+          "id_s",
+          "_version_",
+          "featuretypeid",
+          "doctype"
+        ]
+      };
+    }
+  ]);
 
-    return {
-      url: gnHttp.getService('featureindexproxy'),
-      docTypeIdField: 'id',
-      docIdField: 'featureTypeId',
-      idDoc: function(config) {
-        this.params = config;
-        return encodeURIComponent(config.wfsUrl + '#' + config.featureTypeName);
-        // config.featureTypeName.replace(':', '\\:');
-      },
-      facets: true,
-      stats: true,
-      excludedFields: [
-        'geom', 'the_geom', 'ms_geometry', 'msgeometry',
-        'bbox_xmin', 'bbox_ymin', 'bbox_xmax', 'bbox_ymax',
-        'id_s', '_version_', 'featuretypeid', 'doctype']
-    };
-  }]);
-
-  module.factory('gnIndexDefaultConfig', ['gnHttp', function(gnHttp) {
-    return {
-      url: gnHttp.getService('indexproxy'),
-      facets: true,
-      stats: false
-    };
-  }]);
-
+  module.factory("gnIndexDefaultConfig", [
+    "gnHttp",
+    function (gnHttp) {
+      return {
+        url: gnHttp.getService("indexproxy"),
+        facets: true,
+        stats: false
+      };
+    }
+  ]);
 })();

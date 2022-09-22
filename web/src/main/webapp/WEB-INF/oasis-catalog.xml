@@ -66,6 +66,9 @@
   <uri name="common/utility-tpl.xsl"
        uri="../xslt/common/utility-tpl.xsl"/>
 
+  <uri name="common/menu-fn.xsl"
+       uri="../xslt/ui-metadata/menu-fn.xsl"/>
+
   <uri name="common/render-html.xsl"
        uri="../xslt/common/render-html.xsl"/>
 

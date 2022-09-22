@@ -21,39 +21,46 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_language_switcher_directive');
+(function () {
+  goog.provide("gn_language_switcher_directive");
 
-  var module = angular.module('gn_language_switcher_directive',
-      ['pascalprecht.translate']);
+  var module = angular.module("gn_language_switcher_directive", [
+    "pascalprecht.translate"
+  ]);
 
-  module.directive('gnLanguageSwitcher', ['$translate', 'gnGlobalSettings', 'gnLangs',
-    function($translate, gnGlobalSettings, gnLangs) {
-
+  module.directive("gnLanguageSwitcher", [
+    "$translate",
+    "gnGlobalSettings",
+    "gnLangs",
+    function ($translate, gnGlobalSettings, gnLangs) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: false,
         transclude: true,
         scope: {
-          langs: '=',
-          langLabels: '=',
-          lang: '=gnLanguageSwitcher'
+          langs: "=",
+          langLabels: "=",
+          lang: "=gnLanguageSwitcher"
         },
         templateUrl: function ($element, $attrs) {
-          return $attrs.templateUrl || '../../catalog/components/common/languageswitcher/partials/' +
-            'language-switcher.html'
+          return (
+            $attrs.templateUrl ||
+            "../../catalog/components/common/languageswitcher/partials/" +
+              "language-switcher.html"
+          );
         },
-        link: function(scope) {
-          scope.$watch('lang', function(value, o) {
-
+        link: function (scope) {
+          scope.$watch("lang", function (value, o) {
             var urlLang = gnLangs.detectLang(
               gnGlobalSettings.gnCfg.langDetector,
               gnGlobalSettings
             );
 
             if (value !== urlLang) {
-              location.href = location.href.replace('\/' + urlLang + '\/', '\/' + value + '\/');
-
+              location.href = location.href.replace(
+                "/" + urlLang + "/",
+                "/" + value + "/"
+              );
 
               //if (value !== o) {
               //  url[5] = value;  // Use ISO3 code
@@ -72,14 +79,15 @@
             }
           });
 
-          scope.isHidden = function() {
+          scope.isHidden = function () {
             return Object.keys(scope.langs).length > 1;
           };
 
-          scope.switchLanguage = function(newLanguage) {
+          scope.switchLanguage = function (newLanguage) {
             scope.lang = newLanguage;
-          }
+          };
         }
       };
-    }]);
+    }
+  ]);
 })();

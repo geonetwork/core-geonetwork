@@ -23,7 +23,7 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
-import org.geotools.data.ows.HTTPClient;
+import org.geotools.http.HTTPClient;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
 import org.geotools.data.wfs.internal.WFSConfig;

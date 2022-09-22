@@ -10,9 +10,15 @@
 
       <div class="panel-body">
         <div class="navbar">
-        <button type="button" class="btn btn-default"
-                data-ng-click="csvReport($event)" data-translate="">csvExport
-        </button></div>
+          <button
+            type="button"
+            class="btn btn-default"
+            data-ng-click="csvReport($event)"
+            data-translate=""
+          >
+            csvExport
+          </button>
+        </div>
 
         <table id="harvestReport" class="table table-striped">
           <tr>
@@ -22,15 +28,14 @@
             <th data-translate="">lastRun</th>
             <th data-translate="">totalNonTemplateMetadata</th>
           </tr>
-          <tr
-            data-ng-repeat="h in $parent.harvesters">
+          <tr data-ng-repeat="h in $parent.harvesters">
             <td>{{h.site.name | translate}}</td>
-            <td class="gn-break">{{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl ||
-              h.site.host}}
+            <td class="gn-break">
+              {{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl || h.site.host}}
             </td>
-            <td >{{('harvester-' + h['@type']) | translate}}</td>
-            <td>{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun |
-              date:'medium')}}
+            <td>{{('harvester-' + h['@type']) | translate}}</td>
+            <td>
+              {{h.info.lastRun.length === 0 ? '' : (h.info.lastRun | date:'medium')}}
             </td>
             <td>{{h.info.result.total}}</td>
           </tr>

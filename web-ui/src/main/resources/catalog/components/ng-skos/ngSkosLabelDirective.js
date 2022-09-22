@@ -74,29 +74,30 @@
 </example>
  */
 
-(function() {
-  goog.provide('ngSkos_label_directive');
+(function () {
+  goog.provide("ngSkos_label_directive");
 
-  var module = angular.module('ngSkos_label_directive', []);
+  var module = angular.module("ngSkos_label_directive", []);
 
-  module.directive('skosLabel', function() {
+  module.directive("skosLabel", function () {
     return {
-      restrict: 'A',
+      restrict: "A",
       scope: {
-        concept: '=skosLabel'
+        concept: "=skosLabel"
       },
-      template: '{{concept.prefLabel[language] ? ' +
-          '(concept.prefLabel[language] == "topConcepts" ? ' +
-          '(concept.prefLabel[language] | translate) : ' +
-              'concept.prefLabel[language])' +
-              ' : "???"}}',
-      link: function(scope, element, attrs) {
-
+      template:
+        "{{concept.prefLabel[language] ? " +
+        '(concept.prefLabel[language] == "topConcepts" ? ' +
+        "(concept.prefLabel[language] | translate) : " +
+        "concept.prefLabel[language])" +
+        ' : "???"}}',
+      link: function (scope, element, attrs) {
         function updateLanguage(language) {
           scope.language = language ? language : attrs.lang;
 
-          language = scope.concept ?
-              selectLanguage(scope.concept.prefLabel, scope.language) : '';
+          language = scope.concept
+            ? selectLanguage(scope.concept.prefLabel, scope.language)
+            : "";
 
           if (language != scope.language) {
             scope.language = language;
@@ -116,14 +117,17 @@
         }
 
         // update if lang attribute changed (also called once at initialization)
-        attrs.$observe('lang', updateLanguage);
+        attrs.$observe("lang", updateLanguage);
 
         // update with same language if prefLabels changed
-        scope.$watch('concept.prefLabel', function(value) {
-          updateLanguage();
-        }, true);
+        scope.$watch(
+          "concept.prefLabel",
+          function (value) {
+            updateLanguage();
+          },
+          true
+        );
       }
     };
   });
-
 })();

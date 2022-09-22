@@ -28,6 +28,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Data Access object for the {@link Link} entities.
@@ -40,4 +41,7 @@ public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRep
      */
     @Nullable
     Link findOneByUrl(@Nonnull String url);
+
+    @Nullable
+    List<Link> findAllByUrlIn(@Nonnull List<String> url);
 }

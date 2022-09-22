@@ -52,6 +52,8 @@
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
         url: "../../srv/api/doc",
+        operationsSorter: "alpha",
+        tagsSorter: "alpha",
         dom_id: '#swagger-ui',
         deepLinking: true,
         requestInterceptor: function(requestObj) {

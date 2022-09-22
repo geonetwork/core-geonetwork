@@ -69,10 +69,12 @@
           </xsl:copy>
         </xsl:for-each>
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test="$txt != ''">
         <xsl:call-template name="addLineBreaksAndHyperlinksInternal">
           <xsl:with-param name="txt" select="$txt"/>
         </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

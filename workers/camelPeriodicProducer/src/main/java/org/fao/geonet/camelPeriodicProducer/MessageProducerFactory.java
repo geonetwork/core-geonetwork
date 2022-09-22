@@ -27,12 +27,17 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.apache.camel.model.RouteDefinition;
+import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.TriggerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 public class MessageProducerFactory {
 
@@ -41,58 +46,92 @@ public class MessageProducerFactory {
     protected RouteBuilder routeBuilder;
     @Autowired
     protected QuartzComponent quartzComponent;
+    @Autowired
+    protected SettingManager settingManager;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
     @PostConstruct
     public void init() throws Exception {
-        quartzComponent.start();
+        try {
+            quartzComponent.start();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     public void registerAndStart(MessageProducer messageProducer) throws Exception {
-        quartzComponent.createEndpoint("quartz2://" + messageProducer.getId());
+        quartzComponent.createEndpoint(buildFrom(messageProducer.getId()));
         writeRoute(messageProducer);
         reschedule(messageProducer);
     }
 
     public void reschedule(MessageProducer messageProducer) throws Exception {
+        String id = buildFrom(messageProducer.getId());
         QuartzEndpoint toReschedule = (QuartzEndpoint) routeBuilder.getContext().getEndpoints().stream()
-            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
+            .filter(x -> x.getEndpointKey().compareTo(id) == 0).findFirst().get();
 
         String msgCronExpression = messageProducer.getCronExpession() == null ? NEVER : messageProducer.getCronExpession();
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(toReschedule.getTriggerKey()).withSchedule(CronScheduleBuilder.cronSchedule(msgCronExpression)).build();
 
+        quartzComponent.getScheduler().interrupt(toReschedule.getId());
         quartzComponent.getScheduler().rescheduleJob(toReschedule.getTriggerKey(), trigger);
-        routeBuilder.getContext().startRoute(findRoute(messageProducer.getId()).getId());
+        Optional<RouteDefinition> route = findRoute(messageProducer.getId());
+        if (route.isPresent()) {
+            routeBuilder.getContext().startRoute(route.get().getId());
+        }
     }
 
     public void changeMessageAndReschedule(MessageProducer messageProducer) throws Exception {
-        routeBuilder.getContext().removeRouteDefinition(findRoute(messageProducer.getId()));
+        Optional<RouteDefinition> route = findRoute(messageProducer.getId());
+        if (route.isPresent()) {
+            routeBuilder.getContext().removeRouteDefinition(route.get());
+        }
         writeRoute(messageProducer);
         reschedule(messageProducer);
     }
 
     public void destroy(Long id) throws Exception {
-        routeBuilder.getContext().removeRouteDefinition(findRoute(id));
-        routeBuilder.getContext().removeEndpoints("quartz2://" + id);
+        Optional<RouteDefinition> route = findRoute(id);
+        if (route.isPresent()) {
+            routeBuilder.getContext().removeRouteDefinition(route.get());
+        }
+        routeBuilder.getContext().removeEndpoints(buildFrom(id));
+    }
+
+    private String buildFrom(Long id) {
+        return String.format("quartz2://%s-%s",
+            settingManager.getSiteId(),
+            id);
+    }
+
+    public void shutdown() {
+        try {
+            quartzComponent.shutdown();
+        } catch (Exception e) {
+            LOGGER.error("Error while trying to shutdown quartz", e);
+        }
     }
 
     private void writeRoute(MessageProducer messageProducer) throws Exception {
         RouteDefinition routeDefinition = routeBuilder
-            .from("quartz2://" + messageProducer.getId())
+            .from(buildFrom(messageProducer.getId()))
             .noAutoStartup()
             .setBody(routeBuilder.constant(messageProducer.getMessage()))
             .to(messageProducer.getTargetUri());
         routeBuilder.getContext().addRouteDefinition(routeDefinition);
     }
 
-    private RouteDefinition findRoute(Long id) {
+    private Optional<RouteDefinition> findRoute(Long id) {
         return routeBuilder.getContext().getRouteDefinitions()
             .stream()
             .filter(route -> routeInputHasQuart2RouteIdUrl(route, id))
+            .map(Optional::ofNullable)
             .findFirst()
-            .get();
+            .orElse(Optional.empty());
     }
 
     private boolean routeInputHasQuart2RouteIdUrl(RouteDefinition route, Long id) {
-        return route.getInputs().size() == 1 && route.getInputs().get(0).getUri().equalsIgnoreCase("quartz2://" + id);
+        return route.getInputs().size() == 1 && route.getInputs().get(0).getUri().equalsIgnoreCase(buildFrom(id));
     }
 }

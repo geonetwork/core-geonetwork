@@ -21,8 +21,8 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_bounding_service');
+(function () {
+  goog.provide("gn_bounding_service");
 
-  var module = angular.module('gn_bounding_service', []);
+  var module = angular.module("gn_bounding_service", []);
 })();

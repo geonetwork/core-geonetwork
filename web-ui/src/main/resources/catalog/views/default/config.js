@@ -21,111 +21,105 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
+(function () {
+  goog.provide("gn_search_default_config");
 
-  goog.provide('gn_search_default_config');
+  var module = angular.module("gn_search_default_config", []);
 
-  var module = angular.module('gn_search_default_config', []);
+  module.value(
+    "gnTplResultlistLinksbtn",
+    "../../catalog/views/default/directives/partials/linksbtn.html"
+  );
 
-  module.value('gnTplResultlistLinksbtn',
-      '../../catalog/views/default/directives/partials/linksbtn.html');
+  module.run([
+    "gnSearchSettings",
+    "gnViewerSettings",
+    "gnOwsContextService",
+    "gnMap",
+    "gnMapsManager",
+    "gnDefaultGazetteer",
+    function (
+      searchSettings,
+      viewerSettings,
+      gnOwsContextService,
+      gnMap,
+      gnMapsManager,
+      gnDefaultGazetteer
+    ) {
+      if (viewerSettings.mapConfig.viewerMapLayers) {
+        console.warn(
+          '[geonetwork] Use of "mapConfig.viewerMapLayers" is deprecated. ' +
+            "Please configure layer per map type."
+        );
+      }
 
-  module
-      .run([
-        'gnSearchSettings',
-        'gnViewerSettings',
-        'gnOwsContextService',
-        'gnMap',
-        'gnMapsManager',
-        'gnDefaultGazetteer',
-        function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnMapsManager, gnDefaultGazetteer) {
+      // Keep one layer in the background
+      // while the context is not yet loaded.
+      viewerSettings.bgLayers = [gnMap.createLayerForType("osm")];
+      viewerSettings.servicesUrl = viewerSettings.mapConfig.listOfServices || {};
 
-          if(viewerSettings.mapConfig.viewerMapLayers) {
-            console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is deprecated. ' +
-              'Please configure layer per map type.')
-          }
+      // WMS settings
+      // If 3D mode is activated, single tile WMS mode is
+      // not supported by olcesium, so force tiling.
+      if (viewerSettings.mapConfig.is3DModeAllowed) {
+        viewerSettings.singleTileWMS = false;
+        // Configure Cesium to use a proxy. This is required when
+        // WMS does not have CORS headers. BTW, proxy will slow
+        // down rendering.
+        viewerSettings.cesiumProxy = true;
+      } else {
+        viewerSettings.singleTileWMS = true;
+      }
 
-          // Keep one layer in the background
-          // while the context is not yet loaded.
-          viewerSettings.bgLayers = [
-            gnMap.createLayerForType('osm')
-          ];
-          viewerSettings.servicesUrl =
-            viewerSettings.mapConfig.listOfServices || {};
+      var bboxStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "rgba(255,0,0,1)",
+          width: 2
+        }),
+        fill: new ol.style.Fill({
+          color: "rgba(255,0,0,0.3)"
+        })
+      });
+      searchSettings.olStyles = {
+        drawBbox: bboxStyle,
+        mdExtent: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: "orange",
+            width: 2
+          }),
+          image: new ol.style.Circle({
+            radius: 5,
+            stroke: new ol.style.Stroke({ color: "orange", width: 2 })
+          })
+        }),
+        mdExtentHighlight: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: "orange",
+            width: 3
+          }),
+          fill: new ol.style.Fill({
+            color: "rgba(255,255,0,0.3)"
+          }),
+          image: new ol.style.Circle({
+            radius: 10,
+            fill: new ol.style.Fill({ color: "orange" }),
+            stroke: new ol.style.Stroke({ color: "rgba(255,0,0,1)", width: 3 })
+          })
+        })
+      };
 
-          // WMS settings
-          // If 3D mode is activated, single tile WMS mode is
-          // not supported by olcesium, so force tiling.
-          if (viewerSettings.mapConfig.is3DModeAllowed) {
-            viewerSettings.singleTileWMS = false;
-            // Configure Cesium to use a proxy. This is required when
-            // WMS does not have CORS headers. BTW, proxy will slow
-            // down rendering.
-            viewerSettings.cesiumProxy = true;
-          } else {
-            viewerSettings.singleTileWMS = true;
-          }
+      gnMapsManager.initProjections(viewerSettings.mapConfig.switcherProjectionList);
+      var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+      var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
 
-          var bboxStyle = new ol.style.Style({
-            stroke: new ol.style.Stroke({
-              color: 'rgba(255,0,0,1)',
-              width: 2
-            }),
-            fill: new ol.style.Fill({
-              color: 'rgba(255,0,0,0.3)'
-            })
-          });
-          searchSettings.olStyles = {
-            drawBbox: bboxStyle,
-            mdExtent: new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: 'orange',
-                width: 2
-              })
-            }),
-            mdExtentHighlight: new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: 'orange',
-                width: 3
-              }),
-              fill: new ol.style.Fill({
-                color: 'rgba(255,255,0,0.3)'
-              })
-            })
+      // To configure a gazetteer provider
+      viewerSettings.gazetteerProvider = gnDefaultGazetteer;
 
-          };
-
-          gnMapsManager.initProjections(viewerSettings.mapConfig.switcherProjectionList);
-          var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
-          var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
-
-          // To configure a gazetteer provider
-          viewerSettings.gazetteerProvider = gnDefaultGazetteer;
-
-          // Map protocols used to load layers/services in the map viewer
-          searchSettings.mapProtocols = {
-            layers: [
-              'OGC:WMS',
-              'OGC:WMTS',
-              'OGC:WMS-1.1.1-http-get-map',
-              'OGC:WMS-1.3.0-http-get-map',
-              'OGC:WFS',
-              'ESRI:REST'
-              ],
-            services: [
-              'OGC:WMS-1.3.0-http-get-capabilities',
-              'OGC:WMS-1.1.1-http-get-capabilities',
-              'OGC:WMTS-1.0.0-http-get-capabilities',
-              'OGC:WFS-1.0.0-http-get-capabilities'
-              ]
-          };
-
-          // Set custom config in gnSearchSettings
-          angular.extend(searchSettings, {
-            viewerMap: viewerMap,
-            searchMap: searchMap
-          });
-
-        }]);
+      // Set custom config in gnSearchSettings
+      angular.extend(searchSettings, {
+        viewerMap: viewerMap,
+        searchMap: searchMap
+      });
+    }
+  ]);
 })();

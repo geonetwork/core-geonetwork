@@ -76,66 +76,64 @@
  * @param {string} template-url URL of a template to display the concept browser
  */
 
-(function() {
-  goog.provide('ngSkos_browser_directive');
-  goog.require('gn_thesaurus_service');
+(function () {
+  goog.provide("ngSkos_browser_directive");
+  goog.require("gn_thesaurus_service");
 
-  var module = angular.module('ngSkos_browser_directive', []);
+  var module = angular.module("ngSkos_browser_directive", []);
 
-  module.directive('skosBrowser',
-      ['$compile', 'gnThesaurusService',
-       function($compile, gnThesaurusService) {
+  module.directive("skosBrowser", [
+    "$compile",
+    "gnThesaurusService",
+    function ($compile, gnThesaurusService) {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: {
+          concept: "=",
+          language: "=",
+          addConcept: "="
+        },
+        templateUrl: "../../catalog/components/ng-skos/" + "templates/skos-browser.html",
+        link: function link(scope, element, attr) {
+          scope.previous = [];
+          angular.forEach(["URI", "Notation", "Label"], function (value) {
+            var lookup = gnThesaurusService["lookup" + value];
+            if (lookup) {
+              scope["select" + value] = function (thes, query) {
+                lookup(thes, query).then(function (response) {
+                  if (scope.previous) response.previous = scope.previous;
+                  angular.copy(response, scope.concept);
+                });
+              };
+            }
+          });
 
-         return {
-           restrict: 'E',
-           replace: true,
-           scope: {
-             concept: '=',
-             language: '=',
-             addConcept: '='
-           },
-           templateUrl: '../../catalog/components/ng-skos/' +
-           'templates/skos-browser.html',
-           link: function link(scope, element, attr) {
-             scope.previous = [];
-             angular.forEach(['URI', 'Notation', 'Label'], function(value) {
-                var lookup = gnThesaurusService['lookup' + value];
-                if (lookup) {
-                 scope['select' + value] = function(thes, query) {
-                   lookup(thes, query).then(
-                   function(response) {
-                     if (scope.previous) response.previous = scope.previous;
-                     angular.copy(response, scope.concept);
-                   }
-                   );
-                 };
-                }
-             });
+          // Select concept for navigation, push previous concept onto stack
+          scope.selectConcept = function (concept, previousConcept) {
+            if (!previousConcept) scope.previous.unshift(concept);
+            if (scope.selectURI && concept.uri) {
+              scope.selectURI(concept.thesaurus, concept.uri);
+            } else if (
+              scope.selectNotation &&
+              concept.notation &&
+              concept.notation.length
+            ) {
+              scope.selectNotation(concept.thesaurus, concept.notation);
+            } else if (scope.selectLabel && concept.prefLabel) {
+              scope.selectLabel(concept.thesaurus, concept.prefLabel);
+            }
+          };
 
-             // Select concept for navigation, push previous concept onto stack
-             scope.selectConcept = function(concept, previousConcept) {
-                if (!previousConcept) scope.previous.unshift(concept);
-                if (scope.selectURI && concept.uri) {
-                 scope.selectURI(concept.thesaurus, concept.uri);
-                } else if (scope.selectNotation && concept.notation &&
-               concept.notation.length) {
-                 scope.selectNotation(concept.thesaurus, concept.notation);
-                } else if (scope.selectLabel && concept.prefLabel) {
-                 scope.selectLabel(concept.thesaurus, concept.prefLabel);
-                }
-             };
-
-             // Refresh current concept with top concept from thesaurus
-             scope.topConcept = function(thesaurus) {
-               gnThesaurusService.getTopConcept(thesaurus).then(
-               function(c) {
-                 angular.copy(c, scope.concept);
-                 scope.previous = []; // reset the list of previous concepts
-               });
-             };
-
-           }
-         };
-       }]);
-
+          // Refresh current concept with top concept from thesaurus
+          scope.topConcept = function (thesaurus) {
+            gnThesaurusService.getTopConcept(thesaurus).then(function (c) {
+              angular.copy(c, scope.concept);
+              scope.previous = []; // reset the list of previous concepts
+            });
+          };
+        }
+      };
+    }
+  ]);
 })();

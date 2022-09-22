@@ -134,10 +134,11 @@ public class ResourceFilter implements Filter {
                 }
 
                 // Resources are images for logos, XML for map config or XSD
-                httpServletResponse.setContentType(
-                    "xml".equals(ext) || "xsd".equals(ext)
-                        ? MediaType.APPLICATION_XML_VALUE
-                        : "image/" + ext);
+                String contentType =  "xml".equals(ext) || "xsd".equals(ext)
+                    ? MediaType.APPLICATION_XML_VALUE
+                    : "image/" + ext;
+
+                httpServletResponse.setContentType(contentType);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                 if (filename.equals("images/logos/" + siteId + ".ico")) {
                     favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico", favicon.one(),
@@ -148,24 +149,20 @@ public class ResourceFilter implements Filter {
                     httpServletResponse.addHeader("Cache-Control", "max-age=" + FIVE_DAYS + ", public");
                     response.getOutputStream().write(favicon.one());
                 } else {
-                    Pair<byte[], Long> loadResource = resources.loadResource(resourcesDir, servletContext, appPath, filename,
-                                                                             defaultImage.one(), -1);
-                    if (loadResource.two() == -1) {
+                    byte[] defaultData = null;
 
-                        synchronized (this) {
-                            defaultImage = resources.loadResource(resourcesDir,
-                                config.getServletContext(), appPath, "images/logos/" + siteId + ".ico",
-                                defaultImage.one(), defaultImage.two());
-                        }
-
-                        // Return HTTP 404 ? TODO
-                        Log.warning(Geonet.RESOURCES, "Resource not found " + filename +
-                            ", default resource returned.");
-                        httpServletResponse.setContentType("image/png");
-                        httpServletResponse.setHeader("Cache-Control", "no-cache");
+                    if (!contentType.equals(MediaType.APPLICATION_XML_VALUE)) {
+                        defaultData = defaultImage.one();
                     }
-                    httpServletResponse.setContentLength(loadResource.one().length);
-                    response.getOutputStream().write(loadResource.one());
+                    Pair<byte[], Long> loadResource = resources.loadResource(resourcesDir, servletContext, appPath, filename,
+                        defaultData, -1);
+                    if (loadResource.two() == -1) {
+                        // Return HTTP 404
+                        httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        httpServletResponse.setContentLength(loadResource.one().length);
+                        response.getOutputStream().write(loadResource.one());
+                    }
                 }
             }
         }

@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <accept>Accept</accept>
-  <atom>
-    <results>
-      <header>Atom feeds</header>
-      <noresults>No atom feed available</noresults>
-      <title>Title</title>
-      <content>Content</content>
-      <id>Identifier</id>
-      <rights>Rights</rights>
-      <describedby>Described by</describedby>
-      <author>Author</author>
-      <updated>Updated</updated>
-    </results>
-  </atom>
   <bookmarkDelicious>Bookmark on Delicious</bookmarkDelicious>
   <bookmarkDigg>Bookmark on Digg</bookmarkDigg>
   <bookmarkEmail>Send a reference to this record by email</bookmarkEmail>

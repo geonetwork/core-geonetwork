@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
-import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
@@ -41,12 +41,17 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.csw.Aligner;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,11 +62,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -128,8 +129,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
         boolean isMef = MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString());
         boolean isXml = file.getFileName().toString().endsWith(".xml");
+        boolean isJson = file.getFileName().toString().endsWith(".json");
 
-        if (!isMef && !isXml) {
+        if (!isMef && !isXml && !isJson) {
             return FileVisitResult.CONTINUE;
         }
 
@@ -139,20 +141,101 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             if (LOGGER.isDebugEnabled() && result.totalMetadata % 1000 == 0) {
                 long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
                 LOGGER.debug("{} records inserted in {} s ({} records/s).", new Object[] {
-                        result.totalMetadata,
-                        elapsedTime,
-                        result.totalMetadata / elapsedTime});
+                    result.totalMetadata,
+                    elapsedTime,
+                    result.totalMetadata / elapsedTime});
             }
 
             if(isMef) {
                 processMef(file);
+            } else if(isJson) {
+                processJson(file);
             } else {
                 processXml(file);
             }
-        } catch (Throwable e) {
-            LOGGER.error("An error occurred while harvesting a local file:{}.", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An error occurred while harvesting file {}. Error is: {}.",
+                file.toAbsolutePath().normalize(), e.getMessage());
         }
         return FileVisitResult.CONTINUE;
+    }
+
+
+    // Reads a JSON file, transform it to XML and use the same workflow as for XML files
+    // inspired by:
+    // https://github.com/geonetwork/core-geonetwork/blob/c57f5de06e5e456af1ee55178eca437235b1d499/harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/simpleUrl/Harvester.java#L239
+    private void processJson(Path file) throws Exception {
+        Path filePath = file.toAbsolutePath().normalize();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Element recordAsElement;
+        try {
+            LOGGER.debug("reading file: {}", filePath);
+            String uuid = com.google.common.io.Files.getNameWithoutExtension(file.getFileName().toString());
+            String recordAsJson = objectMapper.readTree(filePath.toFile()).toString();
+            JSONObject sanitizedJson = sanitize(new JSONObject(recordAsJson));
+            String recordAsXml = XML.toString(sanitizedJson,"record")
+                .replace("<@", "<")
+                .replace("</@", "</")
+                .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
+            recordAsElement = Xml.loadString(recordAsXml, false);
+            recordAsElement.addContent(new Element("uuid").setText(uuid));
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error processing JSON from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.badFormat++;
+            return;
+        } catch (JDOMException e) {
+            LOGGER.error("Error transforming JSON into XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.badFormat++;
+            return;
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving JSON from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
+            result.unretrievable++;
+            return;
+        }
+
+        processXmlData(file, recordAsElement);
+    }
+
+    /**
+     * Replace whitespace in keys to underscore (mutates object)
+     */
+    public static JSONObject sanitize(JSONObject json) throws JSONException {
+        JSONArray names = json.names();
+        if (names != null) {
+            for (int i = 0; i < names.length(); i++) {
+                String key = names.getString(i);
+                if (key.contains(" ")) {
+                    String oldKey = key;
+                    key = key.replace(" ", "_");
+                    json.put(key, json.get(oldKey));
+                    json.remove(oldKey);
+                }
+                Object value = json.opt(key);
+                if (value instanceof JSONObject) {
+                    sanitize((JSONObject) value);
+                } else if (value instanceof JSONArray) {
+                    sanitize((JSONArray) value);
+                }
+            }
+        }
+        return json;
+    }
+
+    public static JSONArray sanitize(JSONArray array) throws JSONException {
+        for (int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONObject) {
+                sanitize((JSONObject) value);
+            } else if (value instanceof JSONArray) {
+                sanitize((JSONArray) value);
+            }
+        }
+        return array;
     }
 
     private void processXml(Path file) throws Exception {
@@ -163,23 +246,29 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             LOGGER.debug("reading file: {}", filePath);
             xml = Xml.loadFile(file);
         } catch (JDOMException e) {
-            LOGGER.debug("Error loading XML from file {}, ignoring", filePath);
-            LOGGER.debug("full stack", e);
+            LOGGER.error("Error loading XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
             result.badFormat++;
             return;
-        } catch (Throwable e) {
-            LOGGER.debug("Error retrieving XML from file {}, ignoring", filePath);
-            LOGGER.debug("full stack", e);
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving XML from file {}, ignoring", filePath);
+            LOGGER.error("full stack", e);
             result.unretrievable++;
             return;
         }
 
-        // transform using importxslt if not none
+        processXmlData(file, xml);
+    }
+
+    private void processXmlData(Path file, Element rawXml) throws Exception {
+        Path filePath = file.toAbsolutePath().normalize();
+
+        Element xml = rawXml;
         if (transformIt) {
             try {
                 xml = Xml.transform(xml, thisXslt);
             } catch (Exception e) {
-                LOGGER.debug("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+                LOGGER.error("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
                 result.badFormat++;
                 return;
             }
@@ -201,16 +290,18 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             params.getValidate().validate(dataMan, context, xml, groupIdVal);
         } catch (Exception e) {
-            LOGGER.debug("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+            LOGGER.error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
             result.doesNotValidate++;
             return;
         }
 
         String uuid = getUuidFromFile(xml, filePath, schema);
-        if (uuid == null || uuid.equals("")) {
+        if (StringUtils.isEmpty(uuid)) {
             result.badFormat++;
             return;
         }
+
+        Aligner.applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, null);
 
         String id = dataMan.getMetadataId(uuid);
         if (id == null) {
@@ -222,25 +313,25 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             if (!params.getUuid().equals(metadata.getHarvestInfo().getUuid())) {
                 // Metadata exists and belongs to another source (local node or other harvester)
                 switch (params.getOverrideUuid()) {
-                case OVERRIDE:
-                    updateMetadata(file, filePath, xml, schema, id, metadata, true);
-                    break;
-                case RANDOM:
-                    LOGGER.debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
-                    String createDate = getCreateDate(file, xml, schema, uuid);
-                    String newUuid = UUID.randomUUID().toString();
-                    id = addMetadata(xml, schema, newUuid, createDate);
+                    case OVERRIDE:
+                        updateMetadata(file, filePath, xml, schema, id, metadata, true);
+                        break;
+                    case RANDOM:
+                        LOGGER.debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
+                        String createDate = getCreateDate(file, xml, schema, uuid);
+                        String newUuid = UUID.randomUUID().toString();
+                        id = addMetadata(xml, schema, newUuid, createDate);
 
-                    break;
-                case SKIP:
-                    LOGGER.debug("Skipping record with uuid " + metadata.getUuid());
-                    result.uuidSkipped++;
-                    result.unchangedMetadata++;
+                        break;
+                    case SKIP:
+                        LOGGER.debug("Skipping record with uuid " + metadata.getUuid());
+                        result.uuidSkipped++;
+                        result.unchangedMetadata++;
 
-                    break;
-                default:
-                    // Do nothing
-                    break;
+                        break;
+                    default:
+                        // Do nothing
+                        break;
                 }
             } else {
                 //record exists and belongs to this harvester
@@ -263,7 +354,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 createDate = dataMan.extractDateModified(schema, xml);
             } catch (Exception ex) {
                 LOGGER.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= {} " +
-                        "using current date for modified date", uuid);
+                    "using current date for modified date", uuid);
                 createDate = new ISODate().toString();
             }
         }
@@ -271,7 +362,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     }
 
     private void updateMetadata(Path file, Path filePath, Element xml, String schema, String id,
-        AbstractMetadata metadata, boolean force)
+                                AbstractMetadata metadata, boolean force)
         throws Exception {
         // Check last modified date of the file with the record change date
         // to check if an update is required
@@ -327,36 +418,36 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             MEFLib.UuidAction uuidAction;
             switch (params.getOverrideUuid()) {
-            case SKIP:
-                uuidAction = MEFLib.UuidAction.NOTHING;
-                break;
-            case RANDOM:
-                uuidAction = MEFLib.UuidAction.GENERATEUUID;
-                break;
-            case OVERRIDE:
-            default:
-                uuidAction = MEFLib.UuidAction.OVERWRITE;
+                case SKIP:
+                    uuidAction = MEFLib.UuidAction.NOTHING;
+                    break;
+                case RANDOM:
+                    uuidAction = MEFLib.UuidAction.GENERATEUUID;
+                    break;
+                case OVERRIDE:
+                default:
+                    uuidAction = MEFLib.UuidAction.OVERWRITE;
             }
 
 
             List<String> ids = MEFLib.doImport(
-                    fileType,
-                    uuidAction,
-                    style,
-                    params.getUuid(),
-                    isTemplate,
-                    Iterables.toArray(params.getCategories(), String.class),
-                    params.getOwnerIdGroup(),
-                    params.getValidate() != NOVALIDATION,
-                    false, context, file);
+                fileType,
+                uuidAction,
+                style,
+                params.getUuid(),
+                isTemplate,
+                Iterables.toArray(params.getCategories(), String.class),
+                params.getOwnerIdGroup(),
+                params.getValidate() != NOVALIDATION,
+                false, context, file);
             for (String id : ids) {
                 LOGGER.debug("Metadata imported from MEF: {}", id);
                 context.getBean(MetadataRepository.class).update(Integer.valueOf(id), new Updater<Metadata>() {
                     @Override
                     public void apply(@Nonnull final Metadata metadata) {
-                       metadata.getHarvestInfo().setHarvested(true);
-                       metadata.getHarvestInfo().setUuid(params.getUuid());
-                       metadata.getSourceInfo().setOwner(aligner.getOwner());
+                        metadata.getHarvestInfo().setHarvested(true);
+                        metadata.getHarvestInfo().setUuid(params.getUuid());
+                        metadata.getSourceInfo().setOwner(aligner.getOwner());
                     }
                 });
                 aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);

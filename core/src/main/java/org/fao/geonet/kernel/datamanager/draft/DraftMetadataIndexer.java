@@ -27,16 +27,18 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetadataIndexer {
@@ -51,6 +53,7 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
     public void init(ServiceContext context, Boolean force) throws Exception {
         super.init(context, force);
         metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
+        statusRepository = context.getBean(MetadataStatusRepository.class);
     }
 
     /**
@@ -67,14 +70,48 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
             Log.trace(Geonet.DATA_MANAGER, "We are indexing a draft with uuid " + fullMd.getUuid());
             extraFields.put(Geonet.IndexFieldNames.DRAFT, "y");
         } else {
-            if (metadataDraftRepository.findOneByUuid(fullMd.getUuid()) != null) {
+            MetadataDraft metadataDraft = metadataDraftRepository.findOneByUuid(fullMd.getUuid());
+            if (metadataDraft != null) {
                 Log.trace(Geonet.DATA_MANAGER,
                     "We are indexing a record with a draft associated with uuid " + fullMd.getUuid());
                 extraFields.put(Geonet.IndexFieldNames.DRAFT, "e");
+                extraFields.put(Geonet.IndexFieldNames.DRAFT_ID, metadataDraft.getId());
+
+                String status = "";
+                String statusDraft = "";
+
+                // get status
+                Sort statusSort = Sort.by(Sort.Direction.DESC,
+                    MetadataStatus_.changeDate.getName());
+                List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(fullMd.getId(), StatusValueType.workflow, statusSort);
+                if (!statuses.isEmpty()) {
+                    MetadataStatus stat = statuses.get(0);
+                    status = String.valueOf(stat.getStatusValue().getId());
+                }
+
+                // get status of draft
+                statuses = statusRepository.findAllByMetadataIdAndByType(metadataDraft.getId(), StatusValueType.workflow, statusSort);
+                if (!statuses.isEmpty()) {
+                    MetadataStatus stat = statuses.get(0);
+                    statusDraft = String.valueOf(stat.getStatusValue().getId());
+                }
+
+                extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW,  status + statusDraft);
+
             } else {
                 Log.trace(Geonet.DATA_MANAGER,
                     "We are indexing a record with no draft associated with uuid " + fullMd.getUuid());
                 extraFields.put(Geonet.IndexFieldNames.DRAFT, "n");
+
+                // get status
+                Sort statusSort = Sort.by(Sort.Direction.DESC,
+                    MetadataStatus_.changeDate.getName());
+                List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(fullMd.getId(), StatusValueType.workflow, statusSort);
+                if (!statuses.isEmpty()) {
+                    MetadataStatus stat = statuses.get(0);
+                    String status = String.valueOf(stat.getStatusValue().getId());
+                    extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW,  status);
+                }
             }
         }
         return extraFields;

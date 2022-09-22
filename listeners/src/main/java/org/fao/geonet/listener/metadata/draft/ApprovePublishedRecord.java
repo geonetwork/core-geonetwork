@@ -26,11 +26,13 @@ package org.fao.geonet.listener.metadata.draft;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataPublished;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,9 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
     private StatusValueRepository statusValueRepository;
 
     @Autowired
+    private MetadataRepository metadataRepository;
+
+    @Autowired
     IMetadataUtils metadataUtils;
 
     @Override
@@ -80,10 +85,20 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
             // Only do something if the workflow is enabled
             MetadataStatus previousStatus = metadataStatus.getStatus(event.getMd().getId());
             if (previousStatus != null) {
-                draftUtilities.replaceMetadataWithDraft(event.getMd());
+                AbstractMetadata publishedMd;
+
+                // On republication the metadata received in the event is the draft version
+                if (!(event.getMd() instanceof Metadata)) {
+                    publishedMd = metadataRepository.findOneByUuid(event.getMd().getUuid());
+                } else {
+                    publishedMd = event.getMd();
+                }
+
                 if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getStatusValue().getId())) {
                     changeToApproved(event.getMd(), previousStatus);
                 }
+
+                draftUtilities.replaceMetadataWithDraft(publishedMd);
             }
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);

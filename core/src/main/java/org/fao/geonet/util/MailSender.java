@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2022 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -39,7 +39,7 @@ import java.util.List;
 @Deprecated
 public class MailSender extends Thread {
     Logger _logger;
-    SimpleEmail _mail;
+    SimpleEmail email;
 
     public MailSender(ServiceContext context) {
         _logger = context.getLogger();
@@ -53,28 +53,31 @@ public class MailSender extends Thread {
     private void setUp(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
                        boolean ignoreSslCertificateErrors,
                        String from, String fromDescr, String to, String subject, String message) throws EmailException {
-        _mail.setHostName(server);
-        _mail.setSmtpPort(port);
-        _mail.setFrom(from, fromDescr);
+        email.setHostName(server);
+        email.setSmtpPort(port);
+        email.setFrom(from, fromDescr);
         if (!"".equals(username)) {
-            _mail.setAuthentication(username, password);
+            email.setAuthentication(username, password);
         }
         if (useTLS) {
-            _mail.setStartTLSEnabled(true);
-            _mail.setStartTLSRequired(true);
+            email.setStartTLSEnabled(true);
+            email.setStartTLSRequired(true);
+            email.setSSLCheckServerIdentity(true);
+
         }
         if (useSSL) {
-            _mail.setSSLOnConnect(useSSL);
-            _mail.setSslSmtpPort(port + "");
+            email.setSSLOnConnect(true);
+            email.setSslSmtpPort(port + "");
+            email.setSSLCheckServerIdentity(true);
         }
-        _mail.addTo(to);
-        _mail.setSubject(subject);
+        email.addTo(to);
+        email.setSubject(subject);
         if ((message == null) || (message.length() == 0)) {
             throw new EmailException("Invalid message supplied");
         }
-        _mail.setContent(message, "text/plain; charset=UTF-8");
+        email.setContent(message, "text/plain; charset=UTF-8");
         if (ignoreSslCertificateErrors) {
-            _mail.getMailSession().getProperties().setProperty("mail.smtp.ssl.trust", "*");
+            email.getMailSession().getProperties().setProperty("mail.smtp.ssl.trust", "*");
         }
     }
 
@@ -88,7 +91,7 @@ public class MailSender extends Thread {
     public void send(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
                      boolean ignoreSslCertificateErrors, String from, String fromDescr, String to, String toDescr, String
                          subject, String message) {
-        _mail = new SimpleEmail();
+        email = new SimpleEmail();
         try {
             setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
                 subject, message);
@@ -104,13 +107,13 @@ public class MailSender extends Thread {
     public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
                                 boolean ignoreSslCertificateErrors, String from, String fromDescr, String to,
                                 String toDescr, String replyTo, String replyToDesc, String subject, String message) {
-        _mail = new SimpleEmail();
+        email = new SimpleEmail();
         try {
             setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
                 subject, message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
             addressColl.add(new InternetAddress(replyTo, replyToDesc));
-            _mail.setReplyTo(addressColl);
+            email.setReplyTo(addressColl);
 
             start();
         } catch (Exception e) {
@@ -120,7 +123,7 @@ public class MailSender extends Thread {
 
     public void run() {
         try {
-            _mail.send();
+            email.send();
 
             _logger.info("Mail sent");
         } catch (EmailException e) {

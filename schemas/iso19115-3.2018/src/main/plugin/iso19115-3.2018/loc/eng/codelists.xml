@@ -64,8 +64,8 @@
     </entry>
     <entry>
       <code>facsimilie</code>
-      <label>Facsimilie</label>
-      <description>Telephone provides facsimilie service</description>
+      <label>Facsimile</label>
+      <description>Telephone provides facsimile service</description>
     </entry>
     <entry>
       <code>sms</code>
@@ -264,7 +264,7 @@
       <code>documentHardcopy</code>
       <label>Hardcopy document</label>
       <description>Representation of a primarily textual item (can contain
-        illustrations also) on paper, photograhic material, or other media
+        illustrations also) on paper, photographic material, or other media
       </description>
     </entry>
     <entry>
@@ -395,7 +395,7 @@
     <entry>
       <code>custodian</code>
       <label>Custodian</label>
-      <description>Party that accepts accountability and responsability for the
+      <description>Party that accepts accountability and responsibility for the
         data and ensures appropriate care and maintenance of the resource
       </description>
     </entry>
@@ -436,7 +436,7 @@
     <entry>
       <code>processor</code>
       <label>Processor</label>
-      <description>Party wha has processed the data in a manner such that the
+      <description>Party that has processed the data in a manner such that the
         resource has been modified
       </description>
     </entry>
@@ -2028,14 +2028,14 @@
     <entry>
       <code>wayPoint</code>
       <label>Way Point</label>
-      <description>Event related to general collectio</description>
+      <description>Event related to general collection</description>
     </entry>
   </codelist>
   <codelist name="mac:MI_GeometryTypeCode">
     <entry>
       <code>areal</code>
       <label>Areal</label>
-      <description>Collection of a geographic area definded by a polygon
+      <description>Collection of a geographic area defined by a polygon
         (coverage)
       </description>
     </entry>

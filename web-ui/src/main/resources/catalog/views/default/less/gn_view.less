@@ -1,74 +1,80 @@
+@import "../../../lib/style/bootstrap/less/variables.less";
+
 /* Defined here any custom style for the view
    which has to be applied for all apps
    (ie. admin, search, login, editor). */
 
 @gn-spacing: 10px;
+@gn-spacing-sm: 5px;
+@gn-spacing-lg: 15px;
 
 //  padding
-.gn-padding-top {
-  padding-top: @gn-spacing !important;
+.gn-padding-top { padding-top: @gn-spacing !important; }
+.gn-padding-right { padding-right: @gn-spacing !important; }
+.gn-padding-bottom { padding-bottom: @gn-spacing !important; }
+.gn-padding-left { padding-left: @gn-spacing !important; }
+// ----- small
+.gn-padding-top-sm { padding-top: @gn-spacing-sm !important; }
+.gn-padding-right-sm { padding-right: @gn-spacing-sm !important; }
+.gn-padding-bottom-sm { padding-bottom: @gn-spacing-sm !important; }
+.gn-padding-left-sm { padding-left: @gn-spacing-sm !important; }
+// ----- large
+.gn-padding-top-lg { padding-top: @gn-spacing-lg !important; }
+.gn-padding-right-lg { padding-right: @gn-spacing-lg !important; }
+.gn-padding-bottom-lg { padding-bottom: @gn-spacing-lg !important; }
+.gn-padding-left-lg { padding-left: @gn-spacing-lg !important; }
+// ----- no padding
+.gn-nopadding-top { padding-top: 0 !important; }
+.gn-nopadding-right { padding-right: 0 !important; }
+.gn-nopadding-bottom { padding-bottom: 0 !important; }
+.gn-nopadding-left { padding-left: 0 !important; }
+.gn-sm-nopadding-top {
+  @media (max-width: @screen-sm-max) {
+    padding-top: 0 !important;
+  }
 }
-.gn-padding-right {
-  padding-right: @gn-spacing !important;
+.gn-sm-nopadding-right {
+  @media (max-width: @screen-sm-max) {
+    padding-right: 0 !important;
+  }
 }
-.gn-padding-bottom {
-  padding-bottom: @gn-spacing !important;
+.gn-sm-nopadding-bottom {
+  @media (max-width: @screen-sm-max) {
+    padding-bottom: 0 !important;
+  }
 }
-.gn-padding-left {
-  padding-left: @gn-spacing !important;
+.gn-sm-nopadding-left {
+  @media (max-width: @screen-sm-max) {
+    padding-left: 0 !important;
+  }
 }
-// no padding
-.gn-nopadding-top {
-  padding-top: 0 !important;
-}
-.gn-nopadding-right {
-  padding-right: 0 !important;
-}
-.gn-nopadding-bottom {
-  padding-bottom: 0 !important;
-}
-.gn-nopadding-left {
-  padding-left: 0 !important;
-}
+
 // margin
-.gn-margin-top {
-  margin-top: @gn-spacing !important;
-}
-.gn-margin-right {
-  margin-right: @gn-spacing !important;
-}
-.gn-margin-bottom {
-  margin-bottom: @gn-spacing !important;
-}
-.gn-margin-left {
-  margin-left: @gn-spacing !important;
-}
-// no margin
-.gn-nomargin-top {
-  margin-top: 0 !important;
-}
-.gn-nomargin-right {
-  margin-right: 0 !important;
-}
-.gn-nomargin-bottom {
-  margin-bottom: 0 !important;
-}
-.gn-nomargin-left {
-  margin-left: 0 !important;
-}
+.gn-margin-top { margin-top: @gn-spacing !important; }
+.gn-margin-right { margin-right: @gn-spacing !important; }
+.gn-margin-bottom { margin-bottom: @gn-spacing !important; }
+.gn-margin-left { margin-left: @gn-spacing !important; }
+// ----- small
+.gn-margin-top-sm { margin-top: @gn-spacing-sm !important; }
+.gn-margin-right-sm { margin-right: @gn-spacing-sm !important; }
+.gn-margin-bottom-sm { margin-bottom: @gn-spacing-sm !important; }
+.gn-margin-left-sm { margin-left: @gn-spacing-sm !important; }
+// ----- large
+.gn-margin-top-lg { margin-top: @gn-spacing-lg !important; }
+.gn-margin-right-lg { margin-right: @gn-spacing-lg !important; }
+.gn-margin-bottom-lg { margin-bottom: @gn-spacing-lg !important; }
+.gn-margin-left-lg { margin-left: @gn-spacing-lg !important; }
+// ----- no margin
+.gn-nomargin-top { margin-top: 0 !important; }
+.gn-nomargin-right { margin-right: 0 !important; }
+.gn-nomargin-bottom { margin-bottom: 0 !important; }
+.gn-nomargin-left { margin-left: 0 !important; }
+
 //border
-.gn-noborder-top {
-  border-top-width: 0 !important;
-}
-.gn-noborder-right {
-  border-right-width: 0 !important;
-}
-.gn-noborder-bottom {
-  border-bottom-width: 0 !important;
-}
-.gn-noborder-left {
-  border-left-width: 0 !important;
-}
+.gn-noborder-top { border-top-width: 0 !important; }
+.gn-noborder-right { border-right-width: 0 !important; }
+.gn-noborder-bottom { border-bottom-width: 0 !important; }
+.gn-noborder-left { border-left-width: 0 !important; }
 
 .btn-round {
   border-radius: 50%;
@@ -97,6 +103,12 @@
   overflow: hidden;
 }
 .clamp-3 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-4 {
   display: -webkit-box !important;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

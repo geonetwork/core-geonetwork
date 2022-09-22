@@ -70,6 +70,7 @@ import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.api.records.formatters.XsltFormatter.getSchemaLocalization;
+import static org.fao.geonet.utils.Xml.getSAXBuilder;
 
 @RequestMapping(value = {"/{portal}/api/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
@@ -222,7 +223,7 @@ public class MetadataValidateApi {
 
         MetadataSchema metadataSchema = dataManager.getSchema(schemaName);
         Path schemaDir = metadataSchema.getSchemaDir();
-        SAXBuilder builder = new SAXBuilder();
+        SAXBuilder builder = getSAXBuilder(false);
 
         for (Schematron schematron : schematrons) {
             // it contains absolute path to the xsl file

@@ -28,12 +28,16 @@ package org.fao.geonet.doi.client;
 public class DoiSettings {
     public static final String SETTING_PUBLICATION_DOI_DOIURL =
         "system/publication/doi/doiurl";
+    public static final String SETTING_PUBLICATION_DOI_DOIPUBLICURL =
+        "system/publication/doi/doipublicurl";
     public static final String SETTING_PUBLICATION_DOI_DOIUSERNAME =
         "system/publication/doi/doiusername";
     public static final String SETTING_PUBLICATION_DOI_DOIPASSWORD =
         "system/publication/doi/doipassword";
     public static final String SETTING_PUBLICATION_DOI_DOIKEY =
         "system/publication/doi/doikey";
+    public static final String SETTING_PUBLICATION_DOI_DOIPATTERN =
+        "system/publication/doi/doipattern";
     public static final String SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE =
         "system/publication/doi/doilandingpagetemplate";
 

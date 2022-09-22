@@ -25,7 +25,6 @@ package org.fao.geonet.api.selections;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.SelectionManager;
@@ -38,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
@@ -52,6 +52,26 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
     description = "Selection related operations")
 @Controller("selections")
 public class SelectionsApi {
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get current selections")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Map<String, Integer> getSelectionsAndSize(
+        @Parameter(hidden = true)
+            HttpSession httpSession
+    )
+        throws Exception {
+        SelectionManager selectionManager =
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
+
+        return selectionManager.getSelectionsAndSize();
+    }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get current selection")
     @RequestMapping(

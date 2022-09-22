@@ -21,73 +21,81 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_template_field_directive');
+(function () {
+  goog.provide("gn_template_field_directive");
 
-  var module = angular.module('gn_template_field_directive',
-      ['pascalprecht.translate']);
-  module.directive('gnTemplateFieldAddButton',
-      ['gnEditor', 'gnCurrentEdit', '$rootScope', '$translate',
-       function(gnEditor, gnCurrentEdit, $rootScope, $translate) {
+  var module = angular.module("gn_template_field_directive", ["pascalprecht.translate"]);
+  module.directive("gnTemplateFieldAddButton", [
+    "gnEditor",
+    "gnCurrentEdit",
+    "$rootScope",
+    "$translate",
+    function (gnEditor, gnCurrentEdit, $rootScope, $translate) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          id: "@gnTemplateFieldAddButton"
+        },
+        link: function (scope, element, attrs) {
+          var textarea = $(element)
+              .parent()
+              .find("textarea[name=" + scope.id + "]"),
+            hasChoice = angular.isDefined($(element).attr("data-has-choice"));
 
-         return {
-           restrict: 'A',
-           replace: true,
-           scope: {
-             id: '@gnTemplateFieldAddButton'
-           },
-           link: function(scope, element, attrs) {
-             var textarea = $(element).parent()
-                 .find('textarea[name=' + scope.id + ']'),
-             hasChoice =
-                 angular.isDefined($(element).attr('data-has-choice'));
+          // Unregister this textarea to the form
+          // It will be only submitted if user click the add button
+          textarea.removeAttr("name");
 
-             // Unregister this textarea to the form
-             // It will be only submitted if user click the add button
-             textarea.removeAttr('name');
+          scope.addFromTemplate = function () {
+            textarea.attr("name", scope.id);
 
-             scope.addFromTemplate = function() {
-               textarea.attr('name', scope.id);
+            // Save and refreshform
+            gnEditor.save(gnCurrentEdit.id, true).then(
+              function () {
+                // success. Do nothing
+              },
+              function (rejectedValue) {
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("runServiceError"),
+                  error: rejectedValue,
+                  timeout: 0,
+                  type: "danger"
+                });
+              }
+            );
+          };
 
-               // Save and refreshform
-               gnEditor.save(gnCurrentEdit.id, true).then(function() {
-                  // success. Do nothing
-               }, function(rejectedValue) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                   title: $translate.instant('runServiceError'),
-                   error: rejectedValue,
-                   timeout: 0,
-                   type: 'danger'
-                  });
-               });
-             };
+          var chooseTemplate = function (id) {
+            textarea.val(
+              $(element)
+                .parent()
+                .find("textarea#" + id + "-value")
+                .val()
+            );
 
-             var chooseTemplate = function(id) {
-               textarea.val($(element).parent()
-               .find('textarea#' + id + '-value').val());
+            scope.addFromTemplate();
+          };
 
-               scope.addFromTemplate();
-             };
-
-             if (!hasChoice) {
-               // Register click event on main button
-               // which will add snippet from the single
-               // textarea
-               $(element).click(scope.addFromTemplate);
-             } else {
-               // Register click on each choices
-               var choices = $(element)
-               .find('ul > li > a');
-               choices.each(function(idx, e) {
-                 var id = $(e).attr('id');
-                 $(e).click(function() {
-                   chooseTemplate(id);
-                 });
-               });
-             }
-           }
-         };
-       }]);
+          if (!hasChoice) {
+            // Register click event on main button
+            // which will add snippet from the single
+            // textarea
+            $(element).click(scope.addFromTemplate);
+          } else {
+            // Register click on each choices
+            var choices = $(element).find("ul > li > a");
+            choices.each(function (idx, e) {
+              var id = $(e).attr("id");
+              $(e).click(function () {
+                chooseTemplate(id);
+              });
+            });
+          }
+        }
+      };
+    }
+  ]);
 
   /**
    * The template field directive managed a custom field which
@@ -99,58 +107,59 @@
    * is displayed to the end user and the creation codelist value
    * is in the XML template for the field.
    */
-  module.directive('gnTemplateField', ['$http', '$rootScope', '$timeout',
-    function($http, $rootScope, $timeout) {
-
+  module.directive("gnTemplateField", [
+    "$http",
+    "$rootScope",
+    "$timeout",
+    function ($http, $rootScope, $timeout) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: false,
         transclude: false,
         scope: {
-          id: '@gnTemplateField',
-          keys: '@',
-          values: '@',
-          notSetCheck: '@'
+          id: "@gnTemplateField",
+          keys: "@",
+          values: "@",
+          notSetCheck: "@"
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
           var xmlSnippetTemplate = element[0].innerHTML;
-          var separator = '$$$';
+          var separator = "$$$";
           var fields = scope.keys && scope.keys.split(separator);
           var values = scope.values && scope.values.split(separator);
 
           // Replace all occurence of {{fieldname}} by its value
-          var generateSnippet = function() {
-            var xmlSnippet = xmlSnippetTemplate, isOneFieldDefined = false;
+          var generateSnippet = function () {
+            var xmlSnippet = xmlSnippetTemplate,
+              isOneFieldDefined = false;
 
-            angular.forEach(fields, function(fieldName) {
-              var field = $('#' + scope.id + '_' + fieldName);
-              var value = '';
-              if (field.attr('type') === 'checkbox') {
-                value = field.is(':checked') ? 'true' : 'false';
+            angular.forEach(fields, function (fieldName) {
+              var field = $("#" + scope.id + "_" + fieldName);
+              var value = "";
+              if (field.attr("type") === "checkbox") {
+                value = field.is(":checked") ? "true" : "false";
               } else {
-                value = field.val() || '';
+                value = field.val() || "";
               }
 
-              if (value !== '') {
+              if (value !== "") {
                 xmlSnippet = xmlSnippet.replace(
-                    '{{' + fieldName + '}}',
-                    value.replace(/\&/g, '&amp;amp;')
-                    .replace(/\"/g, '&quot;'));
+                  "{{" + fieldName + "}}",
+                  value.replace(/\&/g, "&amp;amp;").replace(/\"/g, "&quot;")
+                );
 
                 // If one value is defined the field
                 // is defined
                 isOneFieldDefined = true;
               } else {
-                xmlSnippet = xmlSnippet.replace(
-                    '{{' + fieldName + '}}',
-                    '');
+                xmlSnippet = xmlSnippet.replace("{{" + fieldName + "}}", "");
               }
             });
 
             // Usually when a template field is link to a
             // gnTemplateFieldAddButton directive, the keys
             // is empty.
-            if (scope.keys === undefined || scope.keys === '') {
+            if (scope.keys === undefined || scope.keys === "") {
               isOneFieldDefined = true;
             }
 
@@ -159,15 +168,15 @@
             if (isOneFieldDefined) {
               element[0].innerHTML = xmlSnippet;
             } else {
-              element[0].innerHTML = '';
+              element[0].innerHTML = "";
             }
           };
-          var init = function() {
+          var init = function () {
             // Initialize all values
-            angular.forEach(values, function(value, key) {
-              var selector = '#' + scope.id + '_' + fields[key];
-              if ($(selector).attr('type') === 'checkbox') {
-                $(selector).attr('checked', value === 'true');
+            angular.forEach(values, function (value, key) {
+              var selector = "#" + scope.id + "_" + fields[key];
+              if ($(selector).attr("type") === "checkbox") {
+                $(selector).attr("checked", value === "true");
               } else {
                 $(selector).val(value);
               }
@@ -175,24 +184,23 @@
 
             // Register change event on each fields to be
             // replaced in the XML snippet.
-            angular.forEach(fields, function(value) {
-              $('#' + scope.id + '_' + value).change(function() {
+            angular.forEach(fields, function (value) {
+              $("#" + scope.id + "_" + value).change(function () {
                 generateSnippet();
               });
             });
 
-
             // If template element is not existing in the metadata
-            var unsetCheckbox = $('#gn-template-unset-' + scope.notSetCheck);
+            var unsetCheckbox = $("#gn-template-unset-" + scope.notSetCheck);
             if (unsetCheckbox[0] !== undefined) {
               // Reset the template
-              element[0].innerHTML = '';
+              element[0].innerHTML = "";
               // When checkbox is checked generate default
               // snippet.
-              unsetCheckbox.change(function() {
-                $('#' + scope.notSetCheck).toggleClass('hidden');
+              unsetCheckbox.change(function () {
+                $("#" + scope.notSetCheck).toggleClass("hidden");
                 if (unsetCheckbox[0].checked) {
-                  element[0].innerHTML = '';
+                  element[0].innerHTML = "";
                 } else {
                   generateSnippet();
                 }
@@ -201,10 +209,11 @@
               generateSnippet();
             }
           };
-          $timeout(function() {
+          $timeout(function () {
             init();
           });
         }
       };
-    }]);
+    }
+  ]);
 })();

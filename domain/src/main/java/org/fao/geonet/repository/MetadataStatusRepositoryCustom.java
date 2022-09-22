@@ -59,6 +59,7 @@ public interface MetadataStatusRepositoryCustom {
                                       List<StatusValueType> types,
                                       List<Integer> authorIds, List<Integer> ownerIds,
                                       List<Integer> recordIds,
+                                      List<String> statusIds,
                                       String dateFrom, String dateTo,
                                       @Nullable Pageable pageable);
 }

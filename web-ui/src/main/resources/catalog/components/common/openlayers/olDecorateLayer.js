@@ -22,10 +22,9 @@
  */
 
 (function () {
+  goog.provide("gn_olDecorateLayer");
 
-  goog.provide('gn_olDecorateLayer')
-
-  var module = angular.module('gn_olDecorateLayer', [])
+  var module = angular.module("gn_olDecorateLayer", []);
 
   /**
    * Provides a function that adds properties (using
@@ -40,48 +39,46 @@
    * @ngname olDecorateLayer
    */
 
-
   /**
    * @param {ol.layer.Base} layer Layer to decorate.
    */
   var decorateLayer = function (layer) {
-
-    Object.defineProperty(layer, 'visible', {
+    Object.defineProperty(layer, "visible", {
       configurable: true,
       get:
         /**
          * @return {boolean} Visible.
          */
         function () {
-          return layer.getVisible()
+          return layer.getVisible();
         },
       set:
         /**
          * @param {boolean} val Visible.
          */
         function (val) {
-          layer.setVisible(val)
+          layer.setVisible(val);
         }
-    })
+    });
 
-    Object.defineProperty(layer, 'opacity', {
+    Object.defineProperty(layer, "opacity", {
       configurable: true,
       get:
         /**
          * @return {string} Opacity.
          */
         function () {
-          return (Math.round(layer.getOpacity() * 100) / 100) + ''
+          return Math.round(layer.getOpacity() * 100) / 100 + "";
         },
       set:
         /**
          * @param {string} val Opacity.
          */
         function (val) {
-          layer.setOpacity(+val)
+          layer.setOpacity(+val);
         }
-    })
-  }
+    });
+  };
 
-  module.value('olDecorateLayer', decorateLayer)
-})()
+  module.value("olDecorateLayer", decorateLayer);
+})();

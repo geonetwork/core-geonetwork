@@ -1,26 +1,45 @@
 <div data-ng-controller="GnDashboardStatusController">
   <div class="row">
     <div class="col-lg-4">
-      <div class="panel panel-default" data-ng-hide="healthy === undefined"
-           data-ng-class="healthy ? 'panel-success' : 'panel-danger'">
+      <div
+        class="panel panel-default"
+        data-ng-hide="healthy === undefined"
+        data-ng-class="healthy ? 'panel-success' : 'panel-danger'"
+      >
         <div class="panel-heading" data-translate="">criticalSystemStatus</div>
 
         <div class="panel-body">
           <table class="table table-striped">
-            <tr class="health-check"
-                data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
-                data-ng-repeat="info in criticalhealthcheck">
+            <tr
+              class="health-check"
+              data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
+              data-ng-repeat="info in criticalhealthcheck"
+            >
               <td>
-                <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate>
-                  {{info.name}} </h4>
+                <h4
+                  class="list-group-item-heading"
+                  ng-show="info.status === 'OK'"
+                  translate
+                >
+                  {{info.name}}
+                </h4>
 
                 <div ng-hide="info.status === 'OK'" class="dropdown">
-                  <a data-target="#" href="http://example.com" data-toggle="dropdown"
-                     aria-haspopup="true" role="button"
-                     aria-expanded="false">
-                    <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
+                  <a
+                    data-target="#"
+                    href="http://example.com"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    role="button"
+                    aria-expanded="false"
+                  >
+                    <h4 class="list-group-item-heading" translate>{{info.name}}</h4>
                   </a>
-                  <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                  <ul
+                    class="dropdown-menu error-message"
+                    role="menu"
+                    aria-labelledby="dLabel"
+                  >
                     <li>
                       <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
                       <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
@@ -28,33 +47,56 @@
                   </ul>
                 </div>
               </td>
-              <td><span class="badge"
-                        data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"> {{info.status}} </span>
+              <td>
+                <span
+                  class="badge"
+                  data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"
+                >
+                  {{info.status}}
+                </span>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <div class="panel panel-default" data-ng-hide="nowarnings === undefined"
-           data-ng-class="nowarnings ? 'panel-success' : 'panel-warning'">
+      <div
+        class="panel panel-default"
+        data-ng-hide="nowarnings === undefined"
+        data-ng-class="nowarnings ? 'panel-success' : 'panel-warning'"
+      >
         <div class="panel-heading" data-translate="">warningSystemStatus</div>
         <div class="panel-body">
-
           <table class="table table-striped">
-            <tr class="health-check"
-                data-ng-class="info.status === 'OK' ? '' : 'alert-warning'"
-                data-ng-repeat="info in warninghealthcheck">
+            <tr
+              class="health-check"
+              data-ng-class="info.status === 'OK' ? '' : 'alert-warning'"
+              data-ng-repeat="info in warninghealthcheck"
+            >
               <td>
-                <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate>
-                  {{info.name}} </h4>
+                <h4
+                  class="list-group-item-heading"
+                  ng-show="info.status === 'OK'"
+                  translate
+                >
+                  {{info.name}}
+                </h4>
 
                 <div ng-hide="info.status === 'OK'" class="dropdown">
-                  <a data-target="#" href="" data-toggle="dropdown"
-                     aria-haspopup="true" role="button"
-                     aria-expanded="false">
-                    <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
+                  <a
+                    data-target="#"
+                    href=""
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    role="button"
+                    aria-expanded="false"
+                  >
+                    <h4 class="list-group-item-heading" translate>{{info.name}}</h4>
                   </a>
-                  <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                  <ul
+                    class="dropdown-menu error-message"
+                    role="menu"
+                    aria-labelledby="dLabel"
+                  >
                     <li>
                       <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
                       <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
@@ -62,25 +104,37 @@
                   </ul>
                 </div>
               </td>
-              <td><span class="badge"
-                        data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"> {{info.status}} </span>
+              <td>
+                <span
+                  class="badge"
+                  data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"
+                >
+                  {{info.status}}
+                </span>
               </td>
             </tr>
-            <tr class="health-check"
-                data-ng-show="indexStatus"
-                title="{{(indexStatus['db.count'] === indexStatus['index.count']) ? '' : ('indexStatusSynchronized-error' | translate)}}"
-                data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? '' : 'alert-danger'">
+            <tr
+              class="health-check"
+              data-ng-show="indexStatus"
+              title="{{(indexStatus['db.count'] === indexStatus['index.count']) ? '' : ('indexStatusSynchronized-error' | translate)}}"
+              data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? '' : 'alert-danger'"
+            >
               <td>
-                <h4 class="list-group-item-heading"
-                    data-translate=""
-                    data-translate-values="{indexStatus: indexStatus}">
+                <h4
+                  class="list-group-item-heading"
+                  data-translate=""
+                  data-translate-values="{indexStatus: indexStatus}"
+                >
                   indexStatusSynchronized
                 </h4>
               </td>
               <td>
-                <span class="badge"
-                      data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? 'badge-success' : 'badge-danger'">
-                  {{(indexStatus['db.count'] === indexStatus['index.count']) ? 'OK' : 'ERROR'}}
+                <span
+                  class="badge"
+                  data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? 'badge-success' : 'badge-danger'"
+                >
+                  {{(indexStatus['db.count'] === indexStatus['index.count']) ? 'OK' :
+                  'ERROR'}}
                 </span>
               </td>
             </tr>
@@ -90,77 +144,144 @@
     </div>
 
     <div class="col-lg-8">
-      <form class="form-horizontal"
-            role="form"
-            data-ng-search-form=""
-            data-runSearch="true"
-            data-ng-show="searchResults.records.length > 0">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+      <form
+        class="form-horizontal"
+        role="form"
+        data-ng-search-form=""
+        data-ng-if="hasIndexingError"
+        data-runSearch="true"
+      >
         <div class="panel panel-default panel-danger">
           <div class="panel-heading">
             <span data-translate="">metadataWithIndexingErrors</span>
 
             <div class="btn-toolbar pull-right">
-              <button type="button" data-ng-click="indexRecordsWithErrors()"
-                      class="btn btn-default">
+              <button
+                type="button"
+                data-ng-click="indexRecordsWithErrors()"
+                class="btn btn-default"
+              >
                 <i class="fa fa-cogs"></i>&nbsp;
                 <span translate>indexRecordsWithErrors</span>
               </button>
             </div>
           </div>
           <div class="panel-body">
-            <div data-ng-show="searchResults.records.length > 0"
-                 data-es-facets="searchResults.facets"></div>
+            <div
+              data-ng-show="searchResults.records.length > 0"
+              data-es-facets="searchResults.facets"
+            ></div>
 
             <table class="table table-striped">
-              <tr data-ng-repeat="md in searchResults.records">
-                <td>
-                  <div class="dropdown">
-                    <a data-target="#"
-                       data-toggle="dropdown"
-                       aria-haspopup="true"
-                       role="button" aria-expanded="false">
-                      {{::(md.resourceTitle || ('recordWithNoTitle' | translate))}}
-                    </a>
+              <thead>
+                <tr>
+                  <td>
+                    <div class="input-group gn-form-any">
+                      <input
+                        type="text"
+                        class="form-control input-lg"
+                        id="gn-any-field"
+                        title="{{'anyFieldTitle' | translate}}"
+                        data-ng-model="searchObj.params.any"
+                        autocomplete="off"
+                        placeholder="{{'anyPlaceHolder' | translate}}"
+                        aria-label="{{'anyPlaceHolder' | translate}}"
+                        data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+                      />
 
-                    <div class="pull-right">
-                      <a target="_blank"
-                         data-ng-href="catalog.search#/metadata/{{::md._id}}">
-                        <i class="fa fa-fw fa-eye"></i>
-                      </a>&nbsp;
-                      <a target="_blank"
-                         data-ng-href="../api/records/{{::md._id}}/formatters/xml?output=xml">
-                        <i class="fa fa-fw fa-file-code-o"></i>
-                      </a>
-                      <a target="_blank"
-                         data-ng-href="catalog.edit#/metadata/{{::md.id}}?tab=xml">
-                        <i class="fa fa-fw fa-pencil"></i>
-                      </a>
+                      <div class="input-group-btn">
+                        <button
+                          type="button"
+                          data-ng-click="resetSearch(searchObj.defaultParams);"
+                          title="{{'ClearTitle' | translate}}"
+                          class="btn btn-default btn-lg btn-reset"
+                        >
+                          <i class="fa fa-times"></i>
+                          <span class="sr-only" data-translate="">ClearTitle</span>
+                        </button>
+                        <button
+                          type="button"
+                          data-ng-click="triggerSearch()"
+                          title="{{'search' | translate}}"
+                          class="btn btn-default btn-lg btn-search"
+                        >
+                          <i class="fa fa-search"></i>
+                          <span class="sr-only" data-translate="">search</span>
+                        </button>
+                      </div>
                     </div>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="md in searchResults.records">
+                  <td>
+                    <div class="dropdown">
+                      <a
+                        data-target="#"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        role="button"
+                        aria-expanded="false"
+                      >
+                        {{::(md.resourceTitle || ('recordWithNoTitle' | translate))}}
+                      </a>
 
-                    <ul class="dropdown-menu error-message left-offset" role="menu"
-                        aria-labelledby="dLabel">
-                      <li>
-                        <table class="table">
-                          <tr data-ng-repeat="errorMsg in ::indexMessages(md)">
-                            <td>
-                              <dl>
-                                <dt>{{::indexMessageTitle(errorMsg) | translate}}</dt>
-                                <dd>
-                                  <span>Error reason: {{::indexMessageReason(errorMsg)}}</span>
-                                  <pre data-ng-hide="::rawIndexMessageDetail(errorMsg).length == 0">{{::indexMessageDetail(errorMsg)}}</pre>
-                                </dd>
-                              </dl>
-                            </td>
-                          </tr>
-                        </table>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
+                      <div class="pull-right">
+                        <a
+                          target="_blank"
+                          data-ng-href="catalog.search#/metadata/{{::md._id}}"
+                        >
+                          <i class="fa fa-fw fa-eye"></i> </a
+                        >&nbsp;
+                        <a
+                          target="_blank"
+                          data-ng-href="../api/records/{{::md._id}}/formatters/xml?output=xml"
+                        >
+                          <i class="fa fa-fw fa-file-code-o"></i>
+                        </a>
+                        <a
+                          target="_blank"
+                          data-ng-href="catalog.edit#/metadata/{{::md.id}}?tab=xml"
+                        >
+                          <i class="fa fa-fw fa-pencil"></i>
+                        </a>
+                      </div>
+
+                      <ul
+                        class="dropdown-menu error-message left-offset"
+                        role="menu"
+                        aria-labelledby="dLabel"
+                      >
+                        <li>
+                          <table class="table">
+                            <tr data-ng-repeat="errorMsg in ::indexMessages(md)">
+                              <td>
+                                <dl>
+                                  <dt>{{::indexMessageTitle(errorMsg) | translate}}</dt>
+                                  <dd>
+                                    <span
+                                      >Error reason:
+                                      {{::indexMessageReason(errorMsg)}}</span
+                                    >
+                                    <pre
+                                      data-ng-hide="::rawIndexMessageDetail(errorMsg).length == 0"
+                                    >
+{{::indexMessageDetail(errorMsg)}}</pre
+                                    >
+                                  </dd>
+                                </dl>
+                              </td>
+                            </tr>
+                          </table>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
-            <div data-gn-pagination="paginationInfo"/>
+            <div data-gn-pagination="paginationInfo" />
           </div>
         </div>
       </form>
@@ -204,24 +325,38 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-6">
-            <a data-toggle="collapse" data-ng-click="openLogActivity()" data-parent="#top"
-               aria-expanded="true" aria-controls="logActivity" translate>
-              load
-            </a>&nbsp;
-            <span ng-class="{'fa fa-fw fa-caret-down': visibleLogView,
-                'fa fa-fw fa-caret-right': !visibleLogView}"></span>
+            <a
+              data-toggle="collapse"
+              data-ng-click="openLogActivity()"
+              data-parent="#top"
+              aria-expanded="true"
+              aria-controls="logActivity"
+              translate
+            >
+              load </a
+            >&nbsp;
+            <span
+              ng-class="{'fa fa-fw fa-caret-down': visibleLogView,
+                'fa fa-fw fa-caret-right': !visibleLogView}"
+            ></span>
             <i class="fa fa-spinner fa-spin" data-ng-show="logInfoLoading"></i>
           </div>
           <div class="col-sm-6">
             <div class="btn-toolbar">
               <a href="" data-ng-click="downloadLog()" class="btn btn-default pull-right">
-                <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>exportLogAsZIP</span>
+                <i class="fa fa-file-zip-o"></i>&nbsp;<span translate
+                  >exportLogAsZIP</span
+                >
               </a>
             </div>
           </div>
         </div>
-        <div id="logActivity" class="panel-collapse collapse" role="tabpanel"
-             aria-labelledby="logActivityHeading">
+        <div
+          id="logActivity"
+          class="panel-collapse collapse"
+          role="tabpanel"
+          aria-labelledby="logActivityHeading"
+        >
           <div class="panel-body">
             <pre>{{logActivity}}</pre>
           </div>
@@ -229,34 +364,54 @@
       </div>
     </div>
   </div>
-  <div class="panel-group" id="threadActivityTop" role="tablist" aria-multiselectable="true">
+  <div
+    class="panel-group"
+    id="threadActivityTop"
+    role="tablist"
+    aria-multiselectable="true"
+  >
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="threadActivityHeading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-ng-click="openThreadActivity()" data-parent="#top"
-             aria-expanded="true" aria-controls="threadActivity" translate>
-            threadStatus
-          </a>&nbsp;
-          <span
-            class="badge">{{threadStatus.threads | filter:threadStatusSearch:false | count}}</span>
+          <a
+            data-toggle="collapse"
+            data-ng-click="openThreadActivity()"
+            data-parent="#top"
+            aria-expanded="true"
+            aria-controls="threadActivity"
+            translate
+          >
+            threadStatus </a
+          >&nbsp;
+          <span class="badge"
+            >{{threadStatus.threads | filter:threadStatusSearch:false | count}}</span
+          >
           <i class="fa fa-spinner fa-spin" data-ng-show="threadInfoLoading"></i>
         </h4>
         <div class="btn-toolbar">
           <form class="form-inline pull-right">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div class="checkbox" data-ng-show="threadStatus.threadContentionMonitoringSupported">
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
+            <div
+              class="checkbox"
+              data-ng-show="threadStatus.threadContentionMonitoringSupported"
+            >
               <label>
-                <input type="checkbox"
-                       data-ng-click="toggleThreadContentionMonitoring()"
-                       data-ng-model="threadStatus.threadContentionMonitoringEnabled"> Thread
-                Contention Monitoring
+                <input
+                  type="checkbox"
+                  data-ng-click="toggleThreadContentionMonitoring()"
+                  data-ng-model="threadStatus.threadContentionMonitoringEnabled"
+                />
+                Thread Contention Monitoring
               </label>
             </div>
             <div class="checkbox" data-ng-show="threadStatus.threadCpuTimeSupported">
               <label>
-                <input type="checkbox"
-                       data-ng-click="toggleThreadCpuTime()"
-                       data-ng-model="threadStatus.threadCpuTimeEnabled"> Thread CPU Time
+                <input
+                  type="checkbox"
+                  data-ng-click="toggleThreadCpuTime()"
+                  data-ng-model="threadStatus.threadCpuTimeEnabled"
+                />
+                Thread CPU Time
               </label>
             </div>
           </form>
@@ -267,17 +422,34 @@
           <!--data-ng-class="threadStatus.isDebugEnabled ? 'active' : ''">Enable Debugging</button>-->
         </div>
       </div>
-      <div id="threadActivity" class="panel-collapse collapse" role="tabpanel"
-           aria-labelledby="threadActivityHeading">
-        <div class="modal fade" id="stackTrace" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel" aria-hidden="true">
+      <div
+        id="threadActivity"
+        class="panel-collapse collapse"
+        role="tabpanel"
+        aria-labelledby="threadActivityHeading"
+      >
+        <div
+          class="modal fade"
+          id="stackTrace"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">&times;</span></button>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title" id="myModalLabel">
-                  Stack Trace '{{selectedThread.name}}'</h4>
+                  Stack Trace '{{selectedThread.name}}'
+                </h4>
               </div>
               <div class="modal-body">
                 <pre>{{threadStackTrace}}</pre>
@@ -286,40 +458,60 @@
           </div>
         </div>
         <div class="panel-body">
-
-          <input class="form-control"
-                 data-ng-show="threadStatus.threads.length > 1"
-                 data-ng-model="threadStatusSearch.$" autofocus=""
-                 placeholder="{{'filter' | translate}}"/>
+          <input
+            class="form-control"
+            data-ng-show="threadStatus.threads.length > 1"
+            data-ng-model="threadStatusSearch.$"
+            autofocus=""
+            placeholder="{{'filter' | translate}}"
+          />
           <table class="table">
-            <th><a data-ng-click="setThreadSortField('name')">Thread Name</a>&nbsp;<i
-              data-ng-class="threadSortClass('name')"></i></th>
-            <th data-ng-show="threadStatus.threadCpuTimeEnabled"><a
-              data-ng-click="setThreadSortField('userTime')">User Time</a>&nbsp;<i
-              data-ng-class="threadSortClass('userTime')"></i></th>
-            <th data-ng-show="threadStatus.threadCpuTimeEnabled"><a
-              data-ng-click="setThreadSortField('cpuTime')">CPU Name</a>&nbsp;<i
-              data-ng-class="threadSortClass('cpuTime')"></i></th>
-            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a
-              data-ng-click="setThreadSortField('waitTime')">Wait Time</a>&nbsp;<i
-              data-ng-class="threadSortClass('waitTime')"></i></th>
-            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a
-              data-ng-click="setThreadSortField('blockedTime')">Blocked Time</a>&nbsp;<i
-              data-ng-class="threadSortClass('blockedTime')"></i></th>
-            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled"><a
-              data-ng-click="setThreadSortField('deadlocked')">Deadlocked</a>&nbsp;<i
-              data-ng-class="threadSortClass('deadlocked')"></i></th>
-            <th><a data-ng-click="setThreadSortField('state')">State</a>&nbsp;<i
-              data-ng-class="threadSortClass('state')"></i></th>
+            <th>
+              <a data-ng-click="setThreadSortField('name')">Thread Name</a>&nbsp;<i
+                data-ng-class="threadSortClass('name')"
+              ></i>
+            </th>
+            <th data-ng-show="threadStatus.threadCpuTimeEnabled">
+              <a data-ng-click="setThreadSortField('userTime')">User Time</a>&nbsp;<i
+                data-ng-class="threadSortClass('userTime')"
+              ></i>
+            </th>
+            <th data-ng-show="threadStatus.threadCpuTimeEnabled">
+              <a data-ng-click="setThreadSortField('cpuTime')">CPU Name</a>&nbsp;<i
+                data-ng-class="threadSortClass('cpuTime')"
+              ></i>
+            </th>
+            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled">
+              <a data-ng-click="setThreadSortField('waitTime')">Wait Time</a>&nbsp;<i
+                data-ng-class="threadSortClass('waitTime')"
+              ></i>
+            </th>
+            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled">
+              <a data-ng-click="setThreadSortField('blockedTime')">Blocked Time</a
+              >&nbsp;<i data-ng-class="threadSortClass('blockedTime')"></i>
+            </th>
+            <th data-ng-show="threadStatus.threadContentionMonitoringEnabled">
+              <a data-ng-click="setThreadSortField('deadlocked')">Deadlocked</a>&nbsp;<i
+                data-ng-class="threadSortClass('deadlocked')"
+              ></i>
+            </th>
+            <th>
+              <a data-ng-click="setThreadSortField('state')">State</a>&nbsp;<i
+                data-ng-class="threadSortClass('state')"
+              ></i>
+            </th>
             <tr
               data-ng-repeat="thread in threadStatus.threads | filter:threadStatusSearch:false | orderBy:threadSortField:threadSortReverse"
-              class="thread-state-{{thread.state}}">
+              class="thread-state-{{thread.state}}"
+            >
               <td class="thread-name">
                 <a data-ng-click="showStackTrace(thread)" title="{{thread.name}}">
                   <i class="fa fa-eye"></i>&nbsp;{{thread.name | ellipses}}
                 </a>
               </td>
-              <td data-ng-show="threadStatus.threadCpuTimeEnabled">{{thread.userTime}}</td>
+              <td data-ng-show="threadStatus.threadCpuTimeEnabled">
+                {{thread.userTime}}
+              </td>
               <td data-ng-show="threadStatus.threadCpuTimeEnabled">{{thread.cpuTime}}</td>
               <td data-ng-show="threadStatus.threadContentionMonitoringEnabled">
                 {{thread.waitTime}}

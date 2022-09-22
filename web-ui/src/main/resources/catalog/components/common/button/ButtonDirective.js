@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_button_directive');
+(function () {
+  goog.provide("gn_button_directive");
 
-  var module = angular.module('gn_button_directive', []);
+  var module = angular.module("gn_button_directive", []);
 
   /**
    * Provides two directives: gn-btn-group and gn-btn.
@@ -59,34 +59,39 @@
    * @ngdoc directive
    * @ngname gnBtnGroup
    */
-  module.directive('gnBtnGroup', ['$parse', function($parse) {
-    return {
-      restrict: 'A',
-      controller: 'gnBtnGroupController',
-      link:
-        /**
-         * @param {!angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         * @param {!Object} controller Controller.
-         */
-        function(scope, element, attrs, controller) {
-          var setActive = $parse(attrs['gnBtnGroupActive']).assign;
+  module.directive("gnBtnGroup", [
+    "$parse",
+    function ($parse) {
+      return {
+        restrict: "A",
+        controller: "gnBtnGroupController",
+        link:
+          /**
+           * @param {!angular.Scope} scope Scope.
+           * @param {angular.JQLite} element Element.
+           * @param {angular.Attributes} attrs Attributes.
+           * @param {!Object} controller Controller.
+           */
+          function (scope, element, attrs, controller) {
+            var setActive = $parse(attrs["gnBtnGroupActive"]).assign;
 
-          if (setActive) {
-            scope.$watch(function() {
-              // return true if at least one button is active otherwise false
-              return controller.buttons_.some(function(buttonModel) {
-                return (buttonModel(scope) === true);
-              });
-            }, function(newValue) {
-              setActive(scope, newValue);
-            });
+            if (setActive) {
+              scope.$watch(
+                function () {
+                  // return true if at least one button is active otherwise false
+                  return controller.buttons_.some(function (buttonModel) {
+                    return buttonModel(scope) === true;
+                  });
+                },
+                function (newValue) {
+                  setActive(scope, newValue);
+                }
+              );
+            }
           }
-        }
-    };
-  }]);
-
+      };
+    }
+  ]);
 
   /**
    * @param {!angular.Scope} $scope Scope.
@@ -96,7 +101,7 @@
    * @ngdoc controller
    * @ngname gnBtnGroupController
    */
-  var BtnGroupController = function($scope) {
+  var BtnGroupController = function ($scope) {
     /**
      * @type {Array.<angular.$parse.Expression>}
      * @private
@@ -110,34 +115,29 @@
     this.scope_ = $scope;
   };
 
-
   /**
    * @param {number} index Index of the button in buttons array.
    */
-  BtnGroupController.prototype.activate = function(index) {
-    this.buttons_.forEach(function(expressionFn, i) {
+  BtnGroupController.prototype.activate = function (index) {
+    this.buttons_.forEach(function (expressionFn, i) {
       if (i != index) {
         expressionFn.assign(this.scope_, false);
       }
     }, this);
   };
 
-
   /**
    * @param {angular.$parse.Expression} expressionFn Expression function.
    * @return {number} Index of the pushed setter.
    */
-  BtnGroupController.prototype.addButton = function(expressionFn) {
+  BtnGroupController.prototype.addButton = function (expressionFn) {
     this.buttons_.push(expressionFn);
     return this.buttons_.length - 1;
   };
 
-  BtnGroupController['$inject'] = [
-    '$scope'
-  ];
+  BtnGroupController["$inject"] = ["$scope"];
 
-  module.controller('gnBtnGroupController', BtnGroupController);
-
+  module.controller("gnBtnGroupController", BtnGroupController);
 
   /**
    * The gn-btn allows creating toggle buttons working with ng-model. It is
@@ -157,49 +157,52 @@
    * @ngdoc directive
    * @ngname gnBtn
    */
-  module.directive('gnBtn', ['$parse', function($parse) {
-    return {
-      require: ['?^gnBtnGroup', 'ngModel'],
-      restrict: 'A',
-      link:
-        /**
-         * @param {!angular.Scope} scope Scope.
-         * @param {angular.JQLite} element Element.
-         * @param {angular.Attributes} attrs Attributes.
-         * @param {!Array.<!Object>} ctrls Controllers.
-         */
-        function(scope, element, attrs, ctrls) {
-          var buttonsCtrl = ctrls[0];
-          var ngModelCtrl = ctrls[1];
-          var indexInGroup = -1;
+  module.directive("gnBtn", [
+    "$parse",
+    function ($parse) {
+      return {
+        require: ["?^gnBtnGroup", "ngModel"],
+        restrict: "A",
+        link:
+          /**
+           * @param {!angular.Scope} scope Scope.
+           * @param {angular.JQLite} element Element.
+           * @param {angular.Attributes} attrs Attributes.
+           * @param {!Array.<!Object>} ctrls Controllers.
+           */
+          function (scope, element, attrs, ctrls) {
+            var buttonsCtrl = ctrls[0];
+            var ngModelCtrl = ctrls[1];
+            var indexInGroup = -1;
 
-          var ngModelGet = $parse(attrs['ngModel']);
-          var ngModelSet = ngModelGet.assign;
+            var ngModelGet = $parse(attrs["ngModel"]);
+            var ngModelSet = ngModelGet.assign;
 
-          // Set ng-model value to false if undefined
-          if (ngModelGet(scope) === undefined) {
-            ngModelSet(scope, false);
-          }
-          if (buttonsCtrl !== null) {
-            indexInGroup = buttonsCtrl.addButton(ngModelGet);
-          }
-
-          // UI -> model
-          element.bind('click', function() {
-            scope.$apply(function() {
-              ngModelCtrl.$setViewValue(!ngModelCtrl.$viewValue);
-              ngModelCtrl.$render();
-            });
-          });
-
-          // model -> UI
-          ngModelCtrl.$render = function() {
-            if (ngModelCtrl.$viewValue && buttonsCtrl !== null) {
-              buttonsCtrl.activate(indexInGroup);
+            // Set ng-model value to false if undefined
+            if (ngModelGet(scope) === undefined) {
+              ngModelSet(scope, false);
             }
-            element.toggleClass('active', ngModelCtrl.$viewValue);
-          };
-        }
-    };
-  }]);
+            if (buttonsCtrl !== null) {
+              indexInGroup = buttonsCtrl.addButton(ngModelGet);
+            }
+
+            // UI -> model
+            element.bind("click", function () {
+              scope.$apply(function () {
+                ngModelCtrl.$setViewValue(!ngModelCtrl.$viewValue);
+                ngModelCtrl.$render();
+              });
+            });
+
+            // model -> UI
+            ngModelCtrl.$render = function () {
+              if (ngModelCtrl.$viewValue && buttonsCtrl !== null) {
+                buttonsCtrl.activate(indexInGroup);
+              }
+              element.toggleClass("active", ngModelCtrl.$viewValue);
+            };
+          }
+      };
+    }
+  ]);
 })();

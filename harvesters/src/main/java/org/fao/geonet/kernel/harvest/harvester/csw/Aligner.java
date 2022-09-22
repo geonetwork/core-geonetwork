@@ -308,6 +308,7 @@ public class Aligner extends BaseAligner<CswParams> {
         String mdUuid = ri.uuid;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
+            schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
             mdUuid = metadataUtils.extractUUID(schema, md);
             if (mdUuid == null) {
@@ -315,7 +316,7 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
-        applyBatchEdits(ri, md, schema);
+        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
         //
         // insert metadata
@@ -354,11 +355,13 @@ public class Aligner extends BaseAligner<CswParams> {
         result.addedMetadata++;
     }
 
-    private void applyBatchEdits(RecordInfo ri, Element md, String schema) throws JDOMException, IOException {
-        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
+    public static void applyBatchEdits(
+        String uuid, Element md, String schema,
+        String batchEdits, ServiceContext context, Logger log) throws JDOMException, IOException {
+        if (StringUtils.isNotEmpty(batchEdits)) {
             ObjectMapper mapper = new ObjectMapper();
 
-            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
+            BatchEditParameter[] listOfUpdates = mapper.readValue(batchEdits, BatchEditParameter[].class);
             if (listOfUpdates.length > 0) {
                 SchemaManager _schemaManager = context.getBean(SchemaManager.class);
                 EditLib editLib = new EditLib(_schemaManager);
@@ -394,8 +397,8 @@ public class Aligner extends BaseAligner<CswParams> {
                         ) || metadataChanged;
                     }
                 }
-                if (metadataChanged) {
-                    log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
+                if (metadataChanged && log != null) {
+                    log.debug("  - Record updated by batch edit configuration:" + uuid);
                 }
             }
         }
@@ -439,11 +442,15 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
+        boolean updateSchema = false;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
+            String newSchema = dataMan.autodetectSchema(md);
+            updateSchema = !newSchema.equals(schema);
+            schema = newSchema;
         }
 
-        applyBatchEdits(ri, md, schema);
+        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
         //
         // update metadata
@@ -455,11 +462,15 @@ public class Aligner extends BaseAligner<CswParams> {
 
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
 
-        if (force) {
-            //change ownership of metadata to new harvester
-            metadata.getHarvestInfo().setUuid(params.getUuid());
-            metadata.getSourceInfo().setSourceId(params.getUuid());
-
+        if (force || updateSchema) {
+            if (force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+            }
+            if (updateSchema) {
+                metadata.getDataInfo().setSchemaId(schema);
+            }
             metadataManager.save(metadata);
         }
 
@@ -623,7 +634,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 log.debug("     metadata filtered.");
                 md = processedMetadata;
             } catch (Exception e) {
-                log.warning("     processing error " + processName + "}): " + e.getMessage());
+                log.warning("     processing error " + processName + ": " + e.getMessage());
             }
         }
         return md;

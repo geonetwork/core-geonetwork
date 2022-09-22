@@ -1,34 +1,29 @@
-<div class="btn-group baselayer"
-     gn-popover
-     gn-popover-placement="bottom"
-     data-ng-show="layers.length > 1">
-  <button type="button" class="btn btn-default dropdown-toggle" gn-popover-anchor>
-    <span data-translate="">backgroundMap</span>&nbsp;{{map.getLayers().item(0).get('title')}} <span
-    class="caret"></span>
-  </button>
-  <div gn-popover-content class="gn-baselayer-switcher-content">
-    <ul class="gn-baselayer-switcher-menu" role="menu">
-      <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()"
-          role="menuitem">
+<div class="gn-margin-bottom" data-ng-show="layers.length > 1">
+  <h4 data-translate="">backgroundMap</h4>
+  <ul class="gn-baselayer-switcher-menu list-group width-100">
+    <li class="list-group-item" ng-if="::layer" ng-repeat="layer in layers">
+      <a href="" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()">
         <span ng-if="::!layer.get('loading')">
-          <span class="fa"
-                ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-          {{layer.get('title')}}
+          <span
+            class="fa gn-margin-right"
+            ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"
+          ></span
+          >{{layer.get('title')}}
         </span>
         <span ng-if="::layer.get('loading')">
           <span class="fa fa-spin fa-spinner"></span>
         </span>
-      <li>
-    </ul>
-  </div>
+      </a>
+    </li>
 
+    <li></li>
+  </ul>
 </div>
-<br/>
-<div>
-  <button class="btn btn-default gn-md-thumbnail"
-          data-ng-click="reset()"
-          aria-label="{{'resetContext' | translate}}">
-    <span
-      class="gn-img-thumbnail-caption" data-translate="">resetContext</span>
-  </button>
-</div>
+
+<button
+  class="btn btn-default"
+  data-ng-click="reset()"
+  aria-label="{{'resetContext' | translate}}"
+>
+  <span data-translate="">resetContext</span>
+</button>

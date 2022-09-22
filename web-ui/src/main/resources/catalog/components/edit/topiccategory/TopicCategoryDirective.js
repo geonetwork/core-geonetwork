@@ -21,12 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_topiccategory_directive');
+(function () {
+  goog.provide("gn_topiccategory_directive");
 
-  var module = angular.module('gn_topiccategory_directive',
-      ['pascalprecht.translate']);
-
+  var module = angular.module("gn_topiccategory_directive", ["pascalprecht.translate"]);
 
   /**
    * @ngdoc directive
@@ -38,216 +36,225 @@
    * the input.
    *
    */
-  module.directive('gnTopiccategorySelectorDiv',
-      ['$compile', '$timeout', '$translate',
-       'gnTopicCategoryService', 'gnCurrentEdit',
-       'TopicCategory', 'gnLangs',
-       function($compile, $timeout, $translate,
-                gnTopicCategoryService, gnCurrentEdit, TopicCategory, gnLangs) {
+  module.directive("gnTopiccategorySelectorDiv", [
+    "$compile",
+    "$timeout",
+    "$translate",
+    "gnTopicCategoryService",
+    "gnCurrentEdit",
+    "TopicCategory",
+    "gnLangs",
+    function (
+      $compile,
+      $timeout,
+      $translate,
+      gnTopicCategoryService,
+      gnCurrentEdit,
+      TopicCategory,
+      gnLangs
+    ) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        scope: {
+          values: "@gnTopiccategorySelectorDiv",
+          label: "@label",
+          ref: "@ref",
+          required: "@required"
+        },
+        templateUrl:
+          "../../catalog/components/edit/topiccategory/partials/" + "topiccategory.html",
+        link: function (scope) {
+          scope.snippet = null;
+          scope.selected = [];
+          scope.initialTopicCategories = [];
+          var xpathBySchema = {
+            iso19139: {
+              name: "gmd:topicCategory",
+              xpath: "gmd:identificationInfo/*/gmd:topicCategory",
+              tpl:
+                "<gmd:topicCategory " +
+                'xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
+                "<gmd:MD_TopicCategoryCode>{{t}}</gmd:MD_TopicCategoryCode>" +
+                "</gmd:topicCategory>"
+            },
+            "iso19115-3": {
+              name: "mri:topicCategory",
+              xpath: "mdb:identificationInfo/*/mri:topicCategory",
+              tpl:
+                '<mri:topicCategory xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0">' +
+                "<mri:MD_TopicCategoryCode>{{t}}</mri:MD_TopicCategoryCode>\n" +
+                "</mri:topicCategory>"
+            }
+          };
 
-         return {
-           restrict: 'A',
-           replace: true,
-           transclude: true,
-           scope: {
-             values: '@gnTopiccategorySelectorDiv',
-             label: '@label',
-             ref: '@ref',
-             required: '@required'
-           },
-           templateUrl: '../../catalog/components/edit/topiccategory/partials/' +
-           'topiccategory.html',
-           link: function(scope) {
-             scope.snippet = null;
-             scope.selected = [];
-             scope.initialTopicCategories = [];
-             var xpathBySchema = {
-               'iso19139': {
-                 name: 'gmd:topicCategory',
-                 xpath: 'gmd:identificationInfo/*/gmd:topicCategory',
-                 tpl: '<gmd:topicCategory ' +
-                 'xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
-                 '<gmd:MD_TopicCategoryCode>{{t}}</gmd:MD_TopicCategoryCode>' +
-                 '</gmd:topicCategory>'
-               },
-               'iso19115-3': {
-                 name: 'mri:topicCategory',
-                 xpath: 'mdb:identificationInfo/*/mri:topicCategory',
-                 tpl: '<mri:topicCategory xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0">' +
-                        '<mri:MD_TopicCategoryCode>{{t}}</mri:MD_TopicCategoryCode>\n' +
-                      '</mri:topicCategory>'
-               }
-             }
+          var schema = gnCurrentEdit.schema;
 
-             var schema = gnCurrentEdit.schema;
+          scope.gnCurrentEdit = gnCurrentEdit;
+          scope.schema = schema;
 
-             scope.gnCurrentEdit = gnCurrentEdit;
-             scope.schema = schema;
+          // By convention schema extension will have
+          // an identifier of the form {baseSchemaId}.{extensionId}
+          var schemaForXpath =
+            gnCurrentEdit.schema.indexOf(".") !== -1
+              ? gnCurrentEdit.schema.split(".")[0]
+              : gnCurrentEdit.schema;
+          scope.xpath = xpathBySchema[schemaForXpath].xpath;
 
-             // By convention schema extension will have
-             // an identifier of the form {baseSchemaId}.{extensionId}
-             var schemaForXpath = (gnCurrentEdit.schema.indexOf(".") !== -1) ?
-               gnCurrentEdit.schema.split('.')[0] :
-               gnCurrentEdit.schema;
-             scope.xpath = xpathBySchema[schemaForXpath].xpath;
+          scope.elementName = xpathBySchema[schemaForXpath].name;
 
-             scope.elementName = xpathBySchema[schemaForXpath].name;
+          // Initial values are comma separated encoded
+          if (scope.values) {
+            scope.initialTopicCategories = scope.values.split(",");
+          }
 
-             // Initial values are comma separated encoded
-             if (scope.values) {
-               scope.initialTopicCategories = scope.values.split(',');
-             }
+          scope.maxTagsLabel = scope.maxTags || "∞";
 
-             scope.maxTagsLabel = scope.maxTags || '∞';
+          scope.buildFinalSnippet = function () {
+            var snippet = "";
 
-             scope.buildFinalSnippet = function() {
-               var snippet = "";
+            if (scope.snippets) {
+              for (var i = 0; i < scope.snippets.length; i++) {
+                snippet += scope.snippets[i];
+              }
+            }
 
-               if (scope.snippets) {
-                 for(var i = 0; i < scope.snippets.length; i++) {
-                   snippet +=
-                     scope.snippets[i];
-                 }
-               }
+            return "<gn_replace_all>" + snippet + "</gn_replace_all>";
+          };
 
-               return "<gn_replace_all>" +
-                 snippet + "</gn_replace_all>";
-             };
+          var init = function () {
+            // Load topic category code list, then init widget
+            gnTopicCategoryService
+              .getTopicCategories(gnCurrentEdit.schema)
+              .then(function (listOfTopicCategories) {
+                angular.forEach(scope.initialTopicCategories, function (topicCategory) {
+                  var existingTopicCategory = null;
+                  for (var i = 0; i < listOfTopicCategories.length; i++) {
+                    if (listOfTopicCategories[i].getId() == topicCategory) {
+                      existingTopicCategory = listOfTopicCategories[i];
+                      break;
+                    }
+                  }
 
-             var init = function() {
-              // Load topic category code list, then init widget
-               gnTopicCategoryService.getTopicCategories(gnCurrentEdit.schema)
-               .then(function(listOfTopicCategories) {
+                  if (existingTopicCategory) {
+                    scope.selected.push(existingTopicCategory);
+                  }
+                });
 
-                 angular.forEach(scope.initialTopicCategories, function(topicCategory) {
-                   var existingTopicCategory = null;
-                   for (var i = 0; i < listOfTopicCategories.length; i++) {
-                     if (listOfTopicCategories[i].getId() == topicCategory) {
-                       existingTopicCategory = listOfTopicCategories[i];
-                       break;
-                     }
-                   }
+                // Build XML for current topic categories
+                getSnippet();
 
-                   if (existingTopicCategory) {
-                     scope.selected.push(existingTopicCategory);
-                   }
-                 });
+                scope.$watch("results", getSnippet);
+                scope.$watch("selected", getSnippet);
 
-                 // Build XML for current topic categories
-                 getSnippet();
+                // Init autocompleter
+                initTagsInput(listOfTopicCategories);
+              });
+          };
 
-                 scope.$watch('results', getSnippet);
-                 scope.$watch('selected', getSnippet);
+          // Init typeahead and tag input
+          var initTagsInput = function (listOfTopicCategories) {
+            var id = "#tagsinput_" + scope.ref;
+            $timeout(function () {
+              try {
+                $(id).tagsinput({
+                  itemValue: "label",
+                  itemText: "label",
+                  maxTags: scope.maxTags
+                });
 
-                 // Init autocompleter
-                 initTagsInput(listOfTopicCategories);
-               });
+                // Add selection to the list of tags
+                angular.forEach(scope.selected, function (topicCategory) {
+                  $(id).tagsinput("add", topicCategory);
+                });
 
-             };
+                var field = $(id).tagsinput("input");
+                field.attr("placeholder", $translate.instant("searchTopicCategory"));
 
-             // Init typeahead and tag input
-             var initTagsInput = function(listOfTopicCategories) {
-               var id = '#tagsinput_' + scope.ref;
-               $timeout(function() {
-                 try {
-                   $(id).tagsinput({
-                     itemValue: 'label',
-                     itemText: 'label',
-                     maxTags: scope.maxTags
-                   });
+                var topicCategoriesAutocompleter =
+                  gnTopicCategoryService.getTopicCategoryAutocompleter({
+                    dataToExclude: scope.selected,
+                    lang: gnLangs.current,
+                    schema: schema,
+                    data: listOfTopicCategories
+                  });
 
-                   // Add selection to the list of tags
-                   angular.forEach(scope.selected, function(topicCategory) {
-                     $(id).tagsinput('add', topicCategory);
-                   });
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(topicCategoriesAutocompleter.all());
+                    // This is the only change needed to get 'ALL'
+                    // items as the defaults
+                  } else {
+                    topicCategoriesAutocompleter.search(q, sync);
+                  }
+                }
+                // Init typeahead
+                field
+                  .typeahead(
+                    {
+                      minLength: 0,
+                      highlight: true
+                    },
+                    {
+                      name: "topiccategory",
+                      displayKey: "label",
+                      limit: Infinity,
+                      source: allOrSearchFn
+                    }
+                  )
+                  .bind(
+                    "typeahead:selected",
+                    $.proxy(function (obj, topiccategory) {
+                      // Add to tags
+                      this.tagsinput("add", topiccategory);
 
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput("items"), scope.selected);
+                      getSnippet();
+                      scope.$apply();
 
-                   var field = $(id).tagsinput('input');
-                   field.attr('placeholder',
-                   $translate.instant('searchTopicCategory'));
+                      // Clear typeahead
+                      this.tagsinput("input").typeahead("val", "");
 
-                   var topicCategoriesAutocompleter =
-                   gnTopicCategoryService.getTopicCategoryAutocompleter({
-                     dataToExclude: scope.selected,
-                     lang: gnLangs.current,
-                     schema: schema,
-                     data: listOfTopicCategories
-                   });
+                      // Force prefect to update items to exclude
+                      topicCategoriesAutocompleter.initialize(true);
+                    }, $(id))
+                  );
 
+                $(id).on("itemRemoved", function () {
+                  angular.copy($(this).tagsinput("items"), scope.selected);
+                  getSnippet();
+                  scope.$apply();
 
-                   function allOrSearchFn(q, sync) {
-                     if (q === '') {
-                       sync(topicCategoriesAutocompleter.all());
-                       // This is the only change needed to get 'ALL'
-                       // items as the defaults
-                     } else {
-                       topicCategoriesAutocompleter.search(q, sync);
-                     }
-                   }
-                   // Init typeahead
-                   field.typeahead({
-                     minLength: 0,
-                     highlight: true
-                   }, {
-                     name: 'topiccategory',
-                     displayKey: 'label',
-                     limit: Infinity,
-                     source: allOrSearchFn
-                   }).bind('typeahead:selected',
-                     $.proxy(function(obj, topiccategory) {
-                       // Add to tags
-                       this.tagsinput('add', topiccategory);
+                  // Force prefect to update items to exclude
+                  topicCategoriesAutocompleter.initialize(true);
+                });
+              } catch (e) {
+                console.warn("No tagsinput for " + id + ", error: " + e.message);
+              }
+            });
+          };
 
-                       // Update selection and snippet
-                       angular.copy(this.tagsinput('items'), scope.selected);
-                       getSnippet();
-                       scope.$apply();
+          var getTopicCategoryIds = function () {
+            var ids = [];
+            angular.forEach(scope.selected, function (t) {
+              ids.push(t.getId());
+            });
+            return ids;
+          };
 
-                       // Clear typeahead
-                       this.tagsinput('input').typeahead('val', '');
+          var getSnippet = function () {
+            var xml = [];
+            angular.forEach(getTopicCategoryIds(), function (t) {
+              xml.push(xpathBySchema[schemaForXpath].tpl.replace("{{t}}", t));
+            });
+            scope.snippets = xml;
+          };
 
-                       // Force prefect to update items to exclude
-                       topicCategoriesAutocompleter.initialize(true);
-                     }, $(id))
-                   );
-
-                   $(id).on('itemRemoved', function() {
-                     angular.copy($(this)
-                     .tagsinput('items'), scope.selected);
-                     getSnippet();
-                     scope.$apply();
-
-                     // Force prefect to update items to exclude
-                     topicCategoriesAutocompleter.initialize(true);
-                   });
-
-                 } catch (e) {
-                   console.warn('No tagsinput for ' + id +
-                   ', error: ' + e.message);
-                 }
-               });
-             };
-
-             var getTopicCategoryIds = function() {
-               var ids = [];
-               angular.forEach(scope.selected, function(t) {
-                 ids.push(t.getId());
-               });
-               return ids;
-             };
-
-             var getSnippet = function() {
-               var xml = [];
-               angular.forEach(getTopicCategoryIds(), function(t) {
-                 xml.push(xpathBySchema[schemaForXpath].tpl.replace('{{t}}', t));
-               });
-               scope.snippets = xml;
-             };
-
-             init();
-
-           }
-         };
-       }]);
-
+          init();
+        }
+      };
+    }
+  ]);
 })();

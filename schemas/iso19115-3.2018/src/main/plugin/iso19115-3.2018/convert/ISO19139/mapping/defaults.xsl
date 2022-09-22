@@ -44,27 +44,6 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
-  <xsl:template name="characterStringSubstitutions">
-    <xsl:param name="parentElement"/>
-    <!-- This template takes a parent of a gcoold:CharacterString element and writes out the child for several possible substitutions  -->
-    <xsl:apply-templates select="$parentElement/@*" mode="from19139to19115-3.2018"/>
-    <xsl:for-each select="$parentElement/*">
-      <xsl:choose>
-        <xsl:when test="local-name(.)='CharacterString'">
-          <gco:CharacterString>
-            <xsl:value-of select="."/>
-          </gco:CharacterString>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:element name="{concat('gcx:',local-name(.))}">
-            <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
-            <xsl:value-of select="."/>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-  </xsl:template>
-
   <xsl:template match="gml30:*|gml:*" mode="from19139to19115-3.2018">
     <xsl:element name="{local-name(.)}" namespace="http://www.opengis.net/gml/3.2">
       <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
@@ -131,7 +110,7 @@
           and not(ancestor-or-self::gmi:LE_Source) and not(ancestor-or-self::gmi:MI_CoverageDescription)">
           <xsl:text>msr</xsl:text>
         </xsl:when>
-        <xsl:when test="starts-with(name(),'gmi:') and 
+        <xsl:when test="starts-with(name(),'gmi:') and
           (ancestor-or-self::gmi:LE_ProcessStep or ancestor-or-self::gmi:LE_Source)">
           <xsl:text>mrl</xsl:text>
         </xsl:when>
@@ -139,7 +118,7 @@
           <xsl:text>mrc</xsl:text>
         </xsl:when>
         <xsl:when test="ancestor-or-self::gmd:MD_Constraints
-          or ancestor-or-self::gmd:MD_SecurityConstraints 
+          or ancestor-or-self::gmd:MD_SecurityConstraints
           or ancestor-or-self::gmd:MD_LegalConstraints
           ">
           <xsl:text>mco</xsl:text>
@@ -150,7 +129,7 @@
         <xsl:when test="ancestor-or-self::gmd:CI_ResponsibleParty or ancestor-or-self::gmd:CI_OnlineResource">
           <xsl:text>cit</xsl:text>
         </xsl:when>
-        <xsl:when test="ancestor-or-self::gmd:MD_ScopeCode or ancestor-or-self::gmx:MX_ScopeCode 
+        <xsl:when test="ancestor-or-self::gmd:MD_ScopeCode or ancestor-or-self::gmx:MX_ScopeCode
           or ancestor-or-self::gmd:MD_ScopeDescription">
           <xsl:text>mcc</xsl:text>
         </xsl:when>
@@ -244,34 +223,22 @@
       <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
       <xsl:element name="mrd:formatSpecificationCitation">
         <xsl:element name="cit:CI_Citation">
-          <cit:title>
-            <xsl:call-template name="characterStringSubstitutions">
-              <xsl:with-param name="parentElement" select="gmd:name"/>
+          <xsl:call-template name="writeCharacterStringElement">
+            <xsl:with-param name="elementName" select="'cit:title'"/>
+            <xsl:with-param name="nodeWithStringToWrite" select="gmd:name"/>
+          </xsl:call-template>
+          <xsl:for-each select="gmd:specification[normalize-space(.) != '']">
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'cit:alternateTitle'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
             </xsl:call-template>
-          </cit:title>
-          <xsl:if test="normalize-space(gmd:specification) != ''">
-            <cit:alternateTitle>
-              <xsl:call-template name="characterStringSubstitutions">
-                <xsl:with-param name="parentElement" select="gmd:specification"/>
-              </xsl:call-template>
-            </cit:alternateTitle>
-          </xsl:if>
+          </xsl:for-each>
           <!-- 19115(2006) does not have concept of a format specification date -->
           <cit:date gco:nilReason="unknown"/>
-          <cit:edition>
-            <xsl:call-template name="characterStringSubstitutions">
-              <xsl:with-param name="parentElement" select="gmd:version"/>
-            </xsl:call-template>
-          </cit:edition>
-          <!--<cit:identifier>
-            <mcc:MD_Identifier>
-              <mcc:code>
-                <xsl:call-template name="characterStringSubstitutions">
-                  <xsl:with-param name="parentElement" select="gmd:name"/>
-                </xsl:call-template>
-              </mcc:code>
-            </mcc:MD_Identifier>
-          </cit:identifier>-->
+          <xsl:call-template name="writeCharacterStringElement">
+            <xsl:with-param name="elementName" select="'cit:edition'"/>
+            <xsl:with-param name="nodeWithStringToWrite" select="gmd:version"/>
+          </xsl:call-template>
         </xsl:element>
       </xsl:element>
       <xsl:apply-templates mode="from19139to19115-3.2018"/>

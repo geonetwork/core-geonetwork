@@ -22,10 +22,9 @@
  */
 
 (function () {
+  goog.provide("gn_olDecorateInteraction");
 
-  goog.provide('gn_olDecorateInteraction')
-
-  var module = angular.module('gn_olDecorateInteraction', [])
+  var module = angular.module("gn_olDecorateInteraction", []);
 
   /**
    * Provides a function that adds an "active" property (using
@@ -46,17 +45,16 @@
   /**
    * @param {ol.interaction.Interaction} interaction Interaction to decorate.
    */
-  var decorateInteraction = function(interaction) {
-
-    Object.defineProperty(interaction, 'active', {
-      get: function() {
+  var decorateInteraction = function (interaction) {
+    Object.defineProperty(interaction, "active", {
+      get: function () {
         return interaction.getActive();
       },
-      set: function(val) {
+      set: function (val) {
         interaction.setActive(val);
       }
     });
   };
 
-  module.value('olDecorateInteraction', decorateInteraction)
-})()
+  module.value("olDecorateInteraction", decorateInteraction);
+})();

@@ -823,7 +823,7 @@
   </element>
   <element name="gmd:compressionGenerationQuantity" id="250.0">
     <label>Compression generation quantity</label>
-    <description>Count of the number the number of lossy compression
+    <description>Count of the number of lossy compression
       cycles performed on the image
     </description>
   </element>
@@ -1968,6 +1968,10 @@
       <option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service
       </option>
       <option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -2332,7 +2336,7 @@
   </element>
   <element name="gmd:topicCategory" id="41.0">
     <label>Topic category</label>
-    <description>Main theme(s) of the datset</description>
+    <description>Main theme(s) of the dataset</description>
     <condition>mandatory</condition>
   </element>
   <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
@@ -2775,7 +2779,7 @@
   <element name="srv:name">
     <label>Name</label>
     <description>The name, as used by the service for this chain or
-      paramater
+      parameter
     </description>
   </element>
   <element name="srv:description">

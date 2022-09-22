@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" dest="out">
+  <Properties>
+    <Property name="log_dir">.</Property>
+  </Properties>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
+    </Console>
+    <RollingFile name="File">
+      <filename>${sys:log_dir:-log_dir}/logs/geonetwork.log</filename>
+      <filePattern>${sys:log_dir:-log_dir}/logs/geonetwork.log-%i.log</filePattern>
+      <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10 MB" />
+      </Policies>
+      <DefaultRolloverStrategy max="3" fileIndex="min"/>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>
+    <Logger name="net.sf.ehcache.config.ConfigurationFactory" level="error"/>
+    <Logger name="org.apache.jcs.auxiliary" level="error"/>
+    <Logger name="org.hibernate" level="error"/>
+    <Logger name="org.hibernate.SQL" level="warn"/>
+    <Logger name="org.fao.geonet.database" level="warn"/>
+    <Logger name="org.fao.geonet.type" level="warn"/>
+    <Logger name="org.fao.geonet.formatter" level="warn"/>
+    <Logger name="org.xhtmlrenderer" level="off"/>
+    <Root level="warn">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+</Configuration>

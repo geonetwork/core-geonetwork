@@ -21,7 +21,6 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-
 /**
  * @fileoverview This script provides a window.countWatchers function that
  * the number of Angular watchers in the page.
@@ -34,12 +33,11 @@
  * setInterval(function(){console.log(countWatchers())}, 5000);
  */
 (function () {
+  goog.provide("gn_count_watchers");
 
-  goog.provide('gn_count_watchers');
+  var root = angular.element(document.getElementsByTagName("body"));
 
-  var root = angular.element(document.getElementsByTagName('body'));
-
-  var countWatchers_ = function(element, scopes, count) {
+  var countWatchers_ = function (element, scopes, count) {
     var scope;
     scope = element.data().$scope;
     if (scope && !(scope.$id in scopes)) {
@@ -61,8 +59,7 @@
     return count;
   };
 
-  window.countWatchers = function() {
+  window.countWatchers = function () {
     return countWatchers_(root, {}, 0);
   };
-
 })();

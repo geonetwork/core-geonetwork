@@ -21,95 +21,106 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wms_directive');
+(function () {
+  goog.provide("gn_wms_directive");
 
-  goog.require('gn_wms_service');
+  goog.require("gn_wms_service");
 
-  var module = angular.module('gn_wms_directive', [
-    'gn_wms_service'
-  ]);
+  var module = angular.module("gn_wms_directive", ["gn_wms_service"]);
 
-  module.directive('gnWmsDownload', ['gnWmsService', 'gnGlobalSettings',
-    'gnSearchSettings', '$rootScope', '$translate',
-    'gnSearchLocation',
-    function(gnWmsService, gnGlobalSettings, gnSearchSettings,
-             $rootScope, $translate, gnSearchLocation) {
+  module.directive("gnWmsDownload", [
+    "gnWmsService",
+    "gnGlobalSettings",
+    "gnSearchSettings",
+    "$rootScope",
+    "$translate",
+    "gnSearchLocation",
+    function (
+      gnWmsService,
+      gnGlobalSettings,
+      gnSearchSettings,
+      $rootScope,
+      $translate,
+      gnSearchLocation
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          layer: '=gnWmsDownload',
-          map: '=',
-          md: '='
+          layer: "=gnWmsDownload",
+          map: "=",
+          md: "="
         },
-        templateUrl: '../../catalog/components/' +
-            'viewer/wms/partials/wmsDownload.html',
-        link: function(scope, element, attrs, ctrls) {
+        templateUrl: "../../catalog/components/" + "viewer/wms/partials/wmsDownload.html",
+        link: function (scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;
           scope.layerSelected = null;
           scope.isWmsAvailable = false;
           scope.isLayerInCapabilities = false;
           scope.capabilitiesChecked = false;
-          var init = function() {
+          var init = function () {
             try {
               // Get WMS URL from attrs or try by getting the url layer property
-              scope.url = attrs['url'] || scope.layer.get('url');
-              scope.layerName = attrs['layerName'];
+              scope.url = attrs["url"] || scope.layer.get("url");
+              scope.layerName = attrs["layerName"];
 
               scope.projections = [];
-              scope.checkWmsUrl().then(
-                  function() {
-                    if (scope.capabilities.layers &&
-                    scope.capabilities.layers.length != 0) {
+              scope
+                .checkWmsUrl()
+                .then(
+                  function () {
+                    if (
+                      scope.capabilities.layers &&
+                      scope.capabilities.layers.length != 0
+                    ) {
                       scope.isWmsAvailable = true;
                       //here check wms/wmts
 
-                      scope.isLayerInCapabilities =
-                      gnWmsService.isLayerInCapabilities(scope.capabilities,
-                      scope.layerName);
+                      scope.isLayerInCapabilities = gnWmsService.isLayerInCapabilities(
+                        scope.capabilities,
+                        scope.layerName
+                      );
                     }
-                  }, function() {
-                  }
-
-              ).finally(function() {
-                scope.capabilitiesChecked = true;
-              });
+                  },
+                  function () {}
+                )
+                .finally(function () {
+                  scope.capabilitiesChecked = true;
+                });
             } catch (e) {
               scope.problemContactingServer = true;
               scope.capabilitiesChecked = true;
             }
           };
 
-          scope.checkWmsUrl = function() {
-            return gnWmsService.getCapabilities(scope.url)
-                .then(function(capabilities) {
-                  scope.capabilities = capabilities;
-                });
+          scope.checkWmsUrl = function () {
+            return gnWmsService.getCapabilities(scope.url).then(function (capabilities) {
+              scope.capabilities = capabilities;
+            });
           };
 
-          scope.addSelectedLayerToMap = function(layerSelected) {
+          scope.addSelectedLayerToMap = function (layerSelected) {
             if (!layerSelected) {
               return;
             }
-            layerSelected.capRequest = scope.capabilities.Request||null;
-            gnWmsService.addLayerToMap(layerSelected,
-                gnSearchSettings.viewerMap);
+            layerSelected.capRequest = scope.capabilities.Request || null;
+            gnWmsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
-
           };
 
-          scope.hasName = function(layer) {
-            return ('Name' in layer) && layer.Name;
+          scope.hasName = function (layer) {
+            return "Name" in layer && layer.Name;
           };
 
-          scope.addWmsLayer = function() {
-            gnWmsService.addWMSToMap(scope.layerName, scope.url,
-                scope.md, gnSearchSettings.viewerMap);
+          scope.addWmsLayer = function () {
+            gnWmsService.addWMSToMap(
+              scope.layerName,
+              scope.url,
+              scope.md,
+              gnSearchSettings.viewerMap
+            );
             gnSearchLocation.setMap();
-
           };
-
 
           init();
         }

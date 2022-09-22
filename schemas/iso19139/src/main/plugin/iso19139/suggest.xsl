@@ -23,12 +23,13 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
-                version="2.0">
+  xmlns:saxon="http://saxon.sf.net/"
+  extension-element-prefixes="saxon"
+  version="2.0">
 
 
   <!-- Register here the list of process for the schema-->
+  <xsl:include href="process/collection-updater.xsl"/>
   <xsl:include href="process/keywords-comma-exploder.xsl"/>
   <xsl:include href="process/scale-denominator-formatter.xsl"/>
   <xsl:include href="process/add-extent-from-geokeywords.xsl"/>
@@ -45,6 +46,7 @@
   -->
 
   <xsl:variable name="processes">
+    <p>collection-updater</p>
     <p>keywords-comma-exploder</p>
     <p>scale-denominator-formatter</p>
     <p>add-extent-from-geokeywords</p>

@@ -170,15 +170,17 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "MetadataResourceDatabaseMigration");
 
+        final SettingManager settingManager = applicationContext.getBean(SettingManager.class);
+
         try (PreparedStatement update = connection.prepareStatement(
             "UPDATE metadata SET data=? WHERE id=?")
         ) {
             try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(
-                     "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
+                 ResultSet resultSet = statement.executeQuery(String.format(
+                     "SELECT data, id, uuid FROM metadata WHERE data LIKE '%%%s%%'",
+                     settingManager.getServerURL()))
             ) {
                 int numInBatch = 0;
-                final SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
                 while (resultSet.next()) {
                     final Element xml = Xml.loadString(resultSet.getString(1), false);

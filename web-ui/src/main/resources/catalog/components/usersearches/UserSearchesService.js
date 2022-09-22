@@ -21,63 +21,64 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_usersearches_service');
+(function () {
+  goog.provide("gn_usersearches_service");
 
-  var module = angular.module('gn_usersearches_service', []);
+  var module = angular.module("gn_usersearches_service", []);
 
-
-  module.service('gnUserSearchesService', [
-    '$http', '$q',
-    function($http, $q) {
-      this.loadFeaturedUserSearches = function(type, withPortal) {
+  module.service("gnUserSearchesService", [
+    "$http",
+    "$q",
+    function ($http, $q) {
+      this.loadFeaturedUserSearches = function (type, withPortal) {
         var deferred = $q.defer(),
-            usersearches = $http.get('../api/usersearches/featured?type=' + type);
-            apiCalls = [usersearches];
+          usersearches = $http.get("../api/usersearches/featured?type=" + type);
+        apiCalls = [usersearches];
         if (withPortal) {
-          apiCalls.push($http.get('../api/sources/subportal'));
+          apiCalls.push($http.get("../api/sources/subportal"));
         }
-        $q.all(apiCalls).then(function(alldata) {
+        $q.all(apiCalls).then(function (alldata) {
           var usersearches = [];
-          usersearches = usersearches.concat(alldata[0].data)
+          usersearches = usersearches.concat(alldata[0].data);
           if (alldata[1]) {
             deferred.resolve({
-              data:
-                usersearches.concat(alldata[1].data
-                .filter(function(p) {
-                  return p.filter != ''
-                })
-                .map(function(p) {
-                  return {
-                    names: p.label,
-                    url: 'any=' + encodeURIComponent('q(' + p.filter + ')'),
-                    logo: '../../images/harvesting/' + p.logo,
-                    featuredType: 'p'
-                  }
-                }))
+              data: usersearches.concat(
+                alldata[1].data
+                  .filter(function (p) {
+                    return p.filter != "";
+                  })
+                  .map(function (p) {
+                    return {
+                      names: p.label,
+                      url: "any=" + encodeURIComponent("q(" + p.filter + ")"),
+                      logo: "../../images/harvesting/" + p.logo,
+                      featuredType: "p"
+                    };
+                  })
+              )
             });
           } else {
-            deferred.resolve({data: usersearches});
+            deferred.resolve({ data: usersearches });
           }
         });
         return deferred.promise;
       };
 
       this.loadUserSearches = function () {
-        return $http.get('../api/usersearches');
+        return $http.get("../api/usersearches");
       };
 
       this.loadAllUserSearches = function () {
-        return $http.get('../api/usersearches/all');
+        return $http.get("../api/usersearches/all");
       };
 
-      this.saveUserSearch = function(userSearch) {
-        return $http.put('../api/usersearches', userSearch);
+      this.saveUserSearch = function (userSearch) {
+        return $http.put("../api/usersearches", userSearch);
       };
 
-      this.removeUserSearch = function(userSearch) {
-        return $http.delete('../api/usersearches/' + userSearch.id);
-      }
-    }]);
-
+      this.removeUserSearch = function (userSearch) {
+        return $http.delete("../api/usersearches/" + userSearch.id);
+      };
+    }
+  ]);
 })();

@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_viewer_service');
+(function () {
+  goog.provide("gn_viewer_service");
 
-  var module = angular.module('gn_viewer_service', []);
+  var module = angular.module("gn_viewer_service", []);
 
   /**
    * @ngdoc service
@@ -36,13 +36,13 @@
    * The `gnViewerService` service provides methods to access viewer functions
    * from everywhere in the application.
    */
-  module.service('gnViewerService', [
-    '$http',
-    function($http) {
+  module.service("gnViewerService", [
+    "$http",
+    function ($http) {
       this.activeTool = {
-        name: '',
-        tab: '',
-        url: ''
+        name: "",
+        tab: "",
+        url: ""
       };
 
       /**
@@ -55,10 +55,10 @@
        * @param {string} tabName optional, tab name
        * @param {string} url optional, url parameter
        */
-      this.openTool = function(toolName, tabName, url) {
-        this.activeTool.name = toolName || '';
-        this.activeTool.addLayerTabs = tabName || '';
-        this.activeTool.url = url || '';
+      this.openTool = function (toolName, tabName, url) {
+        this.activeTool.name = toolName || "";
+        this.activeTool.addLayerTabs = tabName || "";
+        this.activeTool.url = url || "";
       };
 
       /**
@@ -67,7 +67,7 @@
        * @return {object} return an object with properties name, url, tab
        *  (for the tabs that support it)
        */
-      this.getOpenedTool = function() {
+      this.getOpenedTool = function () {
         // fetch correct url according to the opened tool
         return this.activeTool;
       };
@@ -76,36 +76,36 @@
        * Opens the "Add Layer" tab, switch to WMS and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openWmsTab = function(serviceUrl) {
-        this.openTool('addLayers', 'services');
-        scope.addLayerUrl[config.type || 'wms'] = serviceUrl;
+      this.openWmsTab = function (serviceUrl) {
+        this.openTool("addLayers", "services");
+        scope.addLayerUrl[config.type || "wms"] = serviceUrl;
       };
 
       /**
        * Opens the "Add Layer" tab, switch to WMTS and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openWmtsTab = function(serviceUrl) {
-        this.openTool('addLayers', 'services');
-        scope.addLayerUrl[config.type || 'wmts'] = serviceUrl;
+      this.openWmtsTab = function (serviceUrl) {
+        this.openTool("addLayers", "services");
+        scope.addLayerUrl[config.type || "wmts"] = serviceUrl;
       };
 
       /**
        * Opens the "Add Layer" tab, switch to WFS and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openWfsTab = function(serviceUrl) {
-        this.openTool('addLayers', 'services');
-        scope.addLayerUrl[config.type || 'wfs'] = serviceUrl;
+      this.openWfsTab = function (serviceUrl) {
+        this.openTool("addLayers", "services");
+        scope.addLayerUrl[config.type || "wfs"] = serviceUrl;
       };
 
       /**
        * Opens the "WPS Processes" tab, and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openProcessesTool = function(serviceUrl) {
-        this.openTool('processes', '', serviceUrl);
+      this.openProcessesTool = function (serviceUrl) {
+        this.openTool("processes", "", serviceUrl);
       };
-    }]
-  );
+    }
+  ]);
 })();

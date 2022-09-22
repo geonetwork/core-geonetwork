@@ -24,28 +24,23 @@
 package org.fao.geonet.kernel;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -73,6 +68,14 @@ public class SelectionManager {
         Set<String> MDSelection = Collections
             .synchronizedSet(new HashSet<String>(0));
         selections.put(SELECTION_METADATA, MDSelection);
+    }
+
+
+    public Map<String, Integer> getSelectionsAndSize() {
+        return selections.entrySet().stream().collect(Collectors.toMap(
+            e -> e.getKey(),
+            e -> e.getValue().size()
+        ));
     }
 
     /**

@@ -21,16 +21,14 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_geometry');
+(function () {
+  goog.provide("gn_geometry");
 
+  goog.require("gn_geometry_directive");
+  goog.require("gn_geometry_service");
 
-
-  goog.require('gn_geometry_directive');
-  goog.require('gn_geometry_service');
-
-  var module = angular.module('gn_geometry', [
-    'gn_geometry_service',
-    'gn_geometry_directive'
+  var module = angular.module("gn_geometry", [
+    "gn_geometry_service",
+    "gn_geometry_directive"
   ]);
 })();

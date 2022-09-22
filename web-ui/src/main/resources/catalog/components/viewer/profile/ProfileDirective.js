@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_profile_directive');
+(function () {
+  goog.provide("gn_profile_directive");
 
-
-  var module = angular.module('gn_profile_directive', []);
+  var module = angular.module("gn_profile_directive", []);
 
   /**
    * @ngdoc directive
@@ -56,35 +55,39 @@
    * Data & options can be passed to the directive through the ProfileService.
    * If a map is specified, the hovered profile point will be rendered on it.
    */
-  module.directive('gnProfile', [
-    function() {
+  module.directive("gnProfile", [
+    function () {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          map: '<',
-          graphData: '<',
-          graphOptions: '<'
+          map: "<",
+          graphData: "<",
+          graphOptions: "<"
         },
-        templateUrl: function(elem, attrs) {
-          return attrs.template ||
-              '../../catalog/components/viewer/profile/partials/profile.html';
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/viewer/profile/partials/profile.html"
+          );
         },
-        controllerAs: 'ctrl',
+        controllerAs: "ctrl",
         bindToController: true,
         controller: [
-          '$scope',
-          'gnProfileService',
+          "$scope",
+          "gnProfileService",
           function ProfileDirectiveController($scope, gnProfileService) {
             // watch service data: when a profile graph is available, render it
             $scope.$watch(
-                function() {
-                  return gnProfileService.getProfileGraphData();
-                },
-                function(newData, oldData) {
-                  if (!newData) { return; }
-                  this.graphData = newData;
-                  this.graphOptions = gnProfileService.getProfileGraphOptions();
-                }.bind(this)
+              function () {
+                return gnProfileService.getProfileGraphData();
+              },
+              function (newData, oldData) {
+                if (!newData) {
+                  return;
+                }
+                this.graphData = newData;
+                this.graphOptions = gnProfileService.getProfileGraphOptions();
+              }.bind(this)
             );
 
             // this is used to render hovered point on the profile
@@ -99,64 +102,73 @@
 
               // this will be used to render the actual profile line on the map
               var profileFeature = new ol.Feature({
-                type: 'LineString'
+                type: "LineString"
               });
               overlayLayer.getSource().addFeature(profileFeature);
 
               // show height on graph when hovering the feature
               this.profileHighlight = -1;
-              this.map.on('pointermove', function(evt) {
-                if (evt.dragging || !this.graphData ||
-                    !profileFeature.getGeometry()) {
-                  return;
-                }
+              this.map.on(
+                "pointermove",
+                function (evt) {
+                  if (evt.dragging || !this.graphData || !profileFeature.getGeometry()) {
+                    return;
+                  }
 
-                // hide profile info by default
-                this.profileHighlight = -1;
-                this.hoveredProfilePoint.setGeometry(null);
+                  // hide profile info by default
+                  this.profileHighlight = -1;
+                  this.hoveredProfilePoint.setGeometry(null);
 
-                var coordinate = this.map.getEventCoordinate(evt.originalEvent);
+                  var coordinate = this.map.getEventCoordinate(evt.originalEvent);
 
-                // line feature built with graph data
-                var closestPoint =
-                    profileFeature.getGeometry().getClosestPoint(coordinate);
-                var dx = Math.abs(closestPoint[0] - coordinate[0]);
-                var dy = Math.abs(closestPoint[1] - coordinate[1]);
-                var pixelDist = Math.max(dx, dy) /
-                    this.map.getView().getResolution();
+                  // line feature built with graph data
+                  var closestPoint = profileFeature
+                    .getGeometry()
+                    .getClosestPoint(coordinate);
+                  var dx = Math.abs(closestPoint[0] - coordinate[0]);
+                  var dy = Math.abs(closestPoint[1] - coordinate[1]);
+                  var pixelDist = Math.max(dx, dy) / this.map.getView().getResolution();
 
-                // if close enough to the feature: show profile info
-                if (pixelDist < 8) {
-                  // update hover point & display info on graph
-                  this.profileHighlight = closestPoint[2];
-                  $scope.$apply();
-                  this.hoveredProfilePoint.setGeometry(
-                      new ol.geom.Point(closestPoint));
-                }
-              }.bind(this));
+                  // if close enough to the feature: show profile info
+                  if (pixelDist < 8) {
+                    // update hover point & display info on graph
+                    this.profileHighlight = closestPoint[2];
+                    $scope.$apply();
+                    this.hoveredProfilePoint.setGeometry(new ol.geom.Point(closestPoint));
+                  }
+                }.bind(this)
+              );
 
               // watch graph data change & display the line on the graph
-              $scope.$watch('ctrl.graphData', function(newValue, oldValue) {
-                if (!newValue) {
-                  profileFeature.setGeometry(null);
-                  return;
-                }
+              $scope.$watch(
+                "ctrl.graphData",
+                function (newValue, oldValue) {
+                  if (!newValue) {
+                    profileFeature.setGeometry(null);
+                    return;
+                  }
 
-                // create geom from points
-                var geom = new ol.geom.LineString(
-                    newValue.map(function(point) {
-                      return [
-                        point[this.graphOptions.xProperty],
-                        point[this.graphOptions.yProperty],
-                        point[this.graphOptions.distanceProperty]
-                      ];
-                    }.bind(this)),
-                    'XYM'
-                    );
-                profileFeature.setGeometry(geom.transform(
-                    this.graphOptions.crs, this.map.getView().getProjection()
-                    ));
-              }.bind(this));
+                  // create geom from points
+                  var geom = new ol.geom.LineString(
+                    newValue.map(
+                      function (point) {
+                        return [
+                          point[this.graphOptions.xProperty],
+                          point[this.graphOptions.yProperty],
+                          point[this.graphOptions.distanceProperty]
+                        ];
+                      }.bind(this)
+                    ),
+                    "XYM"
+                  );
+                  profileFeature.setGeometry(
+                    geom.transform(
+                      this.graphOptions.crs,
+                      this.map.getView().getProjection()
+                    )
+                  );
+                }.bind(this)
+              );
             }
 
             // ngeo profile graph options
@@ -164,50 +176,52 @@
             this.profileOptions = {
               // for older versions of ngeo
               elevationExtractor: {
-                dist: function(data) {
+                dist: function (data) {
                   return data[this.graphOptions.distanceProperty];
                 }.bind(this),
-                z: function(data) {
+                z: function (data) {
                   return data[this.graphOptions.valuesProperty].z;
                 }.bind(this)
               },
 
               // for newer versions of ngeo
               linesConfiguration: {
-                'line': {
-                  zExtractor: function(data) {
+                line: {
+                  zExtractor: function (data) {
                     return data[this.graphOptions.valuesProperty].z;
                   }.bind(this)
                 }
               },
-              distanceExtractor: function(data) {
+              distanceExtractor: function (data) {
                 return data[this.graphOptions.distanceProperty];
               }.bind(this),
 
-              hoverCallback: function(point) {
-                if (!this.hoveredProfilePoint) { return; }
+              hoverCallback: function (point) {
+                if (!this.hoveredProfilePoint) {
+                  return;
+                }
                 var geom = new ol.geom.Point([
                   point[this.graphOptions.xProperty],
                   point[this.graphOptions.yProperty]
                 ]);
-                geom.transform(
-                    this.graphOptions.crs,
-                    this.map.getView().getProjection()
-                );
+                geom.transform(this.graphOptions.crs, this.map.getView().getProjection());
                 this.hoveredProfilePoint.setGeometry(geom);
               }.bind(this),
-              outCallback: function(point) {
-                if (!this.hoveredProfilePoint) { return; }
+              outCallback: function (point) {
+                if (!this.hoveredProfilePoint) {
+                  return;
+                }
                 this.hoveredProfilePoint.setGeometry(null);
               }.bind(this)
             };
 
             // closes the profile graph
-            this.closeProfileGraph = function() {
+            this.closeProfileGraph = function () {
               this.graphData = null;
             };
           }
         ]
       };
-    }]);
+    }
+  ]);
 })();

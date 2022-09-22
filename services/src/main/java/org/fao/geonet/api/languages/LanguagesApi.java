@@ -28,8 +28,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -41,14 +43,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
     "/{portal}/api/languages"
@@ -63,6 +66,37 @@ public class LanguagesApi {
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
+
+    private String defaultLanguage;
+
+    @Resource(name="defaultLanguage")
+    public void setDefaultLanguage(String defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get languages available in the application",
+        description = "Languages available in this version of the application. Those that you can add using PUT operation and which have SQL script to initialize the language.")
+    @RequestMapping(
+        value = "/application",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public List<Language> getApplicationLanguages() throws Exception {
+        Set<String> applicationLanguages =
+            (Set<String>) ApplicationContextHolder.get().getBean("languages");
+        List<Language> list = applicationLanguages.stream().map(l -> {
+            Language language = new Language();
+            language.setId(l);
+            if (l.equals(defaultLanguage)) {
+                language.setDefaultLanguage(true);
+            }
+            return language;
+        }).collect(Collectors.toList());
+        return list;
+    }
 
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -109,8 +143,8 @@ public class LanguagesApi {
             HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
 
-        Language lang = languageRepository.findById(langCode).get();
-        if (lang == null) {
+        Optional<Language> lang = languageRepository.findById(langCode);
+        if (!lang.isPresent()) {
             String languageDataFile = "loc-" + langCode + "-default.sql";
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
                 .resolve("classes").resolve("setup").resolve("sql").resolve("data")
@@ -134,7 +168,7 @@ public class LanguagesApi {
             ));
         } else {
             throw new RuntimeException(String.format(
-                "Language '%s' already available.", lang.getId()
+                "Language '%s' already available.", lang.get().getId()
             ));
         }
     }
@@ -166,12 +200,19 @@ public class LanguagesApi {
             String langCode,
         HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
-        Language lang = languageRepository.findById(langCode).get();
-        if (lang == null) {
+        Optional<Language> lang = languageRepository.findById(langCode);
+        if (!lang.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Language '%s' not found.", langCode
             ));
         } else {
+            long count = languageRepository.count();
+            if (count == 1) {
+                throw new NotAllowedException(String.format(
+                    "You can't delete the last language. Add another one before removing %s.",
+                    langCode
+                ));
+            }
             final String LANGUAGE_DELETE_SQL = "language-delete.sql";
 
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
@@ -182,7 +223,7 @@ public class LanguagesApi {
                 try (BufferedReader br = new BufferedReader(new FileReader(templateFile.toFile()))) {
                     String line;
                     while ((line = br.readLine()) != null) {
-                        data.add(String.format(line, lang.getId()));
+                        data.add(String.format(line, lang.get().getId()));
                     }
                 }
                 if (data.size() > 0) {

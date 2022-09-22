@@ -23,7 +23,6 @@
 
 package org.fao.geonet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.StringUtils;
@@ -37,11 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -86,21 +81,20 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     // ---------------------------------------------------------------------------
 
     /**
-     * Constructs an instance of {@code ISODate} with the time and format passed as parameters, local timezone.
+     * Constructs an instance of {@code ISODate} with the time and format passed as parameters.
+     *
+     * The local timezone is used, unless the argument {@code shortDate} value {@code true} is supplied
+     * to to force the timezone to UTC. THis setting is used to respect a time provided in the short
+     * format {@code yyyy-mm-dd}.
      *
      * @param timeInEpochMillis milliseconds passed from 1970-01-01T00:00:00Z (Unix epoch).
-     * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd}.
+     * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd} forcing timezone to UTC.
      */
     public ISODate(final long timeInEpochMillis, final boolean shortDate) {
-        ZoneId zoneId;
-        if (shortDate) {
-            zoneId = ZoneOffset.UTC;
-        } else {
-            zoneId = ZoneId.systemDefault();
-        }
-        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
-        internalDateTime = ZonedDateTime.ofInstant(instantParam, zoneId).truncatedTo(ChronoUnit.MILLIS);
         _shortDate = shortDate;
+
+        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
+        internalDateTime = instantParam.atZone(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS);
     }
 
     /**
@@ -252,8 +246,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      *
      * @return The date and time in ISO format.
      */
-    //@JsonProperty("dateAndTime")
-    @JsonIgnore
+    @JsonProperty("dateAndTimeUtc")
     public String getDateAndTimeUtc() {
         return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
     }

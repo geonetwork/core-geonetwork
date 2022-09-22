@@ -89,6 +89,7 @@ public final class Edit {
 
             public static final String ADMIN = "admin";
             public static final String EDIT = "edit";
+            public static final String REVIEW = "canReview";
             public static final String NOTIFY = "notify";
             public static final String DOWNLOAD = "download";
             public static final String DYNAMIC = "dynamic";

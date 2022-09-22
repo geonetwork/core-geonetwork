@@ -16,6 +16,8 @@
 
   <xsl:param name="doi"
              select="''"/>
+  <xsl:param name="doiProxy"
+             select="'https://www.doi.org/'"/>
   <xsl:variable name="doiProtocol"
                 select="'DOI'"/>
   <xsl:variable name="doiName"
@@ -49,7 +51,7 @@
       <cit:identifier>
         <mcc:MD_Identifier>
           <mcc:code>
-            <gcx:Anchor xlink:href="{$doi}">
+            <gcx:Anchor xlink:href="{concat($doiProxy, $doi)}">
               <xsl:value-of select="$doi"/>
             </gcx:Anchor>
           </mcc:code>
@@ -89,7 +91,7 @@
             <mrd:onLine>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <gco:CharacterString><xsl:value-of select="$doi"/></gco:CharacterString>
+                  <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
                 </cit:linkage>
                 <cit:protocol>
                   <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
