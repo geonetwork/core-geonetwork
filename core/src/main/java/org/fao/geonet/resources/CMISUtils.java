@@ -48,7 +48,8 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -189,6 +190,7 @@ public class CMISUtils {
     public Document saveDocument(String key, CmisObject cmisObject, Map<String, Object> properties, InputStream is, final Date changeDate) throws IOException {
         // Don't use caching for this process.
         OperationContext oc = createOperationContext();
+        oc.setFilter(null);
         oc.setCacheEnabled(false);
 
         // Split the filename and parent folder from the key.
@@ -242,7 +244,7 @@ public class CMISUtils {
                     doc = (Document) cmisConfiguration.getClient().getObjectByPath(key, oc);
                 }
                 // Avoid CMIS API call is info is not enabled.
-                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
                         String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
                 }
@@ -265,9 +267,9 @@ public class CMISUtils {
             try {
                 Folder parentFolder = getFolderCache(parentKey, true);
 
-                doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState());
+                doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState(), (List)null, (List)null, (List)null, oc);
                 // Avoid CMIS API call is info is not enabled.
-                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
                         String.format("Added resource '%s'.", doc.getPaths().get(0)));
                 }

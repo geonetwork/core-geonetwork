@@ -50,7 +50,7 @@
     <xsl:strip-space elements="*"/>
 
     <xsl:template match="/record">
-      <xsl:variable name="cataloglang" select="'fr'"></xsl:variable>
+      <xsl:variable name="cataloglang" select="'fre'"></xsl:variable>
 
       <mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                        xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"

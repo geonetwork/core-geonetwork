@@ -1,5 +1,7 @@
-<div data-ng-if="similarDocuments.length > 0"
-     class="gn-info-list-blocks gn-margin-bottom">
+<div
+  data-ng-if="similarDocuments.length > 0"
+  class="gn-info-list-blocks gn-margin-bottom"
+>
   <h2 data-ng-hide="ofSameType" data-translate="">moreLikeThis</h2>
   <h2 data-ng-show="ofSameType">
     <span data-translate="">moreLikeType</span>
@@ -7,15 +9,19 @@
   </h2>
 
   <ul class="row list-group gn-info-list">
-    <gn-metadata-card data-ng-repeat="md in similarDocuments"
-                      md="md"
-                      formatter-url="formatter.defaultUrl"/>
+    <gn-metadata-card
+      data-ng-repeat="md in similarDocuments"
+      md="md"
+      formatter-url="formatter.defaultUrl"
+    />
   </ul>
 
-  <button data-ng-if="size < maxSize
+  <button
+    data-ng-if="size < maxSize
                    && size < total"
-          class="btn btn-link"
-          data-ng-click="moreRecords()">
+    class="btn btn-link"
+    data-ng-click="moreRecords()"
+  >
     <span data-translate="">viewMore</span>
   </button>
 </div>

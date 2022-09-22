@@ -2,21 +2,19 @@
   <div class="flex-col">
     <div class="flex-row width-100 flex-align-stretch">
       <div class="flex-col flex-grow">
-        <a href=""
-           class="truncate"
-           data-ng-click="addLayer()"
-           title="{{member.name}}">
-          <i class='fa fa-fw'
-             data-ng-class='"fa-map-o"'></i>
+        <a href="" class="truncate" data-ng-click="addLayer()" title="{{member.name}}">
+          <i class="fa fa-fw" data-ng-class='"fa-map-o"'></i>
           {{member.name}}
         </a>
       </div>
       <div class="gn-layer-toolbar btn-group btn-group-xs">
-        <a href=""
+        <a
+          href=""
           class="btn btn-link btn-xs"
           data-ng-click="addLayer()"
           class="btn btn-default btn-xs"
-          title="{{'addToMap' | translate}}">
+          title="{{'addToMap' | translate}}"
+        >
           <i class="fa fa-fw fa-plus"></i>
         </a>
       </div>

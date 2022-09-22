@@ -24,7 +24,8 @@
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class WFSHarvesterExchangeState implements Serializable {
     private WFSHarvesterParameter parameters;
-    private transient Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private transient Map<String, String> fields = new LinkedHashMap<String, String>();
     private transient WFSDataStore wfsDatastore = null;
     private String resolvedTypeName = null;

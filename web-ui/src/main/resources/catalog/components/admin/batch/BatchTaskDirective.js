@@ -22,15 +22,15 @@
  */
 
 (function () {
-  goog.provide('gn_batchtask_directive');
+  goog.provide("gn_batchtask_directive");
 
-  var module = angular.module('gn_batchtask_directive', []);
+  var module = angular.module("gn_batchtask_directive", []);
 
   var STATUS_UNDEFINED = -1;
   var STATUS_INPROGRESS = 0;
   var STATUS_FINISHED = 1;
   var STATUS_ERRORS = 2;
-  var STATUS_CANCELED = 3;  // unused for now
+  var STATUS_CANCELED = 3; // unused for now
 
   /**
    * Renders the status of a given batch task (queries are made to update it)
@@ -38,72 +38,95 @@
    * Usage:
    * <gn-batch-task-status task-id="123456" />
    */
-  module.directive('gnBatchTaskStatus', [
-    '$http',
+  module.directive("gnBatchTaskStatus", [
+    "$http",
     function ($http) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          taskInfo: '<',
-          taskStatusLbl: '='
+          taskInfo: "<",
+          taskStatusLbl: "="
         },
-        templateUrl: '../../catalog/components/admin/batch/partials/batchstatus.html',
+        templateUrl: "../../catalog/components/admin/batch/partials/batchstatus.html",
         link: function (scope, element, attrs) {
-          scope.getStatusCode = function() {
+          scope.getStatusCode = function () {
             if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
               return STATUS_INPROGRESS;
             }
-            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed && scope.taskInfo.errors > 0) {
+            if (
+              scope.taskInfo &&
+              scope.taskInfo.total === scope.taskInfo.processed &&
+              scope.taskInfo.errors > 0
+            ) {
               return STATUS_ERRORS;
             }
             if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
               return STATUS_FINISHED;
             }
             return STATUS_UNDEFINED;
-          }
+          };
 
-          scope.getStatusLabel = function() {
-            switch(scope.getStatusCode()) {
-              case STATUS_UNDEFINED: return  scope.taskStatusLbl + 'TaskUndefined';
-              case STATUS_INPROGRESS: return scope.taskStatusLbl + 'TaskRunning';
-              case STATUS_FINISHED: return scope.taskStatusLbl + 'TaskFinished';
-              case STATUS_ERRORS: return scope.taskStatusLbl + 'TaskFinishedWithErrors';
-              case STATUS_CANCELED: return scope.taskStatusLbl + 'TaskCanceled';
+          scope.getStatusLabel = function () {
+            switch (scope.getStatusCode()) {
+              case STATUS_UNDEFINED:
+                return scope.taskStatusLbl + "TaskUndefined";
+              case STATUS_INPROGRESS:
+                return scope.taskStatusLbl + "TaskRunning";
+              case STATUS_FINISHED:
+                return scope.taskStatusLbl + "TaskFinished";
+              case STATUS_ERRORS:
+                return scope.taskStatusLbl + "TaskFinishedWithErrors";
+              case STATUS_CANCELED:
+                return scope.taskStatusLbl + "TaskCanceled";
             }
-          }
+          };
 
-          scope.getStatusIcon = function() {
-            switch(scope.getStatusCode()) {
-              case STATUS_UNDEFINED: return 'fa-question';
-              case STATUS_INPROGRESS: return 'fa-spinner fa-spin';
-              case STATUS_FINISHED: return 'fa-check';
-              case STATUS_ERRORS: return 'fa-exclamation-triangle';
-              case STATUS_CANCELED: return 'fa-ban';
+          scope.getStatusIcon = function () {
+            switch (scope.getStatusCode()) {
+              case STATUS_UNDEFINED:
+                return "fa-question";
+              case STATUS_INPROGRESS:
+                return "fa-spinner fa-spin";
+              case STATUS_FINISHED:
+                return "fa-check";
+              case STATUS_ERRORS:
+                return "fa-exclamation-triangle";
+              case STATUS_CANCELED:
+                return "fa-ban";
             }
-          }
+          };
 
-          scope.getStatusClass = function(warningOnly) {
-            switch(scope.getStatusCode()) {
-              case STATUS_INPROGRESS: return '';
-              case STATUS_FINISHED: return 'success';
-              case STATUS_ERRORS: return 'warning';
-              case STATUS_CANCELED: return '';
-              default: return '';
+          scope.getStatusClass = function (warningOnly) {
+            switch (scope.getStatusCode()) {
+              case STATUS_INPROGRESS:
+                return "";
+              case STATUS_FINISHED:
+                return "success";
+              case STATUS_ERRORS:
+                return "warning";
+              case STATUS_CANCELED:
+                return "";
+              default:
+                return "";
             }
-          }
+          };
 
-          scope.getProcessRatio = function() {
-            return Math.round(1000 * scope.taskInfo.processed / scope.taskInfo.total) * 0.001;
-          }
+          scope.getProcessRatio = function () {
+            return (
+              Math.round((1000 * scope.taskInfo.processed) / scope.taskInfo.total) * 0.001
+            );
+          };
 
-          scope.getTaskInfo = function() {
-            if (!scope.taskInfo) { return 'no task info available'; }
-            return 'Task id: ' + scope.taskInfo.id;
-          }
+          scope.getTaskInfo = function () {
+            if (!scope.taskInfo) {
+              return "no task info available";
+            }
+            return "Task id: " + scope.taskInfo.id;
+          };
         }
       };
-    }]
-  );
+    }
+  ]);
 
   /**
    * Will query the backend to display all currently running tasks.
@@ -111,38 +134,47 @@
    * Usage:
    * <gn-batch-tasks-container />
    */
-  module.directive('gnBatchTasksContainer', [
-    '$http', 'gnConfig', 'gnConfigService',
+  module.directive("gnBatchTasksContainer", [
+    "$http",
+    "gnConfig",
+    "gnConfigService",
     function ($http, gnConfig, gnConfigService) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          task: '=',
-          forceRefreshTask: '=',
-          taskStatusLbl: '='
+          task: "=",
+          forceRefreshTask: "=",
+          taskStatusLbl: "="
         },
-        templateUrl: '../../catalog/components/admin/batch/partials/batchstatuscontainer.html',
-        link: function (scope, element, attrs) {
-        },
-        controllerAs: 'ctrl',
+        templateUrl:
+          "../../catalog/components/admin/batch/partials/batchstatuscontainer.html",
+        link: function (scope, element, attrs) {},
+        controllerAs: "ctrl",
         controller: [
-          '$scope', '$element', '$attrs',
+          "$scope",
+          "$element",
+          "$attrs",
           function ($scope, $element, $attrs) {
             this.tasks = [];
             this.initialLoad = true;
             var me = this;
 
             this.refresh = function () {
-              $http.get('../../jolokia/read/'
-                + 'geonetwork-' + gnConfig['system.site.siteId']
-                + ':name=' + $scope.task + ',idx=*')
+              $http
+                .get(
+                  "../../jolokia/read/" +
+                    "geonetwork-" +
+                    gnConfig["system.site.siteId"] +
+                    ":name=" +
+                    $scope.task +
+                    ",idx=*"
+                )
                 .then(function successCallback(result) {
                   me.tasks.length = 0;
 
                   // Check if jolokia task available and if there's data available,
                   // otherwise reschedule the check
-                  if ((result.data.status != 200) || 
-                    !result.data || !result.data.value) {
+                  if (result.data.status != 200 || !result.data || !result.data.value) {
                     me.timeout = setTimeout(me.refresh, 10000);
                     return;
                   }
@@ -179,7 +211,7 @@
                     } else {
                       // Clean the tasks with a delay to remove the progress panel
                       // after a few seconds when the task is finished.
-                      setTimeout(function() {
+                      setTimeout(function () {
                         me.tasks.length = 0;
                       }, 5000);
                     }
@@ -189,20 +221,26 @@
 
             $scope.refresh = this.refresh;
 
-            $scope.$watch('forceRefreshTask', function(newValue, oldValue) {
-              if (newValue == true) {
-                $scope.refresh();
-              } else {
-                setTimeout(function() { me.tasks.length = 0;}, 5000);
-              }
-            }, true);
+            $scope.$watch(
+              "forceRefreshTask",
+              function (newValue, oldValue) {
+                if (newValue == true) {
+                  $scope.refresh();
+                } else {
+                  setTimeout(function () {
+                    me.tasks.length = 0;
+                  }, 5000);
+                }
+              },
+              true
+            );
 
-            gnConfigService.load().then(function(c) {
+            gnConfigService.load().then(function (c) {
               $scope.refresh();
             });
           }
         ]
       };
-    }]
-  );
+    }
+  ]);
 })();

@@ -32,6 +32,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
@@ -85,6 +86,9 @@ public class UserSelectionsApi {
 
     @Autowired
     UserGroupRepository userGroupRepository;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get list of user selection sets")
     @RequestMapping(
@@ -318,6 +322,7 @@ public class UserSelectionsApi {
                 UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
                 try {
                     umsRepository.save(e);
+                    metadataIndexer.indexMetadata(metadataRepository.getMetadataId(u), true);
                 } catch (Exception e1) {
                     Log.error(API.LOG_MODULE_NAME, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
                 }
@@ -382,6 +387,7 @@ public class UserSelectionsApi {
                     .setUserId(userIdentifier)
                     .setMetadataUuid(u);
                 umsRepository.deleteById(e);
+                metadataIndexer.indexMetadata(metadataRepository.getMetadataId(u), true);
             }
         }
 

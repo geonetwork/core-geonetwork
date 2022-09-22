@@ -21,34 +21,36 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_default_gazetteer_default_factory');
+(function () {
+  goog.provide("gn_default_gazetteer_default_factory");
 
-  var module = angular.module('gn_default_gazetteer_default_factory', []);
+  var module = angular.module("gn_default_gazetteer_default_factory", []);
 
-  module.provider('gnDefaultGazetteer', function() {
+  module.provider("gnDefaultGazetteer", function () {
     return {
-      $get : [
-        '$http',
-        'gnGlobalSettings',
-        'gnViewerSettings',
-        'gnGetCoordinate',
-        function($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate) {
-          var zoomTo = function(extent, map) {
+      $get: [
+        "$http",
+        "gnGlobalSettings",
+        "gnViewerSettings",
+        "gnGetCoordinate",
+        function ($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate) {
+          var zoomTo = function (extent, map) {
             map.getView().fit(extent, map.getSize());
-          }
+          };
           return {
-            onClick: function(scope, loc, map) {
+            onClick: function (scope, loc, map) {
               zoomTo(loc.extent, map);
               scope.query = loc.name;
               scope.collapsed = true;
             },
-            search: function(scope, loc, query) {
+            search: function (scope, loc, query) {
               var lang = gnGlobalSettings.lang;
 
               if (query.length < 1) return;
               var coord = gnGetCoordinate(
-                  scope.map.getView().getProjection().getWorldExtent(), query);
+                scope.map.getView().getProjection().getWorldExtent(),
+                query
+              );
 
               if (coord) {
                 function moveTo(map, zoom, center) {
@@ -57,49 +59,61 @@
                   view.setZoom(zoom);
                   view.setCenter(center);
                 }
-                moveTo(scope.map, 5, ol.proj.transform(coord,
-                    'EPSG:4326', scope.map.getView().getProjection()));
+                moveTo(
+                  scope.map,
+                  5,
+                  ol.proj.transform(
+                    coord,
+                    "EPSG:4326",
+                    scope.map.getView().getProjection()
+                  )
+                );
                 return;
               }
-              var formatter = function(loc) {
+              var formatter = function (loc) {
                 var props = [];
-                ['toponymName', 'adminName1', 'countryName'].
-                forEach(function(p) {
-                  if (loc[p]) { props.push(loc[p]); }
+                ["toponymName", "adminName1", "countryName"].forEach(function (p) {
+                  if (loc[p]) {
+                    props.push(loc[p]);
+                  }
                 });
-                return (props.length == 0) ? '' : '—' + props.join(', ');
+                return props.length == 0 ? "" : "—" + props.join(", ");
               };
 
               var url = gnViewerSettings.geocoder;
-              $http.get(url, {
-                params: {
-                  lang: lang,
-                  style: 'full',
-                  type: 'json',
-                  maxRows: 10,
-                  name_startsWith: query,
-                  username: 'georchestra'
-                }
-              }).
-              success(function(response) {
-                var loc;
-                scope.results = [];
-                for (var i = 0; i < response.geonames.length; i++) {
-                  loc = response.geonames[i];
-                  if (loc.bbox) {
-                    scope.results.push({
-                      name: loc.name,
-                      formattedName: formatter(loc),
-                      extent: ol.proj.transformExtent([loc.bbox.west,
-                        loc.bbox.south, loc.bbox.east, loc.bbox.north],
-                        'EPSG:4326', scope.map.getView().getProjection())
-                    });
+              $http
+                .get(url, {
+                  params: {
+                    lang: lang,
+                    style: "full",
+                    type: "json",
+                    maxRows: 10,
+                    name_startsWith: query,
+                    username: "georchestra"
                   }
-                }
-              });
+                })
+                .success(function (response) {
+                  var loc;
+                  scope.results = [];
+                  for (var i = 0; i < response.geonames.length; i++) {
+                    loc = response.geonames[i];
+                    if (loc.bbox) {
+                      scope.results.push({
+                        name: loc.name,
+                        formattedName: formatter(loc),
+                        extent: ol.proj.transformExtent(
+                          [loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north],
+                          "EPSG:4326",
+                          scope.map.getView().getProjection()
+                        )
+                      });
+                    }
+                  }
+                });
             }
-          }
-        }]
-    }
+          };
+        }
+      ]
+    };
   });
 })();

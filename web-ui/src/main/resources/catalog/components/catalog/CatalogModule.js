@@ -21,12 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_catalog');
+(function () {
+  goog.provide("gn_catalog");
 
-  goog.require('gn_catalog_service');
+  goog.require("gn_catalog_service");
 
-  angular.module('gn_catalog', [
-    'gn_catalog_service'
-  ]);
+  angular.module("gn_catalog", ["gn_catalog_service"]);
 })();
