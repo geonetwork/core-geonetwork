@@ -6,7 +6,8 @@
     <span data-ng-show="c.position">({{c.position}})</span>
   </a>
 </div>
-<div data-ng-if="c.email === ''">{{c.individual}}
+<div data-ng-if="c.email === ''">
+  {{c.individual}}
   <span data-ng-show="c.position">({{c.position}})</span>
 </div>
 <div data-ng-repeat="id in c.identifiers">
@@ -14,12 +15,12 @@
     {{id.code || id.link}}
     <span data-ng-show="id.codeSpace">({{id.codeSpace}})</span>
   </span>
-  <a data-ng-show="id.code.indexOf('http') === 0 && id.link == ''"
-     href="{{id.code}}">{{id.code}}
+  <a data-ng-show="id.code.indexOf('http') === 0 && id.link == ''" href="{{id.code}}"
+    >{{id.code}}
     <span data-ng-show="id.codeSpace != ''">({{id.codeSpace}})</span>
   </a>
-  <a data-ng-show="id.link != ''"
-     href="{{id.link}}">{{id.code || id.link}}
+  <a data-ng-show="id.link != ''" href="{{id.link}}"
+    >{{id.code || id.link}}
     <span data-ng-show="id.codeSpace != ''">({{id.codeSpace}})</span>
   </a>
 </div>

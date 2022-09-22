@@ -22,15 +22,15 @@
  */
 
 (function () {
-  goog.provide('gn_indexingtask_directive');
+  goog.provide("gn_indexingtask_directive");
 
-  var module = angular.module('gn_indexingtask_directive', []);
+  var module = angular.module("gn_indexingtask_directive", []);
 
   var STATUS_UNDEFINED = -1;
   var STATUS_INPROGRESS = 0;
   var STATUS_FINISHED = 1;
   var STATUS_ERRORS = 2;
-  var STATUS_CANCELED = 3;  // unused for now
+  var STATUS_CANCELED = 3; // unused for now
 
   /**
    * Renders the status of a given indexing task (queries are made to update it)
@@ -38,71 +38,94 @@
    * Usage:
    * <gn-indexing-task-status task-id="123456" />
    */
-  module.directive('gnIndexingTaskStatus', [
-    '$http',
+  module.directive("gnIndexingTaskStatus", [
+    "$http",
     function ($http) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          taskInfo: '<'
+          taskInfo: "<"
         },
-        templateUrl: '../../catalog/components/admin/index/partials/indexingstatus.html',
+        templateUrl: "../../catalog/components/admin/index/partials/indexingstatus.html",
         link: function (scope, element, attrs) {
-          scope.getStatusCode = function() {
+          scope.getStatusCode = function () {
             if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
               return STATUS_INPROGRESS;
             }
-            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed && scope.taskInfo.errors > 0) {
+            if (
+              scope.taskInfo &&
+              scope.taskInfo.total === scope.taskInfo.processed &&
+              scope.taskInfo.errors > 0
+            ) {
               return STATUS_ERRORS;
             }
             if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
               return STATUS_FINISHED;
             }
             return STATUS_UNDEFINED;
-          }
+          };
 
-          scope.getStatusLabel = function() {
-            switch(scope.getStatusCode()) {
-              case STATUS_UNDEFINED: return 'indexingTaskUndefined';
-              case STATUS_INPROGRESS: return 'indexingTaskRunning';
-              case STATUS_FINISHED: return 'indexingTaskFinished';
-              case STATUS_ERRORS: return 'indexingTaskFinishedWithErrors';
-              case STATUS_CANCELED: return 'indexingTaskCanceled';
+          scope.getStatusLabel = function () {
+            switch (scope.getStatusCode()) {
+              case STATUS_UNDEFINED:
+                return "indexingTaskUndefined";
+              case STATUS_INPROGRESS:
+                return "indexingTaskRunning";
+              case STATUS_FINISHED:
+                return "indexingTaskFinished";
+              case STATUS_ERRORS:
+                return "indexingTaskFinishedWithErrors";
+              case STATUS_CANCELED:
+                return "indexingTaskCanceled";
             }
-          }
+          };
 
-          scope.getStatusIcon = function() {
-            switch(scope.getStatusCode()) {
-              case STATUS_UNDEFINED: return 'fa-question';
-              case STATUS_INPROGRESS: return 'fa-spinner fa-spin';
-              case STATUS_FINISHED: return 'fa-check';
-              case STATUS_ERRORS: return 'fa-exclamation-triangle';
-              case STATUS_CANCELED: return 'fa-ban';
+          scope.getStatusIcon = function () {
+            switch (scope.getStatusCode()) {
+              case STATUS_UNDEFINED:
+                return "fa-question";
+              case STATUS_INPROGRESS:
+                return "fa-spinner fa-spin";
+              case STATUS_FINISHED:
+                return "fa-check";
+              case STATUS_ERRORS:
+                return "fa-exclamation-triangle";
+              case STATUS_CANCELED:
+                return "fa-ban";
             }
-          }
+          };
 
-          scope.getStatusClass = function(warningOnly) {
-            switch(scope.getStatusCode()) {
-              case STATUS_INPROGRESS: return '';
-              case STATUS_FINISHED: return 'success';
-              case STATUS_ERRORS: return 'warning';
-              case STATUS_CANCELED: return '';
-              default: return '';
+          scope.getStatusClass = function (warningOnly) {
+            switch (scope.getStatusCode()) {
+              case STATUS_INPROGRESS:
+                return "";
+              case STATUS_FINISHED:
+                return "success";
+              case STATUS_ERRORS:
+                return "warning";
+              case STATUS_CANCELED:
+                return "";
+              default:
+                return "";
             }
-          }
+          };
 
-          scope.getProcessRatio = function() {
-            return Math.round(1000 * scope.taskInfo.processed / scope.taskInfo.total) * 0.001;
-          }
+          scope.getProcessRatio = function () {
+            return (
+              Math.round((1000 * scope.taskInfo.processed) / scope.taskInfo.total) * 0.001
+            );
+          };
 
-          scope.getTaskInfo = function() {
-            if (!scope.taskInfo) { return 'no task info available'; }
-            return 'Task id: ' + scope.taskInfo.id;
-          }
+          scope.getTaskInfo = function () {
+            if (!scope.taskInfo) {
+              return "no task info available";
+            }
+            return "Task id: " + scope.taskInfo.id;
+          };
         }
       };
-    }]
-  );
+    }
+  ]);
 
   /**
    * Will query the backend to display all currently running tasks.
@@ -110,14 +133,17 @@
    * Usage:
    * <gn-indexing-tasks-container />
    */
-  module.directive('gnIndexingTasksContainer', [
-    '$http', 'gnConfig', 'gnConfigService',
+  module.directive("gnIndexingTasksContainer", [
+    "$http",
+    "gnConfig",
+    "gnConfigService",
     function ($http, gnConfig, gnConfigService) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {},
-        templateUrl: '../../catalog/components/admin/index/partials/indexingstatuscontainer.html',
-        controllerAs: 'ctrl',
+        templateUrl:
+          "../../catalog/components/admin/index/partials/indexingstatuscontainer.html",
+        controllerAs: "ctrl",
         controller: [
           function () {
             this.tasks = [];
@@ -125,13 +151,19 @@
             var me = this;
 
             this.refresh = function () {
-              $http.get('../../jolokia/read/'
-                + 'geonetwork-' + gnConfig['system.site.siteId']
-                + ':name=indexing-task,idx=*')
+              $http
+                .get(
+                  "../../jolokia/read/" +
+                    "geonetwork-" +
+                    gnConfig["system.site.siteId"] +
+                    ":name=indexing-task,idx=*"
+                )
                 .then(function (result) {
                   me.tasks.length = 0;
 
-                  if (!result.data || !result.data.value) { return; }
+                  if (!result.data || !result.data.value) {
+                    return;
+                  }
 
                   var probes = result.data.value;
                   Object.keys(probes).forEach(function (probeName) {
@@ -142,19 +174,19 @@
                       processed: probe.Processed,
                       total: probe.ToProcessCount
                     });
-                  })
+                  });
 
                   // loop
                   setTimeout(me.refresh, 1000);
                 });
-            }
+            };
 
-            gnConfigService.load().then(function(c) {
+            gnConfigService.load().then(function (c) {
               me.refresh();
             });
           }
         ]
       };
-    }]
-  );
+    }
+  ]);
 })();

@@ -21,14 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-
-  goog.provide('gn_polyfills');
+(function () {
+  goog.provide("gn_polyfills");
 
   if (!Array.prototype.includes) {
-    Object.defineProperty(Array.prototype, 'includes', {
-      value: function(searchElement, fromIndex) {
-
+    Object.defineProperty(Array.prototype, "includes", {
+      value: function (searchElement, fromIndex) {
         // 1. Let O be ? ToObject(this value).
         if (this == null) {
           throw new TypeError('"this" is null or not defined');
@@ -75,11 +73,14 @@
   }
 
   if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function(searchString, position) {
+    String.prototype.endsWith = function (searchString, position) {
       var subjectString = this.toString();
-      if (typeof position !== 'number' || !isFinite(position) ||
-          Math.floor(position) !== position ||
-          position > subjectString.length) {
+      if (
+        typeof position !== "number" ||
+        !isFinite(position) ||
+        Math.floor(position) !== position ||
+        position > subjectString.length
+      ) {
         position = subjectString.length;
       }
       position -= searchString.length;
@@ -89,7 +90,7 @@
   }
 
   if (!Array.prototype.unique) {
-    Array.prototype.unique = function(compareCallback) {
+    Array.prototype.unique = function (compareCallback) {
       var a = this.concat();
       for (var i = 0; i < a.length; ++i) {
         for (var j = i + 1; j < a.length; ++j) {

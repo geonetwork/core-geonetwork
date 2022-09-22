@@ -21,19 +21,17 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_printmap_directive');
+(function () {
+  goog.provide("gn_printmap_directive");
 
-  var module = angular.module('gn_printmap_directive', []);
+  var module = angular.module("gn_printmap_directive", []);
 
-  var mapPrintController = function($scope, gnPrint, $http,
-                                    $translate, $window) {
-
+  var mapPrintController = function ($scope, gnPrint, $http, $translate, $window) {
     var printRectangle;
     var deregister;
 
     var options = {
-      printConfigUrl: '../../pdf/info.json?url=..%2F..%2Fpdf',
+      printConfigUrl: "../../pdf/info.json?url=..%2F..%2Fpdf",
       graticule: false
     };
 
@@ -43,12 +41,12 @@
      * Unmanaged layer with custom render method
      * used to draw the grey rectangle for print extent
      */
-    var overlayCanvas = document.createElement('canvas');
-    overlayCanvas.style.position = 'absolute';
-    overlayCanvas.style.width = '100%';
-    overlayCanvas.style.height = '100%';
+    var overlayCanvas = document.createElement("canvas");
+    overlayCanvas.style.position = "absolute";
+    overlayCanvas.style.width = "100%";
+    overlayCanvas.style.height = "100%";
     var overlayLayer = new ol.layer.Layer({
-      render: function() {
+      render: function () {
         // print rectangle might not be ready if config is loading
         if (!printRectangle) {
           return;
@@ -59,12 +57,13 @@
         var width = size[0] * ol.has.DEVICE_PIXEL_RATIO;
         overlayCanvas.width = width;
         overlayCanvas.height = height;
-        var ctx = overlayCanvas.getContext('2d');
-
+        var ctx = overlayCanvas.getContext("2d");
 
         var minx, miny, maxx, maxy;
-        minx = printRectangle[0], miny = printRectangle[1],
-          maxx = printRectangle[2], maxy = printRectangle[3];
+        (minx = printRectangle[0]),
+          (miny = printRectangle[1]),
+          (maxx = printRectangle[2]),
+          (maxy = printRectangle[3]);
 
         ctx.beginPath();
         // Outside polygon, must be clockwise
@@ -83,7 +82,7 @@
         ctx.lineTo(minx, miny);
         ctx.closePath();
 
-        ctx.fillStyle = 'rgba(0, 5, 25, 0.75)';
+        ctx.fillStyle = "rgba(0, 5, 25, 0.75)";
         ctx.fill();
 
         return overlayCanvas;
@@ -94,14 +93,13 @@
      * Return print configuration from Mapfishprint service
      * @return {*} promise
      */
-    var updatePrintConfig = function() {
+    var updatePrintConfig = function () {
       var http = $http.get(options.printConfigUrl);
-      http.success(function(data) {
-
+      http.success(function (data) {
         // default values:
         var layout = data.layouts[0];
         if ($scope.defaultLayout) {
-          angular.forEach(data.layouts, function(l) {
+          angular.forEach(data.layouts, function (l) {
             if (l.name === $scope.defaultLayout) {
               layout = l;
             }
@@ -121,12 +119,12 @@
       return http;
     };
 
-    this.activate = function() {
+    this.activate = function () {
       $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
 
-      var initMapEvents = function() {
+      var initMapEvents = function () {
         deregister = [
-          $scope.map.getView().on('change:resolution', function(event) {
+          $scope.map.getView().on("change:resolution", function (event) {
             if ($scope.map.getView().getAnimating()) {
               return;
             }
@@ -137,7 +135,7 @@
               updatePrintRectanglePixels($scope.config.scale);
             }
           }),
-          $scope.$watch('auto', function(v) {
+          $scope.$watch("auto", function (v) {
             if (v) {
               fitRectangleToView();
             }
@@ -154,7 +152,7 @@
       overlayLayer.setMap($scope.map);
     };
 
-    this.deactivate = function() {
+    this.deactivate = function () {
       if (deregister) {
         for (var i = 0; i < deregister.length; i++) {
           if (angular.isFunction(deregister[i])) {
@@ -170,28 +168,33 @@
       refreshComp();
     };
 
-    var updatePrintRectanglePixels = function(scale) {
-      printRectangle = gnPrint.calculatePageBoundsPixels($scope.map,
-          $scope.config.layout, scale);
+    var updatePrintRectanglePixels = function (scale) {
+      printRectangle = gnPrint.calculatePageBoundsPixels(
+        $scope.map,
+        $scope.config.layout,
+        scale
+      );
       $scope.map.render();
     };
 
-    var refreshComp = function() {
+    var refreshComp = function () {
       updatePrintRectanglePixels($scope.config.scale);
       $scope.map.render();
     };
     $scope.refreshComp = refreshComp;
 
-    this.fitRectangleToView = function() {
-      $scope.config.scale = gnPrint.getOptimalScale($scope.map,
+    this.fitRectangleToView = function () {
+      $scope.config.scale = gnPrint.getOptimalScale(
+        $scope.map,
         $scope.config.scales,
-        $scope.config.layout);
+        $scope.config.layout
+      );
 
       refreshComp();
     };
     var fitRectangleToView = this.fitRectangleToView;
 
-    $scope.downloadUrl = function(url) {
+    $scope.downloadUrl = function (url) {
       $window.location = url;
     };
 
@@ -199,7 +202,7 @@
 
     $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
 
-    $scope.submit = function() {
+    $scope.submit = function () {
       if (!$scope.printActive) {
         return;
       }
@@ -209,29 +212,27 @@
       var proj = view.getProjection();
       var lang = $translate.use();
       var defaultPage = {
-        comment: $scope.mapComment || '',
-        title: $scope.mapTitle || ''
+        comment: $scope.mapComment || "",
+        title: $scope.mapTitle || ""
       };
-      defaultPage['lang' + lang] = true;
+      defaultPage["lang" + lang] = true;
       var encLayers = [];
       var encLegends = [];
       var attributions = [];
       var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
 
-      var sortedZindexLayers = layers.getArray().sort(function(a, b) {
+      var sortedZindexLayers = layers.getArray().sort(function (a, b) {
         return a.getZIndex() > b.getZIndex();
       });
-      angular.forEach(sortedZindexLayers, function(layer) {
+      angular.forEach(sortedZindexLayers, function (layer) {
         if (layer.getVisible()) {
           var attribution = layer.attribution;
-          if (attribution !== undefined &&
-              attributions.indexOf(attribution) == -1) {
+          if (attribution !== undefined && attributions.indexOf(attribution) == -1) {
             attributions.push(attribution);
           }
           if (layer instanceof ol.layer.Group) {
-            var encs = gnPrint.encoders.layers['Group'].call(this,
-                layer, proj);
+            var encs = gnPrint.encoders.layers["Group"].call(this, layer, proj);
             encLayers = encLayers.concat(encs);
           } else {
             var enc = encodeLayer(layer, proj);
@@ -246,14 +247,14 @@
         }
       });
 
-      var scales = $scope.config.scales.map(function(scale) {
+      var scales = $scope.config.scales.map(function (scale) {
         return parseInt(scale.value);
       });
 
       var spec = {
         layout: $scope.config.layout.name,
         srs: proj.getCode(),
-        units: proj.getUnits() || 'm',
+        units: proj.getUnits() || "m",
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
@@ -265,19 +266,23 @@
         hasNoTitle: $scope.mapTitle ? false : true,
         hasAttribution: !!attributions.length,
         pages: [
-          angular.extend({
-            center: gnPrint.getPrintRectangleCenterCoord(
-                $scope.map, printRectangle),
-            // scale has to be one of the advertise by the print server
-            scale: $scope.config.scale.value,
-            dataOwner: '© ' + attributions.join(),
-            rotation: -((view.getRotation() * 180.0) / Math.PI)
-          }, defaultPage)
+          angular.extend(
+            {
+              center: gnPrint.getPrintRectangleCenterCoord($scope.map, printRectangle),
+              // scale has to be one of the advertise by the print server
+              scale: $scope.config.scale.value,
+              dataOwner: "© " + attributions.join(),
+              rotation: -((view.getRotation() * 180.0) / Math.PI)
+            },
+            defaultPage
+          )
         ]
       };
-      var http = $http.post($scope.config.createURL + '?url=' +
-          encodeURIComponent('../../pdf'), spec);
-      http.success(function(data) {
+      var http = $http.post(
+        $scope.config.createURL + "?url=" + encodeURIComponent("../../pdf"),
+        spec
+      );
+      http.success(function (data) {
         $scope.printing = false;
         $scope.downloadUrl(data.getURL);
         //After standard print, download the pdf Legends
@@ -286,13 +291,13 @@
           $window.open(pdfLegendsToDownload[i]);
         }
       });
-      http.error(function() {
+      http.error(function () {
         $scope.printing = false;
       });
     };
 
     // Encode ol.Layer to a basic js object
-    var encodeLayer = function(layer, proj) {
+    var encodeLayer = function (layer, proj) {
       var encLayer, encLegend;
       var ext = proj.getExtent();
       var resolution = $scope.map.getView().getResolution();
@@ -303,117 +308,119 @@
         var minResolution = layerConfig.minResolution || 0;
         var maxResolution = layerConfig.maxResolution || Infinity;
 
-        if (resolution <= maxResolution &&
-            resolution >= minResolution) {
+        if (resolution <= maxResolution && resolution >= minResolution) {
           if (src instanceof ol.source.WMTS) {
-            encLayer = gnPrint.encoders.layers['WMTS'].call(this,
-                layer, layerConfig, proj);
+            encLayer = gnPrint.encoders.layers["WMTS"].call(
+              this,
+              layer,
+              layerConfig,
+              proj
+            );
           } else if (src instanceof ol.source.OSM) {
-            encLayer = gnPrint.encoders.layers['OSM'].call(this,
-                layer, layerConfig);
+            encLayer = gnPrint.encoders.layers["OSM"].call(this, layer, layerConfig);
           } else if (src instanceof ol.source.BingMaps) {
-            encLayer = gnPrint.encoders.layers['Bing'].call(this,
-                layer, layerConfig);
-          } else if (src instanceof ol.source.ImageWMS ||
-              src instanceof ol.source.TileWMS) {
-            encLayer = gnPrint.encoders.layers['WMS'].call(this,
-                layer, layerConfig, proj);
+            encLayer = gnPrint.encoders.layers["Bing"].call(this, layer, layerConfig);
+          } else if (
+            src instanceof ol.source.ImageWMS ||
+            src instanceof ol.source.TileWMS
+          ) {
+            encLayer = gnPrint.encoders.layers["WMS"].call(
+              this,
+              layer,
+              layerConfig,
+              proj
+            );
           } else if (src instanceof ol.source.XYZ) {
-            encLayer = gnPrint.encoders.layers['XYZ'].call(this,
-                layer, layerConfig, proj);
+            encLayer = gnPrint.encoders.layers["XYZ"].call(
+              this,
+              layer,
+              layerConfig,
+              proj
+            );
           } else if (src instanceof ol.source.Vector) {
             var features = [];
-            src.forEachFeatureInExtent(ext, function(feat) {
+            src.forEachFeatureInExtent(ext, function (feat) {
               features.push(feat);
             });
 
             if (features && features.length > 0) {
-              encLayer =
-                  gnPrint.encoders.layers['Vector'].call(this,
-                  layer, features);
+              encLayer = gnPrint.encoders.layers["Vector"].call(this, layer, features);
             }
           }
         }
       }
 
-      encLegend = gnPrint.encoders.legends['base'].call(
-          this, layer, layerConfig
-          );
+      encLegend = gnPrint.encoders.legends["base"].call(this, layer, layerConfig);
 
       if (encLegend && encLegend.classes[0] && !encLegend.classes[0].icon) {
         encLegend = undefined;
       }
-      return {layer: encLayer, legend: encLegend};
+      return { layer: encLayer, legend: encLegend };
     };
   };
 
-  mapPrintController['$inject'] = [
-    '$scope',
-    'gnPrint',
-    '$http',
-    '$translate',
-    '$window'
-  ];
+  mapPrintController["$inject"] = ["$scope", "gnPrint", "$http", "$translate", "$window"];
 
-  module.directive('gnMapprint',
-      ['gnCurrentEdit', function(gnCurrentEdit) {
-        return {
-          restrict: 'A',
-          require: 'gnMapprint',
-          templateUrl: '../../catalog/components/common/map/' +
-           'print/partials/printmap.html',
-          controller: mapPrintController,
-          scope: {
-            printActive: '=',
-            map: '='
-          },
-          link: function(scope, elt, attrs, ctrl) {
+  module.directive("gnMapprint", [
+    "gnCurrentEdit",
+    function (gnCurrentEdit) {
+      return {
+        restrict: "A",
+        require: "gnMapprint",
+        templateUrl:
+          "../../catalog/components/common/map/" + "print/partials/printmap.html",
+        controller: mapPrintController,
+        scope: {
+          printActive: "=",
+          map: "="
+        },
+        link: function (scope, elt, attrs, ctrl) {
+          scope.defaultLayout = attrs.layout;
+          scope.auto = true;
+          scope.activatedOnce = false;
 
-            scope.defaultLayout = attrs.layout;
-            scope.auto = true;
-            scope.activatedOnce = false;
+          scope.layersWithWhiteSpaces = false;
 
-            scope.layersWithWhiteSpaces = false;
-
-            scope.$watchCollection(
-                function() {
-                  return scope.map.getLayers().getArray();
-                },
-                function(layers) {
-                  scope.layersWithWhiteSpaces = false;
-                  layers.forEach(function(layer) {
-                    if(layer.getSource()
-                        && layer.getSource() instanceof ol.source.TileWMS
-                        && layer.getSource().getParams()
-                        && layer.getSource().getParams().LAYERS
-                        && layer.getSource().getParams().LAYERS.indexOf(" ") >= 0) {
-                      scope.layersWithWhiteSpaces = true;
-                    }
-                  });
+          scope.$watchCollection(
+            function () {
+              return scope.map.getLayers().getArray();
+            },
+            function (layers) {
+              scope.layersWithWhiteSpaces = false;
+              layers.forEach(function (layer) {
+                if (
+                  layer.getSource() &&
+                  layer.getSource() instanceof ol.source.TileWMS &&
+                  layer.getSource().getParams() &&
+                  layer.getSource().getParams().LAYERS &&
+                  layer.getSource().getParams().LAYERS.indexOf(" ") >= 0
+                ) {
+                  scope.layersWithWhiteSpaces = true;
                 }
-            );
+              });
+            }
+          );
 
-            // Deactivate only if it has been activated once first
-            scope.$watch('printActive', function(isActive, old) {
-              if (angular.isDefined(isActive) &&
-                  (scope.activatedOnce || isActive)) {
-                if (isActive) {
-                  ctrl.activate();
-                  scope.activatedOnce = true;
-                } else {
-                  ctrl.deactivate();
-                }
+          // Deactivate only if it has been activated once first
+          scope.$watch("printActive", function (isActive, old) {
+            if (angular.isDefined(isActive) && (scope.activatedOnce || isActive)) {
+              if (isActive) {
+                ctrl.activate();
+                scope.activatedOnce = true;
+              } else {
+                ctrl.deactivate();
               }
-            });
+            }
+          });
 
-            scope.$watch('config.layout', function(newV, oldV) {
-              if (!newV) {
-                return;
-              }
-              ctrl.fitRectangleToView.call(ctrl);
-            });
-
-          }
-        };
-      }]);
+          scope.$watch("config.layout", function (newV, oldV) {
+            if (!newV) {
+              return;
+            }
+            ctrl.fitRectangleToView.call(ctrl);
+          });
+        }
+      };
+    }
+  ]);
 })();

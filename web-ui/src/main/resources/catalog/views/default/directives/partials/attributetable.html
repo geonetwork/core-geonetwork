@@ -10,19 +10,22 @@
       <span data-ng-show="attribute.type">&nbsp;({{attribute.type}})</span>
     </td>
     <td data-ng-show="showCodeColumn">
-      <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}" >{{attribute.code}}</strong>
-      <a href="{{attribute.link}}" data-ng-show="{{attribute.link != null && attribute.link > ''}}" >{{attribute.code}}</a>
+      <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}"
+        >{{attribute.code}}</strong
+      >
+      <a
+        href="{{attribute.link}}"
+        data-ng-show="{{attribute.link != null && attribute.link > ''}}"
+        >{{attribute.code}}</a
+      >
     </td>
-    <td>
-      {{attribute.definition}}
-    </td>
+    <td>{{attribute.definition}}</td>
   </tr>
   <tr data-ng-if="attribute.values.length > 0">
-    <td colspan="3" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"/>
+    <td colspan="3" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom" />
   </tr>
   <tr data-ng-repeat-end data-ng-if="attribute.values.length > 0">
     <td colspan="3" class="gn-noborder-top">
-
       <div data-ng-show="attribute.values.length > 0">
         <h5 data-translate="">attributeValues</h5>
 

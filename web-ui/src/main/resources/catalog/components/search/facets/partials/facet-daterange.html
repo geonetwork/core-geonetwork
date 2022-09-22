@@ -5,13 +5,26 @@
       <a href class="zoomBtn fa fa-minus-circle" rel="zoomOut" title="Zoom Out"></a>
     </div>
   </div>
-  <div class="input-daterange input-group input-group-sm"
-      gn-bootstrap-datepicker="pickerValues"
-      data-date-format="dd-mm-yyyy"
-      on-change-fn="updateCallback({from: pickerValues.from, to: pickerValues.to})"
-      date-only-highlight="true">
-    <input type="text" class="input-sm form-control" name="start" value="{{::pickerValues.from}}"/>
+  <div
+    class="input-daterange input-group input-group-sm"
+    data-gn-bootstrap-datepicker="pickerValues"
+    data-config="{}"
+    data-date-format="dd-mm-yyyy"
+    on-change-fn="updateCallback({from: pickerValues.from, to: pickerValues.to})"
+    date-only-highlight="true"
+  >
+    <input
+      type="text"
+      class="input-sm form-control"
+      name="start"
+      value="{{::pickerValues.from}}"
+    />
     <span class="input-group-addon" translate>dateToDate</span>
-    <input type="text" class="input-sm form-control" name="end" value="{{::pickerValues.to}}" />
+    <input
+      type="text"
+      class="input-sm form-control"
+      name="end"
+      value="{{::pickerValues.to}}"
+    />
   </div>
 </div>

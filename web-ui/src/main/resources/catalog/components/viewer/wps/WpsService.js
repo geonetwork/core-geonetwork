@@ -21,40 +21,31 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wps_service');
+(function () {
+  goog.provide("gn_wps_service");
 
+  goog.require("GML_3_1_1");
+  goog.require("OWS_1_1_0");
+  goog.require("SMIL_2_0");
+  goog.require("SMIL_2_0_Language");
+  goog.require("WPS_1_0_0");
+  goog.require("XLink_1_0");
 
-
-
-
-
-
-
-
-
-  goog.require('GML_3_1_1');
-  goog.require('OWS_1_1_0');
-  goog.require('SMIL_2_0');
-  goog.require('SMIL_2_0_Language');
-  goog.require('WPS_1_0_0');
-  goog.require('XLink_1_0');
-
-  var module = angular.module('gn_wps_service', []);
+  var module = angular.module("gn_wps_service", []);
 
   // WPS Client
   // Jsonix wrapper to read or write WPS response or request
   var context = new Jsonix.Context(
-      [XLink_1_0, OWS_1_1_0, WPS_1_0_0, GML_3_1_1, SMIL_2_0, SMIL_2_0_Language],
-      {
-        namespacePrefixes: {
-          'http://www.w3.org/1999/xlink': 'xlink',
-          'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wps/1.0.0': 'wps',
-          'http://www.opengis.net/gml': 'gml'
-        }
+    [XLink_1_0, OWS_1_1_0, WPS_1_0_0, GML_3_1_1, SMIL_2_0, SMIL_2_0_Language],
+    {
+      namespacePrefixes: {
+        "http://www.w3.org/1999/xlink": "xlink",
+        "http://www.opengis.net/ows/1.1": "ows",
+        "http://www.opengis.net/wps/1.0.0": "wps",
+        "http://www.opengis.net/gml": "gml"
       }
-      );
+    }
+  );
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
@@ -72,17 +63,23 @@
    * The `gnWpsService` service provides methods to call WPS request and
    * manage WPS responses.
    */
-  module.service('gnWpsService', [
-    '$http',
-    'gnOwsCapabilities',
-    'gnUrlUtils',
-    'gnGlobalSettings',
-    'gnMap',
-    '$q',
-    '$translate',
-    function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings,
-             gnMap, $q, $translate) {
-
+  module.service("gnWpsService", [
+    "$http",
+    "gnOwsCapabilities",
+    "gnUrlUtils",
+    "gnGlobalSettings",
+    "gnMap",
+    "$q",
+    "$translate",
+    function (
+      $http,
+      gnOwsCapabilities,
+      gnUrlUtils,
+      gnGlobalSettings,
+      gnMap,
+      $q,
+      $translate
+    ) {
       this.WMS_MIMETYPE_REGEX = /.*ogc-wms/;
       this.GEOM_MIMETYPE_REGEX = /application\/(xml|geo\+json|json|gml\+xml)/;
 
@@ -101,11 +98,11 @@
        * @param {boolean} options.cancelPrevious if true, previous ongoing
        *  requests are cancelled
        */
-      this.describeProcess = function(uri, processId, options) {
+      this.describeProcess = function (uri, processId, options) {
         url = gnOwsCapabilities.mergeDefaultParams(uri, {
-          service: 'WPS',
-          version: '1.0.0',
-          request: 'DescribeProcess',
+          service: "WPS",
+          version: "1.0.0",
+          request: "DescribeProcess",
           identifier: processId
         });
         options = options || {};
@@ -120,14 +117,14 @@
 
         //send request and decode result
         if (gnUrlUtils.isValid(url)) {
-          return $http.get(url, {
-            cache: true,
-            timeout: this.descProcCanceller.promise
-          }).then(
-              function(response) {
-                return unmarshaller.unmarshalString(response.data).value;
-              }
-          );
+          return $http
+            .get(url, {
+              cache: true,
+              timeout: this.descProcCanceller.promise
+            })
+            .then(function (response) {
+              return unmarshaller.unmarshalString(response.data).value;
+            });
         }
       };
 
@@ -144,11 +141,11 @@
        * @param {boolean} options.cancelPrevious if true, previous ongoing
        *  requests are cancelled
        */
-      this.getCapabilities = function(url, options) {
+      this.getCapabilities = function (url, options) {
         var url = gnOwsCapabilities.mergeDefaultParams(url, {
-          service: 'WPS',
-          version: '1.0.0',
-          request: 'GetCapabilities'
+          service: "WPS",
+          version: "1.0.0",
+          request: "GetCapabilities"
         });
         options = options || {};
 
@@ -161,16 +158,18 @@
         this.getCapCanceller = $q.defer();
 
         // send request and decode result
-        return $http.get(url, {
-          cache: true,
-          timeout: this.getCapCanceller.promise
-        }).then(function(response) {
-          this.getCapCanceller = null;
-          if (!response.data) {
-            return;
-          }
-          return unmarshaller.unmarshalString(response.data).value;
-        });
+        return $http
+          .get(url, {
+            cache: true,
+            timeout: this.getCapCanceller.promise
+          })
+          .then(function (response) {
+            this.getCapCanceller = null;
+            if (!response.data) {
+              return;
+            }
+            return unmarshaller.unmarshalString(response.data).value;
+          });
       };
 
       /**
@@ -190,19 +189,18 @@
        * status
        * @return {string} XML message
        */
-      this.printExecuteMessage = function(processDescription, inputs,
-          output) {
+      this.printExecuteMessage = function (processDescription, inputs, output) {
         var me = this;
         var description = processDescription;
 
         var request = {
           name: {
-            localPart: 'Execute',
-            namespaceURI: 'http://www.opengis.net/wps/1.0.0'
+            localPart: "Execute",
+            namespaceURI: "http://www.opengis.net/wps/1.0.0"
           },
           value: {
-            service: 'WPS',
-            version: '1.0.0',
+            service: "WPS",
+            version: "1.0.0",
             identifier: {
               value: description.identifier.value
             },
@@ -212,7 +210,7 @@
           }
         };
 
-        var setInputData = function(input, data) {
+        var setInputData = function (input, data) {
           if (input.literalData && data) {
             request.value.dataInputs.input.push({
               identifier: {
@@ -240,8 +238,8 @@
             });
           }
           // when bbox is cleared value is still set to ',,,'
-          if (input.boundingBoxData && data && data != ',,,') {
-            var bbox = data.split(',');
+          if (input.boundingBoxData && data && data != ",,,") {
+            var bbox = data.split(",");
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -249,7 +247,7 @@
               data: {
                 boundingBoxData: {
                   dimensions: 2,
-                  crs: 'EPSG:4326',
+                  crs: "EPSG:4326",
                   lowerCorner: [bbox[1], bbox[0]],
                   upperCorner: [bbox[3], bbox[2]]
                 }
@@ -263,11 +261,13 @@
           var inputName = input.identifier.value;
 
           // for each value for this input, add to message
-          inputs.filter(function(inputValue) {
-            return inputValue.name === inputName;
-          }).forEach(function(inputValue) {
-            setInputData(input, inputValue.value);
-          });
+          inputs
+            .filter(function (inputValue) {
+              return inputValue.name === inputName;
+            })
+            .forEach(function (inputValue) {
+              setInputData(input, inputValue.value);
+            });
         }
 
         // generate response document based on output info
@@ -279,19 +279,24 @@
         };
 
         // output selection based on form control
-        angular.forEach(description.processOutputs.output,
-            function(descOutput) {
-              if (descOutput.identifier.value === output.identifier) {
-                responseDocument.output.push({
-                  asReference: output.asReference !== undefined ?
-                  output.asReference : descOutput.asReference,
-                  mimeType: output.mimeType,
-                  identifier: {
-                    value: output.identifier
-                  }
-                });
-              }
-            }, {});
+        angular.forEach(
+          description.processOutputs.output,
+          function (descOutput) {
+            if (descOutput.identifier.value === output.identifier) {
+              responseDocument.output.push({
+                asReference:
+                  output.asReference !== undefined
+                    ? output.asReference
+                    : descOutput.asReference,
+                mimeType: output.mimeType,
+                identifier: {
+                  value: output.identifier
+                }
+              });
+            }
+          },
+          {}
+        );
 
         request.value.responseForm = {
           responseDocument: responseDocument
@@ -317,28 +322,30 @@
        * lineage and status
        * @return {defer} promise
        */
-      this.execute = function(uri, processId, inputs, responseDocument) {
+      this.execute = function (uri, processId, inputs, responseDocument) {
         var defer = $q.defer();
         var me = this;
 
-        this.describeProcess(uri, processId).then(
-            function(data) {
-              // generate the XML message from the description
-              var description = data.processDescription[0];
-              var message = me.printExecuteMessage(description, inputs,
-              responseDocument);
+        this.describeProcess(uri, processId).then(function (data) {
+          // generate the XML message from the description
+          var description = data.processDescription[0];
+          var message = me.printExecuteMessage(description, inputs, responseDocument);
 
-              // do the post request
-              $http.post(uri, message, {
-                headers: {'Content-Type': 'application/xml'}
-              }).then(function(data) {
-                var response =
-                unmarshaller.unmarshalString(data.data).value;
+          // do the post request
+          $http
+            .post(uri, message, {
+              headers: { "Content-Type": "application/xml" }
+            })
+            .then(
+              function (data) {
+                var response = unmarshaller.unmarshalString(data.data).value;
                 defer.resolve(response);
-              }, function(data) {
+              },
+              function (data) {
                 defer.reject(data);
-              });
-            });
+              }
+            );
+        });
 
         return defer.promise;
       };
@@ -353,17 +360,17 @@
        *
        * @param {string} url of status document
        */
-      this.getStatus = function(url) {
+      this.getStatus = function (url) {
         var defer = $q.defer();
 
         $http.get(url).then(
-            function(data) {
-              var response = unmarshaller.unmarshalString(data.data).value;
-              defer.resolve(response);
-            },
-            function(data) {
-              defer.reject(data);
-            }
+          function (data) {
+            var response = unmarshaller.unmarshalString(data.data).value;
+            defer.resolve(response);
+          },
+          function (data) {
+            defer.reject(data);
+          }
         );
 
         return defer.promise;
@@ -375,7 +382,7 @@
        * @param {object} response excecuteProcess response object.
        * @return {number} index of the output with the WMS service info; null if none found
        */
-      this.responseHasWmsService = function(response) {
+      this.responseHasWmsService = function (response) {
         var outputs = response.processOutputs.output;
         for (var i = 0; i < outputs.length; i++) {
           try {
@@ -383,48 +390,52 @@
             if (this.WMS_MIMETYPE_REGEX.test(mimeType)) {
               return i;
             }
-          } catch (e) {
-          }
+          } catch (e) {}
         }
         return null;
       };
-      this.getGeometryOutput = function(response, loadReference) {
-        var defer = $q.defer(), outputs = response.processOutputs.output;
+      this.getGeometryOutput = function (response, loadReference) {
+        var defer = $q.defer(),
+          outputs = response.processOutputs.output;
         for (var i = 0; i < outputs.length; i++) {
           if (outputs[i].data) {
             try {
-              var mimeType = outputs[i].data.complexData.mimeType || 'application/json';
+              var mimeType = outputs[i].data.complexData.mimeType || "application/json";
               if (this.GEOM_MIMETYPE_REGEX.test(mimeType)) {
                 var complexData = outputs[i].data.complexData,
-                  content = '',
+                  content = "",
                   geom = null;
-                if (complexData.encoding === 'base64') {
+                if (complexData.encoding === "base64") {
                   content = atob(complexData.content);
                 } else {
                   content = complexData.content;
                 }
-                if (mimeType.indexOf('json') != -1) {
+                if (mimeType.indexOf("json") != -1) {
                   var format = new ol.format.GeoJSON();
                   geom = format.readFeatures(content, {
                     // dataProjection: 'EPSG:3035',
                     // featureProjection: 'EPSG:3857'
                   });
-                } else if (mimeType.indexOf('xml') != -1) {
+                } else if (mimeType.indexOf("xml") != -1) {
                   // GML ?
                 }
-                defer.resolve({data: geom});
+                defer.resolve({ data: geom });
               }
             } catch (e) {
-              console.warn("Error while trying to decode complexData content from WPS response.", complexData, e)
+              console.warn(
+                "Error while trying to decode complexData content from WPS response.",
+                complexData,
+                e
+              );
             }
           } else if (loadReference && outputs[i].reference) {
-            $http.get(outputs[i].reference.href).then(function(r) {
+            $http.get(outputs[i].reference.href).then(function (r) {
               var format = new ol.format.GeoJSON();
               geom = format.readFeatures(r.data, {
                 // dataProjection: 'EPSG:3035',
                 // featureProjection: 'EPSG:3857'
               });
-              defer.resolve({data: geom});
+              defer.resolve({ data: geom });
             });
           }
         }
@@ -440,15 +451,15 @@
        * @return {string} object with outputIdentifier and mimeType; null if no
        * matching mimeType
        */
-      this.getProcessOutputWMSMimeType = function(processDesc) {
+      this.getProcessOutputWMSMimeType = function (processDesc) {
         var result = null;
         var me = this;
         try {
           var outputs = processDesc.processOutputs.output;
-          outputs.forEach(function(output) {
+          outputs.forEach(function (output) {
             var outputId = output.identifier.value;
             var mimeTypes = output.complexOutput.supported.format;
-            mimeTypes.forEach(function(mimeType) {
+            mimeTypes.forEach(function (mimeType) {
               if (!result && me.WMS_MIMETYPE_REGEX.test(mimeType.mimeType)) {
                 result = {
                   mimeType: mimeType.mimeType,
@@ -458,7 +469,7 @@
             });
           });
         } catch (e) {
-          console.warn('Failed parsing WPS process description: ', e);
+          console.warn("Failed parsing WPS process description: ", e);
         }
         return result;
       };
@@ -475,21 +486,20 @@
        * @param {ol.Map} map
        * @param {ol.layer.Base} parentLayer optional
        */
-      this.extractWmsLayerFromResponse = function(response, index, map, parentLayer) {
+      this.extractWmsLayerFromResponse = function (response, index, map, parentLayer) {
         try {
           var output = response.processOutputs.output[index];
           var ref = output.reference;
           var identifier = output.identifier.value;
-          gnMap.addWmsAllLayersFromCap(map, ref.href, true).
-              then(function(layers) {
-                layers.forEach(function(l) {
-                  l.set('fromWps', true);
-                  l.set('wpsParent', parentLayer);
-                  map.addLayer(l);
-                });
-              });
+          gnMap.addWmsAllLayersFromCap(map, ref.href, true).then(function (layers) {
+            layers.forEach(function (l) {
+              l.set("fromWps", true);
+              l.set("wpsParent", parentLayer);
+              map.addLayer(l);
+            });
+          });
         } catch (e) {
-          console.warn('Error extracting WMS layers from response: ', e);
+          console.warn("Error extracting WMS layers from response: ", e);
         }
       };
 
@@ -508,8 +518,7 @@
         } else {
           return null;
         }
-      }
+      };
     }
   ]);
-
 })();

@@ -1,18 +1,19 @@
-<div class="panel panel-default"
-     data-ng-show="processReport"
-     data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
-
+<div
+  class="panel panel-default"
+  data-ng-show="processReport"
+  data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'"
+>
   <div class="panel-heading">
     <span data-translate="">processReportFor</span>
-    {{processReport.processId | translate}}<br/>
-    <p> {{processReport.totalRecords}}
+    {{processReport.processId | translate}}<br />
+    <p>
+      {{processReport.totalRecords}}
       <span data-translate="">recordsProcessed</span>
       ({{processReport.startIsoDateTime}}
-      <span data-ng-show="processReport.running"
-      >...</span>
-      <span data-ng-hide="processReport.running"> -
-              {{processReport.endIsoDateTime}}</span>) =
-      {{processReport.totalTimeInSeconds}}s</p>
+      <span data-ng-show="processReport.running">...</span>
+      <span data-ng-hide="processReport.running"> - {{processReport.endIsoDateTime}}</span
+      >) = {{processReport.totalTimeInSeconds}}s
+    </p>
   </div>
   <div class="panel-body">
     <table class="table table-striped">
@@ -32,8 +33,7 @@
         <td>{{('processReportErrors') | translate}}</td>
         <td class="text-right">
           {{processReport.numberOfRecordsWithErrors}}
-          <div data-ng-repeat="value in processReport.errors"
-               alt="{{value.stack}}">
+          <div data-ng-repeat="value in processReport.errors" alt="{{value.stack}}">
             {{value.message}}
           </div>
         </td>
@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div data-ng-hide="!hasMetadataInfo()" >
+    <div data-ng-hide="!hasMetadataInfo()">
       <h3 data-translate="">metadataInfoReport</h3>
 
       <div class="batch-report-metadata-info">
@@ -80,9 +80,7 @@
             <td>{{infos[0].uuid}}</td>
             <td>
               <ul>
-                <li data-ng-repeat="value in infos">
-                  {{value.message}}
-                </li>
+                <li data-ng-repeat="value in infos">{{value.message}}</li>
               </ul>
             </td>
           </tr>
