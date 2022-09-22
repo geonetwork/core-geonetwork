@@ -1,25 +1,24 @@
 <form role="form" class="form-horizontal">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
 
   <!--Point-->
   <div data-ng-if="getType() == 'point'">
     <div class="form-group">
-      <label class="col-xs-4"
-             for="gn-draw-radius-input">
+      <label class="col-xs-4" for="gn-draw-radius-input">
         {{'drawRadius'|translate}}
       </label>
       <div class="col-xs-4">
-        <input type="number"
-               id="gn-draw-radius-input"
-               class="form-control input-sm"
-               data-ng-model="style.image.radius"
-               placeholder="{{'drawRadius'|translate}}">
+        <input
+          type="number"
+          id="gn-draw-radius-input"
+          class="form-control input-sm"
+          data-ng-model="style.image.radius"
+          placeholder="{{'drawRadius'|translate}}"
+        />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-xs-4">
-        {{'drawColor'|translate}}
-      </label>
+      <label class="col-xs-4"> {{'drawColor'|translate}} </label>
       <div class="col-xs-6">
         <color-picker
           ng-model="style.image.fill.color"
@@ -33,21 +32,21 @@
   <!--Linestring-->
   <div data-ng-if="getType().indexOf('line') == 0">
     <div class="form-group">
-      <label class="col-xs-4"
-             for="gn-draw-width-input">
+      <label class="col-xs-4" for="gn-draw-width-input">
         {{'drawWidth'|translate}}
       </label>
       <div class="col-xs-4">
-        <input type="number"
-               id="gn-draw-width-input"
-               class="form-control input-sm"
-               data-ng-model="style.stroke.width"
-               placeholder="{{'drawWidth'|translate}}">
+        <input
+          type="number"
+          id="gn-draw-width-input"
+          class="form-control input-sm"
+          data-ng-model="style.stroke.width"
+          placeholder="{{'drawWidth'|translate}}"
+        />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-xs-4"
-             for="gn-draw-width-input">
+      <label class="col-xs-4" for="gn-draw-width-input">
         {{'drawColor'|translate}}
       </label>
       <div class="col-xs-6">
@@ -63,22 +62,21 @@
   <!--Polygon-->
   <div data-ng-if="getType() == 'polygon'">
     <div class="form-group">
-      <label class="col-xs-4"
-             for="gn-draw-width-input-polygon">
+      <label class="col-xs-4" for="gn-draw-width-input-polygon">
         {{'drawWidth'|translate}}
       </label>
       <div class="col-xs-4">
-        <input type="number"
-               id="gn-draw-width-input-polygon"
-               class="form-control input-sm"
-               data-ng-model="style.stroke.width"
-               placeholder="{{'drawWidth'|translate}}">
+        <input
+          type="number"
+          id="gn-draw-width-input-polygon"
+          class="form-control input-sm"
+          data-ng-model="style.stroke.width"
+          placeholder="{{'drawWidth'|translate}}"
+        />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-xs-4">
-        {{'drawStrokeColor'|translate}}
-      </label>
+      <label class="col-xs-4"> {{'drawStrokeColor'|translate}} </label>
       <div class="col-xs-6">
         <color-picker
           ng-model="style.stroke.color"
@@ -88,9 +86,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-xs-4">
-        {{'drawFillColor'|translate}}
-      </label>
+      <label class="col-xs-4"> {{'drawFillColor'|translate}} </label>
       <div class="col-xs-6">
         <color-picker
           ng-model="style.fill.color"
@@ -104,28 +100,32 @@
   <!--Text-->
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
-      <div class="col-xs-12">
-        <label >{{'textInput'|translate}}
-          <input class="form-control" ng-model="style.text.text"
-                 placeholder="{{'textInput'|translate}}"
-                 title="{{'tipDrawText'|translate}}">
-        </label>
+      <label class="col-xs-4" for="gn-draw-text-text"> {{'textInput'|translate}} </label>
+      <div class="col-xs-8">
+        <input
+          class="form-control"
+          id="gn-draw-text-text"
+          ng-model="style.text.text"
+          placeholder="{{'textInput'|translate}}"
+          title="{{'tipDrawText'|translate}}"
+        />
       </div>
     </div>
     <div class="form-group">
-      <label class="col-xs-4"
-             for="gn-draw-text-width">
-        {{'textWidth'|translate}}
-      </label>
+      <label class="col-xs-4" for="gn-draw-text-width"> {{'textWidth'|translate}} </label>
       <div class="col-xs-4">
-        <input type="number"
-               id="gn-draw-text-width"
-               class="form-control input-sm"
-               data-ng-model="style.text.width"
-               placeholder="{{'textWidth'|translate}}">
+        <input
+          type="number"
+          id="gn-draw-text-width"
+          class="form-control input-sm"
+          data-ng-model="style.text.width"
+          placeholder="{{'textWidth'|translate}}"
+        />
       </div>
+    </div>
     <div class="form-group">
-      <label>{{'textFillColor'|translate}}
+      <label class="col-xs-4"> {{'textFillColor'|translate}} </label>
+      <div class="col-xs-6">
         <color-picker
           ng-model="style.text.fill.color"
           color-picker-format="'rgb'"
@@ -134,9 +134,7 @@
       </div>
     </div>
     <div class="form-group gn-draw-text-stroke">
-      <label class="col-xs-4">
-        {{'textStrokeColor'|translate}}
-      </label>
+      <label class="col-xs-4"> {{'textStrokeColor'|translate}} </label>
       <div class="col-xs-6">
         <color-picker
           ng-model="style.text.stroke.color"
@@ -146,11 +144,15 @@
       </div>
     </div>
     <div class="form-group">
-      <label>{{'textStrokeWidth'|translate}}
-        <input type="number" class="form-control input-sm" data-ng-model="style.text.stroke.width"
-               placeholder="{{'textWidth'|translate}}">
-      </label>
+      <label class="col-xs-4"> {{'textStrokeWidth'|translate}} </label>
+      <div class="col-xs-4">
+        <input
+          type="number"
+          class="form-control input-sm"
+          data-ng-model="style.text.stroke.width"
+          placeholder="{{'textWidth'|translate}}"
+        />
+      </div>
     </div>
-
   </div>
 </form>

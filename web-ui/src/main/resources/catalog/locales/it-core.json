@@ -430,7 +430,7 @@
     "link-fcats": "Catalogo delle entità",
     "link-associated": "Risorse associate",
     "indexAccessError": "Si è verificato un errore durante l'accesso all'indice.",
-    "applyFilter": "Applica il filtro",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Conferma l'azione",
     "close": "Chiudi",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Batch metadata approval",
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
-    "facet-mdStatus": "Progresso del flusso di lavoro"
+    "facet-mdStatus": "Progresso del flusso di lavoro",
+    "skipLink": "Skip and go to the content"
 }

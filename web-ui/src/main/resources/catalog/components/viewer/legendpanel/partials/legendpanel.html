@@ -1,24 +1,30 @@
-<ul class="list-group">
-  <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
-      data-ng-if="layer.get('legend')"
-      class="list-group-item gn-map-layer">
+<ul class="list-group" tabindex="0">
+  <li
+    ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
+    data-ng-if="layer.get('legend')"
+    class="list-group-item gn-map-layer"
+  >
     <label>{{layer.get('label')}}</label>
-    <span><em>
-      {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
-    </em></span>
-    <p>
-      <img ng-src="{{layer.get('legend')}}"
-           alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
-           aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
+    <em>
+      {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
+      layer.get('currentStyle').Name) + ')' : ''}}
+    </em>
+    <p class="gn-margin-top">
+      <img
+        ng-src="{{layer.get('legend')}}"
+        alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+        aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"
+      />
     </p>
-    <h6 ng-if="layer.get('attribution')">
+    <h4 ng-if="layer.get('attribution')">
       <span data-translate="">Attribution</span>
       <em>{{layer.get('attribution')}}</em>
-    </h6>
+    </h4>
   </li>
-  <li data-ng-if="(layers | gnReverse | filter:layerFilterFn).length == 0"
-      class="list-group-item">
+  <li
+    data-ng-if="(layers | gnReverse | filter:layerFilterFn).length == 0"
+    class="list-group-item"
+  >
     <span data-translate="">noLayersFound</span>
   </li>
 </ul>
-

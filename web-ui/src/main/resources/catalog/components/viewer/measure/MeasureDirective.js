@@ -21,35 +21,29 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_measure');
+(function () {
+  goog.provide("gn_measure");
 
-  var module = angular.module('gn_measure', [
-    'ui.bootstrap.buttons'
-  ]);
+  var module = angular.module("gn_measure", ["ui.bootstrap.buttons"]);
 
-  var formatLength = function(line, sourceProj) {
-    var length = ol.sphere.getLength(line, { projection: sourceProj});
+  var formatLength = function (line, sourceProj) {
+    var length = ol.sphere.getLength(line, { projection: sourceProj });
     var output;
     if (length > 1000) {
-      output = (Math.round(length / 1000 * 100) / 100) +
-        ' ' + 'km';
+      output = Math.round((length / 1000) * 100) / 100 + " " + "km";
     } else {
-      output = (Math.round(length * 100) / 100) +
-        ' ' + 'm';
+      output = Math.round(length * 100) / 100 + " " + "m";
     }
     return output;
   };
 
-  var formatArea = function(polygon, sourceProj) {
-    var area = ol.sphere.getArea(polygon, { projection: sourceProj});
+  var formatArea = function (polygon, sourceProj) {
+    var area = ol.sphere.getArea(polygon, { projection: sourceProj });
     var output;
     if (area > 10000) {
-      output = (Math.round(area / 1000000 * 100) / 100) +
-        ' ' + 'km<sup>2</sup>';
+      output = Math.round((area / 1000000) * 100) / 100 + " " + "km<sup>2</sup>";
     } else {
-      output = (Math.round(area * 100) / 100) +
-        ' ' + 'm<sup>2</sup>';
+      output = Math.round(area * 100) / 100 + " " + "m<sup>2</sup>";
     }
     return output;
   };
@@ -62,13 +56,12 @@
    * Panel to load WMS capabilities service and pick layers.
    * The server list is given in global properties.
    */
-  module.service('gnMeasure', [
-    function() {
-
+  module.service("gnMeasure", [
+    function () {
       var mInteraction, updateMeasuresFn, distFeature, areaFeature;
       var options = {
-        waitClass: '',
-        styleFunction: (function() {
+        waitClass: "",
+        styleFunction: (function () {
           var styles = {};
 
           var stroke = new ol.style.Stroke({
@@ -85,20 +78,20 @@
             color: [255, 0, 0, 0.4]
           });
 
-          styles['Polygon'] = [
+          styles["Polygon"] = [
             new ol.style.Style({
               fill: fill,
               stroke: strokeDashed
             })
           ];
 
-          styles['LineString'] = [
+          styles["LineString"] = [
             new ol.style.Style({
               stroke: strokeDashed
             })
           ];
 
-          styles['Point'] = [
+          styles["Point"] = [
             new ol.style.Style({
               image: new ol.style.Circle({
                 radius: 4,
@@ -108,40 +101,41 @@
             })
           ];
 
-          styles['Circle'] = [
+          styles["Circle"] = [
             new ol.style.Style({
               stroke: stroke
             })
           ];
 
-          return function(feature, resolution) {
+          return function (feature, resolution) {
             return styles[feature.getGeometry().getType()];
           };
         })()
       };
 
-      options.drawStyleFunction = (function() {
-        var drawStylePolygon = [new ol.style.Style({
-          fill: new ol.style.Fill({
-            color: [255, 255, 255, 0.4]
-          }),
-          stroke: new ol.style.Stroke({
-            color: [255, 255, 255, 0],
-            width: 0
+      options.drawStyleFunction = (function () {
+        var drawStylePolygon = [
+          new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: [255, 255, 255, 0.4]
+            }),
+            stroke: new ol.style.Stroke({
+              color: [255, 255, 255, 0],
+              width: 0
+            })
           })
-        })];
+        ];
 
-        return function(feature, resolution) {
-          if (feature.getGeometry().getType() === 'Polygon') {
+        return function (feature, resolution) {
+          if (feature.getGeometry().getType() === "Polygon") {
             return drawStylePolygon;
           } else {
             return options.styleFunction(feature, resolution);
           }
-        }
+        };
       })();
 
-      var initInteraction = function(map) {
-
+      var initInteraction = function (map) {
         var deregisterFeature;
 
         var featureOverlay = new ol.layer.Vector({
@@ -152,16 +146,16 @@
 
         // define the draw interaction used for measure
         mInteraction = new ol.interaction.Draw({
-          type: 'Polygon',
+          type: "Polygon",
           features: featureOverlay.getSource().getFeatures(),
           style: options.drawStyleFunction
         });
 
-        Object.defineProperty(mInteraction, 'active', {
-          get: function() {
+        Object.defineProperty(mInteraction, "active", {
+          get: function () {
             return map.getInteractions().getArray().indexOf(mInteraction) >= 0;
           },
-          set: function(val) {
+          set: function (val) {
             if (val) {
               map.addInteraction(mInteraction);
             } else {
@@ -171,53 +165,55 @@
           }
         });
 
-        mInteraction.on('drawstart',
-            function(evt) {
-              featureOverlay.getSource().clear();
+        mInteraction.on(
+          "drawstart",
+          function (evt) {
+            featureOverlay.getSource().clear();
 
-              areaFeature = evt.feature;
-              var firstPoint = areaFeature.getGeometry().getCoordinates()[0][0];
-              distFeature = new ol.Feature(
-                  new ol.geom.LineString([firstPoint]));
+            areaFeature = evt.feature;
+            var firstPoint = areaFeature.getGeometry().getCoordinates()[0][0];
+            distFeature = new ol.Feature(new ol.geom.LineString([firstPoint]));
 
-              deregisterFeature = areaFeature.on('change',
-                  function(evt) {
-                    var feature = evt.target;
-                    var lineCoords = feature.getGeometry().getCoordinates()[0].slice(0, -1);
+            deregisterFeature = areaFeature.on("change", function (evt) {
+              var feature = evt.target;
+              var lineCoords = feature.getGeometry().getCoordinates()[0].slice(0, -1);
 
-                    distFeature.getGeometry().setCoordinates(lineCoords);
-                    updateMeasuresFn();
-                  }
-                  );
-            }, this);
-
-        mInteraction.on('drawend',
-            function(evt) {
-              var lineCoords = evt.feature.getGeometry().getCoordinates()[0];
-              lineCoords.pop();
               distFeature.getGeometry().setCoordinates(lineCoords);
-
               updateMeasuresFn();
-              featureOverlay.getSource().addFeature(distFeature);
-              ol.Observable.unByKey(deregisterFeature);
-            }, this);
+            });
+          },
+          this
+        );
+
+        mInteraction.on(
+          "drawend",
+          function (evt) {
+            var lineCoords = evt.feature.getGeometry().getCoordinates()[0];
+            lineCoords.pop();
+            distFeature.getGeometry().setCoordinates(lineCoords);
+
+            updateMeasuresFn();
+            featureOverlay.getSource().addFeature(distFeature);
+            ol.Observable.unByKey(deregisterFeature);
+          },
+          this
+        );
       };
 
-      this.create = function(map, measureObj, scope) {
-
+      this.create = function (map, measureObj, scope) {
         // taken from https://openlayers.org/en/v3.15.0/examples/measure.html
-        getGeodesicLength = function(geometry) {
+        getGeodesicLength = function (geometry) {
           var sourceProj = map.getView().getProjection();
           return formatLength(geometry, sourceProj);
         };
-        getGeodesicArea = function(geometry) {
+        getGeodesicArea = function (geometry) {
           var sourceProj = map.getView().getProjection();
           return formatArea(geometry, sourceProj);
         };
 
         // Update values of measures from features
-        updateMeasuresFn = function() {
-          scope.$apply(function() {
+        updateMeasuresFn = function () {
+          scope.$apply(function () {
             measureObj.distance = getGeodesicLength(distFeature.getGeometry());
             measureObj.surface = getGeodesicArea(areaFeature.getGeometry());
           });
@@ -226,5 +222,6 @@
 
         return mInteraction;
       };
-    }]);
+    }
+  ]);
 })();

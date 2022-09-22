@@ -3,12 +3,16 @@
   <div class="search-options">
     <gn-search-options></gn-search-options>
   </div>
-  <label data-ng-if="searchObj.params.resourceTemporalDateRange"
-         class="gn-margin-top"
-         data-translate="">advanced</label>
-  <div data-ng-if="searchObj.params.resourceTemporalDateRange"
-       data-gn-date-range-filter="resourceTemporalDateRange"
-       data-field="searchObj.params.resourceTemporalDateRange"
-       class="gn-search-filter-datepicker">
-  </div>
+  <label
+    data-ng-if="searchObj.params.resourceTemporalDateRange"
+    class="gn-margin-top"
+    data-translate=""
+    >advanced</label
+  >
+  <div
+    data-ng-if="searchObj.params.resourceTemporalDateRange"
+    data-gn-date-range-filter="resourceTemporalDateRange"
+    data-field="searchObj.params.resourceTemporalDateRange"
+    class="gn-search-filter-datepicker"
+  ></div>
 </div>
