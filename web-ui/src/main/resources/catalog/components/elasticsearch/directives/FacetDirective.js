@@ -345,6 +345,44 @@
     }
   ]);
 
+  module.directive("esFacetDecorator", [
+    function () {
+      return {
+        restrict: "A",
+        replace: false,
+        scope: {
+          decorator: "=esFacetDecorator",
+          key: "="
+        },
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/elasticsearch/directives/" +
+              "partials/facetDecorator.html"
+          );
+        },
+        link: function (scope, element, attrs) {
+          if (scope.decorator) {
+            var key = scope.decorator.expression
+              ? scope.key.replace(new RegExp(scope.decorator.expression), "$1")
+              : scope.key;
+
+            if (scope.decorator.map) {
+              key = scope.decorator.map[key] || "";
+            }
+
+            if (scope.decorator.type == "img") {
+              scope.ext =
+                "image/" + (key.substr(key.lastIndexOf(".") + 1, key.length) || "png");
+            }
+
+            scope.class = scope.decorator.prefix ? scope.decorator.prefix + key : key;
+          }
+        }
+      };
+    }
+  ]);
+
   module.filter("facetCssClassCode", [
     function () {
       return function (key, isInspire) {

@@ -44,7 +44,9 @@
   //  }
   //}
   .gn-facet-container {
-    margin-left: 15px;
+    .gn-facet-container {
+      margin-left: 20px;
+    }
     margin-top: 5px;
     margin-bottom: 5px;
     a {
@@ -52,9 +54,16 @@
       .fa {
         margin-right: 3px;
       }
+      div.gn-facet-image {
+        background-size: cover !important;
+        width: 20px;
+        height: 20px;
+      }
       * {
-        color: @gray-dark;
         transition: color 0.1s;
+      }
+      span {
+        color: @gray-dark;
       }
       &:hover * {
         color: @facet-hover;
