@@ -367,6 +367,16 @@
       <BooleanClause required="true" prohibited="false">
         <TermQuery fld="_isTemplate" txt="n"/>
       </BooleanClause>
+      <BooleanClause required="true" prohibited="false">
+        <BooleanQuery>
+          <BooleanClause required="false" prohibited="false">
+            <TermQuery fld="_draft" txt="n" />
+          </BooleanClause>
+          <BooleanClause required="false" prohibited="false">
+            <TermQuery fld="_draft" txt="e" />
+          </BooleanClause>
+        </BooleanQuery>
+      </BooleanClause>
     </BooleanQuery>
   </xsl:template>
 
