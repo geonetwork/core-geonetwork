@@ -21,94 +21,114 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_crs_selector');
+(function () {
+  goog.provide("gn_crs_selector");
 
-  var module = angular.module('gn_crs_selector', ['pascalprecht.translate']);
+  var module = angular.module("gn_crs_selector", ["pascalprecht.translate"]);
 
   /**
    *
    *
    */
-  module.directive('gnCrsSelector',
-      ['$rootScope', '$timeout', '$http',
-       'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit', '$translate',
-       function($rootScope, $timeout, $http,
-               gnEditor, gnEditorXMLService, gnCurrentEdit, $translate) {
+  module.directive("gnCrsSelector", [
+    "$rootScope",
+    "$timeout",
+    "$http",
+    "gnEditor",
+    "gnEditorXMLService",
+    "gnCurrentEdit",
+    "$translate",
+    function (
+      $rootScope,
+      $timeout,
+      $http,
+      gnEditor,
+      gnEditorXMLService,
+      gnCurrentEdit,
+      $translate
+    ) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        scope: {
+          mode: "@gnCrsSelector",
+          elementName: "@",
+          elementRef: "@",
+          domId: "@"
+        },
+        templateUrl:
+          "../../catalog/components/edit/" + "crsselector/partials/" + "crsselector.html",
+        link: function (scope, element, attrs) {
+          scope.snippet = null;
+          scope.crsResults = [];
+          scope.snippetRef = gnEditor.buildXMLFieldName(
+            scope.elementRef,
+            scope.elementName
+          );
 
-         return {
-           restrict: 'A',
-           replace: true,
-           transclude: true,
-           scope: {
-             mode: '@gnCrsSelector',
-             elementName: '@',
-             elementRef: '@',
-             domId: '@'
-           },
-           templateUrl: '../../catalog/components/edit/' +
-           'crsselector/partials/' +
-           'crsselector.html',
-           link: function(scope, element, attrs) {
-             scope.snippet = null;
-             scope.crsResults = [];
-             scope.snippetRef = gnEditor.
-             buildXMLFieldName(scope.elementRef, scope.elementName);
+          // Replace the name attribute with id since this textarea is
+          // used only to store the template, we don't wanna submit it
+          var textarea = $.find("textarea[name=" + scope.snippetRef + "]")[0];
+          var elemValue = $(textarea).attr("name");
+          $(textarea).removeAttr("name");
+          $(textarea).attr("id", elemValue);
 
-             // Replace the name attribute with id since this textarea is
-             // used only to store the template, we don't wanna submit it
-             var textarea = $.find('textarea[name=' + scope.snippetRef +
-             ']')[0];
-             var elemValue = $(textarea).attr('name');
-             $(textarea).removeAttr('name');
-             $(textarea).attr('id', elemValue);
+          scope.add = function () {
+            gnEditor.add(
+              gnCurrentEdit.id,
+              scope.elementRef,
+              scope.elementName,
+              scope.domId,
+              "before"
+            );
+            return false;
+          };
 
-             scope.add = function() {
-               gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
-               return false;
-             };
+          scope.search = function () {
+            if (scope.filter) {
+              $http
+                .get("../api/registries/crs?type=&rows=50&q=" + scope.filter)
+                .success(function (data) {
+                  scope.crsResults = data;
+                });
+            }
+          };
 
+          // Then register search filter change
+          scope.$watch("filter", scope.search);
 
-             scope.search = function() {
-               if (scope.filter) {
-                 $http.get('../api/registries/crs?type=&rows=50&q=' +
-                 scope.filter).success(
-                 function(data) {
-                   scope.crsResults = data;
-                 });
-               }
-             };
+          scope.addCRS = function (crs) {
+            var textarea = $.find("textarea[id=" + scope.snippetRef + "]")[0];
+            var xmlSnippet = textarea ? $(textarea).text() : undefined;
+            scope.snippet = gnEditorXMLService.buildCRSXML(
+              crs,
+              gnCurrentEdit.schema,
+              xmlSnippet
+            );
+            scope.crsResults = [];
 
-             // Then register search filter change
-             scope.$watch('filter', scope.search);
+            $timeout(function () {
+              // Save the metadata and refresh the form
+              gnEditor.save(gnCurrentEdit.id, true).then(
+                function () {
+                  // Success. Do nothing.
+                },
+                function (rejectedValue) {
+                  $rootScope.$broadcast("StatusUpdated", {
+                    title: $translate.instant("runServiceError"),
+                    error: rejectedValue,
+                    timeout: 0,
+                    type: "danger"
+                  });
+                }
+              );
+            });
 
-             scope.addCRS = function(crs) {
-
-               var textarea = $.find('textarea[id=' + scope.snippetRef +
-               ']')[0];
-               var xmlSnippet = textarea ? $(textarea).text() : undefined;
-               scope.snippet = gnEditorXMLService.buildCRSXML(crs,
-               gnCurrentEdit.schema, xmlSnippet);
-               scope.crsResults = [];
-
-               $timeout(function() {
-                 // Save the metadata and refresh the form
-                 gnEditor.save(gnCurrentEdit.id, true).then(function() {
-                   // Success. Do nothing.
-                 }, function(rejectedValue) {
-                   $rootScope.$broadcast('StatusUpdated', {
-                     title: $translate.instant('runServiceError'),
-                     error: rejectedValue,
-                     timeout: 0,
-                     type: 'danger'
-                   });
-                 });
-               });
-
-               return false;
-             };
-           }
-         };
-       }]);
+            return false;
+          };
+        }
+      };
+    }
+  ]);
 })();

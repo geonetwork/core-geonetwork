@@ -21,114 +21,134 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_languages_controller');
+(function () {
+  goog.provide("gn_languages_controller");
 
+  var module = angular.module("gn_languages_controller", []);
 
-  var module = angular.module('gn_languages_controller',
-      []);
-
-
-  module.controller('GnLanguagesController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+  module.controller("GnLanguagesController", [
+    "$scope",
+    "$http",
+    "$rootScope",
+    "$translate",
+    function ($scope, $http, $rootScope, $translate) {
       $scope.dbLanguages = [];
       $scope.applicationLanguagesNotAlreadyAvailable = [];
 
       function loadDbLanguages() {
-        $http.get('../api/languages').then(function(r) {
+        $http.get("../api/languages").then(function (r) {
           $scope.dbLanguages = r.data;
-          $http.get('../api/languages/application').then(function(r) {
-            $scope.applicationLanguagesNotAlreadyAvailable = r.data.filter(function(l) {
-              return $scope.dbLanguages.find(function(dbL) {
-                return dbL.id === l.id}) === undefined;
+          $http.get("../api/languages/application").then(function (r) {
+            $scope.applicationLanguagesNotAlreadyAvailable = r.data.filter(function (l) {
+              return (
+                $scope.dbLanguages.find(function (dbL) {
+                  return dbL.id === l.id;
+                }) === undefined
+              );
             });
           });
         });
       }
 
-      $scope.removeLanguage = function(l) {
-        $http.delete('../api/languages/' + l.id).then(function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('language.removed'),
-            timeout: 2,
-            type: 'success'});
-          loadDbLanguages();
-        }, function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('language.removal.error'),
-            error: r.data,
-            timeout: 0,
-            type: 'danger'});
-          loadDbLanguages();
-        });
+      $scope.removeLanguage = function (l) {
+        $http.delete("../api/languages/" + l.id).then(
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("language.removed"),
+              timeout: 2,
+              type: "success"
+            });
+            loadDbLanguages();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("language.removal.error"),
+              error: r.data,
+              timeout: 0,
+              type: "danger"
+            });
+            loadDbLanguages();
+          }
+        );
       };
-      $scope.addLanguage = function(l) {
-        $http.put('../api/languages/' + l.id).then(function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('language.added'),
-            timeout: 2,
-            type: 'success'});
-          loadDbLanguages();
-        }, function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('language.added.error'),
-            error: r.data,
-            timeout: 0,
-            type: 'danger'});
-          loadDbLanguages();
-        });
+      $scope.addLanguage = function (l) {
+        $http.put("../api/languages/" + l.id).then(
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("language.added"),
+              timeout: 2,
+              type: "success"
+            });
+            loadDbLanguages();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("language.added.error"),
+              error: r.data,
+              timeout: 0,
+              type: "danger"
+            });
+            loadDbLanguages();
+          }
+        );
       };
       loadDbLanguages();
 
-
-
       $scope.dbTranslations = [];
-      $scope.newKey = '';
+      $scope.newKey = "";
 
       function loadDbTranslations() {
-        $http.get('../api/i18n/db/custom').then(function(r) {
+        $http.get("../api/i18n/db/custom").then(function (r) {
           $scope.dbTranslations = r.data;
         });
+      }
+
+      $scope.saveTranslations = function (l) {
+        $http.put("../api/i18n/db/translations", $scope.dbTranslations).then(
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("translations.saved"),
+              timeout: 2,
+              type: "success"
+            });
+            loadDbTranslations();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("translations.save.error"),
+              error: r.data,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
-      $scope.saveTranslations = function(l) {
-        $http.put('../api/i18n/db/translations',
-          $scope.dbTranslations).then(function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('translations.saved'),
-            timeout: 2,
-            type: 'success'});
-          loadDbTranslations();
-        }, function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('translations.save.error'),
-            error: r.data,
-            timeout: 0,
-            type: 'danger'});
-        });
+      $scope.removeAllTranslations = function (l) {
+        $http.delete("../api/i18n/db/translations").then(
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("translations.allremoved"),
+              timeout: 2,
+              type: "success"
+            });
+            loadDbTranslations();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("translations.allremoval.error"),
+              error: r.data,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
-      $scope.removeAllTranslations = function(l) {
-        $http.delete('../api/i18n/db/translations').then(function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('translations.allremoved'),
-            timeout: 2,
-            type: 'success'});
-          loadDbTranslations();
-        }, function(r) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('translations.allremoval.error'),
-            error: r.data,
-            timeout: 0,
-            type: 'danger'});
-        });
-      };
-
-      $scope.synchAllTranslations = function() {
-        var translationByKey = _.groupBy($scope.dbTranslations, 'fieldName');
+      $scope.synchAllTranslations = function () {
+        var translationByKey = _.groupBy($scope.dbTranslations, "fieldName");
         angular.forEach(translationByKey, function (values, key) {
-          var translationByLang = _.groupBy(values, 'langId');
+          var translationByLang = _.groupBy(values, "langId");
           for (var j = 0; j < $scope.dbLanguages.length; j++) {
             // Add missing
             var lang = $scope.dbLanguages[j].id;
@@ -136,59 +156,71 @@
               $scope.dbTranslations.push({
                 fieldName: key,
                 langId: lang,
-                value: ''
+                value: ""
               });
             }
           }
         });
-      }
+      };
 
       function buildTranslationObject() {
         var translationObject = {};
-        for (var i = 0; i < $scope.dbLanguages.length; i ++) {
-          translationObject[$scope.dbLanguages[i].id] = '';
+        for (var i = 0; i < $scope.dbLanguages.length; i++) {
+          translationObject[$scope.dbLanguages[i].id] = "";
         }
         return translationObject;
       }
 
-      $scope.addTranslation = function(newKey) {
-        if(newKey != '') {
-          $http.put('../api/i18n/db/translations/' + newKey,
-            buildTranslationObject()).then(function(r) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate.instant('translations.saved'),
-              timeout: 2,
-              type: 'success'});
-            $scope.newKey = '';
-            loadDbTranslations();
-          }, function(r) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('translations.save.error'),
-              error: r.data,
-              timeout: 0,
-              type: 'danger'});
-          });
+      $scope.addTranslation = function (newKey) {
+        if (newKey != "") {
+          $http
+            .put("../api/i18n/db/translations/" + newKey, buildTranslationObject())
+            .then(
+              function (r) {
+                $rootScope.$broadcast("StatusUpdated", {
+                  msg: $translate.instant("translations.saved"),
+                  timeout: 2,
+                  type: "success"
+                });
+                $scope.newKey = "";
+                loadDbTranslations();
+              },
+              function (r) {
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("translations.save.error"),
+                  error: r.data,
+                  timeout: 0,
+                  type: "danger"
+                });
+              }
+            );
         }
       };
 
-      $scope.removeTranslation = function(key) {
-        if(key != '') {
-          $http.delete('../api/i18n/db/translations/' + key).then(function(r) {
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: $translate.instant('translations.removed'),
-              timeout: 2,
-              type: 'success'});
-            $scope.newKey = '';
-            loadDbTranslations();
-          }, function(r) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('translations.removal.error'),
-              error: r.data,
-              timeout: 0,
-              type: 'danger'});
-          });
+      $scope.removeTranslation = function (key) {
+        if (key != "") {
+          $http.delete("../api/i18n/db/translations/" + key).then(
+            function (r) {
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("translations.removed"),
+                timeout: 2,
+                type: "success"
+              });
+              $scope.newKey = "";
+              loadDbTranslations();
+            },
+            function (r) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("translations.removal.error"),
+                error: r.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
         }
       };
       loadDbTranslations();
-    }]);
+    }
+  ]);
 })();
