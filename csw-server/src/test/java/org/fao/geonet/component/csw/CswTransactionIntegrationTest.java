@@ -387,6 +387,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         List<Element> extras = Lists.newArrayList(
             SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
             SearchManager.makeField("_isTemplate", "n", true, true),
+            SearchManager.makeField("_draft", "n", true, true),
             SearchManager.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
