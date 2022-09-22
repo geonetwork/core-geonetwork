@@ -21,293 +21,309 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_admin_controller');
+(function () {
+  goog.provide("gn_admin_controller");
 
-  goog.require('gn_admin_menu');
-  goog.require('gn_adminmetadata_controller');
-  goog.require('gn_admintools_controller');
-  goog.require('gn_cat_controller');
-  goog.require('gn_classification_controller');
-  goog.require('gn_dashboard_controller');
-  goog.require('gn_harvest_controller');
-  goog.require('gn_report_controller');
-  goog.require('gn_settings_controller');
-  goog.require('gn_usergroup_controller');
+  goog.require("gn_admin_menu");
+  goog.require("gn_adminmetadata_controller");
+  goog.require("gn_admintools_controller");
+  goog.require("gn_cat_controller");
+  goog.require("gn_classification_controller");
+  goog.require("gn_dashboard_controller");
+  goog.require("gn_harvest_controller");
+  goog.require("gn_report_controller");
+  goog.require("gn_settings_controller");
+  goog.require("gn_usergroup_controller");
 
-  var module = angular.module('gn_admin_controller',
-      ['gn_dashboard_controller', 'gn_usergroup_controller',
-       'gn_admintools_controller', 'gn_settings_controller',
-       'gn_adminmetadata_controller', 'gn_classification_controller',
-       'gn_harvest_controller', 'gn_report_controller', 'gn_admin_menu']);
+  var module = angular.module("gn_admin_controller", [
+    "gn_dashboard_controller",
+    "gn_usergroup_controller",
+    "gn_admintools_controller",
+    "gn_settings_controller",
+    "gn_adminmetadata_controller",
+    "gn_classification_controller",
+    "gn_harvest_controller",
+    "gn_report_controller",
+    "gn_admin_menu"
+  ]);
 
+  var tplFolder = "../../catalog/templates/admin/";
 
-  var tplFolder = '../../catalog/templates/admin/';
+  module.provider("authorizationService", [
+    function () {
+      this.$get = [
+        function () {
+          return {
+            check: function (rol) {
+              //FIXME get a better way to get the authenticated user
+              //other UIs may not have this? This is dirty
+              this.scope = angular
+                .element($("*[data-ng-controller=GnCatController]")[0])
+                .scope();
+              if (this.scope.routelistener) {
+                this.scope.routelistener();
+              }
 
-  module.provider('authorizationService', [function() {
-
-    this.$get = [function() {
-      return {
-        check: function(rol) {
-
-          //FIXME get a better way to get the authenticated user
-          //other UIs may not have this? This is dirty
-          this.scope = angular.element(
-              $('*[data-ng-controller=GnCatController]')[0])
-                              .scope();
-          if (this.scope.routelistener) {
-            this.scope.routelistener();
-          }
-
-          this.listener = this.scope.$watch('user.profile',
-                                            function(newProfile, oldProfile) {
-
-
-                if (!newProfile) {
-                  return;
-                }
-
-                var roles = ['GUEST', 'REGISTEREDUSER', 'EDITOR',
-                  'REVIEWER', 'USERADMIN', 'ADMINISTRATOR'];
-
-                var irol = 0;
-                for (i = 0; i < roles.length; i++) {
-                  if (rol.toUpperCase() == roles[i].toUpperCase()) {
-                    irol = i;
-                  }
-                }
-
-                var iprofile = 0;
-                for (i = 0; i < roles.length; i++) {
-                  if (newProfile.toUpperCase() == roles[i].toUpperCase()) {
-                    iprofile = i;
-                  }
-                }
-
-                if (iprofile < irol) {
-                  var href = window.location.href;
-                  if (href.indexOf('#') > 0) {
-                    href = href.substring(0, href.indexOf('#'));
+              this.listener = this.scope.$watch(
+                "user.profile",
+                function (newProfile, oldProfile) {
+                  if (!newProfile) {
+                    return;
                   }
 
-                  //redirect to home
-                  window.location.href = (href.substring(0,
-                      href.lastIndexOf('/')) + '/catalog.search');
-                }
-              });
+                  var roles = [
+                    "GUEST",
+                    "REGISTEREDUSER",
+                    "EDITOR",
+                    "REVIEWER",
+                    "USERADMIN",
+                    "ADMINISTRATOR"
+                  ];
 
-          this.scope.routelistener = this.listener;
+                  var irol = 0;
+                  for (i = 0; i < roles.length; i++) {
+                    if (rol.toUpperCase() == roles[i].toUpperCase()) {
+                      irol = i;
+                    }
+                  }
+
+                  var iprofile = 0;
+                  for (i = 0; i < roles.length; i++) {
+                    if (newProfile.toUpperCase() == roles[i].toUpperCase()) {
+                      iprofile = i;
+                    }
+                  }
+
+                  if (iprofile < irol) {
+                    var href = window.location.href;
+                    if (href.indexOf("#") > 0) {
+                      href = href.substring(0, href.indexOf("#"));
+                    }
+
+                    //redirect to home
+                    window.location.href =
+                      href.substring(0, href.lastIndexOf("/")) + "/catalog.search";
+                  }
+                }
+              );
+
+              this.scope.routelistener = this.listener;
+            }
+          };
         }
-      };
-    }];
-  }]);
+      ];
+    }
+  ]);
 
-  module.config(['$routeProvider', 'authorizationServiceProvider',
-    function($routeProvider, authorizationService) {
-      $routeProvider.
-          when('/metadata', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminMetadataController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+  module.config([
+    "$routeProvider",
+    "authorizationServiceProvider",
+    function ($routeProvider, authorizationService) {
+      $routeProvider
+        .when("/metadata", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminMetadataController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/metadata/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminMetadataController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/metadata/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminMetadataController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/metadata/schematron/:schemaName', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminMetadataController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/metadata/schematron/:schemaName", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminMetadataController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/metadata/schematron/:schemaName/:schematronId', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminMetadataController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/metadata/schematron/:schemaName/:schematronId", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminMetadataController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/metadata/:tab/:metadataAction/:schema', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminMetadataController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/metadata/:tab/:metadataAction/:schema", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminMetadataController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/dashboard', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnDashboardController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/dashboard", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnDashboardController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/dashboard/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnDashboardController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/dashboard/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnDashboardController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/organization', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnUserGroupController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/organization", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnUserGroupController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/organization/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnUserGroupController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/organization/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnUserGroupController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/organization/:tab/:userOrGroup', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnUserGroupController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Guest');
-              }
+          }
+        })
+        .when("/organization/:tab/:userOrGroup", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnUserGroupController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Guest");
             }
-          }).
-          when('/classification', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnClassificationController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/classification", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnClassificationController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/classification/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnClassificationController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/classification/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnClassificationController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/tools', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminToolsController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Administrator');
-              }
+          }
+        })
+        .when("/tools", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminToolsController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Administrator");
             }
-          }).
-          when('/tools/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminToolsController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Administrator');
-              }
+          }
+        })
+        .when("/tools/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminToolsController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Administrator");
             }
-          }).
-          when('/tools/:tab/select/:selectAll/process/:processId', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnAdminToolsController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Administrator');
-              }
+          }
+        })
+        .when("/tools/:tab/select/:selectAll/process/:processId", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnAdminToolsController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Administrator");
             }
-          }).
-          when('/harvest', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnHarvestController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/harvest", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnHarvestController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/harvest/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnHarvestController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
+          }
+        })
+        .when("/harvest/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnHarvestController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("Editor");
             }
-          }).
-          when('/settings', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnSettingsController',
-            reloadOnSearch: false,
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('UserAdmin');
-              }
+          }
+        })
+        .when("/settings", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnSettingsController",
+          reloadOnSearch: false,
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("UserAdmin");
             }
-          }).
-          when('/settings/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnSettingsController',
-            reloadOnSearch: false,
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('UserAdmin');
-              }
+          }
+        })
+        .when("/settings/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnSettingsController",
+          reloadOnSearch: false,
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("UserAdmin");
             }
-          }).
-          when('/reports', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnReportController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('UserAdmin');
-              }
+          }
+        })
+        .when("/reports", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnReportController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("UserAdmin");
             }
-          }).
-          when('/reports/:tab', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnReportController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('UserAdmin');
-              }
+          }
+        })
+        .when("/reports/:tab", {
+          templateUrl: tplFolder + "page-layout.html",
+          controller: "GnReportController",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("UserAdmin");
             }
-          }).
-          when('/home', {
-            templateUrl: tplFolder + 'admin.html',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('UserAdmin');
-              }
+          }
+        })
+        .when("/home", {
+          templateUrl: tplFolder + "admin.html",
+          resolve: {
+            permission: function () {
+              authorizationService.$get[0]().check("UserAdmin");
             }
-          }).
-          otherwise({
-            redirectTo: '/home'
-          });
-    }]);
+          }
+        })
+        .otherwise({
+          redirectTo: "/home"
+        });
+    }
+  ]);
 
   /**
    * The admin console controller.
@@ -316,11 +332,25 @@
    *
    *     <body ng-controller="GnAdminController">
    */
-  module.controller('GnAdminController', [
-    '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
-    'gnUtilityService', 'gnAdminMenu',
-    function($scope, $http, $q, $rootScope, $route, $routeParams,
-        gnUtilityService, gnAdminMenu) {
+  module.controller("GnAdminController", [
+    "$scope",
+    "$http",
+    "$q",
+    "$rootScope",
+    "$route",
+    "$routeParams",
+    "gnUtilityService",
+    "gnAdminMenu",
+    function (
+      $scope,
+      $http,
+      $q,
+      $rootScope,
+      $route,
+      $routeParams,
+      gnUtilityService,
+      gnAdminMenu
+    ) {
       $scope.menu = gnAdminMenu;
       /**
        * Define menu position on the left (nav-stacked)
@@ -328,43 +358,45 @@
        */
       $scope.navStacked = true;
 
-      $scope.getTpl = function(pageMenu) {
+      $scope.getTpl = function (pageMenu) {
         $scope.type = pageMenu.defaultTab;
-        $.each(pageMenu.tabs, function(index, value) {
+        $.each(pageMenu.tabs, function (index, value) {
           var isMatch = false;
 
           if (angular.isUndefined($routeParams.dashboard)) {
             // If no $routeParams.tab, check if the option is the default one,
             // otherwise  compare the option with $routeParams.tab
-            isMatch = ($routeParams.tab === undefined &&
-              value.type === pageMenu.defaultTab) ||
-              (value.type === $routeParams.tab);
+            isMatch =
+              ($routeParams.tab === undefined && value.type === pageMenu.defaultTab) ||
+              value.type === $routeParams.tab;
           } else {
-            isMatch = value.href.indexOf(
-              encodeURIComponent($routeParams.dashboard)) !== -1;
+            isMatch =
+              value.href.indexOf(encodeURIComponent($routeParams.dashboard)) !== -1;
           }
 
           if (isMatch) {
-            $scope.type = ($routeParams.tab !== undefined)?$routeParams.tab:pageMenu.defaultTab;
+            $scope.type =
+              $routeParams.tab !== undefined ? $routeParams.tab : pageMenu.defaultTab;
             $scope.href = value.href;
           }
         });
         //do not try to load undefined.html
-        if (!pageMenu || !pageMenu.folder || !$scope.type) return '';
-        return tplFolder + pageMenu.folder + $scope.type + '.html';
+        if (!pageMenu || !pageMenu.folder || !$scope.type) return "";
+        return tplFolder + pageMenu.folder + $scope.type + ".html";
       };
 
-      $scope.csvExport = function(json, e) {
-        $(e.target).next('pre.gn-csv-export').remove();
-        $(e.target).after("<pre class='gn-csv-export'>" +
-                gnUtilityService.toCsv(json) + '</pre>');
+      $scope.csvExport = function (json, e) {
+        $(e.target).next("pre.gn-csv-export").remove();
+        $(e.target).after(
+          "<pre class='gn-csv-export'>" + gnUtilityService.toCsv(json) + "</pre>"
+        );
       };
 
       /**
        * Return menu Angular route or GeoNetwork legacy URLs
        * according to $scope.menu configuration.
        */
-      $scope.getMenuUrl = function(menu) {
+      $scope.getMenuUrl = function (menu) {
         if (menu.route) {
           return menu.route;
         } else if (menu.url) {
@@ -375,9 +407,9 @@
       /**
        * Return menu according to user profile
        */
-      $scope.getMenu = function() {
+      $scope.getMenu = function () {
         return $scope.menu[$scope.user.profile];
       };
-    }]);
-
+    }
+  ]);
 })();

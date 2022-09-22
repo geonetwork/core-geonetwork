@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_geometry_service');
+(function () {
+  goog.provide("gn_geometry_service");
 
-  var module = angular.module('gn_geometry_service', []);
+  var module = angular.module("gn_geometry_service", []);
 
   /**
    * @ngdoc service
@@ -36,14 +36,13 @@
    * The `gnGeometryService` service provides utility related to handling
    * geometry and mime types
    */
-  module.service('gnGeometryService', [
-    function() {
-
-      var LONLAT_WGS84 = 'EPSG:4326';   // Projection code of WGS 1984 coordinate system
-      var WEB_MERCATOR = 'EPSG:3857';   // Projection code of (Google) Web Mercator
-      var LL_SOUTHPOLE = [0, -90];      // South pole longitude-latitude coordinate
-      var LL_NORTHPOLE = [0, 90];       // North pole longitude-latitude coordinate
-      var LL_EQUATORDL = [180, 0];      // Longitude-latitude coordinate of datum line at equator
+  module.service("gnGeometryService", [
+    function () {
+      var LONLAT_WGS84 = "EPSG:4326"; // Projection code of WGS 1984 coordinate system
+      var WEB_MERCATOR = "EPSG:3857"; // Projection code of (Google) Web Mercator
+      var LL_SOUTHPOLE = [0, -90]; // South pole longitude-latitude coordinate
+      var LL_NORTHPOLE = [0, 90]; // North pole longitude-latitude coordinate
+      var LL_EQUATORDL = [180, 0]; // Longitude-latitude coordinate of datum line at equator
 
       /**
        * @ngdoc method
@@ -57,26 +56,26 @@
        * @param {string} mimeType mime type from the process description
        * @return {string} format to be used by a gn-geometry-tool directive
        */
-      this.getFormatFromMimeType = function(mimeType) {
-        var parts = mimeType.split(';');
-        parts.forEach(function(p) {
+      this.getFormatFromMimeType = function (mimeType) {
+        var parts = mimeType.split(";");
+        parts.forEach(function (p) {
           p = p.trim().toLowerCase();
         });
 
         switch (parts[0]) {
-          case 'application/vnd.geo+json':
-          case 'application/json':
-            return 'geojson';
+          case "application/vnd.geo+json":
+          case "application/json":
+            return "geojson";
 
-          case 'application/wkt':
-            return 'wkt';
+          case "application/wkt":
+            return "wkt";
 
-          case 'application/gml+xml':
-          case 'text/xml':
-            return 'gml';
+          case "application/gml+xml":
+          case "text/xml":
+            return "gml";
 
           default:
-            return 'object';
+            return "object";
         }
       };
 
@@ -92,13 +91,16 @@
        * @param {ol.Map} map open layers map
        * @return {ol.layer.Vector} vector layer
        */
-      this.getCommonLayer = function(map) {
+      this.getCommonLayer = function (map) {
         var commonLayer = null;
-        map.getLayers().getArray().forEach(function(layer) {
-          if (layer.get('name') === 'geometry-tool-layer') {
-            commonLayer = layer;
-          }
-        });
+        map
+          .getLayers()
+          .getArray()
+          .forEach(function (layer) {
+            if (layer.get("name") === "geometry-tool-layer") {
+              commonLayer = layer;
+            }
+          });
 
         if (commonLayer) {
           return commonLayer;
@@ -111,29 +113,30 @@
         });
         commonLayer = new ol.layer.Vector({
           source: source,
-          name: 'geometry-tool-layer',
+          name: "geometry-tool-layer",
           style: [
-            new ol.style.Style({  // this is the default editing style
+            new ol.style.Style({
+              // this is the default editing style
               fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.5)'
+                color: "rgba(255, 255, 255, 0.5)"
               }),
               stroke: new ol.style.Stroke({
-                color: 'white',
+                color: "white",
                 width: 5
               })
             }),
             new ol.style.Style({
               stroke: new ol.style.Stroke({
-                color: 'rgba(0, 153, 255, 1)',
+                color: "rgba(0, 153, 255, 1)",
                 width: 3
               }),
               image: new ol.style.Circle({
                 radius: 6,
                 fill: new ol.style.Fill({
-                  color: 'rgba(0, 153, 255, 1)'
+                  color: "rgba(0, 153, 255, 1)"
                 }),
                 stroke: new ol.style.Stroke({
-                  color: 'white',
+                  color: "white",
                   width: 1.5
                 })
               })
@@ -143,7 +146,7 @@
         commonLayer.setZIndex(100);
 
         // add our layer to the map
-        map.get('creationPromise').then(function() {
+        map.get("creationPromise").then(function () {
           map.addLayer(commonLayer);
         });
 
@@ -170,30 +173,33 @@
        * @return {string | ol.geom.Geometry | Array.<ol.Feature>} output
        *  as string or object
        */
-      this.printGeometryOutput = function(map, feature, options) {
-        var options = angular.extend({
-          crs: LONLAT_WGS84,
-          format: 'gml'
-        }, options);
+      this.printGeometryOutput = function (map, feature, options) {
+        var options = angular.extend(
+          {
+            crs: LONLAT_WGS84,
+            format: "gml"
+          },
+          options
+        );
 
         // clone & transform geom
-        var outputGeom = feature.getGeometry().clone().transform(
-            map.getView().getProjection(),
-            options.crs || LONLAT_WGS84
-            );
+        var outputGeom = feature
+          .getGeometry()
+          .clone()
+          .transform(map.getView().getProjection(), options.crs || LONLAT_WGS84);
         var outputFeature = new ol.Feature({
           geometry: outputGeom
         });
 
         // set id on feature
-        feature.setId('geometry-tool-output');
+        feature.setId("geometry-tool-output");
 
         var formatLabel = options.format.toLowerCase();
         var format;
         var outputValue;
         switch (formatLabel) {
-          case 'json':
-          case 'geojson':
+          case "json":
+          case "geojson":
             format = new ol.format.GeoJSON();
             if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
@@ -202,7 +208,7 @@
             }
             break;
 
-          case 'wkt':
+          case "wkt":
             format = new ol.format.WKT();
             if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
@@ -211,25 +217,23 @@
             }
             break;
 
-          case 'gml':
+          case "gml":
             format = new ol.format.GML({
-              featureNS: options.gmlFeatureNS ||
-                  'http://mapserver.gis.umn.edu/mapserver',
-              featureType: options.gmlFeatureElement || 'features',
+              featureNS: options.gmlFeatureNS || "http://mapserver.gis.umn.edu/mapserver",
+              featureType: options.gmlFeatureElement || "features",
               srsName: options.crs
             });
 
             if (options.outputAsWFSFeaturesCollection) {
               outputValue =
-                  '<wfs:FeatureCollection ' +
-                  'xmlns:wfs="http://www.opengis.net/wfs">' +
-                  format.writeFeatures([outputFeature]) +
-                  '</wfs:FeatureCollection>';
+                "<wfs:FeatureCollection " +
+                'xmlns:wfs="http://www.opengis.net/wfs">' +
+                format.writeFeatures([outputFeature]) +
+                "</wfs:FeatureCollection>";
             } else if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
             } else {
-              var nodes = format.writeFeaturesNode([outputFeature])
-                  .firstChild.childNodes;
+              var nodes = format.writeFeaturesNode([outputFeature]).firstChild.childNodes;
               var geom = null;
               for (var i = 0; i < nodes.length; i++) {
                 var node = nodes.item(0);
@@ -238,7 +242,7 @@
                 }
               }
               if (!geom) {
-                console.warn('No geometry found for feature', feature);
+                console.warn("No geometry found for feature", feature);
                 return null;
               }
               outputValue = geom.innerHTML;
@@ -247,11 +251,15 @@
 
           // no valid format specified: output as object + give warning
           default:
-            console.warn('No valid output format specified for ' +
-                'gn-geometry-tool (value=' + options.format + '); ' +
-                'outputting geometry as object');
+            console.warn(
+              "No valid output format specified for " +
+                "gn-geometry-tool (value=" +
+                options.format +
+                "); " +
+                "outputting geometry as object"
+            );
 
-          case 'object':
+          case "object":
             if (options.outputAsFeatures) {
               outputValue = [outputFeature];
             } else {
@@ -280,19 +288,22 @@
        * @param {string} options.gmlFeatureNS feature element ns
        * @return {ol.geom.Geometry} geometry object
        */
-      this.parseGeometryInput = function(map, input, options) {
-        var options = angular.extend({
-          crs: LONLAT_WGS84,
-          format: 'gml'
-        }, options);
+      this.parseGeometryInput = function (map, input, options) {
+        var options = angular.extend(
+          {
+            crs: LONLAT_WGS84,
+            format: "gml"
+          },
+          options
+        );
 
         var formatLabel = options.format.toLowerCase();
         var format;
         var outputProjection = map.getView().getProjection();
         var outputValue = null;
         switch (formatLabel) {
-          case 'json':
-          case 'geojson':
+          case "json":
+          case "geojson":
             format = new ol.format.GeoJSON();
             outputValue = format.readGeometry(input, {
               dataProjection: options.crs,
@@ -300,7 +311,7 @@
             });
             break;
 
-          case 'wkt':
+          case "wkt":
             format = new ol.format.WKT();
             outputValue = format.readGeometry(input, {
               dataProjection: options.crs,
@@ -308,33 +319,41 @@
             });
             break;
 
-          case 'gml':
+          case "gml":
             format = new ol.format.GML({
-              featureNS: 'http://www.opengis.net/gml',
-              featureType: 'feature'
-            });            
-            var fullXml = '<featureMembers>' +
-                '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
-                '<geometry>' +
-                input + '</geometry></gml:feature></featureMembers>';
+              featureNS: "http://www.opengis.net/gml",
+              featureType: "feature"
+            });
+            var fullXml =
+              "<featureMembers>" +
+              '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
+              "<geometry>" +
+              input +
+              "</geometry></gml:feature></featureMembers>";
 
             var feature = format.readFeatures(
               fullXml.replace(
-                /http:\/\/www.opengis.net\/gml\/3.2/g,
-                'http://www.opengis.net/gml'), {
-              dataProjection: options.crs,
-              featureProjection: outputProjection
-            })[0];
+                /http:\/\/www\.opengis\.net\/gml\/3.2/g,
+                "http://www.opengis.net/gml"
+              ),
+              {
+                dataProjection: options.crs,
+                featureProjection: outputProjection
+              }
+            )[0];
             outputValue = fixGmlGeometryLayout(feature.getGeometry(), input);
             break;
 
           // no valid format specified: handle as object
           default:
-          case 'object':
+          case "object":
             if (!input instanceof ol.geom.Geometry) {
-              console.error('gn-geometry-tool input was supposed to be a ' +
-                  'ol.geom.Geometry object but was something else, ' +
-                  'skipping parse.', input);
+              console.error(
+                "gn-geometry-tool input was supposed to be a " +
+                  "ol.geom.Geometry object but was something else, " +
+                  "skipping parse.",
+                input
+              );
               return outputValue;
             }
             outputValue = input.clone.transform(options.crs, outputProjection);
@@ -346,58 +365,60 @@
 
       /**
        * Forces geometry that has been created from GML to become 2D
-       * if the srsDimension attribute in the GML equals 2. 
+       * if the srsDimension attribute in the GML equals 2.
        * OpenLayers GML parser always outputs 3D feature members.
        * If the srsDimension attribute is 3 (Z) or 4 (ZM), no fix is applied.
        * NOTE: the fix is applied in-place.
-       * 
+       *
        * @param {ol.geom.Geometry} geom geometry to check and fix
        * @param {string} gmlString original GML used to create the geometry
        * @returns {ol.geom.Geometry} a (possibly) modified geometry
        */
-      var fixGmlGeometryLayout = function(geom, gmlString) {
+      var fixGmlGeometryLayout = function (geom, gmlString) {
         // Get dimensions from GML
-        var dim = gmlString.match(new RegExp('srsDimension=\"([^"]*)\"'));
+        var dim = gmlString.match(new RegExp('srsDimension="([^"]*)"'));
         // If srsDimension > 2 OR geometry is already 2D, return unmodified geometry
-        if ((dim && dim.length === 2 && dim[1] >= 3) || 
-            (geom.layout === 'XY' && geom.stride === 2)) 
-              return geom;            
+        if (
+          (dim && dim.length === 2 && dim[1] >= 3) ||
+          (geom.layout === "XY" && geom.stride === 2)
+        )
+          return geom;
         // Drop Z (and M)
-        geom.setCoordinates(geom.getCoordinates(), 'XY');
+        geom.setCoordinates(geom.getCoordinates(), "XY");
         return geom;
-      }
+      };
 
       /**
        * Checks if the feature geometry contains the north or south pole.
        * Returns the polar coordinate in the current map projection when found or null otherwise.
        * NOTE: Will not trigger if pole is on the edge.
-       * 
+       *
        * @param {ol.feature} feat feature for which to check its geometry
        * @param {string} proj current feature geometry projection
-       * @returns {null | Array.<number>} polar coordinate 
+       * @returns {null | Array.<number>} polar coordinate
        */
-      var getContainedPole = function(feat, proj) {
+      var getContainedPole = function (feat, proj) {
         var geom = feat.getGeometry();
         var southPole = ol.proj.fromLonLat(LL_SOUTHPOLE, proj);
         var northPole = ol.proj.fromLonLat(LL_NORTHPOLE, proj);
         if (geom.intersectsCoordinate(southPole)) {
-          console.debug('Geometry contains south pole');
+          console.debug("Geometry contains south pole");
           return southPole;
         } else if (geom.intersectsCoordinate(northPole)) {
-          console.debug('Geometry contains north pole');
+          console.debug("Geometry contains north pole");
           return northPole;
         }
-      }
+      };
 
       /**
        * Transforms the feature geometry in-place to longitude-latitude coordinates (EPSG:4326).
-       * 
+       *
        * @param {ol.feature} feat feature to transform (in-place)
        * @param {string} inputProj current feature geometry projection
        */
-      var transformGeometry = function(feat, inputProj) {
+      var transformGeometry = function (feat, inputProj) {
         feat.getGeometry().transform(inputProj, LONLAT_WGS84);
-      }
+      };
 
       /**
        * Breaks each segment of an extent polygon into 4 parts in-place.
@@ -405,20 +426,20 @@
        * If the polygon has more than 5 coordinates, the function
        * assumes that it's not an extent and will not densify.
        * NOTE: if the geometry is not extent-like, it remains the same.
-       * 
+       *
        * @param {ol.feature} feat feature to densify (in-place)
        */
-      var densifyEdges = function(feat) {
+      var densifyEdges = function (feat) {
         var outCoords = [];
         // Get first/outer ring
         var geom = feat.getGeometry();
         var inCoords = geom.getCoordinates()[0];
         // Do not densify if shape does not appear to be an extent
-        if (geom.getType() !== 'Polygon' || inCoords.length > 5) return;
+        if (geom.getType() !== "Polygon" || inCoords.length > 5) return;
         for (var i = 0; i < inCoords.length - 1; i++) {
           var p0, p1, x0, y0, dX;
           p0 = inCoords[i];
-          p1 = inCoords[i+1];
+          p1 = inCoords[i + 1];
           x0 = p0[0];
           y0 = p0[1];
           dX = (p1[0] - x0) / 4;
@@ -426,81 +447,85 @@
           outCoords.push(p0);
           for (var j = 1; j < 4; j++) {
             // Add 3 coords
-            outCoords.push([x0 + (j * dX), y0 + (j * dY)]);
+            outCoords.push([x0 + j * dX, y0 + j * dY]);
           }
         }
         // Add first coord to close polygon
         outCoords.push(inCoords[0]);
         feat.setGeometry(new ol.geom.Polygon([outCoords]));
-      }
+      };
 
       /**
        * Given three colinear points (p1, p2, p3), check if p2 lies on line segment p1-p3.
-       * 
+       *
        * @param {Array.<number>} p1 point 1
        * @param {Array.<number>} p2 point 2
        * @param {Array.<number>} p3 point 3
        * @returns {bool} true if on segment
-       */ 
-      var onSegment = function(p1, p2, p3) {
-        if (p2[0] <= Math.max(p1[0], p3[0]) && p2[0] >= Math.min(p1[0], p3[0]) && 
-            p2[1] <= Math.max(p1[1], p3[1]) && p2[1] >= Math.min(p1[1], p3[1])) {
-              return true;
+       */
+      var onSegment = function (p1, p2, p3) {
+        if (
+          p2[0] <= Math.max(p1[0], p3[0]) &&
+          p2[0] >= Math.min(p1[0], p3[0]) &&
+          p2[1] <= Math.max(p1[1], p3[1]) &&
+          p2[1] >= Math.min(p1[1], p3[1])
+        ) {
+          return true;
         }
         return false;
-      }
+      };
 
       /**
-       * Finds the orientation of an ordered triplet (p1, p2, p3). 
-       * Returns one of the following values: 
-       * 0 : Colinear points 
-       * 1 : Clockwise points 
-       * 2 : Counterclockwise 
+       * Finds the orientation of an ordered triplet (p1, p2, p3).
+       * Returns one of the following values:
+       * 0 : Colinear points
+       * 1 : Clockwise points
+       * 2 : Counterclockwise
        *
        * See https://www.geeksforgeeks.org/orientation-3-ordered-points/amp for details of below formula.
-       * 
+       *
        * @param {Array.<number>} p1 point 1
        * @param {Array.<number>} p2 point 2
        * @param {Array.<number>} p3 point 3
        * @returns {int} 0, 1 or 2
-       */ 
-      var getOrientation = function(p1, p2, p3) {
-        var value = ((p2[1] - p1[1]) * (p3[0] - p2[0])) - ((p2[0] - p1[0]) * (p3[1] - p2[1]));
+       */
+      var getOrientation = function (p1, p2, p3) {
+        var value = (p2[1] - p1[1]) * (p3[0] - p2[0]) - (p2[0] - p1[0]) * (p3[1] - p2[1]);
         if (value > 0) return 1;
         else if (value < 0) return 2;
         return 0;
-      }
+      };
 
       /**
-       * Returns true if the line segments 'line1' and 'line2' (with points A and B) intersect. 
+       * Returns true if the line segments 'line1' and 'line2' (with points A and B) intersect.
        * @param {Array.<number>} line1A point A of first line
        * @param {Array.<number>} line1B point B of first line
        * @param {Array.<number>} line2A point A of second line
        * @param {Array.<number>} line2B point B of second line
        * @returns {bool} true if lines intersect
        */
-      var linesIntersect = function(line1A, line1B, line2A, line2B) {
-        // Find the 4 orientations required for the general and special cases 
+      var linesIntersect = function (line1A, line1B, line2A, line2B) {
+        // Find the 4 orientations required for the general and special cases
         var o1 = getOrientation(line1A, line1B, line2A);
         var o2 = getOrientation(line1A, line1B, line2B);
         var o3 = getOrientation(line2A, line2B, line1A);
         var o4 = getOrientation(line2A, line2B, line1B);
 
         // General case
-        if ((o1 !== o2) && (o3 !== o4)) return true;
+        if (o1 !== o2 && o3 !== o4) return true;
 
         // Special cases:
         // Line1(A,B) and Line2(A) are colinear and Line2(A) lies on Line1
-        if ((o1 === 0) && onSegment(line1A, line2A, line1B)) return true;
+        if (o1 === 0 && onSegment(line1A, line2A, line1B)) return true;
         // Line1(A,B) and Line2(B) are colinear and Line2(B) lies on Line1
-        if ((o2 === 0) && onSegment(line1A, line2B, line1B)) return true;
+        if (o2 === 0 && onSegment(line1A, line2B, line1B)) return true;
         // Line2(A,B) and Line1(A) are colinear and Line1(A) lies on Line2
-        if ((o3 === 0) && onSegment(line2A, line1A, line2B)) return true;
+        if (o3 === 0 && onSegment(line2A, line1A, line2B)) return true;
         // Line2(A,B) and Line1(B) are colinear and Line1(B) lies on Line2
-        if ((o4 === 0) && onSegment(line2A, line1B, line2B)) return true;
+        if (o4 === 0 && onSegment(line2A, line1B, line2B)) return true;
         // Nothing intersects
-        return false;                  
-      }
+        return false;
+      };
 
       /**
        * Calculates the intersection point between 'line1' and 'line2'.
@@ -511,51 +536,51 @@
        * @param {Array.<number>} line2B point B of second line
        * @returns {Array.<number>} intersection coordinate
        */
-      var getIntersection = function(line1A, line1B, line2A, line2B) {
-        // Line 1 represented as a1x + b1y = c1 
-        var a1 = line1B[1] - line1A[1]; 
-        var b1 = line1A[0] - line1B[0]; 
-        var c1 = a1 * line1A[0] + b1 * line1A[1]; 
+      var getIntersection = function (line1A, line1B, line2A, line2B) {
+        // Line 1 represented as a1x + b1y = c1
+        var a1 = line1B[1] - line1A[1];
+        var b1 = line1A[0] - line1B[0];
+        var c1 = a1 * line1A[0] + b1 * line1A[1];
 
-        // Line 2 represented as a2x + b2y = c2 
-        var a2 = line2B[1] - line2A[1]; 
-        var b2 = line2A[0] - line2B[0]; 
-        var c2 = a2 * line2A[0] + b2 * line2A[1]; 
-      
+        // Line 2 represented as a2x + b2y = c2
+        var a2 = line2B[1] - line2A[1];
+        var b2 = line2A[0] - line2B[0];
+        var c2 = a2 * line2A[0] + b2 * line2A[1];
+
         // NOTE: Determinant could be 0 when lines are parallel,
         // but since we constructed the lines ourselves and already checked
         // if the lines intersect, this should never happen.
-        var determinant = a1 * b2 - a2 * b1;                
-        var x = (b2 * c1 - b1 * c2) / determinant; 
-        var y = (a1 * c2 - a2 * c1) / determinant; 
+        var determinant = a1 * b2 - a2 * b1;
+        var x = (b2 * c1 - b1 * c2) / determinant;
+        var y = (a1 * c2 - a2 * c1) / determinant;
         return [x, y];
-      }
+      };
 
       /**
        * Makes a "cut" at the datum line from the polygon edge up or down to the polar coordinate.
        * The feature geometry is also transformed to WGS 1984 (EPSG:4326) in-place.
        * NOTE: This is not suitable for complex or multipart polygons!
-       * 
+       *
        *           North pole polygon                   South pole polygon
        *          +======+===========+                 +------------------+
        *          |      |           |                 |                  |
        *          |      o           |                 |            o     |
        *          |                  |                 |            |     |
        *          +------------------+                 +============+=====+
-       * 
-       *   === -> "cut side" 
+       *
+       *   === -> "cut side"
        *   o   -> polar coordinate
        * @param {ol.feature} feat input feature to modify (in-place)
        * @param {Array.<number>} polarCoord contained polar coordinate
        * @param {string} proj input feature geometry projection
        */
-      var modifyPolarPolygon = function(feat, polarCoord, proj) {
+      var modifyPolarPolygon = function (feat, polarCoord, proj) {
         var atNorthPole = polarCoord == ol.proj.fromLonLat(LL_NORTHPOLE, proj);
         var polarLat = atNorthPole ? LL_NORTHPOLE[1] : LL_SOUTHPOLE[1];
         var geom = feat.getGeometry();
 
         // Do not modify if geometry is not a polygon: just transform to WGS 1984 (EPSG:4326)
-        if (geom.getType() !== 'Polygon') {
+        if (geom.getType() !== "Polygon") {
           return transformGeometry(feat, proj);
         }
 
@@ -578,17 +603,22 @@
             break;
           }
         }
-        
+
         if (lineStart !== null) {
           // Calculate intersection point between extent segment and datum line
-          var intersectionPoint = getIntersection(lineStart, lineEnd, originCoord, polarCoord);
+          var intersectionPoint = getIntersection(
+            lineStart,
+            lineEnd,
+            originCoord,
+            polarCoord
+          );
           coords.splice(intersectionPointIndex, 0, intersectionPoint);
           feat.setGeometry(new ol.geom.Polygon([coords]));
         }
 
         // Transform to WGS 1984 (EPSG:4326)
         transformGeometry(feat, proj);
-        
+
         if (intersectionPointIndex >= 0) {
           // Get all (transformed) coordinates and previous and next longitudes
           coords = feat.getGeometry().getCoordinates()[0];
@@ -602,20 +632,26 @@
           if ((insertedLon > 0 && polarLon1 < 0) || (insertedLon < 0 && polarLon1 > 0)) {
             insertedLon = -insertedLon;
             coords[intersectionPointIndex][0] = insertedLon;
-          }                
+          }
           // Get latitude of inserted coordinate
           var insertedLat = coords[intersectionPointIndex][1];
           // Insert 3 coordinates (2 at either side of the pole) to create the "cut"
-          coords.splice(intersectionPointIndex + 1, 0, [polarLon1, polarLat], [polarLon2, polarLat], [-insertedLon, insertedLat]);
+          coords.splice(
+            intersectionPointIndex + 1,
+            0,
+            [polarLon1, polarLat],
+            [polarLon2, polarLat],
+            [-insertedLon, insertedLat]
+          );
           feat.setGeometry(new ol.geom.Polygon([coords]));
         }
-      }
+      };
 
       /**
        * @ngdoc method
        * @methodOf gn_geometry.service:gnGeometryService
        * @name gnGeometryService#featureToLonLat
-       * 
+       *
        * @description
        * Transforms the feature geometry into WGS 1984 (EPSG:4326).
        * If the polygon has a custom projection, the coordinates are densified.
@@ -624,13 +660,12 @@
        * NOTE: If the geometry is not a polygon, it will be transformed as-is.
        * If the projection already is EPSG:4326, the original feature is returned.
        * In all other cases, a feature clone is returned.
-       * 
+       *
        * @param {ol.feature} feature input feature to transform
        * @param {string} proj current feature geometry projection
        * @returns {ol.feature} output feature
        */
-      this.featureToLonLat = function(feature, proj) {
-
+      this.featureToLonLat = function (feature, proj) {
         // Input feature already in WGS 1984 (EPSG:4326): no transform needed
         if (proj === LONLAT_WGS84) return feature;
 
@@ -643,10 +678,9 @@
         if (proj !== WEB_MERCATOR) {
           // Add points to each edge to get a more accurate reprojection
           densifyEdges(lonlatFeat, proj);
-        }        
+        }
 
-        if (polarCoord) 
-        {
+        if (polarCoord) {
           // Original polygon includes a north or south pole: manipulate polygon.
           // Solves issue #4810: Query by south pole area doesn't give any results.
           modifyPolarPolygon(lonlatFeat, polarCoord, proj);
@@ -656,7 +690,7 @@
         }
 
         return lonlatFeat;
-      }
+      };
     }
   ]);
 })();

@@ -21,42 +21,44 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_editor');
+(function () {
+  goog.provide("gn_editor");
 
-  goog.require('gn_app_templates');
-  goog.require('gn_batch_service');
-  goog.require('gn_access_manager');
-  goog.require('gn_draggable_directive');
-  goog.require('gn_editor_controller');
-  goog.require('gn_geopublisher');
-  goog.require('gn_mdactions_directive');
-  goog.require('gn_module');
-  goog.require('gn_onlinesrc');
-  goog.require('gn_ows');
-  goog.require('gn_popup');
-  goog.require('gn_suggestion');
-  goog.require('gn_validation');
+  goog.require("gn_app_templates");
+  goog.require("gn_batch_service");
+  goog.require("gn_access_manager");
+  goog.require("gn_draggable_directive");
+  goog.require("gn_editor_controller");
+  goog.require("gn_geopublisher");
+  goog.require("gn_mdactions_directive");
+  goog.require("gn_module");
+  goog.require("gn_onlinesrc");
+  goog.require("gn_ows");
+  goog.require("gn_popup");
+  goog.require("gn_suggestion");
+  goog.require("gn_validation");
 
-  var module = angular.module('gn_editor', [
-    'gn_module',
-    'gn_popup',
-    'gn_onlinesrc',
-    'gn_suggestion',
-    'gn_validation',
-    'gn_draggable_directive',
-    'gn_editor_controller',
-    'gn_batchedit_controller',
-    'gn_ows',
-    'gn_geopublisher',
-    'gn_batch_service',
-    'gn_access_manager_controller',
-    'gn_mdactions_directive',
-    'ui.ace'
+  var module = angular.module("gn_editor", [
+    "gn_module",
+    "gn_popup",
+    "gn_onlinesrc",
+    "gn_suggestion",
+    "gn_validation",
+    "gn_draggable_directive",
+    "gn_editor_controller",
+    "gn_batchedit_controller",
+    "gn_ows",
+    "gn_geopublisher",
+    "gn_batch_service",
+    "gn_access_manager_controller",
+    "gn_mdactions_directive",
+    "ui.ace"
   ]);
 
-
-  module.config(['$LOCALES', function($LOCALES) {
-    $LOCALES.push('/../api/i18n/packages/editor');
-  }]);
+  module.config([
+    "$LOCALES",
+    function ($LOCALES) {
+      $LOCALES.push("/../api/i18n/packages/editor");
+    }
+  ]);
 })();

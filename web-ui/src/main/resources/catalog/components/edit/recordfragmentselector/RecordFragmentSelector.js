@@ -21,149 +21,156 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_record_fragment_selector');
+(function () {
+  goog.provide("gn_record_fragment_selector");
 
-  var module = angular.module('gn_record_fragment_selector', []);
+  var module = angular.module("gn_record_fragment_selector", []);
 
   /**
    * Select a fragment from another metadata record
    * and copy it in current one. Fragments are extracted using
    * SavedQuery API.
    */
-  module.directive('gnRecordFragmentSelector',
-      ['$http', 'gnGlobalSettings',
-       'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
-       function($http, gnGlobalSettings,
-               gnEditor, gnEditorXMLService, gnCurrentEdit) {
+  module.directive("gnRecordFragmentSelector", [
+    "$http",
+    "gnGlobalSettings",
+    "gnEditor",
+    "gnEditorXMLService",
+    "gnCurrentEdit",
+    function ($http, gnGlobalSettings, gnEditor, gnEditorXMLService, gnCurrentEdit) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          mode: "@gnRecordFragmentSelector",
+          elementName: "@",
+          elementRef: "@",
+          domId: "@"
+        },
+        templateUrl:
+          "../../catalog/components/edit/" +
+          "recordfragmentselector/partials/" +
+          "rfselector.html",
+        compile: function compile(tElement, tAttrs, transclude) {
+          return {
+            pre: function preLink(scope) {
+              scope.searchObj = {
+                any: "",
+                internal: true,
+                params: {
+                  any: "",
+                  from: 1,
+                  to: 50,
+                  sortBy: "resourceTitleObject.default.keyword",
+                  sortOrder: ""
+                }
+              };
 
-         return {
-           restrict: 'A',
-           replace: true,
-           scope: {
-             mode: '@gnRecordFragmentSelector',
-             elementName: '@',
-             elementRef: '@',
-             domId: '@'
-           },
-           templateUrl: '../../catalog/components/edit/' +
-           'recordfragmentselector/partials/' +
-           'rfselector.html',
-           compile: function compile(tElement, tAttrs, transclude) {
-             return {
-               pre: function preLink(scope) {
-                 scope.searchObj = {
-                   any: '',
-                   internal: true,
-                   params: {
-                     any: '',
-                     from: 1,
-                     to: 50,
-                     sortBy: 'resourceTitleObject.default.keyword',
-                     sortOrder: ''
-                   }
-                 };
+              scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+            },
+            post: function (scope, element, attrs) {
+              scope.snippet = null;
+              scope.sourceRecord = null;
 
-                 scope.modelOptions = angular.copy(
-                  gnGlobalSettings.modelOptions);
-               },
-               post: function(scope, element, attrs) {
-                 scope.snippet = null;
-                 scope.sourceRecord = null;
+              // Source records define a list of UUIDs to choose from
+              // TODO: Retrieve title of source records
+              // to be displayed in the selector.
+              scope.sourceRecords =
+                (attrs["sourceRecords"] && attrs["sourceRecords"].split(",")) || [];
 
-                 // Source records define a list of UUIDs to choose from
-                 // TODO: Retrieve title of source records
-                 // to be displayed in the selector.
-                 scope.sourceRecords =
-                  (attrs['sourceRecords'] &&
-                 attrs['sourceRecords'].split(',')) || [];
+              scope.exclude = (attrs["exclude"] && attrs["exclude"].split("#")) || [];
 
-                 scope.exclude =
-                  (attrs['exclude'] &&
-                 attrs['exclude'].split('#')) || [];
+              // Define a search query to choose from
+              if (scope.sourceRecords.length > 0) {
+                scope.searchQuery = {
+                  _uuid: scope.sourceRecords.join(" or ")
+                };
+              } else {
+                scope.searchQuery =
+                  (attrs["searchQuery"] &&
+                    angular.fromJson(
+                      attrs["searchQuery"]
+                        .replace("{uuid}", gnCurrentEdit.uuid)
+                        .replace(/'/g, '"')
+                    )) ||
+                  {};
+              }
 
-                 // Define a search query to choose from
-                 if (scope.sourceRecords.length > 0) {
-                   scope.searchQuery = {
-                     _uuid: scope.sourceRecords.join(' or ')
-                   };
-                 } else {
-                   scope.searchQuery =
-                    (attrs['searchQuery'] &&
-                   angular.fromJson(
-                        attrs['searchQuery']
-                   .replace('{uuid}', gnCurrentEdit.uuid)
-                   .replace(/'/g, '\"')
-                   )) || {};
-                 }
+              angular.extend(scope.searchObj.params, scope.searchQuery);
 
-                 angular.extend(scope.searchObj.params, scope.searchQuery);
+              scope.query = "dq-sections";
+              scope.snippetRef = gnEditor.buildXMLFieldName(
+                scope.elementRef,
+                scope.elementName
+              );
 
-                 scope.query = 'dq-sections';
-                 scope.snippetRef = gnEditor.
-                 buildXMLFieldName(scope.elementRef, scope.elementName);
+              scope.setSource = function (r) {
+                if (angular.isObject(r)) {
+                  scope.sourceRecordTitle = r.resourceTitle || "";
+                  scope.sourceRecord = r.uuid;
+                } else {
+                  scope.sourceRecordTitle = null;
+                  scope.sourceRecord = null;
+                  scope.fragments = {};
+                }
+              };
+              scope.getFragments = function () {
+                scope.fragments = [];
+                $http
+                  .post(
+                    "../api/records/" + scope.sourceRecord + "/query/" + scope.query,
+                    {}
+                  )
+                  .then(function (r) {
+                    if (r.status === 200) {
+                      scope.fragments = {};
+                      if (scope.exclude.length > 0) {
+                        angular.forEach(r.data, function (value, key) {
+                          if (scope.exclude.indexOf(key.trim()) === -1) {
+                            scope.fragments[key.trim()] = value;
+                          }
+                        });
+                      } else {
+                        scope.fragments = r.data;
+                      }
+                    }
+                  });
+              };
 
-                 scope.setSource = function(r) {
-                   if (angular.isObject(r)) {
-                     scope.sourceRecordTitle = r.resourceTitle || '';
-                     scope.sourceRecord = r.uuid;
-                   } else {
-                     scope.sourceRecordTitle = null;
-                     scope.sourceRecord = null;
-                     scope.fragments = {};
-                   }
+              // Append * for like search
+              scope.updateParams = function () {
+                scope.searchObj.params.any = "*" + scope.searchObj.any + "*";
+              };
 
-                 };
-                 scope.getFragments = function() {
-                   scope.fragments = [];
-                   $http.post(
-                    '../api/records/' + scope.sourceRecord +
-                    '/query/' + scope.query, {}).then(function(r) {
-                     if (r.status === 200) {
-                       scope.fragments = {};
-                       if (scope.exclude.length > 0) {
-                         angular.forEach(r.data, function(value, key) {
-                           if (scope.exclude.indexOf(key.trim()) === -1) {
-                             scope.fragments[key.trim()] = value;
-                           }
-                         });
-                       } else {
-                         scope.fragments = r.data;
-                       }
-                     }
-                   });
-                 };
+              scope.$watch("sourceRecord", function (n, o) {
+                if (n && n !== o) {
+                  scope.getFragments();
+                }
+              });
 
-                 // Append * for like search
-                 scope.updateParams = function() {
-                   scope.searchObj.params.any =
-                    '*' + scope.searchObj.any + '*';
-                 };
+              scope.add = function () {
+                gnEditor.add(
+                  gnCurrentEdit.id,
+                  scope.elementRef,
+                  scope.elementName,
+                  scope.domId,
+                  "before"
+                );
+                return false;
+              };
 
-                 scope.$watch('sourceRecord', function(n, o) {
-                   if (n && n !== o) {
-                     scope.getFragments();
-                   }
-                 });
+              scope.addFragment = function (f) {
+                var field = $.find("input[name=" + scope.snippetRef + "]")[0];
 
-                 scope.add = function() {
-                   gnEditor.add(gnCurrentEdit.id,
-                    scope.elementRef, scope.elementName, scope.domId, 'before');
-                   return false;
-                 };
-
-                 scope.addFragment = function(f) {
-                   var field = $.find('input[name=' + scope.snippetRef +
-                    ']')[0];
-
-                   $(field).val(f);
-                   scope.fragments = [];
-                   gnEditor.save(gnCurrentEdit.id, true);
-                   return false;
-                 };
-
-               }
-             };
-           }
-         }}]);
+                $(field).val(f);
+                scope.fragments = [];
+                gnEditor.save(gnCurrentEdit.id, true);
+                return false;
+              };
+            }
+          };
+        }
+      };
+    }
+  ]);
 })();

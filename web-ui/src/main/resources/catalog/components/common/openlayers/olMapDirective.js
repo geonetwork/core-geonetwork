@@ -22,10 +22,9 @@
  */
 
 (function () {
+  goog.provide("gn_olMapDirective");
 
-  goog.provide('gn_olMapDirective')
-
-  var module = angular.module('gn_olMapDirective', [])
+  var module = angular.module("gn_olMapDirective", []);
 
   /**
    * Provides a directive used to insert a user-defined OpenLayers
@@ -45,17 +44,17 @@
    * @ngdoc directive
    * @ngname olMap
    */
-  var mapDirective = function() {
+  var mapDirective = function () {
     return {
-      restrict: 'A',
+      restrict: "A",
       link:
         /**
          * @param {angular.Scope} scope Scope.
          * @param {angular.JQLite} element Element.
          * @param {angular.Attributes} attrs Attributes.
          */
-        function(scope, element, attrs) {
-          var attr = 'olMap';
+        function (scope, element, attrs) {
+          var attr = "olMap";
           var prop = attrs[attr];
 
           var map = scope.$eval(prop);
@@ -64,5 +63,5 @@
     };
   };
 
-  module.directive('olMap', mapDirective)
-})()
+  module.directive("olMap", mapDirective);
+})();

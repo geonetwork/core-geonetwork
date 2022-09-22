@@ -21,33 +21,32 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_featurestables_directive');
+(function () {
+  goog.provide("gn_featurestables_directive");
 
-  var module = angular.module('gn_featurestables_directive', []);
+  var module = angular.module("gn_featurestables_directive", []);
 
-  module.directive('gnFeaturesTables', [function() {
+  module.directive("gnFeaturesTables", [
+    function () {
+      return {
+        restrict: "E",
+        scope: {
+          map: "<gnFeaturesTablesMap",
+          active: "<gnActive",
+          showClose: "=",
+          showExport: "=",
+          height: "="
+        },
+        controllerAs: "ctrl",
+        bindToController: true,
+        controller: "gnFeaturesTablesController",
+        templateUrl:
+          "../../catalog/components/viewer/gfi/partials/" + "featurestables.html"
+      };
+    }
+  ]);
 
-    return {
-      restrict: 'E',
-      scope: {
-        map: '<gnFeaturesTablesMap',
-        active: '<gnActive',
-        showClose: '=',
-        showExport: '=',
-        height: '='
-      },
-      controllerAs: 'ctrl',
-      bindToController: true,
-      controller: 'gnFeaturesTablesController',
-      templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-          'featurestables.html'
-    };
-
-  }]);
-
-  var GnFeaturesTablesController = function(gnFeaturesTableManager,
-                                            gnSearchSettings) {
+  var GnFeaturesTablesController = function (gnFeaturesTableManager, gnSearchSettings) {
     this.tm = gnFeaturesTableManager;
 
     this.tables = gnFeaturesTableManager.tables;
@@ -70,17 +69,15 @@
       updateWhileInteracting: true,
       map: this.map
     });
-
   };
 
-  GnFeaturesTablesController.prototype.clear = function() {
+  GnFeaturesTablesController.prototype.clear = function () {
     this.tm.clear();
   };
 
-
-  module.controller('gnFeaturesTablesController', [
-    'gnFeaturesTableManager', 'gnSearchSettings',
+  module.controller("gnFeaturesTablesController", [
+    "gnFeaturesTableManager",
+    "gnSearchSettings",
     GnFeaturesTablesController
   ]);
-
 })();
