@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_resultsview');
+(function () {
+  goog.provide("gn_resultsview");
 
-  var module = angular.module('gn_resultsview', []);
+  var module = angular.module("gn_resultsview", []);
 
   /**
    * @ngdoc directive
@@ -43,22 +43,20 @@
    * directive that will load the custom view into its root html
    * element.
    */
-  module.directive('gnResultsTplSwitcher',
-    function() {
-      return {
-        require: '^ngSearchForm',
-        templateUrl: '../../catalog/components/search/resultsview/partials/' +
-        'templateswitcher.html',
-        restrict: 'A',
-        link: function($scope, element, attrs, searchFormCtrl) {
-          $scope.setResultTemplate = function (t) {
-            $scope.resultTemplate = t.tplUrl;
-            searchFormCtrl.triggerSearch(true);
-          };
-        }
-      };
-    }
-  );
+  module.directive("gnResultsTplSwitcher", function () {
+    return {
+      require: "^ngSearchForm",
+      templateUrl:
+        "../../catalog/components/search/resultsview/partials/" + "templateswitcher.html",
+      restrict: "A",
+      link: function ($scope, element, attrs, searchFormCtrl) {
+        $scope.setResultTemplate = function (t) {
+          $scope.resultTemplate = t.tplUrl;
+          searchFormCtrl.triggerSearch(true);
+        };
+      }
+    };
+  });
 
   /**
    * @ngdoc directive
@@ -70,22 +68,27 @@
    * The `gnResultsContainer` directive is used to load a custom
    * view (defined by a html file path) into its root element.
    */
-  module.directive('gnResultsContainer', [
-    '$compile',
-    'gnMap',
-    'gnOwsCapabilities',
-    'gnSearchSettings',
-    'gnMetadataActions',
-    'gnConfig',
-    'gnConfigService',
-    function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
-             gnMetadataActions, gnConfig, gnConfigService) {
-
+  module.directive("gnResultsContainer", [
+    "$compile",
+    "gnMap",
+    "gnOwsCapabilities",
+    "gnSearchSettings",
+    "gnMetadataActions",
+    "gnConfig",
+    "gnConfigService",
+    function (
+      $compile,
+      gnMap,
+      gnOwsCapabilities,
+      gnSearchSettings,
+      gnMetadataActions,
+      gnConfig,
+      gnConfigService
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: true,
-        link: function(scope, element, attrs, controller) {
-
+        link: function (scope, element, attrs, controller) {
           scope.mdService = gnMetadataActions;
           scope.map = scope.$eval(attrs.map);
           //scope.searchResults = scope.$eval(attrs.searchResults);
@@ -93,12 +96,12 @@
           /** Display fa icons for categories
            * TODO: Move to configuration */
           scope.catIcons = {
-            featureCatalogs: 'fa-table',
-            services: 'fa-cog',
-            maps: 'fa-globe',
-            staticMaps: 'fa-globe',
-            datasets: 'fa-file',
-            interactiveResources: 'fa-rss'
+            featureCatalogs: "fa-table",
+            services: "fa-cog",
+            maps: "fa-globe",
+            staticMaps: "fa-globe",
+            datasets: "fa-file",
+            interactiveResources: "fa-rss"
           };
 
           if (scope.map) {
@@ -117,31 +120,31 @@
             });
           }
 
-          gnConfigService.load().then(function(c) {
-            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
-            scope.isInspireEnabled = gnConfig['system.inspire.enable'];
+          gnConfigService.load().then(function (c) {
+            scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+            scope.isInspireEnabled = gnConfig["system.inspire.enable"];
           });
 
-          scope.$watchCollection('searchResults.records', function(rec) {
-
+          scope.$watchCollection("searchResults.records", function (rec) {
             //scroll to top
-            element.animate({scrollTop: top});
+            element.animate({ scrollTop: top });
 
             // get md extent boxes
             if (scope.map) {
               fo.getSource().clear();
 
-              if (!angular.isArray(rec) ||
-                  angular.isUndefined(scope.map.getTarget())) {
+              if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
                 return;
               }
               for (var i = 0; i < rec.length; i++) {
-                var feat = gnMap.getBboxFeatureFromMd(rec[i],
-                    scope.map.getView().getProjection());
+                var feat = gnMap.getBboxFeatureFromMd(
+                  rec[i],
+                  scope.map.getView().getProjection()
+                );
                 fo.getSource().addFeature(feat);
               }
               var extent = ol.extent.createEmpty();
-              fo.getSource().forEachFeature(function(f) {
+              fo.getSource().forEachFeature(function (f) {
                 var g = f.getGeometry();
                 if (g) {
                   ol.extent.extend(extent, g.getExtent());
@@ -154,97 +157,76 @@
             }
           });
 
-          scope.$watch('resultTemplate', function(templateUrl) {
+          scope.$watch("resultTemplate", function (templateUrl) {
             if (angular.isUndefined(templateUrl)) {
               return;
             }
-            var template = angular.element(document.createElement('div'));
+            var template = angular.element(document.createElement("div"));
             template.attr({
-              'ng-include': 'resultTemplate'
+              "ng-include": "resultTemplate"
             });
             element.empty();
             element.append(template);
             $compile(template)(scope);
           });
 
-          scope.zoomToMdExtent = function(md, map) {
-            var feat = gnMap.getBboxFeatureFromMd(md,
-                scope.map.getView().getProjection());
+          scope.zoomToMdExtent = function (md, map) {
+            var feat = gnMap.getBboxFeatureFromMd(
+              md,
+              scope.map.getView().getProjection()
+            );
             if (feat) {
-              map.getView().fit(
-                  feat.getGeometry().getExtent(),
-                  map.getSize());
+              map.getView().fit(feat.getGeometry().getExtent(), map.getSize());
             }
           };
-
 
           if (scope.map) {
             scope.hoverOL.setMap(scope.map);
           }
         }
       };
-    }]);
+    }
+  ]);
 
-  /**
-   * As we cannot use nested ng-repeat on a getLinksByType()
-   * function, we have to load them once into the scope on rendering.
-   */
-  module.directive('gnFixMdlinks', ['gnSearchSettings',
-    function(gnSearchSettings) {
-
+  module.directive("gnDisplayextentOnhover", [
+    "gnMap",
+    function (gnMap) {
       return {
-        restrict: 'A',
-        scope: false,
-        link: function(scope) {
-          var obj = gnSearchSettings.linkTypes;
-          for (var p in obj) {
-            scope[p] = scope.md.getLinksByType.apply(scope.md, obj[p]);
-          }
-        }
-      };
-    }]);
-
-  module.directive('gnDisplayextentOnhover', [
-    'gnMap',
-    function(gnMap) {
-
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs, controller) {
-
+        restrict: "A",
+        link: function (scope, element, attrs, controller) {
           //TODO : change, just apply a style to the feature when
           // featureoverlay is fixed
           var feat = new ol.Feature();
 
-          element.bind('mouseenter', function() {
-
-            var feat = gnMap.getBboxFeatureFromMd(scope.md,
-                scope.map.getView().getProjection());
+          element.bind("mouseenter", function () {
+            var feat = gnMap.getBboxFeatureFromMd(
+              scope.md,
+              scope.map.getView().getProjection()
+            );
             if (feat) {
               scope.hoverOL.getSource().addFeature(feat);
             }
           });
 
-          element.bind('mouseleave', function() {
+          element.bind("mouseleave", function () {
             scope.hoverOL.getSource().clear();
           });
         }
       };
-    }]);
+    }
+  ]);
 
-  module.directive('gnZoomtoOnclick', [
-    'gnMap',
-    function(gnMap) {
-
+  module.directive("gnZoomtoOnclick", [
+    "gnMap",
+    function (gnMap) {
       return {
-        restrict: 'A',
-        link: function(scope, element, attrs, controller) {
-
-          element.bind('dblclick', function() {
+        restrict: "A",
+        link: function (scope, element, attrs, controller) {
+          element.bind("dblclick", function () {
             scope.zoomToMdExtent(scope.md, scope.map);
           });
         }
       };
-    }]);
-
+    }
+  ]);
 })();

@@ -25,8 +25,8 @@ package jeeves.server.context;
 
 import jeeves.monitor.MonitorManager;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.Level;
 import org.fao.geonet.Logger;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;

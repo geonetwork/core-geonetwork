@@ -1476,7 +1476,7 @@
   </element>
   <element name="gmd:name" context="gmd:CI_Series" id="404.0">
     <label>Nome</label>
-    <description>Nome della serie, o set di dati aggregati, di cui il datset è una parte
+    <description>Nome della serie, o set di dati aggregati, di cui il dataset è una parte
     </description>
   </element>
   <element name="gmd:name" context="gmd:MD_CodeDomain" id="537.0">
@@ -2036,6 +2036,10 @@
       </option>
       <option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)
       </option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web
       </option>
       <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language

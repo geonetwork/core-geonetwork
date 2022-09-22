@@ -21,204 +21,235 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_md_validation_tools_directive');
+(function () {
+  goog.provide("gn_md_validation_tools_directive");
 
-  var module = angular.module('gn_md_validation_tools_directive', []);
+  var module = angular.module("gn_md_validation_tools_directive", []);
 
-  module.directive(
-      'gnMdValidationTools', ['gnConfig', '$http', '$interval',
-      'gnAlertService', '$translate', 'gnPopup', '$timeout',
-      'gnCurrentEdit', 'gnConfigService', 'gnSearchManagerService', 'Metadata',
-        function(gnConfig, $http, $interval, gnAlertService,
-                 $translate, gnPopup, $timeout,
-                 gnCurrentEdit, gnConfigService,
-                 gnSearchManagerService, Metadata) {
-          return {
-            restrict: 'AEC',
-            replace: true,
-            templateUrl:
-            '../../catalog/components/validationtools/partials/mdValidationTools.html',
-            link: function postLink(scope, element, attrs) {
-              scope.isDownloadingRecord = false;
-              scope.isDownloadedRecord = false;
-              scope.isEnabled = false;
-              scope.testSuites = {}
+  module.directive("gnMdValidationTools", [
+    "gnConfig",
+    "$http",
+    "$interval",
+    "gnAlertService",
+    "$translate",
+    "gnPopup",
+    "$timeout",
+    "gnCurrentEdit",
+    "gnConfigService",
+    "gnSearchManagerService",
+    "Metadata",
+    function (
+      gnConfig,
+      $http,
+      $interval,
+      gnAlertService,
+      $translate,
+      gnPopup,
+      $timeout,
+      gnCurrentEdit,
+      gnConfigService,
+      gnSearchManagerService,
+      Metadata
+    ) {
+      return {
+        restrict: "AEC",
+        replace: true,
+        templateUrl:
+          "../../catalog/components/validationtools/partials/mdValidationTools.html",
+        link: function postLink(scope, element, attrs) {
+          scope.isDownloadingRecord = false;
+          scope.isDownloadedRecord = false;
+          scope.isEnabled = false;
+          scope.testSuites = {};
 
+          scope.$watch("gnCurrentEdit.uuid", function (newValue, oldValue) {
+            if (newValue == undefined) {
+              return;
+            }
+            scope.isEnabled = true;
+            scope.inspMdUuid = newValue;
+            scope.md = gnCurrentEdit.metadata;
+            $http({
+              method: "GET",
+              url: "../api/records/" + scope.inspMdUuid + "/validate/inspire/testsuites"
+            }).then(function (r) {
+              scope.testsuites = r.data;
+            });
 
+            gnConfigService.load().then(function (c) {
+              // INSPIRE validator only support ISO19139/115-3 records.
+              // This assume that those schema have and ISO19139 formatter
+              // which is the format supported by the validator
+              scope.isInspireValidationEnabled =
+                gnConfig[gnConfig.key.isInspireEnabled] &&
+                angular.isString(gnConfig["system.inspire.remotevalidation.url"]) &&
+                gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
 
-              scope.$watch('gnCurrentEdit.uuid', function(newValue, oldValue) {
-                if (newValue == undefined) {
-                  return;
-                }
-                scope.isEnabled = true;
-                scope.inspMdUuid = newValue;
-                scope.md = gnCurrentEdit.metadata;
-                $http({
-                  method: 'GET',
-                  url: '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire/testsuites'
-                }).then(function(r) {
-                  scope.testsuites = r.data;
-                });
+              scope.validationNode =
+                gnConfig["system.inspire.remotevalidation.nodeid"] || "";
+            });
+          });
 
-                gnConfigService.load().then(function(c) {
-                  // INSPIRE validator only support ISO19139/115-3 records.
-                  // This assume that those schema have and ISO19139 formatter
-                  // which is the format supported by the validator
-                  scope.isInspireValidationEnabled =
-                    gnConfig[gnConfig.key.isInspireEnabled] &&
-                    angular.isString(gnConfig['system.inspire.remotevalidation.url']) &&
-                    gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
-
-                  scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'] || '';
-                });
-              });
-
-              scope.validateInspire = function(test, mode) {
-
-                if (scope.isEnabled) {
-                  scope.isDownloadingRecord = true;
-                  scope.token = null;
-                  var url = '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire?testsuite=' + test;
-                  if (angular.isDefined(mode) && mode !== '') {
-                    url += '&mode=' + mode;
-                  }
-                  $http({
-                    method: 'PUT',
-                    url: url
-                  }).then(function mySucces(response) {
-                    if (angular.isDefined(response.data) && response.data != null) {
-                      scope.checkInBackgroud(response.data);
-                    } else {
-                      scope.isDownloadingRecord = false;
-                      scope.isDownloadedRecord = false;
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireServiceError'),
-                        type: 'danger'
-                      });
-                    }
-                  }, function myError(error) {
+          scope.validateInspire = function (test, mode) {
+            if (scope.isEnabled) {
+              scope.isDownloadingRecord = true;
+              scope.token = null;
+              var url =
+                "../api/records/" +
+                scope.inspMdUuid +
+                "/validate/inspire?testsuite=" +
+                test;
+              if (angular.isDefined(mode) && mode !== "") {
+                url += "&mode=" + mode;
+              }
+              $http({
+                method: "PUT",
+                url: url
+              }).then(
+                function mySucces(response) {
+                  if (angular.isDefined(response.data) && response.data != null) {
+                    scope.checkInBackgroud(response.data);
+                  } else {
                     scope.isDownloadingRecord = false;
                     scope.isDownloadedRecord = false;
-                    if (error.status == 403) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireNotAllowedError'),
-                        type: 'danger'
-                      });
-                    } else if (error.status == 404) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireNotFoundError'),
-                        type: 'danger'
-                      });
-                    } else if (error.status == 406) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireNotAcceptableError'),
-                        type: 'danger'
-                      });
-                    } else if (error.status == 500) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireServiceError'),
-                        type: 'danger'
-                      });
-                    } else {
-                      gnAlertService.addAlert({
-                        msg: error.data.description,
-                        type: 'danger'
-                      });
-                    }
-                  });
-                }
-              };
-
-              function reloadRecord() {
-                gnSearchManagerService.gnSearch({
-                  _id: gnCurrentEdit.id,
-                  _content_type: 'json',
-                  _isTemplate: 'y or n or s',
-                  _draft: 'y or n or e',
-                  fast: 'index'
-                }).then(function(data) {
-                  scope.md = new Metadata(data.metadata[0]);
-                });
-              }
-              scope.checkInBackgroud = function(token) {
-                scope.stop = undefined;
-                if (token === '') {
-                  gnAlertService.addAlert({
-                    msg: $translate.instant('noINSPIRETestTokenAvailable'),
-                    type: 'danger'
-                  });
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireServiceError"),
+                      type: "danger"
+                    });
+                  }
+                },
+                function myError(error) {
                   scope.isDownloadingRecord = false;
                   scope.isDownloadedRecord = false;
-                  return;
+                  if (error.status == 403) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireNotAllowedError"),
+                      type: "danger"
+                    });
+                  } else if (error.status == 404) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireNotFoundError"),
+                      type: "danger"
+                    });
+                  } else if (error.status == 406) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireNotAcceptableError"),
+                      type: "danger"
+                    });
+                  } else if (error.status == 500) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireServiceError"),
+                      type: "danger"
+                    });
+                  } else {
+                    gnAlertService.addAlert({
+                      msg: error.data.description,
+                      type: "danger"
+                    });
+                  }
                 }
-                scope.stop = $interval(function() {
-                  $http({
-                    method: 'GET',
-                    url: '../api/records/' + token + '/validate/inspire'
-                  }).then(function mySucces(response) {
-
-                    if (response.status == 200) {
-                      scope.stopChecking();
-                      scope.isDownloadingRecord = false;
-                      scope.isDownloadedRecord = true;
-
-                      scope.reportStatus = response.data.status;
-                      scope.reportURL = response.data.report;
-                      scope.showDisclaimer(scope.reportURL, scope.reportStatus);
-                      $timeout(function() {
-                        reloadRecord();
-                      }, 5000);
-                    } else if (response.status == 201) {
-                      // continue
-                    }
-                  }, function myError(error) {
-                    scope.isDownloadingRecord = false;
-                    scope.isDownloadedRecord = false;
-                    scope.stopChecking();
-                    if (error.status == 403) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireNotAllowedError'),
-                        type: 'danger'
-                      });
-                    } else if (error.status == 404) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireNotFoundError'),
-                        type: 'danger'
-                      });
-                    } else if (error.status == 500) {
-                      gnAlertService.addAlert({
-                        msg: $translate.instant('inspireServiceError'),
-                        type: 'danger'
-                      });
-                    }
-                  });
-
-                },10000);
-              };
-
-              scope.showDisclaimer = function(url, status) {
-                gnPopup.createModal({
-                  class: 'disclaimer-popup',
-                  title: $translate.instant('inspirePopupReportTitle'),
-                  content: '<div>' +
-                  $translate.instant('inspirePopupReportText') +
-                  status + '</br></br>' +
-                  '<a href=\'' + url + '\' target=\'_blank\'>' +
-                  $translate.instant('inspirePopupReportLink') + '</a></div>'
-                }, scope);
-              };
-
-              scope.stopChecking = function() {
-                if (angular.isDefined(scope.stop)) {
-                  $interval.cancel(scope.stop);
-                  scope.stop = undefined;
-                }
-              };
+              );
             }
           };
-        }]);
 
+          function reloadRecord() {
+            gnSearchManagerService
+              .gnSearch({
+                _id: gnCurrentEdit.id,
+                _content_type: "json",
+                _isTemplate: "y or n or s",
+                _draft: "y or n or e",
+                fast: "index"
+              })
+              .then(function (data) {
+                scope.md = new Metadata(data.metadata[0]);
+              });
+          }
+          scope.checkInBackgroud = function (token) {
+            scope.stop = undefined;
+            if (token === "") {
+              gnAlertService.addAlert({
+                msg: $translate.instant("noINSPIRETestTokenAvailable"),
+                type: "danger"
+              });
+              scope.isDownloadingRecord = false;
+              scope.isDownloadedRecord = false;
+              return;
+            }
+            scope.stop = $interval(function () {
+              $http({
+                method: "GET",
+                url: "../api/records/" + token + "/validate/inspire"
+              }).then(
+                function mySucces(response) {
+                  if (response.status == 200) {
+                    scope.stopChecking();
+                    scope.isDownloadingRecord = false;
+                    scope.isDownloadedRecord = true;
+
+                    scope.reportStatus = response.data.status;
+                    scope.reportURL = response.data.report;
+                    scope.showDisclaimer(scope.reportURL, scope.reportStatus);
+                    $timeout(function () {
+                      reloadRecord();
+                    }, 5000);
+                  } else if (response.status == 201) {
+                    // continue
+                  }
+                },
+                function myError(error) {
+                  scope.isDownloadingRecord = false;
+                  scope.isDownloadedRecord = false;
+                  scope.stopChecking();
+                  if (error.status == 403) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireNotAllowedError"),
+                      type: "danger"
+                    });
+                  } else if (error.status == 404) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireNotFoundError"),
+                      type: "danger"
+                    });
+                  } else if (error.status == 500) {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("inspireServiceError"),
+                      type: "danger"
+                    });
+                  }
+                }
+              );
+            }, 10000);
+          };
+
+          scope.showDisclaimer = function (url, status) {
+            gnPopup.createModal(
+              {
+                class: "disclaimer-popup",
+                title: $translate.instant("inspirePopupReportTitle"),
+                content:
+                  "<div>" +
+                  $translate.instant("inspirePopupReportText") +
+                  status +
+                  "</br></br>" +
+                  "<a href='" +
+                  url +
+                  "' target='_blank'>" +
+                  $translate.instant("inspirePopupReportLink") +
+                  "</a></div>"
+              },
+              scope
+            );
+          };
+
+          scope.stopChecking = function () {
+            if (angular.isDefined(scope.stop)) {
+              $interval.cancel(scope.stop);
+              scope.stop = undefined;
+            }
+          };
+        }
+      };
+    }
+  ]);
 })();

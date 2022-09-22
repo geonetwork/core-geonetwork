@@ -15,6 +15,7 @@
   <xsl:include href="process/add-values-from-csv.xsl"/>
   <xsl:include href="process/create-featurecatalogue-from-wfs.xsl"/>
   <xsl:include href="process/spatineo-registration.xsl"/>
+  <xsl:include href="process/collection-updater.xsl"/>
   <!--<xsl:include href="process/inspire-add-conformity.xsl"/>-->
 
   <xsl:variable name="processes">
@@ -26,6 +27,7 @@
     <p>add-wms-and-legend-from-esrirest</p>
     <p>add-columns-from-csv</p>
     <p>add-values-from-csv</p>
+    <p>collection-updater</p>
     <p>spatineo-registration</p>
     <!--<p>inspire-add-conformity</p>-->
   </xsl:variable>

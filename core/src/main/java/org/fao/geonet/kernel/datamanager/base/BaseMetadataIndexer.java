@@ -118,6 +118,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     private ApplicationEventPublisher publisher;
 
+    @Autowired
+    private UserSavedSelectionRepository userSavedSelectionRepository;
+
     public BaseMetadataIndexer() {
     }
 
@@ -421,8 +424,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
                 if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                    fields.put("has_atom", "y");
-                    fields.put("any", feed.getAtom());
+                    fields.put("atomfeed", feed.getAtom());
                 }
 
                 if (owner != null) {
@@ -530,6 +532,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         fields.put(Geonet.IndexFieldNames.VALID_INSPIRE, "-1");
                     }
                 }
+
+                // index the amount of users that have saved this record in the "Preferred Records" list (id=0)
+                int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid, 0);
+                fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
 
                 fields.putAll(addExtraFields(fullMd));
 

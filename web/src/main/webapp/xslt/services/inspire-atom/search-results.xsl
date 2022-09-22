@@ -32,8 +32,11 @@
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
               encoding="UTF-8"/>
 
-  <!-- Catalog settings -->
-  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+  <xsl:variable name="translations"
+                select="/root/translations"/>
+
+  <xsl:variable name="env"
+                select="/root/gui/systemConfig"/>
 
   <xsl:template match="/root">
     <html>
@@ -52,10 +55,10 @@
 
 
           <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
-                href="../../images/logos/favicon.png"/>
-          <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
-          <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
+                href="../../../images/logos/favicon.png"/>
+          <link href="feeds"
+                rel="search"
+                type="application/opensearchdescription+xml"
                 title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
           <style>
@@ -101,10 +104,10 @@
 
       </head>
       <body>
-        <h1><xsl:value-of select="/root/gui/strings/atom/results/header" /></h1>
+        <h1><xsl:value-of select="$translations/atom.header" /></h1>
 
         <xsl:if test="count(feeds/atom:feed) = 0">
-          <p><xsl:value-of select="/root/gui/strings/atom/results/noresults" /></p>
+          <p><xsl:value-of select="$translations/atom.noresults" /></p>
         </xsl:if>
 
 
@@ -112,7 +115,7 @@
           <div class="feed">
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/title" /></span>
+                <span><xsl:value-of select="$translations/atom.title" /></span>
               </div>
               <div class="column-content">
                 <span class="feed-title"><xsl:value-of select="atom:title" /></span>
@@ -121,7 +124,7 @@
 
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/content" /></span>
+                <span><xsl:value-of select="$translations/atom.content" /></span>
               </div>
               <div class="column-content">
                 <span><xsl:value-of select="atom:content" /></span>
@@ -130,7 +133,7 @@
 
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/id" /></span>
+                <span><xsl:value-of select="$translations/atom.id" /></span>
               </div>
               <div class="column-content">
                 <xsl:choose>
@@ -146,7 +149,7 @@
 
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/rights" /></span>
+                <span><xsl:value-of select="$translations/atom.rights" /></span>
               </div>
               <div class="column-content">
                 <span><xsl:value-of select="atom:rights" /></span>
@@ -156,7 +159,7 @@
             <xsl:if test="atom:link[@rel='describedby']">
               <div class="row">
                 <div class="column-title">
-                  <span><xsl:value-of select="/root/gui/strings/atom/results/describedby" /></span>
+                  <span><xsl:value-of select="$translations/atom.describedby" /></span>
                 </div>
                 <div class="column-content">
                   <a href="{atom:link[@rel='describedby']/@href}"><xsl:value-of select="atom:link[@rel='describedby']/@href" /></a>
@@ -166,7 +169,7 @@
 
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/author" /></span>
+                <span><xsl:value-of select="$translations/atom.author" /></span>
               </div>
               <div class="column-content">
                 <span><xsl:value-of select="atom:author/atom:name" />
@@ -179,7 +182,7 @@
 
             <div class="row">
               <div class="column-title">
-                <span><xsl:value-of select="/root/gui/strings/atom/results/updated" /></span>
+                <span><xsl:value-of select="$translations/atom.updated" /></span>
               </div>
               <div class="column-content">
                 <span><xsl:value-of select="atom:updated" /></span>

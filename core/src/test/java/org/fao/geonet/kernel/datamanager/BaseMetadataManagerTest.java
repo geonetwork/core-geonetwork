@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.Xml;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link BaseMetadataManager} and {@link BaseMetadataUtils}.
@@ -62,6 +64,9 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IMetadataSchemaUtils metadataSchemaUtils;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -87,7 +92,7 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
     @Test
     public void testSave() throws Exception {
         assertTrue(metadataUtils.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
-        md = metadataManager.save(createMetadata());
+        md = metadataManager.save(createMetadata("valid-metadata.iso19139.xml", MetadataType.TEMPLATE));
         assertNotNull(md);
         assertNotNull(metadataUtils.findOne(md.getId()));
         metadataManager.delete(md.getId());
@@ -98,7 +103,7 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        md = metadataManager.save(createMetadata());
+        md = metadataManager.save(createMetadata("valid-metadata.iso19139.xml", MetadataType.TEMPLATE));
 
         List<? extends AbstractMetadata> templates = metadataUtils
             .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE));
@@ -128,12 +133,57 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
+    public void testDuplicate() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        AbstractMetadata metadataToDuplicate = metadataManager.save(createMetadata("doi-metadata.iso19139.xml", MetadataType.METADATA));
+
+        Object x = Xml.selectSingle(metadataToDuplicate.getXmlData(false), "gmd:identificationInfo//gmd:identifier[" +
+                "                                contains(*/gmd:code/*/text(), 'datacite.org/doi/')" +
+                "                                or contains(*/gmd:code/*/text(), 'doi.org')" +
+                "                                or contains(*/gmd:code/*/@xlink:href, 'doi.org')]",
+            metadataSchemaUtils.getSchema(metadataToDuplicate.getDataInfo().getSchemaId()).getNamespaces());
+        assertNotNull(x);
+
+        x = Xml.selectSingle(metadataToDuplicate.getXmlData(false), "gmd:distributionInfo//gmd:protocol[" +
+                "                              */text() = 'DOI']",
+            metadataSchemaUtils.getSchema(metadataToDuplicate.getDataInfo().getSchemaId()).getNamespaces());
+        assertNotNull(x);
+
+        assertTrue(metadataUtils.exists(metadataToDuplicate.getId()));
+        assertTrue(metadataUtils.existsMetadata(metadataToDuplicate.getId()));
+        assertTrue(metadataUtils.existsMetadataUuid(metadataToDuplicate.getUuid()));
+
+        String id = metadataManager.createMetadata(context, String.valueOf(metadataToDuplicate.getId()),
+            String.valueOf(group.getId()), "test", user.getId(), null, MetadataType.METADATA.codeString, true);
+
+        assertNotNull(id);
+        assertNotNull(metadataUtils.findOne(id));
+
+        AbstractMetadata metadataDuplicated = metadataUtils.findOne(id);
+        assertNotNull(metadataDuplicated);
+
+        x = Xml.selectSingle(metadataDuplicated.getXmlData(false), "gmd:identificationInfo//gmd:identifier[\n" +
+                "                                contains(*/gmd:code/*/text(), 'datacite.org/doi/')\n" +
+                "                                or contains(*/gmd:code/*/text(), 'doi.org')\n" +
+                "                                or contains(*/gmd:code/*/@xlink:href, 'doi.org')]",
+            metadataSchemaUtils.getSchema(metadataToDuplicate.getDataInfo().getSchemaId()).getNamespaces());
+        assertNull(x);
+
+        x = Xml.selectSingle(metadataDuplicated.getXmlData(false), "gmd:distributionInfo//gmd:protocol[" +
+                "                              */text() = 'DOI']",
+            metadataSchemaUtils.getSchema(metadataToDuplicate.getDataInfo().getSchemaId()).getNamespaces());
+        assertNull(x);
+    }
+
+    @Test
     public void testSpecification() throws Exception {
 
         assertTrue(metadataUtils
             .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
 
-        md = metadataManager.save(createMetadata());
+        md = metadataManager.save(createMetadata("valid-metadata.iso19139.xml", MetadataType.TEMPLATE));
 
         assertFalse(metadataUtils
             .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
@@ -145,17 +195,17 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
             .findAll(MetadataSpecs.hasMetadataId(md.getId())).isEmpty());
     }
 
-    private AbstractMetadata createMetadata() throws IOException {
+    private AbstractMetadata createMetadata(String metadataFile, MetadataType metadataType) throws IOException {
         AbstractMetadata md = new Metadata();
         md.setUuid("test-metadata");
-        try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
+        try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream(metadataFile)) {
             md.setData(IOUtils.toString(is));
         }
         md.getSourceInfo().setGroupOwner(group.getId());
         md.getSourceInfo().setOwner(1);
         md.getSourceInfo().setSourceId("test-faking");
         md.getDataInfo().setSchemaId("iso19139");
-        md.getDataInfo().setType(MetadataType.TEMPLATE);
+        md.getDataInfo().setType(metadataType);
         return md;
     }
 

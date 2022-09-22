@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Priority;
+import org.apache.logging.log4j.Level;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
@@ -412,7 +412,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private void logModel(WroModel model) {
-        if (Log.isEnabledFor(WRO4J_LOG, Priority.INFO_INT)) {
+        if (Log.isEnabledFor(WRO4J_LOG, Level.INFO)) {
             StringBuilder builder = new StringBuilder();
             final int uriLength = 60;
             for (Group group : model.getGroups()) {
@@ -713,8 +713,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 @Override
                 public Iterator<File> iterator() {
-                    // More detailed error about 
-                    // Parameter 'directory' is not a directory 
+                    // More detailed error about
+                    // Parameter 'directory' is not a directory
                     // when a missing lib is not found by wro4j when geonetwork initialized.
                     // It may happen when submodules are not loaded properly.
                     if (!root.isDirectory()) {

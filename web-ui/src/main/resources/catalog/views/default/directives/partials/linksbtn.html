@@ -1,65 +1,51 @@
 <div class="gn-md-links">
-
-  <a class="gn-md-edit-btn btn btn-default btn-sm"
-     data-ng-show="user.canEditRecord(md)"
-     data-ng-href="catalog.edit#/metadata/{{md.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md.uuid}}"
-     title="{{'edit' | translate}}"
-     aria-label="{{'edit' | translate}}">
+  <a
+    class="gn-md-edit-btn btn btn-default btn-sm"
+    data-ng-show="user.canEditRecord(md)"
+    data-ng-href="catalog.edit#/metadata/{{md.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md.uuid}}"
+    title="{{'edit' | translate}}"
+    aria-label="{{'edit' | translate}}"
+  >
     <i class="fa fa-pencil"></i>
 
-    <span data-ng-if="(md.draft == 'e')" data-translate="">
-      workingCopy
-    </span>
+    <span data-ng-if="(md.draft == 'e')" data-translate=""> workingCopy </span>
   </a>
 
-  <div class="btn-group"
-       data-gn-saved-selections-action="MyFrequentlyUsedRecords"
-       data-record="md"
-       data-user="user"
-       data-lang="lang"/>
+  <div
+    class="btn-group"
+    data-gn-saved-selections-action="MyFrequentlyUsedRecords"
+    data-record="md"
+    data-user="user"
+    data-lang="lang"
+  />
 
-  <div data-ng-if="::links.length > 0"
-       data-gn-record-links-button="links"
-       data-alt-title="weblink"
-       data-btn="dropdown"
-       data-icon-class="fa-link"
-       data-icon-mode="dropdownOnly"
-       data-record="md">
-  </div>
-
-  <div data-ng-if="::isMapViewerEnabled && layers.length > 0"
-       data-gn-record-links-button="layers"
-       data-btn-disabled="!md.dynamic"
-       data-alt-title="layers"
-       data-btn="dropdownOrButton"
-       data-icon-mode="dropdownOnly"
-       data-record="md">
-    <li data-ng-show="layers.length > 1"
-        class="divider"></li>
-    <li data-ng-show="layers.length > 1">
-      <a href=""
-         data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
-        <i class="fa fa-plus"></i>&nbsp;
-        <span data-translate=""
-              data-translate-values="{number: '{{layers.length}}'}">
+  <span
+    data-ng-repeat="(k, links) in md.linksByType"
+    data-ng-if="::(isMapViewerEnabled && (k === 'layers' || k === 'maps'))
+                  || (k !== 'layers' && k !== 'maps')"
+  >
+    <div
+      data-ng-if="::links.length > 0"
+      data-gn-record-links-button="links"
+      data-alt-title="{{k | translate}}"
+      data-btn="dropdownOrButton"
+      data-icon-class="{{k === 'links' ? 'fa-link' :
+            (k === 'layers' ? 'fa-globe' :
+            (k === 'maps' ? 'fa-map' :
+            (k === 'downloads' ? 'fa-download' :
+            (k === 'downloadServices' ? 'fa-cloud' : ''))))}}"
+      data-icon-mode="dropdownOnly"
+      data-record="md"
+    >
+      <li data-ng-show="k === 'layers' && links.length > 1" class="divider"></li>
+      <li data-ng-show="k === 'layers' && links.length > 1">
+        <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(links, md)">
+          <i class="fa fa-plus"></i>&nbsp;
+          <span data-translate="" data-translate-values="{number: '{{links.length}}'}">
             addAllLayersToMap
           </span>
-      </a>
-    </li>
-  </div>
-
-  <div data-ng-if="::isMapViewerEnabled && maps.length > 0"
-       data-gn-record-links-button="maps"
-       data-alt-title="layers"
-       data-btn="dropdownOrButton"
-       data-icon-mode="dropdownOnly"
-       data-record="md">
-  </div>
-  <div data-ng-if="::downloads.length > 0"
-       data-gn-record-links-button="downloads"
-       data-alt-title="downloads"
-       data-btn="dropdownOrButton"
-       data-icon-mode="dropdownOnly"
-       data-record="md">
-  </div>
+        </a>
+      </li>
+    </div>
+  </span>
 </div>

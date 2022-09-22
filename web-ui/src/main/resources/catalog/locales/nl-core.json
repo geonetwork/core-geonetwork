@@ -430,7 +430,7 @@
     "link-fcats": "Feature catalogus",
     "link-associated": "Downloads, views en links",
     "indexAccessError": "Error tijdens raadplegen van de index",
-    "applyFilter": "Filter toepassen",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "Ok",
     "confirmDialogTitle": "Actie bevestigen",
     "close": "Sluiten",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Goedkeuring van batch-metagegevens",
     "batchApproveInfo": "Deze optie keurt de geselecteerde metagegevens goed die eigendom zijn van de gebruiker. Standaard worden alleen de metadata in de ingediende status goedgekeurd, selecteer de onderstaande optie om de metadata die niet de ingediende status hebben direct goed te keuren.",
     "batchApproveDirect": "Keur de metadata goed zonder de status &#39;Ingediend&#39; te hebben",
-    "facet-mdStatus": "Voortgang in de workflow"
+    "facet-mdStatus": "Voortgang in de workflow",
+    "skipLink": "Skip and go to the content"
 }

@@ -22,37 +22,57 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
 
-/**
- * Class to test the InspireAtomHarvester.
- *
- * @author Jose García
- */
-public class AtomHarvester implements Service {
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
+import java.io.IOException;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
+import static org.springframework.http.HttpStatus.CREATED;
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
+@RequestMapping(value = {
+    "/{portal}/api/atom"
+})
+@Tag(name = "atom",
+    description = "ATOM")
+@RestController
+public class AtomHarvester {
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Scan records for ATOM feeds",
+        description = "Check in the settings which protocol identify ATOM feeds in your catalogue." +
+            "Only applies to ISO19139 records.")
+    @GetMapping(
+        value = "/scan",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Scan completed."),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(CREATED)
+    @ResponseBody
+    public Object scan(
+        @Parameter(hidden = true)
+            HttpServletRequest request) throws IOException {
+        ServiceContext context = ApiUtils.createServiceContext(request);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         InspireAtomHarvester inspireAtomHarvester = new InspireAtomHarvester(gc);
-
-        return inspireAtomHarvester.harvest();
+        Element scanReport = inspireAtomHarvester.harvest();
+        return Xml.getJSON(scanReport);
     }
 }

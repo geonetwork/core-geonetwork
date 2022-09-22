@@ -32,7 +32,7 @@
     normalize-space(cit:CI_OnlineResource/cit:name/gco:CharacterString) = normalize-space($name)]|
     mrd:onLine[
     normalize-space(cit:CI_OnlineResource/cit:linkage/gco:CharacterString) = $url and
-    normalize-space(cit:CI_OnlineResource/cit:protocol/gco:CharacterString) = 'WWW:DOWNLOAD-1.0-http--download']|
+    normalize-space(cit:CI_OnlineResource/cit:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download']|
     mdq:report[*/mdq:result/*/mdq:specification/
                 */cit:onlineResource/*/cit:linkage/*/text() = $url]|
     mdq:standaloneQualityReport[*/mdq:reportReference/

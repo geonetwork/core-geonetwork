@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_batch_service');
+(function () {
+  goog.provide("gn_batch_service");
 
-  var module = angular.module('gn_batch_service', [
-  ]);
+  var module = angular.module("gn_batch_service", []);
 
   /**
    * @ngdoc service
@@ -41,19 +40,17 @@
    * on metadatas during the edition. It is mostly used for the online resources
    * management.
    */
-  module.factory('gnBatchProcessing', [
-    'gnHttp',
-    '$http',
-    'gnUrlUtils',
-    'gnEditor',
-    'gnCurrentEdit',
-    '$q',
-    function(gnHttp, $http, gnUrlUtils, gnEditor, gnCurrentEdit, $q) {
-
+  module.factory("gnBatchProcessing", [
+    "gnHttp",
+    "$http",
+    "gnUrlUtils",
+    "gnEditor",
+    "gnCurrentEdit",
+    "$q",
+    function (gnHttp, $http, gnUrlUtils, gnEditor, gnCurrentEdit, $q) {
       var processing = true;
       var processReport = null;
       return {
-
         /**
          * @name gnBatchProcessing#runProcessMd
          *
@@ -69,47 +66,72 @@
          *                           to the related dataset.
          * @return {HttpPromise}
          */
-        runProcessMd: function(params, skipSave) {
+        runProcessMd: function (params, skipSave) {
           if (!params.id && !params.uuid) {
             angular.extend(params, {
               id: gnCurrentEdit.id
             });
           }
           var defer = $q.defer();
-          gnEditor.save(false, true)
-              .then(function() {
-                if (!skipSave) {
-                  $http.post('../api/records/' + (params.id || params.uuid) +
-                    '/processes/' + params.process,
+          gnEditor.save(false, true).then(
+            function () {
+              if (!skipSave) {
+                $http
+                  .post(
+                    "../api/records/" +
+                      (params.id || params.uuid) +
+                      "/processes/" +
+                      params.process,
                     gnUrlUtils.toKeyValue(params),
-                    {headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}
-                  ).then(function(data) {
-                    $http.get('../api/records/' + gnCurrentEdit.id + '/editor' +
-                      '?currTab=' + gnCurrentEdit.tab).then(function(data) {
-                      var snippet = $(data.data);
-                      gnEditor.refreshEditorForm(snippet);
+                    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+                  )
+                  .then(
+                    function (data) {
+                      $http
+                        .get(
+                          "../api/records/" +
+                            gnCurrentEdit.id +
+                            "/editor" +
+                            "?currTab=" +
+                            gnCurrentEdit.tab
+                        )
+                        .then(function (data) {
+                          var snippet = $(data.data);
+                          gnEditor.refreshEditorForm(snippet);
+                          defer.resolve(data);
+                        });
+                    },
+                    function (error) {
+                      defer.reject(error);
+                    }
+                  );
+              } else {
+                $http
+                  .post(
+                    "../api/records/" +
+                      (params.id || params.uuid) +
+                      "/processes/" +
+                      params.process,
+                    gnUrlUtils.toKeyValue(params),
+                    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+                  )
+                  .then(
+                    function (data) {
                       defer.resolve(data);
-                    });
-                  }, function(error) {
-                    defer.reject(error);
-                  });
-                } else {
-                  $http.post('../api/records/' + (params.id || params.uuid) +
-                    '/processes/' + params.process,
-                    gnUrlUtils.toKeyValue(params),
-                    {headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}
-                  ).then(function(data) {
-                    defer.resolve(data);
-                  }, function(error) {
-                    defer.reject(error);
-                  });
-                }
-
-              }, function(error) {
-                defer.reject(error);
-              });
+                    },
+                    function (error) {
+                      defer.reject(error);
+                    }
+                  );
+              }
+            },
+            function (error) {
+              defer.reject(error);
+            }
+          );
           return defer.promise;
         }
       };
-    }]);
+    }
+  ]);
 })();

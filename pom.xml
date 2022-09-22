@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.1-SNAPSHOT</version>
+  <version>4.2.2-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -507,7 +507,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
@@ -524,20 +524,26 @@
         <artifactId>batik-transcoder</artifactId>
         <version>1.10</version>
       </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+      <!-- logging -->
+      <dependency> <!-- usedf for camel -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j18-impl</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency> <!-- used for LDAP test dependency in core -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${slf4j.version}</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jcl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-1.2-api</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -547,6 +553,11 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jul</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
       <dependency>
@@ -770,8 +781,12 @@
       <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
         <artifactId>mime-util</artifactId>
-        <version>2.1.2</version>
+        <version>2.1.3</version>
         <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -814,6 +829,12 @@
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
         <version>2.2.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Lib utils -->
@@ -841,6 +862,12 @@
         <groupId>com.yammer.metrics</groupId>
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Tests -->
@@ -887,6 +914,14 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-all</artifactId>
+        <version>2.0.0-M24</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- other stuff -->
+      <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>2.1.212</version>
@@ -918,11 +953,6 @@
          <version>19.6.0.0</version>
          <!-- Oracle Free Use Terms and Conditions (FUTC) -->
        </dependency>
-      <dependency>
-        <groupId>org.codehaus.izpack</groupId>
-        <artifactId>izpack-standalone-compiler</artifactId>
-        <version>4.3.1</version>
-      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
@@ -1504,7 +1534,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.46.v20220331</jetty.version>
+    <jetty.version>9.4.48.v20220622</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1515,7 +1545,7 @@
     <pg.version>42.3.3</pg.version>
 
     <spring.version>5.2.20.RELEASE</spring.version>
-    <spring.security.version>5.2.15.RELEASE</spring.security.version>
+    <spring.security.version>5.7.3</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.2.2.RELEASE</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
@@ -1532,8 +1562,7 @@
     <xmlunit.version>2.1.1</xmlunit.version>
     <jackson.version>2.10.4</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
-    <camel.version>2.25.4</camel.version>
-    <log4j.version>1.2.17</log4j.version>
+    <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>

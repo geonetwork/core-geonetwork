@@ -248,12 +248,19 @@
         <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL/text())"/>",
-        "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>",
+        "contentUrl":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL/text())"/>"
+        <xsl:if test="gmd:protocol">,
+        "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>"
+        </xsl:if>
+        <xsl:if test="gmd:name">,
         "name": <xsl:apply-templates mode="toJsonLDLocalized"
-                                     select="gmd:name"/>,
+                                     select="gmd:name"/>
+        </xsl:if>
+        <xsl:if test="gmd:description">,
         "description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                            select="gmd:description"/>        }
+                                            select="gmd:description"/>
+        </xsl:if>
+        }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
     ]

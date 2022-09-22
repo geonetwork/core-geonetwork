@@ -110,7 +110,8 @@ public class ProcessApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Search and replace values in one or more records",
+    @Deprecated
+    @io.swagger.v3.oas.annotations.Operation(summary = "Search and replace values in one or more ISO19139 records",
         description = "Service to apply replacements to one or more records." +
             "\n" +
             " To define a replacement, send the following parameters:\n" +
@@ -118,8 +119,7 @@ public class ProcessApi {
             " * mdfield-1398155513728=id.contact.individualName\n" +
             " * replaceValue-1398155513728=Juan\n" +
             " * searchValue-1398155513728=Jose\n\n" +
-            "TODO: Would be good to provide a simple object to define list of changes " +
-            "instead of group of parameters.<br/>" +
+            "<br/>" +
             "Batch editing can also be used for similar works.")
     @RequestMapping(
         value = "/search-and-replace",

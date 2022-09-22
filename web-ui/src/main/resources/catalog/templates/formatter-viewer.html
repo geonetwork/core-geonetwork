@@ -1,19 +1,24 @@
 <div class="container formatter-container">
   <div class="btn-toolbar pull-right">
-    <div class="gn-md-actions-btn pull-right btn-group md-actions"
-         data-gn-md-actions-menu="md"/>
-    <a class="btn btn-primary gn-md-edit-btn"
-       data-ng-show="user.canEditRecord(md)"
-       data-ng-href="catalog.edit#/metadata/{{md.getId()}}"
-       title="{{'edit' | translate}}">
+    <div
+      class="gn-md-actions-btn pull-right btn-group md-actions"
+      data-gn-md-actions-menu="md"
+    />
+    <a
+      class="btn btn-primary gn-md-edit-btn"
+      data-ng-show="user.canEditRecord(md)"
+      data-ng-href="catalog.edit#/metadata/{{md.getId()}}"
+      title="{{'edit' | translate}}"
+    >
       <i class="fa fa-fw fa-pencil"></i>
     </a>
-    <a class="btn btn-danger gn-md-delete-btn"
-       data-ng-show="user.canEditRecord(md)"
-       data-gn-click-and-spin="deleteRecord(md)"
-       data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
-       title="{{'delete' | translate}}">
-
+    <a
+      class="btn btn-danger gn-md-delete-btn"
+      data-ng-show="user.canEditRecord(md)"
+      data-gn-click-and-spin="deleteRecord(md)"
+      data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
+      title="{{'delete' | translate}}"
+    >
       <i class="fa fa-fw fa-times"></i>
     </a>
   </div>

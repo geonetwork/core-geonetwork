@@ -430,7 +430,7 @@
     "link-fcats": "Katalog prvků",
     "link-associated": "Přidružené zdroje",
     "indexAccessError": "Chyba při přístupu k indexům.",
-    "applyFilter": "Použít filtr",
+    "applyFilter": "Použít aktuální filtr na mapu (vytvořit SLD pro použití na vrstvu WMS).",
     "confirm": "OK",
     "confirmDialogTitle": "Potvrdit akci",
     "close": "Zavřít ",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Dávkové schválení metadat",
     "batchApproveInfo": "Tato možnost schvaluje vybraná metadata vlastněná uživatelem. Ve výchozím nastavení jsou schválena pouze metadata v odeslaném stavu, výběrem níže uvedené možnosti schválíte přímo metadata, která nejsou ve odeslaném stavu.",
     "batchApproveDirect": "Schválit metadata, aniž byste museli být ve stavu odeslání",
-    "facet-mdStatus": "Vývoj v postupu prací"
+    "facet-mdStatus": "Vývoj v postupu prací",
+    "skipLink": "Skip and go to the content"
 }

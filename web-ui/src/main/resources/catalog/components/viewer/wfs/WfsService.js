@@ -21,45 +21,38 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wfs_service');
+(function () {
+  goog.provide("gn_wfs_service");
 
+  var module = angular.module("gn_wfs_service", []);
 
-
-
-  var module = angular.module('gn_wfs_service', []);
-
-  module.service('gnWfsService', [
-    '$http',
-    'gnOwsCapabilities',
-    'gnUrlUtils',
-    'gnGlobalSettings',
-    '$q',
-    function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings, $q) {
-
+  module.service("gnWfsService", [
+    "$http",
+    "gnOwsCapabilities",
+    "gnUrlUtils",
+    "gnGlobalSettings",
+    "$q",
+    function ($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings, $q) {
       /**
        * Do a getCapabilies request to the url (service) given in parameter.
        *
        * @param {string} url wfs service url
        * @return {Promise}
        */
-      this.getCapabilities = function(url, version) {
+      this.getCapabilities = function (url, version) {
         return gnOwsCapabilities.getWFSCapabilities(url, version);
       };
 
-      this.getTypeName = function(capabilities, typename) {
+      this.getTypeName = function (capabilities, typename) {
         if (capabilities.featureTypeList) {
-          var tokens = typename.split(':'),
-              prefix = tokens.length === 1 ? null : tokens[0],
-              localPart = tokens.length === 1 ? typename : tokens[1];
-          for (var i = 0;
-               i < capabilities.featureTypeList.featureType.length;
-               i++) {
-            var name = capabilities.featureTypeList.
-                featureType[i].name;
+          var tokens = typename.split(":"),
+            prefix = tokens.length === 1 ? null : tokens[0],
+            localPart = tokens.length === 1 ? typename : tokens[1];
+          for (var i = 0; i < capabilities.featureTypeList.featureType.length; i++) {
+            var name = capabilities.featureTypeList.featureType[i].name;
             if (
-                (name.localPart == localPart && prefix == null) ||
-                (name.localPart == localPart && name.prefix == prefix)
+              (name.localPart == localPart && prefix == null) ||
+              (name.localPart == localPart && name.prefix == prefix)
             ) {
               return capabilities.featureTypeList.featureType[i];
             }
@@ -67,26 +60,27 @@
         }
       };
 
-      this.getOutputFormat = function(capabilities, operation) {
+      this.getOutputFormat = function (capabilities, operation) {
         if (capabilities.operationsMetadata) {
-          for (var i = 0;
-               i < capabilities.operationsMetadata.operation.length; i++) {
+          for (var i = 0; i < capabilities.operationsMetadata.operation.length; i++) {
             var op = capabilities.operationsMetadata.operation[i];
-            if (op.name == operation || op.name == 'GetFeature') {
-              if (op.parameter){
+            if (op.name == operation || op.name == "GetFeature") {
+              if (op.parameter) {
                 for (var j = 0; j < op.parameter.length; j++) {
                   var f = op.parameter[j];
-                  if (f.name == 'outputFormat') {
-                    if (capabilities.version=="2.0.0") {
+                  if (f.name == "outputFormat") {
+                    if (capabilities.version == "2.0.0") {
                       //wfs2 exposes outputformats in 'AllowedValues'
-                      return f.allowedValues.valueOrRange.map(function(v) { return v.value; })
+                      return f.allowedValues.valueOrRange.map(function (v) {
+                        return v.value;
+                      });
                     } else {
-                      return f.value
+                      return f.value;
                     }
                   }
                 }
               } else {
-                if (capabilities.version=="2.0.0") {
+                if (capabilities.version == "2.0.0") {
                   return ["text/xml; subtype=gml/3.2"];
                 } else {
                   return ["text/xml; subtype=gml/3.1.1"];
@@ -97,15 +91,14 @@
         }
         return [];
       };
-      this.getProjection = function(capabilities, layers) {
+      this.getProjection = function (capabilities, layers) {
         if (capabilities.operationsMetadata) {
-          for (var i = 0;
-               i < capabilities.operationsMetadata.operation.length; i++) {
+          for (var i = 0; i < capabilities.operationsMetadata.operation.length; i++) {
             var op = capabilities.operationsMetadata.operation[i];
-            if (op.name == operation || op.name == 'GetFeature') {
+            if (op.name == operation || op.name == "GetFeature") {
               for (var j = 0; j < op.parameter.length; j++) {
                 var f = op.parameter[j];
-                if (f.name == 'projection') {
+                if (f.name == "projection") {
                   return f.value;
                 }
               }
@@ -115,17 +108,15 @@
         return [];
       };
 
-
       // TODO: Add maxFeatures, featureid
-      this.download = function(url, version, typename,
-                               format, extent, projection) {
+      this.download = function (url, version, typename, format, extent, projection) {
         if (url) {
-          var defaultVersion = '1.1.0';
+          var defaultVersion = "1.1.0";
           // Params to remove from input URL if existing
-          var excludedParams = ['request', 'service', 'version'];
+          var excludedParams = ["request", "service", "version"];
           var params = {
-            request: 'GetFeature',
-            service: 'WFS',
+            request: "GetFeature",
+            service: "WFS",
             version: version || defaultVersion,
             outputFormat: format
           };
@@ -145,7 +136,7 @@
           url = gnOwsCapabilities.mergeParams(url, params, excludedParams);
           window.open(url);
         } else {
-          console.warn('no url');
+          console.warn("no url");
         }
       };
     }
