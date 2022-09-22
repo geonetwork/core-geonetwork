@@ -5,6 +5,7 @@
 // styling for a single result: metadata view
 
 .btn-toolbar {
+  margin-left: 0;
   .btn-group {
     margin-left: 0;
     margin-right: 5px;
@@ -29,6 +30,22 @@
 .gn-md-view {
   padding: 15px 20px;
   background-color: @gn-md-view-background-color;
+  h2 {
+    font-size: 24px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+  [data-gn-keyword-badges] {
+    .col-md-12 {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    .btn {
+      margin: 0 5px 5px 0;
+    }
+    margin-bottom: 15px;
+  }
   // highlight the active view
   .gn-view-menu-button {
     .dropdown-menu {
@@ -43,6 +60,133 @@
       }
     }
   }
+  .gn-thumbnails {
+    list-style: none;
+    padding: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    li {
+      flex-grow: 2;
+      img {
+        object-fit: cover;
+        vertical-align: bottom;
+        border-radius: 0;
+        border: 1px solid #ddd !important;
+        padding: 0;
+      }
+      &:last-child {
+        flex-grow: 10;
+      }
+    }
+  }
+  .badge-rounded {
+    padding: 10px 8px;
+    border-radius: 50%;
+    color: #0e0e0e;
+    background-color: #efefef !important;
+    flex: none;
+    display: none;
+    &.bg-success {
+      color: #fff;
+      background-color: @brand-success !important;
+    }
+    &.bg-danger {
+      color: #fff;
+      background-color: @brand-danger !important;
+    }
+  }
+  // card
+  .gn-card-view-header {
+    padding: 15px;
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    color: #fff;
+  }
+  .gn-card-badge {
+    padding: 15px;
+    margin-top: 30px !important;
+    color: #0e0e0e;
+    position: absolute;
+    left: -5px;
+    bottom: 10px;
+  }
+  .btn-block + .btn-block {
+    margin-top: 0;
+  }
+  .gn-card {
+    h1 {
+      margin-top: 15px;
+      font-size: 32px;
+      font-weight: 300;
+    }
+    p {
+      font-size: 15px;
+      line-height: 1.6em;
+      a {
+        line-break: anywhere;
+      }
+    }
+    .badge-rounded {
+      color: #fff;
+      background-color: #333 !important;
+    }
+    .gallery {
+      width: 100%;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 0;
+      border: none;
+      height: auto;
+    }
+    .img-thumbnail {
+      padding: 0;
+      border: none;
+      max-height: 300px;
+      min-height: 150px;
+      max-width: 100%;
+    }
+  }
+  .gn-card-series {
+    background-color: lighten(@gray-base, 85%);
+    &:hover {
+      background-color: lighten(@gray-base, 85%);
+    }
+  }
+  .gn-card-dataset {
+    background-color: @gray-lighter;
+    &:hover {
+      background-color: @gray-lighter;
+    }
+  }
+  .gn-card-nonGeographicDataset {
+    background-color: @gray-lighter;
+    &:hover {
+      background-color: @gray-lighter;
+    }
+  }
+  .gn-card-service, .gn-card-application {
+    background-color: lighten(@gray-base, 85%);
+    &:hover {
+      background-color: lighten(@gray-base, 85%);
+    }
+  }
+  .gn-series {
+    .nav-pills {
+      li {
+        font-size: 20px;
+      }
+    }
+
+  }
+  // similar block
+  .gn-block-similar {
+    background-color: @navbar-default-bg;
+    .btn-link {
+      padding: 0;
+    }
+  }
+  // related items
   .gn-related-item {
     margin-top: -1px;
     border-radius: 0;
@@ -55,10 +199,14 @@
       }
     }
     h3 {
-      margin-top: 0;
+      margin-top: 5px;
       color: #333;
       padding-left: 0;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+    p {
+      margin-top: 10px;
     }
     .table-striped td {
       padding-left: 8px;
@@ -68,7 +216,52 @@
       overflow: auto;
     }
   }
+  .gn-label-list {
+    list-style: none;
+    padding: 0 !important;
+    margin-bottom: 0;
+    .clearfix();
+    li, .btn {
+      border: 1px solid @btn-default-border;
+      border-radius: @btn-border-radius-base;
+      float: left;
+      padding: 5px 5px 3px 5px;
+      margin: 0 5px 5px 0;
+      font-size: 12px;
+    }
+  }
+  .gn-comma-list {
+    list-style: none;
+    padding: 0 !important;
+    margin-bottom: 0;
+    .clearfix();
+    li {
+      line-height: 1.7em;
+      display: inline;
+      line-break: auto;
+      a {
+        line-break: normal;
+      }
+      &:after {
+        content: ",";
+        margin-left: -0.3ch;
+      }
+      &:last-child:after {
+        content: "";
+      }
+    }
+  }
   .gn-md-side {
+    padding-top: 20px;
+    p {
+      margin: 0;
+    }
+    .gn-providedby-logo {
+      display: inline-block;
+      img {
+        display: none;
+      }
+    }
     .gn-img-thumbnail,
     .gn-img-extent {
       max-width: 100%;
@@ -77,11 +270,72 @@
       border: 1px solid #ccc;
       padding: 4px;
     }
+    .flex-row {
+      gap: 5px;
+    }
+    .badge-rounded {
+      display: inline-block;
+    }
+    a {
+      line-break: anywhere;
+      cursor: pointer;
+    }
+    ul {
+      padding-left: 1em;
+      margin-top: 5px;
+    }
     section {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     h2 {
-      font-size: 16px;
+      font-size: 18px;
+    }
+    h3 {
+      font-size: 14px;
+      display: inline-block;
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .gn-md-side-dates {
+      ul {
+        list-style: none;
+        padding-left: 0;
+        li {
+          padding: 5px 0;
+        }
+      }
+    }
+    // keywords
+    [data-gn-keyword-badges] {
+      .btn {
+        white-space: normal;
+        text-align: left;
+      }
+    }
+    // card
+    &.col-md-4 {
+      .gn-info-list-blocks {
+        .gn-info-list {
+          .gn-card {
+            width: 100%;
+            margin: 0 0 10px 0;
+
+            .gn-card-body {
+              height: calc(~"20em - @{gn-card-header-height} - @{gn-card-footer-height}");
+
+              .gn-img-thumbnail, .gn-md-no-thumbnail {
+                height: calc(~"20em - @{gn-card-header-height} - @{gn-card-footer-height}") !important;
+              }
+              .gn-md-no-thumbnail {
+                &:after {
+                  margin-right: 10%;
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
   .view-header {
@@ -200,6 +454,17 @@
   // IE11 flexbox fix
   .gn-record > table {
     table-layout: fixed;
+  }
+  // OpenLayers
+  .ol-attribution {
+    ul {
+      margin-top: 2px;
+      max-width: none;
+      display: block;
+      a {
+        color: @link-color;
+      }
+    }
   }
 }
 

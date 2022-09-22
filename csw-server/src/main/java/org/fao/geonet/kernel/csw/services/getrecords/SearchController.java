@@ -82,6 +82,9 @@ public class SearchController {
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";
 
     @Autowired
+    NodeInfo node;
+
+    @Autowired
     IMetadataUtils metadataUtils;
 
     @Autowired
@@ -445,7 +448,7 @@ public class SearchController {
         JsonNode esJsonQuery;
 
         try {
-            String filterQueryString = esFilterBuilder.build(context, "metadata");
+            String filterQueryString = esFilterBuilder.build(context, "metadata", false, node);
             String jsonQuery = String.format(elasticSearchQuery, filterQueryString);
 
             ObjectMapper objectMapper = new ObjectMapper();

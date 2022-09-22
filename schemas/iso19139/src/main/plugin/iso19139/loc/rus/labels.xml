@@ -539,7 +539,7 @@
   <!-- ==================================================== -->
   <element name="gmd:compressionGenerationQuantity">
     <label>Compression generation quantity</label>
-    <description>count of the number the number of lossy compression
+    <description>count of the number of lossy compression
       cycles performed on the
       image
     </description>
@@ -2218,6 +2218,10 @@
       </option>
       <option show="y" value="GLG:KML-2.0-http-get-map">Сервис Google Earth KML (версия 2.0)
       </option>
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -3080,7 +3084,7 @@
   <element name="srv:name">
     <label>Название</label>
     <description>the name, as used by the service for this chain or
-      paramater
+      parameter
     </description>
   </element>
   <element name="srv:description">

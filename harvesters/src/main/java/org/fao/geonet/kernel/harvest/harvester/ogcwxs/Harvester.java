@@ -23,26 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -52,24 +35,14 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -89,8 +62,18 @@ import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-//=============================================================================
+import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
+
 
 /**
  * A OgcWxSHarvester is able to generate metadata for data and service from a GetCapabilities
@@ -216,9 +199,12 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
 
         // Try to load capabilities document
+        String serviceType = params.ogctype.replaceAll("[0-9]+.?", "");
+        String version = params.ogctype.replaceAll("[A-Z]+", "");
+        boolean isSos = "SOS".equals(serviceType);
         this.capabilitiesUrl = getBaseUrl(params.url) +
-            "SERVICE=" + params.ogctype.substring(0, 3) +
-            "&VERSION=" + params.ogctype.substring(3) +
+            "SERVICE=" +  serviceType +
+            (isSos ? "" : ("&VERSION=" + version)) +
             "&REQUEST=" + GETCAPABILITIES
         ;
 
@@ -228,7 +214,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
-        req.setMethod(XmlRequest.Method.GET);
+        req.setMethod(GET);
         Lib.net.setupProxy(context, req);
 
         if (params.isUseAccount()) {
@@ -244,7 +230,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         List<String> ids = Lists.transform(uuids, new Function<String, String>() {
             @Nullable
             @Override
-            public String apply(@Nonnull String uuid) {
+            public String apply(String uuid) {
                 try {
                     return dataMan.getMetadataId(uuid);
                 } catch (Exception e) {
@@ -332,7 +318,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         }
 
 
-        final String schema = dataMan.autodetectSchema(md, null);
+        String schema = dataMan.autodetectSchema(md, null);
         if (schema == null) {
             log.warning("Skipping metadata with unknown schema.");
             result.unknownSchema++;
@@ -396,6 +382,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             importXsl = importXsl.resolve(importXslFile);
             log.info("Applying custom import XSL " + importXsl.getFileName());
             md = Xml.transform(md, importXsl);
+            schema = dataMan.autodetectSchema(md, null);
         }
 
 
@@ -458,7 +445,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         try {
             md = Xml.transform(capa, styleSheet, xsltParams);
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             String message = String.format(
                 "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
                 this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));
@@ -591,8 +578,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         boolean exist;
         boolean loaded = false;
+        String ogcType = params.ogctype.replaceAll("[0-9]+.?", "");
 
-        if (params.ogctype.substring(0, 3).equals("WMS")) {
+        if (ogcType.equals("WMS")) {
             Element name;
             if (params.ogctype.substring(3, 8).equals("1.3.0")) {
                 Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
@@ -606,19 +594,19 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 return null;
             }
             reg.name = name.getValue();
-        } else if (params.ogctype.substring(0, 3).equals("WFS")) {
+        } else if (ogcType.equals("WFS")) {
             Namespace wfs = Namespace.getNamespace("http://www.opengis.net/wfs");
             reg.name = layer.getChild("Name", wfs).getValue();
-        } else if (params.ogctype.substring(0, 3).equals("WCS")) {
+        } else if (ogcType.equals("WCS")) {
             Namespace wcs = Namespace.getNamespace("http://www.opengis.net/wcs");
             reg.name = layer.getChild("name", wcs).getValue();
-        } else if (params.ogctype.substring(0, 3).equals("WPS")) {
+        } else if (ogcType.equals("WPS")) {
             Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/2.0");
             reg.name = layer.getChild("Identifier", ows).getValue();
-        } else if (params.ogctype.substring(0, 3).equals("SOS")) {
+        } else if (ogcType.equals("SOS")) {
             Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
             reg.name = layer.getChild("name", gml).getValue();
-        } else if (params.ogctype.substring(0, 4).equals("WMTS")) {
+        } else if (ogcType.equals("WMTS")) {
             Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/1.1");
             reg.name = layer.getChild("Identifier", ows).getValue();
         }
@@ -629,10 +617,10 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         log.info("  - Loading layer: " + reg.name + " with UUID " + reg.uuid + " (hash of capabilities URL + layer name).");
 
         if (params.useLayerMd && (
-            params.ogctype.substring(0, 3).equals("WMS") ||
-            params.ogctype.substring(0, 3).equals("WFS") ||
-            params.ogctype.substring(0, 3).equals("WPS") ||
-            params.ogctype.substring(0, 3).equals("WCS"))) {
+            ogcType.equals("WMS") ||
+            ogcType.equals("WFS") ||
+            ogcType.equals("WPS") ||
+            ogcType.equals("WCS"))) {
 
             log.info("  - Searching for metadataUrl for layer " + reg.name);
 
@@ -792,6 +780,19 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                         resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilitiesLayer-to-19139.xsl");
 
                     xml = Xml.transform(capa, styleSheet, param);
+
+                    // Apply custom transformation if requested
+                    Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+                    String importXslFile = params.getImportXslt();
+                    if (importXslFile != null && !importXslFile.equals("none")) {
+                        if (!importXslFile.endsWith("xsl")) {
+                            importXslFile = importXslFile + ".xsl";
+                        }
+                        importXsl = importXsl.resolve(importXslFile);
+                        log.info("Applying custom import XSL " + importXsl.getFileName());
+                        xml = Xml.transform(xml, importXsl);
+                    }
+
                     if (log.isDebugEnabled()) {
                         log.debug("  - Layer loaded using GetCapabilities document.");
                     }
@@ -1051,8 +1052,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
      */
     @Override
     public List<HarvestError> getErrors() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<>();
     }
 
     private static class WxSLayerRegistry {

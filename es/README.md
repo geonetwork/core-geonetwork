@@ -81,24 +81,23 @@ curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
 curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
 
-## Multilingual configuration (beta)
+## Multilingual configuration
 
-* Stop Elasticsearch
-* Define which analyzer to use https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html depending on the language(s) used in your catalogue
-* Build the application with the default analyzer to use (or configure it in `data/index/records.json`)
+Default index is configured with analyzer for the following languages:
+* English
+* French
+* German
+* Italian
+  
+To add a new language, update the index schema in `datadir/config/index/records.json` and update the containing fields starting with `lang`.
 
-  ```shell script
-  mvn clean install -Des.default.analyzer=french_heavy
-  ```
+First create a full text search field for the new language in the `any` object field eg. `any.langfre` and define the proper analyzer.
 
-* Install ICU plugin (if needed)
+Then add the new language like the others.
 
-  ```shell script
-  elasticsearch-plugin install analysis-icu
-  ```
+From the admin console > tools, Delete index and reindex.
 
-* Start Elasticsearch
-* Drop and rebuild your index
+Don't hesitate to propose a Pull Request with the new language.
 
 
 # Production use

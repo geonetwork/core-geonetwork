@@ -49,6 +49,9 @@
         "name": {"param": "thumbnail_desc"}
       }
     }],
-    "multilingualFields": ["name", "desc"]
+    "multilingualFields": ["name", "desc"],
+    "wmsResources": {
+      "addLayerNamesMode": "resourcename"
+    }
   }
 }

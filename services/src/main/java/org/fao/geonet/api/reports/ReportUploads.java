@@ -114,7 +114,8 @@ public class ReportUploads implements IReport {
 
                 Optional<Metadata> metadata = metadataRepository.findById(fileUpload.getMetadataId());
                 String metadataUuid = metadata.get().getUuid();
-                String metadataTitle = ReportUtils.retrieveMetadataTitle(metadataUuid);
+                String metadataTitle = ReportUtils.retrieveMetadataIndex(
+                    metadataUuid, "resourceTitleObject", "default");
 
 
                 // Online resource description from the index ...

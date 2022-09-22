@@ -142,7 +142,8 @@ public class ReportDownloads implements IReport {
 
                 Optional<Metadata> metadata = metadataRepository.findById(fileDownload.getMetadataId());
                 String metadataUuid = metadata.get().getUuid();
-                String metadataTitle = ReportUtils.retrieveMetadataTitle(metadataUuid);
+                String metadataTitle = ReportUtils.retrieveMetadataIndex(
+                    metadataUuid, "resourceTitleObject", "default");
 
                 List<String> record = new ArrayList<>();
                 record.add(metadataUuid);

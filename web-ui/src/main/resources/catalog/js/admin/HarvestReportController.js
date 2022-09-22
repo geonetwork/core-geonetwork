@@ -21,27 +21,25 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_harvest_report_controller');
+(function () {
+  goog.provide("gn_harvest_report_controller");
 
-
-  var module = angular.module('gn_harvest_report_controller',
-      []);
+  var module = angular.module("gn_harvest_report_controller", []);
 
   /**
    * GnHarvestReportController provides management interface
    * for report on harvesters.
    */
-  module.controller('GnHarvestReportController', [
-    '$scope',
-    function($scope) {
-      $scope.csvReport = function(event) {
+  module.controller("GnHarvestReportController", [
+    "$scope",
+    function ($scope) {
+      $scope.csvReport = function (event) {
         var json = [];
-        var table = document.getElementById('harvestReport');
+        var table = document.getElementById("harvestReport");
         var names = [];
-        for (var i = 0, row; row = table.rows[i]; i++) {
+        for (var i = 0, row; (row = table.rows[i]); i++) {
           var obj = {};
-          for (var j = 0, col; col = row.cells[j]; j++) {
+          for (var j = 0, col; (col = row.cells[j]); j++) {
             if (i == 0) {
               names[j] = col.innerText;
             } else {
@@ -55,5 +53,6 @@
 
         $scope.csvExport(json, event);
       };
-    }]);
+    }
+  ]);
 })();

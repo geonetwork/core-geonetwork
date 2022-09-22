@@ -38,6 +38,7 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
@@ -122,9 +123,9 @@ public class JeevesEngine {
         }
 
         try {
-            Path log4jConfig = configPath.resolve("log4j.cfg");
+            Path log4jConfig = configPath.resolve("log4j2.xml");
             if (Files.exists(log4jConfig)) {
-                PropertyConfigurator.configure(log4jConfig.toUri().toURL());
+                LogManager.getContext(null, false, log4jConfig.toUri());
             }
 
             _monitorManager.init(servletContext, baseUrl);

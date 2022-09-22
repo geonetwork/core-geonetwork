@@ -1,0 +1,178 @@
+================================================================================
+===
+=== GeoNetwork 4.2.1: List of changes
+===
+================================================================================
+- Deploy / On Jetty app fails to start due to logging (#6542)
+- Transifex updates. (#6546)
+- Record view / Feature catalogue / Fix link to record (#6544)
+- Merge pull request #6541 from jahow/fix-esri-json-language
+- Fix language in ESRI JSON transformation
+- Search / Track total hits (#6482)
+- Enable server hostname verification on this SSL/TLS connection. (#6403)
+- Adjust side bar thickness to 12px (#6293)
+- Index / Schema / First field match in mapping (#6473)
+- Standard / Protocol extraction when using Anchor. (#6495)
+- Home / Map / Fix link adding the map to the map (#6519)
+- Record view / Link tables / Avoid errors on record with no links (#6498)
+- Standard / ISO19110 / Index / Title field as object (#6529)
+- Display successful test mail sent message
+- Record view / Files / Display full description in tooltip
+- Advanced search - datepicker doesn't work. Fixes #6520
+- Add validation status to cmis store and configuration (#6511)
+- [a11y] Make the map and it's elements accessible (#6211)
+- Remove duplicated dependencies declaration (#6536)
+- Update Threads API (#6537)
+- Fix typos in metadata schema element labels and descriptions (#6524)
+- Add missing French messages for DOI and remove double quotes for texts used in mails
+- Add Message.properties files to core tests, causing failure of test that uses code retrieving messages from that files (#6532)
+- Upgrade keycloak dependency to 18.0.2 (#6531)
+- Update DOI manager with multilingual exceptions (#6472)
+- Support for a process to update the metadata content when creating a duplicate
+- Merge pull request #6518 from jahow/index-favorite-count
+- UserSavedSelections / add index on md uuid
+- [a11y] `TAB` order of the row tools on the search page (#6526)
+- [FIX] Add missing print stylesheet (#6527)
+- Fix links not generated properly in schema docs
+- UserSavedSelections / only index saved count for preferred records
+- Remove unused izpack-standalone-compiler dependency (#6515)
+- log4j2 upgrade - add dependency exclusions to avoid including log4j 1.2.17. (#6522)
+- Implement print styles
+- [a11y] Add a skiplink button to the page (#6217)
+- Admin / MapServers / Fix button label. (#6491)
+- Change to log4j2 logging library implementation for logging messages (components choose log4j 1.2 api or log4j 2 api to generate messages) (#6397)
+- UserSavedSelections / index amount of users that saved a record
+- Merge pull request #6450 from geonetwork/formatter-upload-alert
+- Merge pull request #6448 from geonetwork/fix_registry_entries
+- Bump commons-email from 1.4 to 1.5 (#6438)
+- Bump spring.security.version from 5.2.15.RELEASE to 5.7.3 (#6514)
+- CSW - Fix typo (variable endPointValue)
+- API / XPath editing / Delete and replace_all fix (#6506)
+- DOI / Only manage DOI from registered prefix (#6489)
+- Record view / Full / Display temporal range using gml:end/begin element (#6510)
+- Index / Temporal range / Handle cases for year and year month only (#6502)
+-  Add OGC API protocols support for online resources (OGC API - Records)
+- Add OGC API protocols support for online resources
+- Fix inconsistent metadata status when requesting the DOI publication after the metadata approval and publication.
+- Move messages property files to web module. This should make it easier to maintain the files, as they are not embedded in a jar file.
+- Merge pull request #6493 from jahow/add-udata-harvester
+- Harvesting / avoid null value in records from udata
+- Harvester / Fix for OCGWxS harvester resource constraint errors (#6487)
+- Top toolbar / Portal switcher / Display main node when only one portal
+- Harvesting / Avoid errors with JSON properties containing colons
+- JSON Harvester / add license and temporal range for udata
+- JSON Harvester / add udata transformation (data.gouv.fr)
+- lowercase extension before matching it against a lowercase regex (geonetwork/core-geonetwork#6486)
+- Fix the operatesOn indexing when the xlink:href it's a GetRecordById, with the identifier contanining an underscore character
+- Translation / Fix duplicated key in JSON.
+- API / INSPIRE Atom / Migration to Elasticsearch and Spring (#6395)
+- Search / Improve error panel when Elasticsearch is down (#6467)
+- Search results / Improve button link config (#6433)
+- Metadata import - store the validation status when the validation option is selected
+- Revert "Bump camel.version from 2.25.1 to 2.25.4 (#6364)" (#6396)
+- Record view / Preview tabular data (#6440)
+- Standard / ISO / Collection updater / Collect temporal extent (#6368)
+- Harvester / WMTS / Fix error on GetCapabilities. (#6470)
+- Standard / ISO / Keyword configuration and labels (#6430)
+- Admin / Batch editing / Removed unused code. (#6400)
+- Increase the number of users displayed in the users dropdown in the versioning log page.
+- Record view / More like this / Suggest records of same type (#6452)
+- Harvester / LocalFileSystem / Add batch edits. (#6442)
+- API / Batch editing / Add support for attribute. (#6423)
+- Formatter / JSONLD / Online source / Fix when empty description. (#6451)
+- Editor board / Search / Same hits per page config (#6466)
+- Block filename contains semicolon. (#6429)
+- Fix lookup of data directory sub-properties (#6461)
+- INSPIRE Registry UI improvements:
+- Move xsd validation to the bottom of the mandatory rules, displaying first the schematron rules (#6456)
+- Bump actions/setup-java from 3.3.0 to 3.4.1 (#6458)
+- Update SECURITY.md
+- Admin / Status / Indexing error / Add an error flag when XSL process raise warning too.
+- Search / Facet / displayFilter takes priority over includes
+- Update en-v4.json
+- Admin / Status / Indexing error / Make distinction between errors and warnings
+- Admin / Status / Show indexing error when search criteria return no match.
+- Update en-v4.json
+- Admin / Indexing errors / Easily check warning and errors with aggs
+- Search / Fix no match when facet contains "
+- Admin / Harvester / Fix paging - not really sure why the pagination directive does not work when in tab?
+- Admin / Indexing
+- formatter: remove alert message if 201 on upload
+- fix: entries list in registry board
+- Standard / ISO / Suggestion / Add connect point to service. (#6424)
+- Online source / Improve format support and more homogeneous icons & labels (#6411)
+- Map viewer - zoom to full extent to the map context full extent if defined, instead of the projection extent. Fixes #6441
+- Add a setting for showing or hiding the select options in the results page (#6414)
+- Configuration option to display the application version and links to the About, GitHub and API pages in the footer (#6436)
+- Metadata template identifier / Always generate UUID
+- Thesaurus / Regions / Turkey is now Türkiye (#6425)
+- Add documentation for the template to index metadata keywords
+- Fix slovenian language code for INSPIRE Registry thesaurus (#6427)
+- Bump mysql-connector-java from 8.0.20 to 8.0.29 (#6418)
+- Configure the user profile allowed to delete published metadata (#6398)
+- Harvesters / GeoNetwork harvester / Re-add exiting files when re-harvesting (#6416)
+- Reports / Refactor retrieveMetadataTitle  (#6413)
+- Remove unused properties from cmis call to increase performance (#6404)
+- Update datepicker widget to configure the display of the date mode selector
+- Support custom map configuration to generate map thumbnails
+- SonarCloud-Workflow: Do not analyze forked repros. (#6409)
+- Change some of the CMIS private methods to protected
+- Bump actions/cache from 1 to 3 (#6406)
+- Fix the `toggle all sections` button in the editor.
+- Add github workflow and properties for SonarCloud. (#6399)
+- Webdav harvester - add the number of files to harvest in INFO log level and remote duplicated log entry
+- Merge pull request #6331 from geonetwork/ods-harvest-lang
+- Modal popup window for Logo Picker (#5933)
+- Disable the DOI publication in the metadata editor for metadata using the metadata workflow (#6367)
+- Small fix to make the copy button from the copy2clipboard option accessible by adding `href`
+- Harvester / OGC WxS / Select template in whatever schema. Fix field use to search on type of records.
+- Harvester / OGC WxS / After applying conversion, update schema if needed. Also apply the conversion to datasets (and not only the service).
+- DOI / Configure DOI URL pattern (#6347)
+- Record view / Citation / ISO19139 fix (#6351)
+- Formatter / Full view / Add function for conditional element. (#6389)
+- Switch from itext to openpdf for PDF map rendering (#6343)
+- New metadata / Use facet to compute types (#6348)
+- ISODate shortDate test case correction for locale timezone senstivity (#6374)
+- Standard / ISO19115-3 / Render extent from identification section
+- Editor / Configuration / Add condition on element and session for all.
+- Editor / Upload file or overview from main form (#6371)
+- Map / Feature indexing / Attach the md when adding from search a layer. (#6385)
+- Record view / Series / Members table / Format and status using badge (#6352)
+- Link analysis / Filter links from a selection of records.
+- Admin / User / Config not always loaded in prod mode
+- ISO19115-3 / Directory / Avoid duplicated org name in title
+- Bump fop.version from 2.4 to 2.7 (#6376)
+- Bump geotools.version from 23.0 to 27.0 (#6370)
+- Bump log4j2.version from 2.17.1 to 2.17.2 (#6377)
+- Standard / ISO19115-3 / from ISO19139 / Update common metadata standard name or preserve it (#6354)
+- Update locale parsing from keycloak token to support different formats.
+- Bump esapi from 2.3.0.0 to 2.4.0.0 (#6365)
+- Bump smiley-http-proxy-servlet from 1.9 to 1.12.1 (#6363)
+- Externalise the configuration of targetUri property for proxyURITemplateProxyServlet (#6356)
+- Bump camel.version from 2.25.1 to 2.25.4 (#6364)
+- Workflow - create working copy - clone files after assigning the privileges. Fixes #6349 (#6350)
+- Bump actions/checkout from 2 to 3 (#6361)
+- Bump actions/setup-java from 2.3.1 to 3.3.0 (#6360)
+- Bump github/codeql-action from 1 to 2 (#6359)
+- Bump actions/cache from 2 to 3 (#6358)
+- Bump gson from 2.8.0 to 2.8.9 in /services (#6327)
+- Add dependabot updates (#6357)
+- User metadata feedback - fix related to #6341 to don't include  unrequired fields when the user is logged. Hiding the fields trigger the validation, it is required to use data-ng-if directive instead of data-ng-hide (#6346)
+- Add inline messages for the Add Feedback form (#6341)
+- Use parent element to retrieve labels in the schemas that use the context attribute
+- Use multilingual texts in metadata sharing API exceptions (#6334)
+- Sharing / Who can publish? (#6339)
+- Aggregations / Add support for terms missing value (#6335)
+- Editor / Online source added in empty links.
+- Metadata map thumbnail - don't rotate the image when using the Landscape layout
+- Fix DOI publication task enabling after publishing the metadata
+- Record view / Scale prefix is missing.
+- Record view / Associated resources / Group by type. (#6328)
+- Create hierarchy in the language elements on the advanced search options (#6247)
+- ods harvester: ensure iso3 lang codes
+- dkan harvester: fix extra space in keywords use java-xsl-util:html2textNormalized instead of disable-output-escaping='yes'
+- Merge pull request #6240 from jahow/dkan-harvester
+- Avoid having HTML entities in keywords
+- Improve DKAN harvest transformation to avoid having HTML tags everywhere
+- Add XSL transformation for harvesting DKAN catalogs using Simple Url harvester
+- Update version to 4.2.1-SNAPSHOT

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
 import org.keycloak.adapters.spi.UserSessionManagement;
+import org.keycloak.adapters.springsecurity.filter.KeycloakCsrfRequestMatcher;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.keycloak.constants.AdapterConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,6 +54,13 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         super(userSessionManagement);
     }
 
+    public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement, CsrfFilter csrfFilter) {
+        super(userSessionManagement);
+        // Set the csrf filter request matcher for Keycloak so that it allows k_* endpoints to be reached without CSRF.
+        // Without this fix, the backchannel logout was not working due to CSRF failures.
+        csrfFilter.setRequireCsrfProtectionMatcher(new KeycloakCsrfRequestMatcher());
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -70,16 +79,13 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
             !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
-            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_VERSION) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_QUERY_BEARER_TOKEN) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
-            String returningUrl = servletRequest.getRequestURL().toString();
-
-            // Append query string
-            if (servletRequest.getQueryString() != null) {
-                returningUrl = returningUrl + "?" + servletRequest.getQueryString();
-            }
+            // Get request uri which is a relative path. Absolute paths will be ignored if they are received as returning url.
+            String returningUrl = servletRequest.getRequestURI() +
+                (servletRequest.getQueryString() == null ? "" : "?" + servletRequest.getQueryString());
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
                 servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));

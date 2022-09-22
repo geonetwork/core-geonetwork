@@ -1,5 +1,4 @@
-<div data-ng-controller="GnLogoSettingsController"
-      id="gn-logo-container">
+<div data-ng-controller="GnLogoSettingsController" id="gn-logo-container">
   <div class="row">
     <div class="col-lg-3 gn-logo-list">
       <div class="panel panel-default">
@@ -8,7 +7,9 @@
         </div>
         <div class="panel-body">
           <div class="text-center">
-            <img data-ng-src="../../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/>
+            <img
+              data-ng-src="../../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"
+            />
           </div>
         </div>
       </div>
@@ -19,24 +20,41 @@
           <span data-translate="">addNewLogo</span>
         </div>
         <div class="panel-body">
-          <form id="fileupload" action="{{'../api/logos?_csrf=' + csrf}}" method="POST"
-                enctype="multipart/form-data" data-file-upload="logoUploadOptions">
+          <form
+            id="fileupload"
+            action="{{'../api/logos?_csrf=' + csrf}}"
+            method="POST"
+            enctype="multipart/form-data"
+            data-file-upload="logoUploadOptions"
+          >
             <div class="fade" data-ng-class="{in: active()}">
               <!-- The global progress bar -->
-              <div class="progress progress-striped active" data-file-upload-progress="progress()"
-                   data-file-upload-done="loadLogo()">
-                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
+              <div
+                class="progress progress-striped active"
+                data-file-upload-progress="progress()"
+                data-file-upload-done="loadLogo()"
+              >
+                <div
+                  class="progress-bar progress-bar-success"
+                  data-ng-style="{width: num + '%'}"
+                />
               </div>
               <div class="progress-extended">&nbsp;</div>
             </div>
-            <span class="btn btn-success btn-block fileinput-button"
-                  ng-class="{disabled: disabled}">
-              <i class="fa fa-plus fa-white"/>
+            <span
+              class="btn btn-success btn-block fileinput-button"
+              ng-class="{disabled: disabled}"
+            >
+              <i class="fa fa-plus fa-white" />
               <span data-translate="">chooseLogos</span>
-              <input type="file"
-                     name="file"
-                     multiple="true"
-                     autofocus="" ng-disabled="disabled"/>
+              <input
+                type="file"
+                name="file"
+                accept=".png"
+                multiple="true"
+                autofocus=""
+                ng-disabled="disabled"
+              />
             </span>
             <p class="help-block" data-translate="">logoUploadHelp</p>
           </form>
@@ -54,50 +72,68 @@
         <div class="panel-body">
           <div class="row gn-margin-bottom">
             <div class="col-md-6 gn-nopadding-left">
-            <label for="filter-settings" data-translate="">filterSettings</label>
-            <div class="input-group">
-              <span class="input-group-addon">
-                <i class="fa fa-filter" aria-hidden="true"></i>
-              </span>
-              <input class="form-control"
-                     type="text"
-                     id="filter-settings"
-                     placeholder="{{'filterPlaceHolder' | translate}}"
-                     data-ng-keyup="filterLogoList($event,'#gn-logo-list')" />
-              <span class="input-group-btn">
-                <button class="btn btn-default"
-                        type="button"
-                        title="{{'filterReset' | translate}}"
-                        data-ng-click="resetFilter('#gn-logo-list')">
-                  <i class="fa fa-close" aria-hidden="true"></i>
-                </button>
-              </span>
+              <label for="filter-settings" data-translate="">filterSettings</label>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-filter" aria-hidden="true"></i>
+                </span>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="filter-settings"
+                  placeholder="{{'filterPlaceHolder' | translate}}"
+                  data-ng-keyup="filterLogoList($event,'#gn-logo-list')"
+                />
+                <span class="input-group-btn">
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    title="{{'filterReset' | translate}}"
+                    data-ng-click="resetFilter('#gn-logo-list')"
+                  >
+                    <i class="fa fa-close" aria-hidden="true"></i>
+                  </button>
+                </span>
+              </div>
             </div>
-          </div>
             <div class="col-md-6 gn-nopadding-right">
               <div class="pull-right">
                 <!-- toggle buttons -->
-                <label for="logoheight-toggle-buttons" data-translate="">logoHeight</label><br>
-                <div id="logoheight-toggle-buttons" class="btn-group" data-toggle="buttons">
-                  <button type="button" class="btn btn-default"
-                          data-ng-click="toggleLogoHeight('small')"
-                          data-ng-model="logoheightType"
-                          data-ng-class="{'active': logoheightType === 'small' || logoheightType === undefined}"
-                          aria-label="{{'logoHeightSmall' | translate}}">
+                <label for="logoheight-toggle-buttons" data-translate="">logoHeight</label
+                ><br />
+                <div
+                  id="logoheight-toggle-buttons"
+                  class="btn-group"
+                  data-toggle="buttons"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    data-ng-click="toggleLogoHeight('small')"
+                    data-ng-model="logoheightType"
+                    data-ng-class="{'active': logoheightType === 'small' || logoheightType === undefined}"
+                    aria-label="{{'logoHeightSmall' | translate}}"
+                  >
                     <i class="fa fa-th" aria-hidden="true"></i>
                   </button>
-                  <button type="button" class="btn btn-default"
-                          data-ng-click="toggleLogoHeight('medium')"
-                          data-ng-model="logoheightType"
-                          data-ng-class="{'active': logoheightType === 'medium'}"
-                          aria-label="{{'logoHeightMedium' | translate}}">
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    data-ng-click="toggleLogoHeight('medium')"
+                    data-ng-model="logoheightType"
+                    data-ng-class="{'active': logoheightType === 'medium'}"
+                    aria-label="{{'logoHeightMedium' | translate}}"
+                  >
                     <i class="fa fa-th-large" aria-hidden="true"></i>
                   </button>
-                  <button type="button" class="btn btn-default"
-                          data-ng-click="toggleLogoHeight('large')"
-                          data-ng-model="logoheightType"
-                          data-ng-class="{'active': logoheightType === 'large'}"
-                          aria-label="{{'logoHeightLarge' | translate}}">
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    data-ng-click="toggleLogoHeight('large')"
+                    data-ng-model="logoheightType"
+                    data-ng-class="{'active': logoheightType === 'large'}"
+                    aria-label="{{'logoHeightLarge' | translate}}"
+                  >
                     <i class="fa fa-stop" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -105,25 +141,35 @@
               </div>
             </div>
           </div>
-          <div class="list-group" id="gn-logo-list" data-ng-class="{'gn-logo-height-small': logoheightType === 'small' || logoheightType === undefined, 'gn-logo-height-medium': logoheightType === 'medium', 'gn-logo-height-large': logoheightType === 'large'}">
+          <div
+            class="list-group"
+            id="gn-logo-list"
+            data-ng-class="{'gn-logo-height-small': logoheightType === 'small' || logoheightType === undefined, 'gn-logo-height-medium': logoheightType === 'medium', 'gn-logo-height-large': logoheightType === 'large'}"
+          >
             <div class="list-group-item clearfix" data-ng-repeat="l in logos | orderBy:l">
-              <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}"/>
+              <img data-ng-src="{{logoPath}}{{l}}" alt="{{l}}" />
 
               <label>{{l.split(".").slice(0, -1).join(".")}}</label>
               <div class="btn-group pull-right" role="group">
-                <a class="btn btn-default"
-                   title="{{'useLogoForCatalog' | translate}}"
-                   data-ng-click="setCatalogLogo(l, false)">
+                <a
+                  class="btn btn-default"
+                  title="{{'useLogoForCatalog' | translate}}"
+                  data-ng-click="setCatalogLogo(l, false)"
+                >
                   <i class="fa fa-picture-o"></i>
                 </a>
-                <a class="btn btn-default"
-                   title="{{'useLogoForCatalogFavicon' | translate}}"
-                   data-ng-click="setCatalogLogo(l, true)">
+                <a
+                  class="btn btn-default"
+                  title="{{'useLogoForCatalogFavicon' | translate}}"
+                  data-ng-click="setCatalogLogo(l, true)"
+                >
                   <i class="fa fa-bookmark"></i>
                 </a>
-                <a class="btn btn-default"
-                   title="{{'removeLogo' | translate}}"
-                   data-ng-click="removeLogo(l)">
+                <a
+                  class="btn btn-default"
+                  title="{{'removeLogo' | translate}}"
+                  data-ng-click="removeLogo(l)"
+                >
                   <i class="fa fa-times text-danger"></i>
                 </a>
               </div>
@@ -136,9 +182,12 @@
     </div>
   </div>
 
-  <div gn-modal class="gn-confirm-delete"
-       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveLogo}"
-       id="gn-confirm-remove-logo">
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveLogo}"
+    id="gn-confirm-remove-logo"
+  >
     <p translate>confirmRemoveLogo</p>
   </div>
 </div>

@@ -21,49 +21,57 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_search_manager_service');
+(function () {
+  goog.provide("gn_search_manager_service");
 
-  var module = angular.module('gn_search_manager_service', []);
+  var module = angular.module("gn_search_manager_service", []);
 
-  module.factory('gnSearchManagerService', [
-    'gnUtilityService',
-    '$q',
-    '$rootScope',
-    '$http',
-    'gnHttp',
-    function(gnUtilityService, $q, $rootScope,
-             $http, gnHttp) {
+  module.factory("gnSearchManagerService", [
+    "gnUtilityService",
+    "$q",
+    "$rootScope",
+    "$http",
+    "gnHttp",
+    function (gnUtilityService, $q, $rootScope, $http, gnHttp) {
       /**
        * Utility to format a search response. JSON response
        * when containing one element will not make an array.
        * Tidy the JSON to be always the same if one or more
        * elements.
        */
-      var format = function(data) {
+      var format = function (data) {
         // Retrieve facet and add name as property and remove @count
-        var facets = {}, dimension = [], results = -1,
-            listOfArrayFields = ['image', 'link',
-              'format', 'keyword', 'otherConstr',
-              'Constraints', 'SecurityConstraints'];
+        var facets = {},
+          dimension = [],
+          results = -1,
+          listOfArrayFields = [
+            "image",
+            "link",
+            "format",
+            "keyword",
+            "otherConstr",
+            "Constraints",
+            "SecurityConstraints"
+          ];
 
         // When using summaryOnly=true, the facet is the root element
-        if (data[0] && data[0]['@count']) {
+        if (data[0] && data[0]["@count"]) {
           data.summary = data[0];
-          results = data[0]['@count'];
+          results = data[0]["@count"];
         }
 
         // Cleaning facets
         for (var facet in data.summary) {
-          if (facet == 'dimension') {
+          if (facet == "dimension") {
             dimension = gnUtilityService.traverse(
-                data.summary.dimension,
-                gnUtilityService.formatObjectPropertyAsArray,
-                'category');
-          } else if (facet != '@count' && facet != '@type') {
+              data.summary.dimension,
+              gnUtilityService.formatObjectPropertyAsArray,
+              "category"
+            );
+          } else if (facet != "@count" && facet != "@type") {
             facets[facet] = data.summary[facet];
             facets[facet].name = facet;
-          } else if (facet == '@count') {
+          } else if (facet == "@count") {
             // Number of results
             results = data.summary[facet];
           }
@@ -71,24 +79,27 @@
 
         if (data.metadata) {
           // Retrieve metadata
-          for (var i = 0; i < data.metadata.length ||
-              (!$.isArray(data.metadata) && i < 1); i++) {
-            var metadata =
-                $.isArray(data.metadata) ? data.metadata[i] : data.metadata;
+          for (
+            var i = 0;
+            i < data.metadata.length || (!$.isArray(data.metadata) && i < 1);
+            i++
+          ) {
+            var metadata = $.isArray(data.metadata) ? data.metadata[i] : data.metadata;
 
             // Fix all fields which are arrays and are returned as string
             // when only one value returned.
             for (var property in metadata) {
-              if (metadata.hasOwnProperty(property) &&
-                  listOfArrayFields.indexOf(property) != -1 &&
-                  typeof metadata[property] === 'string') {
+              if (
+                metadata.hasOwnProperty(property) &&
+                listOfArrayFields.indexOf(property) != -1 &&
+                typeof metadata[property] === "string"
+              ) {
                 metadata[property] = [metadata[property]];
               }
             }
 
             // Parse selected to boolean
-            metadata.selected =
-                metadata.selected == 'true';
+            metadata.selected = metadata.selected == "true";
           }
         }
 
@@ -105,7 +116,6 @@
           count: results,
           metadata: records
         };
-
       };
 
       /**
@@ -146,29 +156,30 @@
        *        });
        *        </code>
        */
-      var register = function(config, scope) {
+      var register = function (config, scope) {
+        var searchFn = function () {
+          var pageOptions = scope[config.pager],
+            filter = "";
 
-        var searchFn = function() {
-          var pageOptions = scope[config.pager], filter = '';
-
-          scope[config.filter] && $.each(scope[config.filter],
-              function(key, value) {
-                filter += '&' + key + '=' + value;
-              });
-          search('q?bucket=' + scope.searchResults.selectionBucket +
+          scope[config.filter] &&
+            $.each(scope[config.filter], function (key, value) {
+              filter += "&" + key + "=" + value;
+            });
+          search(
+            "q?bucket=" +
+              scope.searchResults.selectionBucket +
               filter +
-              '&from=' + (pageOptions.currentPage *
-              pageOptions.hitsPerPage + 1) +
-              '&to=' + ((pageOptions.currentPage + 1) *
-              pageOptions.hitsPerPage), config.error)
-              .then(function(data) {
-                scope[config.records] = data;
-                pageOptions.count = parseInt(data.count);
-                pageOptions.pages = Math.round(
-                    data.count /
-                    pageOptions.hitsPerPage, 0);
-                config.success && config.success(data);
-              });
+              "&from=" +
+              (pageOptions.currentPage * pageOptions.hitsPerPage + 1) +
+              "&to=" +
+              (pageOptions.currentPage + 1) * pageOptions.hitsPerPage,
+            config.error
+          ).then(function (data) {
+            scope[config.records] = data;
+            pageOptions.count = parseInt(data.count);
+            pageOptions.pages = Math.round(data.count / pageOptions.hitsPerPage, 0);
+            config.success && config.success(data);
+          });
         };
         return searchFn;
       };
@@ -176,96 +187,100 @@
       /**
        * Run a search.
        */
-      var search = function(url, error) {
+      var search = function (url, error) {
         var defer = $q.defer();
-        $http.get(url).
-            success(function(data, status) {
-              defer.resolve(format(data));
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
+        $http
+          .get(url)
+          .success(function (data, status) {
+            defer.resolve(format(data));
+          })
+          .error(function (data, status) {
+            defer.reject(error);
+          });
         return defer.promise;
       };
 
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error, internal) {
+      var gnSearch = function (params, error, internal) {
         var defer = $q.defer();
 
-        gnHttp.callService(internal ? 'internalSearch' : 'search',
-            params).
-            success(function(data, status) {
-              defer.resolve(format(data));
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
+        gnHttp
+          .callService(internal ? "internalSearch" : "search", params)
+          .success(function (data, status) {
+            defer.resolve(format(data));
+          })
+          .error(function (data, status) {
+            defer.reject(error);
+          });
         return defer.promise;
       };
 
-      var indexSetOfRecords = function(params) {
+      var indexSetOfRecords = function (params) {
         var defer = $q.defer();
         var defaultParams = {
-          fast: 'index',
-          summaryOnly: 'true'
+          fast: "index",
+          summaryOnly: "true"
         };
         angular.extend(params, defaultParams);
 
-        gnSearch(params).then(function(data) {
-          if (parseInt(data.count) > 0) {
-            selectAll().then(function() {
-              index(false, true).then(function(data) {
-                defer.resolve(data);
+        gnSearch(params).then(
+          function (data) {
+            if (parseInt(data.count) > 0) {
+              selectAll().then(function () {
+                index(false, true).then(function (data) {
+                  defer.resolve(data);
+                });
               });
-            });
-          } else {
-            defer.reject('No records to index');
+            } else {
+              defer.reject("No records to index");
+            }
+          },
+          function (reason) {
+            defer.reject("error: " + reason);
           }
-        }, function(reason) {
-          defer.reject('error: ' + reason);
-        });
+        );
         return defer.promise;
       };
-      var index = function(reset, fromSelection) {
+      var index = function (reset, fromSelection) {
         var defer = $q.defer();
-        var url = 'admin.index.rebuildxlinks?reset=';
-        url += reset ? 'yes' : 'no';
-        url += '&fromSelection=';
-        url += fromSelection ? 'yes' : 'no';
+        var url = "admin.index.rebuildxlinks?reset=";
+        url += reset ? "yes" : "no";
+        url += "&fromSelection=";
+        url += fromSelection ? "yes" : "no";
 
-        $http.get(url).
-            success(function(data, status) {
-              defer.resolve(data);
-            }).
-            error(function(data, status) {
-              defer.reject(error);
-            });
+        $http
+          .get(url)
+          .success(function (data, status) {
+            defer.resolve(data);
+          })
+          .error(function (data, status) {
+            defer.reject(error);
+          });
         return defer.promise;
       };
-      var selected = function(bucket) {
-        return $http.get('../api/selections/' + (bucket || 'metadata'));
+      var selected = function (bucket) {
+        return $http.get("../api/selections/" + (bucket || "metadata"));
       };
-      var select = function(uuid, bucket) {
-        return $http.put('../api/selections/' + (bucket || 'metadata'), null, {
+      var select = function (uuid, bucket) {
+        return $http.put("../api/selections/" + (bucket || "metadata"), null, {
           params: {
             uuid: uuid
           }
         });
       };
-      var unselect = function(uuid, bucket) {
-        return $http.delete('../api/selections/' + (bucket || 'metadata'),
-            {
-              params: {
-                uuid: uuid
-              }
-            });
+      var unselect = function (uuid, bucket) {
+        return $http.delete("../api/selections/" + (bucket || "metadata"), {
+          params: {
+            uuid: uuid
+          }
+        });
       };
-      var selectAll = function(bucket) {
-        return $http.put('../api/selections/' + (bucket || 'metadata'));
+      var selectAll = function (bucket) {
+        return $http.put("../api/selections/" + (bucket || "metadata"));
       };
-      var selectNone = function(bucket) {
-        return $http.delete('../api/selections/' + (bucket || 'metadata'));
+      var selectNone = function (bucket) {
+        return $http.delete("../api/selections/" + (bucket || "metadata"));
       };
 
       return {
@@ -282,5 +297,4 @@
       };
     }
   ]);
-
 })();

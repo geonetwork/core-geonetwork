@@ -22,67 +22,94 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.InspireAtomFeedEntry;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.InspireAtomFeedEntry;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-/**
- * Service to get a data file related to dataset.
- *
- * This service if a dataset has only 1 download format for a CRS returns the file, otherwise
- * returns a feed with downloads for the dataset.
- *
- * @author Jose García
- */
-public class AtomGetData implements Service {
+import static org.springframework.http.HttpStatus.OK;
 
-    /**
-     * Dataset identifier param name
-     **/
-    private final static String DATASET_IDENTIFIER_CODE_PARAM = "spatial_dataset_identifier_code";
+@RequestMapping(value = {
+    "/{portal}/api/atom"
+})
+@Tag(name = "atom",
+    description = "ATOM")
+@RestController
+public class AtomGetData {
 
-    /**
-     * Dataset namespace param name
-     **/
-    private final static String DATASET_IDENTIFIER_NS_PARAM = "spatial_dataset_identifier_namespace";
+    @Autowired
+    InspireAtomService service;
 
-    /**
-     * Dataset crs param name
-     **/
-    private final static String DATASET_CRS_PARAM = "crs";
+    @Autowired
+    SettingManager sm;
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
+    @Autowired
+    DataManager dm;
 
-    }
+    @Autowired
+    InspireAtomFeedRepository inspireAtomFeedRepository;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec
-    //---
-    //--------------------------------------------------------------------------
-
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        SettingManager sm = context.getBean(SettingManager.class);
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a data file related to dataset",
+        description = "This service if a dataset has only 1 download format for a CRS returns the file, otherwise " +
+            "returns a feed with downloads for the dataset.")
+    @GetMapping(
+        value = "/download/resource",
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Get a data file related to dataset"),
+        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+    })
+    @ResponseStatus(OK)
+    @ResponseBody
+    public Element downloadResource(
+        @Parameter(
+            description = "spatial_dataset_identifier_code",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String spatial_dataset_identifier_code,
+        @Parameter(
+            description = "spatial_dataset_identifier_namespace",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String spatial_dataset_identifier_namespace,
+        @Parameter(
+            description = "crs",
+            required = false)
+        @RequestParam(defaultValue = "")
+            String crs,
+        @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
+            HttpServletResponse response
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
@@ -90,18 +117,9 @@ public class AtomGetData implements Service {
             Log.info(Geonet.ATOM, "Inspire is disabled");
             throw new Exception("Inspire is disabled");
         }
-
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
-        InspireAtomService service = context.getBean(InspireAtomService.class);
-
-        // Get request parameters
-        String datasetIdCode = Util.getParam(params, DATASET_IDENTIFIER_CODE_PARAM);
-        String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
-        String datasetCrs = Util.getParam(params, DATASET_CRS_PARAM);
-
         // Get the metadata uuid for the dataset
-        String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
+        String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(
+            spatial_dataset_identifier_code, spatial_dataset_identifier_namespace);
         if (StringUtils.isEmpty(datasetUuid)) throw new MetadataNotFoundEx(datasetUuid);
 
         // Retrieve metadata to check existence and permissions.
@@ -115,25 +133,22 @@ public class AtomGetData implements Service {
 
         // Check the metadata has an atom document.
         String atomUrl = inspireAtomFeed.getAtomUrl();
-        if (StringUtils.isEmpty(atomUrl)) throw new Exception("Metadata has no atom feed");
+        if (StringUtils.isEmpty(atomUrl)) throw new ResourceNotFoundEx("Metadata has no atom feed");
 
-        Pair<Integer, InspireAtomFeedEntry> result = countDatasetsForCrs(inspireAtomFeed, datasetCrs);
+        Pair<Integer, InspireAtomFeedEntry> result = countDatasetsForCrs(inspireAtomFeed, crs);
         int downloadCount = result.one();
         InspireAtomFeedEntry selectedEntry = result.two();
 
         // No download  for the CRS specified
         if (downloadCount == 0) {
-            throw new Exception("No downloads available for dataset: " + datasetIdCode + " and CRS: " + datasetCrs);
+            throw new ResourceNotFoundEx("No downloads available for dataset: " + spatial_dataset_identifier_code + " and CRS: " + crs);
 
             // Only one download for the CRS specified
         } else if (downloadCount == 1) {
 
-            // Jeeves checks for <reponse redirect="true" url="...." mime-type="..." /> to manage about redirecting
-            // to the provided file
-            return new Element("response")
-                .setAttribute("redirect", "true")
-                .setAttribute("url", selectedEntry.getUrl())
-                .setAttribute("mime-type", selectedEntry.getType());
+            response.setContentType(selectedEntry.getType());
+            response.sendRedirect(selectedEntry.getUrl());
+            return null;
 
             // Otherwise, return a feed with the downloads for the specified CRS
         } else {
@@ -141,7 +156,7 @@ public class AtomGetData implements Service {
             Element feed = service.retrieveFeed(context, inspireAtomFeed);
 
             // Filter the dataset feed by CRS code.
-            InspireAtomUtil.filterDatasetFeedByCrs(feed, datasetCrs);
+            InspireAtomUtil.filterDatasetFeedByCrs(feed, crs);
 
             return feed;
         }

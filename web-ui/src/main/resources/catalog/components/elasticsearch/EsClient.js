@@ -21,79 +21,92 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_es_client');
+(function () {
+  goog.provide("gn_es_client");
 
-  var module = angular.module('gn_es_client', []);
+  var module = angular.module("gn_es_client", []);
 
+  var ES_API_URL = "../api/search/records/";
 
-  var ES_API_URL = '../api/search/records/';
+  module.service("gnESClient", [
+    "$http",
+    "Metadata",
+    "gnESFacet",
+    "gnESService",
+    "gnGlobalSettings",
+    function ($http, Metadata, gnESFacet, gnESService, gnGlobalSettings) {
+      this.getUrl = function (service) {
+        return ES_API_URL + service;
+      };
 
-  module.service('gnESClient', [
-    '$http',
-    'Metadata',
-    'gnESFacet',
-    'gnESService',
-    function($http, Metadata, gnESFacet, gnESService) {
-
-    this.getUrl = function(service) {
-      return ES_API_URL + service;
-    };
-
-    this.search = function(params, selectionBucket, configId) {
-      return callApi('_search', params, selectionBucket).then(
-        function(response) {
+      this.search = function (params, selectionBucket, configId, types) {
+        return callApi("_search", params, selectionBucket, types).then(function (
+          response
+        ) {
           return gnESFacet.getUIModel(response, params, configId);
-        }
-      );
-    };
+        });
+      };
 
-    this.suggest = function(field, query, searchObj) {
-      var params = gnESService.getSuggestParams(field, query, searchObj);
-      return callApi('_search', params).then(
-        function(response) {
-          var d = response.data.hits.hits.flatMap(function(md) {
+      this.suggest = function (field, query, searchObj) {
+        var params = gnESService.getSuggestParams(field, query, searchObj);
+        return callApi("_search", params).then(function (response) {
+          var d = response.data.hits.hits.flatMap(function (md) {
             if (field) {
               return new Metadata(md)[field];
             } else {
               var values = [];
               for (p in new Metadata(md)) {
                 values = values.concat(md[p]);
-              };
+              }
               return values;
             }
           });
           return d;
-        }
-      );
-    };
+        });
+      };
 
-    this.suggestAny = function(query) {
-      var params = gnESService.getSuggestAnyParams(query);
-      return callApi('_search', params).then(
-        function(response) {
-          return response.data.hits.hits.map(function(md) {
+      this.suggestAny = function (query) {
+        var params = gnESService.getSuggestAnyParams(query);
+        return callApi("_search", params).then(function (response) {
+          return response.data.hits.hits.map(function (md) {
             return md._source[field];
           });
-        }
-      );
-    };
+        });
+      };
 
-    this.getTermsParamsWithNewSizeOrFilter = function(
-      query, facetPath, newSize, include, exclude, facetConfig) {
-      var params = gnESService.getTermsParamsWithNewSizeOrFilter(
-        query, facetPath, newSize, include, exclude, facetConfig);
-      return callApi('_search', params).then(
-        function(response) {
+      this.getTermsParamsWithNewSizeOrFilter = function (
+        query,
+        facetPath,
+        newSize,
+        include,
+        exclude,
+        facetConfig
+      ) {
+        var params = gnESService.getTermsParamsWithNewSizeOrFilter(
+          query,
+          facetPath,
+          newSize,
+          include,
+          exclude,
+          facetConfig
+        );
+        return callApi("_search", params).then(function (response) {
           var model = gnESFacet.getUIModel(response, params);
           return model.facets[0];
-        }
-      );
-    };
+        });
+      };
 
-    function callApi(service, params, selectionBucket) {
-      return $http.post(ES_API_URL + service + (selectionBucket ? '?bucket=' + selectionBucket : ''), params);
+      function callApi(service, params, selectionBucket, types) {
+        var types = types || [];
+
+        return $http.post(
+          ES_API_URL +
+            service +
+            (selectionBucket ? "?bucket=" + selectionBucket : "") +
+            (types.length > 0 ? [""].concat(types).join("&relatedType=") : ""),
+          params
+        );
+      }
     }
-
-  }]);
+  ]);
 })();

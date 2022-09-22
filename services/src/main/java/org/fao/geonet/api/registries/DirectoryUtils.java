@@ -5,6 +5,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -208,6 +209,8 @@ public class DirectoryUtils {
                         identifier = ((Text) obj).getTextNormalize();
                     } else if (obj instanceof Attribute) {
                         identifier = ((Attribute) obj).getValue();
+                    } else if (obj instanceof String) {
+                        identifier = (String) obj;
                     }
                 }
 
@@ -248,8 +251,9 @@ public class DirectoryUtils {
                             numberOfEntries, uuid
                         ));
                     }
-                    // TODO: Add support for other type of subtemplate
-                    String searchIndexField = "email";
+                    // TODO: Add support for other type of subtemplate search
+                    // Currently search uuid matching hash of the identifier
+                    String searchIndexField = "uuid";
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
@@ -271,10 +275,10 @@ public class DirectoryUtils {
                                 ));
                             }
                         }
-                        parameters.put(searchIndexField, identifier);
-                        String id = search(context, parameters);
-                        if (id != null) {
-                            AbstractMetadata subTemplate = metadataRepository.findOneById(Integer.valueOf(id));
+                        parameters.put(searchIndexField, uuid);
+                        String entryUuid = search(context, parameters);
+                        if (entryUuid != null) {
+                            AbstractMetadata subTemplate = metadataRepository.findOneByUuid(entryUuid);
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);
@@ -303,6 +307,7 @@ public class DirectoryUtils {
 //                                xmlns:xlink="http://www.w3.org/1999/xlink"
 //                                xlink:href="local://eng/subtemplate?uuid=0c18725d-7884-4a09-8492-8b0626d958f2&amp;process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&amp;">
                             // TODO: Should depend on the setting for XLink
+                            // TODO: Add languages
                             StringBuffer params = new StringBuffer(localXlinkUrlPrefix);
                             params.append(uuid);
                             params.append(getPropertiesAsParameters(
@@ -394,30 +399,20 @@ public class DirectoryUtils {
         ServiceConfig _config = new ServiceConfig();
 
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
-        // TODOES
-//
-//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-//            // Creating parameters for search, fast only to retrieve uuid
-//            Element parameters = new Element(Jeeves.Elem.REQUEST);
-//            parameters.addContent(new Element("fast").addContent("index"));
-//            parameters.addContent(new Element("_isTemplate").addContent("s"));
-//            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
-//                parameters.addContent(
-//                    new Element(e.getKey()).addContent(e.getValue()));
-//            }
-//            parameters.addContent(new Element("from").addContent(1 + ""));
-//            parameters.addContent(new Element("to").addContent(1 + ""));
-//
-//            searcher.search(context, parameters, _config);
-//
-//            Element response = searcher.present(context, parameters, _config);
-//            Element record = response.getChild("metadata");
-//            if (record != null) {
-//                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+        StringBuilder query = new StringBuilder("+isTemplate:s");
+        for (Map.Entry<String, String> e : searchParameters.entrySet()) {
+            query.append(String.format(" +%s:\"%s\"", e.getKey(), e.getValue()));
+        }
+
+        try {
+            SearchResponse results = searchMan.query(query.toString(), null, 0, 1);
+            if (results.getHits().getTotalHits().value > 0) {
+                return results.getHits().getHits()[0].getId();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

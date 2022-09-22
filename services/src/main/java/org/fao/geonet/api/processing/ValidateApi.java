@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -207,7 +208,7 @@ public class ValidateApi {
 
             // index records
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
-            r.process(true);
+            r.process(settingManager.getSiteId(), true);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -278,7 +279,7 @@ public class ValidateApi {
 
             // index records
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
-            r.process(true);
+            r.process(settingManager.getSiteId(), true);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -343,8 +344,12 @@ public class ValidateApi {
 
     private MInspireEtfValidateProcess getRegistredMInspireEtfValidateProcess(ServiceContext serviceContext) {
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        String URL_QUERY = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
+        if (StringUtils.isEmpty(URL_QUERY)) {
+            URL_QUERY = URL;
+        }
 
-        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(URL, serviceContext, appContext);
+        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(settingManager.getSiteId(), URL, URL_QUERY, serviceContext, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
         try {
             mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());

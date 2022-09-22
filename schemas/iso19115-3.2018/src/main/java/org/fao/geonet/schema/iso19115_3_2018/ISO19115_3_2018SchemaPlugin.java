@@ -3,38 +3,26 @@ package org.fao.geonet.schema.iso19115_3_2018;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.schema.AssociatedResource;
-import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.ExportablePlugin;
-import org.fao.geonet.kernel.schema.ISOPlugin;
-import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
-import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces.XLINK;
 
 
-/**
- * Created by francois on 6/15/14.
- */
 public class ISO19115_3_2018SchemaPlugin
-        extends org.fao.geonet.kernel.schema.SchemaPlugin
-        implements
+    extends org.fao.geonet.kernel.schema.SchemaPlugin
+    implements
     AssociatedResourcesSchemaPlugin,
     MultilingualSchemaPlugin,
     ExportablePlugin,
@@ -42,7 +30,7 @@ public class ISO19115_3_2018SchemaPlugin
     LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19115-3";
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
 
@@ -50,26 +38,27 @@ public class ISO19115_3_2018SchemaPlugin
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
-                .add(ISO19115_3_2018Namespaces.GCO)
-                .add(ISO19115_3_2018Namespaces.MDB)
-                .add(ISO19115_3_2018Namespaces.GEX)
-                .add(ISO19115_3_2018Namespaces.MRC)
-                .add(ISO19115_3_2018Namespaces.MRL)
-                .add(ISO19115_3_2018Namespaces.LAN)
-                .add(ISO19115_3_2018Namespaces.MRI)
-                .add(ISO19115_3_2018Namespaces.SRV)
-                .add(ISO19115_3_2018Namespaces.XLINK)
-                .build();
+            .add(ISO19115_3_2018Namespaces.GCO)
+            .add(ISO19115_3_2018Namespaces.MDB)
+            .add(ISO19115_3_2018Namespaces.GEX)
+            .add(ISO19115_3_2018Namespaces.MRC)
+            .add(ISO19115_3_2018Namespaces.MRL)
+            .add(ISO19115_3_2018Namespaces.LAN)
+            .add(ISO19115_3_2018Namespaces.MRI)
+            .add(ISO19115_3_2018Namespaces.CIT)
+            .add(ISO19115_3_2018Namespaces.SRV)
+            .add(XLINK)
+            .build();
 
         allTypenames = ImmutableMap.<String, Namespace>builder()
-                .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
-                .put("mdb:MD_Metadata", Namespace.getNamespace("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0"))
-                .put("gmd:MD_Metadata", Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"))
-                .build();
+            .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
+            .put("mdb:MD_Metadata", Namespace.getNamespace("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0"))
+            .put("gmd:MD_Metadata", Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"))
+            .build();
 
         allExportFormats = ImmutableMap.<String, String>builder()
-                .put("convert/ISO19139/toISO19139.xsl", "metadata-iso19139.xml")
-                .build();
+            .put("convert/ISO19139/toISO19139.xsl", "metadata-iso19139.xml")
+            .build();
     }
 
     public ISO19115_3_2018SchemaPlugin() {
@@ -78,41 +67,26 @@ public class ISO19115_3_2018SchemaPlugin
 
     public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata) {
         String XPATH_FOR_AGGRGATIONINFO = "*//mri:associatedResource/*" +
-                "[mri:metadataReference/@uuidref " +
-                "and %s]";
+            "[mri:metadataReference/@uuidref " +
+            "and %s]";
         Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
         List<?> sibs = null;
         try {
             sibs = Xml
-                    .selectNodes(
-                            metadata,
-                            String.format(XPATH_FOR_AGGRGATIONINFO,
-                                StringUtils.isNotEmpty(parentAssociatedResourceType) ?
-                                    String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
-                                    "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''"
-                                ),
-                            allNamespaces.asList());
+                .selectNodes(
+                    metadata,
+                    String.format(XPATH_FOR_AGGRGATIONINFO,
+                        StringUtils.isNotEmpty(parentAssociatedResourceType) ?
+                            String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
+                            "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''"
+                    ),
+                    allNamespaces.asList());
 
 
             for (Object o : sibs) {
                 if (o instanceof Element) {
                     Element sib = (Element) o;
-                    Element agId = (Element) sib.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
-                    // TODO: Reference may be defined in Citation identifier
-                    String sibUuid = agId.getAttributeValue("uuidref");
-
-                    String associationType = sib.getChild("associationType", ISO19115_3_2018Namespaces.MRI)
-                        .getChild("DS_AssociationTypeCode", ISO19115_3_2018Namespaces.MRI)
-                        .getAttributeValue("codeListValue");
-
-                    String initType = "";
-                    final Element initiativeTypeEl = sib.getChild("initiativeType", ISO19115_3_2018Namespaces.MRI);
-                    if (initiativeTypeEl != null) {
-                        initType = initiativeTypeEl.getChild("DS_InitiativeTypeCode", ISO19115_3_2018Namespaces.MRI)
-                            .getAttributeValue("codeListValue");
-                    }
-
-                    AssociatedResource resource = new AssociatedResource(sibUuid, initType, associationType);
+                    AssociatedResource resource = metadataRefAsAssociatedResource(sib);
                     listOfResources.add(resource);
                 }
             }
@@ -124,60 +98,132 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
-        String XPATH_FOR_PARENT_IN_AGGRGATIONINFO = "*//mri:associatedResource/*" +
-            "[mri:associationType/*/@codeListValue = '%s']/mri:metadataReference/@uuidref";
+        return getAssociatedParents(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
 
-        ElementFilter elementFilter = new ElementFilter("parentMetadata", ISO19115_3_2018Namespaces.MDB);
-        Set<String> parents = Xml.filterElementValues(
-                metadata,
-                elementFilter,
-                null, null,
-                "uuidref");
+    @Override
+    public Set<AssociatedResource> getAssociatedParents(Element metadata) {
+        Set<AssociatedResource> associatedResources =
+            collectAssociatedResources(metadata, "mdb:parentMetadata");
 
         if (StringUtils.isNotEmpty(parentAssociatedResourceType)) {
             try {
+                String XPATH_FOR_PARENT_IN_AGGRGATIONINFO =
+                    "*//mri:associatedResource/*" +
+                        "[mri:associationType/*/@codeListValue = '%s']";
                 final List<?> associatedParents = Xml
                     .selectNodes(
                         metadata,
                         String.format(XPATH_FOR_PARENT_IN_AGGRGATIONINFO, parentAssociatedResourceType),
                         allNamespaces.asList());
                 for (Object o : associatedParents) {
-                    if (o instanceof Attribute) {
-                        parents.add(((Attribute) o).getValue());
-                    }
+                    Element sib = (Element) o;
+                    AssociatedResource resource = metadataRefAsAssociatedResource(sib);
+                    associatedResources.add(resource);
                 }
             } catch (JDOMException e) {
             }
         }
-        return parents;
+        return associatedResources;
     }
 
-    public Set<String> getAssociatedDatasetUUIDs (Element metadata) {
-        return getAttributeUuidrefValues(metadata, "operatesOn", ISO19115_3_2018Namespaces.SRV);
-    };
-    public Set<String> getAssociatedFeatureCatalogueUUIDs (Element metadata) {
+    public Set<String> getAssociatedDatasetUUIDs(Element metadata) {
+        return getAssociatedDatasets(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedDatasets(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//srv:operatesOn");
+        return associatedResources;
+    }
+
+    public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
         // Feature catalog may also be embedded into the document
         // Or the citation of the feature catalog may contains a reference to it
-        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", ISO19115_3_2018Namespaces.MRC);
-    };
-    public Set<String> getAssociatedSourceUUIDs (Element metadata) {
-        return getAttributeUuidrefValues(metadata, "source", ISO19115_3_2018Namespaces.MRL);
+        return getAssociatedFeatureCatalogues(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
     }
 
-    private Set<String> getAttributeUuidrefValues(Element metadata, String tagName, Namespace namespace) {
-        ElementFilter elementFilter = new ElementFilter(tagName, namespace);
-        return Xml.filterElementValues(
-                metadata,
-                elementFilter,
-                null, null,
-                "uuidref");
-    };
+    @Override
+    public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation");
+        return associatedResources;
+    }
 
+    public Set<String> getAssociatedSourceUUIDs(Element metadata) {
+        return getAssociatedSources(metadata)
+            .stream()
+            .map(AssociatedResource::getUuid)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedSources(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrl:source");
+        return associatedResources;
+    }
+
+    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String XPATH) {
+        Set<AssociatedResource> associatedResources = new HashSet<>();
+        try {
+            final List<?> parentMetadata = Xml
+                .selectNodes(
+                    metadata,
+                    XPATH,
+                    allNamespaces.asList());
+            for (Object o : parentMetadata) {
+                Element sib = (Element) o;
+                AssociatedResource resource = elementAsAssociatedResource(sib);
+                associatedResources.add(resource);
+            }
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        }
+        return associatedResources;
+    }
+
+    private AssociatedResource elementAsAssociatedResource(Element ref) {
+        String sibUuid = ref.getAttributeValue("uuidref");
+        if (StringUtils.isEmpty(sibUuid)) {
+            sibUuid = ref.getTextNormalize();
+        }
+        String title = ref.getAttributeValue("title", XLINK);
+        String url = ref.getAttributeValue("href", XLINK);
+        return new AssociatedResource(sibUuid, "", "", url, title);
+    }
+
+    private AssociatedResource metadataRefAsAssociatedResource(Element sibling) {
+        Element ref = (Element) sibling.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
+        String sibUuid = ref.getAttributeValue("uuidref");
+
+        String associationType = sibling.getChild("associationType", ISO19115_3_2018Namespaces.MRI)
+            .getChild("DS_AssociationTypeCode", ISO19115_3_2018Namespaces.MRI)
+            .getAttributeValue("codeListValue");
+
+        String initType = "";
+        final Element initiativeTypeEl = sibling.getChild("initiativeType", ISO19115_3_2018Namespaces.MRI);
+        if (initiativeTypeEl != null) {
+            initType = initiativeTypeEl.getChild("DS_InitiativeTypeCode", ISO19115_3_2018Namespaces.MRI)
+                .getAttributeValue("codeListValue");
+        }
+
+        String title = ref.getAttributeValue("title", XLINK);
+        String url = ref.getAttributeValue("href", XLINK);
+        return new AssociatedResource(sibUuid, initType, associationType, url, title);
+    }
 
     @Override
     public List<Element> getTranslationForElement(Element element, String languageIdentifier) {
         final String path = ".//lan:LocalisedCharacterString" +
-                "[@locale='#" + languageIdentifier + "']";
+            "[@locale='#" + languageIdentifier + "']";
         try {
             XPath xpath = XPath.newInstance(path);
             @SuppressWarnings("unchecked")
@@ -185,16 +231,16 @@ public class ISO19115_3_2018SchemaPlugin
             return matches;
         } catch (Exception e) {
             Log.debug(LOGGER_NAME, getIdentifier() + ": getTranslationForElement failed " +
-                    "on element " + Xml.getString(element) +
-                    " using XPath '" + path +
-                    " Exception: " + e.getMessage());
+                "on element " + Xml.getString(element) +
+                " using XPath '" + path +
+                " Exception: " + e.getMessage());
         }
         return null;
     }
 
     /**
-     *  Add a LocalisedCharacterString to an element. In ISO19139, the translation are
-     *  stored gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString.
+     * Add a LocalisedCharacterString to an element. In ISO19139, the translation are
+     * stored gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString.
      *
      * <pre>
      * <cit:title xsi:type="lan:PT_FreeText_PropertyType">
@@ -212,7 +258,7 @@ public class ISO19115_3_2018SchemaPlugin
     @Override
     public void addTranslationToElement(Element element, String languageIdentifier, String value) {
         element.setAttribute("type", "lan:PT_FreeText_PropertyType",
-                Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+            Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
         // Create a new translation for the language
         Element langElem = new Element("LocalisedCharacterString", ISO19115_3_2018Namespaces.LAN);
@@ -235,7 +281,7 @@ public class ISO19115_3_2018SchemaPlugin
      * as default gco:CharacterString for the element.
      *
      * @param element
-     * @param langs Metadata languages. The main language MUST be the first one.
+     * @param langs   Metadata languages. The main language MUST be the first one.
      * @return
      * @throws JDOMException
      */
@@ -245,13 +291,13 @@ public class ISO19115_3_2018SchemaPlugin
 
         List<Element> nodesWithStrings = (List<Element>) Xml.selectNodes(element, "*//lan:PT_FreeText", Arrays.asList(ISO19115_3_2018Namespaces.LAN));
 
-        for(Element e : nodesWithStrings) {
+        for (Element e : nodesWithStrings) {
             // Retrieve or create the main language element
-            Element mainCharacterString = ((Element)e.getParent()).getChild("CharacterString", ISO19115_3_2018Namespaces.GCO);
+            Element mainCharacterString = ((Element) e.getParent()).getChild("CharacterString", ISO19115_3_2018Namespaces.GCO);
             if (mainCharacterString == null) {
                 // create it if it does not exist
                 mainCharacterString = new Element("CharacterString", ISO19115_3_2018Namespaces.GCO);
-                ((Element)e.getParent()).addContent(0, mainCharacterString);
+                ((Element) e.getParent()).addContent(0, mainCharacterString);
             }
 
             // Retrieve the main language value if exist
@@ -266,27 +312,27 @@ public class ISO19115_3_2018SchemaPlugin
 
                 if (StringUtils.isNotEmpty(mainLangString)) {
                     mainCharacterString.setText(mainLangString);
-                } else if (mainCharacterString.getAttribute("nilReason", ISO19115_3_2018Namespaces.GCO) == null){
-                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19115_3_2018Namespaces.GCO);
+                } else if (mainCharacterString.getAttribute("nilReason", ISO19115_3_2018Namespaces.GCO) == null) {
+                    ((Element) mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19115_3_2018Namespaces.GCO);
                 }
             } else if (StringUtils.isEmpty(mainCharacterString.getText())) {
-                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19115_3_2018Namespaces.GCO);
+                ((Element) mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19115_3_2018Namespaces.GCO);
             }
         }
 
         // Remove unused lang entries
-        List<Element> translationNodes = (List<Element>)Xml.selectNodes(element, "*//node()[@locale]");
-        for(Element el : translationNodes) {
+        List<Element> translationNodes = (List<Element>) Xml.selectNodes(element, "*//node()[@locale]");
+        for (Element el : translationNodes) {
             // Remove all translations if there is no or only one language requested
-            if(langs.size() <= 1 ||
+            if (langs.size() <= 1 ||
                 !langs.contains(el.getAttribute("locale").getValue())) {
-                Element parent = (Element)el.getParent();
+                Element parent = (Element) el.getParent();
                 parent.detach();
             }
         }
 
         // Remove PT_FreeText which might be emptied by above processing
-        for(Element el : nodesWithStrings) {
+        for (Element el : nodesWithStrings) {
             if (el.getChildren().size() == 0) {
                 el.detach();
             }
@@ -385,7 +431,7 @@ public class ISO19115_3_2018SchemaPlugin
                 op.setAttribute("uuidref", uuid);
 
                 String hRefLink = baseUrl + "api/records/" + uuid + "/formatters/xml";
-                op.setAttribute("href", hRefLink, ISO19115_3_2018Namespaces.XLINK);
+                op.setAttribute("href", hRefLink, XLINK);
 
                 root.addContent(op);
             });
@@ -410,7 +456,8 @@ public class ISO19115_3_2018SchemaPlugin
                     Double.valueOf(box.getChild("southBoundLatitude", ISO19115_3_2018Namespaces.GEX).getChild("Decimal", ISO19115_3_2018Namespaces.GCO).getText()),
                     Double.valueOf(box.getChild("northBoundLatitude", ISO19115_3_2018Namespaces.GEX).getChild("Decimal", ISO19115_3_2018Namespaces.GCO).getText())
                 ));
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException e) {
+            }
         }
         return extents;
     }
@@ -429,17 +476,17 @@ public class ISO19115_3_2018SchemaPlugin
 
     /**
      * Process some of the ISO elements which can have substitute.
-     *
+     * <p>
      * For example, a CharacterString can have a gmx:Anchor as a substitute
      * to encode a text value + an extra URL. To make the transition between
      * CharacterString and Anchor transparent, this method takes care of
      * creating the appropriate element depending on the presence of an xlink:href attribute.
      * If the attribute is empty, then a CharacterString is used, if a value is set, an Anchor is created.
      *
-     * @param el element to process.
-     * @param attributeRef the attribute reference
+     * @param el                  element to process.
+     * @param attributeRef        the attribute reference
      * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
-     * @param attributeValue the attribute value
+     * @param attributeValue      the attribute value
      * @return
      */
     @Override
@@ -449,8 +496,8 @@ public class ISO19115_3_2018SchemaPlugin
                                   String attributeValue) {
         if (Log.isDebugEnabled(LOGGER_NAME)) {
             Log.debug(LOGGER_NAME, String.format(
-                    "Processing element %s, attribute %s with attributeValue %s.",
-                    el, attributeRef, attributeValue));
+                "Processing element %s, attribute %s with attributeValue %s.",
+                el, attributeRef, attributeValue));
         }
 
         boolean elementToProcess = isElementToProcess(el);
@@ -462,7 +509,7 @@ public class ISO19115_3_2018SchemaPlugin
             if (isMultilingualElement) {
                 // The attribute provided relates to the CharacterString and not to the LocalisedCharacterString
                 Element targetElement = el.getParentElement().getParentElement().getParentElement()
-                        .getChild("CharacterString", ISO19115_3_2018Namespaces.GCO);
+                    .getChild("CharacterString", ISO19115_3_2018Namespaces.GCO);
                 if (targetElement != null) {
                     el = targetElement;
                 }
@@ -470,15 +517,15 @@ public class ISO19115_3_2018SchemaPlugin
 
             if (isEmptyLink) {
                 el.setNamespace(ISO19115_3_2018Namespaces.GCO).setName("CharacterString");
-                el.removeAttribute("href", ISO19115_3_2018Namespaces.XLINK);
+                el.removeAttribute("href", XLINK);
                 return el;
             } else {
                 el.setNamespace(ISO19115_3_2018Namespaces.GCX).setName("Anchor");
-                el.setAttribute("href", "", ISO19115_3_2018Namespaces.XLINK);
+                el.setAttribute("href", "", XLINK);
                 return el;
             }
         } else if (elementToProcess && StringUtils.isNotEmpty(parsedAttributeName) &&
-                parsedAttributeName.startsWith(":")) {
+            parsedAttributeName.startsWith(":")) {
             // eg. :codeSpace
             el.setAttribute(parsedAttributeName.substring(1), attributeValue);
             return el;
@@ -492,7 +539,6 @@ public class ISO19115_3_2018SchemaPlugin
      * Checks if an element requires processing in {@link #processElement(Element, String, String, String)}.
      *
      * @param el Element to check.
-     *
      * @return boolean indicating if the element requires processing or not.
      */
     protected boolean isElementToProcess(Element el) {
@@ -501,8 +547,8 @@ public class ISO19115_3_2018SchemaPlugin
         return elementsToProcess.contains(el.getQualifiedName());
     }
 
-    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
-        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder, String excludePattern) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder, excludePattern);
         patternStreamer.setNamespaces(ISO19115_3_2018SchemaPlugin.allNamespaces.asList());
         // TODO: Add xlink:href ?
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'lan:LocalisedCharacterString']");
@@ -513,6 +559,7 @@ public class ISO19115_3_2018SchemaPlugin
      * If not empty defind if parent metadata reference
      * should also be searched in associated resources.
      * Define the value of associationType to use.
+     *
      * @return
      */
     public String getParentAssociatedResourceType() {

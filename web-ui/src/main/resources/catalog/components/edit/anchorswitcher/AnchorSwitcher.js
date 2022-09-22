@@ -21,130 +21,133 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_anchor_switcher_directive');
+(function () {
+  goog.provide("gn_anchor_switcher_directive");
 
-  var module = angular.module('gn_anchor_switcher_directive', []);
+  var module = angular.module("gn_anchor_switcher_directive", []);
 
-  module.directive('gnAnchorSwitcher',
-      ['gnEditor', 'gnCurrentEdit', '$compile', '$q',
-       function(gnEditor, gnCurrentEdit, $compile, $q) {
-         return {
-           restrict: 'A',
-           replace: true,
-           transclude: true,
-           scope: {
-             id: '@',
-             textValue: '@value',
-             elementRef: '@name',
-             gnFieldTooltip: '@'
-           },
-           templateUrl: '../../catalog/components/edit/anchorswitcher/partials/' +
-           'anchorswitcher.html',
-           link: function(scope, element, attrs) {
-             var attributeHtmlTemplate = _.template(
-             '<div class="form-group" id="gn-attr-<%= id %>_xlinkCOLONhref">' +
-             '<label class="col-sm-4" data-translate>url</label>' +
-             '<div class="col-sm-7">' +
-             '<input type="text" class="" ' +
-             'name="<%= id %>_xlinkCOLONhref" value="">' +
-             '</div>' +
-             '<div class="col-sm-1">' +
-             '<a class="btn pull-right" ' +
-             'data-gn-click-and-spin="removeAttribute(\'<%= id %>_xlinkCOLONhref\')" ' +
-             'data-toggle="tooltip" data-placement="top" ' +
-             'title="{{\'deleteField\' |translate}}" style="visibility: hidden;">' +
-             '<i class="fa fa-times text-danger"></i>' +
-             '</a>' +
-             '</div>' +
-             '</div>'
-             );
+  module.directive("gnAnchorSwitcher", [
+    "gnEditor",
+    "gnCurrentEdit",
+    "$compile",
+    "$q",
+    function (gnEditor, gnCurrentEdit, $compile, $q) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        scope: {
+          id: "@",
+          textValue: "@value",
+          elementRef: "@name",
+          gnFieldTooltip: "@"
+        },
+        templateUrl:
+          "../../catalog/components/edit/anchorswitcher/partials/" +
+          "anchorswitcher.html",
+        link: function (scope, element, attrs) {
+          var attributeHtmlTemplate = _.template(
+            '<div class="form-group" id="gn-attr-<%= id %>_xlinkCOLONhref">' +
+              '<label class="col-sm-4" data-translate>url</label>' +
+              '<div class="col-sm-7">' +
+              '<input type="text" class="" ' +
+              'name="<%= id %>_xlinkCOLONhref" value="">' +
+              "</div>" +
+              '<div class="col-sm-1">' +
+              '<a class="btn pull-right" ' +
+              "data-gn-click-and-spin=\"removeAttribute('<%= id %>_xlinkCOLONhref')\" " +
+              'data-toggle="tooltip" data-placement="top" ' +
+              'title="{{\'deleteField\' |translate}}" style="visibility: hidden;">' +
+              '<i class="fa fa-times text-danger"></i>' +
+              "</a>" +
+              "</div>" +
+              "</div>"
+          );
 
+          scope.checkMode = function () {
+            var xlinkHrefDomEl = $(
+              '[name="' + scope.elementRef + "_xlinkCOLONhref" + '"]'
+            );
+            if (xlinkHrefDomEl.length > 0) {
+              scope.mode = "anchor";
+            } else {
+              scope.mode = "characterString";
+            }
+            return scope.mode;
+          };
 
-             scope.checkMode = function() {
-               var xlinkHrefDomEl = $('[name="' + scope.elementRef +
-               '_xlinkCOLONhref' + '"]');
-               if (xlinkHrefDomEl.length > 0) {
-                 scope.mode = 'anchor';
-               } else {
-                 scope.mode = 'characterString';
-               }
-               return scope.mode;
-             };
+          scope.setAttributesVisibility = function (mode, newAttributes) {
+            var visibility = newAttributes || gnCurrentEdit.displayAttributes;
 
-             scope.setAttributesVisibility = function(mode, newAttributes) {
-               var visibility = newAttributes ||
-               gnCurrentEdit.displayAttributes;
+            if (mode === "anchor") {
+              visibility = true;
+            }
+            var attributesDiv = $("#gn-attr-div" + scope.elementRef);
+            // Toggle class on all gn-attr widgets
+            if (visibility) {
+              attributesDiv.removeClass("hidden");
+            } else {
+              attributesDiv.addClass("hidden");
+            }
+          };
 
-               if (mode === 'anchor') {
-                 visibility = true;
-               }
-               var attributesDiv = $('#gn-attr-div' + scope.elementRef);
-               // Toggle class on all gn-attr widgets
-               if (visibility) {
-                 attributesDiv.removeClass('hidden');
-               } else {
-                 attributesDiv.addClass('hidden');
-               }
-             };
+          scope.$watch("getDisplayAttributes()", function (newAttributes) {
+            scope.setAttributesVisibility(scope.mode, newAttributes);
+          });
 
-             scope.$watch('getDisplayAttributes()', function(newAttributes) {
-               scope.setAttributesVisibility(scope.mode, newAttributes);
-             });
+          scope.getDisplayAttributes = function () {
+            return gnCurrentEdit.displayAttributes;
+          };
 
-             scope.getDisplayAttributes = function() {
-               return gnCurrentEdit.displayAttributes;
-             };
+          scope.$watch("mode", function (newMode) {
+            var xlinkInput = $('[name="' + scope.elementRef + "_xlinkCOLONhref" + '"]');
+            if (newMode === "anchor") {
+              if (xlinkInput.length === 0) {
+                addXlinkHrefElement();
+              }
+            } else if (newMode === "characterString") {
+            }
+            scope.setAttributesVisibility(newMode);
+          });
 
-             scope.$watch('mode', function(newMode) {
-               var xlinkInput = $('[name="' + scope.elementRef +
-               '_xlinkCOLONhref' + '"]');
-               if (newMode === 'anchor') {
-                 if (xlinkInput.length === 0) {
-                   addXlinkHrefElement();
-                 }
+          var addXlinkHrefElement = function () {
+            var snippedDiv = $("#gn-attr-div" + scope.elementRef);
+            var xlinkDivTemplate = attributeHtmlTemplate({
+              id: scope.elementRef
+            });
+            var xlinkDiv = $(xlinkDivTemplate);
+            var compiledAngularDiv = $compile(xlinkDiv)(scope);
+            snippedDiv.append(compiledAngularDiv);
+          };
 
-               } else if (newMode === 'characterString') {
+          scope.setMode = function (newMode) {
+            scope.mode = newMode;
+          };
 
-               }
-               scope.setAttributesVisibility(newMode);
-             });
+          scope.removeAttribute = function (ref) {
+            var defer = $q.defer();
+            gnEditor.removeAttribute(gnCurrentEdit.id, ref).then(
+              function () {
+                defer.resolve();
+              },
+              function () {
+                defer.reject();
+              }
+            );
+            return defer.promise;
+          };
 
-             var addXlinkHrefElement = function() {
-               var snippedDiv = $('#gn-attr-div' + scope.elementRef);
-               var xlinkDivTemplate = attributeHtmlTemplate({
-                 id: scope.elementRef
-               });
-               var xlinkDiv = $(xlinkDivTemplate);
-               var compiledAngularDiv = $compile(xlinkDiv)(scope);
-               snippedDiv.append(compiledAngularDiv);
-             };
+          scope.$on("attributeRemoved", function (event, ref) {
+            if (ref === scope.elementRef + "_xlinkCOLONhref") {
+              scope.setMode("characterString");
+            }
+          });
 
-             scope.setMode = function(newMode) {
-               scope.mode = newMode;
-             };
-
-             scope.removeAttribute = function(ref) {
-               var defer = $q.defer();
-               gnEditor.removeAttribute(gnCurrentEdit.id, ref).then(function() {
-                 defer.resolve();
-               }, function() {
-                 defer.reject();
-               });
-               return defer.promise;
-             };
-
-             scope.$on('attributeRemoved', function(event, ref) {
-               if (ref === scope.elementRef + '_xlinkCOLONhref') {
-                 scope.setMode('characterString');
-               }
-             });
-
-
-             // init
-             element.removeClass('form-control');
-             scope.initialMode = scope.checkMode();
-           }
-         };
-       }]);
+          // init
+          element.removeClass("form-control");
+          scope.initialMode = scope.checkMode();
+        }
+      };
+    }
+  ]);
 })();

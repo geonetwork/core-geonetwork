@@ -27,6 +27,8 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.LinkStatusRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
@@ -49,6 +51,9 @@ public class UrlAnalyzer {
 
     @Autowired
     protected SchemaManager schemaManager;
+
+    @Autowired
+    protected SettingManager settingManager;
 
     @Autowired
     protected MetadataRepository metadataRepository;
@@ -103,7 +108,7 @@ public class UrlAnalyzer {
                     link.getRecords().add(metadataLink);
                     linkRepository.save(link);
                 }
-            }).processAllRawText(element, md);
+            }, settingManager.getValue(Settings.METADATA_LINK_EXCLUDEPATTERN)).processAllRawText(element, md);
             entityManager.flush();
         }
     }
