@@ -567,6 +567,10 @@
             );
           }
           var fromNow = parsedDate.fromNow();
+
+          if (date.length === 4) {
+            format = "YYYY";
+          }
           if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
             return {
               value: fromNow,
