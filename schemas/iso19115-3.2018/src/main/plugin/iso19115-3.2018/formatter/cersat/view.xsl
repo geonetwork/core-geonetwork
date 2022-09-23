@@ -122,7 +122,7 @@
 
             <xsl:for-each select="$version">
               <xsl:if test="position() = 1">
-                <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
+                <div class="cersat-bg cersat-bg-lightgreen">
                   <div>
                     <xsl:value-of select="$schemaStrings/cersat-version"/>
                   </div>
@@ -135,7 +135,7 @@
             <xsl:variable name="doiUrl"
                           select="$metadata/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/* = 'DOI']/cit:linkage/*/text()"/>
             <xsl:if test="$doiUrl != ''">
-              <div class="cersat-bg cersat-bg-lightgreen" style="width:57%">
+              <div class="cersat-bg cersat-bg-lightgreen">
                 <div>
                   DOI
                 </div>
@@ -151,7 +151,7 @@
             <xsl:variable name="status"
                           select="$metadata/mdb:identificationInfo/*/mri:status[1]/*/@codeListValue"/>
             <xsl:if test="$status != ''">
-              <div class="cersat-bg cersat-bg-lightgreen" style="width:20%">
+              <div class="cersat-bg cersat-bg-lightgreen">
                 <div>
                   <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
                 </div>
