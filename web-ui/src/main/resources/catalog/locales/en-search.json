@@ -534,5 +534,6 @@
   "fieldTooLong": "The value is too long",
   "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
   "fieldTooShort": "The value is too short",
-  "fieldEmailNotValid": "A valid email address is required"
+  "fieldEmailNotValid": "A valid email address is required",
+  "submit": "Submit"
 }

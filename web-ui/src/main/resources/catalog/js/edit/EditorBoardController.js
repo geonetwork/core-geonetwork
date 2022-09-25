@@ -171,6 +171,13 @@
         }
       });
 
+      // Refresh list when metadata statuses are updated
+      $scope.$on("metadataStatusUpdated", function (event, data) {
+        if (data && data === true) {
+          $rootScope.$broadcast("search");
+        }
+      });
+
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
             'partials/viewtemplates/editor.html',

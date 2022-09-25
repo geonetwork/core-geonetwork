@@ -44,10 +44,7 @@ import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.MetadataBatchApproveParameter;
-import org.fao.geonet.api.records.model.MetadataStatusParameter;
-import org.fao.geonet.api.records.model.MetadataStatusResponse;
-import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
+import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.domain.*;
@@ -255,7 +252,7 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Set the records status to approved", notes = "", nickname = "setRecordsStatus")
     @RequestMapping(value = "/approve", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('Reviewer')")
-    @ApiResponses(value = {@ApiResponse(code = 2020, message = "Metadata approved ."),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Metadata approved ."),
         @ApiResponse(code = 400, message = "Metadata workflow not enabled.")})
     @ResponseBody
     MetadataProcessingReport approve(@RequestBody MetadataBatchApproveParameter approveParameter,
@@ -266,12 +263,7 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.iso3code(request.getLocales()));
 
-        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
-
-        if (!isMdWorkflowEnable) {
-            throw new FeatureNotEnabledException(
-                "Metadata workflow is disabled, can not be set the status of metadata");
-        }
+        checkWorkflowEnabled();
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
@@ -295,53 +287,117 @@ public class MetadataWorkflowApi {
                     ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
-                    boolean isAllowedSubmitApproveInvalidMd = settingManager
-                        .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
-                    if (!isAllowedSubmitApproveInvalidMd) {
-                        boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
-
-                        if (isInvalid) {
-                            report.addMetadataInfos(metadata.getId(), metadata.getUuid(), true, false, "Metadata is invalid: can't be approved");
-                            continue;
-                        }
+                    if (!isAllowedMetadataStatusChange(context, metadata, report)) {
+                        continue;
                     }
 
                     MetadataStatus currentStatus = metadataStatus.getStatus(metadata.getId());
-                    // Metadata not in the workflow
-                    if (!approveParameter.isDirectApproval()) {
-                        if (currentStatus == null) {
-                            report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
-                                true, false, "Metadata workflow is not enabled");
-                            continue;
-                        } else if (currentStatus.getStatusValue().getId() != Integer.parseInt(StatusValue.Status.SUBMITTED)) {
-                            report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
-                                metadataUtils.isMetadataDraft(metadata.getId()),
-                                metadataUtils.isMetadataApproved(metadata.getId()),
-                                "Metadata is not in submitted status.");
-                            continue;
+
+                    if (currentStatus == null) {
+                        // Metadata not in the workflow
+                        report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
+                            true, false, "Metadata workflow is not enabled");
+                        continue;
+                    } else {
+                        if (!approveParameter.isDirectApproval()) {
+                            if (currentStatus.getStatusValue().getId() != Integer.parseInt(StatusValue.Status.SUBMITTED)) {
+                                report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
+                                    this.metadataUtils.isMetadataDraft(metadata.getId()),
+                                    this.metadataUtils.isMetadataApproved(metadata.getId()),
+                                    "Metadata is not in submitted status.");
+                                continue;
+                            }
                         }
                     }
 
-                    // --- use StatusActionsFactory and StatusActions class to
-                    // --- change status and carry out behaviours for status changes
-                    StatusActions sa = statusActionFactory.createStatusActions(context);
-
-                    MetadataStatusParameter status = new MetadataStatusParameter();
-                    status.setStatus(Integer.parseInt(StatusValue.Status.APPROVED));
-                    status.setChangeMessage(approveParameter.getMessage());
-
-                    int author = context.getUserSession().getUserIdAsInt();
-                    MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
-                    List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
-                    listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    // Change the metadata status to approved
+                    changeMetadataStatus(context, metadata, StatusValue.Status.APPROVED, approveParameter.getMessage());
 
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
                 }
             }
-            dataMan.flush();
-            dataMan.indexMetadata(listOfUpdatedRecords);
+            dataManager.flush();
+            dataManager.indexMetadata(listOfUpdatedRecords);
+
+        } catch (Exception exception) {
+            report.addError(exception);
+        } finally {
+            report.close();
+        }
+
+        return report;
+    }
+
+    @ApiOperation(value = "Set the records status to submitted", notes = "", nickname = "submit")
+    @RequestMapping(value = "/submit", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Metadata submitted ."),
+        @ApiResponse(code = 400, message = "Metadata workflow not enabled.")})
+    @ResponseBody
+    MetadataProcessingReport submit(@RequestBody MetadataBatchSubmitParameter submitParameter,
+                                     @ApiParam(hidden = true) HttpSession session,
+                                     @ApiParam(hidden = true) HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request,
+            languageUtils.getIso3langCode(request.getLocales()));
+
+        checkWorkflowEnabled();
+
+        MetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        try {
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(submitParameter.getUuids(),
+                submitParameter.getBucket(), ApiUtils.getUserSession(session));
+            report.setTotalRecords(records.size());
+
+            List<String> listOfUpdatedRecords = new ArrayList<>();
+            for (String uuid : records) {
+                AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+                if (metadata == null) {
+                    report.incrementNullRecords();
+                } else if (!accessManager.isOwner(
+                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+                    report.addNotEditableMetadataId(metadata.getId());
+                } else {
+                    if (!isAllowedMetadataStatusChange(context, metadata, report)) {
+                        continue;
+                    }
+
+                    MetadataStatus currentStatus = metadataStatus.getStatus(metadata.getId());
+
+                    if (currentStatus == null) {
+                        // Metadata not in the workflow
+                        report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
+                            true, false, "Metadata workflow is not enabled");
+                        continue;
+                    } else if (currentStatus.getStatusValue().getId() != Integer.parseInt(StatusValue.Status.DRAFT)) {
+                        // Metadata not in draft status
+                        report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
+                            this.metadataUtils.isMetadataDraft(metadata.getId()),
+                            this.metadataUtils.isMetadataApproved(metadata.getId()),
+                            "Metadata is not in draft status.");
+                        continue;
+                    }
+
+                    // Change the metadata status to submitted
+                    changeMetadataStatus(context, metadata, StatusValue.Status.SUBMITTED, submitParameter.getMessage());
+
+                    // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+                    // status of the published and draft versions
+                    if (metadata instanceof MetadataDraft) {
+                        Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+                        if (metadataApproved != null) {
+                            listOfUpdatedRecords.add(String.valueOf(metadataApproved.getId()));
+                        }
+                    }
+
+                    report.incrementProcessedRecords();
+                    listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                }
+            }
+            dataManager.flush();
+            dataManager.indexMetadata(listOfUpdatedRecords);
 
         } catch (Exception exception) {
             report.addError(exception);
@@ -1024,5 +1080,74 @@ public class MetadataWorkflowApi {
         }
 
         return StateText;
+    }
+
+    /**
+     * Checks if the metadata workflow is enabled.
+     *
+     * @throws FeatureNotEnabledException
+     */
+    private void checkWorkflowEnabled() throws FeatureNotEnabledException {
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+
+        if (!isMdWorkflowEnable) {
+            throw new FeatureNotEnabledException(
+                "Metadata workflow is disabled, can not be set the status of metadata")
+                .withMessageKey("exception.resourceNotEnabled.workflow")
+                .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
+        }
+    }
+
+    /**
+     * Checks if the metadata status can be changed.
+     *
+     * If the setting to allow only to submit / approve valid metadata only is enabled,
+     * the metadata should be valid, to allow the status change.
+     *
+     * @param context
+     * @param metadata
+     * @param report
+     * @throws Exception
+     */
+    private boolean isAllowedMetadataStatusChange(ServiceContext context, AbstractMetadata metadata,
+                                                  MetadataProcessingReport report) throws Exception {
+        boolean isAllowedSubmitApproveInvalidMd = settingManager
+            .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+        if (!isAllowedSubmitApproveInvalidMd) {
+            boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
+
+            if (isInvalid) {
+                report.addMetadataInfos(metadata.getId(), metadata.getUuid(), true, false, "Metadata is invalid: can't be approved");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Change the status of a metadata.
+     *
+     * @param context
+     * @param metadata
+     * @param newStatus
+     * @param changeMessage
+     * @throws Exception
+     */
+    private void changeMetadataStatus(ServiceContext context, AbstractMetadata metadata, String newStatus, String changeMessage)
+        throws Exception {
+        // --- use StatusActionsFactory and StatusActions class to
+        // --- change status and carry out behaviours for status changes
+        StatusActions sa = statusActionFactory.createStatusActions(context);
+
+        MetadataStatusParameter status = new MetadataStatusParameter();
+        status.setStatus(Integer.parseInt(newStatus));
+        status.setChangeMessage(changeMessage);
+
+        int author = context.getUserSession().getUserIdAsInt();
+        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+        listOfStatusChange.add(metadataStatus);
+        sa.onStatusChange(listOfStatusChange);
     }
 }
