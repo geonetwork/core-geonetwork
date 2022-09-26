@@ -471,14 +471,7 @@
           }
 
           if (scope.text) {
-            scope.citationText = '<blockquote>\n' +
-              '      <div class="row">\n' +
-              '        <div class="col-md-3">\n' +
-              '          <i class="fa fa-quote-left pull-right"></i>\n' +
-              '        </div>\n' +
-              '        <div class="col-md-9">\n' +
-              '          <p>' +  $filter('linky')(scope.text, '_blank') +
-              '</p></div></div></blockquote>';
+            scope.citationText = $filter('linky')(scope.text, '_blank');
             scope.citationAvailable = true;
           }
 
