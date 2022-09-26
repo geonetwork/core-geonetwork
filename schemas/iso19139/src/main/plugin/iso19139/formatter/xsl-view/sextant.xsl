@@ -84,7 +84,8 @@
 
           <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
             <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-            <xsl:value-of select="if (gml:beginPosition castable as xs:date)
+            <xsl:value-of select="if (gml:beginPosition castable as xs:date
+                                    or gml:beginPosition castable as xs:dateTime)
                                   then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
                                   else gml:beginPosition"/>
             <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
@@ -97,7 +98,8 @@
           </xsl:variable>
           <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
             <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-            <xsl:value-of select="if (gml:endPosition castable as xs:date)
+            <xsl:value-of select="if (gml:endPosition castable as xs:date
+                                    or gml:endPosition castable as xs:dateTime)
                                   then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
                                   else gml:endPosition"/>
             <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
@@ -137,7 +139,8 @@
 
 
               <dd>
-                <xsl:value-of select="if (gmd:date/* castable as xs:date)
+                <xsl:value-of select="if (gmd:date/* castable as xs:date
+                                        or gmd:date/* castable as xs:dateTime)
                                       then format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]')
                                       else gmd:date/*"/>
                 <xsl:text>&#10;(</xsl:text>
