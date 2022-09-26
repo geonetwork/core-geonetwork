@@ -331,7 +331,7 @@
                           ng-selected="l === s.value"
                           data-translate=""
                         >
-                          {{'notificationLevel-' + l}}
+                         {{l !== ''?'notificationLevel-' + l: ''}}
                         </option>
                       </select>
                       <select
@@ -347,7 +347,7 @@
                           ng-selected="l === s.value"
                           data-translate=""
                         >
-                          {{'notificationLevel-' + l}}
+                          {{l !== ''?'notificationLevel-' + l: ''}}
                         </option>
                       </select>
                       <select

@@ -223,6 +223,7 @@
 
         $http.get("../api/site/info/notificationLevels").success(function (data) {
           $scope.notificationLevels = data;
+          $scope.notificationLevels.unshift('');
         });
 
         // load log files
