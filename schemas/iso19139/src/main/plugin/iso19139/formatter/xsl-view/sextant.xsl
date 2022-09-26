@@ -82,40 +82,46 @@
                                  select="gml:beginPosition/@indeterminatePosition"/>
           </xsl:variable>
 
-          <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-            <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-            <xsl:value-of select="if (gml:beginPosition castable as xs:date
-                                    or gml:beginPosition castable as xs:dateTime)
-                                  then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
-                                  else gml:beginPosition"/>
-            <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
-            <i class="fa fa-fw fa-arrow-right">&#160;</i>
-          </xsl:if>
+          <xsl:variable name="extent">
+            <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+              <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
+              <xsl:value-of select="if (gml:beginPosition castable as xs:date
+                                      or gml:beginPosition castable as xs:dateTime)
+                                    then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
+                                    else gml:beginPosition"/>
+              <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
+              <i class="fa fa-fw fa-arrow-right">&#160;</i>
+            </xsl:if>
 
-          <xsl:variable name="indeterminatePositionLabel">
-            <xsl:apply-templates mode="render-value"
-                                 select="gml:endPosition/@indeterminatePosition"/>
-          </xsl:variable>
-          <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-            <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-            <xsl:value-of select="if (gml:endPosition castable as xs:date
-                                    or gml:endPosition castable as xs:dateTime)
-                                  then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
-                                  else gml:endPosition"/>
-            <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
-          </xsl:if>
+            <xsl:variable name="indeterminatePositionLabel">
+              <xsl:apply-templates mode="render-value"
+                                   select="gml:endPosition/@indeterminatePosition"/>
+            </xsl:variable>
+            <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+              <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
+              <xsl:value-of select="if (gml:endPosition castable as xs:date
+                                      or gml:endPosition castable as xs:dateTime)
+                                    then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]')
+                                    else gml:endPosition"/>
+              <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
+            </xsl:if>
 
-          <xsl:if test="gml:timePosition != ''">
-            <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
-          </xsl:if>
-          &#160;
-          <xsl:variable name="type">
-            <xsl:call-template name="landingpage-label">
-              <xsl:with-param name="key" select="'sxt-view-temporal'"/>
-            </xsl:call-template>
+            <xsl:if test="gml:timePosition != ''">
+              <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
+            </xsl:if>
           </xsl:variable>
-          (<xsl:copy-of select="if (count($type/element()) = 0) then concat(' ', $type, ' ') else $type/element()"/>)
-          <br/>
+
+          <xsl:if test="$extent != ''">
+            <xsl:copy-of select="$extent"/>
+            &#160;
+            <xsl:variable name="type">
+              <xsl:call-template name="landingpage-label">
+                <xsl:with-param name="key" select="'sxt-view-temporal'"/>
+              </xsl:call-template>
+            </xsl:variable>
+            (<xsl:copy-of select="if (count($type/element()) = 0) then concat(' ', $type, ' ') else $type/element()"/>)
+            <br/>
+          </xsl:if>
         </xsl:for-each>
       </xsl:variable>
 
@@ -150,7 +156,7 @@
             </dl>
           </xsl:for-each>
 
-          <xsl:if test="$temporalCoverageContent != ''">
+          <xsl:if test="normalize-space($temporalCoverageContent) != ''">
             <dl>
               <!--<dt>
                 <xsl:call-template name="landingpage-label">
