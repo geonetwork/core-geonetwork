@@ -190,7 +190,15 @@
             }
           },
           source: {
-            includes: ["id", "uuid", "creat*", "group*", "resource*", "owner*"]
+            includes: [
+              "id",
+              "uuid",
+              "creat*",
+              "group*",
+              "resource*",
+              "owner*",
+              "isTemplate"
+            ]
           },
           track_total_hits: true
         },
