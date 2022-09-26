@@ -572,22 +572,22 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start castable as xs:date
-                    or $start castable as xs:dateTime
-                    or $start castable as xs:gYearMonth
-                    or $start castable as xs:gYear">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
+      <xsl:if test="$start/text() castable as xs:date
+                    or $start/text() castable as xs:dateTime
+                    or $start/text() castable as xs:gYearMonth
+                    or $start/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$start/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end castable as xs:date
-                    or $end castable as xs:dateTime
-                    or $start castable as xs:gYearMonth
-                    or $start castable as xs:gYear">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
+      <xsl:if test="$end/text() castable as xs:date
+                    or $end/text() castable as xs:dateTime
+                    or $end/text() castable as xs:gYearMonth
+                    or $end/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$end/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
