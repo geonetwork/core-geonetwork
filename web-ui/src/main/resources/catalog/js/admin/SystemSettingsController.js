@@ -197,6 +197,17 @@
       $scope.loadTplReport = null;
       $scope.atomFeedType = "";
 
+      $scope.isGroupPublicationNotificationLevel = false;
+      $scope.isGroupLocalRatingNotificationLevel = false;
+
+      $scope.changeLocalRatingNotificationLevel = function (value) {
+        $scope.isGroupLocalRatingNotificationLevel = value === "recordGroupEmail";
+      };
+
+      $scope.changePublicationNotificationLevel = function (value) {
+        $scope.isGroupPublicationNotificationLevel = value === "recordGroupEmail";
+      };
+
       /**
        * Load catalog settings as a flat list and
        * extract firs and second level sections.
@@ -212,6 +223,7 @@
 
         $http.get("../api/site/info/notificationLevels").success(function (data) {
           $scope.notificationLevels = data;
+          $scope.notificationLevels.unshift('');
         });
 
         // load log files
@@ -242,6 +254,15 @@
                 $scope.settings[i].name == "metadata/workflow/draftWhenInGroup"
               ) {
                 $scope.draftInAllGroups = $scope.settings[i].value == ".*";
+              } else if (
+                $scope.settings[i].name ==
+                "system/metadataprivs/publication/notificationLevel"
+              ) {
+                $scope.isGroupPublicationNotificationLevel =
+                  $scope.settings[i].value === "recordGroupEmail";
+              } else if ("system/localrating/notificationLevel") {
+                $scope.isGroupLocalRatingNotificationLevel =
+                  $scope.settings[i].value === "recordGroupEmail";
               }
 
               var tokens = $scope.settings[i].name.split("/");

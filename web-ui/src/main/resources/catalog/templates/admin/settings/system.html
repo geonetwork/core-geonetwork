@@ -322,13 +322,32 @@
                         data-ng-switch-when="system/localrating/notificationLevel"
                         class="form-control"
                         name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeLocalRatingNotificationLevel(s.value)"
                       >
                         <option
                           data-ng-repeat="l in notificationLevels"
                           value="{{l}}"
                           ng-selected="l === s.value"
+                          data-translate=""
                         >
-                          {{l}}
+                         {{l !== ''?'notificationLevel-' + l: ''}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/metadataprivs/publication/notificationLevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changePublicationNotificationLevel(s.value)"
+                      >
+                        <option
+                          data-ng-repeat="l in notificationLevels"
+                          value="{{l}}"
+                          ng-selected="l === s.value"
+                          data-translate=""
+                        >
+                          {{l !== ''?'notificationLevel-' + l: ''}}
                         </option>
                       </select>
                       <select
@@ -609,6 +628,26 @@
                           </div>
                         </span>
                       </div>
+
+                      <input
+                        data-ng-switch-when="system/metadataprivs/publication/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupPublicationNotificationLevel"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/localrating/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupLocalRatingNotificationLevel"
+                      />
 
                       <!-- Default -->
                       <input

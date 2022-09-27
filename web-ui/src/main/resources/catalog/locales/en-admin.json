@@ -688,6 +688,8 @@
     "system/localrating": "Metadata rating",
     "system/localrating/enable": "Local rating",
     "system/localrating/enable-help": "If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).",
+    "system/localrating/notificationGroups": "Groups to notify in case of rating",
+    "system/localrating/notificationGroups-help": "List of groups, separated by the char |, to notify in case of rating (for 'Notify the group(s) emails' notification level)",
     "system/metadata": "Metadata configuration",
     "system/metadata/prefergrouplogo": "Prefer Group Logo",
     "system/users": "Groups & users",
@@ -705,6 +707,10 @@
     "system/metadataprivs/usergrouponly": "Only set privileges to user's groups",
     "system/metadataprivs/publicationbyrevieweringroupowneronly": "Publication by users reviewer in record group only",
     "system/metadataprivs/publicationbyrevieweringroupowneronly-help": "Allow publication by administrator and reviewer member of record group. If false, then also all users reviewer in group with editing rights can publish/unpublish a record.",
+    "system/metadataprivs/publication/notificationLevel": "Notification level when a metadata is published / unpublished",
+    "system/metadataprivs/publication/notificationLevel-help": "Define which users to alert when a metadata is published / unpublished",
+    "system/metadataprivs/publication/notificationGroups": "Groups to notify when a metadata is published / unpublished",
+    "system/metadataprivs/publication/notificationGroups-help": "List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level)",
     "system/metadatacreate" : "Metadata create",
     "system/metadatacreate/generateUuid" : "Generate UUID",
     "system/metadatacreate/generateUuid-help" : "GeoNetwork assigns a random metadata UUID to the metadata created by a user (default). To assign the metadata UUID manually disable this option and fill the metadata UUID prefix.",
@@ -1374,6 +1380,17 @@
     "ui-searchResultContact-help": "Select the default type of contacts to display in the search results. If the metadata doesn't have contacts of the selected type, the contact organisation for the resource is displayed (if available).",
     "Org": "Contact organisation for the metadata",
     "OrgForResource": "Contact organisation for the resource",
-    "OrgForDistribution": "Contact organisation for distribution"
+    "OrgForDistribution": "Contact organisation for distribution",
+    "notificationLevel-statusUserOwner": "Notify the status owner user",
+    "notificationLevel-catalogueAdministrator": "Notify the catalogue administrators",
+    "notificationLevel-catalogueProfileAdministrator": "Notify the catalogue administrators",
+    "notificationLevel-catalogueProfileUserAdmin": "Notify the catalogue user administrators",
+    "notificationLevel-catalogueProfileReviewer": "Notify the catalogue reviewers",
+    "notificationLevel-catalogueProfileEditor": "Notify the catalogue editors",
+    "notificationLevel-catalogueProfileRegisteredUser": "Notify the catalogue registered user",
+    "notificationLevel-catalogueProfileGuest": "Notify the catalogue guest",
+    "notificationLevel-recordProfileReviewer": "Notify the reviewers part of the record group owner",
+    "notificationLevel-recordUserAuthor": "Notify the record author",
+    "notificationLevel-recordGroupEmail": "Notify the group(s) emails"
 }
 
