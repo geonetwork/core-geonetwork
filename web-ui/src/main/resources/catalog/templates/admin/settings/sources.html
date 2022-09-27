@@ -1,4 +1,4 @@
-<div data-ng-controller="GnSearchController">
+<div>
   <div class="row" data-ng-controller="GnSourcesController">
     <div class="col-lg-4">
       <div class="panel panel-default">
@@ -219,11 +219,10 @@
               >
 
               <div
-                data-gn-metadata-selector="source.serviceRecord"
-                data-search-obj="serviceRecordSearchObj"
-                data-md="cswServiceRecord"
-                data-element-name="source.serviceRecord"
-                id="serviceList"
+                data-gn-suggest="serviceRecordSearchObj"
+                data-gn-suggest-model="source.serviceRecord"
+                data-gn-suggest-property="_id"
+                data-gn-suggest-display-title="span"
               />
 
               <p class="help-block">

@@ -54,6 +54,10 @@
           sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
@@ -120,35 +124,6 @@
         };
         // TODO: init labels
       };
-      function loadServiceRecords() {
-        var id = $scope.source.serviceRecord;
-
-        if (angular.isDefined(id) && id != -1) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: id
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
-          });
-        }
-      }
-      $scope.$watchCollection("source.serviceRecord", function (n, o) {
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
 
       $scope.updateSource = function () {
         var url = "../api/sources" + ($scope.isNew ? "" : "/" + $scope.source.uuid);

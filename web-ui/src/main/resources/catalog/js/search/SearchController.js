@@ -73,13 +73,15 @@
       gnMetadataManager
     ) {
       /** Object to be shared through directives and controllers */
-      $scope.searchObj = {
-        params: {},
-        permalink: true,
-        sortbyValues: gnSearchSettings.sortbyValues,
-        sortbyDefault: gnSearchSettings.sortbyDefault,
-        hitsperpageValues: gnSearchSettings.hitsperpageValues
-      };
+      if (angular.isUndefined($scope.searchObj)) {
+        $scope.searchObj = {
+          params: {},
+          permalink: true,
+          sortbyValues: gnSearchSettings.sortbyValues,
+          sortbyDefault: gnSearchSettings.sortbyDefault,
+          hitsperpageValues: gnSearchSettings.hitsperpageValues
+        };
+      }
 
       $scope.isUserFeedbackEnabled = false;
       $scope.isInspireEnabled = false;
