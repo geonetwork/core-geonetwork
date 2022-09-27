@@ -46,13 +46,7 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiManager;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.SettingDataType;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -692,6 +686,25 @@ public class SiteApi {
     public SystemInfo getSystemInfo(
     ) throws Exception {
         return ApplicationContextHolder.get().getBean(SystemInfo.class);
+    }
+
+
+    @ApiOperation(
+        value = "Get notification levels",
+        notes = "",
+        nickname = "getNotificationLevel")
+    @RequestMapping(
+        path = "/info/notificationLevels",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of notification levels.")
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public StatusValueNotificationLevel[] getNotificationLevel() {
+        return StatusValueNotificationLevel.values();
     }
 
 

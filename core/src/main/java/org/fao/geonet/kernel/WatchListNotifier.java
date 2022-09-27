@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.fao.geonet.kernel.metadata.DefaultStatusActions.compileMessageWithIndexFields;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USER_LASTNOTIFICATIONDATE;
 
 /**
@@ -198,7 +197,7 @@ public class WatchListNotifier extends QuartzJobBean {
                 for (String record : updatedRecords) {
                     try {
                         listOfUpdateMessage.append(
-                            compileMessageWithIndexFields(recordMessage, record, this.language)
+                            MailUtil.compileMessageWithIndexFields(recordMessage, record, this.language)
                         );
                     } catch (Exception e) {
                         Log.error(Geonet.USER_WATCHLIST, e.getMessage(), e);

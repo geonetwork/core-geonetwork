@@ -55,6 +55,8 @@ public class SelfRegisterTest extends AbstractServiceIntegrationTest {
         ServiceContext svcCtx = createServiceContext();
 
         settingManager.setValue(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE, true);
+        settingManager.setValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST, "localhost");
+        settingManager.setValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT, "25");
 
         Element params = createParams(Pair.write("surname", "john"),
             Pair.write("name", "Doe"),
@@ -95,7 +97,8 @@ public class SelfRegisterTest extends AbstractServiceIntegrationTest {
         ServiceContext svcCtx = createServiceContext();
 
         settingManager.setValue(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE, true);
-
+        settingManager.setValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST, "localhost");
+        settingManager.setValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT, "25");
 
         Element params = createParams(Pair.write("surname", "john"),
             Pair.write("name", "Doe"),

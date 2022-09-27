@@ -256,6 +256,22 @@
                         {{'system/requestedLanguage/only-value9' | translate}}
                       </option>
                     </select>
+                    <select
+                      data-ng-switch-when="system/metadataprivs/publication/notificationLevel"
+                      class="form-control"
+                      name="{{s.name}}"
+                      data-ng-model="s.value"
+                      data-ng-change="changePublicationNotificationLevel(s.value)"
+                    >
+                      <option
+                        data-ng-repeat="l in notificationLevels"
+                        value="{{l}}"
+                        ng-selected="l === s.value"
+                        data-translate=""
+                      >
+                        {{l !== ''?'notificationLevel-' + l: ''}}
+                      </option>
+                    </select>
 
                     <select data-ng-switch-when="system/inspire/atom" class="form-control"
                             name="{{s.name}}" data-ng-model="atomFeedType">
@@ -437,6 +453,16 @@
                              data-translate="">validatorUseInspireOne</div>
                       </span>
                     </div>
+
+                    <input
+                      data-ng-switch-when="system/metadataprivs/publication/notificationGroups"
+                      type="text"
+                      class="form-control"
+                      id="{{s['name']}}"
+                      name="{{s.name}}"
+                      value="{{s.value}}"
+                      data-ng-disabled="!isGroupPublicationNotificationLevel"
+                    />
 
                     <!-- Default -->
                     <input data-ng-switch-default="" type="text" class="form-control"
