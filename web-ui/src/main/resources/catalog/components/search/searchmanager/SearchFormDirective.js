@@ -123,7 +123,7 @@
 
     var cleanSearchParams = function (params) {
       for (v in params) {
-        if (params[v] == "") {
+        if (v !== "sortOrder" && params[v] == "") {
           delete params[v];
         }
       }
