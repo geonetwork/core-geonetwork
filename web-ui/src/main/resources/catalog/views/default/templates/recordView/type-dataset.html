@@ -25,10 +25,11 @@
 <!-- map & extent -->
 <div class="row gn-section gn-padding-top">
   <div class="gn-record" data-ng-class="showDataBrowser ? 'col-md-12' : 'col-md-8'">
-    <h2>{{(showDataBrowser ? 'dataPreview' : 'spatialExtent') | translate}}</h2>
-    <div data-gn-data-preview="mdView.current.record" />
-
-    <br />
+    <div data-ng-if="mdView.current.record.geom">
+      <h2>{{(showDataBrowser ? 'dataPreview' : 'spatialExtent') | translate}}</h2>
+      <div data-gn-data-preview="mdView.current.record" />
+      <br />
+    </div>
     <div
       data-gn-keyword-badges="mdView.current.record"
       data-thesaurus="viewConfig.locationThesaurus"
