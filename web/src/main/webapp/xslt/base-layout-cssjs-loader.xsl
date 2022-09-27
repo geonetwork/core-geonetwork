@@ -199,7 +199,7 @@
 
         <!--</xsl:if>-->
 
-        <script src="{$uiResourcesPath}lib/underscore/underscore-min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/underscore/underscore-umd.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
 
