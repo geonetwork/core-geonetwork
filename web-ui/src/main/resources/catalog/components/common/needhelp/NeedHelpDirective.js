@@ -68,7 +68,8 @@
           });
 
           var helpBaseUrl =
-            gnGlobalSettings.docUrl || "https://geonetwork-opensource.org/manuals/trunk/";
+            gnGlobalSettings.docUrl ||
+            "https://geonetwork-opensource.org/manuals/trunk/{lang}";
 
           /**
            * load the JSON file with all the documentation links and put the links in the scope
@@ -125,11 +126,15 @@
           scope.showHelp = function () {
             var pageId = attrs.gnNeedHelp;
             var page = scope.documentationLinks[pageId];
-            var helpPageUrl = helpBaseUrl + "en/" + page;
+            var baseUrl = helpBaseUrl.replace("{lang}", gnGlobalSettings.lang);
+            var helpPageUrl = baseUrl + "/" + page;
 
             testAndOpen(helpPageUrl).then(
               function () {},
               function () {
+                var baseUrl = helpBaseUrl.replace("{lang}", "en");
+                var helpPageUrl = baseUrl + "/" + page;
+
                 testAndOpen(helpPageUrl);
               }
             );
