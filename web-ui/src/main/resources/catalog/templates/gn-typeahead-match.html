@@ -1,9 +1,10 @@
 <a tabindex="-1">
-  <span
+  <i data-ng-if="!match.model.record.resourceType" class="fa fa-fw" />
+  <i
     data-ng-if="match.model.record.resourceType"
     class="fa fa-fw gn-icon-{{match.model.record.resourceType[0]}}"
     title="{{match.model.record.resourceType[0] | translate}}"
-  ></span>
+  ></i>
   <span
     bind-html-unsafe="match.label | sanitizeHtmlFilter | typeaheadHighlight:query"
   ></span>
