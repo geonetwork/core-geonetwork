@@ -27,7 +27,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -61,8 +61,7 @@ class SimpleOidcUser {
         if (username != null) {
             username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
         }
-
-        if (username != null && username.length() > 0) {
+        if (!StringUtils.isBlank(username)) {
             surname = idToken.getFamilyName();
             firstname = idToken.getGivenName();
             email = idToken.getEmail();
