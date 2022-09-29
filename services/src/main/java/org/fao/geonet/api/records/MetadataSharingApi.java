@@ -39,10 +39,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.GroupOperations;
-import org.fao.geonet.api.records.model.GroupPrivilege;
-import org.fao.geonet.api.records.model.SharingParameter;
-import org.fao.geonet.api.records.model.SharingResponse;
+import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -284,16 +281,16 @@ public class MetadataSharingApi {
         }
 
         List<GroupOperations> privileges = sharing.getPrivileges();
-        Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
         boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request,
-            metadataUuidsToNotifyPublication, notifyByEmail);
+            metadataListToNotifyPublication, notifyByEmail);
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
-        if (notifyByEmail && !metadataUuidsToNotifyPublication.isEmpty()) {
-            notifyPublication(context, request, metadataUuidsToNotifyPublication);
+        if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+            notifyPublication(context, request, metadataListToNotifyPublication);
         }
     }
 
@@ -409,7 +406,7 @@ public class MetadataSharingApi {
         boolean skipAllReservedGroup,
         MetadataProcessingReport report,
         HttpServletRequest request,
-        Map<String, Boolean> metadataUuidsToNotifyPublication,
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication,
         boolean notifyByMail) throws Exception {
         if (privileges != null) {
 
@@ -504,7 +501,13 @@ public class MetadataSharingApi {
                 boolean publishedAfter = allGroupOpsAfter.get().getOperations().get(ReservedOperation.view.name());
 
                 if (publishedBefore != publishedAfter) {
-                    metadataUuidsToNotifyPublication.put(metadata.getUuid(), publishedAfter);
+                    MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
+                    metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
+                    metadataNotificationInfo.setMetadataId(metadata.getId());
+                    metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
+                    metadataNotificationInfo.setPublished(publishedAfter);
+
+                    metadataListToNotifyPublication.add(metadataNotificationInfo);
                 }
             }
 
@@ -1054,16 +1057,16 @@ public class MetadataSharingApi {
         SharingParameter sharing = buildSharingForPublicationConfig(publish);
 
         List<GroupOperations> privileges = sharing.getPrivileges();
-        Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
         boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), true,null, request,
-            metadataUuidsToNotifyPublication, notifyByEmail);
+            metadataListToNotifyPublication, notifyByEmail);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
-        if (notifyByEmail && !metadataUuidsToNotifyPublication.isEmpty()) {
-            notifyPublication(context, request, metadataUuidsToNotifyPublication);
+        if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+            notifyPublication(context, request, metadataListToNotifyPublication);
         }
     }
 
@@ -1096,7 +1099,7 @@ public class MetadataSharingApi {
             ServiceContext context = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
-            Map<String, Boolean> metadataUuidsToNotifyPublication = new HashMap<>();
+            List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
             boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
             for (String uuid : records) {
@@ -1123,15 +1126,15 @@ public class MetadataSharingApi {
 
                     setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
                         ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
-                        metadataUuidsToNotifyPublication, notifyByEmail);
+                        metadataListToNotifyPublication, notifyByEmail);
 
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
                 }
             }
 
-            if (!metadataUuidsToNotifyPublication.isEmpty()) {
-                notifyPublication(context, request, metadataUuidsToNotifyPublication);
+            if (!metadataListToNotifyPublication.isEmpty()) {
+                notifyPublication(context, request, metadataListToNotifyPublication);
             }
 
             dataMan.flush();
@@ -1187,79 +1190,106 @@ public class MetadataSharingApi {
         this.publicationConfig = publicationConfig;
     }
 
-    private void notifyPublication(ServiceContext context, HttpServletRequest request, Map<String, Boolean> metadataUuidsToNotifyPublication) {
+    private void notifyPublication(ServiceContext context, HttpServletRequest request,
+                                   List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
         String notificationSetting = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
         if (StringUtils.isNotEmpty(notificationSetting)) {
             StatusValueNotificationLevel notificationLevel =
                 StatusValueNotificationLevel.valueOf(notificationSetting);
             if (notificationLevel != null) {
-                List<String> toAddress;
 
-                if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
-                    List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
-                       Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
+                if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
+                    Map<Integer, List<MetadataPublicationNotificationInfo>> metadataListToNotifyPublicationPerGroup =
+                        metadataListToNotifyPublication.stream()
+                            .collect(Collectors.groupingBy(MetadataPublicationNotificationInfo::getGroupId));
 
-                   toAddress = groupToNotify.stream()
-                       .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
-                       .map(Group::getEmail)
-                       .collect(Collectors.toList());
-                } else {
-                    Set<Integer> metadataIds = new HashSet<>();
-                    for (String key : metadataUuidsToNotifyPublication.keySet()) {
-                        try {
-                            metadataIds.add( Integer.parseInt(metadataUtils.getMetadataId(key)));
-                        } catch (Exception ex) {
-                            // Ignore
-                        }
-                    }
+                    // Process the metadata published by group owner
+                    metadataListToNotifyPublicationPerGroup.forEach((groupId, metadataNotificationInfoList) -> {
+                        Set<Integer> metadataIds = metadataNotificationInfoList
+                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
 
-                    List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
-                        metadataIds,
-                        null);
+                        List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
+                            metadataIds,
+                            null);
 
-                   toAddress = userToNotify.stream()
-                        .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
-                        .map(User::getEmail)
-                        .collect(Collectors.toList());
+                        List<String> toAddress1 = userToNotify.stream()
+                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
+                            .map(User::getEmail)
+                            .collect(Collectors.toList());
 
-                }
-
-                if (toAddress.size() > 0) {
-                    Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-                    ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
-
-                    String subject = String.format(
-                        messages.getString("metadata_published_subject"),
-                        sm.getSiteName());
-
-                    String message = messages.getString("metadata_published_text");
-                    String recordPublishedMessage = messages.getString("metadata_published_record_text")
-                        .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
-                    String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
-                        .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
-
-                    StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
-
-                    metadataUuidsToNotifyPublication.forEach( (key, value) -> {
-                        if (value) {
-                            listOfProcessedMetadataMessage.append(
-                                MailUtil.compileMessageWithIndexFields(recordPublishedMessage, key, context.getLanguage()));
-                        } else {
-                            listOfProcessedMetadataMessage.append(
-                                MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, key, context.getLanguage()));
-                        }
+                        sendMailPublicationNotification(context, request, toAddress1, metadataNotificationInfoList);
                     });
 
-                    String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
+                } else {
+                    List<String> toAddress;
 
-                    // Send mail to notify about metadata publication / un-publication
-                    try {
-                        MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
-                    } catch (IllegalArgumentException ex) {
-                        Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+                    if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
+                        List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
+                            Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
+
+                        toAddress = groupToNotify.stream()
+                            .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
+                            .map(Group::getEmail)
+                            .collect(Collectors.toList());
+                    } else {
+                        Set<Integer> metadataIds = metadataListToNotifyPublication
+                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
+
+                        List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
+                            metadataIds,
+                            null);
+
+                        toAddress = userToNotify.stream()
+                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
+                            .map(User::getEmail)
+                            .collect(Collectors.toList());
+
                     }
+
+                    sendMailPublicationNotification(context, request, toAddress, metadataListToNotifyPublication);
                 }
             }
+        }
+    }
+
+    private void sendMailPublicationNotification(ServiceContext context, HttpServletRequest request,
+                                                 List<String> toAddress, List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
+        if (toAddress.isEmpty()) {
+            return;
+        }
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        String subject = String.format(
+            messages.getString("metadata_published_subject"),
+            sm.getSiteName());
+
+        String message = messages.getString("metadata_published_text");
+        String recordPublishedMessage = messages.getString("metadata_published_record_text")
+            .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+        String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
+            .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+
+        StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
+
+        metadataListToNotifyPublication.forEach( metadata -> {
+            if (metadata.getPublished()) {
+                listOfProcessedMetadataMessage.append(
+                    MailUtil.compileMessageWithIndexFields(recordPublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+            } else {
+                listOfProcessedMetadataMessage.append(
+                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+            }
+        });
+
+        String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
+
+        // Send mail to notify about metadata publication / un-publication
+        try {
+            MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
+        } catch (IllegalArgumentException ex) {
+            Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
         }
     }
 }
