@@ -133,20 +133,19 @@
          */
       function loadSettings() {
 
-        if ($scope.$parent.user && $scope.$parent.user.isAdministratorOrMore()) {
-          $http.get('../api/site/info/build')
-            .success(function (data) {
-              $scope.systemInfo = data;
-            });
-        }
 
-        if ($scope.$parent.user && $scope.$parent.user.isAdministratorOrMore()) {
-          // load log files
-          $http.get('../api/site/logging')
-            .success(function (data) {
-              $scope.logfiles = data;
-            });
-        }
+        $http.get('../api/site/info/build')
+          .success(function (data) {
+            $scope.systemInfo = data;
+          });
+
+
+        // load log files
+        $http.get('../api/site/logging')
+          .success(function (data) {
+            $scope.logfiles = data;
+          });
+
 
         $http.get('../api/site/settings/details')
             .success(function(data) {
