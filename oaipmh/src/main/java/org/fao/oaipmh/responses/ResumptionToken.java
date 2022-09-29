@@ -89,7 +89,7 @@ public class ResumptionToken {
     //---------------------------------------------------------------------------
 
     public boolean isTokenEmpty() {
-        return token.length() == 0;
+        return token.isEmpty();
     }
 
     //---------------------------------------------------------------------------

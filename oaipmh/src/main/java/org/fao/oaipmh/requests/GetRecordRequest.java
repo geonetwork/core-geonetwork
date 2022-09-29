@@ -87,7 +87,7 @@ public class GetRecordRequest extends AbstractRequest {
 
     public GetRecordResponse execute() throws IOException, OaiPmhException, JDOMException,
         SAXException, Exception {
-        Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
 
         params.put("identifier", identifier);
         params.put("metadataPrefix", mdPrefix);

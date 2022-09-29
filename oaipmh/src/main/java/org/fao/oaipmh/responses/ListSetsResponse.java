@@ -45,7 +45,7 @@ public class ListSetsResponse extends ListResponse {
     //---
     //---------------------------------------------------------------------------
 
-    private List<SetInfo> sets = new ArrayList<SetInfo>();
+    final private List<SetInfo> sets = new ArrayList<>();
 
     //---------------------------------------------------------------------------
 

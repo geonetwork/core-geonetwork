@@ -61,6 +61,7 @@ public class RecordInfo {
     //---
     //---------------------------------------------------------------------------
 
+    @Override
     public int hashCode() {
         return id.hashCode();
     }
@@ -73,6 +74,7 @@ public class RecordInfo {
         return (changeDate.timeDifferenceInSeconds(localDate) > 0);
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof RecordInfo) {
             RecordInfo ri = (RecordInfo) o;

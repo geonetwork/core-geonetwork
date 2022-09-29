@@ -35,7 +35,7 @@ public abstract class TokenListRequest extends ListRequest {
     protected String mdPrefix;
     protected String set;
 
-    public TokenListRequest(GeonetHttpRequestFactory transport) {
+    protected TokenListRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
