@@ -25,7 +25,7 @@
   goog.provide('gn_system_settings_controller');
 
   goog.require('gn_ui_config');
-  goog.require('gn_timezone_selector')
+  goog.require('gn_timezone_selector');
 
 
   var module = angular.module('gn_system_settings_controller',
@@ -87,9 +87,9 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService', '$timeout', 'gnGlobalSettings',
+    'gnUtilityService', '$timeout', 'gnGlobalSettings', `authorizationService`,
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings) {
+        gnUtilityService, $timeout, gnGlobalSettings, authorizationService) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -133,16 +133,20 @@
          */
       function loadSettings() {
 
-        $http.get('../api/site/info/build')
-            .success(function(data) {
+        if ($scope.$parent.user && $scope.$parent.user.isAdministratorOrMore()) {
+          $http.get('../api/site/info/build')
+            .success(function (data) {
               $scope.systemInfo = data;
             });
+        }
 
-        // load log files
-        $http.get('../api/site/logging')
-            .success(function(data) {
+        if ($scope.$parent.user && $scope.$parent.user.isAdministratorOrMore()) {
+          // load log files
+          $http.get('../api/site/logging')
+            .success(function (data) {
               $scope.logfiles = data;
             });
+        }
 
         $http.get('../api/site/settings/details')
             .success(function(data) {
