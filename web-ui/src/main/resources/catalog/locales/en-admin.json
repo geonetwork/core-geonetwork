@@ -1001,7 +1001,7 @@
     "metadata/backuparchive": "Backup archive",
     "metadata/backuparchive/enable": "Enable",
     "metadata/backuparchive/enable-help": "Activate nightly backup archive on server. Add a download archive button in admin/tools interface.",
-    "downloadBackupArchive": "Download backup archive.",
+    "downloadBackupArchive": "Download backup archive",
     "downloadBackupArchiveHelp": "Download a MEF file containing all inner metadatas of the catalog (non harvested including templates).",
     "APITest": "API doc & test",
     "APIHelp": "Documentation and testing page for the GeoNetwork API. Learn how to use the REST API.",
