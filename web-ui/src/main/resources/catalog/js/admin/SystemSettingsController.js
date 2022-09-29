@@ -87,9 +87,9 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService', '$timeout', 'gnGlobalSettings', `authorizationService`,
+    'gnUtilityService', '$timeout', 'gnGlobalSettings',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService, $timeout, gnGlobalSettings, authorizationService) {
+        gnUtilityService, $timeout, gnGlobalSettings) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
