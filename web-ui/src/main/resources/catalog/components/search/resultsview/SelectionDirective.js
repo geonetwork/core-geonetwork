@@ -153,7 +153,7 @@
             records.forEach(function (record, i) {
               watchers.push(
                 scope.$watch(
-                  "searchResults.records[" + i + ']["geonet:info"].selected',
+                  "searchResults.records[" + i + '].selected',
                   function () {
                     updateCkb(scope.searchResults.records);
                   }
