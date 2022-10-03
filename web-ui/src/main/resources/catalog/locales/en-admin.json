@@ -1382,7 +1382,7 @@
     "OrgForResource": "Contact organisation for the resource",
     "OrgForDistribution": "Contact organisation for distribution",
     "notificationLevel-statusUserOwner": "Notify the status owner user",
-    "notificationLevel-catalogueAdministrator": "Notify the catalogue administrators",
+    "notificationLevel-catalogueAdministrator": "Notify catalogue administrator mail address defined in the Settings > Feedback",
     "notificationLevel-catalogueProfileAdministrator": "Notify the catalogue administrators",
     "notificationLevel-catalogueProfileUserAdmin": "Notify the catalogue user administrators",
     "notificationLevel-catalogueProfileReviewer": "Notify the catalogue reviewers",
