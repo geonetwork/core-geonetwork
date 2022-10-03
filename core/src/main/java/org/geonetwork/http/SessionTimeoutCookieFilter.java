@@ -66,7 +66,6 @@ public class SessionTimeoutCookieFilter implements javax.servlet.Filter {
 
             Cookie cookie = new Cookie("serverTime", "" + currTime);
             cookie.setPath(httpReq.getContextPath());
-            cookie.setHttpOnly(req.getServletContext().getSessionCookieConfig().isHttpOnly());
             cookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
             httpResp.addCookie(cookie);
 
@@ -85,7 +84,6 @@ public class SessionTimeoutCookieFilter implements javax.servlet.Filter {
                 cookie = new Cookie("sessionExpiry", "" + currTime);
             }
             cookie.setPath(httpReq.getContextPath());
-            cookie.setHttpOnly(req.getServletContext().getSessionCookieConfig().isHttpOnly());
             cookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
             httpResp.addCookie(cookie);
         }

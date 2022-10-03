@@ -682,6 +682,7 @@ public class SiteApi {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Build info.")
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public SystemInfo getSystemInfo(
     ) throws Exception {
@@ -719,7 +720,7 @@ public class SiteApi {
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Logo set."),

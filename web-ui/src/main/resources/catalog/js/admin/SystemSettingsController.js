@@ -25,7 +25,7 @@
   goog.provide('gn_system_settings_controller');
 
   goog.require('gn_ui_config');
-  goog.require('gn_timezone_selector')
+  goog.require('gn_timezone_selector');
 
 
   var module = angular.module('gn_system_settings_controller',
@@ -139,10 +139,12 @@
          */
       function loadSettings() {
 
+
         $http.get('../api/site/info/build')
-            .success(function(data) {
-              $scope.systemInfo = data;
-            });
+          .success(function (data) {
+            $scope.systemInfo = data;
+          });
+
 
         $http.get("../api/site/info/notificationLevels").success(function (data) {
           $scope.notificationLevels = data;
@@ -151,9 +153,10 @@
 
         // load log files
         $http.get('../api/site/logging')
-            .success(function(data) {
-              $scope.logfiles = data;
-            });
+          .success(function (data) {
+            $scope.logfiles = data;
+          });
+
 
         $http.get('../api/site/settings/details')
             .success(function(data) {
