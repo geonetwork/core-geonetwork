@@ -39,7 +39,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
     public static final String LOGGER_NAME = "geonetwork.harvest.wfs.features";
     public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
     public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
-    public static final String HARVEST_WFS_FEATURES_QUEUE_URI = "activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=10";
+    public static final String HARVEST_WFS_FEATURES_QUEUE_URI = "activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
 
     private boolean startsFromXMLConfigurationFile = false;
 
