@@ -41,7 +41,7 @@
               ></i>
             </a>
           </th>
-          <th data-ng-repeat="key in operations">
+          <th data-ng-repeat="key in ::operations">
             <a href="" ng-click="setSorter(key)">
               <i class="fa {{icons[key] || fa-fw}}" />
               <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
@@ -79,7 +79,7 @@
             : ''}}"
         >
           <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-          <td data-ng-repeat="key in operations" class="text-center">
+          <td data-ng-repeat="key in ::operations" class="text-center">
             <input
               type="checkbox"
               name="{{g.group + '-' + key}}"
@@ -93,7 +93,7 @@
           <td data-ng-if="!disableAllCol">
             <input
               type="checkbox"
-              data-ng-disabled="!isAdminOrReviewer"
+              data-ng-disabled="::!isAdminOrReviewer"
               data-ng-click="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
@@ -105,8 +105,8 @@
           data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false"
         >
-          <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-          <td data-ng-repeat="key in operations" class="text-center">
+          <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
+          <td data-ng-repeat="key in ::operations" class="text-center">
             <input
               type="checkbox"
               name="{{g.group + '-' + key}}"
@@ -115,7 +115,7 @@
               data-ng-model="g.operations[key]"
             />
           </td>
-          <td data-ng-if="!disableAllCol">
+          <td data-ng-if="::!disableAllCol">
             <input
               type="checkbox"
               data-ng-click="checkAll(g)"
