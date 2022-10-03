@@ -1056,6 +1056,38 @@
               }
             ],
             sortBy: "relevance",
+            facetConfig:  {
+              valid: {
+                terms: {
+                  field: "valid",
+                  size: 10
+                }
+              },
+              groupOwner: {
+                terms: {
+                  field: "groupOwner",
+                  size: 10
+                }
+              },
+              recordOwner: {
+                terms: {
+                  field: "recordOwner",
+                  size: 10
+                }
+              },
+              groupPublished: {
+                terms: {
+                  field: "groupPublished",
+                  size: 10
+                }
+              },
+              isHarvested: {
+                terms: {
+                  field: "isHarvested",
+                  size: 2
+                }
+              }
+            },
             // Add some fuzziness when search on directory entries
             // but boost exact match.
             queryBase:
