@@ -341,7 +341,7 @@
     <!-- Thumbnail -->
     <xsl:for-each
       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString">
-      <foaf:thumbnail rdf:resource="{.}"/>
+      <foaf:thumbnail rdf:resource="{replace(., ' ', '%20')}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString -->
 
