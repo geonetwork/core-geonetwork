@@ -112,7 +112,7 @@
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
