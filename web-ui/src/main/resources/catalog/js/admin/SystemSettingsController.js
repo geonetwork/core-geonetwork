@@ -217,23 +217,19 @@
        * element name in XML Jeeves request element).
        */
       function loadSettings() {
-        if ($scope.user.isAdministratorOrMore()) {
-          $http.get("../api/site/info/build").success(function (data) {
-            $scope.systemInfo = data;
-          });
-        }
+        $http.get("../api/site/info/build").success(function (data) {
+          $scope.systemInfo = data;
+        });
 
         $http.get("../api/site/info/notificationLevels").success(function (data) {
           $scope.notificationLevels = data;
           $scope.notificationLevels.unshift("");
         });
 
-        if ($scope.user.isAdministratorOrMore()) {
-          // load log files
-          $http.get("../api/site/logging").success(function (data) {
-            $scope.logfiles = data;
-          });
-        }
+        // load log files
+        $http.get("../api/site/logging").success(function (data) {
+          $scope.logfiles = data;
+        });
 
         $http
           .get("../api/site/settings/details")
