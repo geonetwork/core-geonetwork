@@ -1583,12 +1583,23 @@
             "type": "text",
             "copy_to": "any.common"
           },
+          "linkObject": {
+            "type": "object",
+            "copy_to": "any.common"
+          },
           "name": {
             "type": "text",
             "copy_to": "any.common"
           },
+          "nameObject": {
+            "type": "object",
+            "copy_to": "any.common"
+          },
           "description": {
             "type": "text"
+          },
+          "descriptionObject": {
+            "type": "object"
           }
         }
       },

@@ -562,7 +562,7 @@
         "process": "fcats-file-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {}
         }
@@ -578,7 +578,7 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
@@ -600,7 +600,7 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
@@ -622,7 +622,7 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
@@ -645,7 +645,7 @@
         "process": "legend-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {}
         }
@@ -662,7 +662,7 @@
         "process": "legend-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {}
         }
@@ -679,7 +679,7 @@
         "process": "legend-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {}
         }
@@ -692,7 +692,7 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "protocol": {
             "value": "WWW:LINK",
@@ -719,7 +719,7 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "protocol": {
             "value": "WWW:LINK",

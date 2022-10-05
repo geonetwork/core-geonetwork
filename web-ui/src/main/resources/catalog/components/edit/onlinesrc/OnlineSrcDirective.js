@@ -1103,7 +1103,7 @@
               };
 
               /**
-               * Build the multingual structure if need for the onlinesrc
+               * Build the multilingual structure if needed for the onlinesrc
                * param (name, desc, url).
                * Struct like {'ger':'', 'eng': ''}
                *

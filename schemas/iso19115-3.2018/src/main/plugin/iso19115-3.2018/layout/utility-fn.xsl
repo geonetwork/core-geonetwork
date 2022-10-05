@@ -122,9 +122,14 @@
       <xsl:when test="matches($string, concat('.*', $translationSeparator, '.*'))">
         <xsl:for-each select="tokenize($string, $translationSeparator)">
           <xsl:variable name="descLang"
-                        select="substring-before(., $valueSeparator)"/>
+                        select="if ($valueSeparator != '')
+                                then substring-before(., $valueSeparator)
+                                else substring(., 1, 2)"/>
           <xsl:variable name="descValue"
-                        select="substring-after(., $valueSeparator)"/>
+                        select="if ($valueSeparator != '')
+                                then substring-after(., $valueSeparator)
+                                else substring(., 4)"/>
+
           <xsl:if test="$useOnlyPTFreeText = false() and $descLang = $mainLanguage">
             <gco:CharacterString>
               <xsl:value-of select="$descValue"/>
@@ -135,9 +140,13 @@
         <lan:PT_FreeText>
           <xsl:for-each select="tokenize($string, $translationSeparator)">
             <xsl:variable name="descLang"
-                          select="substring-before(., $valueSeparator)"/>
+                          select="if ($valueSeparator != '')
+                                  then substring-before(., $valueSeparator)
+                                  else substring(., 1, 2)"/>
             <xsl:variable name="descValue"
-                          select="substring-after(., $valueSeparator)"/>
+                          select="if ($valueSeparator != '')
+                                  then substring-after(., $valueSeparator)
+                                  else substring(., 4)"/>
             <xsl:if test="$useOnlyPTFreeText or $descLang != $mainLanguage">
               <lan:textGroup>
                 <lan:LocalisedCharacterString locale="{concat('#', $descLang)}">

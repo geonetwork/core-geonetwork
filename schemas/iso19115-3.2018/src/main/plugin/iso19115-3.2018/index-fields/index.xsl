@@ -377,11 +377,11 @@
 
 
 
-        <!-- # Characterset -->
-        <xsl:if test="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode">
+        <xsl:for-each-group select="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode"
+                            group-by="@codeListValue">
           <xsl:copy-of select="gn-fn-index:add-codelist-field(
-                                  'cl_resourceCharacterSet', mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode, $allLanguages)"/>
-        </xsl:if>
+                                  'cl_resourceCharacterSet', ., $allLanguages)"/>
+        </xsl:for-each-group>
 
         <!-- Indexing resource contact -->
         <xsl:apply-templates mode="index-contact"
@@ -1123,9 +1123,18 @@
                                               else if (starts-with(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
                                               then gn-fn-index:json-escape(replace(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', ''))
                                               else ''"/>",
-            "url":"<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())"/>",
-            "name":"<xsl:value-of select="gn-fn-index:json-escape((cit:name/*/text())[1])"/>",
-            "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>",
+            <xsl:if test="normalize-space(cit:linkage) != ''">
+              "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'url', cit:linkage, $allLanguages)"/>,
+            </xsl:if>
+            <xsl:if test="normalize-space(cit:name) != ''">
+              "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'name', cit:name, $allLanguages)"/>,
+            </xsl:if>
+            <xsl:if test="normalize-space(cit:description) != ''">
+              "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'description', cit:description, $allLanguages)"/>,
+            </xsl:if>
             "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(cit:applicationProfile/gco:CharacterString/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
