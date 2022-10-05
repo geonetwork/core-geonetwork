@@ -225,7 +225,10 @@
     function ($translate) {
       return function (input) {
         return $translate.instant(
-          input.replace(/(.key|.default|Object.lang[a-z]{3})$/, "")
+          input.replace(
+            /(?:.key|.default|Object(?:.default|.lang[a-z]{3}(?:.keyword)?)?)$/,
+            ""
+          )
         );
       };
     }

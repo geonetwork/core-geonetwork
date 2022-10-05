@@ -197,6 +197,8 @@
               exactMatch: true,
               language: true
             },
+            // The language strategy define how to search on multilingual content.
+            // It also applies to aggregation using ${aggLanguage} substitute.
             // Language strategy can be:
             // * searchInUILanguage: search in UI languages
             // eg. full text field is any.langfre if French
@@ -459,9 +461,9 @@
                   }
                 }
               },
-              "tag.default": {
+              tag: {
                 terms: {
-                  field: "tag.default",
+                  field: "tag.${aggLang}",
                   include: ".*",
                   size: 10
                 },
@@ -533,9 +535,11 @@
               // },
               OrgForResource: {
                 terms: {
-                  field: "OrgForResourceObject",
+                  field: "OrgForResourceObject.${aggLang}",
+                  // field: "OrgForResourceObject.default",
+                  // field: "OrgForResourceObject.langfre",
                   include: ".*",
-                  size: 15
+                  size: 20
                 },
                 meta: {
                   // Always display filter even no more elements

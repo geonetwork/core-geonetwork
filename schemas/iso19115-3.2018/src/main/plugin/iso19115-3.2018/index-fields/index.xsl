@@ -248,6 +248,7 @@
       <!-- Indexing metadata contact -->
       <xsl:apply-templates mode="index-contact" select="mdb:contact">
         <xsl:with-param name="fieldSuffix" select="''"/>
+        <xsl:with-param name="languages" select="$allLanguages"/>
       </xsl:apply-templates>
 
       <!-- Indexing all codelist
@@ -386,6 +387,7 @@
         <xsl:apply-templates mode="index-contact"
                              select="mri:pointOfContact">
           <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
+          <xsl:with-param name="languages" select="$allLanguages"/>
         </xsl:apply-templates>
 
 
@@ -1089,6 +1091,7 @@
           <xsl:apply-templates mode="index-contact"
                                select="mrd:distributorContact">
             <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
           </xsl:apply-templates>
         </xsl:for-each>
 
@@ -1227,10 +1230,11 @@
   ISO19115-3 allows more combinations. -->
   <xsl:template mode="index-contact" match="*[cit:CI_Responsibility]">
     <xsl:param name="fieldSuffix" select="''" as="xs:string"/>
+    <xsl:param name="languages" as="node()?"/>
 
     <xsl:variable name="organisationName"
-                  select="(.//cit:CI_Organisation/cit:name/gco:CharacterString)[1]"
-                  as="xs:string*"/>
+                  select="(.//cit:CI_Organisation/cit:name)[1]"
+                  as="node()?"/>
     <xsl:variable name="uuid" select="@uuid"/>
     <xsl:variable name="elementName" select="name()"/>
 
@@ -1251,31 +1255,35 @@
                                         cit:deliveryPoint|cit:postalCode|cit:city|
                                         cit:administrativeArea|cit:country)/gco:CharacterString/text(), ', ')"/>
 
+    <xsl:variable name="roleField"
+                  select="concat(replace($role, '[^a-zA-Z0-9-]', ''), 'Org', $fieldSuffix)"/>
+    <xsl:variable name="orgField"
+                  select="concat('Org', $fieldSuffix)"/>
+
     <xsl:if test="normalize-space($organisationName) != ''">
       <xsl:if test="count(preceding-sibling::*[name() = $elementName
-                        and .//cit:CI_Organisation/cit:name/gco:CharacterString = $organisationName]) = 0">
-        <xsl:element name="Org{$fieldSuffix}">
-          <xsl:value-of select="$organisationName"/>
-        </xsl:element>
+                        and .//cit:CI_Organisation/cit:name/gco:CharacterString = $organisationName/gco:CharacterString]) = 0">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field(
+                              $orgField, $organisationName, $languages)"/>
       </xsl:if>
 
       <xsl:if test="count(preceding-sibling::*[name() = $elementName
-                      and .//cit:CI_Organisation/cit:name/gco:CharacterString = $organisationName
+                      and .//cit:CI_Organisation/cit:name/gco:CharacterString = $organisationName/gco:CharacterString
                       and .//cit:role/*/@codeListValue = $role]) = 0">
-        <xsl:element name="{replace($role, '[^a-zA-Z0-9-]', '')}Org{$fieldSuffix}">
-          <xsl:value-of select="$organisationName"/>
-        </xsl:element>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field(
+                              $roleField, $organisationName, $languages)"/>
       </xsl:if>
     </xsl:if>
 
     <xsl:variable name="identifiers"
                   select=".//cit:partyIdentifier/*"/>
-
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
-      "organisation":"<xsl:value-of
-      select="gn-fn-index:json-escape($organisationName)"/>",
+      <xsl:if test="$organisationName">
+        "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'organisation', $organisationName, $languages)"/>,
+      </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email)"/>",
       "website":"<xsl:value-of select="$website"/>",

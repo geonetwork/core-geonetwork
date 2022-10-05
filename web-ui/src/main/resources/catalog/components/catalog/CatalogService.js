@@ -746,8 +746,8 @@
                 }.bind(this)
               );
             } else if (
-              key.match(/th_.*$/) !== null &&
-              key.match(/.*(_tree|Number)$/) === null
+              fieldName.match(/th_.*$/) !== null &&
+              fieldName.match(/.*(_tree|Number)$/) === null
             ) {
               this.translateMultilingualObjects(field);
             } else if (typeof field === "object") {

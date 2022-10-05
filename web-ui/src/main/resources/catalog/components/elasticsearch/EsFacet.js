@@ -31,7 +31,8 @@
   module.service("gnESFacet", [
     "gnGlobalSettings",
     "gnFacetTree",
-    function (gnGlobalSettings, gnFacetTree) {
+    "gnEsLanguageService",
+    function (gnGlobalSettings, gnFacetTree, gnEsLanguageService) {
       var defaultSource = {
         includes: [
           "uuid",
@@ -264,7 +265,14 @@
         }
       };
 
-      this.addFacets = function (esParams, type) {
+      this.getMultilingualFacetFieldName = function (field, languageConfig) {
+        if (field.indexOf("${") !== -1) {
+          return gnEsLanguageService.injectLanguage(field, languageConfig, false);
+        }
+        return undefined;
+      };
+
+      this.addFacets = function (esParams, type, languageConfig) {
         var esFacet = this,
           aggs =
             typeof type === "string" ? angular.copy(this.configs[type].facets, {}) : type;
@@ -274,10 +282,17 @@
           if (config.hasOwnProperty("gnBuildFilterForRange")) {
             esParams.aggregations[facetName] = esFacet.gnBuildFilterForRange(config);
           } else {
-            var searchLang = gnGlobalSettings.iso3lang;
-            if (config.terms && config.terms.field.endsWith("Object")) {
-              config.terms.field += ".lang" + searchLang;
-              facetName = config.terms.field;
+            if (config.terms) {
+              var fieldName = esFacet.getMultilingualFacetFieldName(
+                config.terms.field,
+                languageConfig
+              );
+              // facetName = fieldName || facetName;
+              config.terms.field = fieldName || config.terms.field;
+              if (!config.meta) {
+                config.meta = {};
+              }
+              config.meta.field = config.terms.field;
             }
             esParams.aggregations[facetName] = config;
           }
@@ -366,7 +381,9 @@
             meta: respAgg.meta,
             config: reqAgg,
             items: [],
-            path: (path || []).concat([searchFieldId])
+            path: (path || []).concat([
+              respAgg.meta && respAgg.meta.field ? respAgg.meta.field : searchFieldId
+            ])
           };
 
           if (reqAgg.hasOwnProperty("terms")) {

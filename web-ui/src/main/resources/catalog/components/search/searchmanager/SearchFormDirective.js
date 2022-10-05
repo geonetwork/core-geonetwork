@@ -568,12 +568,6 @@
     };
 
     this.loadMoreTerms = function (facet, moreItemsNumber) {
-      var facetConfigs = {};
-      for (var i = 0; i < facet.path.length; i++) {
-        if ((i + 1) % 2 === 0) continue;
-        var key = facet.path[i];
-        facetConfigs[key] = $scope.facetConfig[key];
-      }
       var request = gnESService.generateEsRequest(
         $scope.finalParams,
         $scope.searchObj.state,
@@ -582,21 +576,15 @@
       );
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
-        facet.path,
+        facet.key,
+        facet.config,
         facet.items.length + (moreItemsNumber || 20),
         facet.include || undefined,
-        facet.exclude || undefined,
-        facetConfigs
+        facet.exclude || undefined
       );
     };
 
     this.filterTerms = function (facet) {
-      var facetConfigs = {};
-      for (var i = 0; i < facet.path.length; i++) {
-        if ((i + 1) % 2 === 0) continue;
-        var key = facet.path[i];
-        facetConfigs[key] = $scope.facetConfig[key];
-      }
       var request = gnESService.generateEsRequest(
         $scope.finalParams,
         $scope.searchObj.state,
@@ -605,11 +593,11 @@
       );
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
-        facet.path,
+        facet.key,
+        facet.config,
         undefined,
         facet.include,
-        facet.exclude,
-        facetConfigs
+        facet.exclude
       );
     };
 
