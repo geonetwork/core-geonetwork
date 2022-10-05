@@ -963,8 +963,8 @@
           </xsl:if>
 
           <crsDetails type="object">{
-            "code": "<xsl:value-of select="gn-fn-index:json-escape((gmd:code/*/text())[1])"/>",
-            "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(gmd:codeSpace/*/text())"/>",
+            "code": "<xsl:value-of select="gn-fn-index:json-escape((gmd:code/*[1]/text())[1])"/>",
+            "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(gmd:codeSpace/*[1]/text())"/>",
             "name": "<xsl:value-of select="gn-fn-index:json-escape($crsLabel)"/>",
             "url": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:href)"/>"
             }</crsDetails>
