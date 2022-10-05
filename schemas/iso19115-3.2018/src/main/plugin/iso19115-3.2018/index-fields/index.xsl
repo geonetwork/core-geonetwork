@@ -412,7 +412,7 @@
               </xsl:if>
             </xsl:if>
             <xsl:if test="count(../../mcc:fileDescription) > 0">,
-              "text":
+              "nameObject":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
             </xsl:if>
             }</overview>

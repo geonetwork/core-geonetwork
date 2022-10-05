@@ -380,7 +380,7 @@
               </xsl:if>
             </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
-              "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
+              "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
             }</overview>
         </xsl:for-each>
