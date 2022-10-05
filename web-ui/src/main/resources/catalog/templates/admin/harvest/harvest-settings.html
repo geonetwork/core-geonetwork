@@ -463,7 +463,7 @@
             <div class="panel-body">
 
               <div id="gn-harvest-records-buttons" class="gn-margin-bottom">
-                <button id="gn-harvest-records-buttons-assign"
+                <button id="gn-harvest-records-buttons-assign" data-ng-show="user.isAdministratorOrMore()"
                         type="button"
                         class="btn btn-primary btn-warning"
                         data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
