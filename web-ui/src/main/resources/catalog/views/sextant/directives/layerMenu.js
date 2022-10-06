@@ -74,26 +74,22 @@
           this.togglePanel = function() {
             this.panelSize = this.panelSize === 'collapsed' ? 'middle' : 'collapsed';
           }
-          this.panelOpened = function() {
-            return this.panelSize !== 'collapsed';
-          }
-
-          $scope.$on('layerMenu.collapse', function () {
-            if (this.panelOpened()) {
-              this.togglePanel();
-            }
-          }.bind(this));
-          $scope.$on('layerMenu.open', function () {
+          this.openPanel = function() {
             if (!this.panelOpened()) {
               this.togglePanel();
             }
-          }.bind(this));
-          $scope.$on('layerMenu.toggle', function () {
+          }
+          this.collapsePanel = function() {
+            if (this.panelOpened()) {
               this.togglePanel();
-          }.bind(this));
+            }
+          }
+          this.panelOpened = function() {
+            return this.panelSize !== 'collapsed';
+          }
         }],
         controllerAs: 'ctrl',
-        link: function(scope) {
+        link: function(scope, element, attrs, controller) {
           function handleLayerChange(newLayer) {
             // clear local variables
             scope.download = null;
@@ -164,6 +160,24 @@
             $timeout(function () {
               scope.legendUrl = newVal;
             });
+          });
+
+          scope.$watch('layer.getVisible()', function (isVisible) {
+            if (isVisible) {
+              controller.openPanel();
+            } else {
+              controller.collapsePanel();
+            }
+          });
+
+          scope.$on('layerMenu.collapse', function () {
+            controller.collapsePanel();
+          });
+          scope.$on('layerMenu.open', function () {
+            controller.openPanel();
+          });
+          scope.$on('layerMenu.toggle', function () {
+            controller.togglePanel();
           });
         }
       };
