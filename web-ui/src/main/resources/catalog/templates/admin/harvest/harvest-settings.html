@@ -121,7 +121,7 @@
 
 
   <div class="col-lg-7" data-ng-hide="harvesterSelected['@id'] == null"
-       data-ng-search-form="">
+       >
 
 
     <div class="panel panel-info" data-ng-if="harvesterSelected['@type'] == 'csw2' && harvesterSelected.info.running === true">
@@ -200,6 +200,7 @@
         </div>
       </div>
     </div>
+
 
     <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
       <tab heading="{{'settings' | translate}}"
@@ -417,14 +418,13 @@
           </div>
         </div>
       </tab>
-      <tab heading="{{ searchResults.count }} {{'metadataRecords' | translate}}"
+      <tab heading="{{ searchResultsTotal }} {{'metadataRecords' | translate}}"
            data-ng-hide="harvesterSelected['@id'] == ''
-                          || searchResults.count == '-1'
                           || isLoadingOneHarvester
                           || deleting.indexOf(harvesterSelected['@id']) > -1"
-           data-ng-show="searchResults.count > 0"
            role="tab">
         <div id="gn-harvest-records-panel"
+             data-ng-search-form=""
              class="gn-margin-top">
 
           <div class="panel panel-default">
@@ -455,7 +455,7 @@
               </div>
             </div>
           </div>
-          <div class="panel panel-default">
+          <div class="panel panel-default" data-ng-show="searchResults.count > 0">
             <div class="panel-heading">
               <span id="gn-harvest-records-title" data-translate="">harvesterRecords</span>
             </div>
@@ -507,5 +507,6 @@
         </div>
       </tab>
     </tabset>
+
   </div>
 </div>
