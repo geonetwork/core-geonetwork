@@ -207,6 +207,8 @@
               );
           paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
         }
+
+        $scope.$emit('searchFinished', {count: $scope.searchResults.count});
       },function(data){
         console.warn('An error occurred while searching. Bad request.', esParams, data.data);
         gnAlertService.addAlert({
