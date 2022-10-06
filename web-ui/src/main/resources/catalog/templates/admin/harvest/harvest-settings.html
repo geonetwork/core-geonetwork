@@ -499,6 +499,7 @@
                   class="btn btn-primary btn-warning"
                   data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                   data-gn-click-and-spin="assignHarvestedRecordToLocalNode()"
+                  data-ng-show="user.isAdministratorOrMore()"
                 >
                   <span class="fa fa-database"></span>
                   <span
