@@ -73,15 +73,16 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     public String minimumProfile = "Guest";
 
     /**
-     * if true, always update the GN user with information from OIDC.
+     *  true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)
+     *  false -> dont update the DB (user must edit profile in UI).
      */
-    public boolean userProfileUpdateEnabled = true;
+    public boolean updateProfile =true;
 
     /**
-     * if true, always update the GN group-profile with information from the OIDC roles.
+     *  true -> update the DB (user's group) with the information from OIDC (don't allow admin to edit user's groups in the UI)
+     *  false -> dont update the DB (admin must edit groups in UI).
      */
-    public boolean userGroupUpdateEnabled = true;
-
+    public boolean updateGroup = true;
 
     public String clientId;
     public String clientSecret;
@@ -170,21 +171,32 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     @Override
     public boolean isUserProfileUpdateEnabled() {
-        return userProfileUpdateEnabled;
-    }
-
-    public void setUserProfileUpdateEnabled(boolean userProfileUpdateEnabled) {
-        this.userProfileUpdateEnabled = userProfileUpdateEnabled;
+        // If updating profile from the security provider then disable the profile updates in the interface
+        return !updateProfile;
     }
 
     @Override
     public boolean isUserGroupUpdateEnabled() {
-        return userGroupUpdateEnabled;
+        // If updating group from the security provider then disable the group updates in the interface
+        return !updateGroup;
     }
 
-    public void setUserGroupUpdateEnabled(boolean userGroupUpdateEnabled) {
-        this.userGroupUpdateEnabled = userGroupUpdateEnabled;
+    public boolean isUpdateProfile() {
+        return updateProfile;
     }
+
+    public void setUpdateProfile(boolean updateProfile) {
+        this.updateProfile = updateProfile;
+    }
+
+    public boolean isUpdateGroup() {
+        return updateGroup;
+    }
+
+    public void setUpdateGroup(boolean updateGroup) {
+        this.updateGroup = updateGroup;
+    }
+
 
     public String getClientId() {
         return clientId;

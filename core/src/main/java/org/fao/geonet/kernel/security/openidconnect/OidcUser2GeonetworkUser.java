@@ -93,10 +93,10 @@ public class OidcUser2GeonetworkUser {
 
         //Apply changes to database is required.
         if (withDbUpdate) {
-            if (newUserFlag || oidcConfiguration.isUserProfileUpdateEnabled()) {
+            if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
                 userRepository.save(user);
             }
-            if (newUserFlag || oidcConfiguration.isUserGroupUpdateEnabled()) {
+            if (newUserFlag || oidcConfiguration.isUpdateGroup()) {
                 updateGroups(profileGroups, user);
             }
         }
