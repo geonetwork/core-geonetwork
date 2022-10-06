@@ -422,6 +422,7 @@
         $scope.harvesterNew = false;
         $scope.harvesterHistory = {};
         $scope.searchResults = null;
+        $scope.searchResultsTotal = null;
 
         loadHarvester(h["@id"]).then(function (data) {
           loadHistory();
@@ -431,6 +432,17 @@
           $scope.$broadcast("resetSearch", $scope.searchObj.params);
         });
       };
+
+      /**
+       * Update the total metadata in the metadata tab, ng-search-form is in a child element.
+       * Can't be moved to a parent element as causes issues with pagination, due scope
+       * conflicts.
+       *
+       * It's used an event to update the total metadata when the harvested metadata search finishes.
+       */
+      $scope.$on("searchFinished", function (event, args) {
+        $scope.searchResultsTotal = args.count;
+      });
 
       var refreshSelectedHarvester = function () {
         if ($scope.harvesterSelected) {

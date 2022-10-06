@@ -1056,7 +1056,7 @@
               }
             ],
             sortBy: "relevance",
-            facetConfig:  {
+            facetConfig: {
               valid: {
                 terms: {
                   field: "valid",
