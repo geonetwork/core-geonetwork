@@ -84,7 +84,7 @@
         </button>
       </div>
     </div>
-    
+
     <div id="gn-harvest-select-help-button" data-gn-need-help="user-guide/harvesting/index.html"></div>
   </div>
 
@@ -288,7 +288,8 @@
                   type="button"
                   class="btn btn-primary btn-warning"
                   data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
-                  data-gn-click-and-spin="assignHarvestedRecordToLocalNode()">
+                  data-gn-click-and-spin="assignHarvestedRecordToLocalNode()"
+                  data-ng-show="user.isAdministratorOrMore()">
             <span class="fa fa-database"></span>
             <span data-translate=""
                   data-translate-values="{records: '{{searchResults.count}}'}">assignHarvestedRecordToLocalNode</span>
