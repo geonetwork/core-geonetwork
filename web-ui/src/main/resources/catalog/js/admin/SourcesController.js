@@ -50,6 +50,7 @@
           from: 1,
           to: 50,
           type: "service",
+          isTemplate: "n",
           sortBy: "resourceTitleObject.default.keyword",
           sortOrder: "asc"
         }
