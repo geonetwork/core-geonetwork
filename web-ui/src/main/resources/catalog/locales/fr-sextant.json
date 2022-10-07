@@ -137,5 +137,6 @@
   "services": "Services",
   "Opendap": "OPeNDAP",
   "ProcessingAndValidation": "Processing and validation",
-  "buildThesaurusHierarchy": "Build hierarchy"
+  "buildThesaurusHierarchy": "Build hierarchy",
+  "default": "défaut"
 }
