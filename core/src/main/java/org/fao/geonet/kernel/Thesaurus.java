@@ -226,7 +226,7 @@ public class Thesaurus {
         } catch (IOException e) {
             lastModified = FileTime.fromMillis(System.currentTimeMillis());
         }
-        LOGGER.debug(Geonet.THESAURUS_MARKER, "{} has lastModified of: {}",title, lastModified.toMillis());
+        LOGGER.debug(Geonet.THESAURUS_MARKER, "{} has lastModified of: {}", title, lastModified.toMillis());
 
         return lastModified;
     }
@@ -287,7 +287,7 @@ public class Thesaurus {
     public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
         QueryEvaluationException, AccessDeniedException {
         if (Log.isDebugEnabled(Geonet.THESAURUS))
-            LOGGER.debug(Geonet.THESAURUS_MARKER, "Query : " + query);
+            LOGGER.debug(Geonet.THESAURUS_MARKER, "Query : {}", query);
 
         //printResultsTable(resultsTable);
         return repository.performTableQuery(QueryLanguage.SERQL, query);

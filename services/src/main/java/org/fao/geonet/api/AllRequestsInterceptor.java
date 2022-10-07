@@ -91,7 +91,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
                 session.setsHttpSession(httpSession);
 
                 if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
-                    LOGGER.debug(Log.REQUEST_MARKER, "Session created for client : {}",request.getRemoteAddr());
+                    LOGGER.debug(Log.REQUEST_MARKER, "Session created for client : {}", request.getRemoteAddr());
                 }
             }
         } else {

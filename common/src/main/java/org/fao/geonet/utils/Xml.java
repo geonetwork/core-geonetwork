@@ -233,7 +233,7 @@ public final class Xml {
 
             result = (Element) jdoc.getRootElement().detach();
         } catch (Exception e) {
-            LOGGER.error(Log.ENGINE_MARKER, "Error loading URL {}. Threw exception {}", url.getPath(),e.getMessage(), e);
+            LOGGER.error(Log.ENGINE_MARKER, "Error loading URL {}. Threw exception {}", url.getPath(), e.getMessage(), e);
         }
         return result;
     }
@@ -1163,7 +1163,7 @@ public final class Xml {
         public Source resolve(String href, String base) throws TransformerException {
             Resolver resolver = ResolverWrapper.getInstance();
             CatalogResolver catResolver = resolver.getCatalogResolver();
-            LOGGER.debug(Log.XML_RESOLVER_MARKER, "Trying to resolve {}:{}",href,base);
+            LOGGER.debug(Log.XML_RESOLVER_MARKER, "Trying to resolve {}:{}", href, base);
             Source s = catResolver.resolve(href, base);
 
             boolean isFile;
@@ -1193,7 +1193,7 @@ public final class Xml {
                         s.setSystemId(f.toUri().toASCIIString());
                     }
                 } catch (URISyntaxException e) {
-                    LOGGER.warn(Log.XML_RESOLVER_MARKER, "URI syntax problem: {}",e.getMessage(), e);
+                    LOGGER.warn(Log.XML_RESOLVER_MARKER, "URI syntax problem: {}", e.getMessage(), e);
                 }
             }
 

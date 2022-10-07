@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import bsh.commands.dir;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.log4j.Appender;
@@ -104,9 +105,7 @@ public class GeonetworkDataDirectory {
      */
     public void init(final String webappName, final Path webappDir,
                      final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
-        if (LOGGER.isDebugEnabled(Geonet.DATA_DIRECTORY_MARKER)) {
-            LOGGER.debug(Geonet.DATA_DIRECTORY_MARKER, "Check and create if needed GeoNetwork data directory");
-        }
+        LOGGER.debug(Geonet.DATA_DIRECTORY_MARKER, "Check and create if needed GeoNetwork data directory");
         this.webappDir = webappDir;
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 
@@ -260,7 +259,7 @@ public class GeonetworkDataDirectory {
 
             LOGGER.debug(Geonet.DATA_DIRECTORY_MARKER,
                 " Found {} for {} with value {}",
-                    typeStr,keyToUse,value);
+                    typeStr, keyToUse, value);
 
             dataDirStr = value;
         }
@@ -342,8 +341,7 @@ public class GeonetworkDataDirectory {
         } catch (IOException e) {
             LOGGER.warn(Geonet.DATA_DIRECTORY_MARKER, "Unable to make a canonical path from: {}", systemDataDir);
         }
-        LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "   - Data directory is: "
-            + systemDataDir);
+        LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "   - Data directory is: {}", systemDataDir);
 
         // Set subfolder data directory
         indexConfigDir = setDir(jeevesServlet, webappName, handlerConfig, indexConfigDir, ".indexConfig" + KEY_SUFFIX,
@@ -397,12 +395,12 @@ public class GeonetworkDataDirectory {
         LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "   - Data directory initialization ...");
 
         if (!Files.exists(this.thesauriDir) || IO.isEmptyDir(this.thesauriDir)) {
-            LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "     - Copying codelists directory ..." + thesauriDir);
+            LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "     - Copying codelists directory ... {}", thesauriDir);
             try {
                 final Path srcThesauri = getDefaultDataDir(webappDir).resolve("config").resolve("codelist");
                 IO.copyDirectoryOrFile(srcThesauri, this.thesauriDir, false);
             } catch (IOException e) {
-                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - Thesaurus copy failed: " + e.getMessage(), e);
+                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - Thesaurus copy failed: {}", e.getMessage(), e);
             }
         }
 
@@ -428,7 +426,7 @@ public class GeonetworkDataDirectory {
                 }
 
             } catch (IOException e) {
-                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - config-viewer-XXX.xml copy failed: " + e.getMessage(), e);
+                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - config-viewer-XXX.xml copy failed: {}", e.getMessage(), e);
             }
         }
 
@@ -441,8 +439,8 @@ public class GeonetworkDataDirectory {
             } catch (IOException e) {
                 LOGGER.info(
                     Geonet.DATA_DIRECTORY_MARKER,
-                    "      - Error copying images folder: "
-                        + e.getMessage());
+                    "      - Error copying images folder: {}",
+                    e.getMessage());
             }
         }
 
@@ -453,8 +451,8 @@ public class GeonetworkDataDirectory {
             } catch (IOException e) {
                 LOGGER.info(
                     Geonet.DATA_DIRECTORY_MARKER,
-                    "      - Error creating images/logos folder: "
-                        + e.getMessage());
+                    "      - Error creating images/logos folder: {}",
+                    e.getMessage());
             }
         }
 
@@ -477,7 +475,7 @@ public class GeonetworkDataDirectory {
                     }
                 }
             } catch (IOException e) {
-                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - Logo copy failed: " + e.getMessage(), e);
+                LOGGER.error(Geonet.DATA_DIRECTORY_MARKER, "     - Logo copy failed: {}", e.getMessage(), e);
             }
         }
 
@@ -490,8 +488,8 @@ public class GeonetworkDataDirectory {
             } catch (IOException e) {
                 LOGGER.info(
                     Geonet.DATA_DIRECTORY_MARKER,
-                    "      - Error copying index configuration: "
-                        + e.getMessage());
+                    "      - Error copying index configuration: {}",
+                    e.getMessage());
             }
         }
 
@@ -518,8 +516,8 @@ public class GeonetworkDataDirectory {
             } catch (IOException e) {
                 LOGGER.info(
                     Geonet.DATA_DIRECTORY_MARKER,
-                    "      - Error copying schema plugin catalogue: "
-                        + e.getMessage());
+                    "      - Error copying schema plugin catalogue: {}",
+                    e.getMessage());
             }
         }
 
@@ -536,8 +534,8 @@ public class GeonetworkDataDirectory {
         } catch (IOException e) {
             LOGGER.info(
                 Geonet.DATA_DIRECTORY_MARKER,
-                "      - Error copying encryptor.propeties file: "
-                    + e.getMessage());
+                "      - Error copying encryptor.propeties file: {}",
+                e.getMessage());
             throw e;
         }
 
@@ -569,10 +567,10 @@ public class GeonetworkDataDirectory {
                         ServiceConfig handlerConfig, Path dir, String key, String handlerKey, String firstPathSeg, String... otherSegments) {
         String envKey = webappName + key;
         if (dir != null) {
-            if (LOGGER.isDebugEnabled(Geonet.DATA_DIRECTORY_MARKER)) {
-                LOGGER.debug(Geonet.DATA_DIRECTORY_MARKER, "path for " + envKey + " set to " + dir.toString()
-                    + " via bean properties, not looking up");
-            }
+            LOGGER.debug(
+                Geonet.DATA_DIRECTORY_MARKER,
+                "path for {} set to {} via bean properties, not looking up",
+                envKey, dir);
         } else {
             dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
         }
@@ -589,8 +587,7 @@ public class GeonetworkDataDirectory {
             if (!dir.isAbsolute()) {
                 LOGGER.info(Geonet.DATA_DIRECTORY_MARKER,
                     "    - {} for directory {} is relative path. Use absolute path instead.",
-                    envKey, dir
-                );
+                    envKey, dir);
             }
         }
         if (handlerKey != null) {
@@ -603,7 +600,7 @@ public class GeonetworkDataDirectory {
             throw new RuntimeException(e);
         }
 
-        LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "    - {} is {}",envKey,dir);
+        LOGGER.info(Geonet.DATA_DIRECTORY_MARKER, "    - {} is {}", envKey, dir);
         return dir;
     }
 

@@ -526,7 +526,7 @@ public class GeoServerRest {
         } catch (Exception e) {
             LOGGER.debug(
                 LOGGER_MARKER,
-                "Failed to create style for layer: {} in workspace {}, error is: ",
+                "Failed to create style for layer: {} in workspace {}, error is: {}",
                 layer,
                 ws,
                 e.getMessage()
@@ -587,12 +587,12 @@ public class GeoServerRest {
         LOGGER.debug(
             Geonet.GEOPUBLISH_MARKER,
             "Checking if a featuretype named {} already exists in workspace {}, datastore {}",
-            ft,ws,ds
+            ft, ws, ds
         );
         status = sendREST(GeoServerRest.METHOD_GET, url + "/" + ft, null, null, null, true);
         if (status != 200) {
             LOGGER.debug(Geonet.GEOPUBLISH_MARKER, "Creating featuretype {} in workspace {} within datastore {}",
-                ft,ws,ds);
+                ft, ws, ds);
             status = sendREST(GeoServerRest.METHOD_POST, url, xml, null, "text/xml",
                 true);
             checkResponseCode(status);
@@ -655,8 +655,8 @@ public class GeoServerRest {
         response = "";
         String url = this.restUrl + urlParams;
         if (LOGGER.isDebugEnabled(LOGGER_MARKER)) {
-            LOGGER.debug(LOGGER_MARKER, "url:{}",url);
-            LOGGER.debug(LOGGER_MARKER, "method:{}",method);
+            LOGGER.debug(LOGGER_MARKER, "url:{}", url);
+            LOGGER.debug(LOGGER_MARKER, "method:{}", method);
             if (postData != null) LOGGER.debug(LOGGER_MARKER, "postData:{}", postData);
         }
 
@@ -695,7 +695,7 @@ public class GeoServerRest {
         try {
             m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
         } catch (AuthenticationException a) {
-            LOGGER.warn(LOGGER_MARKER, "Failed to add the authentication Header, error is: {}",a.getMessage());
+            LOGGER.warn(LOGGER_MARKER, "Failed to add the authentication Header, error is: {}", a.getMessage());
         }
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);

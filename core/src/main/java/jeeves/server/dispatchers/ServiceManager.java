@@ -432,7 +432,7 @@ public class ServiceManager {
             while (true) {
                 String srvName = req.getService();
 
-                LOGGER.info("Dispatching : {}",srvName);
+                LOGGER.info("Dispatching : {}", srvName);
                 logParameters(req.getParams());
 
                 ArrayList<ServiceInfo> al = htServices.get(srvName);
@@ -540,7 +540,7 @@ public class ServiceManager {
         boolean cache = (srvInfo != null) && srvInfo.isCacheSet();
 
         if (LOGGER.isDebugEnabled(Log.SERVICE_MARKER))
-            LOGGER.debug(Log.SERVICE_MARKER, "Raised exception while executing service\n" + Xml.getString(error));
+            LOGGER.debug(Log.SERVICE_MARKER, "Raised exception while executing service\n{}", Xml.getString(error));
 
         try {
             InputMethod input = req.getInputMethod();

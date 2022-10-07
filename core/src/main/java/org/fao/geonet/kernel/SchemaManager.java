@@ -132,15 +132,15 @@ public class SchemaManager {
             catalogProp = "";
         }
         if (!catalogProp.equals("")) {
-            LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
+            LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "Overriding {}  property (was set to {})", Constants.XML_CATALOG_FILES, catalogProp);
         }
         catalogProp = webInf.resolve("oasis-catalog.xml") + ";" + schemapluginUriCatalog;
         System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
-        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
+        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "{} property set to {}", Constants.XML_CATALOG_FILES, catalogProp);
 
         Path blankXSLFile = webappDir.resolve("xsl").resolve("blanks.xsl");
         System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toUri().toASCIIString());
-        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER,  "{} property set to {}", Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
 
         return webInf;
     }
@@ -167,10 +167,9 @@ public class SchemaManager {
             }
         } catch (Exception e) {
             // No bean for this schema
-            if (LOGGER.isDebugEnabled(Geonet.SCHEMA_MANAGER_MARKER)) {
-                LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "No bean defined for the schema plugin '{}'. {}",
-                    schemaIdentifier, e.getMessage(),e);
-            }
+            LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER,
+                    "No bean defined for the schema plugin '{}'. {}",
+                    schemaIdentifier, e.getMessage(), e);
         }
         return schemaPlugin;
     }
@@ -233,7 +232,7 @@ public class SchemaManager {
             for (Path schemaDir : saSchemas) {
                 if (!schemaDir.getFileName().toString().equals("CVS") && !schemaDir.getFileName().startsWith(".")) {
                     if (Files.isDirectory(schemaDir)) {
-                        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "Loading schema {} ...",schemaDir.getFileName());
+                        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "Loading schema {} ...", schemaDir.getFileName());
                         processSchema(applicationContext, schemaDir, schemaPluginCatRoot);
                     }
                 }
@@ -818,13 +817,13 @@ public class SchemaManager {
                     for (Element depends : dependsList) {
                         LOGGER.debug(
                             Geonet.SCHEMA_MANAGER_MARKER,
-                            "  checkNamespace for dependency: {}",depends.getText());
+                            "  checkNamespace for dependency: {}", depends.getText());
                         return checkNamespace(md, depends.getText());
                     }
                 }
             }
         } catch (Exception e) {
-            LOGGER.warn(Geonet.SCHEMA_MANAGER_MARKER, "Schema {} not registered?",schema);
+            LOGGER.warn(Geonet.SCHEMA_MANAGER_MARKER, "Schema {} not registered?", schema);
         }
 
         return result;
@@ -987,7 +986,7 @@ public class SchemaManager {
                 config.setAttribute("base", locBase.toUri().toString());
                 config.setAttribute("file", fname);
                 if (LOGGER.isDebugEnabled(Geonet.SCHEMA_MANAGER_MARKER))
-                    LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Adding XmlFile " + Xml.getString(config));
+                    LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Adding XmlFile {}", Xml.getString(config));
                 XmlFile xf = new XmlFile(config, defaultLang, true);
                 xfMap.put(fname, xf);
             } else {
@@ -1002,7 +1001,7 @@ public class SchemaManager {
         mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
         mds.setOperationFilters(extractOperationFilters(xmlIdFile));
 
-        LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
+        LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "  UUID is read/write mode: {}", mds.isReadwriteUUID());
 
         putSchemaInfo(
             schemaName,
@@ -1021,7 +1020,7 @@ public class SchemaManager {
         LOGGER.debug(
                 Geonet.SCHEMA_MANAGER_MARKER,
                 "Property {} is {}",
-                Constants.XML_CATALOG_FILES,System.getProperty(Constants.XML_CATALOG_FILES));
+                Constants.XML_CATALOG_FILES, System.getProperty(Constants.XML_CATALOG_FILES));
 
         // -- Add entry for presentation xslt to schemaPlugins catalog
         // -- if this schema is a plugin schema
@@ -1095,7 +1094,7 @@ public class SchemaManager {
             else continue; // skip this
 
             if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Namespaces.OASIS_CATALOG)) {
-                LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Skipping element {}:{}",uri.getQualifiedName(), uri.getNamespace());
+                LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Skipping element {}:{}", uri.getQualifiedName(), uri.getNamespace());
                 continue;
             }
 
@@ -1129,7 +1128,7 @@ public class SchemaManager {
             else continue; // skip this
 
             if (!uri.getName().equals("rewriteURI") || !uri.getNamespace().equals(Namespaces.OASIS_CATALOG)) {
-                LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Skipping element {}:{}", uri.getQualifiedName(),uri.getNamespace());
+                LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "Skipping element {}:{}", uri.getQualifiedName(), uri.getNamespace());
                 continue;
             }
 
@@ -1293,12 +1292,12 @@ public class SchemaManager {
         Path conversionsFile = schemasDir.resolve(Geonet.File.SCHEMA_CONVERSIONS);
 
         if (!Files.exists(idFile)) {
-            LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "    Skipping : " + schemasDir.getFileName() + " as it doesn't have " +
+            LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "    Skipping : {}  as it doesn't have [] ", schemasDir.getFileName(), 
                 Geonet.File.SCHEMA_ID);
             return;
         }
 
-        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "    Adding xml schema : {}",schemasDir.getFileName());
+        LOGGER.info(Geonet.SCHEMA_MANAGER_MARKER, "    Adding xml schema : {}", schemasDir.getFileName());
 
         String stage = "";
         try {
@@ -1367,9 +1366,8 @@ public class SchemaManager {
             Version schemaMinorAppVersion = Version.parseVersionNumber(minorAppVersionSupported);
 
             if (appVersion.compareTo(schemaMinorAppVersion) < 0) {
-                LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "Schema " + schemaName +
-                    " requires min Geonetwork version: " + minorAppVersionSupported + ", current is: " +
-                    version + ". Skip load schema.");
+                LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER,
+                    "Schema {} requires min Geonetwork version: {}, current is: {}. Skip load schema.", schemaName, minorAppVersionSupported, version);
                 removes.add(schemaName);
                 continue;
             }
@@ -1379,9 +1377,9 @@ public class SchemaManager {
                 Version schemaMajorAppVersion = Version.parseVersionNumber(majorAppVersionSupported);
 
                 if (appVersion.compareTo(schemaMajorAppVersion) > 0) {
-                    LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "Schema " + schemaName +
-                        " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " +
-                        version + ". Skip load schema.");
+                    LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER,
+                        "Schema {} requires max Geonetwork version: {}, current is: {}. Skip load schema.",
+                        schemaName, majorAppVersionSupported, version);
                     removes.add(schemaName);
                     continue;
                 }
@@ -1631,7 +1629,9 @@ public class SchemaManager {
 
             for (Element elem : adElems) {
                 if (LOGGER.isDebugEnabled(Geonet.SCHEMA_MANAGER_MARKER))
-                    LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER, "		Checking autodetect element " + Xml.getString(elem) + " with name " + elem.getName());
+                    LOGGER.debug(Geonet.SCHEMA_MANAGER_MARKER,
+                        "		Checking autodetect element {} with name {}",
+                        Xml.getString(elem), elem.getName());
 
                 @SuppressWarnings("unchecked")
                 List<Element> elemKids = elem.getChildren();
@@ -1675,7 +1675,10 @@ public class SchemaManager {
                             if (LOGGER.isDebugEnabled(Geonet.SCHEMA_MANAGER_MARKER))
                                 LOGGER.debug(
                                     Geonet.SCHEMA_MANAGER_MARKER,
-                                    "				Comparing " + Xml.getString(kid) + " with " + md.getName() + " with namespace " + md.getNamespace() + " : " + (kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace())));
+                                    "				Comparing {} with {}  with namespace {}: {}",
+                                    Xml.getString(kid), md.getName(), md.getNamespace(),
+                                    (kid.getName().equals(md.getName()) && kid.getNamespace().equals(md.getNamespace()))
+                                );
                             if (kid.getName().equals(md.getName()) &&
                                 kid.getNamespace().equals(md.getNamespace())) {
                                 match = true;
@@ -1819,7 +1822,7 @@ public class SchemaManager {
                     returnVal = Pattern.matches(needleVal, tempVal);
                     LOGGER.debug(
                         Geonet.SCHEMA_MANAGER_MARKER,
-                        "    Pattern {} applied to value{} match: {}",
+                        "    Pattern {} applied to value {} match: {}",
                         needleVal, tempVal, returnVal);
 
                     if (returnVal) {
@@ -1898,7 +1901,7 @@ public class SchemaManager {
             }
 
             if (missingXsdFiles) {
-                LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "Schema " + name + " does not have any XSD files!");
+                LOGGER.error(Geonet.SCHEMA_MANAGER_MARKER, "Schema {} does not have any XSD files!", name);
             }
         }
 

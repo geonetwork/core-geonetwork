@@ -62,7 +62,7 @@ public class TransformerFactoryFactory {
         }
         LOGGER.debug(
             Log.TRANSFORMER_FACTORY_MARKER,
-            "TransformerFactoryFactory: {} produces transformer implementation ",
+            "TransformerFactoryFactory: {} produces transformer implementation {}",
             factory.getClass().getName(),
             factory.newTransformer().getClass().getName()
         );

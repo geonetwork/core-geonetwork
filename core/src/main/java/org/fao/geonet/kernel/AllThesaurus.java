@@ -406,7 +406,7 @@ public class AllThesaurus extends Thesaurus {
             }
         }
 
-        LOGGER.debug(Geonet.THESAURUS_MARKER,  "{} has lastModified of: {}",ALL_THESAURUS_KEY,lastModified);
+        LOGGER.debug(Geonet.THESAURUS_MARKER,  "{} has lastModified of: {}",ALL_THESAURUS_KEY, lastModified);
 
         return FileTime.fromMillis(lastModified);
     }

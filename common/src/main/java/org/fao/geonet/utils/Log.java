@@ -361,7 +361,6 @@ public final class Log {
      */
     public static org.fao.geonet.Logger createLogger(final String module,
                                                      final String fallback) {
-        // Class<?> caller = StackLocator.getInstance().getCallerClass(1);
         String caller = toCaller();
         Marker marker = toMarker(module,fallback);
         return new LoggerWrapper(caller,marker);

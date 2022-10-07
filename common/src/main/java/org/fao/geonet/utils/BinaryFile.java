@@ -117,10 +117,10 @@ public final class BinaryFile {
             }
             while (c != '\n');
             if (b == 1) { // error
-                LOGGER.error("scp: Protocol error: {}",sb);
+                LOGGER.error("scp: Protocol error: {}", sb);
             }
             if (b == 2) { // fatal error
-                LOGGER.error("scp: Protocol error: {}",sb);
+                LOGGER.error("scp: Protocol error: {}", sb);
             }
         }
         return b;
@@ -167,7 +167,7 @@ public final class BinaryFile {
             }
 
             // now get file name from scp
-            LOGGER.debug(Log.RESOURCES_MARKER,"scp: file returned has filesize={}, file={}",filesize, file);
+            LOGGER.debug(Log.RESOURCES_MARKER, "scp: file returned has filesize={}, file={}", filesize, file);
 
             // send '\0'
             buf[0] = 0;
@@ -273,6 +273,7 @@ public final class BinaryFile {
         try {
             return new String(Files.readAllBytes(path), Constants.CHARSET);
         } catch (IOException e) {
+            // The "geonetwork" marker defined by GeoInt.GEONETWORK from core
             LOGGER.error(MarkerManager.getMarker("geonetwork"), "Error reading file: {}", path);
             return null;
         }
@@ -306,7 +307,7 @@ public final class BinaryFile {
                 remotePath = tokens[4].trim();
                 remoteProtocol = getRemoteProtocol(fileContents.toLowerCase());
                 remoteFile = true;
-                LOGGER.debug(Log.RESOURCES_MARKER,"REMOTE: {} :********:{}:{}:{}",remoteUser,remoteSite,remotePath,remoteProtocol);
+                LOGGER.debug(Log.RESOURCES_MARKER, "REMOTE: {} :********:{}:{}:{}", remoteUser, remoteSite, remotePath, remoteProtocol);
             } else {
                 LOGGER.debug(Log.RESOURCES_MARKER,"ERROR: remote file details were not valid");
                 remoteFile = false;
@@ -484,7 +485,7 @@ public final class BinaryFile {
                         session.disconnect();
                     }
                 } catch (Exception e) {
-                    LOGGER.error("Problem with scp from site: {}@{}:{}", remoteUser,remoteSite,remotePath, e);
+                    LOGGER.error("Problem with scp from site: {}@{}:{}", remoteUser, remoteSite, remotePath, e);
                 }
             } else if (remoteProtocol.equals("ftp")) {
                 // set up globus FTP client
@@ -495,7 +496,7 @@ public final class BinaryFile {
                     DataSinkStream outputSink = new DataSinkStream(output);
                     ftp.get(remotePath, outputSink, null);
                 } catch (Exception e) {
-                    LOGGER.error("Problem with ftp from site: {}@{}:{}",remoteUser,remoteSite,remotePath, e);
+                    LOGGER.error("Problem with ftp from site: {}@{}:{}", remoteUser, remoteSite, remotePath, e);
                 }
             } else {
                 LOGGER.error("Unknown remote protocol in config file");

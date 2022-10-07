@@ -202,7 +202,7 @@ public class KeycloakUserUtils {
         if (accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()) != null) {
             for (String role : accessToken.getResourceAccess(adapterDeploymentContext.resolveDeployment(null).getResourceName()).getRoles()) {
                 if (role.contains(roleGroupSeparator)) {
-                    LOGGER.debug(Geonet.SECURITY_MARKER, "Identified group:profile ({}) from user token.",role);
+                    LOGGER.debug(Geonet.SECURITY_MARKER, "Identified group:profile ({}) from user token.", role);
                     roleGroupList.add(role);
                 } else {
                     // Only use the profiles we know of and don't add duplicates.

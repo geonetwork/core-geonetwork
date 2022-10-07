@@ -211,7 +211,7 @@ public class ServiceInfo {
             return result;
         } catch (Exception e) {
             LOGGER.error("Exception during transformation");
-            LOGGER.error("  (C) message is : " + e.getMessage());
+            LOGGER.error("  (C) message is : {}", e.getMessage());
 
             Throwable t = e;
 

@@ -154,7 +154,7 @@ public class ProfileManager {
         }
         LOGGER.debug(Log.REQUEST_MARKER,
             "{} denied for {}",
-            fi,authentication
+            fi, authentication
         );
         return false;
     }

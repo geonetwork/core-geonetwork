@@ -176,8 +176,8 @@ public class SearchController {
         } catch (InvalidParameterValueEx e) {
             throw e;
         } catch (Exception e) {
-            context.error("Error while getting metadata with id : " + id);
-            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+            context.getLogger().error("Error while getting metadata with id : {}", id);
+            context.getLogger().error("  (C) StackTrace:",e);
             throw new NoApplicableCodeEx("Raised exception while getting metadata :" + e);
         }
     }
@@ -549,8 +549,8 @@ public class SearchController {
             try {
                 result = Xml.transform(result, styleSheet, params);
             } catch (Exception e) {
-                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                context.getLogger().error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                context.getLogger().error("  (C) StackTrace:", e);
                 return null;
             }
             return result;
@@ -606,8 +606,8 @@ public class SearchController {
             try {
                 result = Xml.transform(result, styleSheet, params);
             } catch (Exception e) {
-                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                context.getLogger().error("Error while transforming metadata with id : {} using {}" , id, styleSheet);
+                context.getLogger().error("  (C) StackTrace:", e);
                 return null;
             }
         }

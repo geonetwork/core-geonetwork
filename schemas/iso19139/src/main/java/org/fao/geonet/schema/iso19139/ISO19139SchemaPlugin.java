@@ -275,7 +275,7 @@ public class ISO19139SchemaPlugin
             return matches;
         } catch (Exception e) {
             LOGGER.debug(LOGGER_NAME,
-                "{}: getTranslationForElement failed on element {} using XPath '{}' updatedLocalizedTextElement exception ",
+                "{}: getTranslationForElement failed on element {} using XPath '{}' updatedLocalizedTextElement exception {}",
                 getIdentifier(),
                 Xml.getString(element),
                 path,

@@ -287,13 +287,13 @@ public final class ServiceRequestFactory {
             String file = fileEntry.getValue().getOriginalFilename();
             final String type = multipartFile.getContentType();
             LOGGER.debug(Log.REQUEST_MARKER, "Uploading file {} type: {} size: {}",
-                file,type,size
+                file, type, size
             );
 
 
             //--- remove path information from file (some browsers put it, like IE)
             file = simplifyName(file);
-            LOGGER.debug(Log.REQUEST_MARKER, "File is called {} after simplification",file);
+            LOGGER.debug(Log.REQUEST_MARKER, "File is called {} after simplification", file);
             multipartFile.transferTo(uploadDir.resolve(file).toFile());
 
             Element elem = new Element(multipartFile.getName())

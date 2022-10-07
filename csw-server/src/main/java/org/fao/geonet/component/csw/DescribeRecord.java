@@ -224,7 +224,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService 
                     Element currentSC = loadSchemaComponent(context, tname, schema);
                     scElements.put(tname, currentSC);
                 } catch (Exception ex) {
-                    context.getLogger().warning("Error while getting schema " + tname + " (" + schema+"): " + ex.getMessage());
+                    context.getLogger().warn("Error while getting schema {} ({}): {}", tname, schema, ex.getMessage());
                 }
             }
         } else {
@@ -273,8 +273,8 @@ public class DescribeRecord extends AbstractOperation implements CatalogService 
             return sc;
 
         } catch (Throwable e) {
-            context.error("Cannot get schema file : " + dir);
-            context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
+            context.getLogger().error("Cannot get schema file : " + dir);
+            context.getLogger().error("  (C) StackTrace\n" + Util.getStackTrace(e));
 
             throw new NoApplicableCodeEx("Cannot get schema file for : " + tname);
         }

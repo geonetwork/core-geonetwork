@@ -120,12 +120,12 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             // Most likely cause is that the column already exists which should be fine.
             LOGGER.error(
                 Geonet.DB_MARKER,
-                "  Exception while adding new {} column to {}. Error is: ",
+                "  Exception while adding new {} column to {}. Error is: {}",
                 MetadataStatus_.id.getName(),
                 MetadataStatus.TABLE_NAME,
                 e.getMessage()
             );
-            LOGGER.debug(Geonet.DB_MARKER,e,e);
+            LOGGER.debug(Geonet.DB_MARKER, e, e);
         }
         try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddColumnString() + "  " + MetadataStatus_.uuid.getName() + " VARCHAR(255) NULL");
@@ -327,7 +327,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                 "  Exception while dropping old primary key constraint on table {}. "
                     + "Restart application and check logs for database errors.  "
                     + "If errors exists then may need to manually drop the primary key for this table."
-                    + "Error is: ",
+                    + "Error is: {}",
                 MetadataStatus.TABLE_NAME,
                 e.getMessage()
             );
@@ -346,7 +346,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                 "  Exception while dropping old primary key on table {}. "
                     + "Restart application and check logs for database errors.  "
                     + "If errors exists then may need to manually drop the primary key for this table. "
-                    + "Error is: ",
+                    + "Error is: {}",
                 e.getMessage(),
                 MetadataStatus.TABLE_NAME
             );
@@ -363,7 +363,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             LOGGER.error(
                 Geonet.DB_MARKER,
                 "  Exception while adding primary key on {} column for {}. "
-                    + "Error is: ",
+                    + "Error is: {}",
                 MetadataStatus_.id.getName(),
                 MetadataStatus.TABLE_NAME,
                 e.getMessage());

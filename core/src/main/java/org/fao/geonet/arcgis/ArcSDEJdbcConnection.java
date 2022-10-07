@@ -164,7 +164,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
             }
         });
 
-        LOGGER.info(ARCSDE_LOG_MARKER, "Finished retrieving metadata, found: #{} metadata records",results.size());
+        LOGGER.info(ARCSDE_LOG_MARKER, "Finished retrieving metadata, found: #{} metadata records", results.size());
 
         return results;
     }

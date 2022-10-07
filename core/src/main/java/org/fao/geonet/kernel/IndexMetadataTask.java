@@ -110,7 +110,7 @@ public final class IndexMetadataTask implements Runnable {
                     dataManager.indexMetadata(metadataId.toString(), false);
                 } catch (Exception e) {
                     LOGGER.error(Geonet.INDEX_MARKER, "Error indexing metadata '{}': {}",
-                        metadataId,e.getMessage(),e);
+                        metadataId, e.getMessage(), e);
                 }
             }
             if (_user != null && _context.getUserSession().getUserId() == null) {

@@ -128,7 +128,7 @@ public abstract class AbstractPage {
                 }
             } catch (Exception e) {
                 LOGGER.error("Exception executing gui service : {}", e.toString());
-                LOGGER.error(" (C) Stack trace is :",e);
+                LOGGER.error(" (C) Stack trace is :", e);
             }
         }
     }

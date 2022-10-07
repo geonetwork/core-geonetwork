@@ -220,8 +220,7 @@ public final class Processor {
 
                 if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
                     xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
-                    if (LOGGER.isDebugEnabled(Log.XLINK_MARKER))
-                        LOGGER.debug(Log.XLINK_MARKER, "cache miss for {}", uri);
+                    LOGGER.debug(Log.XLINK_MARKER, "cache miss for {}", uri);
                 } else {
                     return null;
                 }
@@ -385,7 +384,7 @@ public final class Processor {
                         continue;
                     }
                 } catch (Exception e) {
-                    LOGGER.error(Log.XLINK_MARKER, "Failed to look up localxlink {}:{}", idSearch,e.getMessage(), e);
+                    LOGGER.error(Log.XLINK_MARKER, "Failed to look up localxlink {}:{}", idSearch, e.getMessage(), e);
                 }
                 if (localFragment != null) {
                     localFragment = (Element) localFragment.clone();
@@ -464,7 +463,7 @@ public final class Processor {
                             element.addContent(remoteFragment);
                         }
                     } catch (Exception e) {
-                        LOGGER.error(Log.XLINK_MARKER, "doXLink {} failed: {}", action,e.getMessage(), e);
+                        LOGGER.error(Log.XLINK_MARKER, "doXLink {} failed: {}", action, e.getMessage(), e);
                     }
                 }
                 cleanXLinkAttributes(element, action);

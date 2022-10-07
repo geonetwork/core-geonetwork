@@ -203,10 +203,10 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                 }
                 update.executeBatch();
             } catch (java.sql.BatchUpdateException e) {
-                LOGGER.error(Geonet.GEONETWORK_MARKER, "Error occurred while updating resource links:" + e.getMessage(), e);
+                LOGGER.error(Geonet.GEONETWORK_MARKER, "Error occurred while updating resource links: {}", e.getMessage(), e);
                 SQLException next = e.getNextException();
                 while (next != null) {
-                    LOGGER.error(Geonet.GEONETWORK_MARKER, "Next error: " + next.getMessage(), next);
+                    LOGGER.error(Geonet.GEONETWORK_MARKER, "Next error: {}", next.getMessage(), next);
                     next = e.getNextException();
                 }
 

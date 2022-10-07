@@ -90,7 +90,7 @@ public class GenericController {
             // Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
             // Log.debug(Log.REQUEST, "Char encoding: "+
             // req.getCharacterEncoding());
-            LOGGER.debug( "Accept       : {}",request.getHeader("Accept"));
+            LOGGER.debug( "Accept       : {}", request.getHeader("Accept"));
             // Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
             // Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
         }
