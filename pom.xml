@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.1-SNAPSHOT</version>
+  <version>4.2.2-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1534,7 +1534,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.46.v20220331</jetty.version>
+    <jetty.version>9.4.48.v20220622</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1569,7 +1569,7 @@
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
-    <jupiter.version>5.7.0</jupiter.version>
+    <jupiter.version>5.9.1</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>
 
     <sonar.organization>geonetwork</sonar.organization>

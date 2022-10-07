@@ -2,22 +2,26 @@
   <div class="clearfix">
     <div data-ng-show="searchResults.count > 0">
       <strong>
-        <ng-pluralize count="searchResults.count"
-                      when="{'0 ': ('noRecordFound' | translate),
+        <ng-pluralize
+          count="searchResults.count"
+          when="{'0 ': ('noRecordFound' | translate),
                 'one': '1 ' +  ('record' | translate),
-                'other': '{} ' +  ('records' | translate)}"/>
+                'other': '{} ' +  ('records' | translate)}"
+        />
       </strong>
     </div>
     <div data-ng-show="options.selection.mode.indexOf('local') === -1">
-      <div class="btn-group pull-right"
-           data-ng-show="searchResults.count > 0">
+      <div class="btn-group pull-right" data-ng-show="searchResults.count > 0">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-          {{selection.length}} <span data-translate="">selected</span><span class="caret"/>
+          {{selection.length}} <span data-translate="">selected</span
+          ><span class="caret" />
         </button>
         <ul class="dropdown-menu">
-          <li><a href="" data-ng-click="selectAll(true)" data-translate="">selectAll</a>
+          <li>
+            <a href="" data-ng-click="selectAll(true)" data-translate="">selectAll</a>
           </li>
-          <li><a href="" data-ng-click="selectAll(false)" data-translate="">selectNone</a>
+          <li>
+            <a href="" data-ng-click="selectAll(false)" data-translate="">selectNone</a>
           </li>
         </ul>
       </div>
@@ -26,35 +30,42 @@
   <!-- Results List -->
   <div>
     <div class="list-group fixed">
-      <li class="list-group-item gn-record"
-          data-ng-repeat="md in searchResults.records"
-          id="gn-record-{{md.uuid}}"
-          href=""
-          data-ng-class="isSelected(md) ? 'active' : ''"
-          data-ng-click="onClick(md)">
-        <div data-ng-if="options.mode == 'title'
-              && options.selection.mode === undefined">
+      <li
+        class="list-group-item gn-record"
+        data-ng-repeat="md in searchResults.records"
+        id="gn-record-{{md.uuid}}"
+        href=""
+        data-ng-class="isSelected(md) ? 'active' : ''"
+        data-ng-click="onClick(md)"
+      >
+        <div
+          data-ng-if="options.mode == 'title'
+              && options.selection.mode === undefined"
+        >
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
-          <a href="catalog.search#/metadata/{{md.uuid}}">
-            {{md.resourceTitle}}
-          </a>
+          <a href="catalog.search#/metadata/{{md.uuid}}"> {{md.resourceTitle}} </a>
         </div>
-        <div data-ng-if="options.mode == 'title'
-              && options.selection.mode !== undefined">
+        <div
+          data-ng-if="options.mode == 'title'
+              && options.selection.mode !== undefined"
+        >
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
           {{md.resourceTitle}}
 
-          <a class="pull-right"
-             href="catalog.search#/metadata/{{md.uuid}}">
+          <a class="pull-right" href="catalog.search#/metadata/{{md.uuid}}">
             <i class="fa fa-eye"></i>
           </a>
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
-          <div class="col-lg-12"
-               title="{{md.resourceAbstract}}">
-            <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
+          <div class="col-lg-12" title="{{md.resourceAbstract}}">
+            <i
+              class="fa gn-icon-{{md.resourceType[0]}}"
+              title="{{md.resourceType[0] | translate}}"
+            />
             <strong>{{md.resourceTitle}}</strong>
-            <p ng-if="::md.resourceAbstract" class="small">{{md.resourceAbstract | characters:200}}</p>
+            <p ng-if="::md.resourceAbstract" class="small">
+              {{md.resourceAbstract | characters:200}}
+            </p>
           </div>
         </div>
         <div data-ng-if="options.mode == 'directory'">
@@ -63,10 +74,12 @@
             <div class="flex-spacer" />
             <strong>{{md.resourceTitle}}</strong>
           </div>
-          <p ng-if="::md.resourceAbstract" class="small">{{md.resourceAbstract | characters:200}}</p>
+          <p ng-if="::md.resourceAbstract" class="small">
+            {{md.resourceAbstract | characters:200}}
+          </p>
         </div>
       </li>
     </div>
   </div>
-  <div data-gn-pagination="paginationInfo"/>
+  <div data-gn-pagination="paginationInfo" />
 </div>

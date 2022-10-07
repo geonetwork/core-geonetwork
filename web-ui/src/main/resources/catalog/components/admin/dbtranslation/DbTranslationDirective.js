@@ -21,35 +21,34 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_dbtranslation_directive');
+(function () {
+  goog.provide("gn_dbtranslation_directive");
 
-  var module = angular.module('gn_dbtranslation_directive', []);
+  var module = angular.module("gn_dbtranslation_directive", []);
 
   /**
-     * Provide a table layout to edit db translations
-     * for some types of entries (eg. groups, categories).
-     *
-     * Changes are saved on keyup event.
-     *
-     * Usage:
-     * <div data-gn-db-translation="groupSelected" data-type="group"></div>
-     */
-  module.directive('gnDbTranslation', [
-    function() {
-
+   * Provide a table layout to edit db translations
+   * for some types of entries (eg. groups, categories).
+   *
+   * Changes are saved on keyup event.
+   *
+   * Usage:
+   * <div data-gn-db-translation="groupSelected" data-type="group"></div>
+   */
+  module.directive("gnDbTranslation", [
+    function () {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
         transclude: true,
         scope: {
-          type: '@type',
-          element: '=gnDbTranslation'
+          type: "@type",
+          element: "=gnDbTranslation"
         },
-        templateUrl: '../../catalog/components/admin/dbtranslation/partials/' +
-            'dbtranslation.html',
-        link: function(scope, element, attrs) {
-        }
+        templateUrl:
+          "../../catalog/components/admin/dbtranslation/partials/" + "dbtranslation.html",
+        link: function (scope, element, attrs) {}
       };
-    }]);
+    }
+  ]);
 })();

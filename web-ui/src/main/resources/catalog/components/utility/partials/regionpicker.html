@@ -1,8 +1,6 @@
 <div class="input-group gn-field">
   <div class="input-group-btn">
-    <button type="button"
-            class="btn btn-default dropdown-toggle"
-            data-toggle="dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
       {{(regionType.label || regionType.name) | translate}} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
@@ -14,10 +12,14 @@
     </ul>
   </div>
   <!-- /btn-group -->
-  <input type="text" name="regionpicker" class="form-control"
-         autocomplete="off"
-         data-gn-region-picker-input=""
-         placeholder="{{'chooseRegion' | translate}}"/>
+  <input
+    type="text"
+    name="regionpicker"
+    class="form-control"
+    autocomplete="off"
+    data-gn-region-picker-input=""
+    placeholder="{{'chooseRegion' | translate}}"
+  />
   <span class="fa fa-spinner fa-spin" data-ng-show="regionLoading"></span>
   <span class="fa fa-times-circle" data-ng-click="resetRegion()"></span>
 </div>
