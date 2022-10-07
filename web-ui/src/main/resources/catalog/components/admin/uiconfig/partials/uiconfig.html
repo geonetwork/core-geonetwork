@@ -1123,7 +1123,19 @@
             <i class="fa fa-file-o" />&nbsp;
             <span data-translate="">resetDefaultConfig</span>
           </button>
-          <button class="btn btn-default" data-ng-click="reset()">
+          <button
+            class="btn btn-default"
+            data-ng-click="currentConfig()"
+            title="{{'ui-full-current-configuration' | translate}}"
+          >
+            <i class="fa fa-file-text-o" />&nbsp;
+            <span data-translate="">uiCurrentConfig</span>
+          </button>
+          <button
+            class="btn btn-default"
+            data-ng-click="reset()"
+            title="{{'ui-full-configuration' | translate}}"
+          >
             <i class="fa fa-file-text-o" />&nbsp;
             <span data-translate="">uiBasicConfig</span>
           </button>
