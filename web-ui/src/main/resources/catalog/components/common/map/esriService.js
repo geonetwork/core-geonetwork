@@ -21,20 +21,24 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_esri_service');
+(function () {
+  goog.provide("gn_esri_service");
 
-  var module = angular.module('gn_esri_service', []);
+  var module = angular.module("gn_esri_service", []);
 
   var PADDING = 5;
   var TITLE_PADDING = 15;
   var FONT_SIZE = 12;
 
-  var TITLE_FONT = 'bold ' + FONT_SIZE + 'px sans-serif';
-  var LABEL_FONT = FONT_SIZE + 'px sans-serif';
+  var TITLE_FONT = "bold " + FONT_SIZE + "px sans-serif";
+  var LABEL_FONT = FONT_SIZE + "px sans-serif";
 
-  module.service('gnEsriUtils', ['$q', '$http', '$translate', 'gnUrlUtils',
-    function($q, $http, $translate, gnUrlUtils) {
+  module.service("gnEsriUtils", [
+    "$q",
+    "$http",
+    "$translate",
+    "gnUrlUtils",
+    function ($q, $http, $translate, gnUrlUtils) {
       return {
         /**
          * Renders a JSON legend asynchronously to an image
@@ -42,23 +46,25 @@
          * @param {string} [layerId] optional, legend will be filtered on this layer
          * @return {Promise<string>} data url
          */
-        renderLegend: function(json, layerId) {
+        renderLegend: function (json, layerId) {
           var singleLayer = !!layerId;
-          var legend = singleLayer ? {
-            layers: json.layers.filter(function (layer) {
-              return layer.layerId == layerId;
-            })
-          } : json;
+          var legend = singleLayer
+            ? {
+                layers: json.layers.filter(function (layer) {
+                  return layer.layerId == layerId;
+                })
+              }
+            : json;
 
-          var canvas = document.createElement('canvas');
-          var context = canvas.getContext('2d');
-          context.textBaseline = 'middle';
+          var canvas = document.createElement("canvas");
+          var context = canvas.getContext("2d");
+          context.textBaseline = "middle";
           var size = this.measureLegend(context, legend, singleLayer);
 
           // size canvas & draw background
           canvas.width = size[0];
           canvas.height = size[1];
-          context.fillStyle = 'white';
+          context.fillStyle = "white";
           context.fillRect(0, 0, size[0], size[1]);
 
           var promises = [];
@@ -69,8 +75,8 @@
             var layer = json.layers[i];
             if (!singleLayer) {
               y += TITLE_PADDING;
-              context.fillStyle = 'black';
-              context.textBaseline = 'middle';
+              context.fillStyle = "black";
+              context.textBaseline = "middle";
               context.font = TITLE_FONT;
               context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
               y += FONT_SIZE;
@@ -80,8 +86,8 @@
             y += (layer.legend[0].height + PADDING) * layer.legend.length;
           }
 
-          return $q.all(promises).then(function() {
-            return canvas.toDataURL('image/png');
+          return $q.all(promises).then(function () {
+            return canvas.toDataURL("image/png");
           });
         },
 
@@ -92,7 +98,7 @@
          * @param {Object[]} rules
          * @return {Promise<number>} current y
          */
-        renderRules: function(startY, context, rules) {
+        renderRules: function (startY, context, rules) {
           var promises = [];
 
           // chain one promise for each rule
@@ -100,15 +106,20 @@
             var rule = rules[i];
             var y = startY + i * (rules[0].height + PADDING) + PADDING;
             promises.push(
-              this.renderImageData(rule.imageData, rule.contentType)
-                .then(function (y, image) {
+              this.renderImageData(rule.imageData, rule.contentType).then(
+                function (y, image) {
                   var rule = this;
                   context.drawImage(image, PADDING, y, rule.width, rule.height);
-                  context.fillStyle = 'black';
-                  context.textBaseline = 'middle';
+                  context.fillStyle = "black";
+                  context.textBaseline = "middle";
                   context.font = LABEL_FONT;
-                  context.fillText(rule.label, PADDING * 2 + rule.width, y + rule.height / 2);
-                }.bind(rule, y))
+                  context.fillText(
+                    rule.label,
+                    PADDING * 2 + rule.width,
+                    y + rule.height / 2
+                  );
+                }.bind(rule, y)
+              )
             );
           }
 
@@ -122,13 +133,13 @@
          * @param {string} format, defaults to 'image/png'
          * @return {Promise<Image>} image
          */
-        renderImageData: function(imageData, format) {
+        renderImageData: function (imageData, format) {
           var defer = $q.defer();
           var image = new Image();
-          image.onload = function() {
+          image.onload = function () {
             defer.resolve(this);
           };
-          image.src = 'data:' + (format || 'image/png') + ';base64,' + imageData;
+          image.src = "data:" + (format || "image/png") + ";base64," + imageData;
           return defer.promise;
         },
 
@@ -139,7 +150,7 @@
          * @param {boolean} skipLayerName
          * @return {[number, number]} width and height
          */
-        measureLegend: function(context, json, skipLayerName) {
+        measureLegend: function (context, json, skipLayerName) {
           var width = 100;
           var height = 1;
           for (var i = 0; i < json.layers.length; i++) {
@@ -167,35 +178,38 @@
          * @param {String} url
          * @return {Promise<String>} capabilities document
          */
-        getCapabilities: function(url) {
+        getCapabilities: function (url) {
           var timeout = 60 * 1000;
           var defer = $q.defer();
 
-          url = gnUrlUtils.append(url,
+          url = gnUrlUtils.append(
+            url,
             gnUrlUtils.toKeyValue({
-              f: 'json'
-            }));
+              f: "json"
+            })
+          );
 
-          $http.get(url, {
-            cache: true,
-            timeout: timeout
-          })
-            .success(function(data, status, headers, config) {
+          $http
+            .get(url, {
+              cache: true,
+              timeout: timeout
+            })
+            .success(function (data, status, headers, config) {
               // Check if the response contains a mapName property,
               // to verify it's an ESRI Rest Capabilities document.
               if (!!data.mapName) {
                 defer.resolve(data);
               } else {
-                defer.reject($translate.instant('esriCapabilitiesNoValid'));
+                defer.reject($translate.instant("esriCapabilitiesNoValid"));
               }
             })
-            .error(function(data, status, headers, config) {
-              defer.reject($translate.instant('esriCapabilitiesFailed'));
+            .error(function (data, status, headers, config) {
+              defer.reject($translate.instant("esriCapabilitiesFailed"));
             });
 
           return defer.promise;
         }
-      }
+      };
     }
   ]);
 })();

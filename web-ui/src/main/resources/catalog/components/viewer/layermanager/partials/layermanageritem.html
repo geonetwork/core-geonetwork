@@ -1,16 +1,66 @@
 <div ng-if="::!layer.get('loading')" class="flex-col">
   <div class="flex-row width-100 flex-align-stretch">
     <div class="flex-col">
-      <input type="checkbox" id="layer-{{$index}}" ng-model="layer.visible" title="{{'layerVisible'|translate}}"/>
+      <input
+        type="checkbox"
+        id="layer-{{$index}}"
+        ng-model="layer.visible"
+        title="{{'layerVisible'|translate}}"
+      />
+    </div>
 
-      <div class="gn-layer-actions">
-        <div gn-popover gn-popover-placement="bottom">
-          <a gn-popover-anchor role="button" tabindex="0"
-             aria-label="{{'settings' | translate}}"
-             class="fa fa-cog"></a>
-          <div gn-popover-content class="layermanager-item-menu">
-            <ul role="menu">
+    <div class="flex-spacer"></div>
 
+    <div class="flex-col flex-grow">
+      <div class="width-100 flex-grow">
+        <span class="gn-layer-ordering btn-group btn-group-xs pull-right">
+          <!-- Legend -->
+          <a
+            href=""
+            class="btn btn-default"
+            ng-if="layer.get('legend') || layer.get('attribution')"
+            data-ng-click="showInfo(layer)"
+            title="{{'Legend'|translate}}"
+          >
+            <span class="fa fa-th-list"></span>
+            <span
+              class="dropdown"
+              ng-if="!layer.showInfo"
+              title="{{'showLegend' | translate}}"
+            >
+              <span class="caret"></span>
+            </span>
+            <span
+              class="dropup"
+              ng-if="layer.showInfo"
+              title="{{'hideLegend' | translate}}"
+            >
+              <span class="caret"></span>
+            </span>
+          </a>
+
+          <!-- TODO ? No style selector for WFS-->
+          <div data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
+            <div
+              data-gn-layer-styles="layer.get('style')"
+              data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
+              data-gn-layer-styles-current="layer.get('currentStyle')"
+            />
+          </div>
+
+          <!-- Tools -->
+          <div class="dropdown gn-layer-actions">
+            <a
+              type="button"
+              href=""
+              data-toggle="dropdown"
+              aria-label="{{'settings' | translate}}"
+              class="btn btn-default"
+            >
+              <span class="fa fa-cog"></span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
               <!--Zoom to extent-->
               <li class="" role="menuitem">
                 <a href="" data-ng-click="zoomToExtent(layer, map)">
@@ -19,131 +69,151 @@
               </li>
 
               <!--Open Metadata-->
-              <li class=""
-                  role="menuitem"
-                  data-ng-if="layer.get('md') || layer.get('metadataUrl')">
+              <li
+                role="menuitem"
+                data-ng-if="layer.get('md') || layer.get('metadataUrl')"
+              >
                 <a href="" data-ng-click="showMetadata()">
                   <span translate="">layerMetadata</span>
                 </a>
               </li>
 
-              <!-- TODO ? No style selector for WFS-->
-              <li role="menuitem" data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
-                <label data-translate="">selectStyle</label>
-                <div data-gn-layer-styles="layer.get('style')"
-                     data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
-                     data-gn-layer-styles-current="layer.get('currentStyle')"
-                     data-gn-layer-styles-layout="select"/>
-              </li>
-
               <!--Opacity slide-->
-              <li class="" title="{{'opacity' | translate}}"
-                  role="menuitem">
+              <li role="separator" class="divider"></li>
+              <li
+                class="gn-padding-left gn-padding-right"
+                title="{{'opacity' | translate}}"
+                role="menuitem"
+              >
                 <label data-translate="">setOpacity</label>
-                <input class="" type="range"
-                       aria-label="{{'setOpacity' | translate}}"
-                      min="0" max="1" step="0.05"
-                      ng-model="layer.opacity"/>
+                <input
+                  class=""
+                  type="range"
+                  aria-label="{{'setOpacity' | translate}}"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  ng-model="layer.opacity"
+                />
               </li>
+              <li role="separator" class="divider"></li>
 
               <!--WPS-->
-              <li class="" data-ng-if="process && process.length == 1"
-                  role="menuitem">
+              <li data-ng-if="process && process.length == 1" role="menuitem">
                 <a href="" data-ng-click="showWPS(process[0])">
                   <span translate="">process</span>
                 </a>
               </li>
-              <li class="btn-group" ng-if="process && process.length > 1 "
-                  role="menuitem">
+              <li
+                class="btn-group"
+                ng-if="process && process.length > 1 "
+                role="menuitem"
+              >
                 <div class="btn-link dropdown-toggle" data-toggle="dropdown">
                   <span translate="">process</span>&nbsp;
                   <span class="caret"></span>
                 </div>
                 <ul class="dropdown-menu" role="menu">
                   <li ng-repeat="p in process" role="menuitem">
-                    <a href="" data-ng-click="showWPS(p)">{{p.desc ||
-                      p.name}}</a>
-                    </li>
+                    <a href="" data-ng-click="showWPS(p)">{{p.desc || p.name}}</a>
+                  </li>
                 </ul>
               </li>
 
               <!--WFS Filter-->
-              <li class="" data-ng-if="::wfs" role="menuitem">
+              <li data-ng-if="::wfs" role="menuitem">
                 <a href="" data-ng-click="showWFSFilter()">
                   <span translate="">filter</span>
                 </a>
               </li>
 
               <!--Download-->
-              <li class="" ng-if="hasDownload"
-                           data-gn-wfs-download="layer"
-                           data-init-on-demand="true"
-                           data-mode="select"
-                           has-download="hasDownload" data-map="map" role="menuitem">
-              </li>
+              <li role="separator" class="divider" ng-if="hasDownload"></li>
+              <li
+                class="gn-padding-left gn-padding-right"
+                ng-if="hasDownload"
+                data-gn-wfs-download="layer"
+                data-init-on-demand="true"
+                data-mode="select"
+                has-download="hasDownload"
+                data-map="map"
+                role="menuitem"
+              ></li>
+              <li role="separator" class="divider" ng-if="hasDownload"></li>
 
               <!--Remove layer-->
-              <li class="" role="menuitem">
-                <a href=""
-                  data-ng-click="removeLayer(layer, map)">
+              <li role="menuitem">
+                <a href="" data-ng-click="removeLayer(layer, map)">
                   <span translate="">layerDelete</span>
                 </a>
               </li>
 
-              <li class="list-group-item list-group-item-warning"
-                  data-ng-show="layer.get('errors').length > 0"
-                  role="menuitem">
-                <p data-ng-repeat="e in layer.get('errors')"
-                   data-ng-bind-html="e"></p>
+              <li
+                class="list-group-item list-group-item-warning"
+                data-ng-show="layer.get('errors').length > 0"
+                role="menuitem"
+              >
+                <p data-ng-repeat="e in layer.get('errors')" data-ng-bind-html="e"></p>
               </li>
-
             </ul>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="flex-spacer"></div>
+          <!-- Layer Up -->
+          <a
+            href=""
+            class="btn btn-default"
+            ng-disabled="$first"
+            ng-click="moveLayer(layer, 1)"
+            title="{{'layerMoveUp'|translate}}"
+          >
+            <span class="fa fa-arrow-up"></span>
+          </a>
+          <!-- Layer Down -->
+          <a
+            href=""
+            class="btn btn-default"
+            ng-disabled="$last"
+            ng-click="moveLayer(layer, -1, $last)"
+            title="{{'layerMoveDown'|translate}}"
+          >
+            <span class="fa fa-arrow-down"></span>
+          </a>
 
-    <div class="flex-col flex-grow">
-      <div class="width-100 flex-grow">
-        <span class="gn-layer-ordering btn-group pull-right">
-          <a href="" class="btn btn-default btn-sm fa fa-arrow-up"
-             ng-disabled="$first"
-             ng-click="moveLayer(layer, 1)"
-             title="{{'layerMoveUp'|translate}}"></a>
-          <a href="" class="btn btn-default btn-sm fa fa-arrow-down"
-             ng-disabled="$last"
-             ng-click="moveLayer(layer, -1, $last)"
-             title="{{'layerMoveDown'|translate}}"></a>
-           <a href=""
-              class="btn btn-default btn-sm fa fa-times"
-              data-ng-click="removeLayer(layer, map)"
-             title="{{'layerDelete'|translate}}"></a>
+          <!-- Remove Layer -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-ng-click="removeLayer(layer, map)"
+            title="{{'layerDelete'|translate}}"
+          >
+            <span class="fa fa-times"></span>
+          </a>
         </span>
         <label class="gn-map-layer" for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
-            <span><em>
-              {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
-            </em></span>
+            <span
+              ><em>
+                {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
+                layer.get('currentStyle').Name) + ')' : ''}}
+              </em></span
+            >
           </span>
         </label>
       </div>
-      <a href class="width-100 text-right small"
-         ng-if="layer.get('legend') || layer.get('attribution')"
-         data-ng-click="showInfo(layer)" title="{{'Legend'|translate}}">
-        <i class="fa fa-caret-down" ng-if="!layer.showInfo"/>
-        <i class="fa fa-caret-up" ng-if="layer.showInfo"/>
-        <span translate ng-if="!layer.showInfo">{{'showLegend' | translate}}</span>
-        <span translate ng-if="layer.showInfo">{{'hideLegend' | translate}}</span>
-      </a>
+    </div>
+
+    <div class="flex-col flex-self-center">
+      <span class="pull-right fa fa-ellipsis-v text-medium text-muted"></span>
     </div>
   </div>
 
   <div class="details width-100" ng-show="layer.showInfo">
     <p ng-if="layer.get('legend')">
-      <img alt="{{layer.get('label')}} {{'mapLegend' | translate}}" ng-src="{{layer.get('legend')}}"/>
+      <img
+        alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+        ng-src="{{layer.get('legend')}}"
+      />
     </p>
     <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
     <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>

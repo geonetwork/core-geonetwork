@@ -21,65 +21,71 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_report_controller');
+(function () {
+  goog.provide("gn_report_controller");
 
-  var module = angular.module('gn_report_controller',
-      []);
+  var module = angular.module("gn_report_controller", []);
 
   /**
    * ReportController provides all necessary operations
    * to build reports.
    */
-  module.controller('GnReportController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate',
-    function($scope, $routeParams, $http, $rootScope, $translate) {
-
-
+  module.controller("GnReportController", [
+    "$scope",
+    "$routeParams",
+    "$http",
+    "$rootScope",
+    "$translate",
+    function ($scope, $routeParams, $http, $rootScope, $translate) {
       $scope.pageMenu = {
-        folder: 'report/',
-        defaultTab: 'report-updated-metadata',
-        tabs:
-            [{
-              type: 'report-updated-metadata',
-              label: 'reportUpdatedMetadata',
-              icon: 'fa-check-square-o',
-              href: '#/reports/report-updated-metadata'
-            },{
-              type: 'report-internal-metadata',
-              label: 'reportInternalMetadata',
-              icon: 'fa-sign-in',
-              href: '#/reports/report-internal-metadata'
-            },{
-              type: 'report-fileupload-metadata',
-              label: 'reportFileUploadMetadata',
-              icon: 'fa-upload',
-              href: '#/reports/report-fileupload-metadata'
-            },{
-              type: 'report-filedownload-metadata',
-              label: 'reportFileDownloadMetadata',
-              icon: 'fa-download',
-              href: '#/reports/report-filedownload-metadata'
-            },{
-              type: 'report-users',
-              label: 'reportUsers',
-              icon: 'fa-users',
-              href: '#/reports/report-users'
-            }]
+        folder: "report/",
+        defaultTab: "report-updated-metadata",
+        tabs: [
+          {
+            type: "report-updated-metadata",
+            label: "reportUpdatedMetadata",
+            icon: "fa-check-square-o",
+            href: "#/reports/report-updated-metadata"
+          },
+          {
+            type: "report-internal-metadata",
+            label: "reportInternalMetadata",
+            icon: "fa-sign-in",
+            href: "#/reports/report-internal-metadata"
+          },
+          {
+            type: "report-fileupload-metadata",
+            label: "reportFileUploadMetadata",
+            icon: "fa-upload",
+            href: "#/reports/report-fileupload-metadata"
+          },
+          {
+            type: "report-filedownload-metadata",
+            label: "reportFileDownloadMetadata",
+            icon: "fa-download",
+            href: "#/reports/report-filedownload-metadata"
+          },
+          {
+            type: "report-users",
+            label: "reportUsers",
+            icon: "fa-users",
+            href: "#/reports/report-users"
+          }
+        ]
       };
 
       $scope.groups = null;
       $scope.report = {};
-      $scope.report.suggestedDate = '';
+      $scope.report.suggestedDate = "";
 
-      $scope.report.dateFrom = new Date(moment().format('YYYY-MM-DD'));
-      $scope.report.dateTo = new Date(moment().format('YYYY-MM-DD'));
+      $scope.report.dateFrom = new Date(moment().format("YYYY-MM-DD"));
+      $scope.report.dateTo = new Date(moment().format("YYYY-MM-DD"));
 
       /**
        * Creates the records updated report
        */
-      $scope.createReport = function(formId, service) {
-        $(formId).attr('action', service);
+      $scope.createReport = function (formId, service) {
+        $(formId).attr("action", service);
         $(formId).submit();
       };
 
@@ -87,61 +93,52 @@
        * Listener for suggested date range selection to update
        * the date controls with the date range selected.
        */
-      $scope.$watch(
-          'report.suggestedDate',
-          function(newValue, oldValue) {
+      $scope.$watch("report.suggestedDate", function (newValue, oldValue) {
+        // Ignore empty value: in initial setup and
+        // if form already mirrors new value.
+        if (
+          newValue === "" ||
+          newValue === oldValue ||
+          $scope.report.suggestedDate.value === newValue
+        ) {
+          return;
+        }
 
-            // Ignore empty value: in initial setup and
-            // if form already mirrors new value.
-            if ((newValue === '') || (newValue === oldValue) ||
-                ($scope.report.suggestedDate.value === newValue)) {
-              return;
-            }
+        // Calculate the dateFrom and dateTo values
+        var today = moment();
 
-            // Calculate the dateFrom and dateTo values
-            var today = moment();
+        if (newValue === "currentMonth") {
+          var month = today.format("MM");
+          var year = today.format("YYYY");
 
-            if (newValue === 'currentMonth') {
-              var month = today.format('MM');
-              var year = today.format('YYYY');
+          $scope.report.dateFrom = new Date(year + "-" + month + "-" + "01");
+          $scope.report.dateTo = new Date(year + "-" + month + "-" + today.daysInMonth());
+        } else if (newValue === "previousMonth") {
+          // Set previous month
+          today.add("months", -1);
 
-              $scope.report.dateFrom =
-                  new Date(year + '-' + month + '-' + '01');
-              $scope.report.dateTo = new Date(year + '-' + month + '-' +
-                  today.daysInMonth());
+          var month = today.format("MM");
+          var year = today.format("YYYY");
 
-            } else if (newValue === 'previousMonth') {
-              // Set previous month
-              today.add('months', -1);
+          $scope.report.dateFrom = new Date(year + "-" + month + "-" + "01");
+          $scope.report.dateTo = new Date(year + "-" + month + "-" + today.daysInMonth());
+        } else if (newValue == "currentYear") {
+          var year = today.format("YYYY");
 
-              var month = today.format('MM');
-              var year = today.format('YYYY');
+          $scope.report.dateFrom = new Date(year + "-" + "01" + "-" + "01");
+          $scope.report.dateTo = new Date(year + "-" + "12" + "-" + "31");
+        } else if (newValue == "previousYear") {
+          // Set previous year
+          today.add("year", -1);
 
-              $scope.report.dateFrom =
-                  new Date(year + '-' + month + '-' + '01');
-              $scope.report.dateTo = new Date(year + '-' + month + '-' +
-                  today.daysInMonth());
+          var year = today.format("YYYY");
 
-            } else if (newValue == 'currentYear') {
-              var year = today.format('YYYY');
+          $scope.report.dateFrom = new Date(year + "-" + "01" + "-" + "01");
+          $scope.report.dateTo = new Date(year + "-" + "12" + "-" + "31");
+        }
+      });
 
-              $scope.report.dateFrom = new Date(year + '-' + '01' + '-' + '01');
-              $scope.report.dateTo = new Date(year + '-' + '12' + '-' + '31');
-
-            } else if (newValue == 'previousYear') {
-              // Set previous year
-              today.add('year', -1);
-
-              var year = today.format('YYYY');
-
-              $scope.report.dateFrom = new Date(year + '-' + '01' + '-' + '01');
-              $scope.report.dateTo = new Date(year + '-' + '12' + '-' + '31');
-
-            }
-          });
-
-
-      $scope.$watch('user.id', function(newId) {
+      $scope.$watch("user.id", function (newId) {
         if (angular.isDefined(newId)) {
           loadGroups();
         }
@@ -150,29 +147,32 @@
       function loadGroups() {
         if ($scope.user.profile == null) return;
 
-        if ($scope.user.profile === 'Administrator') {
-          $http.get('../api/groups').success(function(data) {
-            $scope.groups = data;
-          }).error(function(data) {
-            // TODO
-          });
-        } else {
-          $http.get('../api/users/' + $scope.user.id + '/groups').success(function(data) {
-            // Extract the group property from user groups array
-            var groups = _.map(data, 'group');
-
-            // Get unique groups
-            $scope.groups = _.uniq(groups, function (e) {
-              return e.id;
+        if ($scope.user.profile === "Administrator") {
+          $http
+            .get("../api/groups")
+            .success(function (data) {
+              $scope.groups = data;
+            })
+            .error(function (data) {
+              // TODO
             });
+        } else {
+          $http
+            .get("../api/users/" + $scope.user.id + "/groups")
+            .success(function (data) {
+              // Extract the group property from user groups array
+              var groups = _.map(data, "group");
 
-          }).error(function(data) {
-            // TODO
-          });
-
+              // Get unique groups
+              $scope.groups = _.uniq(groups, function (e) {
+                return e.id;
+              });
+            })
+            .error(function (data) {
+              // TODO
+            });
         }
       }
-
-    }]);
-
+    }
+  ]);
 })();

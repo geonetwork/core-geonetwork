@@ -21,114 +21,122 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_categories_controller');
+(function () {
+  goog.provide("gn_categories_controller");
 
-  var module = angular.module('gn_categories_controller',
-      []);
-
+  var module = angular.module("gn_categories_controller", []);
 
   /**
    * CategoriesController provides all necessary operations
    * to manage category.
    */
-  module.controller('GnCategoriesController', [
-    '$scope', '$routeParams', '$http', '$rootScope',
-    '$translate', '$timeout',
-    function($scope, $routeParams, $http, $rootScope,
-             $translate, $timeout) {
-
+  module.controller("GnCategoriesController", [
+    "$scope",
+    "$routeParams",
+    "$http",
+    "$rootScope",
+    "$translate",
+    "$timeout",
+    function ($scope, $routeParams, $http, $rootScope, $translate, $timeout) {
       $scope.categories = null;
-      $scope.categorySelected = {id: $routeParams.categoryId};
+      $scope.categorySelected = { id: $routeParams.categoryId };
 
       $scope.categoryUpdated = false;
 
-      $scope.selectCategory = function(c) {
+      $scope.selectCategory = function (c) {
         $scope.cateroryUpdated = false;
         $scope.categorySelected = c;
-        $timeout(function() {
-          $('#categoryname').focus();
+        $timeout(function () {
+          $("#categoryname").focus();
         }, 100);
       };
 
       /**
        * Ask for confirmation to delete the category
        */
-      $scope.deleteCategory = function(id) {
+      $scope.deleteCategory = function (id) {
         $scope.delCategoryId = id;
-        $('#gn-confirm-delete-category').modal('show');
+        $("#gn-confirm-delete-category").modal("show");
       };
 
       /**
        * Delete a category
        */
-      $scope.confirmDeleteCategory = function(id) {
-        $http.delete('../api/tags/' + $scope.delCategoryId)
-          .then(function(r) {
+      $scope.confirmDeleteCategory = function (id) {
+        $http.delete("../api/tags/" + $scope.delCategoryId).then(
+          function (r) {
             if (r.status === 204) {
               $scope.unselectCategory();
               loadCategories();
             } else {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('categoryDeleteError'),
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("categoryDeleteError"),
                 error: r.data,
                 timeout: 0,
-                type: 'danger'});
+                type: "danger"
+              });
             }
-          }, function(r) {
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('categoryDeleteError'),
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("categoryDeleteError"),
               error: r.data,
               timeout: 0,
-              type: 'danger'});
-          });
+              type: "danger"
+            });
+          }
+        );
       };
 
       /**
        * Save a category
        */
-      $scope.saveCategory = function() {
-        $http.put('../api/tags/' + $scope.categorySelected.id,
-            $scope.categorySelected).success(function(data) {
-          $scope.unselectCategory();
-          loadCategories();
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('categoryUpdated'),
-            timeout: 2,
-            type: 'success'});
-        })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('categoryUpdateError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
+      $scope.saveCategory = function () {
+        $http
+          .put("../api/tags/" + $scope.categorySelected.id, $scope.categorySelected)
+          .success(function (data) {
+            $scope.unselectCategory();
+            loadCategories();
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("categoryUpdated"),
+              timeout: 2,
+              type: "success"
             });
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("categoryUpdateError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
+            });
+          });
       };
 
-      $scope.addCategory = function() {
+      $scope.addCategory = function () {
         $scope.unselectCategory();
         $scope.categorySelected = {
-          'id': '',
-          name: ''
+          id: "",
+          name: ""
           // label: {
           // TODO: Should define default language
           // based on catalog languages
           // }
         };
-        $timeout(function() {
-          $('#categoryname').focus();
+        $timeout(function () {
+          $("#categoryname").focus();
         }, 100);
       };
-      $scope.unselectCategory = function() {
+      $scope.unselectCategory = function () {
         $scope.categorySelected = {};
       };
 
       function loadCategories() {
-        $http.get('../api/tags').success(function(data) {
+        $http.get("../api/tags").success(function (data) {
           $scope.categories = data;
         });
       }
       loadCategories();
-    }]);
+    }
+  ]);
 })();

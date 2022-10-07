@@ -317,7 +317,7 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
-        applyBatchEdits(ri, md, schema);
+        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
         //
         // insert metadata
@@ -356,11 +356,13 @@ public class Aligner extends BaseAligner<CswParams> {
         result.addedMetadata++;
     }
 
-    private void applyBatchEdits(RecordInfo ri, Element md, String schema) throws JDOMException, IOException {
-        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
+    public static void applyBatchEdits(
+        String uuid, Element md, String schema,
+        String batchEdits, ServiceContext context, Logger log) throws JDOMException, IOException {
+        if (StringUtils.isNotEmpty(batchEdits)) {
             ObjectMapper mapper = new ObjectMapper();
 
-            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
+            BatchEditParameter[] listOfUpdates = mapper.readValue(batchEdits, BatchEditParameter[].class);
             if (listOfUpdates.length > 0) {
                 SchemaManager _schemaManager = context.getBean(SchemaManager.class);
                 EditLib editLib = new EditLib(_schemaManager);
@@ -396,8 +398,8 @@ public class Aligner extends BaseAligner<CswParams> {
                         ) || metadataChanged;
                     }
                 }
-                if (metadataChanged) {
-                    log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
+                if (metadataChanged && log != null) {
+                    log.debug("  - Record updated by batch edit configuration:" + uuid);
                 }
             }
         }
@@ -449,7 +451,7 @@ public class Aligner extends BaseAligner<CswParams> {
             schema = newSchema;
         }
 
-        applyBatchEdits(ri, md, schema);
+        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
 
         boolean validate = false;

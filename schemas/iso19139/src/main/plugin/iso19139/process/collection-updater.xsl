@@ -65,37 +65,35 @@
 
 
   <xsl:variable name="elements" as="node()*">
-    <tag name="gmd:descriptiveKeywords" context="gmd:MD_DataIdentification"
+    <tag name="gmd:descriptiveKeywords" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:thesaurusName/*/gmd:title/*/text()"
          merge="gmd:keyword"/>
-    <!-- TODO: temporalElement is also part of gmd:extent.
-    How to group by both? -->
-    <tag name="gmd:extent" context="gmd:MD_DataIdentification"
-         groupBy="*/gmd:geographicElement"
-         merge="gmd:geographicElement"/>
+    <tag name="gmd:extent" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
+         groupBy="*/(gmd:geographicElement|gmd:temporalElement)"
+         merge="gmd:geographicElement|gmd:temporalElement"/>
     <!-- TODO: gmd:language can be in various places. -->
-    <tag name="gmd:language" context="gmd:MD_DataIdentification"
+    <tag name="gmd:language" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:LanguageCode/@codeListValue"
          merge="gmd:LanguageCode"/>
-    <tag name="gmd:graphicOverview" context="gmd:MD_DataIdentification"
+    <tag name="gmd:graphicOverview" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:fileName/*/text()"
          merge="."/>
-    <tag name="gmd:characterSet" context="gmd:MD_DataIdentification"
+    <tag name="gmd:characterSet" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:MD_CharacterSetCode/@codeListValue"
          merge="gmd:characterSet"/>
-    <tag name="gmd:spatialRepresentationType" context="gmd:MD_DataIdentification"
+    <tag name="gmd:spatialRepresentationType" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:MD_SpatialRepresentationTypeCode/@codeListValue"
          merge="gmd:spatialRepresentationType"/>
-    <tag name="gmd:spatialResolution" context="gmd:MD_DataIdentification"
+    <tag name="gmd:spatialResolution" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:equivalentScale/*/gmd:denominator/*/text()"
          merge="gmd:spatialResolution"/>
-    <tag name="gmd:topicCategory" context="gmd:MD_DataIdentification"
+    <tag name="gmd:topicCategory" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:MD_TopicCategoryCode/text()"
          merge="gmd:MD_TopicCategoryCode"/>
     <tag name="gmd:contact" context="gmd:MD_Metadata"
          groupBy="*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"
          merge="."/>
-    <tag name="gmd:pointOfContact" context="gmd:MD_DataIdentification"
+    <tag name="gmd:pointOfContact" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()"
          merge="."/>
   </xsl:variable>
@@ -144,7 +142,7 @@
 
   <!-- Create empty elements that will be populated by the merge
   and may not exist in current record.-->
-  <xsl:template match="gmd:MD_DataIdentification" mode="expand">
+  <xsl:template match="gmd:MD_DataIdentification|srv:SV_ServiceIdentification" mode="expand">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="gmd:citation" mode="expand"/>

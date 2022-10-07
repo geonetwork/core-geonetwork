@@ -152,8 +152,8 @@ public class ReportUpdatedMetadata implements IReport {
                     }
                 }
 
-                String mdTitle = ReportUtils.retrieveMetadataTitle(
-                    metadata.getUuid());
+                String mdTitle = ReportUtils.retrieveMetadataIndex(
+                    metadata.getUuid(), "resourceTitleObject", "default");
 
                 // Build the record element with the information for the report
                 List<String> record = new ArrayList<>();

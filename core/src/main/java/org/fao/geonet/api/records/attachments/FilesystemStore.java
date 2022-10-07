@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -39,6 +39,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -50,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nullable;
 
 /**
  * A FileSystemStore store resources files in the catalog data directory. Each metadata record as a directory in the data directory
@@ -148,25 +148,33 @@ public class FilesystemStore extends AbstractStore {
         return getResourceDescription(context, metadataUuid, visibility, path, approved);
     }
 
+    /**
+     * Get the resource description or null if the file doesn't exist.
+     * @param context the service context.
+     * @param metadataUuid the uuid of the owner metadata record.
+     * @param visibility is the resource is public or not.
+     * @param filePath the path to the resource.
+     * @param approved if the metadata draft has been approved or not
+     * @return the resource description or {@code null} if there is any problem accessing the file.
+     */
     private MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
-                                                    final MetadataResourceVisibility visibility, final Path filePath, Boolean approved)
-            throws IOException {
-        Integer metadataId = null;
+                                                    final MetadataResourceVisibility visibility, final Path filePath, Boolean approved) {
+        FilesystemStoreResource result = null;
 
         try {
-            metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        } catch (Exception e) {
-            Log.error(Geonet.RESOURCES, e.getMessage(), e);
-        }
-
-        long fileSize = -1;
-        try {
-            fileSize = Files.size(filePath);
+            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            long fileSize = Files.size(filePath);
+            result = new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(),
+                settingManager.getNodeURL() + "api/records/", visibility, fileSize,
+                new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
         } catch (IOException e) {
-            Log.error(Geonet.RESOURCES, e.getMessage(), e);
+            Log.error(Geonet.RESOURCES, "Error getting size of file " + filePath + ": "
+                + e.getMessage(), e);
+        } catch (Exception e) {
+            Log.error(Geonet.RESOURCES, "Error in getResourceDescription: "
+                + e.getMessage(), e);
         }
-        return new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
-                                           visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+        return result;
     }
 
     @Override

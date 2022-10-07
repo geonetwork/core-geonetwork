@@ -21,97 +21,104 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_timezone_selector_directive');
+(function () {
+  goog.provide("gn_timezone_selector_directive");
 
-
-  var module = angular.module('gn_timezone_selector_directive', []);
+  var module = angular.module("gn_timezone_selector_directive", []);
 
   /**
    * This directive requires momentjs_timezones and typeahead JS libraries.
    */
-  module.directive('gnTimezoneSelector', ['$interpolate', function($interpolate) {
-    return {
-      restrict: 'A',
-      replace: false,
-      transclude: false,
-      scope: {
-        elementTimezone: '@elementTimezone'
-      },
-      link: function(scope, element, attrs) {
-        var lastValidValue = scope.elementTimezone;
-        $(element).val(lastValidValue);
+  module.directive("gnTimezoneSelector", [
+    "$interpolate",
+    function ($interpolate) {
+      return {
+        restrict: "A",
+        replace: false,
+        transclude: false,
+        scope: {
+          elementTimezone: "@elementTimezone"
+        },
+        link: function (scope, element, attrs) {
+          var lastValidValue = scope.elementTimezone;
+          $(element).val(lastValidValue);
 
-        var userTimezone =  moment.tz.guess(),
-          timezoneNames = [{
-            name: userTimezone,
-            offset: moment.tz(userTimezone).format('Z / z')
-          }];
-        _.forEach(moment.tz.names(), function(tz, index, list) {
-          timezoneNames.push({
-            name: tz,
-            offset: moment.tz(tz).format('Z / z')
-          })
-        });
-        var source = new Bloodhound({
-          datumTokenizer: function(datum) {
-            var name = datum.name + ' ' + datum.offset;
-            var tokens = [name].concat(Bloodhound.tokenizers.nonword(name));
-            if (name.indexOf('_') >= 0) {
-              tokens.push(name.replace('_', ''));
-            }
+          var userTimezone = moment.tz.guess(),
+            timezoneNames = [
+              {
+                name: userTimezone,
+                offset: moment.tz(userTimezone).format("Z / z")
+              }
+            ];
+          _.forEach(moment.tz.names(), function (tz, index, list) {
+            timezoneNames.push({
+              name: tz,
+              offset: moment.tz(tz).format("Z / z")
+            });
+          });
+          var source = new Bloodhound({
+            datumTokenizer: function (datum) {
+              var name = datum.name + " " + datum.offset;
+              var tokens = [name].concat(Bloodhound.tokenizers.nonword(name));
+              if (name.indexOf("_") >= 0) {
+                tokens.push(name.replace("_", ""));
+              }
 
-            var stringSize = name.length;
-            //multiple combinations for every available size
-            //(eg. dog = d, o, g, do, og, dog)
-            for (var size = 2; size <= stringSize; size++) {
-              for (var i = 0; i + size <= stringSize; i++) {
-                var currentToken = name.substr(i, size);
-                tokens.push(currentToken);
-                if (currentToken.indexOf("_") > 0) {
-                  tokens.push(currentToken.replace("_", " "));
+              var stringSize = name.length;
+              //multiple combinations for every available size
+              //(eg. dog = d, o, g, do, og, dog)
+              for (var size = 2; size <= stringSize; size++) {
+                for (var i = 0; i + size <= stringSize; i++) {
+                  var currentToken = name.substr(i, size);
+                  tokens.push(currentToken);
+                  if (currentToken.indexOf("_") > 0) {
+                    tokens.push(currentToken.replace("_", " "));
+                  }
                 }
               }
-            }
 
-            return tokens;
-          },
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          limit: 100,
-          local: timezoneNames
-        });
-
-        element.typeahead({
-          hint: true,
-          highlight: true,
-          minLength: 0
-        }, {
-            name: 'timezones',
-            limit: 1000,
-            source: source.ttAdapter(),
-            display: function (suggestedTz) {
-              return  suggestedTz.name;
+              return tokens;
             },
-            templates: {
-              suggestion: Handlebars.compile('<div>{{name}} (GMT{{offset}})</div>')
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            limit: 100,
+            local: timezoneNames
+          });
+
+          element.typeahead(
+            {
+              hint: true,
+              highlight: true,
+              minLength: 0
+            },
+            {
+              name: "timezones",
+              limit: 1000,
+              source: source.ttAdapter(),
+              display: function (suggestedTz) {
+                return suggestedTz.name;
+              },
+              templates: {
+                suggestion: Handlebars.compile("<div>{{name}} (GMT{{offset}})</div>")
+              }
             }
+          );
+
+          $(element).bind("typeahead:change", function (ev, suggestion) {
+            var normalizedTz = _.find(moment.tz.names(), function (tz) {
+              return suggestion.toLowerCase() === tz.toLowerCase();
+            });
+
+            if (angular.isUndefined(normalizedTz) && suggestion.trim() !== "") {
+              normalizedTz = lastValidValue;
+            } else if (suggestion.trim() === "") {
+              normalizedTz = "";
+            }
+
+            $(element).val(normalizedTz.trim());
+            lastValidValue = normalizedTz;
           });
-
-        $(element).bind('typeahead:change', function(ev, suggestion) {
-          var normalizedTz = _.find(moment.tz.names(), function (tz) {
-            return suggestion.toLowerCase() === tz.toLowerCase();
-          });
-
-          if (angular.isUndefined(normalizedTz) && suggestion.trim() !== '') {
-            normalizedTz = lastValidValue;
-          } else if (suggestion.trim() === '') {
-            normalizedTz = '';
-          }
-
-          $(element).val(normalizedTz.trim());
-          lastValidValue = normalizedTz;
-        });
-      }
-    };
-  }])
+        }
+      };
+    }
+  ]);
 })();

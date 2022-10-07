@@ -21,23 +21,23 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_login');
+(function () {
+  goog.provide("gn_login");
 
+  goog.require("gn");
+  goog.require("gn_cat_controller");
+  goog.require("gn_login_controller");
 
-
-
-  goog.require('gn');
-  goog.require('gn_cat_controller');
-  goog.require('gn_login_controller');
-
-  var module = angular.module('gn_login', [
-    'gn',
-    'gn_login_controller',
-    'gn_cat_controller'
+  var module = angular.module("gn_login", [
+    "gn",
+    "gn_login_controller",
+    "gn_cat_controller"
   ]);
 
-  module.config(['$LOCALES', function($LOCALES) {
-    $LOCALES.push('/../api/i18n/packages/login');
-  }]);
+  module.config([
+    "$LOCALES",
+    function ($LOCALES) {
+      $LOCALES.push("/../api/i18n/packages/login");
+    }
+  ]);
 })();

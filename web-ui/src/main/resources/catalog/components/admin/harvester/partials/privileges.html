@@ -4,37 +4,65 @@
     <span data-translate="">harvestedRecordPrivileges</span>
   </legend>
 
-
-  <div id="gn-harvest-settings-gn-priviliges-ifRecordExistAppendPrivileges"
-       data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' ">
+  <div
+    id="gn-harvest-settings-gn-priviliges-ifRecordExistAppendPrivileges"
+    data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' "
+  >
     <label class="control-label">
-      <input type="checkbox"
-             data-ng-model="harvester.ifRecordExistAppendPrivileges"/>
+      <input type="checkbox" data-ng-model="harvester.ifRecordExistAppendPrivileges" />
       <span data-translate="">ifRecordExistAppendPrivileges</span>
     </label>
     <p class="help-block" data-translate="">ifRecordExistAppendPrivilegesHelp</p>
   </div>
 
-
   <ul id="gn-harvest-settings-gn-priviliges-list" class="list-group">
     <li class="list-group-item">
       <div>
-        <input id="gn-harvest-settings-gn-priviliges-input"
-               class="form-control" data-ng-model="groupSearch.$"
-               placeholder="{{'filter' | translate}}"/>
+        <input
+          id="gn-harvest-settings-gn-priviliges-input"
+          class="form-control"
+          data-ng-model="groupSearch.$"
+          placeholder="{{'filter' | translate}}"
+        />
       </div>
-      </tr>
     </li>
     <li id="gn-harvest-settings-gn-priviliges-buttons" class="list-group-item">
-      <a id="gn-harvest-settings-gn-priviliges-buttons-asc" href='' class="privilege-check-order" ng-click="sorter='checked'">{{'selected' | translate}} &#x2193;</a>
-      <a id="gn-harvest-settings-gn-priviliges-buttons-desc" href='' ng-click="sorter='name'">{{'groups' | translate}} &#x2193;</a>
+      <a
+        id="gn-harvest-settings-gn-priviliges-buttons-asc"
+        href=""
+        class="privilege-check-order"
+        ng-click="sorter='checked'"
+        >{{'selected' | translate}} &#x2193;</a
+      >
+      <a
+        id="gn-harvest-settings-gn-priviliges-buttons-desc"
+        href=""
+        ng-click="sorter='name'"
+        >{{'groups' | translate}} &#x2193;</a
+      >
     </li>
-    <li data-ng-repeat="g in groups" ng-if="keepInternalGroups(g)" class="list-group-item list-group-interne">
-      <input type="checkbox" id="int-group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>
+    <li
+      data-ng-repeat="g in groups"
+      ng-if="keepInternalGroups(g)"
+      class="list-group-item list-group-interne"
+    >
+      <input
+        type="checkbox"
+        id="int-group-{{g['@id']}}"
+        data-ng-model="selectedPrivileges[g['@id']]"
+      />
       <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
-    <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:setSorter" ng-if="removeInternalGroups(g)" class="list-group-item">
-      <input type="checkbox" id="group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>
+    <li
+      data-ng-repeat="g in groups | filter:groupSearch | orderBy:setSorter"
+      ng-if="removeInternalGroups(g)"
+      class="list-group-item"
+    >
+      <input
+        type="checkbox"
+        id="group-{{g['@id']}}"
+        data-ng-model="selectedPrivileges[g['@id']]"
+      />
       <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
   </ul>

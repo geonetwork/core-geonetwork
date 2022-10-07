@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_onlinesrc_service');
+(function () {
+  goog.provide("gn_onlinesrc_service");
 
-  var module = angular.module('gn_onlinesrc_service', [
-  ]);
+  var module = angular.module("gn_onlinesrc_service", []);
 
   /**
    * @ngdoc service
@@ -42,24 +41,35 @@
    * The `gnOnlinesrc` service provides all tools required to manage
    * online resources like method to link or remove all kind of resources.
    */
-  module.factory('gnOnlinesrc', [
-    'gnBatchProcessing',
-    'gnHttp',
-    'gnEditor',
-    'gnCurrentEdit',
-    '$q',
-    '$http',
-    '$window',
-    '$rootScope',
-    '$translate',
-    '$filter',
-    'Metadata',
-    'gnUrlUtils',
-    'gnGlobalSettings',
-    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $window, $rootScope, $translate, $filter, Metadata,
-             gnUrlUtils, gnGlobalSettings) {
-
+  module.factory("gnOnlinesrc", [
+    "gnBatchProcessing",
+    "gnHttp",
+    "gnEditor",
+    "gnCurrentEdit",
+    "$q",
+    "$http",
+    "$window",
+    "$rootScope",
+    "$translate",
+    "$filter",
+    "Metadata",
+    "gnUrlUtils",
+    "gnGlobalSettings",
+    function (
+      gnBatchProcessing,
+      gnHttp,
+      gnEditor,
+      gnCurrentEdit,
+      $q,
+      $http,
+      $window,
+      $rootScope,
+      $translate,
+      $filter,
+      Metadata,
+      gnUrlUtils,
+      gnGlobalSettings
+    ) {
       var reload = false;
       var openCb = {};
 
@@ -68,30 +78,30 @@
        * TODO: Should be the same as in related resource directive
        */
       var protocolIcons = [
-        ['dq-report', 'fa-certificate'],
-        ['legend', 'fa-paint-brush'],
-        ['fcats', 'fa-table'],
-        ['FILE:', 'fa-database'],
-        ['OGC:OWS', 'fa-map'],
-        ['OGC:WMC', 'fa-map'],
-        ['OGC:WM', 'fa-map'],
-        ['OGC:WFS', 'fa-download'],
-        ['OGC:', 'fa-globe'],
-        ['KML:', 'fa-globe'],
-        ['ESRI', 'fa-globe'],
-        ['WWW:LINK', 'fa-link'],
-        ['DB:', 'fa-columns'],
-        ['WWW:DOWNLOAD', 'fa-download']
+        ["dq-report", "fa-certificate"],
+        ["legend", "fa-paint-brush"],
+        ["fcats", "fa-table"],
+        ["FILE:", "fa-database"],
+        ["OGC:OWS", "fa-map"],
+        ["OGC:WMC", "fa-map"],
+        ["OGC:WM", "fa-map"],
+        ["OGC:WFS", "fa-download"],
+        ["OGC:", "fa-globe"],
+        ["KML:", "fa-globe"],
+        ["ESRI", "fa-globe"],
+        ["WWW:LINK", "fa-link"],
+        ["DB:", "fa-columns"],
+        ["WWW:DOWNLOAD", "fa-download"]
       ];
-      var defaultIcon = 'fa-link';
+      var defaultIcon = "fa-link";
       /**
-     * Prepare batch process request parameters.
-     *   - get parameters from onlinesrc form
-     *   - add process name
-     *   - encode URL
-     *   - update name and desc if we add layers
-     */
-      var setParams = function(processName, formParams) {
+       * Prepare batch process request parameters.
+       *   - get parameters from onlinesrc form
+       *   - add process name
+       *   - encode URL
+       *   - update name and desc if we add layers
+       */
+      var setParams = function (processName, formParams) {
         var params = angular.copy(formParams);
         angular.extend(params, {
           process: processName
@@ -103,36 +113,38 @@
       };
 
       /**
-      * Prepare name and description parameters
-      * if we are adding resource with layers.
-      *
-      * Parse all selected layers, extract name
-      * and title to build name and desc params like
-      *   name : name1,name2,name3
-      *   desc : title1,title2,title3
-      */
-      var setLayersParams = function(params) {
-        if (angular.isArray(params.selectedLayers) &&
-            params.selectedLayers.length > 0) {
+       * Prepare name and description parameters
+       * if we are adding resource with layers.
+       *
+       * Parse all selected layers, extract name
+       * and title to build name and desc params like
+       *   name : name1,name2,name3
+       *   desc : title1,title2,title3
+       */
+      var setLayersParams = function (params) {
+        if (angular.isArray(params.selectedLayers) && params.selectedLayers.length > 0) {
           var names = [],
             descs = [];
 
-          angular.forEach(params.selectedLayers, function(layer) {
+          angular.forEach(params.selectedLayers, function (layer) {
             names.push(layer.Name || layer.name);
             descs.push(layer.Title || layer.title);
           });
 
           var addLayersInUrl = params.addLayersInUrl;
 
-          if ((addLayersInUrl != '') && (params.protocol.indexOf('OGC:WMS') >= 0)) {
+          if (addLayersInUrl != "" && params.protocol.indexOf("OGC:WMS") >= 0) {
             params.url = gnUrlUtils.remove(params.url, [addLayersInUrl], true);
-            params.url = gnUrlUtils.append(params.url, addLayersInUrl + '=' + names.join(','));
+            params.url = gnUrlUtils.append(
+              params.url,
+              addLayersInUrl + "=" + names.join(",")
+            );
           }
 
           if (params.wmsResources.addLayerNamesMode == "resourcename") {
             angular.extend(params, {
-              name: names.join(','),
-              desc: descs.join(',')
+              name: names.join(","),
+              desc: descs.join(",")
             });
           }
         }
@@ -144,15 +156,14 @@
         return params;
       };
 
-
-      var refreshForm = function(scope, data) {
+      var refreshForm = function (scope, data) {
         gnEditor.refreshEditorForm(data);
         scope.reload = true;
       };
 
-      var closePopup = function(id) {
+      var closePopup = function (id) {
         if (id) {
-          $(id).modal('hide');
+          $(id).modal("hide");
         }
       };
 
@@ -161,16 +172,20 @@
        * response and reload the updated online resources list.
        * The first save is done in 'runProcessMd'
        */
-      var runProcess = function(scope, params) {
-        return gnBatchProcessing.runProcessMd(params).then(function(data) {
-          refreshForm(scope, $(data.data));
-        }, function(error) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('runProcessError'),
-            error: error,
-            timeout: 0,
-            type: 'danger'});
-        });
+      var runProcess = function (scope, params) {
+        return gnBatchProcessing.runProcessMd(params).then(
+          function (data) {
+            refreshForm(scope, $(data.data));
+          },
+          function (error) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("runProcessError"),
+              error: error,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
       /**
@@ -182,19 +197,22 @@
        * The save is silent, in order not to reload the
        * onlinesrc list on save and on batch success.
        */
-      var runService = function(service, params, scope) {
-        return gnEditor.save(false, true)
-            .then(function() {
-              gnHttp.callService(service, params).success(function() {
-                refreshForm(scope);
-              }).error(function(error) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('runServiceError'),
-                  error: error,
-                  timeout: 0,
-                  type: 'danger'});
+      var runService = function (service, params, scope) {
+        return gnEditor.save(false, true).then(function () {
+          gnHttp
+            .callService(service, params)
+            .success(function () {
+              refreshForm(scope);
+            })
+            .error(function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("runServiceError"),
+                error: error,
+                timeout: 0,
+                type: "danger"
               });
             });
+        });
       };
 
       /**
@@ -209,7 +227,6 @@
        *******************************************
        */
       return {
-
         /**
          * This value is watched from gnOnlinesrcList directive
          * to reload online resources list when it is true
@@ -227,48 +244,52 @@
          *
          * @return {HttpPromise} Future object
          */
-        getAllResources: function(types) {
+        getAllResources: function (types) {
           var linksAndRelatedPromises = [],
-            apiPrefix = '../api/records/' + gnCurrentEdit.uuid,
+            apiPrefix = "../api/records/" + gnCurrentEdit.uuid,
             isArray = angular.isArray(types),
-            defaultRelatedTypes = ['thumbnails', 'onlines'],
+            defaultRelatedTypes = ["thumbnails", "onlines"],
             relatedTypes = [],
             associatedTypes = [];
 
           if (isArray) {
-            var relatedTypeFilterFn = function(t) {
+            var relatedTypeFilterFn = function (t) {
               return defaultRelatedTypes.indexOf(t) !== -1;
             };
             relatedTypes = types.filter(relatedTypeFilterFn);
-            associatedTypes = types.filter(function(t) {
+            associatedTypes = types.filter(function (t) {
               return !relatedTypeFilterFn(t);
             });
           } else {
             relatedTypes = defaultRelatedTypes;
           }
 
-          linksAndRelatedPromises.push($http.get(apiPrefix + '/related?type=' + relatedTypes.join('&type='), {
-            headers: {
-              'Accept': 'application/json'
-            }
-          }));
-          linksAndRelatedPromises.push($http.get(apiPrefix + '/associated?type=' + associatedTypes.join('&type='), {
-            headers: {
-              'Accept': 'application/json'
-            }
-          }));
+          linksAndRelatedPromises.push(
+            $http.get(apiPrefix + "/related?type=" + relatedTypes.join("&type="), {
+              headers: {
+                Accept: "application/json"
+              }
+            })
+          );
+          linksAndRelatedPromises.push(
+            $http.get(apiPrefix + "/associated?type=" + associatedTypes.join("&type="), {
+              headers: {
+                Accept: "application/json"
+              }
+            })
+          );
 
-          var all = $q.all(linksAndRelatedPromises).then(function(result){
+          var all = $q.all(linksAndRelatedPromises).then(function (result) {
             var relations = {};
-            for (var i = 0; i < result.length; i++){
+            for (var i = 0; i < result.length; i++) {
               angular.extend(relations, result[i].data);
             }
-            Object.keys(relations).forEach(function(key) {
+            Object.keys(relations).forEach(function (key) {
               if (defaultRelatedTypes.indexOf(key) === -1) {
                 if (angular.isArray(relations[key])) {
-                  relations[key] = relations[key].map(function(r) {
+                  relations[key] = relations[key].map(function (r) {
                     return new Metadata(r);
-                  })
+                  });
                 }
               }
             });
@@ -289,20 +310,18 @@
          *
          * @return {Object} Containing relations and siblingTypes properties
          */
-        formatResources: function(data, lang, mdLanguage) {
+        formatResources: function (data, lang, mdLanguage) {
           var siblingTypes = [];
           // If multilingual, get current lang url to
           // diplay the resource in the list (img, link)
           // lUrl means localize Url
-          angular.forEach(data.onlines, function(src) {
-            src.lUrl = src.url[lang] ||
-              src.url[mdLanguage] ||
-              src.url[Object.keys(src.url)[0]];
+          angular.forEach(data.onlines, function (src) {
+            src.lUrl =
+              src.url[lang] || src.url[mdLanguage] || src.url[Object.keys(src.url)[0]];
           });
-          angular.forEach(data.thumbnails, function(img) {
-            img.lUrl = img.url[lang] ||
-              img.url[mdLanguage] ||
-              img.url[Object.keys(img.url)[0]];
+          angular.forEach(data.thumbnails, function (img) {
+            img.lUrl =
+              img.url[lang] || img.url[mdLanguage] || img.url[Object.keys(img.url)[0]];
           });
           if (data.siblings) {
             for (var i = 0; i < data.siblings.length; i++) {
@@ -328,13 +347,14 @@
          *
          * @param {string} type of the directive that calls it.
          */
-        onOpenPopup: function(type, additionalParams) {
+        onOpenPopup: function (type, additionalParams) {
           var fn = openCb[type];
           if (angular.isFunction(fn)) {
             openCb[type](additionalParams);
           } else {
-            console.warn('No callback functions available for \'' + type +
-                '\'. Check the type value.');
+            console.warn(
+              "No callback functions available for '" + type + "'. Check the type value."
+            );
           }
         },
 
@@ -350,32 +370,33 @@
          * @param {r} MetadataResource
          * @param {$window} window object
          */
-        openExternalResourceManagement: function(r, $window) {
+        openExternalResourceManagement: function (r, $window) {
           try {
             var url = r.metadataResourceExternalManagementProperties.url;
           } catch (e) {
-            console.log("external management url not defined")
-            return
+            console.log("external management url not defined");
+            return;
           }
 
           var modal = gnCurrentEdit.resourceManagementExternalProperties.modal;
-          var externalManagementWindowsParameters = gnCurrentEdit.resourceManagementExternalProperties.windowParameters;
+          var externalManagementWindowsParameters =
+            gnCurrentEdit.resourceManagementExternalProperties.windowParameters;
 
-          var win = window.open(url, "_blank", externalManagementWindowsParameters)
+          var win = window.open(url, "_blank", externalManagementWindowsParameters);
 
           if (modal) {
-            var ZIndex = $('.modal').css("z-index");
-            $('.modal').css("z-index", 0);
+            var ZIndex = $(".modal").css("z-index");
+            $(".modal").css("z-index", 0);
             var timer = setInterval(function () {
               if (win.closed) {
                 clearInterval(timer);
-                $('.modal').css("z-index", ZIndex);
-                $rootScope.$broadcast('gnFileStoreUploadDone');
+                $(".modal").css("z-index", ZIndex);
+                $rootScope.$broadcast("gnFileStoreUploadDone");
               } else {
                 // whenever user comes back to the browser window give them focus on the popup.
                 // This will simulat a modal
                 if (document.hasFocus()) {
-                  win.focus()
+                  win.focus();
                 }
               }
             }, 250);
@@ -394,7 +415,7 @@
          * @param {string} type of the directive that calls it.
          * @param {function} fn callback to call on `onOpenPopup`
          */
-        register: function(type, fn) {
+        register: function (type, fn) {
           openCb[type] = fn;
         },
 
@@ -412,9 +433,8 @@
          * @param {string} params to send to the batch process
          * @param {string} popupid id of the popup to close after process.
          */
-        add: function(params, popupid) {
-          return runProcess(this,
-              setParams(params.process, params)).then(function() {
+        add: function (params, popupid) {
+          return runProcess(this, setParams(params.process, params)).then(function () {
             closePopup(popupid);
           });
         },
@@ -434,78 +454,37 @@
          * @param {Object} record metadata to link.
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToMd: function(mode, record, popupid) {
+        linkToMd: function (mode, record, popupid) {
           var md = new Metadata(record);
           var params = {
-            process: mode + '-add'
+            process: mode + "-add"
           };
-          if (mode == 'fcats') {
+          if (mode == "fcats") {
             params.uuidref = md.uuid;
+          } else {
+            params[mode + "Uuid"] = md.uuid;
           }
-          else {
-            params[mode + 'Uuid'] = md.uuid;
-          }
-          params[mode + 'Url'] = md.remoteUrl || '';
-          params[mode + 'Title'] = md.title // Remote
-            || md.resourceTitle // not multilingual eg. 19110
-            || md.resourceTitleObject.default;
-          return runProcess(this, params).then(function() {
+          params[mode + "Url"] = md.remoteUrl || "";
+          params[mode + "Title"] =
+            md.title || // Remote
+            md.resourceTitle || // not multilingual eg. 19110
+            md.resourceTitleObject.default;
+          return runProcess(this, params).then(function () {
             closePopup(popupid);
           });
         },
 
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#getIconByProtocol
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * Get display icon depending of the protocol
-         * of the online resource.
-         * To display onlinesrc list
-         *
-         * @param {string} protocol name
-         * @return {string} icon class
-         */
-        getIconByProtocol: function(p) {
-          if (p.type) {
-            for (i = 0; i < protocolIcons.length; ++i) {
-              if (p.type.indexOf(protocolIcons[i][0]) >= 0 ||
-                  p.type.indexOf(protocolIcons[i][0]) >= 0) {
-                return protocolIcons[i][1];
-              }
-            }
+        getApprovedUrl: function (url) {
+          if (
+            gnCurrentEdit.metadata.draft &&
+            url.match(".*/api/records/(.*)/attachments/.*") != null
+          ) {
+            url +=
+              url.indexOf("?") > 0
+                ? "&"
+                : "?" + "approved=" + (gnCurrentEdit.metadata.draft != "y");
           }
-          if (p.protocol) {
-            for (i = 0; i < protocolIcons.length; ++i) {
-              if (p.protocol.indexOf(protocolIcons[i][0]) >= 0 ||
-                  p.protocol.indexOf(protocolIcons[i][0]) >= 0) {
-                return protocolIcons[i][1];
-              }
-            }
-          }
-          return defaultIcon;
-        },
-
-        /**
-         * @ngdoc method
-         * @name gnOnlinesrc#getIconByProtocol
-         * @methodOf gn_onlinesrc.service:gnOnlinesrc
-         *
-         * @description
-         * Get display icon depending of the protocol
-         * of the online resource.
-         * To display onlinesrc list
-         *
-         * @param {string} protocol name
-         * @return {string} icon class
-         */
-        getApprovedUrl: function(url) {
-          if(gnCurrentEdit.metadata.draft
-             && url.match(".*/api/records/(.*)/attachments/.*") != null) {
-             url += (url.indexOf("?") > 0)?"&":"?" + "approved=" + (gnCurrentEdit.metadata.draft != 'y');
-          }
-          return url
+          return url;
         },
 
         /**
@@ -519,20 +498,20 @@
          * @param {Object} params for the batch
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToService: function(params, popupid, addOnlineSrcInDataset) {
+        linkToService: function (params, popupid, addOnlineSrcInDataset) {
           var scope = this;
 
           // Add link of the service in the dataset (optional)
-          var addDatasetToServiceFn = function(r) {
-            var qParams = setParams('dataset-add', params);
+          var addDatasetToServiceFn = function (r) {
+            var qParams = setParams("dataset-add", params);
             if (addOnlineSrcInDataset) {
               return runProcess(scope, {
-                scopedName: qParams.remote ? '' : (qParams.name || ''),
+                scopedName: qParams.remote ? "" : qParams.name || "",
                 uuidref: qParams.uuidSrv,
                 uuid: qParams.uuidDS,
                 url: qParams.url,
                 title: qParams.name,
-                source: qParams.identifier || '',
+                source: qParams.identifier || "",
                 protocol: qParams.protocol,
                 process: qParams.process
               }).then(function () {
@@ -544,32 +523,37 @@
             }
           };
 
-
           // Add link to the dataset in the service
-          var qParams = setParams('service-add', params);
+          var qParams = setParams("service-add", params);
           if (qParams.remote) {
             // We can't update a remote record.
             // Only make link in current dataset.
             addDatasetToServiceFn();
           } else {
-            return gnBatchProcessing.runProcessMd({
-              scopedName: qParams.remote ? '' : (qParams.name || ''),
-              uuidref: qParams.uuidDS,
-              title: qParams.datasetTitle,
-              uuid: qParams.uuidSrv,
-              source: qParams.identifier || '',
-              process: qParams.process
-            }, true).then(addDatasetToServiceFn, function(error) {
-              // Current user may not be able to edit
-              // the targeted dataset. Notify user in this case
-              // that only the service will be updated.
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('linkToServiceError'),
-                msg: $translate.instant('cantAddLinkToDataset'),
-                timeout: 0,
-                type: 'danger'});
-              addDatasetToServiceFn();
-            });
+            return gnBatchProcessing
+              .runProcessMd(
+                {
+                  scopedName: qParams.remote ? "" : qParams.name || "",
+                  uuidref: qParams.uuidDS,
+                  title: qParams.datasetTitle,
+                  uuid: qParams.uuidSrv,
+                  source: qParams.identifier || "",
+                  process: qParams.process
+                },
+                true
+              )
+              .then(addDatasetToServiceFn, function (error) {
+                // Current user may not be able to edit
+                // the targeted dataset. Notify user in this case
+                // that only the service will be updated.
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("linkToServiceError"),
+                  msg: $translate.instant("cantAddLinkToDataset"),
+                  timeout: 0,
+                  type: "danger"
+                });
+                addDatasetToServiceFn();
+              });
           }
         },
 
@@ -585,29 +569,32 @@
          * @param {Object} params for the batch
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToDataset: function(params, popupid, addOnlineSrcToDataset) {
+        linkToDataset: function (params, popupid, addOnlineSrcToDataset) {
           // Define if when linking a service with a dataset
           // a online source element should be added to the dataset
           // first or not.
           var scope = this;
 
-          var addDatasetToServiceFn = function() {
-            var qParams = setParams('dataset-add', params);
+          var addDatasetToServiceFn = function () {
+            var qParams = setParams("dataset-add", params);
 
             return runProcess(scope, {
               // names are equal if no selected layers
               // See #setLayersParams
               // In this case, dataset-add.xsl MUST not add coupledResource
               // So setting it to empty
-              scopedName: params.remote ? '' :
-                (params.name === qParams.name ? '' : qParams.name),
+              scopedName: params.remote
+                ? ""
+                : params.name === qParams.name
+                ? ""
+                : qParams.name,
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
-              url: qParams.remote ? qParams.url : '',
-              title: qParams.remote ? qParams.name : '',
-              source: qParams.identifier || '',
+              url: qParams.remote ? qParams.url : "",
+              title: qParams.remote ? qParams.name : "",
+              source: qParams.identifier || "",
               process: qParams.process
-            }).then(function() {
+            }).then(function () {
               closePopup(popupid);
             });
           };
@@ -615,27 +602,33 @@
           // We can't update a remote record.
           // Only make link in current dataset.
           if (!params.remote && addOnlineSrcToDataset) {
-            var qParams = setParams('onlinesrc-add', params);
-            return gnBatchProcessing.runProcessMd({
-              name: qParams.name,
-              desc: qParams.desc,
-              url: qParams.url,
-              uuidref: qParams.uuidSrv,
-              uuid: qParams.uuidDS,
-              source: qParams.source,
-              protocol: qParams.protocol,
-              process: qParams.process
-            }, true).then(addDatasetToServiceFn, function(error) {
-              // Current user may not be able to edit
-              // the targeted dataset. Notify user in this case
-              // that only the service will be updated.
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('linkToServiceError'),
-                msg: $translate.instant('cantAddLinkToDataset'),
-                timeout: 0,
-                type: 'danger'});
-              addDatasetToServiceFn();
-            });
+            var qParams = setParams("onlinesrc-add", params);
+            return gnBatchProcessing
+              .runProcessMd(
+                {
+                  name: qParams.name,
+                  desc: qParams.desc,
+                  url: qParams.url,
+                  uuidref: qParams.uuidSrv,
+                  uuid: qParams.uuidDS,
+                  source: qParams.source,
+                  protocol: qParams.protocol,
+                  process: qParams.process
+                },
+                true
+              )
+              .then(addDatasetToServiceFn, function (error) {
+                // Current user may not be able to edit
+                // the targeted dataset. Notify user in this case
+                // that only the service will be updated.
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("linkToServiceError"),
+                  msg: $translate.instant("cantAddLinkToDataset"),
+                  timeout: 0,
+                  type: "danger"
+                });
+                addDatasetToServiceFn();
+              });
           } else {
             return addDatasetToServiceFn();
           }
@@ -652,9 +645,8 @@
          * @param {Object} params for the batch
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToSibling: function(params, popupid) {
-          return runProcess(this,
-              setParams('sibling-add', params)).then(function() {
+        linkToSibling: function (params, popupid) {
+          return runProcess(this, setParams("sibling-add", params)).then(function () {
             closePopup(popupid);
           });
         },
@@ -671,24 +663,30 @@
          *
          * @param {Object} thumb the online resource to remove
          */
-        removeThumbnail: function(thumb) {
+        removeThumbnail: function (thumb) {
           var scope = this;
 
           // It is a url thumbnail
-          if (thumb.id.indexOf('resources.get') < 0) {
-            return runProcess(this,
-                setParams('thumbnail-remove', {
-                  id: gnCurrentEdit.id,
-                  thumbnail_url: thumb.id
-                }));
+          if (thumb.id.indexOf("resources.get") < 0) {
+            return runProcess(
+              this,
+              setParams("thumbnail-remove", {
+                id: gnCurrentEdit.id,
+                thumbnail_url: thumb.id
+              })
+            );
           }
           // It is an uploaded tumbnail
           else {
-            return runService('removeThumbnail', {
-              type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
-              id: gnCurrentEdit.id,
-              version: gnCurrentEdit.version
-            }, this);
+            return runService(
+              "removeThumbnail",
+              {
+                type: thumb.title === "thumbnail" ? "small" : "large",
+                id: gnCurrentEdit.id,
+                version: gnCurrentEdit.version
+              },
+              this
+            );
           }
         },
 
@@ -704,14 +702,15 @@
          *
          * @param {Object} onlinesrc the online resource to remove
          */
-        removeOnlinesrc: function(onlinesrc) {
-
-          return runProcess(this,
-              setParams('onlinesrc-remove', {
-                id: gnCurrentEdit.id,
-                url: onlinesrc.lUrl || onlinesrc.url,
-                name: $filter('gnLocalized')(onlinesrc.title)
-              }));
+        removeOnlinesrc: function (onlinesrc) {
+          return runProcess(
+            this,
+            setParams("onlinesrc-remove", {
+              id: gnCurrentEdit.id,
+              url: onlinesrc.lUrl || onlinesrc.url,
+              name: $filter("gnLocalized")(onlinesrc.title)
+            })
+          );
         },
 
         /**
@@ -724,27 +723,30 @@
          *
          * @param {Object} record the metadata to remove
          */
-        removeService: function(record) {
+        removeService: function (record) {
           var params = {
-            uuid: record.uuid,
-            uuidref: gnCurrentEdit.uuid
-          }, service = this;
+              uuid: record.uuid,
+              uuidref: gnCurrentEdit.uuid
+            },
+            service = this;
 
-          gnBatchProcessing.runProcessMd(
-              setParams('services-remove', params)).
-              then(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('serviceDetachedToCurrentRecord'),
-                  timeout: 3
-                });
-                service.reload = true;
-              }, function(error) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('removeServiceError'),
-                  error: error,
-                  timeout: 0,
-                  type: 'danger'});
+          gnBatchProcessing.runProcessMd(setParams("services-remove", params)).then(
+            function (data) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("serviceDetachedToCurrentRecord"),
+                timeout: 3
               });
+              service.reload = true;
+            },
+            function (error) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("removeServiceError"),
+                error: error,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
         },
 
         /**
@@ -758,13 +760,12 @@
          *
          * @param {Object} record the record resource to remove
          */
-        removeDataset: function(record) {
+        removeDataset: function (record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
             uuidref: record.uuid
           };
-          runProcess(this,
-              setParams('datasets-remove', params));
+          runProcess(this, setParams("datasets-remove", params));
         },
 
         /**
@@ -778,11 +779,10 @@
          * @param {string} mode can be 'source', 'parent'
          * @param {Object} record the record to remove
          */
-        removeMdLink: function(mode, record) {
+        removeMdLink: function (mode, record) {
           var params = {};
-          params[mode + 'Uuid'] = record.uuid;
-          runProcess(this,
-              setParams(mode + '-remove', params));
+          params[mode + "Uuid"] = record.uuid;
+          runProcess(this, setParams(mode + "-remove", params));
         },
 
         /**
@@ -796,14 +796,12 @@
          *
          * @param {Object} record the record to remove
          */
-        removeFeatureCatalog: function(record) {
+        removeFeatureCatalog: function (record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: record['@subtype'] ? record.url :
-              record.uuid
+            uuidref: record["@subtype"] ? record.url : record.uuid
           };
-          runProcess(this,
-              setParams('fcats-remove', params));
+          runProcess(this, setParams("fcats-remove", params));
         },
 
         /**
@@ -817,13 +815,12 @@
          *
          * @param {Object} record the record to remove
          */
-        removeSibling: function(record) {
+        removeSibling: function (record) {
           var params = {
             uuid: gnCurrentEdit.uuid,
             uuidref: record.uuid
           };
-          runProcess(this,
-              setParams('sibling-remove', params));
+          runProcess(this, setParams("sibling-remove", params));
         },
 
         /**
@@ -841,24 +838,26 @@
          * @param {String} name the name
          * @param {String} description the description
          */
-        buildOnLineResource: function(url, protocol, name, description) {
-
-          return '<gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
-              '            xmlns:gco="http://www.isotc211.org/2005/gco">' +
-              '  <gmd:CI_OnlineResource>' +
-              '    <gmd:linkage><gmd:URL>' + url +
-              '    </gmd:URL></gmd:linkage>' +
-              '    <gmd:protocol><gco:CharacterString>' +
-              protocol +
-              '    </gco:CharacterString></gmd:protocol>' +
-              '    <gmd:name><gco:CharacterString>' +
-              name +
-              '    </gco:CharacterString></gmd:name>' +
-              '    <gmd:description><gco:CharacterString>' +
-              description +
-              '    </gco:CharacterString></gmd:description>' +
-              '  </gmd:CI_OnlineResource>' +
-              '</gmd:onLine>';
+        buildOnLineResource: function (url, protocol, name, description) {
+          return (
+            '<gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+            '            xmlns:gco="http://www.isotc211.org/2005/gco">' +
+            "  <gmd:CI_OnlineResource>" +
+            "    <gmd:linkage><gmd:URL>" +
+            url +
+            "    </gmd:URL></gmd:linkage>" +
+            "    <gmd:protocol><gco:CharacterString>" +
+            protocol +
+            "    </gco:CharacterString></gmd:protocol>" +
+            "    <gmd:name><gco:CharacterString>" +
+            name +
+            "    </gco:CharacterString></gmd:name>" +
+            "    <gmd:description><gco:CharacterString>" +
+            description +
+            "    </gco:CharacterString></gmd:description>" +
+            "  </gmd:CI_OnlineResource>" +
+            "</gmd:onLine>"
+          );
         },
         /**
          * Specific method used by the geopublisher.
@@ -866,22 +865,25 @@
          *
          * return the XML snippet to include to the form.
          */
-        addFromGeoPublisher: function(layerName, title, node, protocols) {
-
-          var xml = '';
+        addFromGeoPublisher: function (layerName, title, node, protocols) {
+          var xml = "";
 
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
               // TODO : define default description
-              var key = p + 'url';
+              var key = p + "url";
               xml +=
-                  this.buildOnLineResource(node[key], protocols[p].label,
-                  layerName, title + ' (' + protocols[p].label + ')') +
-                  '&&&';
+                this.buildOnLineResource(
+                  node[key],
+                  protocols[p].label,
+                  layerName,
+                  title + " (" + protocols[p].label + ")"
+                ) + "&&&";
             }
           }
           return xml;
         }
       };
-    }]);
+    }
+  ]);
 })();

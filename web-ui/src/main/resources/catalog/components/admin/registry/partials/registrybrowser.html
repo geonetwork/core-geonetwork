@@ -1,28 +1,29 @@
 <div>
   <div class="form-group">
-    <label class="control-label"
-           data-translate="">registryUrl</label>
+    <label class="control-label" data-translate="">registryUrl</label>
     <div class="input-group">
-
-      <input type="url"
-             data-ng-model="registryUrl"
-             class="form-control"
-             placeholder="https://"/>
+      <input
+        type="url"
+        data-ng-model="registryUrl"
+        class="form-control"
+        placeholder="https://"
+      />
 
       <div class="input-group-btn">
-        <button type="button"
-                class="btn btn-default dropdown-toggle"
-                title="{{::'registryList' | translate}}"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false">
+        <button
+          type="button"
+          class="btn btn-default dropdown-toggle"
+          title="{{::'registryList' | translate}}"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           <i class="fa fa-fw fa-th-list"></i>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
           <li data-ng-repeat="r in registries">
-            <a data-ng-click="setDefault(r.url)"
-               title="{{r.url}}">{{r.name}}</a>
+            <a data-ng-click="setDefault(r.url)" title="{{r.url}}">{{r.name}}</a>
           </li>
         </ul>
       </div>
@@ -30,20 +31,31 @@
     <p class="help-block ng-scope" data-translate="">registry-help</p>
   </div>
 
-  <div class="form-group"
-       data-ng-show="registryType === 're3gistry' && languages.length > 0">
-    <label class="form-label"
-           data-translate="">
-      registryChooseLanguages
-    </label>
+  <div
+    class="form-group"
+    data-ng-show="registryType === 're3gistry' && languages.length > 0"
+  >
+    <label class="form-label" data-translate=""> registryChooseLanguages </label>
     <div class="row">
       <div class="col-md-6 gn-nopadding-left">
+        <a href data-ng-click="selectAllRegistryLanguages(true)" data-translate=""
+          >selectAll</a
+        >
+        |
+        <a href data-ng-click="selectAllRegistryLanguages(false)" data-translate=""
+          >selectNone</a
+        >
         <ul class="list-group gn-nopadding-right">
           <li data-ng-repeat="l in languages" class="list-group-item">
-            <label><input type="checkbox"
-                          name="registryLanguage"
-                          data-ng-model="selectedLanguages[l.key]"
-                          value="{{l.key}}"/> {{l.label}}</label>
+            <label
+              ><input
+                type="checkbox"
+                name="registryLanguage"
+                data-ng-model="selectedLanguages[l.key]"
+                value="{{l.key}}"
+              />
+              {{l.label}}</label
+            >
           </li>
         </ul>
       </div>
@@ -53,34 +65,29 @@
     </div>
   </div>
 
-  <div class="form-group"
-       data-ng-show="itemClass.length > 0">
-    <label class="form-label"
-           data-translate="">
-    registryChooseType
-    </label>
-    <select class="form-control"
-            data-ng-options="t as t.label group by t.group for t in itemClass | orderBy:'label' track by t.key"
-            data-ng-model="selectedClassUrl">
+  <div class="form-group" data-ng-show="itemClass.length > 0">
+    <label class="form-label" data-translate=""> registryChooseType </label>
+    <select
+      class="form-control"
+      data-ng-options="t as t.label group by t.group for t in itemClass | orderBy:'label' track by t.key"
+      data-ng-model="selectedClassUrl"
+    >
       <!--<option data-ng-repeat="t in itemClass | orderBy:'label' track by t.key"
               value="{{t}}" title="{{t.description}}">{{t.label}}</option>-->
     </select>
   </div>
 
-  <div class="form-group"
-       data-ng-show="itemClass.length > 0 && !isSimple">
-    <label class="form-label"
-           data-translate="">
-      registryChooseItem
-    </label>
-    <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection"/>
-    <select class="form-control"
-            data-ng-hide="loadingCollection"
-            data-ng-options="i[selectedClass].id as i[selectedClass].label.text for i in itemCollection track by i[selectedClass].id"
-            data-ng-model="selectedCollection"/>
+  <div class="form-group" data-ng-show="itemClass.length > 0 && !isSimple">
+    <label class="form-label" data-translate=""> registryChooseItem </label>
+    <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection" />
+    <select
+      class="form-control"
+      data-ng-hide="loadingCollection"
+      data-ng-options="i[selectedClass].id as i[selectedClass].label.text for i in itemCollection track by i[selectedClass].id"
+      data-ng-model="selectedCollection"
+    />
   </div>
 
-  <input type="hidden" name="registryUrl" value="{{selectedCollection}}">
-  <input type="hidden" name="registryType" value="{{registryType}}">
-
+  <input type="hidden" name="registryUrl" value="{{selectedCollection}}" />
+  <input type="hidden" name="registryType" value="{{registryType}}" />
 </div>

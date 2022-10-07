@@ -21,10 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_map_wmsqueue');
+(function () {
+  goog.provide("gn_map_wmsqueue");
 
-  var module = angular.module('gn_map_wmsqueue', []);
+  var module = angular.module("gn_map_wmsqueue", []);
 
   /**
    * Manage a queuing service for wms/wmts/esri layer that are added to the maps.
@@ -34,94 +34,97 @@
    * which is an array for pending layers, and an error object with one array
    * per maps for layer for which the getCapabilities failed
    */
-  module.service('gnWmsQueue', [function() {
+  module.service("gnWmsQueue", [
+    function () {
+      // wms pending layers list
+      var queue = {};
 
-    // wms pending layers list
-    var queue = {};
+      // wms for which getCapabilities failed
+      var errors = {};
 
-    // wms for which getCapabilities failed
-    var errors = {};
+      this.queue = queue;
+      this.errors = errors;
 
-    this.queue = queue;
-    this.errors = errors;
-
-    var getMapType = function (map) {
-      var type = (map && map.get && map.get('type')) || 'viewer';
-      if (queue[type] === undefined) {
-        queue[type] = [];
-        errors[type] = [];
-      }
-      return type;
-    }
-
-    var getLayerIndex = function(a, layer) {
-      var idx = -1;
-      for (var i = 0; i < a.length; i++) {
-        var o = a[i];
-        if (o.name == layer.name && o.style == layer.style
-          && o.url == layer.url && o.map == layer.map) {
-          idx = i;
+      var getMapType = function (map) {
+        var type = (map && map.get && map.get("type")) || "viewer";
+        if (queue[type] === undefined) {
+          queue[type] = [];
+          errors[type] = [];
         }
-      }
-      return idx;
-    };
-
-    var removeFromArray = function(a, layer) {
-      a.splice(getLayerIndex(a, layer), 1);
-    };
-
-    /**
-     * Add the layer to the queue
-     * @param {string} url
-     * @param {string} name
-     * @param {ol.Map} map
-     */
-    this.add = function(url, name, style, map) {
-      queue[getMapType(map)].push({
-        url: url,
-        name: name,
-        map: map,
-        style: style
-      });
-    };
-
-    this.removeFromQueue = function(layer, map) {
-      removeFromArray(queue[getMapType(map)], layer);
-    };
-
-    /**
-     * Remove the layer from the queue and add it to errors list.
-     * Usually when the getCapabilities failed
-     * @param {Object} layer contains
-     *  url - name - msg
-     */
-    this.error = function(layer, map) {
-      this.removeFromQueue(layer, map);
-      if (getLayerIndex(errors, layer) < 0) {
-        errors[getMapType(map)].push(layer);
-      }
-    };
-
-    this.removeFromError = function(layer, map) {
-      removeFromArray(errors[getMapType(map)], layer);
-    };
-
-    /**
-     *
-     * @param {string} url
-     * @param {string} name
-     * @param {ol.Map} map
-     */
-    this.isPending = function(url, name, style, map) {
-      var layer = {
-        url: url,
-        name: name,
-        map: map,
-        style: style
+        return type;
       };
-      return getLayerIndex(queue[getMapType(map)], layer) >= 0;
-    };
 
-  }]);
+      var getLayerIndex = function (a, layer) {
+        var idx = -1;
+        for (var i = 0; i < a.length; i++) {
+          var o = a[i];
+          if (
+            o.name == layer.name &&
+            o.style == layer.style &&
+            o.url == layer.url &&
+            o.map == layer.map
+          ) {
+            idx = i;
+          }
+        }
+        return idx;
+      };
 
+      var removeFromArray = function (a, layer) {
+        a.splice(getLayerIndex(a, layer), 1);
+      };
+
+      /**
+       * Add the layer to the queue
+       * @param {string} url
+       * @param {string} name
+       * @param {ol.Map} map
+       */
+      this.add = function (url, name, style, map) {
+        queue[getMapType(map)].push({
+          url: url,
+          name: name,
+          map: map,
+          style: style
+        });
+      };
+
+      this.removeFromQueue = function (layer, map) {
+        removeFromArray(queue[getMapType(map)], layer);
+      };
+
+      /**
+       * Remove the layer from the queue and add it to errors list.
+       * Usually when the getCapabilities failed
+       * @param {Object} layer contains
+       *  url - name - msg
+       */
+      this.error = function (layer, map) {
+        this.removeFromQueue(layer, map);
+        if (getLayerIndex(errors, layer) < 0) {
+          errors[getMapType(map)].push(layer);
+        }
+      };
+
+      this.removeFromError = function (layer, map) {
+        removeFromArray(errors[getMapType(map)], layer);
+      };
+
+      /**
+       *
+       * @param {string} url
+       * @param {string} name
+       * @param {ol.Map} map
+       */
+      this.isPending = function (url, name, style, map) {
+        var layer = {
+          url: url,
+          name: name,
+          map: map,
+          style: style
+        };
+        return getLayerIndex(queue[getMapType(map)], layer) >= 0;
+      };
+    }
+  ]);
 })();

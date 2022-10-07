@@ -21,56 +21,61 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_mdview_directive');
+(function () {
+  goog.provide("gn_mdview_directive");
 
-  var module = angular.module('gn_mdview_directive', [
-    'ui.bootstrap.tpls',
-    'ui.bootstrap.rating']);
+  var module = angular.module("gn_mdview_directive", [
+    "ui.bootstrap.tpls",
+    "ui.bootstrap.rating"
+  ]);
 
   /**
    * Directive to set the proper link to open
    * a metadata record in the default angular view
    * or using a formatter.
    */
-  module.directive('gnMetadataOpen', [
-    'gnMdViewObj', 'gnMdView',
-    function(gnMdViewObj, gnMdView) {
+  module.directive("gnMetadataOpen", [
+    "gnMdViewObj",
+    "gnMdView",
+    function (gnMdViewObj, gnMdView) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          md: '=gnMetadataOpen',
-          formatter: '=gnFormatter',
-          records: '=gnRecords',
-          selector: '@gnMetadataOpenSelector',
-          appUrl: '@?'
+          md: "=gnMetadataOpen",
+          formatter: "=gnFormatter",
+          records: "=gnRecords",
+          selector: "@gnMetadataOpenSelector",
+          appUrl: "@?"
         },
-        link: function(scope, element, attrs, controller) {
-          scope.$watch('md', function(n, o) {
-            if (n == null
-                || n == undefined
-                || (n && n.uuid == undefined)
-                || (n && n.remoteUrl !== undefined)) {
+        link: function (scope, element, attrs, controller) {
+          scope.$watch("md", function (n, o) {
+            if (
+              n == null ||
+              n == undefined ||
+              (n && n.uuid == undefined) ||
+              (n && n.remoteUrl !== undefined)
+            ) {
               return;
             }
 
-            var formatter = scope.formatter === undefined || scope.formatter == '' ?
-              undefined :
-              scope.formatter.replace('../api/records/{{uuid}}/formatters/', '');
+            var formatter =
+              scope.formatter === undefined || scope.formatter == ""
+                ? undefined
+                : scope.formatter.replace("../api/records/{{uuid}}/formatters/", "");
 
-            var hyperlinkTagName = 'A';
+            var hyperlinkTagName = "A";
             if (element.get(0).tagName === hyperlinkTagName) {
-             var url =
-                (scope.appUrl || (window.location.pathname + window.location.search))
-                + '#/'
-                + (scope.md.draft == 'y' ? 'metadraf' : 'metadata')
-                + '/' + scope.md.uuid
-                + (scope.formatter === undefined || scope.formatter == ''
-                  ? '' : formatter);
+              var url =
+                (scope.appUrl || window.location.pathname + window.location.search) +
+                "#/" +
+                (scope.md.draft == "y" ? "metadraf" : "metadata") +
+                "/" +
+                scope.md.uuid +
+                (scope.formatter === undefined || scope.formatter == "" ? "" : formatter);
 
-              element.attr('href', url);
+              element.attr("href", url);
             } else {
-              element.on('click', function(e) {
+              element.on("click", function (e) {
                 gnMdView.setLocationUuid(scope.md.uuid, formatter);
               });
             }
@@ -82,157 +87,220 @@
           });
         }
       };
-    }]
-  );
-
+    }
+  ]);
 
   /**
    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
    */
-  module.directive('gnMoreLikeThis', [
-    '$http', 'gnGlobalSettings', 'Metadata',
-    function($http, gnGlobalSettings, Metadata) {
+  module.directive("gnMoreLikeThis", [
+    "$http",
+    "gnGlobalSettings",
+    "Metadata",
+    function ($http, gnGlobalSettings, Metadata) {
       return {
         scope: {
-          md: '=gnMoreLikeThis'
+          md: "=gnMoreLikeThis"
         },
-        templateUrl: function(elem, attrs) {
-          return attrs.template ||
-            '../../catalog/components/search/mdview/partials/' +
-            'morelikethis.html';
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/search/mdview/partials/" + "morelikethis.html"
+          );
         },
-        link: function(scope, element, attrs, controller) {
-          var initSize = attrs['size'] ? parseInt(attrs['size']) : 4;
+        link: function (scope, element, attrs, controller) {
+          var initSize = attrs["size"] ? parseInt(attrs["size"]) : 4;
+          scope.maxSize = attrs["maxSize"] ? parseInt(attrs["maxSize"]) : 12;
           scope.similarDocuments = [];
           scope.size = initSize;
           scope.pageSize = initSize;
-          scope.maxSize = 8;
+          scope.ofSameType =
+            gnGlobalSettings.gnCfg.mods.search.moreLikeThisSameType === true;
+
           var moreLikeThisQuery = {};
-          angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
-          var query = {
-            "_source": {
-              "include": ['id',
-                'uuid',
-                'overview.*',
-                'resource*',
-                'cl_status*'
-              ]
-            },
-            "size": scope.size,
-            "query": {
-              "bool": {
-                "must": [
-                  moreLikeThisQuery,
-                  {"terms": {"isTemplate": ["n"]}}, // TODO: We may want to use it for subtemplate
-                  {"terms": {"draft": ["n", "e"]}}
-                ],
-                "must_not" : [
-                  {"terms": {"uuid": []}}
-                ]}
+          angular.copy(
+            gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig,
+            moreLikeThisQuery
+          );
+
+          var datasetTypes = ["nonGeographicDataset", "dataset"],
+            resourceTypeMapping = {
+              nonGeographicDataset: { label: "dataset", types: datasetTypes },
+              dataset: { label: "dataset", types: datasetTypes },
+              featureCatalog: {
+                label: "records",
+                types: ["featureCatalog"].concat(datasetTypes)
+              }
+            };
+
+          function buildQuery() {
+            var query = {
+              _source: {
+                include: [
+                  "id",
+                  "uuid",
+                  "overview.*",
+                  "resourceTitle*",
+                  "resourceAbstract*",
+                  "resourceType",
+                  "cl_status*"
+                ]
+              },
+              size: scope.size,
+              query: {
+                bool: {
+                  must: [
+                    moreLikeThisQuery,
+                    { terms: { isTemplate: ["n"] } },
+                    // TODO: We may want to use it for subtemplate
+                    { terms: { draft: ["n", "e"] } }
+                  ],
+                  // Exclude self and all related records
+                  must_not: [
+                    {
+                      terms: {
+                        uuid: [scope.md.uuid].concat(
+                          scope.md.related && scope.md.related.uuids
+                            ? scope.md.related.uuids
+                            : []
+                        )
+                      }
+                    }
+                  ]
+                }
+              }
+            };
+            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
+
+            var resourceType = scope.md.resourceType
+              ? scope.md.resourceType[0]
+              : undefined;
+            if (scope.ofSameType && resourceType) {
+              var mapping = resourceTypeMapping[resourceType];
+              scope.label = mapping ? mapping.label : resourceType;
+              query.query.bool.filter = [
+                { terms: { resourceType: mapping ? mapping.types : [resourceType] } }
+              ];
             }
+
+            return query;
+          }
+
+          scope.moreRecords = function () {
+            scope.size += scope.pageSize;
+            loadMore();
           };
 
-          scope.moreRecords = function() {
-            query.size += scope.pageSize;
-            scope.size = query.size;
-            loadMore();
-          }
           function loadMore() {
             if (scope.md == null) {
               return;
             }
-            // Exclude self and all related records
-            query.query.bool.must_not[0].terms.uuid =
-              [scope.md.uuid].concat(scope.md.related && scope.md.related.uuids
-                ? scope.md.related.uuids : [])
-            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
-            $http.post('../api/search/records/_search', query).then(function (r) {
-              scope.similarDocuments = r.data.hits.hits.map(function(r) {
+
+            $http.post("../api/search/records/_search", buildQuery()).then(function (r) {
+              scope.total = r.data.hits.total.value;
+              scope.similarDocuments = r.data.hits.hits.map(function (r) {
                 return new Metadata(r);
               });
-            })
+            });
           }
-          scope.$watch('md', function() {
+
+          scope.$watch("md", function () {
             scope.similarDocuments = [];
             scope.size = initSize;
-            query.size = initSize;
+            scope.pageSize = initSize;
             loadMore();
           });
-
         }
       };
-    }]);
+    }
+  ]);
 
-  module.directive('gnDataPreview', [
-    'gnMapsManager', 'gnMap', 'gnSearchSettings',
-    function(gnMapsManager, gnMap, gnSearchSettings) {
+  module.directive("gnDataPreview", [
+    "gnMapsManager",
+    "gnMap",
+    "gnSearchSettings",
+    function (gnMapsManager, gnMap, gnSearchSettings) {
       return {
         scope: {
-          md: '=gnDataPreview'
+          md: "=gnDataPreview"
         },
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'datapreview.html',
-        controller: ['$scope', '$timeout',
-          function ($scope, $timeout) {
-          $scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
-          $scope.hasExtent = false;
-          $scope.extentLayer = new ol.layer.Vector({
-            source: new ol.source.Vector(),
-            map: $scope.map,
-            style: gnSearchSettings.olStyles.mdExtent
-          });
+        templateUrl:
+          "../../catalog/components/search/mdview/partials/" + "datapreview.html",
+        controller: [
+          "$scope",
+          "$timeout",
+          function (scope, $timeout) {
+            scope.map = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+            scope.hasExtent = false;
+            scope.currentLayer = undefined;
+            scope.extentLayer = new ol.layer.Vector({
+              source: new ol.source.Vector(),
+              map: scope.map,
+              style: gnSearchSettings.olStyles.mdExtent
+            });
 
-          this.addRecordsExtent = function(records) {
-            $scope.extentLayer.getSource().clear();
+            this.addRecordsExtent = function (records) {
+              scope.extentLayer.getSource().clear();
 
-            for (var i = 0; i < records.length; i++) {
-              var feat = gnMap.getBboxFeatureFromMd(records[i],
-                $scope.map.getView().getProjection());
-              $scope.extentLayer.getSource().addFeature(feat);
-              $scope.hasExtent = !!feat.getGeometry();
-            }
+              for (var i = 0; i < records.length; i++) {
+                var feat = gnMap.getBboxFeatureFromMd(
+                  records[i],
+                  scope.map.getView().getProjection()
+                );
+                scope.extentLayer.getSource().addFeature(feat);
+                scope.hasExtent = !!feat.getGeometry();
+              }
 
-            if ($scope.hasExtent) {
-              $timeout(function() {
-                $scope.map.getView().fit(
-                  $scope.extentLayer.getSource().getExtent(),
-                  $scope.map.getSize());
-              }, 100);
-            }
+              if (scope.hasExtent) {
+                $timeout(function () {
+                  scope.map
+                    .getView()
+                    .fit(scope.extentLayer.getSource().getExtent(), scope.map.getSize());
+                }, 100);
+              }
+            };
           }
-        }],
-        link: function(scope, element, attrs, ctrl) {
+        ],
+        link: function (scope, element, attrs, ctrl) {
           if (scope.md) {
-            scope.map.get('creationPromise').then(function() {
+            scope.map.get("creationPromise").then(function () {
               ctrl.addRecordsExtent([scope.md]);
-              scope.md.getLinksByType('OGC:WMS').forEach(function(link) {
-                gnMap.addWmsFromScratch(scope.map, link.url, link.name, false, scope.md);
+              scope.md.getLinksByType("OGC:WMS").forEach(function (link) {
+                gnMap
+                  .addWmsFromScratch(scope.map, link.url, link.name, false, scope.md)
+                  .then(function (layer) {
+                    if (!scope.currentLayer) {
+                      scope.currentLayer = layer;
+                    }
+                  });
               });
-            })
+            });
           }
         }
       };
-    }]);
+    }
+  ]);
 
-  module.directive('gnMetadataDisplay', [
-    'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
+  module.directive("gnMetadataDisplay", [
+    "gnMdView",
+    "gnSearchSettings",
+    function (gnMdView, gnSearchSettings) {
       return {
         scope: true,
-        templateUrl: function(elem, attrs) {
-          return attrs.template ||
-              '../../catalog/components/search/mdview/partials/' +
-              'mdpanel.html';
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/search/mdview/partials/" + "mdpanel.html"
+          );
         },
-        link: function(scope, element, attrs, controller) {
-
+        link: function (scope, element, attrs, controller) {
           var unRegister;
 
-          element.find('.panel-body').append(scope.fragment);
-          scope.dismiss = function() {
+          element.find(".panel-body").append(scope.fragment);
+          scope.dismiss = function () {
             unRegister();
             // Do not close parent mdview
-            if ($('[gn-metadata-display] ~ [gn-metadata-display]')
-                .length == 0) {
+            if ($("[gn-metadata-display] ~ [gn-metadata-display]").length == 0) {
               gnMdView.removeLocationUuid();
             }
             element.remove();
@@ -242,66 +310,69 @@
           if (gnSearchSettings.dismissMdView) {
             scope.dismiss = gnSearchSettings.dismissMdView;
           }
-          unRegister = scope.$on('locationBackToSearchFromMdview', function() {
+          unRegister = scope.$on("locationBackToSearchFromMdview", function () {
             scope.dismiss();
           });
         }
       };
-    }]);
+    }
+  ]);
 
-  module.directive('gnMetadataObjectField', [function() {
+  module.directive("gnMetadataObjectField", [
+    function () {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-          'objectFieldWithLink.html',
-        restrict: 'A',
+        templateUrl:
+          "../../catalog/components/search/mdview/partials/" + "objectFieldWithLink.html",
+        restrict: "A",
         scope: {
-          field: '@gnMetadataObjectField',
-          record: '='
+          field: "@gnMetadataObjectField",
+          record: "="
         }
-      }
-    }]);
+      };
+    }
+  ]);
 
-  module.directive('gnMetadataRate', [
-    '$http', 'gnConfig', 'gnConfigService',
-    function($http, gnConfig, gnConfigService) {
+  module.directive("gnMetadataRate", [
+    "$http",
+    "gnConfig",
+    "gnConfigService",
+    function ($http, gnConfig, gnConfigService) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'rate.html',
-        restrict: 'A',
+        templateUrl: "../../catalog/components/search/mdview/partials/" + "rate.html",
+        restrict: "A",
         scope: {
-          md: '=gnMetadataRate',
-          readonly: '@readonly'
+          md: "=gnMetadataRate",
+          readonly: "@readonly"
         },
 
-        link: function(scope, element, attrs, controller) {
+        link: function (scope, element, attrs, controller) {
           scope.isRatingEnabled = false;
 
-          gnConfigService.load().then(function(c) {
-            var statusSystemRating =
-              gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-            if (statusSystemRating == 'advanced') {
+          gnConfigService.load().then(function (c) {
+            var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+            if (statusSystemRating == "advanced") {
               scope.isUserFeedbackEnabled = true;
             }
-            if (statusSystemRating == 'basic') {
+            if (statusSystemRating == "basic") {
               scope.isRatingEnabled = true;
             }
           });
 
-          scope.$watch('md', function() {
+          scope.$watch("md", function () {
             scope.rate = scope.md ? scope.md.rating : null;
           });
 
-
-          scope.rateForRecord = function() {
-            return $http.put('../api/records/' + scope.md.uuid +
-                             '/rate', scope.rate).success(function(data) {
-              scope.rate = data;
-            });
+          scope.rateForRecord = function () {
+            return $http
+              .put("../api/records/" + scope.md.uuid + "/rate", scope.rate)
+              .success(function (data) {
+                scope.rate = data;
+              });
           };
         }
       };
-    }]
-  );
+    }
+  ]);
 
   /**
    * Directive to provide 3 visualization modes for metadata contacts
@@ -336,96 +407,101 @@
    *      Address organisation 2
    *      Resource provider : user3@mail.com
    */
-  module.directive('gnMetadataContacts', [
-    '$http', '$filter',
-    function($http, $filter) {
+  module.directive("gnMetadataContacts", [
+    "$http",
+    "$filter",
+    function ($http, $filter) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'contact.html',
-        restrict: 'A',
+        templateUrl: "../../catalog/components/search/mdview/partials/" + "contact.html",
+        restrict: "A",
         scope: {
-          mdContacts: '=gnMetadataContacts',
+          mdContacts: "=gnMetadataContacts",
           // Group by 'default', 'role', 'org-role'
-          mode: '@gnMode',
+          mode: "@gnMode",
           // 'icon' or 'list' (default)
-          layout: '@layout'
+          layout: "@layout"
         },
-        link: function(scope, element, attrs, controller) {
-          if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
-            scope.mode = 'default';
+        link: function (scope, element, attrs, controller) {
+          if (["default", "role", "org-role"].indexOf(scope.mode) == -1) {
+            scope.mode = "default";
           }
 
-          scope.calculateContacts = function() {
-            if (scope.mode != 'default') {
-              var groupByOrgAndMailOrName = function(resources) {
-                return _.groupBy(resources,
-                  function(contact) {
-                    if (contact.email) {
-                      return contact.organisation + '#' + contact.email;
-                    } else {
-                      return contact.organisation + '#' + contact.individual;
-                    }
-                  });
+          scope.calculateContacts = function () {
+            if (scope.mode != "default") {
+              var groupByOrgAndMailOrName = function (resources) {
+                return _.groupBy(resources, function (contact) {
+                  if (contact.email) {
+                    return contact.organisation + "#" + contact.email;
+                  } else {
+                    return contact.organisation + "#" + contact.individual;
+                  }
+                });
               };
 
-              var aggregateRoles = function(resources) {
-                return _.map(resources,
-                  function(contact) {
-                    var copy = angular.copy(contact[0]);
-                    angular.extend(copy, {
-                      roles: _.map(contact, 'role')
-                    });
-
-                    return copy;
+              var aggregateRoles = function (resources) {
+                return _.map(resources, function (contact) {
+                  var copy = angular.copy(contact[0]);
+                  angular.extend(copy, {
+                    roles: _.map(contact, "role")
                   });
+
+                  return copy;
+                });
               };
 
-              if (scope.mode == 'role') {
-                var contactsByOrgAndMailOrName =
-                  groupByOrgAndMailOrName(scope.mdContacts);
+              if (scope.mode == "role") {
+                var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(
+                  scope.mdContacts
+                );
 
-                var contactsWithAggregatedRoles =
-                  aggregateRoles(contactsByOrgAndMailOrName);
+                var contactsWithAggregatedRoles = aggregateRoles(
+                  contactsByOrgAndMailOrName
+                );
 
                 /**
                  * Contacts format:
                  *
                  * {
-               *    {[roles]: [{contact1}, {contact2}, ... },
-               *    {[roles]: [{contact3}, {contact4}, ... },
-               * }
+                 *    {[roles]: [{contact1}, {contact2}, ... },
+                 *    {[roles]: [{contact3}, {contact4}, ... },
+                 * }
                  *
                  */
-                scope.mdContactsByRole =
-                  _.groupBy(contactsWithAggregatedRoles, function(c) {
+                scope.mdContactsByRole = _.groupBy(
+                  contactsWithAggregatedRoles,
+                  function (c) {
                     return c.roles;
-                  });
-              } else if (scope.mode == 'org-role') {
+                  }
+                );
+              } else if (scope.mode == "org-role") {
                 /**
                  * Contacts format:
                  *
                  * {
-               *    {organisation1: [{contact1}, {contact2}, ... },
-               *    {organisation2: [{contact3}, {contact4}, ... },
-               * }
+                 *    {organisation1: [{contact1}, {contact2}, ... },
+                 *    {organisation2: [{contact3}, {contact4}, ... },
+                 * }
                  *
                  */
                 scope.orgWebsite = {};
-                scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
-                  function(contact) {
-                    if (contact.website !== '') {
-                     scope.orgWebsite[contact.organisation] = contact.website;
+                scope.mdContactsByOrgRole = _.groupBy(
+                  scope.mdContacts,
+                  function (contact) {
+                    if (contact.website !== "") {
+                      scope.orgWebsite[contact.organisation] = contact.website;
                     }
                     return contact.organisation;
-                  });
+                  }
+                );
 
                 for (var key in scope.mdContactsByOrgRole) {
                   var value = scope.mdContactsByOrgRole[key];
 
                   var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(value);
 
-                  scope.mdContactsByOrgRole[key] =
-                    aggregateRoles(contactsByOrgAndMailOrName);
+                  scope.mdContactsByOrgRole[key] = aggregateRoles(
+                    contactsByOrgAndMailOrName
+                  );
                 }
               }
             }
@@ -438,55 +514,61 @@
            * @param roles
            * @returns {string|*}
            */
-          scope.translateRoles = function(roles) {
+          scope.translateRoles = function (roles) {
             if (roles) {
-              var rolesList = roles.split(',');
+              var rolesList = roles.split(",");
               var roleTranslations = [];
 
-              for(var i = 0; i < rolesList.length; i++) {
-                roleTranslations.push($filter('translate')(rolesList[i]));
+              for (var i = 0; i < rolesList.length; i++) {
+                roleTranslations.push($filter("translate")(rolesList[i]));
               }
 
-              return roleTranslations.join(',');
+              return roleTranslations.join(",");
             } else {
-              return '';
+              return "";
             }
           };
 
-          scope.$watch('mdContacts', function () {
+          scope.$watch("mdContacts", function () {
             scope.calculateContacts();
           });
         }
       };
-    }]
-  );
+    }
+  ]);
 
-  module.directive('gnMetadataIndividual', [
-    '$http', '$filter',
-    function($http, $filter) {
+  module.directive("gnMetadataIndividual", [
+    "$http",
+    "$filter",
+    function ($http, $filter) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-          'individual.html'
-      }}]);
+        templateUrl:
+          "../../catalog/components/search/mdview/partials/" + "individual.html"
+      };
+    }
+  ]);
 
-
-  module.directive('gnKeywordBadges', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive("gnKeywordBadges", [
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-          'keywordBadges.html',
+        templateUrl:
+          "../../catalog/components/search/mdview/partials/" + "keywordBadges.html",
         scope: {
-          record: '=gnKeywordBadges',
-          thesaurus: '=thesaurus'
+          record: "=gnKeywordBadges",
+          thesaurus: "=thesaurus"
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
           scope.allKeywords = scope.record && scope.record.allKeywords;
-          scope.getOrderByConfig = function(thesaurus) {
-            return thesaurus === 'th_regions'
-              ? ['-group','default']
-              : (gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically
-                ? 'default' : '')
+          scope.getOrderByConfig = function (thesaurus) {
+            return thesaurus === "th_regions"
+              ? ["-group", "default"]
+              : gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically
+              ? "default"
+              : "";
           };
         }
-      }}]);
+      };
+    }
+  ]);
 })();

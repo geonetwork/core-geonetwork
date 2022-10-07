@@ -1,14 +1,17 @@
 <div>
-  <tabset class="info-tabset"
-          data-ng-if="mode == 'tabset'">
-    <tab data-ng-repeat="item in relatedConfigUI track by $index"
-         data-ng-if="item.relationFound"
-         heading="{{item.title | translate}}">
-      <div data-gn-related="md"
-           data-user="user"
-           data-layout="{{item.layout}}"
-           data-types="{{item.types}}"
-           data-filter="{{item.filter}}"></div>
+  <tabset class="info-tabset" data-ng-if="mode == 'tabset'">
+    <tab
+      data-ng-repeat="item in relatedConfigUI track by $index"
+      data-ng-if="item.relationFound"
+      heading="{{item.title | translate}}"
+    >
+      <div
+        data-gn-related="md"
+        data-user="user"
+        data-layout="{{item.layout}}"
+        data-types="{{item.types}}"
+        data-filter="{{item.filter}}"
+      ></div>
     </tab>
   </tabset>
 
@@ -20,7 +23,7 @@
       data-layout="{{item.layout}}"
       data-types="{{item.types}}"
       data-filter="{{item.filter}}"
-      data-title="{{item.title | translate}}">
-    </div>
+      data-title="{{item.title | translate}}"
+    ></div>
   </div>
 </div>

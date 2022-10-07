@@ -27,6 +27,7 @@ import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
@@ -40,7 +41,10 @@ import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -51,8 +55,8 @@ import java.util.regex.Pattern;
 public class CMISConfiguration {
     private Session client = null;
 
-    private final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
-    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
+    public final static String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
+    public final static String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
@@ -78,7 +82,16 @@ public class CMISConfiguration {
     private String password;
     private String repositoryId;
     private String repositoryName;
+
+    /**
+     * Property name for storing the metadata uuid that is expected to be a String
+     * It is expected to be in one of the following formats
+     * {Aspect}->{property_name}  - for secondary properties - i.e. P:cm:titled->cm:title
+     * {property_name}  - for primary properties - i.e. cmis:description
+     */
     private String cmisMetadataUUIDPropertyName;
+    private boolean cmisMetadataUUIDSecondaryProperty = false;
+
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -87,6 +100,22 @@ public class CMISConfiguration {
     private Boolean externalResourceManagementModalEnabled;
     private Boolean externalResourceManagementFolderEnabled;
     private String externalResourceManagementFolderRoot;
+
+    /**
+     * Property name for validation status that is expected to be an integer with values of null, 0, 1, 2
+     * (See MetadataResourceExternalManagementProperties.ValidationStatus for code meaning)
+     * Property name follows the same format as cmisMetadataUUIDPropertyName
+     *
+     * If null then validation status will default to UNKNOWN.
+     */
+    private String externalResourceManagementValidationStatusPropertyName;
+    /**
+     * Default value to be used for the validation status.
+     * If null then it will use INCOMPLETE as the default.
+     * Note that if property name is not supplied then it will always default to UNKNOWN
+     */
+    private String externalResourceManagementValidationStatusDefaultValue;
+    private boolean externalResourceManagementValidationStatusSecondaryProperty = false;
 
     /*
      * Enable option to add versioning in the link to the resource.
@@ -110,8 +139,6 @@ public class CMISConfiguration {
     private String browserUrl;
 
     private String atompubUrl;
-
-    private boolean secondaryPropertyExists = false;
 
     @Nonnull
     public String getServicesBaseUrl() {
@@ -245,6 +272,14 @@ public class CMISConfiguration {
         }
 
         this.externalResourceManagementFolderRoot = folderRoot;
+    }
+
+    public String getExternalResourceManagementValidationStatusDefaultValue() {
+        return externalResourceManagementValidationStatusDefaultValue;
+    }
+
+    public void setExternalResourceManagementValidationStatusDefaultValue(String externalResourceManagementValidationStatusDefaultValue) {
+        this.externalResourceManagementValidationStatusDefaultValue = externalResourceManagementValidationStatusDefaultValue;
     }
 
     @Nonnull
@@ -430,14 +465,35 @@ public class CMISConfiguration {
                 Log.error(Geonet.RESOURCES,
                     String.format("Invalid format for property name %s property will not be used", cmisMetadataUUIDPropertyName));
                 this.cmisMetadataUUIDPropertyName = null;
-                this.secondaryPropertyExists = false;
+                this.cmisMetadataUUIDSecondaryProperty = false;
                 return;
             } else {
-                this.secondaryPropertyExists = true;
+                this.cmisMetadataUUIDSecondaryProperty = true;
             }
         }
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
     }
+
+    public String getExternalResourceManagementValidationStatusPropertyName() {
+        return externalResourceManagementValidationStatusPropertyName;
+    }
+
+    public void setExternalResourceManagementValidationStatusPropertyName(String externalResourceManagementValidationStatusPropertyName) {
+        this.externalResourceManagementValidationStatusPropertyName = externalResourceManagementValidationStatusPropertyName;
+        if (!StringUtils.isEmpty(externalResourceManagementValidationStatusPropertyName) && externalResourceManagementValidationStatusPropertyName.contains(CMIS_SECONDARY_PROPERTY_SEPARATOR)) {
+            String[] splitPropertyNames = externalResourceManagementValidationStatusPropertyName.split(Pattern.quote(CMIS_SECONDARY_PROPERTY_SEPARATOR));
+            if (splitPropertyNames.length != 2) {
+                Log.error(Geonet.RESOURCES,
+                    String.format("Invalid format for property name %s property will not be used", externalResourceManagementValidationStatusPropertyName));
+                this.externalResourceManagementValidationStatusPropertyName = null;
+                this.externalResourceManagementValidationStatusSecondaryProperty = false;
+                return;
+            } else {
+                this.externalResourceManagementValidationStatusSecondaryProperty = true;
+            }
+        }
+    }
+
 
     @PostConstruct
     public void init() {
@@ -575,6 +631,35 @@ public class CMISConfiguration {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
                 }
+
+                // Setup default filter. Only include properties that are used by the application.
+                // Having too many may cause performance issues on some systems.
+                // The default is generally an empty string meaning all properties are used.
+                if (StringUtils.isEmpty(client.getDefaultContext().getFilterString())) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context filter.");
+                    // excluding "cmis:secondaryObjectTypeIds" from the list as it could decrease performance on some systems.
+                    client.getDefaultContext().setFilter(new HashSet<>(Arrays.asList(
+                        PropertyIds.NAME,
+                        PropertyIds.OBJECT_ID,
+                        PropertyIds.OBJECT_TYPE_ID,
+                        PropertyIds.BASE_TYPE_ID,
+                        PropertyIds.CREATED_BY,
+                        PropertyIds.CREATION_DATE,
+                        PropertyIds.LAST_MODIFIED_BY,
+                        PropertyIds.LAST_MODIFICATION_DATE,
+                        PropertyIds.CHANGE_TOKEN,
+                        PropertyIds.DESCRIPTION,
+                        PropertyIds.IS_LATEST_VERSION,
+                        PropertyIds.IS_MAJOR_VERSION,
+                        PropertyIds.IS_LATEST_MAJOR_VERSION,
+                        PropertyIds.VERSION_LABEL,
+                        PropertyIds.VERSION_SERIES_ID,
+                        PropertyIds.CONTENT_STREAM_LENGTH,
+                        PropertyIds.CONTENT_STREAM_MIME_TYPE,
+                        PropertyIds.CONTENT_STREAM_FILE_NAME,
+                        PropertyIds.CONTENT_STREAM_ID)));
+                }
+
             } catch (CmisRuntimeException | CmisConnectionException e) {
                 client = null;
                 Log.error(Geonet.RESOURCES,
@@ -604,7 +689,15 @@ public class CMISConfiguration {
     }
 
     public boolean existSecondaryProperty() {
-        return secondaryPropertyExists;
+        return cmisMetadataUUIDSecondaryProperty || externalResourceManagementValidationStatusSecondaryProperty;
+    }
+
+    public boolean existMetadataUUIDSecondaryProperty() {
+        return cmisMetadataUUIDSecondaryProperty;
+    }
+
+    public boolean existExternalResourceManagementValidationStatusSecondaryProperty() {
+        return externalResourceManagementValidationStatusSecondaryProperty;
     }
 
     /**
