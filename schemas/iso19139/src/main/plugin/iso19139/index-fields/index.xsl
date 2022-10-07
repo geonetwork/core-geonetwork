@@ -154,6 +154,10 @@
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
       </xsl:for-each>
 
+      <xsl:for-each select="gmd:hierarchyLevelName">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
+      </xsl:for-each>
+
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
       <indexingDate>
