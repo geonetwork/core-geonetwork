@@ -284,11 +284,12 @@
                 scope.setActiveLayer(null);
                 scope.collapseLayerMenu();
               }
-              // if no layer selected, select the first one
+              // if no layer selected, select the first one with showLayerInfo = true
               if (!scope.getActiveLayer()) {
-                var firstLayer = getFirstLayer(scope.layerTree, false);
-                var firstLayerWithShownInfo = getFirstLayer(scope.layerTree, true);
-                scope.setActiveLayer(firstLayerWithShownInfo || firstLayer);
+                var firstLayer = getFirstLayer(scope.layerTree, true);
+                if (firstLayer) {
+                  scope.setActiveLayer(firstLayer);
+                }
               }
 
               debounce--;
