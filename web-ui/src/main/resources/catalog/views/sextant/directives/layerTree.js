@@ -197,17 +197,18 @@
           scope.layersFromContext = true;
 
           // browse the tree to find the first layer and select it
-          function selectFirstLayer(node) {
-            if (node instanceof ol.layer.Base && !node.get('loading')) {
-              scope.setActiveLayer(node);
-              return true;
+          // if shownInfo = true, will select the first layer with the property showLayerInfo: true
+          function getFirstLayer(node, shownInfo) {
+            if (node instanceof ol.layer.Base && !node.get('loading')
+              && (!shownInfo || node.get('showLayerInfo'))) {
+              return node;
             } else if (Array.isArray(node.nodes)) {
               for (var i = 0; i < node.nodes.length; i++) {
-                if (selectFirstLayer(node.nodes[i])) {
-                  return true;
-                }
+                var found = getFirstLayer(node.nodes[i], shownInfo);
+                if (found) { return found; }
               }
             }
+            return null;
           }
 
           // Build the layer manager tree depending on layer groups
@@ -285,7 +286,9 @@
               }
               // if no layer selected, select the first one
               if (!scope.getActiveLayer()) {
-                selectFirstLayer(scope.layerTree);
+                var firstLayer = getFirstLayer(scope.layerTree, false);
+                var firstLayerWithShownInfo = getFirstLayer(scope.layerTree, true);
+                scope.setActiveLayer(firstLayerWithShownInfo || firstLayer);
               }
 
               debounce--;

@@ -401,6 +401,10 @@ var OWC_0_3_1_Module_Factory = function() {
       }, {
         n: 'annotationsId',
         t: 'a'
+      }, {
+        n: 'showLayerInfo',
+        ti: 'Boolean',
+        t: 'a'
       }
       // end sextant specific
       ]

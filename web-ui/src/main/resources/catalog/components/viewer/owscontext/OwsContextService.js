@@ -632,6 +632,7 @@
               }]
             },
             annotationsId: layer.get('annotationsUuid'),
+            showLayerInfo: layer.get('showLayerInfo'),
             // end sextant specific
 
             server: [{
@@ -772,6 +773,7 @@
             olL.set('metadata_url', layer.metadataUrl);
             olL.set('qi_list', layer.qiList);
             olL.set('annotationsUuid', layer.annotationsId);
+            olL.set('showLayerInfo', layer.showLayerInfo);
             // end sextant specific
 
             olL.setOpacity(layer.opacity);
@@ -814,6 +816,7 @@
                   olL.set('metadata_url', layer.metadataUrl);
                   olL.set('qi_list', layer.qiList);
                   olL.set('annotationsUuid', layer.annotationsId);
+                  olL.set('showLayerInfo', layer.showLayerInfo);
                   // end sextant specific
 
                   olL.set('tree_index', index);
