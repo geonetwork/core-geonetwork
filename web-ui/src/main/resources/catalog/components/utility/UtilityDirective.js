@@ -2356,8 +2356,8 @@
           if (angular.isDefined(scope.displayTitleAs)) {
             scope.$watch("model", function (n, o) {
               if (
-                (n !== o && n != "" && scope.property === "_id") ||
-                (n != "" && scope.property === "_id" && scope.current === undefined)
+                (n !== o && !!n && scope.property === "_id") ||
+                (!!n && scope.property === "_id" && scope.current === undefined)
               ) {
                 scope.current = undefined;
 
