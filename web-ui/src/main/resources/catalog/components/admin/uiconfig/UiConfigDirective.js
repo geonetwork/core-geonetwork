@@ -47,7 +47,8 @@
     "gnGlobalSettings",
     "gnProjService",
     "$translate",
-    function (gnGlobalSettings, gnProjService, $translate) {
+    "$templateCache",
+    function (gnGlobalSettings, gnProjService, $translate, $templateCache) {
       return {
         restrict: "A",
         scope: {
@@ -60,6 +61,29 @@
           var testAppUrl = "../../catalog/views/api/?config=";
 
           scope.optionsToAdd = undefined;
+
+          scope.uiSelectedOptions = [];
+
+          scope.$watchCollection("uiSelectedOptions", function (n, o) {
+            console.log("$watchCollection uiSelectedOptions:", n);
+          });
+
+          $templateCache.put("multiselect.tpl.html",
+            "<div class=\"btn-group\">\n" +
+            "  <button tabindex=\"{{tabindex}}\" title=\"{{header}}\" type=\"button\" class=\"btn btn-default dropdown-toggle\" ng-click=\"toggleSelect()\" ng-disabled=\"disabled\" ng-class=\"{'error': !valid()}\">\n" +
+            "    <div ng-style=\"maxWidth\" style=\"width: 300px; padding-right: 13px; overflow: hidden; text-overflow: ellipsis;\">{{header}}</div><span class=\"caret\" style=\"position:absolute;right:10px;top:14px;\"></span>\n" +
+            "  </button>\n" +
+            "  <ul class=\"dropdown-menu\" style=\"width: 300px; margin-bottom:30px;padding-left:5px;padding-right:5px;\" ng-style=\"ulStyle\">\n" +
+            "    <input ng-show=\"items.length > filterAfterRows\" ng-model=\"filter\" style=\"width: 150px; padding: 0px 3px;margin-right: 35px; margin-bottom: 4px;\" placeholder=\"Type to filter options\">" +
+            "    <input ng-show=\"items.length > filterAfterRows\" ng-model=\"filterActive\" type=\"checkbox\" style=\"position: absolute; left: 160px; top: 7px;\" title=\"Show only selected items\">" +
+            "    <li data-stopPropagation=\"true\" ng-repeat=\"i in items | filter:filter | filter:activeFilter\" ng-class=\"{'dropdown-header': i.header, 'divider': i.divider}\">\n" +
+            "      <a ng-if=\"!i.header && !i.divider\" ng-click=\"select($event, i)\" style=\"padding:3px 10px;cursor:pointer;\" ng-style=\"i.style\">\n" +
+            "        <i class=\"fa\" ng-class=\"{'fa-check': i.checked, 'empty': !i.checked}\"></i> {{i.label}}" +
+            "      </a>\n" +
+            "      <span ng-if=\"i.header\">{{i.label}}</span>" +
+            "    </li>\n" +
+            "  </ul>\n" +
+            "</div>");
 
           var preferredKey = [
             "mods.header.languages",
@@ -167,6 +191,14 @@
           });
 
           scope.configOptions = collectConfigOption(gnGlobalSettings.getDefaultConfig());
+          console.log("configOptions", scope.configOptions);
+
+          scope.optionsToAdd = scope.configOptions[5];
+          scope.jsonConfig = addOptionToConfig(scope.optionsToAdd, scope.jsonConfig);
+
+          scope.configOptionsHeaders = _.uniq(_.map(scope.configOptions, 'group'));
+          console.log("configOptionsHeaders", scope.configOptionsHeaders);
+
           scope.previousConfig = undefined;
 
           function init(setPrevious) {
@@ -181,8 +213,22 @@
               gnGlobalSettings.getDefaultConfig(),
               scope.jsonConfig
             );
+
+            scope.configOptionsHeaders = []; //_.keys(scope.finalConfig.mods);
+            console.log("configOptionsHeaders keys:", scope.configOptionsHeaders);
+
+            angular.forEach( _.keys(scope.finalConfig.mods), function(key) {
+              scope.configOptionsHeaders.push({
+                id: key,
+                name: $translate.instant('ui-mod-' + key)
+              })
+              console.log("scope.configOptionsHeaders translation: ",  $translate.instant('ui-mod-' + key));
+            })
           }
 
+          scope.isUiSectionSelected = function(opt) {
+            return _.findIndex(scope.uiSelectedOptions, { id: opt }) > -1;
+          }
           scope.$watch(
             "config",
             function (n, o) {
