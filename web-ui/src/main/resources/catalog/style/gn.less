@@ -70,6 +70,9 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+.btn-help {
+  background-color: #e2edf7 !important;
+}
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -97,11 +100,14 @@ div[gn-transfer-ownership] * .list-group {
 }
 // help button
 [data-gn-need-help] {
-  margin-top: 10px;
+  margin-bottom: 10px !important;
 }
 .panel-heading {
   [data-gn-need-help] {
-    margin-top: 0;
+    margin-bottom: 0 !important;
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
   }
 }
 
@@ -451,7 +457,7 @@ div.gn-scroll-spy {
     border-top: 1px solid @modal-footer-border-color;
     padding: 15px;
     [data-gn-need-help] {
-      margin-top: 0;
+      margin-bottom: 0 !important;
       border: 0;
       font-size: 18px;
     }
