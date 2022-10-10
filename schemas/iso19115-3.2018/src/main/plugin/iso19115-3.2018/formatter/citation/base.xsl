@@ -35,7 +35,9 @@
       <xsl:for-each select="$authors">
         <author>
           <xsl:variable name="name"
-                        select=".//cit:individual/*/cit:name[1]"/>
+                        select="if (normalize-space(.//cit:individual/*/cit:name[1]) != '')
+                                then .//cit:individual/*/cit:name[1]
+                                else cit:party/*/cit:name"/>
 
           <xsl:for-each select="$name">
             <xsl:call-template name="get-iso19115-3.2018-localised">

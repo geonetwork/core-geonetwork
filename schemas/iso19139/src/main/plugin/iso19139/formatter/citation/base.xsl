@@ -40,7 +40,9 @@
       <xsl:for-each select="$authors">
         <author>
           <xsl:variable name="name"
-                        select=".//gmd:individualName[1]"/>
+                        select="if (normalize-space(.//gmd:individualName[1]) != '')
+                                then .//gmd:individualName[1]
+                                else .//gmd:organisationName"/>
 
           <xsl:for-each select="$name">
             <xsl:call-template name="localised">
