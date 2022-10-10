@@ -562,9 +562,8 @@
         }
         if (parsedDate.isValid()) {
           if (!!timezone) {
-            parsedDate = parsedDate.tz(
-              timezone === "Browser" ? moment.tz.guess() : timezone
-            );
+            var tz = moment.tz(timezone === "Browser" ? moment.tz.guess() : timezone);
+            parsedDate = parsedDate.utcOffset(tz.utcOffset());
           }
           var fromNow = parsedDate.fromNow();
 
