@@ -18,13 +18,6 @@
       </a>
     </li>
 
-    <li data-ng-if="user.isReviewerOrMore()">
-      <a data-gn-click-and-spin="mdService.deleteMd(md)"
-         data-gn-confirm-click="{{::('deleteRecordConfirm' | translate:md)}}">
-        <i class="fa fa-trash-o"></i>
-        <span translate>delete</span>
-      </a>
-    </li>
     <li data-ng-if="!user.isReviewerOrMore()"
         class="disabled"><a href="">
       <i class="fa fa-trash-o"></i><span
@@ -61,6 +54,15 @@
         2. Reject metadata (id = 5)
         3. Retire metadata (id = 3)
     -->
+
+    <li data-ng-if="user.isReviewerOrMore()">
+      <a data-gn-click-and-spin="mdService.deleteMd(md)"
+         data-gn-confirm-click="{{::('deleteRecordConfirm' | translate:md)}}">
+        <i class="fa fa-trash-o"></i>
+        <span translate>delete</span>
+      </a>
+    </li>
+
     <li role="menuitem" class="divider"
         data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)">
     </li>
