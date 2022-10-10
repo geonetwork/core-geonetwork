@@ -211,11 +211,17 @@
                       </div>
 
                       <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                        <input
+                          type="hidden"
+                          id="{{s.name}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                        />
                         <div
-                          data-gn-metadata-selector="s.value"
-                          data-search-obj="metadataTemplateSearchObj"
-                          data-md="defaultMetadataTemplate"
-                          data-element-name="{{s.name}}"
+                          data-gn-suggest="metadataTemplateSearchObj"
+                          data-gn-suggest-model="s.value"
+                          data-gn-suggest-property="_id"
+                          data-gn-suggest-display-title="span"
                         />
                       </div>
 

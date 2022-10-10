@@ -140,6 +140,21 @@
         delete p.forcedLanguage;
       }
 
+      function addSortBy(params, sortBy, sortOrder) {
+        if (sortBy) {
+          var sort = {},
+            orders = sortOrder.split(",", -1);
+          params.sort = [];
+          sortBy.split(",", -1).forEach(function (value, idx) {
+            if (value != "relevance") {
+              sort[getFieldName(mappingFields, value)] = orders[idx] || "asc";
+              params.sort.push(sort);
+            }
+          });
+          params.sort.push("_score");
+        }
+      }
+
       /**
        * Build all clauses to be added to the Elasticsearch
        * query from current parameters.
@@ -402,15 +417,8 @@
         if (p.to) {
           params.size = p.to + 1 - p.from;
         }
-        if (p.sortBy) {
-          var sort = {};
-          params.sort = [];
-          if (p.sortBy != "relevance") {
-            sort[getFieldName(mappingFields, p.sortBy)] = p.sortOrder || "asc";
-            params.sort.push(sort);
-          }
-          params.sort.push("_score");
-        }
+
+        addSortBy(params, p.sortBy, p.sortOrder);
 
         params.query = query;
 
@@ -479,8 +487,11 @@
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
+        addSortBy(params, currentSearch.params.sortBy, currentSearch.params.sortOrder);
+
         try {
-          params.query.function_score.query.bool.must[0].multi_match.query = any;
+          params.query.function_score.query.bool.must[0].multi_match.query =
+            any === "*" ? "" : any;
 
           filterPermalinkFlags(currentSearch.params, currentSearch.state);
 
@@ -501,6 +512,14 @@
             luceneQueryString,
             currentSearch.state
           );
+
+          params._source = field
+            ? [field + "*"]
+            : gnGlobalSettings.gnCfg.mods.search.autocompleteConfig._source || [
+                "resourceTitle*"
+              ];
+
+          params.size = gnGlobalSettings.gnCfg.mods.search.autocompleteConfig.size || 10;
 
           return params;
         } catch (e) {

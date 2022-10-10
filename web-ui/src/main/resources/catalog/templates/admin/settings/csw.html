@@ -1,4 +1,4 @@
-<div class="row" data-ng-controller="GnSearchController">
+<div class="row">
   <div class="col-md-12">
     <span data-ng-controller="GnCSWSettingsController">
       <div class="panel panel-default">
@@ -34,16 +34,18 @@
               <label for="serviceList"
                 >{{'system/csw/capabilityRecordUuid' | translate}}</label
               >
-
-              <div
-                data-gn-metadata-selector="cswSettings['system/csw/capabilityRecordUuid']"
-                data-search-obj="serviceRecordSearchObj"
-                data-md="cswServiceRecord"
-                data-ng-show="cswSettings['system/csw/enable']"
-                data-element-name="system/csw/capabilityRecordUuid"
-                id="serviceList"
+              <input
+                type="hidden"
+                name="system/csw/capabilityRecordUuid"
+                value="{{cswSettings['system/csw/capabilityRecordUuid']}}"
+                data-ng-model="cswSettings['system/csw/capabilityRecordUuid']"
               />
-
+              <div
+                data-gn-suggest="serviceRecordSearchObj"
+                data-gn-suggest-model="cswSettings['system/csw/capabilityRecordUuid']"
+                data-gn-suggest-property="_id"
+                data-gn-suggest-display-title="span"
+              />
               <p class="help-block">
                 {{'system/csw/capabilityRecordUuid-help' | translate}}
               </p>
