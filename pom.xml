@@ -1550,7 +1550,7 @@
     <springboot.version>2.2.2.RELEASE</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
 
-    <metrics.version>2.1.1</metrics.version>
+    <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
