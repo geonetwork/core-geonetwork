@@ -728,7 +728,8 @@
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:value-of select="*/gmd:organisationName|*/gmd:individualName"/>
+          <xsl:apply-templates mode="render-value-no-breaklines"
+                               select="*/gmd:organisationName|*/gmd:individualName"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
