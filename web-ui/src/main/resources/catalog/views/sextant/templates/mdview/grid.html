@@ -14,9 +14,8 @@
           <!-- </a> -->
 
         <div class="row gn-md-title">
-          <!--Icon for types - usually only one-->
-          <span class="fa" data-ng-class="::md.icon.cls"
-                title="{{::md.icon.title | translate}}"></span>
+          <span class="fa gn-icon-{{md.resourceType[0]}}"
+                title="{{md.resourceType[0] | translate}}"></span>
 
           <h4 title="{{::md.resourceTitle}}" class="gn-break">
             <a gn-metadata-open="::md" sxt-truncate>

@@ -41,39 +41,6 @@
     this.feedMd = function(scope) {
       var md = scope.md;
 
-      if (md.resourceType) {
-        if(md.resourceType.indexOf('dataset')>=0) {
-          md.icon = {cls: 'fa-database', title: 'dataset'}
-        }
-        else if(md.resourceType.indexOf('series')>=0) {
-          md.icon = {cls: 'fa-database', title: 'series'}
-        }
-        else if(md.resourceType.indexOf('software')>=0) {
-          md.icon = {cls: 'fa-hdd-o', title: 'software'}
-        }
-        else if(md.resourceType.indexOf('map')>=0) {
-          md.icon = {cls: 'fa-globe', title: 'map'}
-        }
-        else if(md.resourceType.indexOf('application')>=0) {
-          md.icon = {cls: 'fa-hdd-o', title: 'application'}
-        }
-        else if(md.resourceType.indexOf('basicgeodata')>=0) {
-          md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
-        }
-        else if(md.resourceType.indexOf('service')>=0) {
-          md.icon = {cls: 'fa-globe', title: 'service'}
-        }
-        else if(md.resourceType.indexOf('repository')>=0) {
-          md.icon = {cls: 'fa-folder-open', title: 'repository'}
-        }
-        else if(md.resourceType.indexOf('document')>=0) {
-          md.icon = {cls: 'fa-file', title: 'document'}
-        }
-        else if(md.resourceType.indexOf('initiative')>=0) {
-          md.icon = {cls: 'fa-group', title: 'initiative'}
-        }
-      }
-
       var status = md.mdStatus;
       var user = scope.user;
       scope.cantStatus = user && ((status == 4 || status == 2 || status == 3)
