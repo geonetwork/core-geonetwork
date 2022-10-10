@@ -321,6 +321,11 @@
                 }
                 return angular.isFunction(fn);
               };
+
+              scope.getOrderBy = function (link) {
+                return link && link.resourceTitle ? link.resourceTitle : link.locTitle;
+              };
+
               scope.externalViewerAction = function(mainType, link, md) {
                 gnExternalViewer.viewService(md, link);
               };

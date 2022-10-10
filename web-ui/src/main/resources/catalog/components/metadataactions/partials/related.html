@@ -10,7 +10,7 @@
                        badge = getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
-         data-ng-repeat="r in items track by $index">
+         data-ng-repeat="r in items | orderBy:getOrderBy">
       <div class="gn-related-icon-col col-xs-12 col-sm-12">
         <h5 data-ng-class="{'hidden': $index != 0}">
           <!-- Sextant specific
