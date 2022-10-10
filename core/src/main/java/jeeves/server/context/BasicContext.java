@@ -49,7 +49,7 @@ public class BasicContext {
 
     private final ConfigurableApplicationContext jeevesApplicationContext;
 
-    protected Logger logger = Log.createLogger(BasicContext.class,Log.JEEVES_MARKER);
+    protected Logger logger = Log.createLogger(BasicContext.class, Log.JEEVES_MARKER);
     protected Map<String, Object> htContexts;
     private String baseUrl;
     private EntityManager entityManager;

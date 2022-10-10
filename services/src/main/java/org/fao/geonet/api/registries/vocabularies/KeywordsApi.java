@@ -272,9 +272,8 @@ public class KeywordsApi {
 
         KeywordsSearcher searcher;
         // perform the search and save search result into session
-        if (Log.isDebugEnabled("KeywordsManager")) {
-            Log.debug("KeywordsManager", "Creating new keywords searcher");
-        }
+        Log.debug("KeywordsManager", "Creating new keywords searcher");
+
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
         String thesauriDomainName = null;

@@ -42,7 +42,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jeeves.server.context.ServiceContext;
 
+import static org.fao.geonet.constants.Geonet.DATA_MANAGER_MARKER;
+
 public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
+
+    final private static org.apache.logging.log4j.Logger LOGGER = Log.createLogger(BaseMetadataSchemaUtils.class, DATA_MANAGER_MARKER);
 
     @Autowired
     private SchemaManager schemaManager;
@@ -124,13 +128,15 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
     String autodetectSchema(Element md, String defaultSchema)
         throws SchemaMatchConflictException, NoSchemaMatchesException {
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER,
-                "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName() + "'\n * with namespace:'"
-                    + md.getNamespace() + "\n * with additional namespaces:" + md.getAdditionalNamespaces().toString());
+        LOGGER.debug(DATA_MANAGER_MARKER,
+                "Autodetect schema for metadata with :\n" +
+                " * root element:'{}'\n" +
+                " * with namespace:'{}\n" +
+                " * with additional namespaces: {}",
+                    md.getQualifiedName(), md.getNamespace(), md.getAdditionalNamespaces());
+
         String schema = schemaManager.autodetectSchema(md, defaultSchema);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Schema detected was " + schema);
+        LOGGER.debug(DATA_MANAGER_MARKER, "Schema detected was {}", schema);
         return schema;
     }
 }

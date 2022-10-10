@@ -115,9 +115,7 @@ public class GetKeywords {
             // perform the search and save search result into session
             ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
 
-            if (Log.isDebugEnabled("KeywordsManager")) {
-                Log.debug("KeywordsManager", "Creating new keywords searcher");
-            }
+            Log.debug("KeywordsManager", "Creating new keywords searcher");
             searcher = new KeywordsSearcher(context, thesaurusMan);
 
             IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);

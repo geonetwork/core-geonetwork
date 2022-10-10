@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
@@ -62,9 +63,20 @@ import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.*;
 
+import static org.fao.geonet.constants.Geonet.DATA_MANAGER_MARKER;
+import static org.fao.geonet.constants.Geonet.EDITOR_SESSION_MARKER;
+import static org.fao.geonet.constants.Geonet.GEONETWORK_MARKER;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
+/**
+ * Facade class orchestrating common interactions for edit sessions and data management.
+ */
 public class BaseMetadataUtils implements IMetadataUtils {
+    final private static Logger LOGGER = Log.createLogger(BaseMetadataUtils.class, EDITOR_SESSION_MARKER);
+
+    final private static Logger DATA_MANAGER_LOGGER = Log.createLogger(BaseMetadataUtils.class, DATA_MANAGER_MARKER);
+
+    final private static Logger GEONETWORK_LOGGER = Log.createLogger(BaseMetadataUtils.class,GEONETWORK_MARKER);
     @Autowired
     private MetadataRepository metadataRepository;
 
@@ -151,9 +163,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
-        }
+        LOGGER.debug(EDITOR_SESSION_MARKER, "Editing session starts for record {}", id);
 
         boolean keepXlinkAttributes = true;
         boolean forEditing = false;
@@ -174,15 +184,14 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Element metadataBeforeAnyChanges = (Element) session
             .getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
 
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION, "Editing session end. Cancel changes. Restore record " + id
-                + ". Replace by original record which was: ");
-        }
+        LOGGER.debug(EDITOR_SESSION_MARKER,
+            "Editing session end. Cancel changes. Restore record {}."
+            + " Replace by original record which was: ",
+            id);
 
         if (metadataBeforeAnyChanges != null) {
-            if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-                Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
-                Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
+            if (LOGGER.isDebugEnabled(EDITOR_SESSION_MARKER)) {
+                LOGGER.debug(EDITOR_SESSION_MARKER, " > restoring record: \n{}", Xml.getString(metadataBeforeAnyChanges));
             }
             Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             boolean validate = false;
@@ -193,10 +202,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
                 index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), true);
             endEditingSession(id, session);
         } else {
-            if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-                Log.debug(Geonet.EDITOR_SESSION, " > nothing to cancel for record " + id
-                    + ". Original record was null. Use starteditingsession to.");
-            }
+            LOGGER.debug(EDITOR_SESSION_MARKER,
+                " > nothing to cancel for record {}."
+                + ". Original record was null. Use starteditingsession to.",
+                id);
         }
     }
 
@@ -205,9 +214,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public void endEditingSession(String id, UserSession session) {
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
-        }
+        LOGGER.debug(EDITOR_SESSION_MARKER, "Editing session end.");
         session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
 
         metadataManager.getEditLib().clearVersion(id);
@@ -233,8 +240,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
         String uuid = Xml.transform(md, styleSheet).getText().trim();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '" + uuid + "' for schema '" + schema + "'");
+        DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
+            "Extracted UUID '{}' for schema '{}'", uuid, schema);
 
         // --- needed to detach md from the document
         md.detach();
@@ -250,8 +257,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DEFAULT_LANGUAGE);
         String defaultLanguage = Xml.transform(md, styleSheet).getText().trim();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted default language '" + defaultLanguage + "' for schema '" + schema + "'");
+        DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
+            "Extracted default language '{}' for schema '{}'", defaultLanguage, schema);
 
         // --- needed to detach md from the document
         md.detach();
@@ -278,8 +285,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
             }
         });
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted title '" + titles + "' for schema '" + schema + "'");
+        DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
+        "Extracted title '{}' for schema '{}}'", titles, schema);
 
         // --- needed to detach md from the document
         md.detach();
@@ -318,8 +325,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATE_MODIFIED);
         String dateMod = Xml.transform(md, styleSheet).getText().trim();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted Date Modified '" + dateMod + "' for schema '" + schema + "'");
+        DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
+        "Extracted Date Modified '{}}' for schema '{}}'", dateMod, schema);
 
         // --- needed to detach md from the document
         md.detach();
@@ -363,8 +370,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public Element extractSummary(Element md) throws Exception {
         Path styleSheet = stylePath.resolve(Geonet.File.METADATA_BRIEF);
         Element summary = Xml.transform(md, styleSheet);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n" + Xml.getString(summary));
+        if (DATA_MANAGER_LOGGER.isDebugEnabled(DATA_MANAGER_MARKER))
+            DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER, "Extracted summary '\n{}", Xml.getString(summary));
 
         // --- needed to detach md from the document
         md.detach();
@@ -521,10 +528,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
             }
         } else {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER,
+            DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
                     "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
-            }
         }
     }
 
@@ -547,8 +552,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         // calculate new rating
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:" + metadataId + " --> rating is:" + newRating);
+        DATA_MANAGER_LOGGER.debug(DATA_MANAGER_MARKER,
+            "Setting rating for id:{} --> rating is:{}", metadataId, newRating);
 
         metadataRepository.update(metadataId, new Updater<Metadata>() {
             @Override
@@ -823,9 +828,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
         try {
             metadata = metadataRepository.findOneByUuid(uuid);
         } catch (IncorrectResultSizeDataAccessException e){
-            Log.warning(Geonet.GEONETWORK, String.format(
-                "More than one record found with UUID '%s'. Error is '%s'.",
-                uuid, e.getMessage()));
+            GEONETWORK_LOGGER.warn(GEONETWORK_MARKER,
+                "More than one record found with UUID '{}'. Error is '{}'.",
+                uuid, e.getMessage());
         }
         return metadata;
     }

@@ -66,8 +66,7 @@ public class GetNarrowerBroader implements Service {
             .getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
-        if (Log.isDebugEnabled("KeywordsManager"))
-            Log.debug("KeywordsManager", "Creating new keywords searcher");
+        Log.debug("KeywordsManager", "Creating new keywords searcher");
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
         String request = Util.getParam(params, "request");

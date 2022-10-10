@@ -126,15 +126,13 @@ public class JeevesServlet extends HttpServlet {
 
         LOGGER.info(Log.REQUEST_MARKER, "==========================================================");
         LOGGER.info(Log.REQUEST_MARKER, "HTML Request (from " + ip + ") : " + req.getRequestURI());
-        if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
-            LOGGER.debug(Log.REQUEST_MARKER, "Method       : {}", req.getMethod());
-            LOGGER.debug(Log.REQUEST_MARKER, "Content type : {}",  req.getContentType());
-            //		LOGGER.debug(Log.REQUEST_MARKER, "Context path : {}",  req.getContextPath());
-            //		LOGGER.debug(Log.REQUEST_MARKER, "Char encoding: {}",  req.getCharacterEncoding());
-            LOGGER.debug(Log.REQUEST_MARKER, "Accept       : {}",  req.getHeader("Accept"));
-            //		LOGGER.debug(Log.REQUEST_MARKER, "Server name  : {}",  req.getServerName());
-            //		LOGGER.debug(Log.REQUEST_MARKER, "Server port  : {}",  req.getServerPort());
-        }
+        LOGGER.debug(Log.REQUEST_MARKER, "Method       : {}", req.getMethod());
+        LOGGER.debug(Log.REQUEST_MARKER, "Content type : {}",  req.getContentType());
+        //		LOGGER.debug(Log.REQUEST_MARKER, "Context path : {}",  req.getContextPath());
+        //		LOGGER.debug(Log.REQUEST_MARKER, "Char encoding: {}",  req.getCharacterEncoding());
+        LOGGER.debug(Log.REQUEST_MARKER, "Accept       : {}",  req.getHeader("Accept"));
+        //		LOGGER.debug(Log.REQUEST_MARKER, "Server name  : {}",  req.getServerName());
+        //		LOGGER.debug(Log.REQUEST_MARKER, "Server port  : {}",  req.getServerPort());
 //		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
 //			String theHeader = (String)e.nextElement();
 //        if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {

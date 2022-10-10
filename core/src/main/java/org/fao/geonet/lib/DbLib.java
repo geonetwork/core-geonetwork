@@ -23,8 +23,10 @@
 
 package org.fao.geonet.lib;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.mef.ExportFormat;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
@@ -47,9 +49,14 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 
+import static org.fao.geonet.constants.Geonet.DB_MARKER;
+
 //=============================================================================
 
 public class DbLib {
+
+    private static Logger LOGGER = Log.createLogger(ExportFormat.class, DB_MARKER);
+
     // -----------------------------------------------------------------------------
     // ---
     // --- API methods
@@ -60,8 +67,7 @@ public class DbLib {
 
     public void insertData(ServletContext servletContext, final ServiceContext context, Path appPath, Path filePath,
                            String filePrefix) throws Exception {
-        if (Log.isDebugEnabled(Geonet.DB))
-            Log.debug(Geonet.DB, "Filling database tables");
+        LOGGER.debug(DB_MARKER, "Filling database tables");
 
         final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
         runSQL(context, data);
@@ -81,8 +87,7 @@ public class DbLib {
 
     public void insertData(ServletContext servletContext, Statement statement, Path appPath, Path filePath,
                            String filePrefix) throws Exception {
-        if (Log.isDebugEnabled(Geonet.DB))
-            Log.debug(Geonet.DB, "Filling database tables");
+        LOGGER.debug(DB_MARKER, "Filling database tables");
 
         List<String> data = loadSqlDataFile(servletContext, statement, appPath, filePath, filePrefix);
         runSQL(statement, data, true);
@@ -109,8 +114,7 @@ public class DbLib {
 
                     sql = sql.substring(0, sql.length() - 1);
 
-                    if (Log.isDebugEnabled(Geonet.DB))
-                        Log.debug(Geonet.DB, "Executing " + sql);
+                    LOGGER.debug(DB_MARKER, "Executing {}", sql);
 
                     try {
                         final String trimmedSQL = sql.trim();
@@ -122,7 +126,7 @@ public class DbLib {
                             query.executeUpdate();
                         }
                     } catch (Throwable e) {
-                        Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage(), e);
+                        LOGGER.warn(DB_MARKER, "SQL failure for: " + sql + ", error is:" + e.getMessage(), e);
 
                         if (failOnError)
                             throw new RuntimeException(e);
@@ -156,8 +160,7 @@ public class DbLib {
 
                     sql = sql.substring(0, sql.length() - 1);
 
-                    if (Log.isDebugEnabled(Geonet.DB))
-                        Log.debug(Geonet.DB, "Executing " + sql);
+                    LOGGER.debug(DB_MARKER, "Executing {}", sql);
 
                     try {
                         if (sql.trim().startsWith("SELECT")) {
@@ -166,8 +169,7 @@ public class DbLib {
                             statement.execute(sql);
                         }
                     } catch (SQLException e) {
-                        Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
-
+                        LOGGER.warn(DB_MARKER, "SQL failure for: {}, error is: {}", sql, e.getMessage());
                         if (failOnError)
                             throw e;
                     }
@@ -214,7 +216,7 @@ public class DbLib {
         if (finalPath != null)
             return finalPath;
         else {
-            Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" + prefix + type + SQL_EXTENSION));
+            LOGGER.debug(DB_MARKER, "  No default SQL script found: " + (filePath + "/" + prefix + type + SQL_EXTENSION));
         }
         return toPath("");
     }

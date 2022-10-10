@@ -30,7 +30,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.API;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -46,12 +48,16 @@ import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
 
+import static org.fao.geonet.constants.Geonet.MEF_MARKER;
+
 /**
  * An extension point called to create files to export as part of the MEF export.
  *
  * User: Jesse Date: 11/8/13 Time: 3:21 PM
  */
 public class ExportFormat implements GeonetworkExtension {
+
+    private static Logger LOGGER = Log.createLogger(ExportFormat.class, MEF_MARKER);
     /**
      * Return a list of &lt;filename, fileContents>.
      *
@@ -76,11 +82,9 @@ public class ExportFormat implements GeonetworkExtension {
                     allExports.add(Pair.read(outputFileName, outputData));
                 } else {
                     // A conversion that does not exist
-                    if (Log.isDebugEnabled(Geonet.MEF)) {
-                        Log.debug(Geonet.MEF, String.format("Exporting MEF file for '%s' schema plugin formats. File '%s' not found",
-                            metadataSchema.getName(),
-                            path.getFileName()));
-                    }
+                    LOGGER.debug(MEF_MARKER, String.format("Exporting MEF file for '%s' schema plugin formats. File '%s' not found",
+                        metadataSchema.getName(),
+                        path.getFileName()));
                 }
             }
             return allExports;

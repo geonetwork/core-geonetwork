@@ -25,6 +25,8 @@ package org.fao.geonet.inspireatom.harvester;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
@@ -58,6 +60,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.fao.geonet.constants.Geonet.ATOM_MARKER;
+
 
 /**
  * Class to harvest the Atom documents referenced in the iso19139 in the catalog.
@@ -65,7 +69,13 @@ import java.util.*;
  * @author Jose García
  */
 public class InspireAtomHarvester {
-    private Logger logger = Log.createLogger(Geonet.ATOM);
+
+    /**
+     * Marker {@code atom} for log messages.
+     */
+    public static final Marker INSPIRE_ATOM = MarkerManager.getMarker("inspireatom").addParents(ATOM_MARKER);
+
+    private Logger logger = Log.createLogger(InspireAtomHarvester.class, INSPIRE_ATOM);
     /**
      * GeoNetwork context.
      **/
@@ -106,19 +116,19 @@ public class InspireAtomHarvester {
         Element result = new Element("response");
 
         try {
-            logger.info("ATOM feed harvest started");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest started");
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
-            logger.info("ATOM feed harvest: remove existing metadata feeds");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: remove existing metadata feeds");
             repository.deleteAll();
 
-            logger.info("ATOM feed harvest: retrieving service metadata feeds");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: retrieving service metadata feeds");
 
             // Retrieve the SERVICE metadata referencing atom feed documents
             Map<String, String> serviceMetadataWithAtomFeeds =
                 InspireAtomUtil.retrieveServiceMetadataWithAtomFeeds(dataMan, iso19139Metadata, atomProtocol);
 
-            logger.info("ATOM feed harvest: processing service metadata feeds (" + serviceMetadataWithAtomFeeds.size() + ")");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: processing service metadata feeds ({})", serviceMetadataWithAtomFeeds.size());
 
             // Process SERVICE metadata feeds
             //    datasetsInformation stores the dataset information for identifier, namespace and feed url
@@ -127,15 +137,14 @@ public class InspireAtomHarvester {
                 processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result);
 
             // Process DATASET metadata feeds related to the service metadata
-            logger.info("ATOM feed harvest: processing dataset metadata feeds (" + datasetsInformation.size() + ")");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: processing dataset metadata feeds ({})", datasetsInformation.size());
             processDatasetsMetadataFeeds(dataMan, datasetsInformation, result);
 
-            logger.info("ATOM feed harvest finished");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest finished");
 
 
         } catch (Exception x) {
-            logger.error("ATOM feed harvest error: " + x.getMessage());
-            logger.error(x);
+            logger.error(INSPIRE_ATOM, "ATOM feed harvest error: {}", x.getMessage(), x);
             result.addContent(new Element("error").setText(x.getMessage()));
         }
 
@@ -150,8 +159,6 @@ public class InspireAtomHarvester {
      * @param metadataId Metadata identifier
      */
     public final void harvestServiceMetadata(final ServiceContext context, final String metadataId) {
-        Logger logger = Log.createLogger(Geonet.ATOM);
-
         final InspireAtomFeedRepository repository = context.getBean(InspireAtomFeedRepository.class);
         DataManager dataMan = context.getBean(DataManager.class);
         SettingManager sm = context.getBean(SettingManager.class);
@@ -165,20 +172,20 @@ public class InspireAtomHarvester {
         Element result = new Element("response");
 
         try {
-            logger.info("ATOM feed harvest started for metadata: " + metadataId);
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest started for metadata: {}", metadataId);
 
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
             String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
-            logger.info("ATOM feed harvest: remove existing metadata feed");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: remove existing metadata feed");
             repository.deleteAll(InspireAtomFeedSpecs.hasMetadataId(Integer.parseInt(metadataId)));
             dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
 
             // Process service metadata feeds
             //    datasetsInformation stores the dataset information for identifier and namespace for the services feed.
             //    This information is not available in the datasets feeds
-            logger.info("ATOM feed harvest: processing service metadata feeds");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest: processing service metadata feeds");
 
             // Retrieve the service metadata referencing atom feed document
             Map<String, String> serviceMetadataWithAtomFeed =
@@ -188,13 +195,12 @@ public class InspireAtomHarvester {
                 processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeed, result);
 
             // Process dataset metadata feeds related to the service metadata
-            logger.info("ATOM feed harvest for metadata: " + metadataId + ",  processing dataset metadata feeds");
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest for metadata: {},  processing dataset metadata feeds", metadataId);
             processDatasetsMetadataFeeds(context, dataMan, datasetsInformation, result);
 
-            logger.info("ATOM feed harvest finished for metadata: " + metadataId);
+            logger.info(INSPIRE_ATOM, "ATOM feed harvest finished for metadata: {}", metadataId);
         } catch (Exception x) {
-            logger.error("ATOM feed harvest error: " + x.getMessage());
-            logger.error(x);
+            logger.error(INSPIRE_ATOM, "ATOM feed harvest error: {}", x.getMessage(), x);
         }
     }
 
@@ -225,8 +231,8 @@ public class InspireAtomHarvester {
 
             try {
                 String atomUrl = entry.getValue();
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
-                logger.info("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
+                logger.info(INSPIRE_ATOM, "Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
+                logger.info(INSPIRE_ATOM, "Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
 
                 String atomFeedDocument = InspireAtomUtil.retrieveRemoteAtomFeedDocument(gc, atomUrl);
                 logger.debug("Atom feed Document for service metadata (" + metadataUuid + "): " + atomFeedDocument);
@@ -234,7 +240,9 @@ public class InspireAtomHarvester {
                 Element atomDoc = Xml.loadString(atomFeedDocument, false);
 
                 if (!atomDoc.getNamespace().equals(Geonet.Namespaces.ATOM)) {
-                    logger.warning("Atom feed Document (" + atomUrl + ") for service metadata (" + metadataUuid + ") is not a valid feed");
+                    logger.warn(ATOM_MARKER,
+                        "Atom feed Document ({}) for service metadata ({}) is not a valid feed",
+                        atomUrl, metadataUuid);
                     continue;
                 }
 
@@ -311,15 +319,19 @@ public class InspireAtomHarvester {
 
                 String atomUrl = datasetFeedInfo.feedUrl;
 
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for dataset metadata with uuid:" + metadataUuid + ", feed url: " + atomUrl);
+                logger.info(INSPIRE_ATOM, "Processing feed (" + i++ + "/"+ total + ") for dataset metadata with uuid:" + metadataUuid + ", feed url: " + atomUrl);
 
                 if (StringUtils.isEmpty(metadataUuid)) {
-                    logger.warning("Metadata with dataset identifier (" + datasetFeedInfo.identifier + ") is not available. Skip dataset feed processing");
+                    logger.warn(ATOM_MARKER,
+                        "Metadata with dataset identifier ({}) is not available. Skip dataset feed processing",
+                        datasetFeedInfo.identifier);
                     continue;
                 }
 
                 if (!atomUrl.toLowerCase().endsWith(".xml")) {
-                    logger.warning("Atom feed Document (" + atomUrl + ") for dataset metadata (" + metadataUuid + ") is not a valid feed");
+                    logger.warn(ATOM_MARKER,
+                        "Atom feed Document ({}) for dataset metadata ({}) is not a valid feed",
+                        atomUrl, metadataUuid);
                     continue;
                 }
 
@@ -334,7 +346,9 @@ public class InspireAtomHarvester {
 
                 // Skip document if not a feed
                 if (!atomDoc.getNamespace().equals(Geonet.Namespaces.ATOM)) {
-                    logger.warning("Atom feed Document (" + atomUrl + ") for dataset metadata (" + metadataUuid + ") is not a valid feed");
+                    logger.warn(ATOM_MARKER,
+                    "Atom feed Document ({}) for dataset metadata ({}) is not a valid feed",
+                        atomUrl, metadataUuid);
                     continue;
                 }
 
@@ -391,11 +405,11 @@ public class InspireAtomHarvester {
                 logger.debug("Dataset, id=" + atomDatasetId + ", namespace=" + atomDatasetNs);
 
                 if (StringUtils.isEmpty(metadataUuid)) {
-                    logger.warning("Can't find dataset metadata with datasetIdCode:" + atomDatasetId);
+                    logger.warn(INSPIRE_ATOM, "Can't find dataset metadata with datasetIdCode:{}", atomDatasetId);
                     continue;
                 }
 
-                logger.info("Processing feed for dataset metadata with uuid:" + metadataUuid);
+                logger.info(INSPIRE_ATOM, "Processing feed for dataset metadata with uuid:{}", metadataUuid);
 
                 String metadataId = dataMan.getMetadataId(metadataUuid);
 
@@ -411,7 +425,8 @@ public class InspireAtomHarvester {
 
                 // Skip document if not a feed
                 if (!atomDoc.getNamespace().equals(Geonet.Namespaces.ATOM)) {
-                    logger.warning("Atom feed Document (" + atomUrl + ") for dataset metadata (" + metadataUuid + ") is not a valid feed");
+                    logger.warn(INSPIRE_ATOM, "Atom feed Document ({}}) for dataset metadata ({}) is not a valid feed",
+                        atomUrl, metadataUuid);
                     continue;
                 }
 
@@ -446,7 +461,7 @@ public class InspireAtomHarvester {
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
         final String harvesterName = "inspireatom";
-        logger = Log.createLogger("inspireatom", "geonetwork.atom");
+        logger = Log.createLogger( InspireAtomHarvester.class, INSPIRE_ATOM);
 
         String directory = logger.getFileAppender();
         if (directory == null || directory.isEmpty()) {
