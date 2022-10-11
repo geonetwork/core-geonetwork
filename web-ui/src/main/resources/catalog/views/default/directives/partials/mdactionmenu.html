@@ -332,7 +332,7 @@
       </li>
       <li role="menuitem" data-ng-repeat="f in formatterList">
         <a
-          data-ng-href="../api/records/{{md.uuid}}{{f.url.replace('${lang}', lang)}}{{f.url.indexOf('?') !== -1 ? '&': '?'}}approved={{mdView.current.record.draft != 'y'}}"
+          data-ng-href="{{buildFormatter(f.url,md.uuid,mdView.current.record.draft)}}"
           target="_blank"
         >
           <span class="fa fa-fw {{f.class}}"></span>&nbsp;
