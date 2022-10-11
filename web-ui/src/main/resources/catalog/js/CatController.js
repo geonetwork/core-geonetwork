@@ -193,6 +193,7 @@
             queryTitle: "resourceTitleObject.\\*:(${any})",
             queryTitleExactMatch: 'resourceTitleObject.\\*:"${any}"',
             searchOptions: {
+              fullText: true,
               titleOnly: true,
               exactMatch: true,
               language: true
@@ -294,6 +295,7 @@
                           "resourceTitleObject.${searchLang}^6",
                           "resourceAbstractObject.${searchLang}^.5",
                           "tag",
+                          "uuid",
                           "resourceIdentifier"
                           // "anytext",
                           // "anytext._2gram",
