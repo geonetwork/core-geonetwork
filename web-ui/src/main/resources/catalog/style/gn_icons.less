@@ -5,8 +5,14 @@
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before, .gn-icon-datasets:before { content: @fa-var-database; }
 .gn-icon-service:before { content: @fa-var-cog }
-.gn-icon-map:before { content: @fa-var-globe }
-.gn-icon-staticMap:before { content: @fa-var-globe }
+.gn-icon-map:before,
+.gn-icon-staticMap:before,
+.gn-icon-maps:before {
+  content: @fa-var-map-o;
+}
+.gn-icon-interactiveMap:before {
+  content: @fa-var-globe;
+}
 .gn-icon-featureCatalog:before { content: @fa-var-table}
 .gn-icon-document:before { content: @fa-var-file }
 .gn-icon-attribute:before { content: @fa-var-tag }
@@ -16,6 +22,7 @@
 .gn-icon-series:before { content: @fa-var-files-o }
 .gn-icon-nonGeographicDataset:before { content: @fa-var-bar-chart-o }
 .gn-icon-dimensionGroup:before { content: @fa-var-star-half-o }
+.gn-icon-publication:before { content: @fa-var-book }
 .gn-icon-feature:before { content: @fa-var-map-pin }
 .gn-icon-featureType:before { content: @fa-var-sitemap }
 .gn-icon-propertyType:before { content: @fa-var-sliders }
@@ -30,7 +37,6 @@
 .gn-icon-datasets:before { content: @fa-var-database }
 .gn-icon-directories:before { content: @fa-var-folder }
 .gn-icon-interactiveResources:before { content: @fa-var-cog }
-.gn-icon-maps:before { content: @fa-var-globe }
 .gn-icon-otherResources:before { content: @fa-var-question }
 .gn-icon-photo:before { content: @fa-var-camera }
 .gn-icon-physicalSamples:before { content: @fa-var-wrench }
