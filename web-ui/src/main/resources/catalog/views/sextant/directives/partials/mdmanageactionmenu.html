@@ -55,6 +55,17 @@
       </a>
     </li>
 
+    <li role="menuitem" class="divider"/>
+
+    <li>
+      <a ng-href="" data-ng-click="mdService.duplicate(md)">
+        <i class="fa fa-copy"></i><span
+        translate>duplicate</span></a>
+    </li>
+    <li><a ng-href="" data-ng-click="mdService.createChild(md)">
+      <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
+    </li>
+
     <li role="menuitem"
         data-ng-show="isMdWorkflowEnable"
         class="divider"/>
@@ -168,15 +179,5 @@
       <span data-translate="">doiDefinedForRecord</span>
     </li>
 
-    <li role="menuitem" class="divider"/>
-
-    <li>
-      <a ng-href="" data-ng-click="mdService.duplicate(md)">
-        <i class="fa fa-copy"></i><span
-        translate>duplicate</span></a>
-    </li>
-    <li><a ng-href="" data-ng-click="mdService.createChild(md)">
-      <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
-    </li>
   </ul>
 </div>
