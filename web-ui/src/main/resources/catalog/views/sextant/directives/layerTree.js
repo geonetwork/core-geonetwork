@@ -308,7 +308,10 @@
             var col = event.target;
             if(loadingLayer.get('loading') && angular.isDefined(idx)) {
               var layer = col.item(idx);
-              switchLoadingLayer(scope.layerTree, loadingLayer, layer);
+              var switched = switchLoadingLayer(scope.layerTree, loadingLayer, layer);
+              if (switched) {
+                buildTree();
+              }
             }
           });
 

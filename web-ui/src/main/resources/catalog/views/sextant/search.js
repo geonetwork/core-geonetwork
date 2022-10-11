@@ -367,6 +367,9 @@
                 ));
               }
 
+              // open layer menu
+              layer.set('showLayerInfo', true);
+
               if(gnSearchLocation.isMdView()) {
                 angular.element($('[gn-metadata-display]')).scope().dismiss();
                 $location.path('/map');
