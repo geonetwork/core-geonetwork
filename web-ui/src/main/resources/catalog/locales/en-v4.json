@@ -273,6 +273,7 @@
   "ui/chooseAnOption-help": "Current user configuration is empty. Choose one or more option above or create a full configuration.",
   "uiConfigForm": "Configuration form",
   "uiConfigJsonForm": "JSON form",
+  "uiConfigPreview": "Preview app",
   "uiCurrentConfig": "Current configuration",
   "uiBasicConfig": "Full configuration",
   "uiRemoveDefaultOptions": "Remove default options",
