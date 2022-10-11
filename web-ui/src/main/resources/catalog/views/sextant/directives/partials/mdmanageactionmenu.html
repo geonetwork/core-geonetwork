@@ -18,21 +18,6 @@
       </a>
     </li>
 
-    <li data-ng-if="!user.isReviewerOrMore()"
-        class="disabled"><a href="">
-      <i class="fa fa-trash-o"></i><span
-      translate>delete</span></a>
-    </li>
-
-    <li>
-      <a ng-href="" data-ng-click="mdService.duplicate(md)">
-      <i class="fa fa-copy"></i><span
-      translate>duplicate</span></a>
-    </li>
-    <li><a ng-href="" data-ng-click="mdService.createChild(md)">
-      <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
-    </li>
-
     <li data-ng-if="user.canManagePrivileges(md)">
       <a ng-href=""
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
@@ -41,6 +26,13 @@
         class="disabled"><a ng-href="">
       <i class="fa fa-key"></i><span
       translate>privileges</span></a></li>
+
+    <li data-ng-if="!user.isReviewerOrMore()"
+        class="disabled"><a href="">
+      <i class="fa fa-trash-o"></i><span
+      translate>delete</span></a>
+    </li>
+
     <!--
       Workflow:
       See https://github.com/geonetwork/core-geonetwork/pull/3600
@@ -63,6 +55,9 @@
       </a>
     </li>
 
+    <li role="menuitem"
+        data-ng-show="isMdWorkflowEnable"
+        class="divider"/>
     <li role="menuitem" class="divider"
         data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)">
     </li>
@@ -173,5 +168,15 @@
       <span data-translate="">doiDefinedForRecord</span>
     </li>
 
+    <li role="menuitem" class="divider"/>
+
+    <li>
+      <a ng-href="" data-ng-click="mdService.duplicate(md)">
+        <i class="fa fa-copy"></i><span
+        translate>duplicate</span></a>
+    </li>
+    <li><a ng-href="" data-ng-click="mdService.createChild(md)">
+      <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
+    </li>
   </ul>
 </div>
