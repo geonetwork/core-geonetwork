@@ -37,84 +37,84 @@
     location="WEB-INF/config-security/config-security-openidconnect-overrides.properties"
     ignore-resource-not-found="true"/>
 
-  <bean id ="openidconnect_Configuration" class="org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration"/>
+  <bean id ="openidconnectConfiguration" class="org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration"/>
 
 
   <!-- Reads from the .json file and creates a ClientRegistration -->
-  <bean id="openidconnect_ClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
+  <bean id="openidconnectClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
     <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_FNAME:#{''}}"/>
     <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT:#{''}}"/>
     <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_CONFIG_URL:#{''}}"/>
-    <constructor-arg ref="openidconnect_Configuration"/>
+    <constructor-arg ref="openidconnectConfiguration"/>
   </bean>
 
 
 
   <!-- Provides a hardcoded  ClientRegistrationRepository with exactly one  ClientRegistration-->
-  <bean id="openidconnect_ClientRegistrationRepository" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationRepository">
-    <constructor-arg ref="openidconnect_ClientRegistration"/>
+  <bean id="openidconnectClientRegistrationRepository" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationRepository">
+    <constructor-arg ref="openidconnectClientRegistration"/>
   </bean>
 
-  <bean id="openidconnect_AuthorizationRequestResolver" class="org.fao.geonet.kernel.security.openidconnect.HardcodedRegistrationIdOAuth2AuthorizationRequestResolver">
-    <constructor-arg ref="openidconnect_ClientRegistrationRepository"/>
+  <bean id="openidconnectAuthorizationRequestResolver" class="org.fao.geonet.kernel.security.openidconnect.HardcodedRegistrationIdOAuth2AuthorizationRequestResolver">
+    <constructor-arg ref="openidconnectClientRegistrationRepository"/>
     <constructor-arg value ="/signin" />
   </bean>
 
 
-  <bean id="opidconnect_SimpleOidcUserFactory" class="org.fao.geonet.kernel.security.openidconnect.SimpleOidcUserFactory"/>
+  <bean id="opidconnectSimpleOidcUserFactory" class="org.fao.geonet.kernel.security.openidconnect.SimpleOidcUserFactory"/>
 
-  <bean id="openidconnect_OAuth2AuthorizationRequestRedirectFilter" class="org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter">
-    <constructor-arg ref ="openidconnect_AuthorizationRequestResolver" />
+  <bean id="openidconnectOAuth2AuthorizationRequestRedirectFilter" class="org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter">
+    <constructor-arg ref ="openidconnectAuthorizationRequestResolver" />
    </bean>
 
 
-  <bean id ="openidconnect_InMemoryOAuth2AuthorizedClientService" class="org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService">
-    <constructor-arg ref ="openidconnect_ClientRegistrationRepository" />
+  <bean id ="openidconnectInMemoryOAuth2AuthorizedClientService" class="org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService">
+    <constructor-arg ref ="openidconnectClientRegistrationRepository" />
   </bean>
 
-  <bean id="openidconnect_OAuth2LoginAuthenticationFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOAuth2LoginAuthenticationFilter">
-    <constructor-arg ref ="openidconnect_ClientRegistrationRepository" />
-    <constructor-arg ref ="openidconnect_InMemoryOAuth2AuthorizedClientService" />
-    <property name="authenticationManager" ref="openidconnect_ProviderManager"/>
+  <bean id="openidconnectOAuth2LoginAuthenticationFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOAuth2LoginAuthenticationFilter">
+    <constructor-arg ref ="openidconnectClientRegistrationRepository" />
+    <constructor-arg ref ="openidconnectInMemoryOAuth2AuthorizedClientService" />
+    <property name="authenticationManager" ref="openidconnectProviderManager"/>
   </bean>
 
-  <bean id="openidconnect_DefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
+  <bean id="openidconnectDefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
 
-  <bean id ="openidconnect_OIDCRoleProcessor" class="org.fao.geonet.kernel.security.openidconnect.OIDCRoleProcessor"/>
+  <bean id ="openidconnectOIDCRoleProcessor" class="org.fao.geonet.kernel.security.openidconnect.OIDCRoleProcessor"/>
 
-  <bean id="openidconnect_UserService" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcUserService">
+  <bean id="openidconnectUserService" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcUserService">
   </bean>
 
 
-  <bean id="openidconnect_AuthorizationProvider" class="org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider">
-    <constructor-arg ref="openidconnect_DefaultAuthorizationCodeTokenResponseClient"/>
-    <constructor-arg ref="openidconnect_UserService"/>
+  <bean id="openidconnectAuthorizationProvider" class="org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider">
+    <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>
+    <constructor-arg ref="openidconnectUserService"/>
   </bean>
 
-  <bean id="openidconnect_ProviderManager" class="org.springframework.security.authentication.ProviderManager">
+  <bean id="openidconnectProviderManager" class="org.springframework.security.authentication.ProviderManager">
     <constructor-arg>
     <util:list>
-      <ref bean="openidconnect_AuthorizationProvider"/>
+      <ref bean="openidconnectAuthorizationProvider"/>
     </util:list>
     </constructor-arg>
   </bean>
 
-  <bean id="openidconnect_OAuth2SecurityProviderUtil" class="org.fao.geonet.kernel.security.openidconnect.OAuth2SecurityProviderUtil"/>
+  <bean id="openidconnectOAuth2SecurityProviderUtil" class="org.fao.geonet.kernel.security.openidconnect.OAuth2SecurityProviderUtil"/>
 
-  <bean id="openidconnect_OidcUser2GeonetworkUser" class="org.fao.geonet.kernel.security.openidconnect.OidcUser2GeonetworkUser"/>
+  <bean id="openidconnectOidcUser2GeonetworkUser" class="org.fao.geonet.kernel.security.openidconnect.OidcUser2GeonetworkUser"/>
 
-  <bean id="openidconnect_logoutSuccessHandler_base" class="org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler">
-    <constructor-arg ref="openidconnect_ClientRegistrationRepository"/>
+  <bean id="openidconnectLogoutSuccessHandlerBase" class="org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler">
+    <constructor-arg ref="openidconnectClientRegistrationRepository"/>
     <property name="postLogoutRedirectUri" value="REPLACE"/>
   </bean>
 
-  <bean id="openidconnect_logoutSuccessHandler" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcLogoutHandler">
-    <constructor-arg ref="openidconnect_logoutSuccessHandler_base"/>
+  <bean id="openidconnectLogoutSuccessHandler" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcLogoutHandler">
+    <constructor-arg ref="openidconnectLogoutSuccessHandlerBase"/>
   </bean>
 
   <bean id="logoutFilter"
         class="org.springframework.security.web.authentication.logout.LogoutFilter">
-    <constructor-arg ref="openidconnect_logoutSuccessHandler"/>
+    <constructor-arg ref="openidconnectLogoutSuccessHandler"/>
     <constructor-arg>
       <list>
         <bean
@@ -143,8 +143,8 @@
         <ref bean="csrfFilter" />
         <!-- To disable csrf security (not recommended) comment the upper line -->
 
-        <ref bean="openidconnect_OAuth2AuthorizationRequestRedirectFilter"/>
-        <ref bean="openidconnect_OAuth2LoginAuthenticationFilter"/>
+        <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
+        <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
         <ref bean="logoutFilter"/>
 
 

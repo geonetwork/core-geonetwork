@@ -41,7 +41,7 @@ public class JwtDecoderFactory {
 
     //taken from nimbus-jose
     public JwtDecoder createJwtDecoder(String nStr, String eStr) throws Exception {
-        // this is for people who don't want to use Bearer tokens - don't cause errors if we dont have to
+        // this is for people who don't want to use Bearer tokens - don't cause errors if we don't have to
         if (nStr == null) {
             Log.warning(Geonet.SECURITY, "OpenID Connect - Bearer Token - public key - null 'n' value.");
             // will throw, below

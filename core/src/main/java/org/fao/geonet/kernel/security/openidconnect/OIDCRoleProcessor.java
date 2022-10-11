@@ -114,7 +114,7 @@ public class OIDCRoleProcessor {
 
 
     /**
-     * get the max profile from an  oauth2 use's attributes
+     * get the max profile from an  oauth2 user's attributes
      *
      * @param user - oauth2 user from OIDC
      * @return
@@ -340,7 +340,7 @@ public class OIDCRoleProcessor {
                 return new ArrayList<>(); // not expecting to see this
             }
         }
-        Log.debug(Geonet.SECURITY, "oidc: pathToRoles - couldnt find role list - " + pathToRoles);
+        Log.debug(Geonet.SECURITY, "oidc: pathToRoles - couldn't find role list - " + pathToRoles);
         return new ArrayList<>(); // unexpected...
     }
 

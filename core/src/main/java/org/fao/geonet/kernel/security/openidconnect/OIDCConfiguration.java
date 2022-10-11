@@ -74,13 +74,13 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     /**
      *  true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)
-     *  false -> dont update the DB (user must edit profile in UI).
+     *  false -> don't update the DB (user must edit profile in UI).
      */
     public boolean updateProfile =true;
 
     /**
      *  true -> update the DB (user's group) with the information from OIDC (don't allow admin to edit user's groups in the UI)
-     *  false -> dont update the DB (admin must edit groups in UI).
+     *  false -> don't update the DB (admin must edit groups in UI).
      */
     public boolean updateGroup = true;
 
