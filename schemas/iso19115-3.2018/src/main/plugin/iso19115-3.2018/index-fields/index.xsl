@@ -229,6 +229,22 @@
       </xsl:for-each>
 
 
+      <!-- ISO19115-3 records can be only a feature catalogue description.
+       In this case,
+       * add the resourceType=featureCatalog to enable search when linking records
+       * (TODO: Check which scopeCode is more appropriate eg. featureType ?)
+       * Index feature catalogue name as title, scope as abstract.
+       -->
+      <xsl:variable name="isOnlyFeatureCatalog"
+                    select="not(mdb:identificationInfo)
+                            and exists(mdb:contentInfo/*/mrc:featureCatalogue)"
+                    as="xs:boolean"/>
+
+      <xsl:if test="exists(mdb:contentInfo/*/mrc:featureCatalogue//gfc:FC_FeatureCatalogue/gfc:featureType)">
+        <resourceType>featureCatalog</resourceType>
+      </xsl:if>
+
+
       <xsl:choose>
         <xsl:when test="$isDataset">
           <resourceType>dataset</resourceType>
@@ -947,21 +963,6 @@
       </xsl:for-each-group>
 
 
-      <!-- ISO19115-3 records can be only a feature catalogue description.
-       In this case,
-       * add the resourceType=featureCatalog to enable search when linking records
-       * (TODO: Check which scopeCode is more appropriate eg. featureType ?)
-       * Index feature catalogue name as title, fieldOfApplication as abstract.
-       -->
-      <xsl:variable name="isOnlyFeatureCatalog"
-                    select="not(mdb:identificationInfo)
-                            and exists(mdb:contentInfo/*/mrc:featureCatalogue)"
-                    as="xs:boolean"/>
-
-      <xsl:if test="exists(mdb:contentInfo/*/mrc:featureCatalogue//gfc:FC_FeatureCatalogue/gfc:featureType)">
-        <resourceType>featureCatalog</resourceType>
-      </xsl:if>
-
       <xsl:if test="$isOnlyFeatureCatalog">
         <resourceType>featureCatalog</resourceType>
 
@@ -974,14 +975,20 @@
           </xsl:for-each>
 
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract',
-                                cat:fieldOfApplication, $allLanguages)"/>
+                                cat:scope, $allLanguages)"/>
         </xsl:for-each>
+
+
+        <xsl:apply-templates mode="index-contact"
+                             select="mdb:contentInfo//gfc:producer">
+          <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
+        </xsl:apply-templates>
       </xsl:if>
 
       <xsl:variable name="jsonFeatureTypes">[
         <xsl:for-each select="mdb:contentInfo//gfc:FC_FeatureCatalogue/gfc:featureType">{
 
-          "typeName" : "<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:typeName/*/text())"/>",
+          "typeName" : "<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:typeName/text())"/>",
           "definition" :"<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
           "code" :"<xsl:value-of select="gn-fn-index:json-escape(gfc:FC_FeatureType/gfc:code/*/text())"/>",
           "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
