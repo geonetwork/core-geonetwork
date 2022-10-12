@@ -261,7 +261,7 @@
           var fix_values = function () {
             //first, make sure missing items are ''
             var nExpectedNumber = scope.config.config.length;
-            scope.individualValues = _.mapObject(
+            scope.individualValues = _.mapValues(
               scope.individualValues,
               function (val, key) {
                 val.length = nExpectedNumber; //extend array
@@ -358,7 +358,7 @@
                 scope.$parent.params[scope.config.fieldName],
                 emptyLangs
               );
-              scope.individualValues = _.mapObject(
+              scope.individualValues = _.mapValues(
                 scope.$parent.params[scope.config.fieldName],
                 function (val, key) {
                   return val.split(scope.combinerSimple); // split on simple one, then we will "fix up" trailing spaces
@@ -367,7 +367,7 @@
             } else {
               // single language
               scope.individualValues = {};
-              _.mapObject(emptyLangs, function (val, key) {
+              _.mapValues(emptyLangs, function (val, key) {
                 scope.individualValues[key] = parentParam.split(scope.combinerSimple);
               });
             }
@@ -477,7 +477,7 @@
               var inputValue = "";
               if (angular.isDefined(newVal)) {
                 if (angular.isObject(newVal)) {
-                  _.mapObject(newVal, function (value, lang) {
+                  _.mapValues(newVal, function (value, lang) {
                     var item = lang + "#" + value;
                     tempArray.push(item);
                   });
