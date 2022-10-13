@@ -1585,7 +1585,12 @@
           },
           "linkObject": {
             "type": "object",
-            "copy_to": "any.common"
+            "properties": {
+              "default": {
+                "type": "keyword",
+                "copy_to": "any.common"
+              }
+            }
           },
           "name": {
             "type": "text",
@@ -1593,7 +1598,12 @@
           },
           "nameObject": {
             "type": "object",
-            "copy_to": "any.common"
+            "properties": {
+              "default": {
+                "type": "keyword",
+                "copy_to": "any.common"
+              }
+            }
           },
           "description": {
             "type": "text"
