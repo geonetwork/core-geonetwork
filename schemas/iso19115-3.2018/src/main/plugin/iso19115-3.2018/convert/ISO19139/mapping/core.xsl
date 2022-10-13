@@ -73,6 +73,7 @@
   </xsl:template>
 
   <xsl:template match="gfcold:typeName/gcoold:LocalName
+                      |gfcold:aliases/gcoold:LocalName
                       |gfcold:memberName/gcoold:LocalName" priority="5"
                 mode="from19139to19115-3.2018">
     <xsl:value-of select="."/>
