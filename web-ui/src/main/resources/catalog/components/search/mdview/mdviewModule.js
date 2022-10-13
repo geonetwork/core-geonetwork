@@ -221,10 +221,7 @@
           }
         });
         // show the first visible tab
-        var visibleTabs = $(".nav-tabs-advanced li").filter(function (idx, li) {
-          return $(li).css("display") != "none";
-        });
-        $("a", visibleTabs[0]).tab("show");
+        $(".nav-tabs-advanced a:visible:first").tab("show");
       };
 
       $scope.loadFormatter = function (url) {
