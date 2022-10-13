@@ -142,6 +142,7 @@
 
       function addSortBy(params, sortBy, sortOrder) {
         if (sortBy) {
+          sortOrder = sortOrder || "";
           var sort = {},
             orders = sortOrder.split(",", -1);
           params.sort = [];
