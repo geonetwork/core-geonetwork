@@ -203,7 +203,7 @@
         );
       };
 
-      // activate the tabs in the advanded metadata view
+      // activate the tabs in the full metadata view
       $scope.activateTabs = function () {
         // attach click to tab
         $(".nav-tabs-advanced a").click(function (e) {
@@ -220,8 +220,11 @@
             }
           }
         });
-        // show the first tab
-        $(".nav-tabs-advanced a:first").tab("show");
+        // show the first visible tab
+        var visibleTabs = $(".nav-tabs-advanced li").filter(function (idx, li) {
+          return $(li).css("display") != "none";
+        });
+        $("a", visibleTabs[0]).tab("show");
       };
 
       $scope.loadFormatter = function (url) {
