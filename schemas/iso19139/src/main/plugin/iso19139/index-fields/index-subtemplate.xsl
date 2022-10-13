@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
@@ -68,7 +69,7 @@
     </doc>
   </xsl:template>
 
-  <!--Contacts & Organisations-->
+  <!-- Indexing Contacts & Organisations -->
   <xsl:template mode="index"
                 match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]|
                        *[@gco:isoType='gmd:CI_ResponsibleParty'][count(ancestor::node()) = 1]">
@@ -99,9 +100,6 @@
 
     <xsl:copy-of select="gn-fn-index:add-field('Org', $org)"/>
 
-    <any type="object">{"common": "<xsl:value-of
-      select="gn-fn-index:json-escape(normalize-space(.))"/>"}</any>
-    
     <xsl:for-each
       select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
       <xsl:copy-of select="gn-fn-index:add-field('email', .)"/>
@@ -111,8 +109,7 @@
   </xsl:template>
 
 
-
-
+  <!-- Indexing extent descriptions  -->
   <xsl:template mode="index" match="gmd:EX_Extent[count(ancestor::node()) =  1]">
     <xsl:param name="locale"/>
     <xsl:choose>
@@ -131,7 +128,6 @@
           </xsl:for-each>
           }</resourceTitleObject>
 
-        <any><xsl:value-of select="$description"/></any>
       </xsl:when>
       <xsl:otherwise>
         <resourceTitle>[<xsl:value-of select="string-join(.//gco:Decimal, ', ')"/>]</resourceTitle>
@@ -142,7 +138,7 @@
   </xsl:template>
 
 
-
+  <!-- Indexing distribution formats -->
   <xsl:template mode="index" match="gmd:MD_Format[count(ancestor::node()) =  1]">
     <xsl:variable name="title"
                   select="if (gmd:version/gco:CharacterString = '' or gmd:version/gco:CharacterString = '-')
@@ -150,16 +146,27 @@
                         else concat(gmd:name/gco:CharacterString, ' ', gmd:version/gco:CharacterString)"/>
     <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
 
-    <any><xsl:value-of select="$title"/></any>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
+
+  <!-- Indexing constraints -->
   <xsl:template mode="index" match="gmd:resourceConstraints[count(ancestor::node()) =  1]">
     <resourceTitle><xsl:value-of select="concat(
                         string-join(gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode/@codeListValue[@codeListValue != 'otherConstraints'], ', '),
                         ' ',
                         string-join(gmd:MD_LegalConstraints/gmd:otherConstraints/*/text(), ', '))"/></resourceTitle>
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+  </xsl:template>
+
+
+  <!-- Indexing DQ report -->
+  <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
+    <xsl:variable name="title"
+                  select="gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor)"/>
+    <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
