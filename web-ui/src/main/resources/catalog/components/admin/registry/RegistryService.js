@@ -76,8 +76,9 @@
           } else {
             angular.forEach(r.data.registry.registers, function (value, key) {
               itemClass.push({
-                key: value.register.id,
-                label: value.register.label.text})
+                key: value.register ? value.register.id : value.id,
+                label: value.register ? value.register.label.text : value.label.text
+              })
             });
             deferred.resolve(itemClass);
           }
