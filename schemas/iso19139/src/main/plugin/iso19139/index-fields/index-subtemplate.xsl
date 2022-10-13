@@ -166,7 +166,9 @@
   <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
     <xsl:variable name="title"
                   select="gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor)"/>
-    <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
+    <resourceTitleObject type="object">{
+      "default": "<xsl:value-of select="gn-fn-index:json-escape($title)"/>"
+      }</resourceTitleObject>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
