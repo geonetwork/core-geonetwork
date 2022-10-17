@@ -433,7 +433,7 @@
                   <xsl:variable name="div" as="node()*">
                     <xsl:value-of select="$sourceName"/>
                     <br/>
-                    <img src="{/root/gui/url}/images/logos/{utils:getNodeLogo(/root/info/record/sourceinfo/sourceid)}"/>
+                    <img src="{/root/gui/baseUrl}images/logos/{utils:getNodeLogo(/root/info/record/sourceinfo/sourceid)}"/>
                   </xsl:variable>
                   <xsl:choose>
                     <xsl:when test="$doiUrl != ''">
