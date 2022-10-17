@@ -667,6 +667,8 @@
         <link key="WWW:OPENSEARCH" label="OpenSearch"/>
         <link key="WWW:LINK" label="HTTPS"/>
         <link key="WWW:LINKUser guide" label="User guide"/>
+        <link key="WWW:LINKSoftware" label="Software"/>
+        <link key="WWW:LINKProduct notices" label="Product notices"/>
         <link key="WWW:LINKProcessing and validation" label="Processing and validation"/>
         <link key="WWW:LINKOther document" label="Other document"/>
 <!--        <link key="WWW:LINKTHREDDS" label="THREDDS"/>-->

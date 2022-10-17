@@ -243,6 +243,66 @@
       },
       {
         "group": "documents",
+        "label": "Software",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "Software",
+            "hidden": true
+          },
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "documents",
+        "label": "Product notices",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "Product notices",
+            "hidden": true
+          },
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "documents",
         "label": "ProcessingAndValidation",
         "copyLabel": "name",
         "sources": {
