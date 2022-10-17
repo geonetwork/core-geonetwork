@@ -200,9 +200,20 @@
                 angular.extend(scope.searchObj.params, angular.fromJson(scope.filter));
               }
 
+              scope.entryFound = null;
+
               scope.updateParams = function () {
                 scope.searchObj.params.any = scope.searchObj.any;
               };
+
+              // On focus check if any entry. If not display alert.
+              var firstSearchFinished = scope.$on(
+                "searchFinished",
+                function (event, args) {
+                  scope.entryFound = args.count !== 0;
+                  firstSearchFinished();
+                }
+              );
 
               scope.snippet = null;
               scope.snippetRef = gnEditor.buildXMLFieldName(

@@ -37,11 +37,17 @@
       autocomplete="false"
     />
 
+    <span
+      class="input-group-addon"
+      ng-show="entryFound === false
+                   || (entryFound && searchResults.records.length === 0 && !searching)"
+      data-translate=""
+      >noRecordFound</span
+    >
+
     <!-- spinner while searching -->
     <div ng-show="searching" class="list-group tt-menu gn-autocomplete-list text-center">
-      <br />
       <i class="fa fa-spinner fa-spin" />
-      <br /><br />
     </div>
 
     <!-- The autocomplete list -->
