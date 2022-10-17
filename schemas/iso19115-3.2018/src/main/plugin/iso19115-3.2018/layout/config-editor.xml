@@ -834,46 +834,51 @@
           <field xpath="/*/mdb:identificationInfo/*/mri:pointOfContact"/>
 
           <action type="add"
+                  name="empty"
+                  addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
-                  in="/*/mdb:identificationInfo/*"
-                  btnLabel="eo-contact-add">
-            <template>
-              <snippet>
-                <mri:pointOfContact>
-                  <cit:CI_Responsibility>
-                    <cit:role>
-                      <cit:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                                       codeListValue=""/>
-                    </cit:role>
-                    <cit:party>
-                      <cit:CI_Organisation>
-                        <cit:name>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:name>
-                        <cit:contactInfo>
-                          <cit:CI_Contact>
-                            <cit:address>
-                              <cit:CI_Address>
-                                <cit:electronicMailAddress>
-                                  <gco:CharacterString></gco:CharacterString>
-                                </cit:electronicMailAddress>
-                              </cit:CI_Address>
-                            </cit:address>
-                          </cit:CI_Contact>
-                        </cit:contactInfo>
-                        <cit:individual>
-                          <cit:CI_Individual>
-                            <cit:name>
-                              <gco:CharacterString></gco:CharacterString>
-                            </cit:name>
-                          </cit:CI_Individual>
-                        </cit:individual>
-                      </cit:CI_Organisation>
-                    </cit:party>
-                  </cit:CI_Responsibility>
-                </mri:pointOfContact>
-              </snippet>
-            </template>
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-snippet="&lt;cit:CI_Responsibility
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue=''/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"root": "gmd:CI_ResponsibleParty", "groupPublished": "CONTACTS_CDS-SAT"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-display-if="ancestor::node()[name()='mdb:MD_Metadata' and contains(mdb:metadataStandard/*/cit:title/*:CharacterString, 'ISO 19115-3:2018 - Remote Sensing')]"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
           </action>
         </section>
       </tab>
@@ -1150,6 +1155,7 @@
       <flatModeExceptions>
         <for name="cit:otherCitationDetails"/>
         <for name="mri:status"/>
+        <for name="mri:pointOfContact"/>
         <for name="mdb:acquisitionInformation"/>
       </flatModeExceptions>
     </view>
@@ -1518,7 +1524,7 @@
               data-template-type="contact"
               data-filter='{"_groupPublished": "CONTACTS_EDMERP"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmerp"
-              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
           </action>
 
           <action type="add" name="orAddEdmerpName"
@@ -1626,7 +1632,7 @@
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"
-              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
           </action>
 
           <action type="add" name="orAddEdmoName"
@@ -1744,7 +1750,7 @@
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"
-              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
           </action>
           <action type="add" name="orAddProducerName"
                   or="pointOfContact"
