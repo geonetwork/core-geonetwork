@@ -5,6 +5,14 @@
       <span data-ng-show="templateAddAction" data-ng-transclude=""></span>
 
       <button
+        data-ng-show="templateAddSnippet"
+        class="btn btn-default"
+        data-ng-click="addEntry(templateAddSnippet, undefined, false, true)"
+      >
+        <i class="fa fa-fw fa-plus" />
+      </button>
+
+      <button
         class="btn btn-default"
         type="button"
         data-ng-show="popupAction"
@@ -70,7 +78,7 @@
             gn-popover
             class="pull-right"
             gn-popover-dismiss=".content"
-            data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
+            data-ng-if="::insertAsXlink && hasDynamicVariable"
             title="{{'addContactAsLink-help' | translate}}"
           >
             <button gn-popover-anchor type="button" class="btn btn-default btn-sm">

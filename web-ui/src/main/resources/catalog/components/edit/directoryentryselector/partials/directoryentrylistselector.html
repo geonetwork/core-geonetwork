@@ -81,18 +81,6 @@
         data-ng-show="isContact && hasDynamicVariable"
         title="{{'addContactAsText-help' | translate}}"
       >
-        <!--default role is set, display a button to attach the selected contact with default role-->
-        <button
-          type="button"
-          class="btn btn-default"
-          data-gn-click-and-spin="addSelectedEntry(defaultRole.code)"
-          data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
-          data-ng-if="defaultRole"
-        >
-          <i class="fa fa-plus"></i>&nbsp;
-          <span>{{defaultRole.label}}</span>
-        </button>
-
         <!--Choose a role, when a role is set, enable the button to attach the contact-->
         <button
           type="button"
@@ -117,52 +105,22 @@
           type="button"
           class="btn btn-success"
           data-gn-click-and-spin="addSelectedEntry(ctrl.role.code)"
-          data-ng-disabled="!ctrl.role"
+          data-ng-disabled="(stateObj.selectRecords.length < 1) && !!ctrl.role"
         >
-          <i class="fa fa-plus"></i>&nbsp;
+          <i class="fa fa-fw fa-plus"></i>&nbsp;
           <span>{{ctrl.role.label}}</span>
         </button>
-      </div>
-      <div
-        data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
-        title="{{'addContactAsLink-help' | translate}}"
-        class="btn-group dropup"
-      >
         <button
+          data-ng-show="::$parent.insertAsXlink"
+          title="{{'addContactAsLink-help' | translate}}"
           type="button"
-          class="btn btn-default"
-          data-gn-click-and-spin="addSelectedEntry(defaultRole.code)"
-          data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
-          data-ng-if="defaultRole"
+          class="btn btn-success"
+          data-gn-click-and-spin="addSelectedEntry(ctrl.role.code, true)"
+          data-ng-disabled="(stateObj.selectRecords.length < 1) && !!ctrl.role"
         >
-          <i class="fa fa-link"></i>&nbsp;
-          <span>{{defaultRole.label}}</span>
+          <i class="fa fa-fw fa-link"></i>
+          <span>{{ctrl.role.label}}</span>
         </button>
-        <button
-          type="button"
-          class="btn btn-default dropdown-toggle"
-          data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
-          data-toggle="dropdown"
-        >
-          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
-          <i data-ng-if="!defaultRole" class="fa fa-link"></i>&nbsp;
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li
-            data-ng-repeat="role in roles | orderBy:'label'"
-            data-ng-hide="role['@hideInEditMode']"
-          >
-            <a
-              href=""
-              data-gn-click-and-spin="addSelectedEntry(role.code, true)"
-              data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
-              title="{{role.description}}"
-            >
-              {{role.label}}
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
     <br />

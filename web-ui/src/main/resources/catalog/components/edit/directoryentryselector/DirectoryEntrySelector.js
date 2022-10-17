@@ -163,7 +163,9 @@
               }
 
               scope.insertAsXlink =
-                !insertModes || insertModes.indexOf("xlink") >= 0 || scope.insertAsTags;
+                ((insertModes && insertModes.indexOf("xlink") >= 0) ||
+                  scope.insertAsTags) &&
+                gnConfig[gnConfig.key.isXLinkEnabled];
               scope.insertAsText = !insertModes || insertModes.indexOf("text") >= 0;
 
               // Separator between each contact XML
@@ -180,6 +182,10 @@
               // If true, display button to add the element
               // without using the subtemplate selector.
               scope.templateAddAction = iAttrs.templateAddAction == "true";
+
+              // An optional XML snippet to insert
+              scope.templateAddSnippet = iAttrs.templateAddSnippet;
+
               // If true, display input to search with autocompletion
               scope.searchAction = iAttrs.searchAction == "true";
               // If true, display button to search using the popup selector
@@ -328,30 +334,37 @@
                   }
                   var urlParams = decodeURIComponent(gnUrlUtils.toKeyValue(params));
 
-                  $http
-                    .get("../api/registries/entries/" + uuid, {
-                      params: params
-                    })
-                    .success(function (xml) {
-                      if (usingXlink) {
-                        snippets.push(
-                          gnEditorXMLService.buildXMLForXlink(
-                            scope.schema,
-                            scope.elementName,
-                            url + uuid + "?" + urlParams
-                          )
-                        );
-                      } else {
-                        snippets.push(
-                          gnEditorXMLService.buildXML(
-                            scope.schema,
-                            scope.elementName,
-                            xml
-                          )
-                        );
-                      }
-                      checkState(c);
-                    });
+                  if (angular.isString(c) && c.startsWith("<")) {
+                    snippets.push(
+                      gnEditorXMLService.buildXML(scope.schema, scope.elementName, c)
+                    );
+                    checkState(c);
+                  } else {
+                    $http
+                      .get("../api/registries/entries/" + uuid, {
+                        params: params
+                      })
+                      .success(function (xml) {
+                        if (usingXlink) {
+                          snippets.push(
+                            gnEditorXMLService.buildXMLForXlink(
+                              scope.schema,
+                              scope.elementName,
+                              url + uuid + "?" + urlParams
+                            )
+                          );
+                        } else {
+                          snippets.push(
+                            gnEditorXMLService.buildXML(
+                              scope.schema,
+                              scope.elementName,
+                              xml
+                            )
+                          );
+                        }
+                        checkState(c);
+                      });
+                  }
                 });
                 return defer.promise;
               };
@@ -423,7 +436,9 @@
                                   },
                                   filter: [
                                     { term: { isTemplate: "s" } },
-                                    { term: { root: "gmd:CI_ResponsibleParty" } }
+                                    {
+                                      term: { root: "gmd:CI_ResponsibleParty" }
+                                    }
                                   ]
                                 }
                               }
@@ -571,6 +586,9 @@
                       (scope.$eval(scope.showValidOnly)
                         ? ' show-valid-only="true"'
                         : "") +
+                      (iAttrs["defaultRole"]
+                        ? ' data-default-role="' + iAttrs["defaultRole"] + '"'
+                        : "") +
                       "></div>",
                     class: "gn-modal-lg"
                   },
@@ -649,6 +667,7 @@
               angular.forEach(scope.roles, function (r) {
                 if (r.code == scope.defaultRoleCode) {
                   scope.defaultRole = r;
+                  scope.ctrl.role = r;
                 }
               });
               scope.addSelectedEntry = function (role, usingXlink) {
