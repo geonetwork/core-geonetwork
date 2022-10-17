@@ -156,6 +156,34 @@
               data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
     </for>
 
+    <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="CRS"
+        data-filter='{"root": "mrs:MD_ReferenceSystem"}'
+        data-insert-modes=""/>
+    </for>
+
+
+    <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
+
+    <for name="mcc:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
+
 
     <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
