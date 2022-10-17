@@ -137,9 +137,10 @@
                     insertModes = insertModes.split(',');
                   }
 
-                  scope.insertAsXlink = !insertModes ||
-                    insertModes.indexOf('xlink') >= 0 ||
-                    scope.insertAsTags ;
+                  scope.insertAsXlink =
+                    ((insertModes && insertModes.indexOf("xlink") >= 0) ||
+                      scope.insertAsTags) &&
+                    gnConfig[gnConfig.key.isXLinkEnabled];
                   scope.insertAsText = !insertModes ||
                     insertModes.indexOf('text') >= 0;
 
@@ -158,6 +159,10 @@
                   // If true, display button to add the element
                   // without using the subtemplate selector.
                   scope.templateAddAction = iAttrs.templateAddAction == 'true';
+
+                  // An optional XML snippet to insert
+                  scope.templateAddSnippet = iAttrs.templateAddSnippet;
+
                   // If true, display input to search with autocompletion
                   scope.searchAction = iAttrs.searchAction == 'true';
                   // If true, display button to search using the popup selector
@@ -173,9 +178,20 @@
                         angular.fromJson(scope.filter));
                   }
 
+                  scope.entryFound = null;
+
                   scope.updateParams = function() {
                     scope.searchObj.params.any = scope.searchObj.any;
                   };
+
+                  // On focus check if any entry. If not display alert.
+                  var firstSearchFinished = scope.$on(
+                    "searchFinished",
+                    function (event, args) {
+                      scope.entryFound = args.count !== 0;
+                      firstSearchFinished();
+                    }
+                  );
 
                   scope.snippet = null;
                   scope.snippetRef = gnEditor.
@@ -295,24 +311,30 @@
                       var urlParams =
                      decodeURIComponent(gnUrlUtils.toKeyValue(params));
 
-                      $http.get(
-                     '../api/registries/entries/' + id, {
-                       params: params
-                     })
-                     .success(function(xml) {
-                       if (usingXlink) {
-                         snippets.push(gnEditorXMLService.
-                         buildXMLForXlink(scope.schema,
-                              scope.elementName,
-                              url + uuid +
-                              '?' + urlParams));
-                       } else {
-                         snippets.push(gnEditorXMLService.
-                         buildXML(scope.schema,
-                              scope.elementName, xml));
-                       }
-                       checkState(c);
-                     });
+                      if (angular.isString(c) &&  c.startsWith("<")) {
+                        snippets.push(gnEditorXMLService.
+                        buildXML(scope.schema,
+                          scope.elementName, c));
+                        checkState(c);
+                      } else {
+                        $http.get(
+                       '../api/registries/entries/' + id, {
+                         params: params
+                        }).success(function(xml) {
+                         if (usingXlink) {
+                           snippets.push(gnEditorXMLService.
+                           buildXMLForXlink(scope.schema,
+                                scope.elementName,
+                                url + uuid +
+                                '?' + urlParams));
+                         } else {
+                           snippets.push(gnEditorXMLService.
+                           buildXML(scope.schema,
+                                scope.elementName, xml));
+                         }
+                         checkState(c);
+                        });
+                      }
                     });
                     return defer.promise;
                   };
@@ -507,8 +529,11 @@
                       title: $translate.instant('chooseEntry'),
                       content:
                      '<div gn-directory-entry-list-selector="" ' +
-                     (scope.$eval(scope.showValidOnly) ?
-                          ' show-valid-only="true"' : '') +
+                     (scope.$eval(scope.showValidOnly)
+                        ? ' show-valid-only="true"' : '') +
+                     (iAttrs["defaultRole"]
+                        ? ' data-default-role="' + iAttrs["defaultRole"] + '"'
+                        : "") +
                      '></div>',
                       class: 'gn-modal-lg'
                     }, scope, 'EntrySelected');
@@ -580,6 +605,7 @@
                  angular.forEach(scope.roles, function(r) {
                    if (r.code == scope.defaultRoleCode) {
                      scope.defaultRole = r;
+                     scope.ctrl.role = r;
                    }
                  });
                  scope.addSelectedEntry = function(role, usingXlink) {

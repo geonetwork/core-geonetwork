@@ -78,6 +78,8 @@
     matching extent.
   </add-extent-from-geokeywordsHelp>
 
+  <empty> </empty>
+
   <earthObservation>Remote sensing view</earthObservation>
   <eo-tab-contact>Contact</eo-tab-contact>
   <eo-tab-description>Description</eo-tab-description>

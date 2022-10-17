@@ -101,7 +101,40 @@
 
     <for name="mdb:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
+              data-template-add-snippet="&lt;cit:CI_Responsibility
+                         xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                         xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                          &lt;cit:role&gt;
+                            &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                            codeListValue='pointOfContact'/&gt;
+                          &lt;/cit:role&gt;
+                          &lt;cit:party&gt;
+                            &lt;cit:CI_Organisation&gt;
+                              &lt;cit:name&gt;
+                                &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                              &lt;/cit:name&gt;
+                              &lt;cit:contactInfo&gt;
+                                &lt;cit:CI_Contact&gt;
+                                  &lt;cit:address&gt;
+                                    &lt;cit:CI_Address&gt;
+                                      &lt;cit:electronicMailAddress&gt;
+                                        &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                      &lt;/cit:electronicMailAddress&gt;
+                                    &lt;/cit:CI_Address&gt;
+                                  &lt;/cit:address&gt;
+                                &lt;/cit:CI_Contact&gt;
+                              &lt;/cit:contactInfo&gt;
+                              &lt;cit:individual&gt;
+                                &lt;cit:CI_Individual&gt;
+                                  &lt;cit:name&gt;
+                                    &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;/cit:name&gt;
+                                &lt;/cit:CI_Individual&gt;
+                              &lt;/cit:individual&gt;
+                            &lt;/cit:CI_Organisation&gt;
+                          &lt;/cit:party&gt;
+                        &lt;/cit:CI_Responsibility&gt;"
+              data-default-role="pointOfContact"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
@@ -117,7 +150,40 @@
       <!-- To use an ISO19139 contact directory in an ISO19115-3 record
       use the following configuration: -->
       <directiveAttributes
-              data-template-add-action="false"
+        data-template-add-snippet="&lt;cit:CI_Responsibility
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue='pointOfContact'/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
+              data-default-role="pointOfContact"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
@@ -125,9 +191,42 @@
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
               data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
     </for>
-    <for name="mrd:distributor" addDirective="data-gn-directory-entry-selector">
+    <for name="mrd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
+        data-template-add-snippet="&lt;cit:CI_Responsibility
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue='distributor'/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
+              data-default-role="distributor"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
@@ -137,7 +236,40 @@
     </for>
     <for name="mrl:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
+        data-template-add-snippet="&lt;cit:CI_Responsibility
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue='processor'/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
+              data-default-role="processor"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
@@ -147,7 +279,40 @@
     </for>
     <for name="cit:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
+        data-template-add-snippet="&lt;cit:CI_Responsibility
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue='author'/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
+              data-default-role="author"
               data-search-action="false"
               data-popup-action="true"
               data-template-type="contact"
