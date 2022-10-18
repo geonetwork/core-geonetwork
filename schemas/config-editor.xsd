@@ -494,14 +494,37 @@ relevant to have parent defined to have more control over the list.
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
       <xs:attribute name="xpath" type="xs:string" use="optional"/>
+      <xs:attribute name="includeFrom" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+Used in for elements in flatModeException to include them from this mode if the parent or xpath of the element is listed in this attribute (comma separated value).
+
+For example, apply flatModeExceptions only to all mcc:description in resource identifier.
+
+.. code-block:: xml
+
+        <for name="mcc:description"
+             includeFrom="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"/>
+
+          ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="excludeFrom" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-        Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute.
+Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute (comma separated value).
 
-        For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
-        ]]>
+For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
+
+.. code-block:: xml
+
+        <for name="gmd:contact"
+             excludeFrom="gmd:MD_MaintenanceInformation"/>
+
+          ]]>
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>

@@ -63,8 +63,9 @@
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(..)"/>
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name, name())"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name, name(..), $xpath)"/>
 
     <xsl:if test="$isEditing and
                   (not($isFlatMode) or $flatModeException)">
