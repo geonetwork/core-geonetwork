@@ -829,6 +829,38 @@
                     return c;
                   }
                 }
+
+                /* If the schema configuration file for the online
+                   resources panel defines a default type, return it
+                   instead of DEFAULT_CONFIG
+
+                   schema/config/associated-panel/default.json
+
+                   {"config": {"types": [
+                      {
+                          "default": true,
+                          "label": "addOnlinesrc"
+                          ...
+                      },
+                      {
+                          "label": "addThumbnail",
+                          ...
+                      }]
+                  }}
+                */
+                var defaultSchemaConfigIndex = _.findIndex(
+                  scope.config.types,
+                  function (t) {
+                    return t.default === true;
+                  }
+                );
+
+                if (defaultSchemaConfigIndex > -1) {
+                  return scope.config.types[defaultSchemaConfigIndex];
+                } else {
+                  return DEFAULT_CONFIG;
+                }
+
                 return DEFAULT_CONFIG;
               }
 
