@@ -84,10 +84,9 @@
       return widthNoScroll - widthWithScroll;
     }
 
-    // Force the table to resetWidth on window resize
+    // Force the table to resetView on window resize
     // this enables the header and the rows to be aligned
     function resizeBsTable() {
-      element.bootstrapTable("resetWidth");
       element.bootstrapTable("resetView");
     }
 
