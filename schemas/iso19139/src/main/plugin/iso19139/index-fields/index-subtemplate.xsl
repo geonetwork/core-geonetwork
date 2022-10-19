@@ -130,7 +130,13 @@
 
       </xsl:when>
       <xsl:otherwise>
-        <resourceTitle>[<xsl:value-of select="string-join(.//gco:Decimal, ', ')"/>]</resourceTitle>
+        <xsl:variable name="name"
+                      select="concat('S:', .//gmd:southBoundLatitude/*/text(), ', W:', .//gmd:westBoundLongitude/*/text(), ', N:', .//gmd:northBoundLatitude/*/text(), ', E:',.//gmd:eastBoundLongitude/*/text())"/>
+
+        <resourceTitleObject type="object">{
+          "default": "<xsl:value-of select="gn-fn-index:json-escape($name)"/>"
+          }
+        </resourceTitleObject>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -148,17 +154,21 @@
       "default": "<xsl:value-of select="gn-fn-index:json-escape($title)"/>"
       }</resourceTitleObject>
 
-
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
 
   <!-- Indexing constraints -->
   <xsl:template mode="index" match="gmd:resourceConstraints[count(ancestor::node()) =  1]">
-    <resourceTitle><xsl:value-of select="concat(
+    <xsl:variable name="constraint" select="concat(
                         string-join(gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode/@codeListValue[@codeListValue != 'otherConstraints'], ', '),
                         ' ',
-                        string-join(gmd:MD_LegalConstraints/gmd:otherConstraints/*/text(), ', '))"/></resourceTitle>
+                        string-join(gmd:MD_LegalConstraints/gmd:otherConstraints/*/text(), ', '))"/>
+
+    <resourceTitleObject type="object">{
+      "default": "<xsl:value-of select="gn-fn-index:json-escape($constraint)"/>"
+      }
+    </resourceTitleObject>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
