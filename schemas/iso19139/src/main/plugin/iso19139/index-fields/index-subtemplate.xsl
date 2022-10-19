@@ -144,7 +144,9 @@
                   select="if (gmd:version/gco:CharacterString = '' or gmd:version/gco:CharacterString = '-')
                         then gmd:name/gco:CharacterString
                         else concat(gmd:name/gco:CharacterString, ' ', gmd:version/gco:CharacterString)"/>
-    <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
+    <resourceTitleObject type="object">{
+      "default": "<xsl:value-of select="gn-fn-index:json-escape($title)"/>"
+      }</resourceTitleObject>
 
 
     <xsl:call-template name="subtemplate-common-fields"/>
