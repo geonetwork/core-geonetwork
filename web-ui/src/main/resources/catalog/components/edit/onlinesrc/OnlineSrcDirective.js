@@ -1873,16 +1873,9 @@
                 scope.mode = iAttrs["gnLinkToMetadata"];
                 scope.popupid = "#linkto" + scope.mode + "-popup";
                 scope.btn = {};
-
-                // Append * for like search
+                
                 scope.updateParams = function () {
-                  var addWildcard =
-                    scope.searchObj.any.indexOf('"') === -1 &&
-                    scope.searchObj.any.indexOf("*") === -1 &&
-                    scope.searchObj.any.indexOf("q(") !== 0;
-                  scope.searchObj.params.any = addWildcard
-                    ? "*" + scope.searchObj.any + "*"
-                    : scope.searchObj.any;
+                  scope.searchObj.params.any = scope.searchObj.any;
                 };
 
                 /**
