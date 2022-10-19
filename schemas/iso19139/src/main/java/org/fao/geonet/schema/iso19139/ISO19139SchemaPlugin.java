@@ -214,7 +214,7 @@ public class ISO19139SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:featureCatalogueCitation");
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:featureCatalogueCitation[@uuidref]");
         return associatedResources;
     }
 
