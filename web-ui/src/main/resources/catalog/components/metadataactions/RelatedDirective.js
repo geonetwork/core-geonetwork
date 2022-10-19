@@ -448,10 +448,9 @@
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
-                      scope.relations["siblings" + type] =
-                        siblings.filter(function (r) {
-                          return r.properties && r.properties.initiativeType === type;
-                        });
+                      scope.relations["siblings" + type] = siblings.filter(function (r) {
+                        return r.properties && r.properties.initiativeType === type;
+                      });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
                 } else {
