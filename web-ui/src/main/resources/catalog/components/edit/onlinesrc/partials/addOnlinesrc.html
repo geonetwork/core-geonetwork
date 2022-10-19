@@ -347,43 +347,53 @@
                 data-translate=""
                 >description</label
               >
-              <div
-                id="gn-addonlinesrc-description-single-row"
-                class="col-sm-9"
-                data-ng-if="!isFieldMultilingual('desc')"
-              >
-                <textarea
-                  rows="3"
-                  id="gn-addonlinesrc-description-single-textarea"
-                  data-gn-autogrow=""
-                  data-ng-required="params.linkType.fields.desc.required"
-                  data-ng-model="params.desc"
-                  class="form-control input-sm"
-                  placeholder="description"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
-                  name="description"
-                />
+              <div class="col-sm-9" data-ng-if="!params.linkType.fields.desc.directive">
+                <div
+                  id="gn-addonlinesrc-description-single-row"
+                  data-ng-if="!isFieldMultilingual('desc')"
+                >
+                  <textarea
+                    rows="3"
+                    id="gn-addonlinesrc-description-single-textarea"
+                    data-gn-autogrow=""
+                    data-ng-required="params.linkType.fields.desc.required"
+                    data-ng-model="params.desc"
+                    class="form-control input-sm"
+                    placeholder="description"
+                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
+                    name="description"
+                  />
+                </div>
+                <div
+                  id="gn-addonlinesrc-description-multilingual-row"
+                  data-ng-if="isFieldMultilingual('desc')"
+                  gn-multilingual-field="{{mdOtherLanguages}}"
+                  data-main-language="{{mdLang}}"
+                  expanded="false"
+                >
+                  <textarea
+                    data-ng-repeat="(key, val) in mdLangs"
+                    id="gn-addonlinesrc-description-multilingual-{{val}}"
+                    rows="3"
+                    lang="{{val}}"
+                    data-ng-required="params.linkType.fields.applicationProfile.required"
+                    data-ng-model="params.desc[val]"
+                    class="form-control input-sm"
+                    placeholder="description"
+                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
+                    name="description"
+                  />
+                </div>
               </div>
               <div
-                id="gn-addonlinesrc-description-multilingual-row"
-                class="col-sm-9"
-                data-ng-if="isFieldMultilingual('desc')"
-                gn-multilingual-field="{{mdOtherLanguages}}"
-                data-main-language="{{mdLang}}"
-                expanded="false"
+                data-ng-if="params.linkType.fields.desc.directive === 'gn-multientry-combiner-online-resources-description'"
               >
-                <textarea
-                  data-ng-repeat="(key, val) in mdLangs"
-                  id="gn-addonlinesrc-description-multilingual-{{val}}"
-                  rows="3"
-                  lang="{{val}}"
-                  data-ng-required="params.linkType.fields.applicationProfile.required"
-                  data-ng-model="params.desc[val]"
-                  class="form-control input-sm"
-                  placeholder="description"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
-                  name="description"
-                />
+                <div
+                  data-gn-multientry-combiner-online-resources-description="{{params.linkType.fields.desc.directiveConfig}}"
+                  class="col-sm-9 col-xs-9 gn-value nopadding-in-table"
+                  data-label="description"
+                  data-ng-required="params.linkType.fields.desc.required"
+                ></div>
               </div>
 
               <div class="col-sm-1 gn-control"></div>
