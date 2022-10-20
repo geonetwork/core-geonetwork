@@ -74,7 +74,9 @@
               <xsl:value-of
                 select="if (contains($sectionName, ':'))
                   then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
-                  else $strings/*[name() = $sectionName]"
+                  else if ($strings/*[name() = $sectionName] != '')
+                  then $strings/*[name() = $sectionName]
+                  else $sectionName"
               />
             </legend>
             <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
@@ -256,8 +258,13 @@
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
+            <xsl:variable name="translation"
+                          select="$strings/*[name() = $configName]"/>
+            <xsl:variable name="overrideLabel"
+                          select="if ($translation != '')
+                                  then $translation
+                                  else $configName"/>
 
-            <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
             <xsl:if test="$configName != '' and not($overrideLabel)">
               <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>
