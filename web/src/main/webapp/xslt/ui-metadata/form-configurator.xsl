@@ -96,7 +96,9 @@
   localization files. -->
   <xsl:template mode="form-builder" match="text">
     <xsl:variable name="id" select="@ref"/>
-    <xsl:variable name="text" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="translation" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="text"
+                  select="if ($translation) then $translation else ."/>
 
     <xsl:variable name="isDisplayed"
                   as="xs:boolean"
