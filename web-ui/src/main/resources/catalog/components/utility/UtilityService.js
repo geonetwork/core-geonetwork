@@ -381,11 +381,11 @@
 
               var recordValue = this.getObjectValueByPath(record, key);
               if (angular.isArray(recordValue)) {
-                if (values.filter(value => recordValue.includes(value)).length > 0) {
+                if (values.filter((value) => recordValue.includes(value)).length > 0) {
                   cb();
                 }
               } else {
-                if(values.includes(recordValue)) {
+                if (values.includes(recordValue)) {
                   cb();
                 }
               }
@@ -394,7 +394,7 @@
         } else {
           console.warn(
             "A conditional config property MUST have a if property. " +
-            'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}'
+              'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}'
           );
         }
       };
