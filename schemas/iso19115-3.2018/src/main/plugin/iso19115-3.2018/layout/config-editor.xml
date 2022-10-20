@@ -409,6 +409,19 @@
         <col del=".."/>
       </row>
     </table>
+    <table for="gfc:FC_ListedValue">
+      <header>
+        <col label="gfc:code"/>
+        <col label="gfc:label"/>
+        <col label="gfc:definition"/>
+      </header>
+      <row>
+        <col xpath="gfc:code"/>
+        <col xpath="gfc:label"/>
+        <col xpath="gfc:definition"/>
+        <col del=".."/>
+      </row>
+    </table>
   </tableFields>
 
 
