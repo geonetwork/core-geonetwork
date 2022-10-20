@@ -22,6 +22,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -145,6 +146,7 @@
                         not(gco:CharacterString)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="config" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -184,6 +186,12 @@
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
       </xsl:with-param>
+      <xsl:with-param name="collapsible"
+                      select="if ($config and $config/@collapsible != '')
+                              then xs:boolean($config/@collapsible) else true()"/>
+      <xsl:with-param name="collapsed"
+                      select="if ($config and $config/@collapsed != '')
+                              then xs:boolean($config/@collapsed) else false()"/>
     </xsl:call-template>
   </xsl:template>
 

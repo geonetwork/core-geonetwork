@@ -67,7 +67,10 @@
           <fieldset data-gn-field-highlight="" class="gn-{@name}">
             <!-- Get translation for labels.
             If labels contains ':', search into labels.xml. -->
-            <legend data-gn-slide-toggle="">
+            <legend>
+              <xsl:if test="not(@collapsible)">
+                <xsl:attribute name="data-gn-slide-toggle" select="exists(@collapsed)"/>
+              </xsl:if>
               <xsl:value-of
                 select="if (contains($sectionName, ':'))
                   then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
@@ -172,7 +175,7 @@
 
 
   <!-- Element to ignore in that mode -->
-  <xsl:template mode="form-builder" match="@name"/>
+  <xsl:template mode="form-builder" match="@name|@collapsed|@collapsible"/>
 
   <!-- For each field, fieldset and section, check the matching xpath
     is in the current document. In that case dispatch to the schema mode
