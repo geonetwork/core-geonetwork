@@ -22,7 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
   <xs:element name="editor">
     <xs:annotation>
       <xs:documentation>
@@ -1361,7 +1362,27 @@ The fragment is defined in localization file strings.xml:
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="ref" use="required" type="xs:string">
+      <xs:sequence>
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Any HTML to directly embed in the editor (if not multilingual content is required, use @ref if not).
+
+.. code-block:: xml
+
+        <section name="metadata" collapsed="true">
+          <text>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="alert alert-info">Describe here whatever you want</div>
+              </div>
+            </div>
+          </text>
+
+          ]]></xs:documentation>
+        </xs:annotation>
+        <xs:any/>
+      </xs:sequence>
+      <xs:attribute name="ref" type="xs:string">
         <xs:annotation>
           <xs:documentation>The tag name of the element to insert in the localization file.
           </xs:documentation>
