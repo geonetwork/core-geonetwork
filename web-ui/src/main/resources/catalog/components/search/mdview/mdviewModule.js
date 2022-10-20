@@ -280,7 +280,8 @@
 
       function checkIfCitationIsDisplayed(record) {
         $scope.showCitation = false;
-        if (gnGlobalSettings.gnCfg.mods.recordview.showCitation.if) {
+        if (gnGlobalSettings.gnCfg.mods.recordview.showCitation.enabled === true
+          && gnGlobalSettings.gnCfg.mods.recordview.showCitation.if) {
           gnUtilityService.checkConfigurationPropertyCondition(
             record,
             gnGlobalSettings.gnCfg.mods.recordview.showCitation,
