@@ -546,6 +546,8 @@
   <!-- Render metadata elements defined by XPath -->
   <xsl:template mode="render-view" match="@xpath">
     <xsl:param name="base" select="$metadata"/>
+    <xsl:param name="collapsible" as="xs:boolean" required="no"/>
+    <xsl:param name="collapsed" as="xs:boolean" required="no"/>
 
     <!-- Matching nodes -->
     <xsl:variable name="nodes">
@@ -564,6 +566,8 @@
     <xsl:for-each select="$nodes">
       <xsl:apply-templates mode="render-field">
         <xsl:with-param name="fieldName" select="$fieldName"/>
+        <xsl:with-param name="collapsible" select="$collapsible"/>
+        <xsl:with-param name="collapsed" select="$collapsed"/>
       </xsl:apply-templates>
     </xsl:for-each>
   </xsl:template>

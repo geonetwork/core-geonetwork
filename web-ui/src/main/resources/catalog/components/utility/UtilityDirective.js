@@ -981,14 +981,18 @@
           '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
-          var selector =
+          var collapsing = true,
+            selector =
               attr["gnSectionToggle"] ||
-              "form > div > fieldset > legend[data-gn-slide-toggle]",
+              "form > div > fieldset legend[data-gn-slide-toggle]",
             event = attr["event"] || "click";
           element.on("click", function () {
             $(selector).each(function (idx, elem) {
-              $(elem).trigger(event);
+              if (collapsing !== $(elem).hasClass("collapsed")) {
+                $(elem).trigger(event);
+              }
             });
+            collapsing = !collapsing;
             $(this).find("i").toggleClass("fa-angle-double-up fa-angle-double-down");
           });
         }

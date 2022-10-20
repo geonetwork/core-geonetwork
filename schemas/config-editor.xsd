@@ -1015,6 +1015,18 @@ the mandatory section with no name and then the inner elements.
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>
       <xs:attribute ref="displayIfServiceInfo"/>
+      <xs:attribute name="collapsed" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to collapse the section. If not set the section is expanded.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="collapsible" type="xs:boolean" fixed="false">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to not allow collapse for the section. If not set the section is expandable.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
