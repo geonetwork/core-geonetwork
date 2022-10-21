@@ -700,7 +700,7 @@ A good default config with all directives is:
                    data-lang="lang"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-onlinesrc-list=""
                    types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
       </sidePanel>
@@ -820,6 +820,13 @@ The tab key used in URL parameter to activate that tab. The key is also use for 
       <xs:attribute ref="mode"/>
       <xs:attribute ref="displayIfRecord"/>
       <xs:attribute ref="displayIfServiceInfo"/>
+      <xs:attribute name="hideIfNotDisplayed" fixed="true" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Define if the tab should be hidden (and not disabled only) if not displayed based on display rules.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="toggle" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[

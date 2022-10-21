@@ -193,6 +193,7 @@
             queryTitle: "resourceTitleObject.\\*:(${any})",
             queryTitleExactMatch: 'resourceTitleObject.\\*:"${any}"',
             searchOptions: {
+              fullText: true,
               titleOnly: true,
               exactMatch: true,
               language: true
@@ -247,6 +248,10 @@
               // }
               boost: "5",
               functions: [
+                {
+                  filter: { match: { resourceType: "series" } },
+                  weight: 1.5
+                },
                 // Boost down member of a series
                 {
                   filter: { exists: { field: "parentUuid" } },
@@ -290,6 +295,7 @@
                           "resourceTitleObject.${searchLang}^6",
                           "resourceAbstractObject.${searchLang}^.5",
                           "tag",
+                          "uuid",
                           "resourceIdentifier"
                           // "anytext",
                           // "anytext._2gram",
@@ -300,20 +306,7 @@
                   ]
                 }
               },
-              _source: ["resourceTitleObject"],
-              // Fuzzy autocomplete
-              // {
-              //   query: {
-              //     // match_phrase_prefix: match
-              //     "multi_match" : {
-              //       "query" : query,
-              //         // "type":       "phrase_prefix",
-              //         "fields" : [ field + "^3", "tag" ]
-              //     }
-              //   },
-              //   _source: [field]
-              // }
-              from: 0,
+              _source: ["resourceTitle*", "resourceType"],
               size: 20
             },
             moreLikeThisSameType: true,
@@ -703,7 +696,12 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              }
+              } /*,
+              {
+                label: "exportDCAT",
+                url: "/geonetwork/api/collections/main/items/${uuid}?f=dcat",
+                class: "fa-file-code-o"
+              }*/
             ],
             grid: {
               related: ["parent", "children", "services", "datasets"]
@@ -1163,7 +1161,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/",
+        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",

@@ -52,7 +52,6 @@
        * CSW properties
        */
       $scope.cswSettings = {};
-      $scope.cswServiceRecord = null;
 
       $scope.serviceRecordSearchObj = {
         internal: true,
@@ -61,11 +60,16 @@
           any: "",
           from: 1,
           to: 50,
+          isTemplate: "n",
           type: "service",
           sortBy: "resourceTitleObject.default.keyword",
           sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       /**
        * CSW element set name (an array of xpath).
@@ -100,41 +104,11 @@
           .get("../api/site/settings?set=CSW")
           .success(function (data) {
             $scope.cswSettings = data;
-            loadServiceRecords();
           })
           .error(function (data) {
             // TODO
           });
       }
-
-      function loadServiceRecords() {
-        var id = $scope.cswSettings["system/csw/capabilityRecordUuid"];
-        if (angular.isDefined(id) && id != -1) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: id
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
-          });
-        }
-      }
-      $scope.$watchCollection("cswSettings", function (n, o) {
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
 
       function loadCSWElementSetName() {
         $http

@@ -127,6 +127,21 @@
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
           });
 
+          scope.buildFormatter = function (url, uuid, isDraft) {
+            if (url.indexOf("${uuid}") !== -1) {
+              return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
+            } else {
+              return (
+                "../api/records/" +
+                uuid +
+                url.replace("${lang}", scope.lang) +
+                (url.indexOf("?") !== -1 ? "&" : "?") +
+                "approved=" +
+                (isDraft != "y")
+              );
+            }
+          };
+
           function loadTasks() {
             return $http
               .get("../api/status/task", { cache: true })

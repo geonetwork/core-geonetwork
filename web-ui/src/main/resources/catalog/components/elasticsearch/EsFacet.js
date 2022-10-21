@@ -222,7 +222,8 @@
                 include: "Warning.*"
               },
               meta: {
-                displayFilter: false
+                displayFilter: false,
+                field: "indexingErrorMsg"
               }
             }
           },

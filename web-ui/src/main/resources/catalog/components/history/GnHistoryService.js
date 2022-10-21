@@ -91,6 +91,9 @@
         if (filter.recordFilter) {
           filters.push("record=" + filter.recordFilter);
         }
+        if (filter.uuid) {
+          filters.push("uuid=" + filter.uuid);
+        }
         if (filter.dateFromFilter) {
           filters.push(
             "dateFrom=" + $filter("date")(filter.dateFromFilter, "yyyy-MM-dd")

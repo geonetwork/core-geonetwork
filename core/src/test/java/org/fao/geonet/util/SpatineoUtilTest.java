@@ -4,6 +4,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -20,7 +21,7 @@ public class SpatineoUtilTest extends AbstractCoreIntegrationTest {
         Map<String, String> response = null;
         try {
             response = SpatineoUtil.registerService(url, calls);
-        } catch (TimeoutException e) {
+        } catch (TimeoutException | IOException e) {
             assertEquals(
                 String.format("Registration not finalized for %s after %s calls. Increase number of calls to the API.", url, calls),
                 e.getMessage());
@@ -31,7 +32,7 @@ public class SpatineoUtilTest extends AbstractCoreIntegrationTest {
             assertEquals(
                 2,
                 response.size());
-        } catch (TimeoutException e) {
+        } catch (TimeoutException | IOException e) {
             e.printStackTrace();
         }
     }

@@ -127,41 +127,14 @@
           from: 1,
           to: 50,
           isTemplate: "y",
-          sortBy: "resourceTitleObject.default.keyword",
-          sortOrder: "asc"
+          sortBy: "resourceType,resourceTitleObject.default.keyword",
+          sortOrder: "asc,asc"
         }
       };
-
-      function loadDefaultMetadataTemplate() {
-        var preferredTemplate = gnConfig["system.metadatacreate.preferredTemplate"];
-
-        if (preferredTemplate) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: preferredTemplate
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.defaultMetadataTemplate = md;
-            });
-          });
-        }
-      }
-
-      $scope.$watchCollection("settings", function (n, o) {
-        if (n != o) {
-          loadDefaultMetadataTemplate();
-        }
-      });
+      $scope.metadataTemplateSearchObj.params = angular.extend(
+        {},
+        $scope.metadataTemplateSearchObj.defaultParams
+      );
 
       $scope.settings = [];
       $scope.initalSettings = [];

@@ -1728,6 +1728,14 @@
       "resourceType": {
         "type": "keyword"
       },
+      "resourceTypeNameObject": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword"
+          }
+        }
+      },
       "resourceIdentifier": {
         "type": "object",
         "properties": {
