@@ -56,7 +56,7 @@
   };
 
   GnFeaturesTableController.prototype.initTable = function(element, scope, getBsTableLang) {
-    
+
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
       var outer = document.createElement('div');
@@ -74,11 +74,10 @@
       return widthNoScroll - widthWithScroll;
     }
 
-    // Force the table to resetWidth on window resize
+    // Force the table to resetView on window resize
     // this enables the header and the rows to be aligned
     function resizeBsTable() {
-      element.bootstrapTable('resetWidth');
-      element.bootstrapTable('resetView');
+      element.bootstrapTable("resetView");
     }
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
