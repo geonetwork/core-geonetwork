@@ -27,6 +27,7 @@
   xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:ogc="http://www.opengis.net/rdf#"
+  xmlns:geo="http://www.opengis.net/ont/geosparql#"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:iso19115-3.2018="http://geonetwork-opensource.org/schemas/iso19115-3.2018"
   extension-element-prefixes="saxon" exclude-result-prefixes="#all">
@@ -293,10 +294,9 @@
       </xsl:variable>
       <dct:spatial>
         <ogc:Polygon>
-          <ogc:asWKT rdf:datatype="http://www.opengis.net/rdf#WKTLiteral">
-            &lt;http://www.opengis.net/def/crs/OGC/1.3/CRS84&gt;
+          <geo:asWKT rdf:datatype="http://www.opengis.net/rdf#wktLiteral">
             Polygon((<xsl:value-of select="string-join($coords, ', ')"/>))
-          </ogc:asWKT>
+          </geo:asWKT>
         </ogc:Polygon>
       </dct:spatial>
     </xsl:for-each>
