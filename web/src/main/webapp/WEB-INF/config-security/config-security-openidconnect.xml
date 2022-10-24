@@ -85,11 +85,16 @@
   <bean id="openidconnectUserService" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcUserService">
   </bean>
 
+   <bean id="openidconnectAuthorizationProvider" class="org.fao.geonet.kernel.security.openidconnect.LoggingOidcAuthorizationCodeAuthenticationProvider">
+      <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>
+      <constructor-arg ref="openidconnectUserService"/>
+     <constructor-arg ref="openidconnectConfiguration"/>
+    </bean>
 
-  <bean id="openidconnectAuthorizationProvider" class="org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider">
-    <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>
-    <constructor-arg ref="openidconnectUserService"/>
-  </bean>
+<!--  <bean id="openidconnectAuthorizationProvider" class="org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider">-->
+<!--    <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>-->
+<!--    <constructor-arg ref="openidconnectUserService"/>-->
+<!--  </bean>-->
 
   <bean id="openidconnectProviderManager" class="org.springframework.security.authentication.ProviderManager">
     <constructor-arg>

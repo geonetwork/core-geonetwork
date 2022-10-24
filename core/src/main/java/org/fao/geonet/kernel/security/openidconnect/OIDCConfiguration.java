@@ -84,6 +84,8 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
      */
     public boolean updateGroup = true;
 
+    public boolean logSensitiveInformation = false;
+
     public String clientId;
     public String clientSecret;
     public String scopes = null; //null or empty -> all
@@ -110,6 +112,14 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
 
     public void setUserNameAttribute(String userNameAttribute) {
         this.userNameAttribute = userNameAttribute;
+    }
+
+    public boolean isLogSensitiveInformation() {
+        return logSensitiveInformation;
+    }
+
+    public void setLogSensitiveInformation(boolean logSensitiveInformation) {
+        this.logSensitiveInformation = logSensitiveInformation;
     }
 
     public String getOrganizationProperty() {
