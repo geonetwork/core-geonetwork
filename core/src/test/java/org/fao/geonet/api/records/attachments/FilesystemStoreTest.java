@@ -67,7 +67,7 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
             new ISODate().getDateAndTime(),
             new ISODate().getDateAndTime(),
             false,
-            IndexingMode.full);
+            IndexingMode.none);
 
         FilesystemStore filesystemStore = new FilesystemStore();
         filesystemStore.settingManager = this.settingManager;
