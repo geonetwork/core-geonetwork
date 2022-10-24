@@ -129,10 +129,11 @@
               // FIXME: refactor the WFS directive to handle changes in wfs link input
               $timeout(function() {
                 scope.wfsLink = wfsLink;
-                var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
+                var featureTypeName = newLayer.getSource().getParams().LAYERS || wfsLink.name;
+                var indexObject = wfsFilterService.registerEsObject(wfsLink.url, featureTypeName);
                 indexObject.init({
                   wfsUrl: wfsLink.url,
-                  featureTypeName: wfsLink.name
+                  featureTypeName: featureTypeName
                 });
                 indexObject.searchWithFacets({}).then(function (data) {
                   if (data.count > 0) {
