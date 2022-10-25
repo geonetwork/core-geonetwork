@@ -160,8 +160,8 @@ public class DefaultStatusActions implements StatusActions {
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
                (statusId).equals(currentStatusId)) {
-                if (context.isDebugEnabled())
-                    context.debug(String.format("Metadata %s already has status %s ",
+                if (context.getLogger().isDebugEnabled())
+                    context.getLogger().debug(String.format("Metadata %s already has status %s ",
                         status.getMetadataId(), status.getStatusValue().getId()));
                 unchanged.add(status.getMetadataId());
                 continue;
@@ -174,7 +174,7 @@ public class DefaultStatusActions implements StatusActions {
             try {
                 notify(getUserToNotify(status), status);
             } catch (Exception e) {
-                context.warning(String.format(
+                context.getLogger().warning(String.format(
                     "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
                     status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
@@ -380,7 +380,7 @@ public class DefaultStatusActions implements StatusActions {
     protected void sendEmail(String sendTo, String subject, String message) throws Exception {
 
         if (!emailNotes) {
-            context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
+            context.getLogger().info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             SettingManager sm = applicationContext.getBean(SettingManager.class);

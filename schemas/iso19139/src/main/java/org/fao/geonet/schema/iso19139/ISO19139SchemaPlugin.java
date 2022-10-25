@@ -26,6 +26,7 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.ExportablePlugin;
@@ -64,6 +65,8 @@ public class ISO19139SchemaPlugin
     ExportablePlugin,
     ISOPlugin,
     LinkAwareSchemaPlugin {
+
+    private static Logger LOGGER = Log.createLogger(ISO19139SchemaPlugin.class,SchemaPlugin.LOGGER_MARKER);
     public static final String IDENTIFIER = "iso19139";
 
     public static ImmutableSet<Namespace> allNamespaces;
@@ -145,11 +148,11 @@ public class ISO19139SchemaPlugin
                         listOfResources.add(resource);
                     }
                 } catch (Exception e) {
-                    Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
+                    LOGGER.error(Log.JEEVES_MARKER, "Error getting resources UUIDs", e);
                 }
             }
         } catch (Exception e) {
-            Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
+            LOGGER.error(Log.JEEVES_MARKER, "Error getting resources UUIDs", e);
         }
         return listOfResources;
     }
@@ -271,10 +274,13 @@ public class ISO19139SchemaPlugin
             List<Element> matches = xpath.selectNodes(element);
             return matches;
         } catch (Exception e) {
-            Log.debug(LOGGER_NAME, getIdentifier() + ": getTranslationForElement failed " +
-                "on element " + Xml.getString(element) +
-                " using XPath '" + path +
-                "updatedLocalizedTextElement exception " + e.getMessage());
+            LOGGER.debug(LOGGER_NAME,
+                "{}: getTranslationForElement failed on element {} using XPath '{}' updatedLocalizedTextElement exception {}",
+                getIdentifier(),
+                Xml.getString(element),
+                path,
+                e.getMessage()
+            );
         }
         return null;
     }
@@ -547,11 +553,10 @@ public class ISO19139SchemaPlugin
                                   String attributeRef,
                                   String parsedAttributeName,
                                   String attributeValue) {
-        if (Log.isDebugEnabled(LOGGER_NAME)) {
-            Log.debug(LOGGER_NAME, String.format(
-                "Processing element %s, attribute %s with attributeValue %s.",
-                    el, attributeRef, attributeValue));
-        }
+        LOGGER.debug(LOGGER_MARKER,
+            "Processing element {}, attribute {} with attributeValue {}.",
+                el, attributeRef, attributeValue
+        );
 
         boolean elementToProcess = isElementToProcess(el);
 

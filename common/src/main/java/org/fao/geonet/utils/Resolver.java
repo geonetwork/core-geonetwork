@@ -23,6 +23,7 @@
 
 package org.fao.geonet.utils;
 
+import org.apache.logging.log4j.Logger;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.Constants;
@@ -39,7 +40,7 @@ import java.util.Vector;
  */
 
 public final class Resolver implements ProxyInfoObserver {
-
+    private static Logger LOGGER = Log.createLogger(Resolver.class,Log.JEEVES_MARKER);
     /**
      * Active readers count
      */
@@ -92,8 +93,7 @@ public final class Resolver implements ProxyInfoObserver {
         } else {
             catFiles = this.oasisCatalogPath.toString();
         }
-        if (Log.isDebugEnabled(Log.JEEVES))
-            Log.debug(Log.JEEVES, "Using oasis catalog files " + catFiles);
+        LOGGER.debug(Log.JEEVES_MARKER, "Using oasis catalog files {}", catFiles);
 
         setBlankXSLFile(System.getProperty(Constants.XML_CATALOG_BLANKXSLFILE));
 
@@ -108,10 +108,9 @@ public final class Resolver implements ProxyInfoObserver {
         try {
             iCatVerb = Integer.parseInt(catVerbosity);
         } catch (NumberFormatException nfe) {
-            Log.error(Log.JEEVES, "Failed to parse " + Constants.XML_CATALOG_VERBOSITY + " " + catVerbosity, nfe);
+            LOGGER.error(Log.JEEVES_MARKER, "Failed to parse {} {}", Constants.XML_CATALOG_VERBOSITY, catVerbosity, nfe);
         }
-        if (Log.isDebugEnabled(Log.JEEVES))
-            Log.debug(Log.JEEVES, "Using catalog resolver verbosity " + iCatVerb);
+        LOGGER.debug(Log.JEEVES_MARKER, "Using catalog resolver verbosity {}", iCatVerb);
         catMan.setVerbosity(iCatVerb);
 
         catResolver = new NioPathAwareCatalogResolver(catMan);

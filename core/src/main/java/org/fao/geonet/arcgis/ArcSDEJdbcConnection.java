@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,6 +41,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * Created by juanl on 17/02/2017.
  */
 public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
+    private static Logger LOGGER = Log.createLogger(ArcSDEJdbcConnection.class,ARCSDE_LOG_MARKER);
 
     private BasicDataSource dataSource;
     protected Connection jdbcConnection;
@@ -56,7 +58,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
     public ArcSDEJdbcConnection(String driverName, String connectionString, String username, String password) {
 
         try {
-            Log.debug(ARCSDE_LOG_MODULE_NAME, "Getting ArcSDE connection (via JDBC)");
+            LOGGER.debug(ARCSDE_LOG_MODULE_NAME, "Getting ArcSDE connection (via JDBC)");
 
             BasicDataSource dataSource = new BasicDataSource();
             dataSource.setDriverClassName(driverName);
@@ -68,7 +70,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
 
             jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         } catch (SQLException x) {
-            Log.error(ARCSDE_LOG_MODULE_NAME, "Error getting ArcSDE connection (via JDBC)", x);
+            LOGGER.error(ARCSDE_LOG_MARKER, "Error getting ArcSDE connection (via JDBC)", x);
 
             throw new ExceptionInInitializerError(new ArcSDEConnectionException("Exception in ArcSDEConnection using JDBC: can not connect to the database", x));
         }
@@ -81,7 +83,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
         try {
             dataSource.close();
         } catch (SQLException ex) {
-            Log.error(ARCSDE_LOG_MODULE_NAME, "Error closing the ArcSDE connection (via JDBC)", ex);
+            LOGGER.error(ARCSDE_LOG_MARKER, "Error closing the ArcSDE connection (via JDBC)", ex);
             throw new ArcSDEConnectionException("Exception closing JDBC connection", ex);
         }
     }
@@ -95,7 +97,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
                 dataSource.close();
             }
         } catch (SQLException ex) {
-            Log.error(ARCSDE_LOG_MODULE_NAME, "Error closing the ArcSDE connection (via JDBC) "
+            LOGGER.error(ARCSDE_LOG_MARKER, "Error closing the ArcSDE connection (via JDBC) "
                 + "in finalize method", ex);
             throw new ArcSDEConnectionException("Exception finalizing class ArcSDEConnection", ex);
         } finally {
@@ -124,7 +126,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
             public void processRow(ResultSet rs) throws SQLException {
                 // Cancel processing
                 if (cancelMonitor.get()) {
-                    Log.warning(ARCSDE_LOG_MODULE_NAME, "Cancelling metadata retrieve using "
+                    LOGGER.warn(ARCSDE_LOG_MARKER, "Cancelling metadata retrieve using "
                             + "ArcSDE connection (via JDBC)");
                     rs.getStatement().cancel();
                     results.clear();
@@ -162,8 +164,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
             }
         });
 
-        Log.info(ARCSDE_LOG_MODULE_NAME, "Finished retrieving metadata, found: #" + results.size()
-                + " metadata records");
+        LOGGER.info(ARCSDE_LOG_MARKER, "Finished retrieving metadata, found: #{} metadata records", results.size());
 
         return results;
     }

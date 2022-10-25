@@ -34,6 +34,7 @@ import jeeves.services.ReadWriteController;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -88,6 +89,8 @@ import static org.fao.geonet.api.ApiParams.*;
 @Controller("recordWorkflow")
 @ReadWriteController
 public class MetadataWorkflowApi {
+
+    private static Logger LOGGER = Log.createLogger(MetadataWorkflowApi.class,API.LOG_MARKER);
 
     @Autowired
     LanguageUtils languageUtils;
@@ -1094,7 +1097,7 @@ public class MetadataWorkflowApi {
         try {
             ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
         } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         } catch (ResourceNotFoundException e) {
             // If metadata record does not exists then it was deleted so

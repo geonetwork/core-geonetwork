@@ -116,7 +116,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
 
         for (String uuid : this.metadata) {
             String id = dm.getMetadataId(uuid);
-            context.info("Processing metadata with id:" + id);
+            context.getLogger().info("Processing metadata with id:" + id);
             processInternal(id, process, "replacements", replacementsString, context);
         }
     }

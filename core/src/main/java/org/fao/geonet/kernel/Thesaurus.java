@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.TermNotFoundException;
@@ -77,6 +78,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public class Thesaurus {
+    private static final Logger LOGGER = Log.createLogger(Thesaurus.class,Geonet.THESAURUS_MARKER);
     private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
 
     private String fname;
@@ -224,10 +226,7 @@ public class Thesaurus {
         } catch (IOException e) {
             lastModified = FileTime.fromMillis(System.currentTimeMillis());
         }
-
-        if (Log.isDebugEnabled(Geonet.THESAURUS)) {
-            Log.debug(Geonet.THESAURUS, title + " has lastModified of: " + lastModified.toMillis());
-        }
+        LOGGER.debug(Geonet.THESAURUS_MARKER, "{} has lastModified of: {}", title, lastModified.toMillis());
 
         return lastModified;
     }
@@ -288,7 +287,7 @@ public class Thesaurus {
     public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
         QueryEvaluationException, AccessDeniedException {
         if (Log.isDebugEnabled(Geonet.THESAURUS))
-            Log.debug(Geonet.THESAURUS, "Query : " + query);
+            LOGGER.debug(Geonet.THESAURUS_MARKER, "Query : {}", query);
 
         //printResultsTable(resultsTable);
         return repository.performTableQuery(QueryLanguage.SERQL, query);
@@ -462,7 +461,7 @@ public class Thesaurus {
         int removedItems = myGraph.remove(subject, null, null);
         if (Log.isDebugEnabled(Geonet.THESAURUS)) {
             String msg = "Removed " + removedItems + " elements from thesaurus " + this.title + " with uri: " + subject;
-            Log.debug(Geonet.THESAURUS, msg);
+            LOGGER.debug(Geonet.THESAURUS_MARKER, msg);
         }
         return this;
     }

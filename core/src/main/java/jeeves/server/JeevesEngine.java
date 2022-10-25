@@ -86,7 +86,7 @@ public class JeevesEngine {
     private boolean _generalLoaded;
 
 
-    private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
+    private Logger _appHandLogger = Log.createLogger(JeevesEngine.class,Log.APPHAND_MARKER);
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
     private List<Element> _dbServices = new ArrayList<Element>();

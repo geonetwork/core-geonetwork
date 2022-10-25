@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
@@ -49,8 +50,12 @@ import java.util.List;
 
 import jeeves.server.context.ServiceContext;
 
+import static org.fao.geonet.constants.Geonet.OAI_HARVESTER_MARKER;
+
 
 public abstract class AbstractTokenLister implements OaiPmhService {
+
+    final private static Logger LOGGER = Log.createLogger(AbstractTokenLister.class, OAI_HARVESTER_MARKER);
 
     protected ResumptionTokenCache cache;
 
@@ -109,8 +114,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
     public AbstractResponse execute(AbstractRequest request,
                                     ServiceContext context) throws Exception {
 
-        if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-            Log.debug(Geonet.OAI_HARVESTER, "OAI " + this.getClass().getSimpleName() + " execute: ");
+        LOGGER.debug(OAI_HARVESTER_MARKER, "OAI {} execute: ", this.getClass().getSimpleName());
 
         TokenListRequest req = (TokenListRequest) request;
 
@@ -125,8 +129,8 @@ public abstract class AbstractTokenLister implements OaiPmhService {
         int pos = 0;
 
         if (strToken == null) {
-            if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                Log.debug(Geonet.OAI_HARVESTER, "OAI " + this.getClass().getSimpleName() + " : new request (no resumptionToken)");
+            LOGGER.debug(OAI_HARVESTER_MARKER,
+                "OAI {} : new request (no resumptionToken)", this.getClass().getSimpleName());
             Element params = new Element("request");
 
             ISODate from = req.getFrom();
@@ -180,8 +184,8 @@ public abstract class AbstractTokenLister implements OaiPmhService {
         } else {
             //result = (SearchResult) session.getProperty(Lib.SESSION_OBJECT);
             token = cache.getResumptionToken(GeonetworkResumptionToken.buildKey(req));
-            if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
-                Log.debug(Geonet.OAI_HARVESTER, "OAI ListRecords : using ResumptionToken :" + GeonetworkResumptionToken.buildKey(req));
+            LOGGER.debug(OAI_HARVESTER_MARKER,
+            "OAI ListRecords : using ResumptionToken :{}",GeonetworkResumptionToken.buildKey(req));
 
             if (token == null)
                 throw new BadResumptionTokenException("No session for token : " + GeonetworkResumptionToken.buildKey(req));

@@ -126,7 +126,7 @@ public class OaiPmhDispatcher {
         } catch (OaiPmhException e) {
             return OaiPmhException.marshal(e, url, params);
         } catch (Exception e) {
-            context.info("Exception stack trace : \n" + Util.getStackTrace(e));
+            context.getLogger().info("Exception stack trace : \n" + Util.getStackTrace(e));
 
             //--- we should use another exception type but we don't have a specific
             //--- type to handle internal errors
@@ -146,13 +146,13 @@ public class OaiPmhDispatcher {
     private void validateResponse(ServiceContext context, Element response) {
         Path schema = context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH);
 
-        if (context.isDebugEnabled())
-            context.debug("Validating against : " + schema);
+        if (context.getLogger().isDebugEnabled())
+            context.getLogger().debug("Validating against : " + schema);
 
         try {
             Xml.validate(schema, response);
         } catch (Exception e) {
-            context.warning("OAI-PMH response does not validate : " + e.getMessage());
+            context.getLogger().warning("OAI-PMH response does not validate : " + e.getMessage());
         }
     }
 

@@ -28,6 +28,7 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
@@ -53,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 //=============================================================================
 
 public final class ServiceRequestFactory {
+    private static Logger LOGGER = Log.createLogger(ServiceRequestFactory.class,Log.REQUEST_MARKER);
 
     private static final String JSON_URL_FLAG = "_content_type=json";
     private static String DEBUG_URL_FLAG = "!";
@@ -284,15 +286,14 @@ public final class ServiceRequestFactory {
             }
             String file = fileEntry.getValue().getOriginalFilename();
             final String type = multipartFile.getContentType();
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "Uploading file " + file + " type: " + type + " size: " + size);
-            }
+            LOGGER.debug(Log.REQUEST_MARKER, "Uploading file {} type: {} size: {}",
+                file, type, size
+            );
+
 
             //--- remove path information from file (some browsers put it, like IE)
             file = simplifyName(file);
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "File is called " + file + " after simplification");
-            }
+            LOGGER.debug(Log.REQUEST_MARKER, "File is called {} after simplification", file);
             multipartFile.transferTo(uploadDir.resolve(file).toFile());
 
             Element elem = new Element(multipartFile.getName())
@@ -303,8 +304,9 @@ public final class ServiceRequestFactory {
             if (type != null)
                 elem.setAttribute("content-type", type);
 
-            if (Log.isDebugEnabled(Log.REQUEST))
-                Log.debug(Log.REQUEST, "Adding to parameters: " + Xml.getString(elem));
+            if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
+                LOGGER.debug(Log.REQUEST_MARKER, "Adding to parameters: {}", Xml.getString(elem));
+            }
             params.addContent(elem);
         }
 
@@ -337,7 +339,7 @@ public final class ServiceRequestFactory {
             byte[] utf8Bytes = file.getBytes("UTF8");
             file = new String(utf8Bytes, "UTF8");
         } catch (UnsupportedEncodingException e) {
-            Log.error(Log.JEEVES, e.getMessage(), e);
+            LOGGER.error(Log.JEEVES_MARKER, e.getMessage(), e);
         }
 
         //--- replace whitespace with underscore

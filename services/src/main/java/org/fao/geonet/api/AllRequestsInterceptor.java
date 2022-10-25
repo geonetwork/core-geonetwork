@@ -26,6 +26,7 @@ package org.fao.geonet.api;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
  * Avoid to create any sessions for crawlers.
  */
 public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
+    private static Logger LOGGER = Log.createLogger(AllRequestsInterceptor.class,Log.REQUEST_MARKER);
 
     /**
      * List of bots to avoid.
@@ -88,18 +90,19 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
                 httpSession.setAttribute(Jeeves.Elem.SESSION, session);
                 session.setsHttpSession(httpSession);
 
-                if (Log.isDebugEnabled(Log.REQUEST)) {
-                    Log.debug(Log.REQUEST, "Session created for client : " + request.getRemoteAddr());
+                if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
+                    LOGGER.debug(Log.REQUEST_MARKER, "Session created for client : {}", request.getRemoteAddr());
                 }
             }
         } else {
             HttpSession httpSession = request.getSession(false);
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, String.format(
-                    "Crawler '%s' detected. Session MUST be null: %s",
+            if (LOGGER.isDebugEnabled(Log.REQUEST_MARKER)) {
+                LOGGER.debug(
+                    Log.REQUEST_MARKER,
+                    "Crawler '{}' detected. Session MUST be null: {}",
                     userAgent,
                     request.getSession(false) == null
-                ));
+                );
             }
             if (httpSession != null) {
                 httpSession.invalidate();

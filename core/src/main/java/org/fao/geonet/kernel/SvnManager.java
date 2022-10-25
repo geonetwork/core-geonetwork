@@ -40,6 +40,7 @@ import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
@@ -91,6 +92,8 @@ import jeeves.transaction.BeforeRollbackTransactionListener;
 import static org.fao.geonet.kernel.setting.Settings.METADATA_VCS;
 
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
+
+    private static final Logger LOGGER = Log.createLogger(SvnManager.class,Geonet.SVN_MANAGER_MARKER);
     private static String username = "geonetwork";
     private static String password = "geonetwork";
     // configure via setter in Geonetwork app
@@ -111,7 +114,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
 
         SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         if (!_settingManager.getValueAsBool(METADATA_VCS)) {
-            Log.debug(Geonet.SVN_MANAGER, String.format(
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, String.format(
                 "VCS is disabled. Change the %s setting and restart the application", METADATA_VCS
             ));
             return;
@@ -144,7 +147,9 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 repoUrl = SVNURL.fromFile(subFile);
 
             } else {
-                Log.error(Geonet.SVN_MANAGER, "Problem creating or using repository at path " + subversionPath + ", " + e.getMessage(),  e);
+                LOGGER.error(Geonet.SVN_MANAGER_MARKER,
+                    "Problem creating or using repository at path {}, {} ",
+                    subversionPath, e.getMessage(),  e);
                 throw new IllegalArgumentException("Problem creating or using repository at path " + subversionPath);
             }
         }
@@ -154,7 +159,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         try {
             repo = getRepository();
         } catch (SVNException se) {
-            Log.error(Geonet.SVN_MANAGER, "Failed to open subversion repo at path " + subversionPath, se);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Failed to open subversion repo at path {}", subversionPath, se);
             throw se;
         }
 
@@ -173,8 +178,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 // if nothing in repo and it doesn't have the uuid we expect then
                 // recreate it and reopen it
                 if (!uuid.equals(repoUuid)) {
-                    Log.warning(Geonet.SVN_MANAGER, "Recreating subversion repository at " + subversionPath
-                        + " as previous repository was empty");
+                    LOGGER.warn(Geonet.SVN_MANAGER_MARKER, "Recreating subversion repository at {} as previous repository was empty", subversionPath);
                     boolean enableRevisionProperties = true;
                     boolean force = true;
                     repoUrl = SVNRepositoryFactory.createLocalRepository(subFile, uuid, enableRevisionProperties, force);
@@ -205,8 +209,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             SvnUtils.modifyFileProps(editor, "/", props);
             editor.closeDir();
             SVNCommitInfo info = editor.closeEdit();
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Committed " + dbUrl + " as property " + Params.Svn.DBURLPROP + ":" + info);
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER,
+                "Committed {} as property {}:{}", dbUrl, Params.Svn.DBURLPROP, info);
         } else {
             // get database URL from root of repository and check against dbUrl
             // if it doesn't match then stop
@@ -246,15 +250,14 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                     it.remove();
                 }
                 editor.closeDir(); // close the root directory.
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids " + task.ids);
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Committed changes to subversion repository for metadata ids {}", task.ids);
             } catch (Exception e) {
-                Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids " + task.ids, e);
+                LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Failed to commit changes to subversion repository for metadata ids {}", task.ids, e);
                 if (editor != null) {
                     try {
                         editor.abortEdit();
                     } catch (Exception ex) {
-                        Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor", ex);
+                        LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Failed to abort subversion editor", ex);
                     }
                 }
             } finally {
@@ -345,20 +348,19 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         if (!exists(id))
             return; // not in repo so exit
 
-        if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, "History will be recorded on metadata " + id);
+        LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "History will be recorded on metadata {}", id);
 
         final Map<String, String> props = sessionToProps(context, new HashMap<String, String>());
 
         try {
             final TransactionStatus status = TransactionAspectSupport.currentTransactionStatus();
             checkSvnTask(status, id, sessionToLogMessage(context), props);
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER)) {
-                Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database "
-                    + "channel " + status);
-            }
+            LOGGER.debug(
+                Geonet.SVN_MANAGER_MARKER,
+                "Changes to metadata {} will be committed/aborted with the database channel {}",
+                id, status);
         } catch (Exception e) {
-            Log.error(Geonet.SVN_MANAGER, "Failed to set history for metadata to subversion repo at path " + subversionPath, e);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Failed to set history for metadata to subversion repo at path {}", subversionPath, e);
         }
     }
 
@@ -402,8 +404,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             return; // already in repo so exit
 
         String logMessage = sessionToLogMessage(context) + " adding directory for metadata " + id;
-        if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, logMessage);
+        LOGGER.debug(Geonet.SVN_MANAGER_MARKER, logMessage);
 
         ISVNEditor editor = getEditor(logMessage);
 
@@ -411,12 +412,11 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             // Create an id/ directory item in the repository
             editor.openRoot(-1);
             SvnUtils.addDir(editor, id);
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Directory for metadata " + id + " was added");
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Directory for metadata {} was added", id);
             editor.closeDir();
             editor.closeEdit();
         } catch (SVNException svne) {
-            Log.error(Geonet.SVN_MANAGER, "Create metadata dir. error: " + svne.getMessage(), svne);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Create metadata dir. error: {}", svne.getMessage(), svne);
             editor.abortEdit();
             throw svne;
         }
@@ -430,14 +430,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
 
             commitMetadata(id, finalEditor);
 
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Metadata " + id + " was added");
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Metadata {} was added", id);
             editor.closeDir();
             SVNCommitInfo commitInfo = editor.closeEdit();
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Commit returned " + commitInfo);
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Commit returned {}", commitInfo);
         } catch (SVNException svne) {
-            Log.error(Geonet.SVN_MANAGER, "Create metadata dir. error: " + svne.getMessage(), svne);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Create metadata dir. error: {}", svne.getMessage(), svne);
             editor.abortEdit();
             throw svne;
         }
@@ -459,18 +457,16 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             return; // not in repo so exit
 
         String logMessage = sessionToLogMessage(context) + " deleting directory for metadata " + id;
-        if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, logMessage);
+        LOGGER.debug(Geonet.SVN_MANAGER_MARKER, logMessage);
 
         ISVNEditor editor = getEditor(logMessage);
 
         try {
             SvnUtils.deleteDir(editor, id);
             SVNCommitInfo commitInfo = editor.closeEdit();
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Directory for metadata " + id + " deleted: " + commitInfo);
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Directory for metadata {} deleted: {}", id, commitInfo);
         } catch (SVNException svne) {
-            Log.error(Geonet.SVN_MANAGER, "Delete metadata dir. error: " +  svne.getMessage(),  svne);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Delete metadata dir. error: {}", svne.getMessage(),  svne);
             editor.abortEdit(); // abort the update on the XML in the repository
             throw svne;
         }
@@ -571,7 +567,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             // get the metadata status and if different commit changes
             commitMetadataStatus(editor, id, dataMan);
         } catch (Exception e) {
-            Log.error(Geonet.SVN_MANAGER, "Failed to commit metadata to  subversion repo at path " + subversionPath, e);
+            LOGGER.error(Geonet.SVN_MANAGER_MARKER, "Failed to commit metadata to  subversion repo at path {}", subversionPath, e);
             editor.abortEdit();
             throw e;
         }
@@ -605,14 +601,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             String old = Xml.getString(categsPrevVersion);
             if (!old.equals(now)) {
                 SvnUtils.modifyFile(editor, id + "/categories.xml", old.getBytes(Constants.ENCODING), now.getBytes(Constants.ENCODING));
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Categories of metadata " + id + " updated");
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Categories of metadata {} updated", id);
             }
         } else {
             // Add the id/owner.xml item to the repository
             SvnUtils.addFile(editor, id + "/categories.xml", now.getBytes(Constants.ENCODING));
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Categories of metadata " + id + " added");
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Categories of metadata {} added", id);
 
         }
     }
@@ -641,15 +635,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             if (!old.equals(now)) {
 
                 SvnUtils.modifyFile(editor, id + "/status.xml", old.getBytes(Constants.ENCODING), now.getBytes(Constants.ENCODING));
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Status of metadata " + id + " was updated");
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Status of metadata {} was updated", id);
             }
         } else {
             // Add the id/owner.xml item to the repository
             SvnUtils.addFile(editor, id + "/status.xml", now.getBytes(Constants.ENCODING));
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Status of metadata " + id + " was added");
-
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Status of metadata {} was added",id);
         }
     }
 
@@ -674,8 +665,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
                 // Update the id/metadata.xml item in the repository
                 SvnUtils.modifyFile(editor, id + "/metadata.xml", old.getBytes(Constants.ENCODING), now.getBytes(Constants.ENCODING));
 
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Metadata " + id + " was updated");
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Metadata {} was updated", id);
             }
         } else {
             SvnUtils.addFile(editor, id + "/metadata.xml", now.getBytes(Constants.ENCODING));
@@ -716,15 +706,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             if (!old.equals(now)) {
 
                 SvnUtils.modifyFile(editor, id + "/owner.xml", old.getBytes(Constants.ENCODING), now.getBytes(Constants.ENCODING));
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata " + id + " was updated");
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Ownership of metadata {} was updated", id);
             }
         } else {
             // Add the id/owner.xml item to the repository
             SvnUtils.addFile(editor, id + "/owner.xml", now.getBytes(Constants.ENCODING));
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata " + id + " was added");
-
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Ownership of metadata {} was added", id);
         }
     }
 
@@ -768,14 +755,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
 
                 SvnUtils.modifyFile(editor, id + "/privileges.xml", old.getBytes(Constants.ENCODING), now.getBytes(Constants.ENCODING));
 
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata " + id + " were updated");
+                LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Privileges of metadata {} were updated", id);
             }
         } else {
             // Add the id/owner.xml item to the repository
             SvnUtils.addFile(editor, id + "/privileges.xml", now.getBytes(Constants.ENCODING));
-            if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata " + id + " were added");
+            LOGGER.debug(Geonet.SVN_MANAGER_MARKER, "Privileges of metadata {} were added", id);
         }
     }
 

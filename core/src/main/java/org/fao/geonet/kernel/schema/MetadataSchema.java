@@ -70,6 +70,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import static org.fao.geonet.constants.Geonet.SCHEMA_MANAGER_MARKER;
+
 
 //==============================================================================
 
@@ -78,6 +80,9 @@ import javax.xml.bind.Unmarshaller;
     "readwriteUUID", "schematronRules"
 })
 public class MetadataSchema {
+
+    final private static org.apache.logging.log4j.Logger LOGGER = Log.createLogger(MetadataSchema.class, SCHEMA_MANAGER_MARKER);
+
     public static final String SCHEMATRON_DIR = "schematron";
     private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
@@ -163,7 +168,7 @@ public class MetadataSchema {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 return (Editor) unmarshaller.unmarshal(metadataSchemaConfig.toFile());
             } catch (JAXBException e) {
-                Log.error(Geonet.SCHEMA_MANAGER, " Get config editor. Error is " + e.getMessage(), e);
+                LOGGER.error(SCHEMA_MANAGER_MARKER, " Get config editor. Error is " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
@@ -221,7 +226,7 @@ public class MetadataSchema {
             Logger.log();
             childType = hmElements.get(elem);
             if (childType == null) {
-                Log.warning(Geonet.SCHEMA_MANAGER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
+                LOGGER.warn(SCHEMA_MANAGER_MARKER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
                     + oldelem + " with parent " + parent + ". Returning xs:string");
                 return "xs:string";
             }
@@ -402,18 +407,14 @@ public class MetadataSchema {
         Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
         Path schematronExpandFile = schematronResourceDir.resolve("iso_abstract_expand.xsl");
 
-        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-            Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
-            Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
-            Log.debug(Geonet.SCHEMA_MANAGER, "          - rules location is " + schemaSchematronDir);
-        }
+        LOGGER.debug(SCHEMA_MANAGER_MARKER, "     Schematron compilation for schema {}", schemaName);
+        LOGGER.debug(SCHEMA_MANAGER_MARKER, "          - compiling with {}", schematronCompilationFile);
+        LOGGER.debug(SCHEMA_MANAGER_MARKER, "          - rules location is {}", schemaSchematronDir);
 
         if (Files.exists(schemaSchematronDir)) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaSchematronDir, "*.sch")) {
                 for (Path rule : paths) {
-                    if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-                        Log.debug(Geonet.SCHEMA_MANAGER, "                - rule " + rule);
-                    }
+                    LOGGER.debug(SCHEMA_MANAGER_MARKER, "                - rule {}", rule);
 
                     // Compile all schematron rules
                     final String xslPath = rule.toAbsolutePath().toString().replace(SCH_FILE_EXTENSION, XSL_FILE_EXTENSION);
@@ -425,17 +426,21 @@ public class MetadataSchema {
                         Element schematronExpandXml = Xml.transform(schematronRule, schematronExpandFile);
                         Xml.transform(schematronExpandXml, schematronCompilationFile, schematronXsl);
                     } catch (FileNotFoundException e) {
-                        Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
-                            + ". Error is " + e.getMessage());
+                        LOGGER.error(SCHEMA_MANAGER_MARKER,
+                            "     Schematron rule file not found {}. Error is {}",
+                            schematronXslFilePath, e.getMessage());
+
                     } catch (Exception e) {
-                        Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath
-                            + ". Error is " + e.getMessage());
+                        LOGGER.error(SCHEMA_MANAGER_MARKER,
+                            "     Schematron rule compilation failed for {}. Error is {}",
+                            schematronXslFilePath, e.getMessage());
                     }
 
                 }
             } catch (IOException e) {
-                Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schemaSchematronDir
-                    + ". Error is " + e.getMessage());
+                LOGGER.error(SCHEMA_MANAGER_MARKER,
+                    "     Schematron rule file not found {}. Error is {}",
+                    schemaSchematronDir, e.getMessage());
             }
         }
     }
@@ -658,10 +663,7 @@ public class MetadataSchema {
         }
 
         String xpath = query.getXpath();
-        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-            Log.error(Geonet.SCHEMA_MANAGER, String.format(
-                "Saved query XPath: %s", xpath));
-        }
+        LOGGER.error(SCHEMA_MANAGER_MARKER, "Saved query XPath: {}", xpath);
 
         return Xml.selectString(xml,
             xpath,

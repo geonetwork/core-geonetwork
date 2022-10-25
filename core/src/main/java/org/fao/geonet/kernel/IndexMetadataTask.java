@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
@@ -44,6 +45,7 @@ import javax.annotation.Nullable;
  * A runnable for indexing multiple metadata in a separate thread.
  */
 public final class IndexMetadataTask implements Runnable {
+    private static Logger LOGGER = Log.createLogger(IndexMetadataTask.class,Geonet.DATA_DIRECTORY_MARKER);
 
     private final ServiceContext _context;
     private final List<?> _metadataIds;
@@ -88,9 +90,7 @@ public final class IndexMetadataTask implements Runnable {
             }
             // poll context to see whether servlet is up yet
             while (!_context.isServletInitialized()) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
-                }
+                LOGGER.debug(Geonet.DATA_MANAGER_MARKER, "Waiting for servlet to finish initializing..");
                 try {
                     Thread.sleep(10000); // sleep 10 seconds
                 } catch (InterruptedException e) {
@@ -109,8 +109,8 @@ public final class IndexMetadataTask implements Runnable {
                 try {
                     dataManager.indexMetadata(metadataId.toString(), false);
                 } catch (Exception e) {
-                    Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
-                        + "\n" + Util.getStackTrace(e));
+                    LOGGER.error(Geonet.INDEX_MARKER, "Error indexing metadata '{}': {}",
+                        metadataId, e.getMessage(), e);
                 }
             }
             if (_user != null && _context.getUserSession().getUserId() == null) {

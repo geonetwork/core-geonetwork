@@ -191,8 +191,8 @@ public class DownloadArchive implements Service {
                     BinaryFile details = BinaryFile.encode(200, resource.getPath(), false);
                     String remoteURL = details.getElement().getAttributeValue("remotepath");
                     if (remoteURL != null) {
-                        if (context.isDebugEnabled())
-                            context.debug("Downloading " + remoteURL + " to archive " + zFile.getFileName());
+                        if (context.getLogger().isDebugEnabled())
+                            context.getLogger().debug("Downloading " + remoteURL + " to archive " + zFile.getFileName());
                         fileInfo.setAttribute("size", "unknown");
                         fileInfo.setAttribute("datemodified", "unknown");
                         fileInfo.setAttribute("name", remoteURL);
@@ -200,8 +200,8 @@ public class DownloadArchive implements Service {
                             remoteURL + " (local config: " + resource.getPath() + ")", context);
                         fname = details.getElement().getAttributeValue("remotefile");
                     } else {
-                        if (context.isDebugEnabled())
-                            context.debug("Writing " + fname + " to archive " + zFile.getFileName());
+                        if (context.getLogger().isDebugEnabled())
+                            context.getLogger().debug("Writing " + fname + " to archive " + zFile.getFileName());
                         fileInfo.setAttribute("size", Long.toString(resource.getMetadata().getSize()));
                         fileInfo.setAttribute("name", fname);
                         fileInfo.setAttribute("datemodified", sdf.format(resource.getMetadata().getLastModification()));
@@ -246,8 +246,8 @@ public class DownloadArchive implements Service {
                 root.addContent(downloaded);
                 root.addContent(entered);
                 root.addContent(userDetails);
-                if (context.isDebugEnabled())
-                    context.debug("Passed to metadata-license-annex.xsl:\n " + Xml.getString(root));
+                if (context.getLogger().isDebugEnabled())
+                    context.getLogger().debug("Passed to metadata-license-annex.xsl:\n " + Xml.getString(root));
 
                 //--- create the license annex html file using the info in root element and
                 //--- add it to the zip stream
@@ -278,18 +278,18 @@ public class DownloadArchive implements Service {
         Element license = Xml.selectElement(root, "metadata/*/licenseLink");
         if (license != null) {
             String licenseURL = license.getText();
-            if (context.isDebugEnabled())
-                context.debug("license URL = " + licenseURL);
+            if (context.getLogger().isDebugEnabled())
+                context.getLogger().debug("license URL = " + licenseURL);
 
             Path licenseFilesDir = getLicenseFilesPath(licenseURL, context);
-            if (context.isDebugEnabled())
-                context.debug(" licenseFilesPath = " + licenseFilesDir);
+            if (context.getLogger().isDebugEnabled())
+                context.getLogger().debug(" licenseFilesPath = " + licenseFilesDir);
 
             if (licenseFilesDir != null && Files.exists(licenseFilesDir)) {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(licenseFilesDir)) {
                     for (Path licenseFile : paths) {
-                        if (context.isDebugEnabled()) {
-                            context.debug("adding " + licenseFile + " to zip file");
+                        if (context.getLogger().isDebugEnabled()) {
+                            context.getLogger().debug("adding " + licenseFile + " to zip file");
                         }
                         Files.copy(licenseFile, zipFs.getPath(licenseFile.getFileName().toString()));
                     }
@@ -308,8 +308,8 @@ public class DownloadArchive implements Service {
         //--- Get license files subdirectory for license
         URL url = new URL(licenseURL);
         String licenseFilesPath = url.getHost() + url.getPath();
-        if (context.isDebugEnabled())
-            context.debug("licenseFilesPath= " + licenseFilesPath);
+        if (context.getLogger().isDebugEnabled())
+            context.getLogger().debug("licenseFilesPath= " + licenseFilesPath);
 
         //--- Get local mirror directory for license files
         Path path = context.getAppPath();
@@ -322,8 +322,8 @@ public class DownloadArchive implements Service {
         Path licenseDir = IO.toPath(licenseDirAsString);
         if (!licenseDir.isAbsolute()) licenseDir = path.resolve(licenseDir);
 
-        if (context.isDebugEnabled()) {
-            context.debug("licenseDir = " + licenseDir);
+        if (context.getLogger().isDebugEnabled()) {
+            context.getLogger().debug("licenseDir = " + licenseDir);
         }
 
         //--- return license files directory
@@ -354,15 +354,15 @@ public class DownloadArchive implements Service {
             String fromDescr = "GeoNetwork administrator";
 
             String dateTime = now();
-            context.info("DOWNLOADED:" + theFile + "," + id + "," + uuid + "," + context.getIpAddress() + "," + username);
+            context.getLogger().info("DOWNLOADED:" + theFile + "," + id + "," + uuid + "," + context.getIpAddress() + "," + username);
 
             if (host.trim().length() == 0 || from.trim().length() == 0) {
-                if (context.isDebugEnabled()) {
-                    context.debug("Skipping email notification");
+                if (context.getLogger().isDebugEnabled()) {
+                    context.getLogger().debug("Skipping email notification");
                 }
             } else {
-                if (context.isDebugEnabled()) {
-                    context.debug("Sending email notification for file : " + theFile);
+                if (context.getLogger().isDebugEnabled()) {
+                    context.getLogger().debug("Sending email notification for file : " + theFile);
                 }
 
                 OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);

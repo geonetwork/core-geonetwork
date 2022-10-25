@@ -25,6 +25,7 @@ package jeeves.server.context;
 
 import jeeves.monitor.MonitorManager;
 
+import org.apache.logging.log4j.MarkerManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -51,7 +52,7 @@ public class ScheduleContext extends BasicContext {
                            EntityManager entityManager) {
         super(appContext, contexts, entityManager);
 
-        logger = Log.createLogger(Log.SCHEDULER + "." + name);
+        logger = Log.createLogger(name, Log.SCHEDULER);
         this.scheduleName = name;
     }
 

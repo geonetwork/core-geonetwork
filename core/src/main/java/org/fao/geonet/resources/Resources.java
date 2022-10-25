@@ -28,6 +28,7 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
@@ -298,9 +299,11 @@ public abstract class Resources {
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 
-            context.warning("Cannot copy icon -> " + e.getMessage());
-            context.warning(" (C) Source : " + icon);
-            context.warning(" (C) Destin : " + logosDir);
+            Logger LOGGER = context.getLogger();
+
+            LOGGER.warn("Cannot copy icon -> {}", e.getMessage());
+            LOGGER.warn(" (C) Source : {}", icon);
+            LOGGER.warn(" (C) Destin : {}", logosDir);
         }
         return filename;
     }

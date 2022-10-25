@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.logging.log4j.Logger;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.fao.geonet.JeevesJCS;
@@ -48,6 +49,7 @@ import org.w3c.dom.ls.LSInput;
 	 hence this extension.  */
 
 public class XmlResolver extends XMLCatalogResolver {
+    private static final Logger LOGGER = Log.createLogger(XmlResolver.class, Log.XML_RESOLVER_MARKER);
 
     public static final String XMLRESOLVER_JCS = "XmlResolver";
     private ProxyParams proxyParams;
@@ -85,9 +87,13 @@ public class XmlResolver extends XMLCatalogResolver {
      */
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
 
-        if (Log.isDebugEnabled(Log.XML_RESOLVER))
-            Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: Before resolution: Type: " + type + " NamespaceURI :" + namespaceURI + " " +
-                "PublicId :" + publicId + " SystemId :" + systemId + " BaseURI:" + baseURI);
+        LOGGER.debug(
+            Log.XML_RESOLVER_MARKER,
+            "Jeeves XmlResolver: Before resolution: Type: {} NamespaceURI: {} " +
+            "PublicId: {} SystemId: {} BaseURI: {}",
+            type, namespaceURI, publicId, systemId, baseURI
+        );
+
         LSInput result = null;
 
         try {
@@ -107,9 +113,10 @@ public class XmlResolver extends XMLCatalogResolver {
             baseURI = result.getBaseURI();
         }
 
-        if (Log.isDebugEnabled(Log.XML_RESOLVER))
-            Log.debug(Log.XML_RESOLVER, "Jeeves XmlResolver: After resolution: PublicId :" + publicId + " SystemId :" + systemId + " " +
-                "BaseURI:" + baseURI);
+        LOGGER.debug(Log.XML_RESOLVER_MARKER,
+            "Jeeves XmlResolver: After resolution: PublicId: {} SystemId: {} BaseURI:{}",
+            publicId, systemId, baseURI
+        );
 
         URL externalRef = null;
         try {
@@ -159,8 +166,8 @@ public class XmlResolver extends XMLCatalogResolver {
                 try {
                     elResult = xml.execute();
                     addXmlToCache(externalRef.toString(), elResult);
-                    if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                        Log.debug(Log.XML_RESOLVER, "Retrieved: \n" + Xml.getString(elResult));
+                    if (LOGGER.isDebugEnabled(Log.XML_RESOLVER_MARKER)) {
+                        LOGGER.debug(Log.XML_RESOLVER_MARKER, "Retrieved: \n{}", Xml.getString(elResult));
                     }
                 } catch (Exception e) {
                     Log.error(Log.XML_RESOLVER, "Request on " + externalRef + " failed." + e.getMessage());

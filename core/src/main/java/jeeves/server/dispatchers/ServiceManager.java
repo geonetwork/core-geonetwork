@@ -44,11 +44,12 @@ import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Marker;
 import org.eclipse.jetty.io.EofException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
@@ -92,6 +93,8 @@ public class ServiceManager {
     private boolean startupError = false;
     private Map<String, String> startupErrors;
 
+    static Logger LOGGER = Log.createLogger(ServiceManager.class,Log.SERVICE_MARKER);
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -102,12 +105,22 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Log info message with {@link Log#SERVICE_MARKER} on behalf of {@link ServiceManager}.
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     static void info(String message) {
-        Log.info(Log.SERVICE, message);
+        LOGGER.info(Log.SERVICE_MARKER,message);
     }
 
+    /**
+     * Log error message with {@link Log#SERVICE_MARKER} on behalf of {@link ServiceManager}.
+     * @param message
+     * @deprecated Please use {@link Log#createLogger(Class, Marker)} to create your own Logger directly
+     */
     static void error(String message) {
-        Log.error(Log.SERVICE, message);
+        LOGGER.error(Log.SERVICE_MARKER,message);
     }
 
     public void setDefaultLang(String lang) {
@@ -188,7 +201,7 @@ public class ServiceManager {
             al = new ArrayList<>();
             htServices.put(name, al);
         } else {
-            info("Service " + name + " already exist, re-register it.");
+            LOGGER.info("Service {} already exist, re-register it.", name);
             htServices.remove(name);
             al = new ArrayList<>();
             htServices.put(name, al);
@@ -419,13 +432,13 @@ public class ServiceManager {
             while (true) {
                 String srvName = req.getService();
 
-                info("Dispatching : " + srvName);
+                LOGGER.info("Dispatching : {}", srvName);
                 logParameters(req.getParams());
 
                 ArrayList<ServiceInfo> al = htServices.get(srvName);
 
                 if (al == null) {
-                    error("Service not found : " + srvName);
+                    LOGGER.error("Service not found : {}", srvName);
                     throw new ServiceNotFoundEx(srvName);
                 }
 
@@ -437,7 +450,7 @@ public class ServiceManager {
                 }
 
                 if (srvInfo == null) {
-                    error("Service not matched in list : " + srvName);
+                    LOGGER.error("Service not matched in list : {}", srvName);
                     throw new ServiceNotMatchedEx(srvName);
                 }
 
@@ -468,10 +481,10 @@ public class ServiceManager {
                 String forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
 
                 if (forward == null) {
-                    info(" -> dispatch ended for : " + srvName);
+                    LOGGER.info(" -> dispatch ended for : {}", srvName);
                     return;
                 } else {
-                    info(" -> forwarding to : " + forward);
+                    LOGGER.info(" -> forwarding to : {}", forward);
 
                     // Use servlet redirect for user.login and user.logout services.
                     // TODO: Make redirect configurable for services in jeeves
@@ -526,7 +539,8 @@ public class ServiceManager {
         int code = getErrorCode(e);
         boolean cache = (srvInfo != null) && srvInfo.isCacheSet();
 
-        if (isDebug()) debug("Raised exception while executing service\n" + Xml.getString(error));
+        if (LOGGER.isDebugEnabled(Log.SERVICE_MARKER))
+            LOGGER.debug(Log.SERVICE_MARKER, "Raised exception while executing service\n{}", Xml.getString(error));
 
         try {
             InputMethod input = req.getInputMethod();
@@ -569,10 +583,10 @@ public class ServiceManager {
                 }
             }
         } catch (Exception ex) {
-            error("Raised exception while writing response to exception");
-            error("  Exception : " + ex);
-            error("  Message   : " + ex.getMessage());
-            error("  Stack     : " + Util.getStackTrace(ex));
+            LOGGER.error("Raised exception while writing response to exception");
+            LOGGER.error("  Exception : {}", ex);
+            LOGGER.error("  Message   : {}", ex.getMessage());
+            LOGGER.error("  Stack     :", e);
         }
     }
 
@@ -584,7 +598,7 @@ public class ServiceManager {
 
     private String dispatchOutput(ServiceRequest req, ServiceContext context,
                                   Element response, OutputPage outPage, boolean cache) throws Exception {
-        info("   -> dispatching to output for : " + req.getService());
+        LOGGER.info("   -> dispatching to output for : {}", req.getService());
 
         //------------------------------------------------------------------------
         //--- check if the output page is a foward
@@ -604,12 +618,14 @@ public class ServiceManager {
             //--- if there is no output page we output the xml result (if any)
 
             if (response == null)
-                warning("Response is null and there is no output page for : " + req.getService());
+                LOGGER.warn("Response is null and there is no output page for : {}", req.getService());
             else {
-                info("     -> writing xml for : " + req.getService());
+                LOGGER.info("     -> writing xml for : {}", req.getService());
 
                 //--- this logging is usefull for xml services that are called by javascript code
-                if (isDebug()) debug("Service xml is :\n" + Xml.getString(response));
+                if (LOGGER.isDebugEnabled(Log.SERVICE_MARKER)) {
+                    LOGGER.debug(Log.SERVICE_MARKER, "Service xml is :\n{}", Xml.getString(response));
+                }
 
                 InputMethod in = req.getInputMethod();
                 OutputMethod out = req.getOutputMethod();
@@ -687,9 +703,9 @@ public class ServiceManager {
                     styleSheet = dataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
                     if (!Files.exists(styleSheet))
-                        error(" -> stylesheet not found on disk, aborting : " + styleSheet);
+                        LOGGER.error(" -> stylesheet not found on disk, aborting : {}", styleSheet);
                     else {
-                        info(" -> transforming with stylesheet : " + styleSheet);
+                        LOGGER.info(" -> transforming with stylesheet : {}", styleSheet);
 
                         try {
                             TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
@@ -727,15 +743,15 @@ public class ServiceManager {
 
                             response = BinaryFile.encode(200, file, documentName, true).getElement();
                         } catch (Exception e) {
-                            error(" -> exception during XSL/FO transformation for : " + req.getService());
-                            error(" -> (C) stylesheet : " + styleSheet);
-                            error(" -> (C) message : " + e.getMessage());
-                            error(" -> (C) exception : " + e.getClass().getSimpleName());
+                            LOGGER.error(" -> exception during XSL/FO transformation for : {}", req.getService());
+                            LOGGER.error(" -> (C) stylesheet : {}", styleSheet);
+                            LOGGER.error(" -> (C) message : {}", e.getMessage());
+                            LOGGER.error(" -> (C) exception : {}", e.getClass().getSimpleName());
 
                             throw e;
                         }
 
-                        info(" -> end transformation for : " + req.getService());
+                        LOGGER.info(" -> end transformation for : {}", req.getService());
                     }
 
 
@@ -815,9 +831,9 @@ public class ServiceManager {
                     styleSheet = dataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
 
                     if (!Files.exists(styleSheet))
-                        error("     -> stylesheet not found on disk, aborting : " + styleSheet);
+                        LOGGER.error("     -> stylesheet not found on disk, aborting : {}", styleSheet);
                     else {
-                        info("     -> transforming with stylesheet : " + styleSheet);
+                        LOGGER.info("     -> transforming with stylesheet : {}", styleSheet);
                         try {
                             //--- then we set the content-type and output the result
                             // If JSON output requested, run the XSLT transformation and the JSON
@@ -858,15 +874,15 @@ public class ServiceManager {
                             // ignore this.
                             // it happens because the stream closes by client.
                         } catch (Exception e) {
-                            error("   -> exception during transformation for : " + req.getService());
-                            error("   ->  (C) stylesheet : " + styleSheet);
-                            error("   ->  (C) message    : " + e.getMessage());
-                            error("   ->  (C) exception  : " + e.getClass().getSimpleName());
+                            LOGGER.error("   -> exception during transformation for : {}", req.getService());
+                            LOGGER.error("   ->  (C) stylesheet : {}",  styleSheet);
+                            LOGGER.error("   ->  (C) message    : {}",  e.getMessage());
+                            LOGGER.error("   ->  (C) exception  : {}",  e.getClass().getSimpleName());
 
                             throw e;
                         }
 
-                        info("     -> end transformation for : " + req.getService());
+                        LOGGER.info("     -> end transformation for : {}", req.getService());
                     }
                 }
             }
@@ -875,7 +891,7 @@ public class ServiceManager {
         //------------------------------------------------------------------------
         //--- end data stream
 
-        info("   -> output ended for : " + req.getService());
+        LOGGER.info("   -> output ended for : {}", req.getService());
 
         return null;
     }
@@ -892,7 +908,7 @@ public class ServiceManager {
 
     private void dispatchError(ServiceRequest req, ServiceContext context,
                                Element response, ErrorPage outPage, boolean cache) throws Exception {
-        info("   -> dispatching to error for : " + req.getService());
+        LOGGER.info("   -> dispatching to error for : {}" ,req.getService());
 
         //--- build the xml data for the XSL translation
 
@@ -916,7 +932,7 @@ public class ServiceManager {
 
             styleSheet = context.getBean(GeonetworkDataDirectory.class).resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
-            info("     -> transforming with stylesheet : " + styleSheet);
+            LOGGER.info("     -> transforming with stylesheet : {}", styleSheet);
 
             try {
                 req.beginStream(outPage.getContentType(), cache);
@@ -926,12 +942,12 @@ public class ServiceManager {
                 // ignore this.
                 // it happens because the stream closes by client.
             } catch (Exception e) {
-                Log.error(Log.JEEVES, e.getMessage(), e);
+                LOGGER.error(Log.SERVICE_MARKER, e.getMessage(), e);
             }
         }
 
-        info("     -> end error transformation for : " + req.getService());
-        info("   -> error ended for : " + req.getService());
+        LOGGER.info("     -> end error transformation for : {}", req.getService());
+        LOGGER.info("   -> error ended for : {}", req.getService());
     }
 
     //---------------------------------------------------------------------------
@@ -944,7 +960,7 @@ public class ServiceManager {
                 return p;
         }
 
-        error("No default error found for id : " + id);
+        LOGGER.error("No default error found for id : {}", id);
         throw new NullPointerException("No default error found for id : " + id);
     }
 
@@ -995,25 +1011,20 @@ public class ServiceManager {
         root.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
     }
 
+    /**
+     * Log xml parameters
+     * @param params
+     */
     @SuppressWarnings("unchecked")
     private void logParameters(Element params) {
         List<Element> paramsList = params.getChildren();
 
-        if (paramsList.size() == 0)
-            if (isDebug()) debug(" -> no input parameters");
-            else if (isDebug()) debug(" -> parameters are : \n" + Xml.getString(params));
-    }
-
-    private boolean isDebug() {
-        return Log.isDebugEnabled(Log.SERVICE);
-    }
-
-    private void debug(String message) {
-        Log.debug(Log.SERVICE, message);
-    }
-
-    private void warning(String message) {
-        Log.warning(Log.SERVICE, message);
+        if (paramsList.size() == 0) {
+            LOGGER.debug(Log.SERVICE_MARKER, " -> no input parameters");
+        }
+        else {
+            LOGGER.debug(Log.SERVICE_MARKER, " -> parameters are : \n{}", Xml.getString(params));
+        }
     }
 
     public ProfileManager getProfileManager() {

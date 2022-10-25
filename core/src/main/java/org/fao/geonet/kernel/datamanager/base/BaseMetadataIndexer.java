@@ -74,8 +74,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
 
+import static org.fao.geonet.constants.Geonet.DATA_MANAGER_MARKER;
+import static org.fao.geonet.constants.Geonet.INDEX_MARKER;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
+
+    final private static org.apache.logging.log4j.Logger LOGGER = Log.createLogger(BaseMetadataIndexer.class, DATA_MANAGER_MARKER);
+
+    final private static org.apache.logging.log4j.Logger INDEX_LOGGER = Log.createLogger(BaseMetadataIndexer.class, INDEX_MARKER);
+
+
 
     @Autowired
 	private EsSearchManager searchManager;
@@ -181,14 +189,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 // Trigger RecordDeletedEvent
                 new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
             } catch (Exception e) {
-                Log.warning(Geonet.DATA_MANAGER, String.format(
-
-                    "Error during removal of metadata %s part of batch delete operation. " +
+                LOGGER.warn(DATA_MANAGER_MARKER,
+                    "Error during removal of metadata {} part of batch delete operation. " +
                     "This error may create a ghost record (ie. not in the index " +
                     "but still present in the database). " +
                     "You can reindex the catalogue to see it again. " +
-                    "Error was: %s.", md.getUuid(), e.getMessage()));
-                e.printStackTrace();
+                    "Error was: {}.", md.getUuid(), e.getMessage(), e);
             }
         });
 
@@ -205,8 +211,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // get all metadata with XLinks
         Set<Integer> toIndex = searchManager.getDocsWithXLinks();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
+        LOGGER.debug(DATA_MANAGER_MARKER, "Will index {} records with XLinks",toIndex.size());
         if (toIndex.size() > 0) {
             // clean XLink Cache so that cache and index remain in sync
             Processor.clearCache();
@@ -242,9 +247,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
         }
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + listOfIdsToIndex.size() + " records from selection.");
-        }
+        LOGGER.debug(DATA_MANAGER_MARKER, "Will index {} records from selection.", listOfIdsToIndex.size());
 
         if (listOfIdsToIndex.size() > 0) {
             // clean XLink Cache so that cache and index remain in sync
@@ -284,25 +287,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         else
             perThread = metadataIds.size() / threadCount;
         int index = 0;
-        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
-            Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
-        }
+        INDEX_LOGGER.debug(INDEX_MARKER, "Indexing {} records.", metadataIds.size());
+        INDEX_LOGGER.debug(INDEX_MARKER, metadataIds);
         AtomicInteger numIndexedTracker = new AtomicInteger();
         while (index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
             int nbRecords = start + count;
 
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
-            }
+            INDEX_LOGGER.debug(INDEX_MARKER, "Indexing records from {} to {}", start, nbRecords);
 
             List<?> subList = metadataIds.subList(start, nbRecords);
 
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, subList.toString());
-            }
+            INDEX_LOGGER.debug(INDEX_MARKER, "{}", subList);
 
             // create threads to process this chunk of ids
             Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
@@ -375,10 +372,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             final String displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null
                 : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
 
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); // DEBUG
-                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); // DEBUG
-            }
+            LOGGER.debug(DATA_MANAGER_MARKER, "record schema ({})", schema);
+            LOGGER.debug(DATA_MANAGER_MARKER, "record createDate ({})", createDate);
 
             fields.put(Geonet.IndexFieldNames.SCHEMA, schema);
             fields.put(Geonet.IndexFieldNames.RECORDLINKFLAG, "record");
@@ -404,9 +399,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     schema
                 ));
                 searchManager.index(null, md, indexKey, fields, metadataType, forceRefreshReaders);
-                Log.error(Geonet.DATA_MANAGER, String.format(
-                    "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
-                    metadataId, schema));
+                LOGGER.error(DATA_MANAGER_MARKER,
+                    "Record {} / Schema '{}' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
+                    metadataId, schema);
             } else {
 
                 fields.put(Geonet.IndexFieldNames.POPULARITY, popularity);
@@ -546,8 +541,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
             }
         } catch (Exception x) {
-            Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
-                + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            LOGGER.error(DATA_MANAGER_MARKER,
+            "The metadata document index with id={} is corrupt/invalid - ignoring it. Error: {}",
+                metadataId, x.getMessage(), x);
             fullMd = null;
         }
         if (fullMd != null) {

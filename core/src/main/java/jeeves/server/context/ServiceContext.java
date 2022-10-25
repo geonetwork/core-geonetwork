@@ -33,6 +33,7 @@ import jeeves.server.sources.http.JeevesServlet;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 
+import org.apache.logging.log4j.MarkerManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -141,7 +142,7 @@ public class ServiceContext extends BasicContext {
 
     public void setService(final String service) {
         this._service = service;
-        logger = Log.createLogger(Log.WEBAPP + "." + service);
+        logger = Log.createLogger(getClass(), MarkerManager.getMarker(service).setParents(Log.WEBAPP_MARKER));
     }
 
     public String getIpAddress() {

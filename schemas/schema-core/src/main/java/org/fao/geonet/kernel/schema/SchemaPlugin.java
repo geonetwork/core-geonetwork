@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.ImmutableSet;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -39,6 +41,7 @@ import java.util.Set;
  */
 public abstract class SchemaPlugin implements CSWPlugin {
     public static final String LOGGER_NAME = "geonetwork.schema-plugin";
+    public static Marker LOGGER_MARKER = MarkerManager.getMarker("schema-plugin").addParents(MarkerManager.getMarker("geonetwork"));
 
     protected SchemaPlugin(String identifier,
                            ImmutableSet<Namespace> allNamespaces) {

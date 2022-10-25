@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="warn" dest="out">
+
+  <Filters>
+    <NoMarkerFilter onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+    <!-- filter by geonetwork module -->
+    <Filters>
+      <ThresholdFilter level="INFO" onMatch="NEUTRAL" onMismatch="DENY"/>
+      <MarkerFilter marker="harvester" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+      <MarkerFilter marker="engine" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+    </Filters>
+    <Filters>
+      <ThresholdFilter level="ERROR" onMatch="NEUTRAL" onMismatch="DENY"/>
+      <MarkerFilter marker="geonetwork" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+      <MarkerFilter marker="jeeves" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+    </Filters>
+  </Filters>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%date{ISO8601} %-5level [%logger] %markerSimpleName: %message%n"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="org.fao.geonet" level="error" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="jeeves" level="error" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Turn off logging except when explicitly declared above -->
+    <Root level="off">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

@@ -51,9 +51,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import static org.fao.geonet.constants.Geonet.SCHEMA_MANAGER_MARKER;
+
 //==============================================================================
 
 public class SchemaLoader {
+
+    final private static org.apache.logging.log4j.Logger LOGGER = Log.createLogger(SchemaLoader.class, SCHEMA_MANAGER_MARKER);
+
     private Element elFirst = null;
     private Map<String, String> hmElements = new HashMap<String, String>();
     private Map<String, ComplexTypeEntry> hmTypes = new HashMap<String, ComplexTypeEntry>();
@@ -174,7 +179,7 @@ public class SchemaLoader {
                 Logger.log();
                 type = recurseOnSubstitutionLinks(elem);
                 if (type == null) {
-                    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: Cannot find type for " + elem + ": assuming string");
+                    LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: Cannot find type for {}: assuming string", elem);
                     type = "string";
                 } else {
                     Logger.log();
@@ -400,7 +405,7 @@ public class SchemaLoader {
                 if (ee.simpleType.alEnum != null) // add enumerations if any
                     elemRestr.addAll(ee.simpleType.alEnum);
             } else {
-                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: Could not find type for " + ee.name + " - assuming string");
+                LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: Could not find type for {} - assuming string", ee.name);
                 ee.type = "string";
             }
         }
@@ -433,7 +438,9 @@ public class SchemaLoader {
             List<String> validSubs = hmSubsNames.get(elementName);
             for (String altSub : ssOs) {
                 if (validSubs != null && !validSubs.contains(altSub)) {
-                    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: schema-substitutions.xml specified " + altSub + " for element " + elementName + " but the schema does not define this as a valid substitute");
+                    LOGGER.warn(SCHEMA_MANAGER_MARKER,
+                        "WARNING: schema-substitutions.xml specified {} for element {} but the schema does not define this as a valid substitute",
+                        altSub, elementName);
                 }
                 for (ElementEntry ee : subs) {
                     if (ee.name.equals(altSub)) {
@@ -442,7 +449,7 @@ public class SchemaLoader {
                 }
             }
             if (results.size() == 0 && validSubs != null) {
-                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: schema-substitutions.xml has wiped out XSD substitution list for " + elementName);
+                LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: schema-substitutions.xml has wiped out XSD substitution list for {}", elementName);
             }
             return results;
         }
@@ -508,7 +515,8 @@ public class SchemaLoader {
         } else if (!isAbstract) {
             mdt.addRefElementWithType(ee.ref, type, ee.min, ee.max);
         } else {
-            Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: element " + ee.ref + " from " + baseName + " has fallen through the logic (abstract: " + isAbstract + ") - ignoring");
+            LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: element {} from {} has fallen through the logic (abstract: {}) - ignoring",
+                ee.ref, baseName, isAbstract);
         }
     }
 
@@ -576,7 +584,7 @@ public class SchemaLoader {
                     mds.addElement(ee.name, ee.type, new ArrayList<String>(), new ArrayList<String>(), "");
                     mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
                 } else {
-                    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: group element ref is NULL in " + baseName + extension + baseNr);
+                    LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: group element ref is NULL in {}{}{}",baseName, extension, baseNr);
                 }
 
                 // SEQUENCE
@@ -650,7 +658,7 @@ public class SchemaLoader {
         Path path = xmlSchemaFile.getParent();
 
         //--- load xml-schema
-        Log.debug(Geonet.SCHEMA_MANAGER, "Loading schema " + xmlSchemaFile);
+        LOGGER.debug(SCHEMA_MANAGER_MARKER, "Loading schema {}", xmlSchemaFile);
 
         Element elRoot = Xml.loadFile(xmlSchemaFile);
         if (elFirst == null) elFirst = elRoot;
@@ -705,14 +713,14 @@ public class SchemaLoader {
                     Resolver resolver = ResolverWrapper.getInstance();
                     final String scPath = resolver.getXmlResolver().resolveURI(schemaLoc);
 
-                    if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-                        Log.debug(Geonet.SCHEMA_MANAGER,
-                            "Cats: " + Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
-                                " Resolved " + schemaLoc + " " + scPath);
+                    if (LOGGER.isDebugEnabled(Geonet.SCHEMA_MANAGER_MARKER)) {
+                        LOGGER.debug(SCHEMA_MANAGER_MARKER,
+                            "Cats: {} Resolved {} {}",
+                            Arrays.toString(resolver.getXmlResolver().getCatalogList()), schemaLoc,  scPath);
                     }
 
                     if (scPath == null) {
-                        Log.warning(Geonet.SCHEMA_MANAGER,
+                        LOGGER.warn(SCHEMA_MANAGER_MARKER,
                             "Cannot resolve " + schemaLoc + ": will append last component to current path " +
                                 "(not sure it will help though!)");
                         int lastSlash = schemaLoc.lastIndexOf('/');
@@ -841,7 +849,7 @@ public class SchemaLoader {
 
         } else {
             if (ee.type == null && ee.substGroup == null) {
-                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: " + ee.name + " is a global element without a type - assuming a string");
+                LOGGER.warn(SCHEMA_MANAGER_MARKER, "WARNING: " + ee.name + " is a global element without a type - assuming a string");
                 ee.type = "string";
             }
             hmElements.put(ee.name, ee.type);

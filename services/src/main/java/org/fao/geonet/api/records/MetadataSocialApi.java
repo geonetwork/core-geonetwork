@@ -153,7 +153,7 @@ public class MetadataSocialApi {
      * TODO GN-API: Needs update on new API
      */
     private int setRemoteRating(ServiceContext context, GeonetParams params, String uuid, int rating) throws Exception {
-        if (context.isDebugEnabled()) context.debug("Rating remote metadata with uuid:" + uuid);
+        context.getLogger().debug("Rating remote metadata with uuid: {}", uuid);
 
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
 

@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 
 import nonapi.io.github.classgraph.utils.Join;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.logging.log4j.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -83,6 +84,7 @@ import static org.springframework.http.HttpStatus.OK;
     description = "ATOM")
 @RestController
 public class AtomServiceDescription {
+    private static Logger LOGGER = Log.createLogger(AtomServiceDescription.class,API.LOG_MARKER);
 
     @Autowired
     InspireAtomService service;
@@ -131,10 +133,10 @@ public class AtomServiceDescription {
         try {
             record = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            LOGGER.debug(API.LOG_MARKER, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
