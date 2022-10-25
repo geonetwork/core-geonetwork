@@ -34,13 +34,11 @@
                 xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
                 version="1.0">
 
-  <xsl:import href="../present/metadata-rdf.xsl"/>
+  <xsl:import href="../layout/tpl-rdf.xsl"/>
 
   <xsl:variable name="url" select="xslUtils:getSiteUrl()"/>
   <xsl:variable name="language" select="xslUtils:getLanguage()"/>
   <xsl:variable name="iso2letterLanguageCode" select="xslUtils:twoCharLangCode($language)"/>
-
-  <!-- ============================================================================================ -->
 
   <xsl:template match="gmd:MD_Metadata">
     <rdf:RDF xmlns:dct="http://purl.org/dc/terms/"

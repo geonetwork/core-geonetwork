@@ -81,6 +81,7 @@
              xmlns:void="http://www.w3.org/TR/void/"
              xmlns:dcat="http://www.w3.org/ns/dcat#">
       <xsl:apply-templates select="$iso19139" mode="to-dcat"/>
+      <xsl:apply-templates select="$iso19139" mode="references"/>
     </rdf:RDF>
   </xsl:template>
 </xsl:stylesheet>
