@@ -92,7 +92,7 @@
                 </button>
                 <button type="submit" class="btn btn-danger pull-right"
                         id="gn-btn-settings-delete"
-                        data-ng-disabled="!uiConfiguration"
+                        data-ng-disabled="!canDeleteUiConfig()"
                         data-ng-click="deleteUiConfig()">
                   <span class="fa fa-trash"></span>
                   {{"deleteUiSettings"|translate}}
