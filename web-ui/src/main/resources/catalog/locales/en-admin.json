@@ -1391,6 +1391,7 @@
     "notificationLevel-catalogueProfileGuest": "Notify the catalogue guest",
     "notificationLevel-recordProfileReviewer": "Notify the reviewers part of the record group owner",
     "notificationLevel-recordUserAuthor": "Notify the record author",
-    "notificationLevel-recordGroupEmail": "Notify the group(s) emails"
+    "notificationLevel-recordGroupEmail": "Notify the group(s) emails",
+    "uiConfigDeleteError": "Error deleting user interface configuration"
 }
 
