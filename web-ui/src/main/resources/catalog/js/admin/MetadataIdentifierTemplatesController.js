@@ -46,10 +46,13 @@
           event.preventDefault();
       });
 
+      $scope.isNew = false;
       $scope.mdIdentifierTemplates = [];
       $scope.mdIdentifierTemplateSelected = {};
 
       $scope.selectTemplate = function (template) {
+        $scope.isNew = false;
+
         if ($(".ng-dirty").length > 0 && confirm($translate.instant("doSaveConfirm"))) {
           $scope.saveMetadataIdentifierTemplate(false);
         }
@@ -70,6 +73,7 @@
       }
 
       $scope.addMetadataIdentifierTemplate = function () {
+        $scope.isNew = true;
         $scope.mdIdentifierTemplateSelected = {
           id: "-99",
           name: "",
@@ -77,9 +81,14 @@
         };
       };
 
-      $scope.deleteMetadataIdentifierTemplate = function (id) {
+
+      $scope.deleteTemplateConfig = function () {
+        $("#gn-confirm-remove-metadataidentifiertpl").modal("show");
+      };
+
+      $scope.confirmDeleteTemplateConfig = function () {
         $http
-          .delete("../api/identifiers/" + id)
+          .delete("../api/identifiers/" + $scope.mdIdentifierTemplateSelected.id)
           .success(function (data) {
             $(".ng-dirty").removeClass("ng-dirty");
             loadMetadataUrnTemplates();

@@ -1393,6 +1393,7 @@
     "notificationLevel-recordUserAuthor": "Notify the record author",
     "notificationLevel-recordGroupEmail": "Notify the group(s) emails",
     "confirmMapserverDelete": "Are you sure you want to delete this Map server?",
-    "confirmSourceDelete": "Are you sure you want to delete this portal?"
+    "confirmSourceDelete": "Are you sure you want to delete this portal?",
+    "confirmMetadataIdentifierTemplateDelete": "Are you sure you want to delete this metadata identifier template?"
 }
 
