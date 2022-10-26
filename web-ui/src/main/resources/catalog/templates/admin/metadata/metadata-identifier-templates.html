@@ -1,4 +1,8 @@
-<div class="row" data-ng-controller="GnMetadataIdentifierTemplatesController" id="gn-metadatatemplates-container">
+<div
+  class="row"
+  data-ng-controller="GnMetadataIdentifierTemplatesController"
+  id="gn-metadatatemplates-container"
+>
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">manageMetadataIdentifierTemplates</div>
@@ -37,15 +41,12 @@
   <div class="col-lg-8" data-ng-hide="mdIdentifierTemplateSelected.id == null">
     <div class="panel panel-default">
       <div class="panel-heading">
+        <span data-ng-show="mdIdentifierTemplateSelected.id == -99" data-translate=""
+          >newMetadataIdentifierTemplate</span
+        >
 
-        <span
-          data-ng-show="mdIdentifierTemplateSelected.id == -99"
-          data-translate=""
-        >newMetadataIdentifierTemplate</span>
-
-        <span
-          data-ng-show="mdIdentifierTemplateSelected.id != -99"
-        >{{mdIdentifierTemplateSelected.name}}</span
+        <span data-ng-show="mdIdentifierTemplateSelected.id != -99"
+          >{{mdIdentifierTemplateSelected.name}}</span
         >
 
         <div class="btn-toolbar">

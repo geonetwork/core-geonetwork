@@ -165,6 +165,7 @@
             });
 
             loadSources();
+            $scope.source = null;
           })
           .error(function (data) {
             $rootScope.$broadcast("StatusUpdated", {

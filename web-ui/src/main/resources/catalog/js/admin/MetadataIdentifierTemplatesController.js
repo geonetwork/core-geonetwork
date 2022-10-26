@@ -81,7 +81,6 @@
         };
       };
 
-
       $scope.deleteTemplateConfig = function () {
         $("#gn-confirm-remove-metadataidentifiertpl").modal("show");
       };
