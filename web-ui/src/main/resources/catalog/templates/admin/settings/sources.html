@@ -82,7 +82,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid"
+            data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid && !gnSourceForm.dirty"
             data-ng-click="updateSource()"
           >
             <i class="fa fa-floppy-o"></i>&nbsp;
@@ -107,6 +107,7 @@
             <input
               type="text"
               class="form-control"
+              data-ng-required="true"
               data-ng-disabled="::!user.isAdministrator()"
               data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
               data-ng-model="source.uuid"
@@ -124,6 +125,7 @@
             <label data-translate="">sourceName</label>
             <input
               type="text"
+              data-ng-required="true"
               class="form-control"
               data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
               data-ng-model="source.name"
