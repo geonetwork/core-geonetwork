@@ -108,6 +108,7 @@
               type="text"
               class="form-control"
               data-ng-required="true"
+              data-ng-readonly="!isNew"
               data-ng-disabled="::!user.isAdministrator()"
               data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
               data-ng-model="source.uuid"
