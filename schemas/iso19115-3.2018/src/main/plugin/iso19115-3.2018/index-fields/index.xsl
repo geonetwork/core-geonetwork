@@ -1015,15 +1015,20 @@
                                         protocol/text())"/>",
           "function": "<xsl:value-of select="gn-fn-index:json-escape(
                                         function/text())"/>",
+          <xsl:if test="normalize-space(url) != ''">
+            "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'url', url, $allLanguages)"/>,
+          </xsl:if>
+          <xsl:if test="normalize-space(title) != ''">
+            "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'name', title, $allLanguages)"/>,
+          </xsl:if>
+          <xsl:if test="normalize-space(description) != ''">
+            "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'description', description, $allLanguages)"/>,
+          </xsl:if>
           "applicationProfile": "<xsl:value-of select="gn-fn-index:json-escape(
-                                        applicationProfile/text())"/>",
-          <!-- TODO: Multilingual support -->
-          "url":"<xsl:value-of select="gn-fn-index:json-escape(
-                                        (url/value/text())[1])"/>",
-          "name":"<xsl:value-of select="gn-fn-index:json-escape(
-                                        (title/value/text())[1])"/>",
-          "description":"<xsl:value-of select="gn-fn-index:json-escape(
-                                        (description/value/text())[1])"/>"
+                                        applicationProfile/text())"/>"
           }
         </link>
       </xsl:for-each>
