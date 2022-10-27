@@ -92,7 +92,7 @@
             $(".ng-dirty").removeClass("ng-dirty");
             loadMetadataUrnTemplates();
             $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("metadataUrnTemplateDeleted"),
+              msg: $translate.instant("metadataIdentifierTemplateDeleted"),
               timeout: 2,
               type: "success"
             });
@@ -100,7 +100,7 @@
           .error(function (data) {
             $(".ng-dirty").removeClass("ng-dirty");
             $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("metadataUrnTemplateDeletedError"),
+              title: $translate.instant("metadataIdentifierTemplateDeletedError"),
               error: data,
               timeout: 0,
               type: "danger"

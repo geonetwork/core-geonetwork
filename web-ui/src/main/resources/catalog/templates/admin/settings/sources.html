@@ -4,7 +4,7 @@
       <div class="panel-heading" data-translate="">manageSources</div>
       <div class="panel-body">
         <div class="list-group">
-          <ul class="list-group">
+          <ul class="list-group gn-nopadding-right">
             <input
               class="form-control"
               data-ng-show="sources.length > 1"
@@ -13,7 +13,7 @@
               placeholder="{{'filter' | translate}}"
             />
 
-            <div class="row">
+            <div class="row gn-margin-bottom gn-margin-to">
               <div class="col-md-3" data-ng-repeat="(k, v) in filter.types">
                 <label title="{{::('source-' + k) | translate}}">
                   <input
