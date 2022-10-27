@@ -1,19 +1,20 @@
 <div>
-  <form class="form-horizontal" role="form"
-        data-ng-search-form="">
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <form class="form-horizontal" role="form" data-ng-search-form="">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
     <div class="onlinesrc-container">
-
       <div class="form-group gn-required" ng-show="::ctrl.associationTypes.length">
         <label class="col-sm-2 control-label">
           <span data-translate="">associationType</span>
         </label>
         <div class="col-sm-10">
-          <div data-schema-info-combo="codelist"
-               data-schema-info-combo-values="ctrl.associationTypes"
-               data-allow-blank="false"
-               data-selected-info="config.associationType"
-               data-gn-schema-info="associationType" lang="lang"></div>
+          <div
+            data-schema-info-combo="codelist"
+            data-schema-info-combo-values="ctrl.associationTypes"
+            data-allow-blank="false"
+            data-selected-info="config.associationType"
+            data-gn-schema-info="associationType"
+            lang="lang"
+          ></div>
         </div>
       </div>
       <div class="form-group" ng-show="::ctrl.initiativeTypes.length">
@@ -21,12 +22,14 @@
           <span data-translate="">initiativeType</span>
         </label>
         <div class="col-sm-10">
-          <div data-schema-info-combo="codelist"
-               data-schema-info-combo-values="ctrl.initiativeTypes"
-               data-selected-info="config.initiativeType"
-               data-gn-schema-info="initiativeType"
-               lang="lang"
-               data-allow-blank="true"></div>
+          <div
+            data-schema-info-combo="codelist"
+            data-schema-info-combo-values="ctrl.initiativeTypes"
+            data-selected-info="config.initiativeType"
+            data-gn-schema-info="initiativeType"
+            lang="lang"
+            data-allow-blank="true"
+          ></div>
         </div>
       </div>
       <div class="form-group gn-nomargin-bottom">
@@ -36,35 +39,38 @@
         <div class="col-sm-10">
           <div class="input-group" id="siblingdd">
             <span class="input-group-addon">
-              <i class="fa fa-search"/>
+              <i class="fa fa-search" />
             </span>
-            <input class="form-control"
-                   data-ng-change="updateParams();triggerSearch();" 
-                   type="text"
-                   data-ng-model="searchObj.any"
-                   data-ng-model-options="modelOptions"
-                   autocomplete="off"
-                   placeholder="{{'anyPlaceHolder' | translate}}"
-                   aria-label="{{'anyPlaceHolder' | translate}}"/>
+            <input
+              class="form-control"
+              data-ng-change="updateParams();triggerSearch();"
+              type="text"
+              data-ng-model="searchObj.any"
+              data-ng-model-options="modelOptions"
+              autocomplete="off"
+              placeholder="{{'anyPlaceHolder' | translate}}"
+              aria-label="{{'anyPlaceHolder' | translate}}"
+            />
             <span class="input-group-btn">
-              <button class="btn btn-default" type="button"
-                      data-ng-click="clearSearch()">
+              <button class="btn btn-default" type="button" data-ng-click="clearSearch()">
                 <span class="fa fa-fw fa-times text-danger"></span>
               </button>
             </span>
           </div>
           <div>
             <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
-              <a href=""
-                 data-ng-repeat="md in searchResults.records"
-                 class="list-group-item"
-                 data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
+              <a
+                href=""
+                data-ng-repeat="md in searchResults.records"
+                class="list-group-item"
+                data-ng-click="addToSelection(md, config.associationType, config.initiativeType)"
+              >
                 {{md.resourceTitle}}
                 <span class="fa fa-plus pull-right"></span>
               </a>
             </div>
           </div>
-          <div data-gn-pagination="paginationInfo"/>
+          <div data-gn-pagination="paginationInfo" />
         </div>
       </div>
       <div data-gn-remote-record-selector=""></div>
@@ -88,9 +94,11 @@
                 <td>{{obj.associationType | translate}}</td>
                 <td>{{obj.initiativeType | translate}}</td>
                 <td class="text-center">
-                  <a title="{{'removeFromSelection' | translate}}"
-                     data-ng-click="removeFromSelection(obj)"
-                     href="">
+                  <a
+                    title="{{'removeFromSelection' | translate}}"
+                    data-ng-click="removeFromSelection(obj)"
+                    href=""
+                  >
                     <i class="fa fa-times text-danger"></i>
                   </a>
                 </td>
@@ -100,14 +108,16 @@
         </div>
       </div>
       <div class="">
-        <button type="button" class="btn navbar-btn btn-success"
-                data-gn-click-and-spin="linkToResource()"
-                data-ng-disabled="selection.length < 1">
-          <i class="fa gn-icon-sibling"/>&nbsp;
+        <button
+          type="button"
+          class="btn navbar-btn btn-success"
+          data-gn-click-and-spin="linkToResource()"
+          data-ng-disabled="selection.length < 1"
+        >
+          <i class="fa gn-icon-sibling" />&nbsp;
           <span data-translate="">saveLinkToSibling</span>
         </button>
-        <div data-gn-need-help="user-guide/associating-resources/linking-others.html"
-             class="pull-right"></div>
+        <div data-gn-need-help="linking-others" class="pull-right"></div>
       </div>
     </div>
   </form>

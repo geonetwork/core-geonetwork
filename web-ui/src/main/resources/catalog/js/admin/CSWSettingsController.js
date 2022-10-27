@@ -21,41 +21,55 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_csw_settings_controller');
+(function () {
+  goog.provide("gn_csw_settings_controller");
 
-
-  var module = angular.module('gn_csw_settings_controller',
-      []);
+  var module = angular.module("gn_csw_settings_controller", []);
 
   /**
    * GnCSWSettingsController provides management interface
    * for CSW settings.
    *
    */
-  module.controller('GnCSWSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    'gnUtilityService', 'gnESClient', 'Metadata',
-    function($scope, $http, $rootScope, $translate, gnUtilityService,
-             gnESClient, Metadata) {
+  module.controller("GnCSWSettingsController", [
+    "$scope",
+    "$http",
+    "$rootScope",
+    "$translate",
+    "gnUtilityService",
+    "gnESClient",
+    "Metadata",
+    function (
+      $scope,
+      $http,
+      $rootScope,
+      $translate,
+      gnUtilityService,
+      gnESClient,
+      Metadata
+    ) {
       /**
        * CSW properties
        */
       $scope.cswSettings = {};
-      $scope.cswServiceRecord = null;
 
       $scope.serviceRecordSearchObj = {
         internal: true,
-        any: '',
+        any: "",
         defaultParams: {
-          any: '',
+          any: "",
           from: 1,
           to: 50,
-          type: 'service',
-          sortBy: 'resourceTitleObject.default.keyword',
-          sortOrder: 'asc'
+          isTemplate: "n",
+          type: "service",
+          sortBy: "resourceTitleObject.default.keyword",
+          sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       /**
        * CSW element set name (an array of xpath).
@@ -65,7 +79,7 @@
       /**
        * The filter for field column
        */
-      $scope.cswFieldFilterValue = '';
+      $scope.cswFieldFilterValue = "";
 
       /**
        * The filter value for language
@@ -82,135 +96,115 @@
        */
       $scope.cswFields = {};
 
-
       /**
-         * Load catalog settings and extract CSW settings
-         */
+       * Load catalog settings and extract CSW settings
+       */
       function loadSettings() {
-        $http.get('../api/site/settings?set=CSW')
-            .success(function(data) {
-              $scope.cswSettings = data;
-              loadServiceRecords();
-            }).error(function(data) {
-              // TODO
-            });
-      }
-
-      function loadServiceRecords() {
-        var id = $scope.cswSettings['system/csw/capabilityRecordUuid'];
-        if (angular.isDefined(id) && id != -1){
-          var query =
-            {"query": {
-                "term": {
-                  "uuid": {
-                    "value": id
-                  }
-                }
-              }, "from": 0, "size": 1};
-
-          gnESClient.search(query).then(function(data) {
-            angular.forEach(data.hits.hits, function(record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
+        $http
+          .get("../api/site/settings?set=CSW")
+          .success(function (data) {
+            $scope.cswSettings = data;
+          })
+          .error(function (data) {
+            // TODO
           });
-        }
       }
-      $scope.$watchCollection('cswSettings', function(n, o){
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
-
 
       function loadCSWElementSetName() {
-        $http.get('admin.config.csw.customelementset?_content_type=json&')
-            .success(function(data) {
-              if (data) {
-                $scope.cswElementSetName =
-                    $.isArray(data.xpaths) ? data.xpaths : [data.xpaths];
-              } else {
-                $scope.cswElementSetName = [];
-              }
-            });
+        $http
+          .get("admin.config.csw.customelementset?_content_type=json&")
+          .success(function (data) {
+            if (data) {
+              $scope.cswElementSetName = $.isArray(data.xpaths)
+                ? data.xpaths
+                : [data.xpaths];
+            } else {
+              $scope.cswElementSetName = [];
+            }
+          });
       }
-      $scope.addCSWElementSetName = function() {
-        $scope.cswElementSetName.push(['']);
+      $scope.addCSWElementSetName = function () {
+        $scope.cswElementSetName.push([""]);
       };
-      $scope.deleteElementSetName = function(e) {
+      $scope.deleteElementSetName = function (e) {
         var index = $.inArray(e, $scope.cswElementSetName);
         $scope.cswElementSetName.splice(index, 1);
       };
-      $scope.saveCSWElementSetName = function(formId) {
+      $scope.saveCSWElementSetName = function (formId) {
         $http({
-          method: 'POST',
-          url: 'admin.config.csw.customelementset.save',
-          data: '_content_type=json&' + $(formId).serialize(),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-            .success(function(data) {
-              loadCSWElementSetName();
-            });
+          method: "POST",
+          url: "admin.config.csw.customelementset.save",
+          data: "_content_type=json&" + $(formId).serialize(),
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        }).success(function (data) {
+          loadCSWElementSetName();
+        });
       };
 
       /**
        * Save the form containing all settings. When saved,
        * broadcast success or failure status.
        */
-      $scope.saveSettings = function(formId) {
-        $http.post('../api/site/settings',
-          gnUtilityService.serialize(formId), {
-            headers: {'Content-Type':
-                'application/x-www-form-urlencoded'}
+      $scope.saveSettings = function (formId) {
+        $http
+          .post("../api/site/settings", gnUtilityService.serialize(formId), {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('settingsUpdated'),
-                timeout: 2,
-                type: 'success'});
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('settingsUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
+          .success(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("settingsUpdated"),
+              timeout: 2,
+              type: "success"
+            });
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("settingsUpdateError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
+            });
+          });
       };
 
       /**
        * Filter CSW settings by language and/or field
        */
-      $scope.cswFilter = function(items) {
+      $scope.cswFilter = function (items) {
         var result = [];
         var field = $scope.cswFieldFilterValue;
         var lang = $scope.cswLanguageFilterValue;
 
         if (items) {
-          angular.forEach(items.capabilitiesInfoFields, function(value, key) {
+          angular.forEach(items.capabilitiesInfoFields, function (value, key) {
             var selected = false;
             // Filter only by lang
-            if (lang !== '' &&
-                field === '' &&
-                items.capabilitiesInfoFields[key].langId === lang) {
+            if (
+              lang !== "" &&
+              field === "" &&
+              items.capabilitiesInfoFields[key].langId === lang
+            ) {
               selected = true;
             }
             //Filter only by field
-            if (field !== '' &&
-                lang === '' &&
-                items.capabilitiesInfoFields[key].fieldName === field) {
+            if (
+              field !== "" &&
+              lang === "" &&
+              items.capabilitiesInfoFields[key].fieldName === field
+            ) {
               selected = true;
             }
             // Filter by both
-            if (field !== '' &&
-                lang !== '' &&
-                items.capabilitiesInfoFields[key].langId === lang &&
-                items.capabilitiesInfoFields[key].fieldName === field) {
+            if (
+              field !== "" &&
+              lang !== "" &&
+              items.capabilitiesInfoFields[key].langId === lang &&
+              items.capabilitiesInfoFields[key].fieldName === field
+            ) {
               selected = true;
             }
             // All
-            if (field === '' &&
-                lang === '') {
+            if (field === "" && lang === "") {
               selected = true;
             }
             if (selected) {
@@ -223,7 +217,6 @@
 
       loadSettings();
       loadCSWElementSetName();
-
-    }]);
-
+    }
+  ]);
 })();

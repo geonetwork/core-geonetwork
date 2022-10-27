@@ -1,44 +1,46 @@
 <div>
-  <form class="form-horizontal" role="form"
-        data-ng-search-form="">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <form class="form-horizontal" role="form" data-ng-search-form="">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
     <div class="onlinesrc-container">
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group gn-margin-bottom">
-            <span class="input-group-addon"><i
-              class="fa fa-search"/></span>
-            <input class="form-control"
-                   data-ng-change="updateParams();triggerSearch()"
-                   type="text"
-                   data-ng-model="searchObj.any"
-                   data-ng-model-options="modelOptions"
-                   autocomplete="off"
-                   placeholder="{{'anyPlaceHolder' | translate}}"
-                   aria-label="{{'anyPlaceHolder' | translate}}"
-                   autofocus=""/>
+            <span class="input-group-addon"><i class="fa fa-search" /></span>
+            <input
+              class="form-control"
+              data-ng-change="updateParams();triggerSearch()"
+              type="text"
+              data-ng-model="searchObj.any"
+              data-ng-model-options="modelOptions"
+              autocomplete="off"
+              placeholder="{{'anyPlaceHolder' | translate}}"
+              aria-label="{{'anyPlaceHolder' | translate}}"
+              autofocus=""
+            />
           </div>
           <div data-gn-remote-record-selector=""></div>
         </div>
       </div>
-      <div data-gn-search-form-results=""
-           data-gn-search-form-results-mode="title"
-           data-gn-search-form-results-selection-mode="local simple"
-           data-search-results="searchResults"
-           data-select-records="selectRecords"
-           data-pagination-info="paginationInfo">
-      </div>
+      <div
+        data-gn-search-form-results=""
+        data-gn-search-form-results-mode="title"
+        data-gn-search-form-results-selection-mode="local simple"
+        data-search-results="searchResults"
+        data-select-records="selectRecords"
+        data-pagination-info="paginationInfo"
+      ></div>
     </div>
     <div class="">
-      <button type="button" class="btn navbar-btn btn-success"
-              data-gn-click-and-spin="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)"
-              data-ng-class="{'disabled': (selectRecords.length < 1)}">
-        <i class="fa gn-icon-{{mode}}"/>
-        <i class="icon-external-link"></i>&nbsp;
-        {{btn.label}}
+      <button
+        type="button"
+        class="btn navbar-btn btn-success"
+        data-gn-click-and-spin="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)"
+        data-ng-class="{'disabled': (selectRecords.length < 1)}"
+      >
+        <i class="fa gn-icon-{{mode}}" />
+        <i class="icon-external-link"></i>&nbsp; {{btn.label}}
       </button>
-      <div data-gn-need-help="user-guide/associating-resources/linking-records.html"
-           class="pull-right"></div>
+      <div data-gn-need-help="linking-records" class="pull-right"></div>
     </div>
   </form>
 </div>

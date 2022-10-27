@@ -21,50 +21,47 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_draftvalidationwidget');
+(function () {
+  goog.provide("gn_draftvalidationwidget");
 
-  var module = angular.module('gn_draftvalidationwidget', []);
+  var module = angular.module("gn_draftvalidationwidget", []);
 
-  module.directive('gnDraftValidationWidget', ['gnSearchManagerService', 'Metadata', '$http',
-    function(gnSearchManagerService, Metadata, $http) {
+  module.directive("gnDraftValidationWidget", [
+    "gnSearchManagerService",
+    "Metadata",
+    "$http",
+    function (gnSearchManagerService, Metadata, $http) {
       return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-          metadata: '='
+          metadata: "="
         },
-        link: function(scope) {
-
+        link: function (scope) {
           var query = {
-            "_source": {
-              "include": ['id',
-                'uuid',
-                'draft',
-                'isTemplate',
-                'valid'
-              ]
+            _source: {
+              include: ["id", "uuid", "draft", "isTemplate", "valid"]
             },
-            "size": 10,
-            "query": {
-              "bool": {
-                "must": [
-                  {"terms": {"uuid": [scope.metadata.uuid]}},
-                  {"terms": {"isTemplate": ["y", "n"]}},
-                  {"terms": {"draft": ["y"]}}
-                ]}
+            size: 10,
+            query: {
+              bool: {
+                must: [
+                  { terms: { uuid: [scope.metadata.uuid] } },
+                  { terms: { isTemplate: ["y", "n"] } },
+                  { terms: { draft: ["y"] } }
+                ]
+              }
             }
           };
 
-          $http.post('../api/search/records/_search', query).then(function (r) {
-            r.data.hits.hits.forEach(function(r) {
+          $http.post("../api/search/records/_search", query).then(function (r) {
+            r.data.hits.hits.forEach(function (r) {
               scope.draft = new Metadata(r);
             });
-          })
+          });
         },
-        templateUrl: '../../catalog/components/utility/' +
-            'partials/draftvalidationwidget.html'
+        templateUrl:
+          "../../catalog/components/utility/" + "partials/draftvalidationwidget.html"
       };
     }
   ]);
-
 })();

@@ -21,28 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_featurestable_service');
+(function () {
+  goog.provide("gn_featurestable_service");
 
-  var module = angular.module('gn_featurestable_service', []);
+  var module = angular.module("gn_featurestable_service", []);
 
   /**
    *
    * @constructor
    */
-  var GnFeaturesTableService = function($q, $http) {
+  var GnFeaturesTableService = function ($q, $http) {
     this.$q = $q;
     this.$http = $http;
   };
-  GnFeaturesTableService.prototype.load = function() {
-  };
-  GnFeaturesTableService.prototype.loadFeatureCatalogue = function(uuid, record) {
-    var deferred = this.$q.defer(), recordUuid = undefined;
+  GnFeaturesTableService.prototype.load = function () {};
+  GnFeaturesTableService.prototype.loadFeatureCatalogue = function (uuid, record) {
+    var deferred = this.$q.defer(),
+      recordUuid = undefined;
     if (record && record.featureTypes && record.featureTypes[0]) {
       var dictionary = {};
-      record.featureTypes[0].attributeTable.map(function(col) {
+      record.featureTypes[0].attributeTable.map(function (col) {
         dictionary[col.code] = col;
-      })
+      });
       deferred.resolve(dictionary);
       return deferred.promise;
     } else if (record && record.uuid && uuid === undefined) {
@@ -51,27 +51,30 @@
       recordUuid = uuid;
     }
 
-    this.dictionary = this.$http.get(
-      '../api/records/' + recordUuid + '/featureCatalog', {
+    this.dictionary = this.$http
+      .get("../api/records/" + recordUuid + "/featureCatalog", {
         cache: true,
         headers: {
-          'Accept': 'application/json'
+          Accept: "application/json"
         }
       })
-      .then(function(response) {
-        if(response.data['decodeMap'] != null) {
-          var dictionary = {};
-          Object.keys(response.data['decodeMap']).map(function(key) {
-            dictionary[key] = {
-              code: response.data['decodeMap'][key][0],
-              name: response.data['decodeMap'][key][1]
-            }
-          });
-          deferred.resolve(dictionary);
+      .then(
+        function (response) {
+          if (response.data["decodeMap"] != null) {
+            var dictionary = {};
+            Object.keys(response.data["decodeMap"]).map(function (key) {
+              dictionary[key] = {
+                code: response.data["decodeMap"][key][0],
+                name: response.data["decodeMap"][key][1]
+              };
+            });
+            deferred.resolve(dictionary);
+          }
+        },
+        function () {
+          deferred.resolve();
         }
-      }, function () {
-        deferred.resolve();
-      });
+      );
     return deferred.promise;
   };
 
@@ -79,39 +82,36 @@
    *
    * @constructor
    */
-  var GnFeaturesTableManager = function(gnFeaturesTableLoader) {
+  var GnFeaturesTableManager = function (gnFeaturesTableLoader) {
     this.gnFeaturesTableLoader = gnFeaturesTableLoader;
     this.tables = [];
   };
-  GnFeaturesTableManager.prototype.addTable = function(tableConfig,
-                                                       loaderConfig) {
+  GnFeaturesTableManager.prototype.addTable = function (tableConfig, loaderConfig) {
     var table = {
       name: tableConfig.name,
       type: tableConfig.type,
-      loader: this.gnFeaturesTableLoader.createLoader(tableConfig.type,
-          loaderConfig)
+      loader: this.gnFeaturesTableLoader.createLoader(tableConfig.type, loaderConfig)
     };
 
     this.tables.push(table);
   };
 
-  GnFeaturesTableManager.prototype.clear = function() {
+  GnFeaturesTableManager.prototype.clear = function () {
     this.tables.length = 0;
   };
 
-
-  GnFeaturesTableManager.prototype.getCount = function() {
+  GnFeaturesTableManager.prototype.getCount = function () {
     var count = 0;
-    this.tables.forEach(function(table) {
+    this.tables.forEach(function (table) {
       count += table.loader.getCount();
     });
     return count;
   };
 
+  module.service("gnFeaturesTableManager", [
+    "gnFeaturesTableLoader",
+    GnFeaturesTableManager
+  ]);
 
-  module.service('gnFeaturesTableManager',
-      ['gnFeaturesTableLoader', GnFeaturesTableManager]);
-
-  module.service('gnFeaturesTableService', ['$q', '$http', GnFeaturesTableService]);
-
+  module.service("gnFeaturesTableService", ["$q", "$http", GnFeaturesTableService]);
 })();

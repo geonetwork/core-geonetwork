@@ -187,7 +187,7 @@ public class SettingManager {
 
     public String getValue(String path, boolean nullable) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
-            Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
+            Log.trace(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
 
         Optional<Setting> se = repo.findById(path);

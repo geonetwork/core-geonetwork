@@ -1166,7 +1166,7 @@ public final class XslUtil {
         StringBuilder sb = new StringBuilder("data:");
         String supportedExtension = "jpg|jpeg|png|gif|tif|tiff";
 
-        String extension = Files.getFileExtension(url);
+        String extension = Files.getFileExtension(url).toLowerCase();
         if (extension.matches(supportedExtension)) {
 
             try {

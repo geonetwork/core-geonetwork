@@ -1,5 +1,4 @@
-<div class="row" data-ng-controller="GnUserGroupController"
-     id="gn-user-container">
+<div class="row" data-ng-controller="GnUserGroupController" id="gn-user-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -8,49 +7,73 @@
       </div>
       <div class="panel-body">
         <div class="pos-relative width-100">
-          <input class="form-control" data-ng-model="userSearch.$"
-                 data-ng-show="users.length > 1"
-                 autofocus=""
-                 placeholder="{{'filter' | translate}}" />
-          <span class="fa fa-times gn-input-clear"
-                ng-click="userSearch.$ = ''" ng-show="userSearch.$"></span>
+          <input
+            class="form-control"
+            data-ng-model="userSearch.$"
+            data-ng-show="users.length > 1"
+            autofocus=""
+            placeholder="{{'filter' | translate}}"
+          />
+          <span
+            class="fa fa-times gn-input-clear"
+            ng-click="userSearch.$ = ''"
+            ng-show="userSearch.$"
+          ></span>
         </div>
-        <input type="hidden" data-ng-model="userSelected.id"/>
+        <input type="hidden" data-ng-model="userSelected.id" />
         <div class="flex-spacer"></div>
         <div class="list-group">
-          <a href="" class="list-group-item"
-             data-ng-repeat="u in pageItems()"
-             data-ng-class="u.id === userSelected.id ? 'active' : ''"
-             data-ng-click="selectUser(u)">
-            <img class="img-circle"
-                 ng-src="../api/users/{{(u.id)}}.png?size=18"/>
-            <span class='badge' data-ng-show="u.enabled === false"
-                  data-translate="">disabled</span> {{u.name}} {{u.surname}}
-            ({{u.profile | translate}})
+          <a
+            href=""
+            class="list-group-item"
+            data-ng-repeat="u in pageItems()"
+            data-ng-class="u.id === userSelected.id ? 'active' : ''"
+            data-ng-click="selectUser(u)"
+          >
+            <img class="img-circle" ng-src="../api/users/{{(u.id)}}.png?size=18" />
+            <span class="badge" data-ng-show="u.enabled === false" data-translate=""
+              >disabled</span
+            >
+            {{u.name}} {{u.surname}} ({{u.profile | translate}})
           </a>
-          <span data-gn-pagination-list=""
-                data-items="users | filter:userSearch | orderBy:'name'"
-                data-cache="users"/>
+          <span
+            data-gn-pagination-list=""
+            data-items="users | filter:userSearch | orderBy:'name'"
+            data-cache="users"
+          />
         </div>
 
-
-        <button type="button" class="btn btn-primary btn-block" id="gn-btn-user-add"
-                data-ng-click="addUser()"
-                data-ng-show="user.isUserAdminOrMore() && isUserProfileUpdateEnabled">
-          <i class="fa fa-plus"/>
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          id="gn-btn-user-add"
+          data-ng-click="addUser()"
+          data-ng-show="user.isUserAdminOrMore() && isUserProfileUpdateEnabled"
+        >
+          <i class="fa fa-plus" />
           <span data-translate="">newUser</span>
         </button>
       </div>
     </div>
-    <div data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"></div>
+    <div data-gn-need-help="creating-user"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
     <div class="panel panel-default">
-      <div class="panel-heading"
-           title="{{searchResults.count > 0 ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
-        <span data-ng-hide="userSelected.id == '' || !isUserProfileUpdateEnabled" data-translate="">updateUser</span>
-        <span data-ng-hide="userSelected.id != '' || !isUserProfileUpdateEnabled" data-translate="">newUser</span>
+      <div
+        class="panel-heading"
+        title="{{searchResults.count > 0 ? ('cantDeleteUserHavingRecords' | translate) : ''}}"
+      >
+        <span
+          data-ng-hide="userSelected.id == '' || !isUserProfileUpdateEnabled"
+          data-translate=""
+          >updateUser</span
+        >
+        <span
+          data-ng-hide="userSelected.id != '' || !isUserProfileUpdateEnabled"
+          data-translate=""
+          >newUser</span
+        >
         <span data-ng-hide="isUserProfileUpdateEnabled" data-translate="">user</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
@@ -58,34 +81,57 @@
           - {{userSelected.security.authType}}
         </span>
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-default pull-right"
-                  data-ng-hide="hideResetPassword() || isDisableLoginForm"
-                  data-ng-click="resetPassword(userSelected.id)">
-            <i class="fa fa-lock fa-fw"></i> <span data-translate=""
-          >resetPassword</span></button>
-          <button type="button" class="btn btn-primary pull-right"
-                  data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
-                  data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
-            <i class="fa fa-save fa-fw"></i> <span data-translate=""
-          >saveUser</span></button>
-          <button type="button" class="btn pull-right btn-danger"
-                  data-ng-disabled="searchResults.count > 0"
-                  data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
-                  data-ng-click="removeUser()" id="gn-btn-user-delete">
-            <i class="fa fa-times"></i> <span data-translate=""
-          >deleteUser</span></button>
+          <button
+            type="button"
+            class="btn btn-default pull-right"
+            data-ng-hide="hideResetPassword() || isDisableLoginForm"
+            data-ng-click="resetPassword(userSelected.id)"
+          >
+            <i class="fa fa-lock fa-fw"></i> <span data-translate="">resetPassword</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary pull-right"
+            data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
+            data-ng-click="saveUser('#gn-user-edit')"
+            id="gn-btn-user-save"
+          >
+            <i class="fa fa-save fa-fw"></i> <span data-translate="">saveUser</span>
+          </button>
+          <button
+            type="button"
+            class="btn pull-right btn-danger"
+            data-ng-disabled="searchResults.count > 0"
+            data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
+            data-ng-click="removeUser()"
+            id="gn-btn-user-delete"
+          >
+            <i class="fa fa-times"></i> <span data-translate="">deleteUser</span>
+          </button>
         </div>
       </div>
       <div class="panel-body">
-        <form id="gn-user-edit" name="gnUserEdit" data-ng-keypress="updatingUser()"
-              class="form-horizontal" role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <form
+          id="gn-user-edit"
+          name="gnUserEdit"
+          data-ng-keypress="updatingUser()"
+          class="form-horizontal"
+          role="form"
+        >
+          <input type="hidden" name="_csrf" value="{{csrf}}" />
           <fieldset>
-            <input type="hidden" name="id" data-ng-model="userSelected.id"
-                   value="{{userSelected.id}}"/>
-            <input type="hidden" name="operation" data-ng-model="userOperation"
-                   value="{{userOperation}}"/>
-
+            <input
+              type="hidden"
+              name="id"
+              data-ng-model="userSelected.id"
+              value="{{userSelected.id}}"
+            />
+            <input
+              type="hidden"
+              name="operation"
+              data-ng-model="userOperation"
+              value="{{userOperation}}"
+            />
 
             <div class="form-group" data-ng-hide="user.id == userSelected.id">
               <label class="control-label col-sm-3" data-translate="">enable</label>
@@ -94,26 +140,36 @@
               </div>
             </div>
 
-            <div data-ng-class="gnUserEdit.username.$error.required ||
+            <div
+              data-ng-class="gnUserEdit.username.$error.required ||
                                 gnUserEdit.username.$error.gnDuplicateCheck ? 'has-error' : ''"
-                 class="form-group">
+              class="form-group"
+            >
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
-                <input type="text" id="username" name="username"
-                       class="form-control"
-                       data-ng-model="userSelected.username"
-                       data-ng-required="true"
-                       required=""
-                       data-ng-model-options="{debounce: 200}"
-                       data-gn-duplicate-check="userSelected.username"
-                       data-gn-duplicate-check-apply="userOperation == 'newuser'"
-                       data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
-                       data-ng-disabled="!user.isUserAdminOrMore() || !isUserProfileUpdateEnabled"
-                       autocomplete="off"/>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  class="form-control"
+                  data-ng-model="userSelected.username"
+                  data-ng-required="true"
+                  required=""
+                  data-ng-model-options="{debounce: 200}"
+                  data-gn-duplicate-check="userSelected.username"
+                  data-gn-duplicate-check-apply="userOperation == 'newuser'"
+                  data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
+                  data-ng-disabled="!user.isUserAdminOrMore() || !isUserProfileUpdateEnabled"
+                  autocomplete="off"
+                />
                 <p class="help-block" data-translate="">usernameHelp</p>
-                <p class="help-block"
-                   ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
-                   data-translate="">duplicatedValueFoundUserName</p>
+                <p
+                  class="help-block"
+                  ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
+                  data-translate=""
+                >
+                  duplicatedValueFoundUserName
+                </p>
               </div>
             </div>
             <!-- Password are disabled when updating user -->
@@ -121,82 +177,135 @@
               <div
                 data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ||
                                gnUserEdit.password.$error.maxlength ||  gnUserEdit.password.$error.pattern ? 'has-error' : ''"
-                class="form-group">
+                class="form-group"
+              >
                 <label class="control-label col-sm-3" data-translate="">password</label>
                 <div class="col-sm-9">
                   <div class="input-group">
-                    <input type="password" id="gn-user-password" name="password"
-                           class="form-control"
-                           data-ng-minlength="{{passwordMinLength}}"
-                           data-ng-maxlength="{{passwordMaxLength}}"
-                           data-ng-required="true"
-                           data-ng-pattern="passwordPattern"
-                           data-ng-model="userSelected.password"
-                           autocomplete="off"/>
+                    <input
+                      type="password"
+                      id="gn-user-password"
+                      name="password"
+                      class="form-control"
+                      data-ng-minlength="{{passwordMinLength}}"
+                      data-ng-maxlength="{{passwordMaxLength}}"
+                      data-ng-required="true"
+                      data-ng-pattern="passwordPattern"
+                      data-ng-model="userSelected.password"
+                      autocomplete="off"
+                    />
 
-                    <gn-hide-show-password input-id="gn-user-password"></gn-hide-show-password>
+                    <gn-hide-show-password
+                      input-id="gn-user-password"
+                    ></gn-hide-show-password>
                   </div>
 
-                  <p class="help-block">
-                    <div class="error" data-ng-show="gnUserEdit.password.$error.minlength && !gnUserInfo.password.$pristine"
-                         data-translate="passwordMinlength" data-translate-value-length="{{passwordMinLength}}"></div>
+                  <div class="help-block">
+                    <div
+                      class="error"
+                      data-ng-show="gnUserEdit.password.$error.minlength && !gnUserInfo.password.$pristine"
+                      data-translate="passwordMinlength"
+                      data-translate-value-length="{{passwordMinLength}}"
+                    ></div>
 
-                    <div class="error" data-ng-show="gnUserEdit.password.$error.maxlength && !gnUserInfo.password.$pristine"
-                         data-translate="passwordMaxlength" data-translate-value-length="{{passwordMaxLength}}"></div>
+                    <div
+                      class="error"
+                      data-ng-show="gnUserEdit.password.$error.maxlength && !gnUserInfo.password.$pristine"
+                      data-translate="passwordMaxlength"
+                      data-translate-value-length="{{passwordMaxLength}}"
+                    ></div>
 
-                    <div class="error" data-ng-show="gnUserEdit.password.$error.pattern && !gnUserInfo.password.$pristine"
-                         data-translate="">passwordPattern</div>
-                  </p>
+                    <div
+                      class="error"
+                      data-ng-show="gnUserEdit.password.$error.pattern && !gnUserInfo.password.$pristine"
+                      data-translate=""
+                    >
+                      passwordPattern
+                    </div>
+                  </div>
                 </div>
               </div>
               <div
                 data-ng-class="gnUserEdit.password.$valid == false ||
-                  (passwordCheck !== userSelected.password) ? 'has-error' : ''" class="form-group">
-                <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
+                  (passwordCheck !== userSelected.password) ? 'has-error' : ''"
+                class="form-group"
+              >
+                <label class="control-label col-sm-3" data-translate=""
+                  >passwordRepeat</label
+                >
                 <div class="col-sm-9">
                   <div class="input-group">
-                    <input type="password" id="gn-user-password2" name="password2"
-                           class="form-control"
-                           autocomplete="off"
-                           data-ng-model="passwordCheck"/>
+                    <input
+                      type="password"
+                      id="gn-user-password2"
+                      name="password2"
+                      class="form-control"
+                      autocomplete="off"
+                      data-ng-model="passwordCheck"
+                    />
 
-                    <gn-hide-show-password input-id="gn-user-password2"></gn-hide-show-password>
+                    <gn-hide-show-password
+                      input-id="gn-user-password2"
+                    ></gn-hide-show-password>
                   </div>
                   <p class="help-block">
-                    <span class="error"
-                          data-ng-show="gnUserEdit.password.$valid
+                    <span
+                      class="error"
+                      data-ng-show="gnUserEdit.password.$valid
                               && passwordCheck != userSelected.password"
-                          data-translate="">passwordNotMatching</span>
+                      data-translate=""
+                      >passwordNotMatching</span
+                    >
                   </p>
                 </div>
               </div>
             </div>
-            <div data-ng-class="gnUserEdit.name.$error.required ? 'has-error' : ''"
-                 class="form-group">
+            <div
+              data-ng-class="gnUserEdit.name.$error.required ? 'has-error' : ''"
+              class="form-group"
+            >
               <label class="control-label col-sm-3" data-translate="">name</label>
               <div class="col-sm-9">
-                <input type="text" name="name" class="form-control"
-                       data-ng-model="userSelected.name"
-                       data-ng-required="true"
-                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  data-ng-model="userSelected.name"
+                  data-ng-required="true"
+                  data-ng-disabled="!isUserProfileUpdateEnabled"
+                />
               </div>
             </div>
-            <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''" class="form-group">
+            <div
+              data-ng-class="userSelected.surname == '' ? 'has-error' : ''"
+              class="form-group"
+            >
               <label class="control-label col-sm-3" data-translate="">surname</label>
               <div class="col-sm-9">
-                <input type="text" name="surname" class="form-control"
-                       data-ng-model="userSelected.surname" data-ng-required=""
-                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                <input
+                  type="text"
+                  name="surname"
+                  class="form-control"
+                  data-ng-model="userSelected.surname"
+                  data-ng-required=""
+                  data-ng-disabled="!isUserProfileUpdateEnabled"
+                />
               </div>
             </div>
             <div
               data-ng-class="gnUserEdit.email.$error.email || gnUserEdit.email.$error.required ? 'has-error' : ''"
-              class="form-group">
+              class="form-group"
+            >
               <label class="control-label col-sm-3" data-translate="">email</label>
               <div class="col-sm-9">
-                <input type="email" name="email" class="form-control"
-                       data-ng-model="userSelected.emailAddresses[0]" data-ng-required="true"
-                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  data-ng-model="userSelected.emailAddresses[0]"
+                  data-ng-required="true"
+                  data-ng-disabled="!isUserProfileUpdateEnabled"
+                />
                 <p class="help-block" data-translate="">configureYourAvatar</p>
               </div>
             </div>
@@ -204,9 +313,13 @@
               <label class="control-label col-sm-3" data-translate="">organisation</label>
               <!-- TODO : Add org list -->
               <div class="col-sm-9">
-                <input type="text" name="org" class="form-control"
-                       data-ng-model="userSelected.organisation"
-                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                <input
+                  type="text"
+                  name="org"
+                  class="form-control"
+                  data-ng-model="userSelected.organisation"
+                  data-ng-disabled="!isUserProfileUpdateEnabled"
+                />
               </div>
             </div>
 
@@ -216,53 +329,69 @@
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">address</label>
                 <div class="col-sm-9">
-                  <input type="text" name="address" class="form-control"
-                         data-ng-model="userSelected.addresses[0].address"
-                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                  <input
+                    type="text"
+                    name="address"
+                    class="form-control"
+                    data-ng-model="userSelected.addresses[0].address"
+                    data-ng-disabled="!isUserProfileUpdateEnabled"
+                  />
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">zip</label>
                 <div class="col-sm-9">
-                  <input type="text" name="zip" class="form-control"
-                         data-ng-model="userSelected.addresses[0].zip"
-                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                  <input
+                    type="text"
+                    name="zip"
+                    class="form-control"
+                    data-ng-model="userSelected.addresses[0].zip"
+                    data-ng-disabled="!isUserProfileUpdateEnabled"
+                  />
                 </div>
               </div>
-
 
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">state</label>
                 <div class="col-sm-9">
-                  <input type="text" name="state" class="form-control"
-                         data-ng-model="userSelected.addresses[0].state"
-                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                  <input
+                    type="text"
+                    name="state"
+                    class="form-control"
+                    data-ng-model="userSelected.addresses[0].state"
+                    data-ng-disabled="!isUserProfileUpdateEnabled"
+                  />
                 </div>
               </div>
-
 
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">city</label>
                 <div class="col-sm-9">
-                  <input type="text" name="city" class="form-control"
-                         data-ng-model="userSelected.addresses[0].city"
-                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                  <input
+                    type="text"
+                    name="city"
+                    class="form-control"
+                    data-ng-model="userSelected.addresses[0].city"
+                    data-ng-disabled="!isUserProfileUpdateEnabled"
+                  />
                 </div>
               </div>
-
 
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">country</label>
                 <div class="col-sm-9">
-                  <input type="text" name="country" class="form-control"
-                         data-ng-model="userSelected.addresses[0].country"
-                         data-gn-country-picker=""
-                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
+                  <input
+                    type="text"
+                    name="country"
+                    class="form-control"
+                    data-ng-model="userSelected.addresses[0].country"
+                    data-gn-country-picker=""
+                    data-ng-disabled="!isUserProfileUpdateEnabled"
+                  />
                 </div>
               </div>
             </fieldset>
-
 
             <fieldset data-ng-if="!user.isUserAdminOrMore()">
               <legend data-translate="profile"></legend>
@@ -270,7 +399,9 @@
               <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
                 <h4 data-translate="">RegisteredUser</h4>
                 <ul>
-                  <li data-ng-repeat="g in groupsByProfile['RegisteredUser']">{{g.langlabel}}</li>
+                  <li data-ng-repeat="g in groupsByProfile['RegisteredUser']">
+                    {{g.langlabel}}
+                  </li>
                 </ul>
               </div>
 
@@ -284,180 +415,254 @@
               <div data-ng-if="groupsByProfile['Reviewer'].length > 0">
                 <h4 data-translate="">Reviewer</h4>
                 <ul>
-                  <li data-ng-repeat="g in groupsByProfile['Reviewer']">{{g.langlabel}}</li>
+                  <li data-ng-repeat="g in groupsByProfile['Reviewer']">
+                    {{g.langlabel}}
+                  </li>
                 </ul>
               </div>
             </fieldset>
 
             <fieldset data-ng-if="user.isUserAdminOrMore()">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
-              <input type="hidden" name="profile" data-ng-model="userSelected.profile"
-                     value="{{userSelected.profile}}"/>
+              <input
+                type="hidden"
+                name="profile"
+                data-ng-model="userSelected.profile"
+                value="{{userSelected.profile}}"
+              />
               <label>
-                <input type="checkbox"
-                       data-ng-checked="userSelected.profile == 'Administrator'"
-                       data-ng-click="setUserProfile(true)"
-                       data-ng-show="user.isAdministratorOrMore()"
-                       data-ng-disabled="!isUserGroupUpdateEnabled"/>
-                <span data-translate=""
-                      data-ng-show="user.isAdministratorOrMore()">isAdministrator</span>
+                <input
+                  type="checkbox"
+                  data-ng-checked="userSelected.profile == 'Administrator'"
+                  data-ng-click="setUserProfile(true)"
+                  data-ng-show="user.isAdministratorOrMore()"
+                  data-ng-disabled="!isUserGroupUpdateEnabled"
+                />
+                <span data-translate="" data-ng-show="user.isAdministratorOrMore()"
+                  >isAdministrator</span
+                >
               </label>
 
-              <div
-                data-ng-show="userSelected.profile != 'Administrator'">
+              <div data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
 
-                <div readonly-mode="!isUserGroupUpdateEnabled"
-                     data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                     data-choices="groups"></div>
-
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsByProfile['RegisteredUser']"
+                  data-choices="groups"
+                ></div>
 
                 <h3 data-translate="">Editor</h3>
-                <div readonly-mode="!isUserGroupUpdateEnabled"
-                     data-gn-multiselect="groupsByProfile['Editor']"
-                     data-choices="groups"></div>
-
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsByProfile['Editor']"
+                  data-choices="groups"
+                ></div>
 
                 <h3 data-translate="">Reviewer</h3>
-                <div readonly-mode="!isUserGroupUpdateEnabled"
-                     data-gn-multiselect="groupsByProfile['Reviewer']"
-                     data-choices="groups"></div>
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsByProfile['Reviewer']"
+                  data-choices="groups"
+                ></div>
 
-                <p class="help-block"
-                   data-translate="">aReviewerInAGroupIsAlsoAnEditor</p>
-
+                <p class="help-block" data-translate="">
+                  aReviewerInAGroupIsAlsoAnEditor
+                </p>
 
                 <h3 data-translate="">UserAdmin</h3>
-                <div readonly-mode="!isUserGroupUpdateEnabled"
-                     data-gn-multiselect="groupsByProfile['UserAdmin']"
-                     data-choices="groups"></div>
+                <div
+                  readonly-mode="!isUserGroupUpdateEnabled"
+                  data-gn-multiselect="groupsByProfile['UserAdmin']"
+                  data-choices="groups"
+                ></div>
 
-                <p class="help-block"
-                   data-translate="">useCtrlClickToUnselect</p>
+                <p class="help-block" data-translate="">useCtrlClickToUnselect</p>
               </div>
             </fieldset>
           </fieldset>
         </form>
 
-        <div data-ng-search-form="" class="panel panel-default" data-ng-show="userSelected.id > 0">
-          <div class="panel-heading"
-               data-gn-slide-toggle="">
-            <i class="fa fa-search"/>&nbsp;
-            <ng-pluralize count="searchResults.count"
-                          when="{'0': ('noRecordFound' | translate),
+        <div
+          data-ng-search-form=""
+          class="panel panel-default"
+          data-ng-show="userSelected.id > 0"
+        >
+          <div class="panel-heading" data-gn-slide-toggle="">
+            <i class="fa fa-search" />&nbsp;
+            <ng-pluralize
+              count="searchResults.count"
+              when="{'0': ('noRecordFound' | translate),
                     'one': '1 ' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
                     'other': '{} ' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}"
             ></ng-pluralize>
           </div>
           <div class="panel-body">
-            <div data-ng-show="searchResults.records.length > 0"
-                 data-gn-search-form-results=""
-                 data-gn-search-form-results-mode="title"
-                 data-search-results="searchResults"
-                 data-pagination-info="paginationInfo">
-            </div>
+            <div
+              data-ng-show="searchResults.records.length > 0"
+              data-gn-search-form-results=""
+              data-gn-search-form-results-mode="title"
+              data-search-results="searchResults"
+              data-pagination-info="paginationInfo"
+            ></div>
           </div>
         </div>
 
-        <br/>
-        <div data-gn-saved-selections="" data-ng-if="userSelected.id > 0"
-             data-gn-saved-selections-panel="userSelected"/>
+        <br />
+        <div
+          data-gn-saved-selections=""
+          data-ng-if="userSelected.id > 0"
+          data-gn-saved-selections-panel="userSelected"
+        />
       </div>
     </div>
   </div>
 
-
-  <div class="modal fade" id="passwordResetModal" tabindex="-1" role="dialog"
-       aria-labelledby="{{'passwordReset' | translate}}" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="passwordResetModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="{{'passwordReset' | translate}}"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          >&times;</button>
-          <h4 class="modal-title" data-translate=""
-              data-translate-values="{ user: '{{userSelected.name}} {{userSelected.surname}}'}">
-            resetPasswordTitle</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4
+            class="modal-title"
+            data-translate=""
+            data-translate-values="{ user: '{{userSelected.name}} {{userSelected.surname}}'}"
+          >
+            resetPasswordTitle
+          </h4>
         </div>
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div class="form-group"
-                 data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''">
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
+            <div
+              class="form-group"
+              data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''"
+            >
               <label class="control-label col-sm-3" data-translate="">passwordOld</label>
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input type="password" id="gn-user-password-old" name="passwordOld"
-                         class="form-control" autocomplete="off"
-                         data-ng-required="true"
-                         data-ng-model="resetPasswordOld"/>
+                  <input
+                    type="password"
+                    id="gn-user-password-old"
+                    name="passwordOld"
+                    class="form-control"
+                    autocomplete="off"
+                    data-ng-required="true"
+                    data-ng-model="resetPasswordOld"
+                  />
 
-                  <gn-hide-show-password input-id="gn-user-password-old"></gn-hide-show-password>
+                  <gn-hide-show-password
+                    input-id="gn-user-password-old"
+                  ></gn-hide-show-password>
                 </div>
-
               </div>
             </div>
-            <div class="form-group"
-                 data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
+            <div
+              class="form-group"
+              data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''"
+            >
               <label class="control-label col-sm-3" data-translate="">password</label>
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input type="password" id="gn-user-password" name="password"
-                         class="form-control" autocomplete="off"
-                         data-ng-minlength="{{passwordMinLength}}"
-                         data-ng-maxlength="{{passwordMaxLength}}"
-                         data-ng-required="true"
-                         data-ng-model="resetPassword1"
-                         data-ng-pattern="passwordPattern" />
+                  <input
+                    type="password"
+                    id="gn-user-password"
+                    name="password"
+                    class="form-control"
+                    autocomplete="off"
+                    data-ng-minlength="{{passwordMinLength}}"
+                    data-ng-maxlength="{{passwordMaxLength}}"
+                    data-ng-required="true"
+                    data-ng-model="resetPassword1"
+                    data-ng-pattern="passwordPattern"
+                  />
 
-                  <gn-hide-show-password input-id="gn-user-password"></gn-hide-show-password>
+                  <gn-hide-show-password
+                    input-id="gn-user-password"
+                  ></gn-hide-show-password>
                 </div>
 
-                <p class="help-block">
-                  <div class="error" data-ng-show="gnPasswordReset.password.$error.minlength && !gnPasswordReset.password.$pristine"
-                       data-translate="passwordMinlength" data-translate-value-length="{{passwordMinLength}}"></div>
+                <div class="help-block">
+                  <div
+                    class="error"
+                    data-ng-show="gnPasswordReset.password.$error.minlength && !gnPasswordReset.password.$pristine"
+                    data-translate="passwordMinlength"
+                    data-translate-value-length="{{passwordMinLength}}"
+                  ></div>
 
-                  <div class="error" data-ng-show="gnPasswordReset.password.$error.maxlength && !gnPasswordReset.password.$pristine"
-                       data-translate="passwordMaxlength" data-translate-value-length="{{passwordMaxLength}}"></div>
+                  <div
+                    class="error"
+                    data-ng-show="gnPasswordReset.password.$error.maxlength && !gnPasswordReset.password.$pristine"
+                    data-translate="passwordMaxlength"
+                    data-translate-value-length="{{passwordMaxLength}}"
+                  ></div>
 
-                  <div class="error" data-ng-show="gnPasswordReset.password.$error.pattern && !gnPasswordReset.password.$pristine"
-                       data-translate="">passwordPattern</div>
-                </p>
+                  <div
+                    class="error"
+                    data-ng-show="gnPasswordReset.password.$error.pattern && !gnPasswordReset.password.$pristine"
+                    data-translate=""
+                  >
+                    passwordPattern
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="form-group"
-                 data-ng-class="gnPasswordReset.password.$valid == false ||
-                      (resetPassword2 !== resetPassword1) ? 'has-error' : ''">
-              <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
+            <div
+              class="form-group"
+              data-ng-class="gnPasswordReset.password.$valid == false ||
+                      (resetPassword2 !== resetPassword1) ? 'has-error' : ''"
+            >
+              <label class="control-label col-sm-3" data-translate=""
+                >passwordRepeat</label
+              >
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input type="password" id="gn-user-password2"
-                         name="password2" class="form-control"
-                         autocomplete="off"
-                         data-ng-model="resetPassword2"/>
+                  <input
+                    type="password"
+                    id="gn-user-password2"
+                    name="password2"
+                    class="form-control"
+                    autocomplete="off"
+                    data-ng-model="resetPassword2"
+                  />
 
-                  <gn-hide-show-password input-id="gn-user-password2"></gn-hide-show-password>
+                  <gn-hide-show-password
+                    input-id="gn-user-password2"
+                  ></gn-hide-show-password>
                 </div>
 
-
                 <p class="help-block">
-                  <span class="error"
-                        data-ng-show="gnPasswordReset.password.$valid
+                  <span
+                    class="error"
+                    data-ng-show="gnPasswordReset.password.$valid
                     && resetPassword2 !== resetPassword1"
-                        data-translate="">passwordNotMatching</span>
+                    data-translate=""
+                    >passwordNotMatching</span
+                  >
                 </p>
               </div>
             </div>
-
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn" data-dismiss="modal">
-            <i class="fa fa-ban-circle"></i>&nbsp;
-            <span data-translate=""
-            >cancel</span></button>
-          <button type="button" class="btn btn-primary"
-                  data-ng-disabled="!gnPasswordReset.password.$valid || resetPassword2 !== resetPassword1"
-                  data-ng-click="saveNewPassword()">
+            <i class="fa fa-ban-circle"></i>&nbsp; <span data-translate="">cancel</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-ng-disabled="!gnPasswordReset.password.$valid || resetPassword2 !== resetPassword1"
+            data-ng-click="saveNewPassword()"
+          >
             <i class="fa fa-lock"></i>&nbsp;
             <span data-translate="">resetPassword</span>
           </button>
@@ -466,9 +671,12 @@
     </div>
   </div>
 
-  <div gn-modal class="gn-confirm-delete"
-       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveUser}"
-       id="gn-confirm-remove-user">
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveUser}"
+    id="gn-confirm-remove-user"
+  >
     <p translate>userDeleteConfirm</p>
   </div>
 </div>

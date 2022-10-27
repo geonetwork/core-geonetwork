@@ -1,0 +1,30 @@
+<form id="gn-batch-approval">
+  <div>
+    <p data-translate="">batchSubmitInfo</p>
+
+    <div class="form-group">
+      <label for="gn-change-message" data-translate="">statusLogMessage</label>
+      <textarea
+        class="form-control"
+        id="gn-change-message"
+        rows="4"
+        data-ng-model="changeMessage"
+      ></textarea>
+    </div>
+
+    <div class="modal-footer-inline clearfix">
+      <div class="btn-toolbar pull-right">
+        <button
+          class="btn btn-default"
+          data-gn-click-and-spin="submit()"
+          data-translate=""
+        >
+          submit
+        </button>
+        <button class="btn btn-default" type="button" data-dismiss="modal">
+          <span data-translate="">cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

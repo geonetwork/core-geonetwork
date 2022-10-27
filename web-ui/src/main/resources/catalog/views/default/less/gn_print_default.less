@@ -1,0 +1,199 @@
+@import "../../../lib/style/bootstrap/less/variables.less";
+
+// special print classes
+.gn-new-page {
+  page-break-before: always !important;
+}
+.gn-page-break-avoid {
+  page-break-inside: avoid;
+}
+// general
+.gn-header.ng-hide {
+  display: block !important;
+  margin: 20px;
+  a {
+    &:after {
+      display: none;
+    }
+  }
+}
+a[href]:after {
+  margin-left: 3px;
+}
+// home
+.gallery {
+  display: none;
+}
+#info-tabset {
+  .nav-pills {
+    display: none;
+  }
+}
+.gn-md-thumbnail {
+  a {
+    &:after {
+      display: none;
+    }
+  }
+}
+// search page
+.gn-search-facet {
+  a {
+    &:after {
+      display: none;
+    }
+  }
+}
+.gn-card {
+  .gn-card-heading .gn-md-title a {
+    &:after {
+      display: none;
+    }
+  }
+  .btn {
+    display: none;
+  }
+}
+// metadata page
+.gn-md-view {
+  .input-group-addon {
+    display: none;
+  }
+  .label {
+    border: 0;
+  }
+  .badge.bg-success, .badge.bg-danger {
+    color: @btn-primary-color;
+  }
+  .gn-section {
+    page-break-inside: avoid;
+    border: 0 !important;
+  }
+  .gn-related-item {
+    page-break-inside: avoid;
+    h3 {
+      font-weight: normal;
+    }
+    a {
+      &:after {
+        display: none;
+      }
+    }
+    [data-ng-switch] {
+      display: none;
+    }
+    .btn {
+      display: none;
+    }
+    select {
+      display: none;
+    }
+    .text-warning {
+      display: none;
+    }
+  }
+  .gn-contact-card {
+    padding: 0 !important;
+    .col-md-12 {
+      padding-left: 0;
+    }
+    .gn-contact-card-role, .gn-contact-card-org-group  {
+      font-style: normal !important;
+      font-weight: normal !important;
+      margin-bottom: 10px;
+    }
+    svg {
+      max-width: 100px;
+    }
+  }
+  .gn-md-side-crs {
+    a {
+      &:after {
+        display: none;
+      }
+    }
+  }
+  .gn-md-side-uuid {
+    span + div {
+      flex-grow: 10;
+      .input-group {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.gn-status-completed {
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+  color: @btn-success-color !important;
+}
+.gn-status-historicalArchive {
+  border-color: darken(@brand-warning, 5%) !important;
+  background-color: @brand-warning !important;
+  color: @btn-warning-color;
+}
+.gn-status-obsolete {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}
+.gn-status-superseded {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}
+.gn-workflow-status {
+
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+}
+.gn-workflow-status-mdview {
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+  color: @btn-success-color !important;
+}
+/* Decide here which status should be displayed
+or not and with which colors */
+.gn-workflow-status-1 {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}
+.gn-status-completed {
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+  color: @btn-success-color !important;
+}
+.gn-status-historicalArchive {
+  border-color: darken(@brand-warning, 5%) !important;
+  background-color: @brand-warning !important;
+  color: @btn-warning-color;
+}
+.gn-status-obsolete {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}
+.gn-status-superseded {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}
+.gn-workflow-status {
+  color: @btn-success-color !important;
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+}
+.gn-workflow-status-mdview {
+  border-color: darken(@brand-success, 5%) !important;
+  background-color: @brand-success !important;
+  color: @btn-success-color !important;
+}
+/* Decide here which status should be displayed
+or not and with which colors */
+.gn-workflow-status-1 {
+  border-color: darken(@brand-danger, 5%) !important;
+  background-color: @brand-danger !important;
+  color: @btn-danger-color !important;
+}

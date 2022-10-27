@@ -5,46 +5,57 @@
         <form name="catsForm" id="catsForm">
           <div data-ng-repeat="c in categories">
             <label>
-              <input type="checkbox"
-                    name="{{c.id}}"
-                    data-ng-click="selectCategory()"
-                    data-ng-model="c.checked"/>&nbsp;
-              <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
+              <input
+                type="checkbox"
+                name="{{c.id}}"
+                data-ng-click="selectCategory()"
+                data-ng-model="c.checked"
+              />&nbsp; <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
               <span class="text">{{c.label[lang] | translate}}</span>
             </label>
           </div>
         </form>
       </div>
       <div class="col-lg-6">
-        <p class="help-block"
-           data-translate="">categoriesBatchAlert</p>
+        <p class="help-block" data-translate="">categoriesBatchAlert</p>
       </div>
     </div>
 
     <div class="btn-toolbar">
-      <button type="reset" class="btn btn-default pull-right"
-              title="{{'clearCheckboxFormChanges' | translate}}"
-              data-ng-disabled="!categoryIsSelected"
-              data-ng-click="reset()">
+      <button
+        type="reset"
+        class="btn btn-default pull-right"
+        title="{{'clearCheckboxFormChanges' | translate}}"
+        data-ng-disabled="!categoryIsSelected"
+        data-ng-click="reset()"
+      >
         <i class="fa fa-undo"></i>&nbsp;
       </button>
-      <button type="button" class="btn btn-primary pull-right"
-              title="{{'addThoseCategories-help' | translate}}"
-              data-gn-click-and-spin="save()">
+      <button
+        type="button"
+        class="btn btn-primary pull-right"
+        title="{{'addThoseCategories-help' | translate}}"
+        data-gn-click-and-spin="save()"
+      >
         <i class="fa fa-save"></i>&nbsp;
         <span data-translate="">addThoseCategories</span>
       </button>
-      <button type="button" class="btn btn-primary pull-right"
-              title="{{'replaceByThoseCategories-help' | translate}}"
-              data-gn-click-and-spin="save(true)">
+      <button
+        type="button"
+        class="btn btn-primary pull-right"
+        title="{{'replaceByThoseCategories-help' | translate}}"
+        data-gn-click-and-spin="save(true)"
+      >
         <i class="fa fa-eraser"></i>&nbsp;
         <span data-translate="">replaceByThoseCategories</span>
       </button>
 
-      <div data-gn-need-help="user-guide/tag-information/tagging-with-categories.html"
-           data-icon-only="true"
-           class="pull-right"></div>
+      <div
+        data-gn-need-help="tagging-with-categories"
+        data-icon-only="true"
+        class="pull-right"
+      ></div>
     </div>
   </div>
-  <br/>
+  <br />
 </div>

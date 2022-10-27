@@ -26,8 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
+import org.apache.logging.log4j.ThreadContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -46,7 +45,6 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.exceptions.UnknownHostEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -184,51 +182,49 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
+    /**
+     * Used to configure Log4J to route harvester messages to an individual file.
+     * <p>
+     * This method has the side effect of setting Log4J ThreadContext values:
+     * <ul>
+     *     <li>harvester</li>
+     *     <li>logfile</li>
+     *     <li>timeZone</li>
+     * </ul>
+     * <p>
+     * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
+     * the logfile location.
+     *
+     * @return the location of the logfile
+     */
     private String initializeLog() {
 
         // configure personalized logger
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
+
+
+        // Filename safe representation of harvester name (using '_' as needed).
         final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
-        log = Log.createLogger(harvesterName, "geonetwork.harvester");
 
-        String directory = log.getFileAppender();
-        if (directory == null || directory.isEmpty()) {
-            directory = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
-        }
-        File d = new File(directory);
-        if (!d.isDirectory()) {
-            directory = d.getParent() + File.separator;
-        }
-
-        FileAppender fa = new FileAppender();
-        fa.setName(harvesterName);
-        String logfile = directory + "harvester_" + packageType + "_"
-            + harvesterName + "_"
-            + dateFormat.format(new Date(System.currentTimeMillis()))
+        String logfile = "harvester_"
+            + packageType
+            + "_" + harvesterName
+            + "_" + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
-        fa.setFile(logfile);
 
         String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
         if (StringUtils.isBlank(timeZoneSetting)) {
             timeZoneSetting = TimeZone.getDefault().getID();
         }
-        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
 
-        fa.setThreshold(log.getThreshold());
-        fa.setAppend(true);
-        fa.activateOptions();
-
-        log.setAppender(fa);
+        ThreadContext.put("harvest", harvesterName);
+        ThreadContext.putIfNull("logfile", logfile);
+        ThreadContext.put("timeZone", timeZoneSetting);
 
         return logfile;
     }
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
 
     public void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
@@ -246,7 +242,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
         initInfo(context);
 
-        initializeLog();
         if (status == Status.ACTIVE) {
             doSchedule();
         }
@@ -282,6 +277,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     /**
      * Deletes the harvester job from the scheduler and schedule it again.
+     *
      * @throws SchedulerException
      */
     public void doReschedule() throws SchedulerException {
@@ -291,6 +287,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     /**
      * Get the timezone of the harvester cron trigger.
+     *
      * @return a time zone.
      * @throws SchedulerException
      */
@@ -655,8 +652,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 running = true;
                 cancelMonitor.set(false);
                 try {
-
                     String logfile = initializeLog();
+
                     this.log.info("Starting harvesting of " + this.getParams().getName());
                     error = null;
                     errors.clear();
@@ -756,7 +753,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             }
             Element logfile_ = new Element("logfile");
             logfile_.setText(logfile);
-
             result.addContent(logfile_);
 
             result.addContent(toElement(errors));
