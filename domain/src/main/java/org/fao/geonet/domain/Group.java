@@ -121,7 +121,7 @@ public class Group extends Localized implements Serializable {
      *
      * @return group name
      */
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 255)
     public String getName() {
         return _name;
     }
