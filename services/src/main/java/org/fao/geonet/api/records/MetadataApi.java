@@ -618,7 +618,7 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
+            RelatedResponse related = getRelated(metadataUuid, type, 1, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
