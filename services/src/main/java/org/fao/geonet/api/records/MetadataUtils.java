@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
@@ -392,7 +393,7 @@ public class MetadataUtils {
     private static String buildRemoteRecord(Map<String, String> props) {
         return props == null ? "{}" : String.format(
             "{\"resourceTitleObject\": {\"default\": \"%s\"}}",
-            props.get("resourceTitle"));
+            StringEscapeUtils.escapeJson(props.get("resourceTitle")));
     }
 
     @Deprecated

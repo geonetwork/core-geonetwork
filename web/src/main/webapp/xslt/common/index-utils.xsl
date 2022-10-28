@@ -54,7 +54,7 @@
   <xsl:variable name="openDataKeywords"
                 select="'opendata|open data|donnees ouvertes'"/>
 
-  <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
+  <xsl:variable name="isStoringOverviewInIndex" select="false()"/>
 
 
   <!-- A date, dateTime, Year or Year and Month

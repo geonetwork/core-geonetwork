@@ -34,6 +34,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
@@ -61,12 +62,12 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                     String mdId = dataManager.insertMetadata(serviceContext, schema, sampleMetadataXml,
                         UUID.randomUUID().toString(), userIdAsInt, "2", "source",
                         MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
-                        new ISODate().getDateAndTime(), false, false);
+                        new ISODate().getDateAndTime(), false, IndexingMode.none);
                     Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",
                         GMD).addContent(new Element("CharacterString", GCO)));
 
-                    AbstractMetadata updateMd = dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
-                        new ISODate().getDateAndTime(), false);
+                    AbstractMetadata updateMd = dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, "eng",
+                        new ISODate().getDateAndTime(), false, IndexingMode.none);
                     assertNotNull(updateMd);
                     boolean hasNext = updateMd.getCategories().iterator().hasNext();
                     assertTrue(hasNext);

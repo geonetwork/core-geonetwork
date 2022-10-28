@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -44,7 +45,7 @@ public interface IMetadataIndexer {
 
     /**
      * This is a hopefully soon to be deprecated when no deps on context
-     * 
+     *
      * @param context
      * @throws Exception
      */
@@ -98,14 +99,8 @@ public interface IMetadataIndexer {
      */
     void indexMetadata(List<String> metadataIds) throws Exception;
 
-    /**
-     * Index one record defined by metadataId
-     *
-     * @param metadataId
-     * @param forceRefreshReaders
-     * @throws Exception
-     */
-    void indexMetadata(String metadataId, boolean forceRefreshReaders) throws Exception;
+    void indexMetadata(String metadataId, boolean forceRefreshReaders, IndexingMode indexingMode) throws Exception;
+
     void indexMetadataPrivileges(String uuid, int id) throws Exception;
 
     /**

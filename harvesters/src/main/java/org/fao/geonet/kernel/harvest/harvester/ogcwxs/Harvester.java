@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -415,13 +416,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
-            metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
         } else {
             result.updatedMetadata++;
             String id = dataMan.getMetadataId(uuid);
             metadata.setId(Integer.valueOf(id));
-            metadataManager.updateMetadata(context, id, md, false, false, false,
-                context.getLanguage(), dataMan.extractDateModified(schema, md), false);
+            metadataManager.updateMetadata(context, id, md, false, false,
+                context.getLanguage(), dataMan.extractDateModified(schema, md), false, IndexingMode.none);
         }
 
         String id = String.valueOf(metadata.getId());
@@ -836,13 +837,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = metadataManager.insertMetadata(context, metadata, xml, false, false, UpdateDatestamp.NO, false, false);
+                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);
                 metadata.setId(Integer.valueOf(id));
-                metadataManager.updateMetadata(context, id, xml, false, false, false,
-                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
+                metadataManager.updateMetadata(context, id, xml, false, false,
+                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false, IndexingMode.none);
             }
 
             reg.id = String.valueOf(metadata.getId());
@@ -873,9 +874,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     xml = loadThumbnail(reg, xml, schema);
                     if (xml != null) {
                         metadataManager.updateMetadata(context, reg.id, xml,
-                            false, false, false,
+                            false, false,
                             context.getLanguage(),
-                            dataMan.extractDateModified(schema, xml), false);
+                            dataMan.extractDateModified(schema, xml), false, IndexingMode.none);
                     }
                 } else {
                     if (log.isDebugEnabled()) {
