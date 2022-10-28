@@ -129,7 +129,12 @@
             // TODO
           });
       };
-      $scope.deleteMapServer = function () {
+
+      $scope.deleteMapserverConfig = function () {
+        $("#gn-confirm-remove-mapserver").modal("show");
+      };
+
+      $scope.confirmDeleteMapserverConfig = function () {
         $http
           .delete("../api/mapservers/" + $scope.mapserverSelected.id)
           .success(function (data) {

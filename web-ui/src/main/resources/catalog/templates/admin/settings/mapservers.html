@@ -1,4 +1,4 @@
-<div class="row" data-ng-controller="GnMapServerController">
+<div class="row" data-ng-controller="GnMapServerController" id="gn-mapservers-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">mapservers</div>
@@ -69,7 +69,7 @@
             type="button"
             class="btn btn-primary btn-danger"
             data-ng-hide="mapserverSelected.id == ''"
-            data-ng-click="deleteMapServer(mapserverSelected.id)"
+            data-ng-click="deleteMapserverConfig()"
           >
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">delete</span>
@@ -163,7 +163,7 @@
                     type="password"
                     class="form-control"
                     required="required"
-                    autocomplete="off"
+                    autocomplete="new-password"
                     data-ng-model="mapserverSelected.password"
                   />
                 </div>
@@ -341,5 +341,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteMapserverConfig}"
+    id="gn-confirm-remove-mapserver"
+  >
+    <p translate>confirmMapserverDelete</p>
   </div>
 </div>
