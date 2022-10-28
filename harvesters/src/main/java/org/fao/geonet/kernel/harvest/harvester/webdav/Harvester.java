@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
@@ -326,7 +327,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         } catch (NumberFormatException e) {
         }
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
@@ -476,11 +477,10 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             //
             boolean validate = false;
             boolean ufo = false;
-            boolean index = false;
             String language = context.getLanguage();
 
-            final AbstractMetadata metadata = metadataManager.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                date, false);
+            final AbstractMetadata metadata = metadataManager.updateMetadata(context, record.id, md, validate, ufo, language,
+                date, false, IndexingMode.none);
 
             if(force) {
                 //change ownership of metadata to new harvester

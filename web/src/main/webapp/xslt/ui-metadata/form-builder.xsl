@@ -376,6 +376,8 @@
       <null/>
     </xsl:param>
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
+    <xsl:param name="collapsible" select="true()" as="xs:boolean" required="no"/>
+    <xsl:param name="collapsed" select="false()" as="xs:boolean" required="no"/>
 
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
@@ -385,8 +387,10 @@
               class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
       <legend class="{$cls}"
-              data-gn-slide-toggle=""
               data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+        <xsl:if test="$collapsible">
+          <xsl:attribute name="data-gn-slide-toggle" select="$collapsed"/>
+        </xsl:if>
         <!--
          The toggle title is in conflict with the element title
          required for the element tooltip

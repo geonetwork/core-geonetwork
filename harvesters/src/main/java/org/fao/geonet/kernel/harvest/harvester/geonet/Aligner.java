@@ -59,6 +59,7 @@ import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -537,7 +538,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -810,11 +811,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
-            boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                updateDateStamp);
+            metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate,
+                updateDateStamp, IndexingMode.none);
             metadata = metadataRepository.findOneById(Integer.valueOf(id));
             result.updatedMetadata++;
             if (force) {

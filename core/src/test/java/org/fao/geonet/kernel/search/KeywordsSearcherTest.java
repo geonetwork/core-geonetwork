@@ -106,7 +106,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         Path thesaurusBlahFile = locateThesaurus(string + ".rdf");
         Thesaurus thes = new Thesaurus(isoLangMapper, string + ".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://" +
             string + ""
-            + ".com");
+            + ".com", 0);
         thes.initRepository();
         if (!Files.exists(thesaurusBlahFile) || Files.size(thesaurusBlahFile) == 0) {
             populateThesaurus(thes, smallWords, "http://" + string + ".com#", string + "Val", string + "Note", languages);

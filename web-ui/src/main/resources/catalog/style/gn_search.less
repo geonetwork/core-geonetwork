@@ -44,7 +44,9 @@
   //  }
   //}
   .gn-facet-container {
-    margin-left: 15px;
+    .gn-facet-container {
+      margin-left: 20px;
+    }
     margin-top: 5px;
     margin-bottom: 5px;
     a {
@@ -52,9 +54,16 @@
       .fa {
         margin-right: 3px;
       }
+      div.gn-facet-image {
+        background-size: cover !important;
+        width: 20px;
+        height: 20px;
+      }
       * {
-        color: @gray-dark;
         transition: color 0.1s;
+      }
+      span {
+        color: @gray-dark;
       }
       &:hover * {
         color: @facet-hover;
@@ -226,9 +235,6 @@
   background-color: #fff;
   &:first-letter {
     text-transform: uppercase;
-  }
-  span {
-    background-color: #fff;
   }
 }
 
@@ -443,11 +449,11 @@
     .dropdown-menu {
       max-width: 500px;
       li a {
-        padding-top: 1px;
-        padding-bottom: 1px;
+        padding: 8px 20px;
         line-height: normal;
         min-width: unset;
         .text-overflow();
+        display: block;
       }
     }
   }

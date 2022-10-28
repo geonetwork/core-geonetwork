@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -601,6 +601,9 @@
                 attrs.clearFormOnProtocolChange == "false"
               ); //default to true (old behavior)
               scope.popupid = attrs["gnPopupid"];
+              $(scope.popupid).on("hidden.bs.modal", function () {
+                scope.$broadcast("onlineSrcDialogHidden", { popupid: scope.popupid });
+              });
 
               scope.config = null;
               scope.linkType = null;
@@ -826,6 +829,38 @@
                     return c;
                   }
                 }
+
+                /* If the schema configuration file for the online
+                   resources panel defines a default type, return it
+                   instead of DEFAULT_CONFIG
+
+                   schema/config/associated-panel/default.json
+
+                   {"config": {"types": [
+                      {
+                          "default": true,
+                          "label": "addOnlinesrc"
+                          ...
+                      },
+                      {
+                          "label": "addThumbnail",
+                          ...
+                      }]
+                  }}
+                */
+                var defaultSchemaConfigIndex = _.findIndex(
+                  scope.config.types,
+                  function (t) {
+                    return t.default === true;
+                  }
+                );
+
+                if (defaultSchemaConfigIndex > -1) {
+                  return scope.config.types[defaultSchemaConfigIndex];
+                } else {
+                  return DEFAULT_CONFIG;
+                }
+
                 return DEFAULT_CONFIG;
               }
 
@@ -978,6 +1013,7 @@
                     scope.params.desc = "";
                     initMultilingualFields();
                   }
+                  scope.$broadcast("onlineSrcDialogInited", { popupid: scope.popupid });
                 };
                 function loadConfigAndInit(withInit) {
                   gnSchemaManagerService

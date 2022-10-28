@@ -35,7 +35,7 @@
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -85,7 +85,7 @@
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
             minimize="false"/>
-    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+    <jsSource webappPath="/catalog/lib/bootstrap-table-angular.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>
@@ -104,7 +104,7 @@
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-resource.min.js" minimize="false"/>
@@ -156,7 +156,7 @@
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
               minimize="false"/>
-    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+    <jsSource webappPath="/catalog/lib/bootstrap-table-angular.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>

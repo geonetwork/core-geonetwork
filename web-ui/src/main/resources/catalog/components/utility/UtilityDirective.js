@@ -981,14 +981,18 @@
           '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
-          var selector =
+          var collapsing = true,
+            selector =
               attr["gnSectionToggle"] ||
-              "form > div > fieldset > legend[data-gn-slide-toggle]",
+              "form > div > fieldset legend[data-gn-slide-toggle]",
             event = attr["event"] || "click";
           element.on("click", function () {
             $(selector).each(function (idx, elem) {
-              $(elem).trigger(event);
+              if (collapsing !== $(elem).hasClass("collapsed")) {
+                $(elem).trigger(event);
+              }
             });
+            collapsing = !collapsing;
             $(this).find("i").toggleClass("fa-angle-double-up fa-angle-double-down");
           });
         }
@@ -2308,6 +2312,7 @@
   /**
    * Directive to display a metadata selector, that accepts a search object
    * to filter the metadata to display in the selector.
+   * @deprecated Use gnSuggest instead.
    */
   module.directive("gnMetadataSelector", [
     function () {
@@ -2333,6 +2338,41 @@
             scope.md = md;
             scope.uuid = md.uuid;
           };
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnSuggest", [
+    "gnMetadataManager",
+    function (gnMetadataManager) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          searchObj: "=gnSuggest",
+          property: "@?gnSuggestProperty",
+          model: "=?gnSuggestModel",
+          displayTitleAs: "@?gnSuggestDisplayTitle" // span or title
+        },
+        templateUrl: "../../catalog/components/utility/partials/suggest.html",
+        link: function (scope, element, attrs) {
+          if (angular.isDefined(scope.displayTitleAs)) {
+            scope.$watch("model", function (n, o) {
+              if (
+                (n !== o && !!n && scope.property === "_id") ||
+                (!!n && scope.property === "_id" && scope.current === undefined)
+              ) {
+                scope.current = undefined;
+
+                gnMetadataManager
+                  .getMdObjByUuid(n, ["y", "n", "s"])
+                  .then(function (record) {
+                    scope.current = record;
+                  });
+              }
+            });
+          }
         }
       };
     }

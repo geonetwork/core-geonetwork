@@ -79,7 +79,7 @@ public class Add extends NotInReadOnlyModeService {
 
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
-        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, description, tnamespace, type, dname, rdfFile, siteURL, false);
+        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, description, tnamespace, type, dname, rdfFile, siteURL, false, tm.getThesaurusCacheMaxSize());
         tm.addThesaurus(thesaurus, true);
 
         // Save activated status in the database

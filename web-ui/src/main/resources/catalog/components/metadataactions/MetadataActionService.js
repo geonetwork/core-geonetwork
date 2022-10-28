@@ -368,6 +368,18 @@
         );
       };
 
+      this.submit = function (bucket, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchSubmitTitle",
+            content:
+              '<div gn-metadata-batch-submit selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "StatusUpdated"
+        );
+      };
+
       this.openPrivilegesBatchPanel = function (scope, bucket) {
         gnUtilityService.openModal(
           {
