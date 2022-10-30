@@ -161,9 +161,11 @@
                 });
       };
 
+      $scope.deleteSourceConfig = function () {
+        $("#gn-confirm-remove-source").modal("show");
+      };
 
-
-      $scope.removeSource = function() {
+      $scope.confirmDeleteSourceConfig = function () {
         $http.delete('../api/sources/' + $scope.source.uuid)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -172,6 +174,7 @@
                 type: 'success'});
 
               loadSources();
+              $scope.source = null;
             })
             .error(function(data) {
                   $rootScope.$broadcast('StatusUpdated', {

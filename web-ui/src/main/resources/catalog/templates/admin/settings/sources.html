@@ -1,6 +1,7 @@
 <div data-ng-controller="GnSearchController">
   <div class="row"
-     data-ng-controller="GnSourcesController">
+       data-ng-controller="GnSourcesController"
+       id="gn-sources-container">>
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading" data-translate="">manageSources</div>
@@ -74,7 +75,8 @@
             </button>
             <button type="button" class="btn btn-danger pull-right"
                     data-ng-disabled="source.type !== 'subportal' || (source.type === 'subportal' && !user.isAdministrator())"
-                    data-gn-click-and-spin="removeSource()">
+                    data-ng-hide="isNew"
+                    data-ng-click="deleteSourceConfig()">
               <i class="fa fa-trash"></i>&nbsp;
               <span data-translate="">removeSource</span>
             </button>
@@ -87,6 +89,8 @@
               <label data-translate="" class="gn-required">sourceUuid</label>
               <input type="text"
                      class="form-control"
+                     data-ng-required="true"
+                     data-ng-readonly="!isNew"
                      data-ng-disabled="::!user.isAdministrator()"
                      data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
                      data-ng-model="source.uuid"/>
@@ -99,6 +103,7 @@
               </p>
               <label data-translate="">sourceName</label>
               <input type="text"
+                     data-ng-required="true"
                      class="form-control"
                      data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
                      data-ng-model="source.name"/>
@@ -246,5 +251,14 @@
         </div>
       </div>
     </div>
+
+    <div
+      gn-modal
+      class="gn-confirm-delete"
+      gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteSourceConfig}"
+      id="gn-confirm-remove-source">
+      <p translate>confirmSourceDelete</p>
+    </div>
   </div>
+
 </div>
