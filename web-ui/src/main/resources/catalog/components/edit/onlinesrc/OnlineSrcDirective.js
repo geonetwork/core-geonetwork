@@ -77,11 +77,15 @@
                 scope.lang,
                 gnCurrentEdit.mdLanguage
               );
-              scope.relations = scope.isOverview
-                ? res.relations[scope.type]
-                : res.relations[scope.type].filter(function (l) {
+              if (angular.isArray(res.relations[scope.type])) {
+                scope.relations = scope.isOverview
+                  ? res.relations[scope.type]
+                  : res.relations[scope.type].filter(function (l) {
                     return l.protocol === scope.protocol;
                   });
+              } else {
+                scope.relations = {};
+              }
             });
           };
 
