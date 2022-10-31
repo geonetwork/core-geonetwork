@@ -562,9 +562,13 @@
    *
    * We can't transclude input (http://plnkr.co/edit/R2O2ixWA1QJUsVcUHl0N)
    */
-  module.directive('gnKeywordPicker', [
-    'gnThesaurusService', '$compile', '$translate', 'gnCurrentEdit',
-    function(gnThesaurusService, $compile, $translate, gnCurrentEdit) {
+  module.directive("gnKeywordPicker", [
+    "gnThesaurusService",
+    "$compile",
+    "$translate",
+    "$timeout",
+    "gnCurrentEdit",
+    function (gnThesaurusService, $compile, $translate, $timeout, gnCurrentEdit) {
       return {
         restrict: 'A',
         scope: {
@@ -583,6 +587,43 @@
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
 
+          // Configuration only required when using the directive in template fields.
+          //
+          // - data-template-field: true to indicate a template field
+          // - data-template-field-value: value of the element
+          // - data-template-field-concept-id-value: value for the anchor link
+          // - data-template-field-element: usually gco:CharacterString
+          // - data-template-field-element-with-concept-id: usually gmx:Anchor
+          // Example:
+          //
+          // <field name="DQ_ConceptualConsistency" or="report" removable="true"
+          //   xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report[gmd:DQ_ConceptualConsistency]"
+          //   templateModeOnly="true" notDisplayedIfMissing="true" del=".">
+          //     <template>
+          //     <values>
+          //     <key label="nameOfMeasure"
+          //          xpath="gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure"
+          //          use="data-gn-keyword-picker"
+          //          tooltip="gmd:nameOfMeasure">
+          //          <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistQualityOfServiceCriteria-QualityOfServiceCriteria"
+          //               data-order-by-id="true"
+          //          data-display-definition="true"
+          //          data-template-field="true"
+          //          data-template-field-element="gco:CharacterString"
+          //          data-template-field-element-with-concept-id="gmx:Anchor"
+          //          data-template-field-value="eval#gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/*/text()"
+          //          data-template-field-concept-id-value="eval#gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor/@xlink:href"
+          //          data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+          //     </key>
+
+          scope.templateField = attrs.templateField === "true";
+          scope.templateFieldValue = attrs.templateFieldValue || "";
+          scope.templateFieldConceptIdValue = attrs.templateFieldConceptIdValue || "";
+          scope.templateFieldId = attrs.id ? attrs.id.replace("template_", "") : "";
+          scope.templateFieldElement = attrs.templateFieldElement || "";
+          scope.templateFieldElementWithConceptId =
+            attrs.templateFieldElementWithConceptId || "";
+          scope.xmlSnippet = "";
 
           // respond to a parent asking me to reset
           scope.$on('resetValue', function (event, data) {
@@ -620,8 +661,34 @@
             dropDown.append($compile(thesaurusSel)(scope));
           };
 
+          var buildTemplateXmlSnippet = function () {
+            var elementXmlSnippet;
+            if (scope.conceptIdElementName) {
+              elementXmlSnippet =
+                "<" +
+                scope.templateFieldElementWithConceptId +
+                " xlink:href='" +
+                scope.templateFieldConceptIdValue +
+                "'>" +
+                scope.templateFieldValue +
+                "</" +
+                scope.templateFieldElementWithConceptId +
+                ">";
+            } else {
+              elementXmlSnippet =
+                "<" +
+                scope.templateFieldElement +
+                ">" +
+                scope.templateFieldValue +
+                "</" +
+                scope.templateFieldElement +
+                ">";
+            }
 
-          var init = function() {
+            return elementXmlSnippet;
+          };
+
+          var init = function () {
             // Get list of available thesaurus (if not defined
             // by scope)
             element.typeahead('destroy');
@@ -661,14 +728,37 @@
             // By default, such an attribute is identified in the form by
             // the parent element id + '_' + attribute name
             if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
-              scope.conceptIdElementName =
-                // In multilingual mode, the ref to the CharacterString is known using the id
-                (isMultilingualMode ? '_' + attrs.id.replace('gn-field-', '') : attrs.name) +
-                '_' + attrs.thesaurusConceptIdAttribute;
+              if (scope.templateField) {
+                scope.conceptIdElementName =
+                  // In multilingual mode, the ref to the CharacterString is known using the id
+                  (isMultilingualMode
+                    ? "_" + attrs.id.replace("gn-field-", "")
+                    : scope.templateFieldId) +
+                  "_" +
+                  attrs.thesaurusConceptIdAttribute;
 
-              // Check that the element does not exist already in the form
-              // Could be in the case it was already encoded.
-              var input = element.parent().parent().find('[name=' + scope.conceptIdElementName + ']');
+                // Check that the element does not exist already in the form
+                // Could be in the case it was already encoded.
+                input = element
+                  .parent()
+                  .parent()
+                  .find("#" + scope.conceptIdElementName);
+              } else {
+                scope.conceptIdElementName =
+                  // In multilingual mode, the ref to the CharacterString is known using the id
+                  (isMultilingualMode
+                    ? "_" + attrs.id.replace("gn-field-", "")
+                    : attrs.name) +
+                  "_" +
+                  attrs.thesaurusConceptIdAttribute;
+
+                // Check that the element does not exist already in the form
+                // Could be in the case it was already encoded.
+                input = element
+                  .parent()
+                  .parent()
+                  .find("[name=" + scope.conceptIdElementName + "]");
+              }
 
               var insertionPoint = isMultilingualMode ?
                 element.closest('div[data-gn-multilingual-field]').find('div.well') : element;
@@ -680,21 +770,59 @@
                 // If multilingual, only one field is added to the first input
                 // eg. in ISO19139, the xlink:href attribute is part of the
                 // CharacterString and not to the children
-                (isMultilingualMode && isFirstMultilingualElement && input.length === 0)) {
+                (isMultilingualMode && isFirstMultilingualElement && input.length === 0)
+              ) {
+                var inputPropertyName;
 
-                var conceptIdElement =  angular.element(
+                if (scope.templateField) {
+                  inputPropertyName = "id";
+                } else {
+                  inputPropertyName = "name";
+                }
+
+                var conceptIdElement = angular.element(
                   '<div class="well well-sm gn-keyword-picker-concept-id row">' +
-                  '  <div class="form-group">' +
-                  '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
-                  '    <div class="col-sm-6"><input name="' + scope.conceptIdElementName + '" ' +
-                  '       class="gn-field-link form-control"/>' +
-                  '    </div>' +
-                  '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
-                  '  </div>' +
-                  '</div>');
-                insertionPoint[isMultilingualMode ? 'before' : 'after'](
-                  $compile(conceptIdElement)(scope));
+                    '  <div class="form-group">' +
+                    '    <label class="col-sm-4"><i class="fa fa-link fa-fw"/><span data-translate>URL</span></label>' +
+                    '    <div class="col-sm-6"><input ' +
+                    inputPropertyName +
+                    '="' +
+                    scope.conceptIdElementName +
+                    '" ' +
+                    '       class="gn-field-link form-control"/>' +
+                    "    </div>" +
+                    '    <div class="col-sm-2"><a class="btn btn-link" title="{{\'resetUrl\' | translate}}" data-ng-click="resetUrl()"><i class="fa fa-times text-danger"/></a></div>' +
+                    "  </div>" +
+                    "</div>"
+                );
+                insertionPoint[isMultilingualMode ? "before" : "after"](
+                  $compile(conceptIdElement)(scope)
+                );
               }
+            }
+
+            if (scope.templateField) {
+              // In template mode add hidden field to build the xml snippet
+              scope.xmlSnippet = buildTemplateXmlSnippet();
+
+              var inputTemplateField = element
+                .parent()
+                .parent()
+                .find("#" + scope.templateFieldId);
+
+              if (inputTemplateField.length == 0) {
+                var inputTemplateFieldHtml =
+                  '<input type="hidden" id="' +
+                  scope.templateFieldId +
+                  '" value="{{xmlSnippet}}" />';
+
+                var compiletInputTemplateField = $compile(inputTemplateFieldHtml)(scope);
+
+                element.after(compiletInputTemplateField);
+              }
+
+              $("#" + attrs.id).val(scope.templateFieldValue);
+              $("#" + scope.conceptIdElementName).val(scope.templateFieldConceptIdValue);
             }
 
             // Init typeahead
@@ -744,13 +872,31 @@
                   // the same target input field for the attribute.
                   // Use a search instead of a scope element to cope with init order.
 
-                  var insertionPoint = isMultilingualMode ?
-                    element.closest('div[data-gn-multilingual-field]') : element.parent().parent();
-                  var input = insertionPoint.find('[name=' + scope.conceptIdElementName + ']');
-                  input.val(keywordKey);
-                }
-              }, $(element))
-            );
+                    var insertionPoint = isMultilingualMode
+                      ? element.closest("div[data-gn-multilingual-field]")
+                      : element.parent().parent();
+
+                    var input;
+                    if (scope.templateField) {
+                      input = insertionPoint.find("#" + scope.conceptIdElementName);
+                    } else {
+                      input = insertionPoint.find(
+                        "[name=" + scope.conceptIdElementName + "]"
+                      );
+                    }
+
+                    input.val(keywordKey);
+                  }
+
+                  if (scope.templateField) {
+                    // Update the hidden field with xml snippet with the selected keyword
+                    scope.templateFieldConceptIdValue = keyword.props.uri;
+                    scope.templateFieldValue = keyword.label;
+
+                    scope.xmlSnippet = buildTemplateXmlSnippet();
+                  }
+                }, $(element))
+              );
 
 
             scope.resetUrl = function () {
@@ -789,6 +935,21 @@
               scope.conceptIdElement.remove();
             }
           });
+
+          if (scope.templateField) {
+            scope.$watch("xmlSnippet", function () {
+              if (scope.templateFieldId) {
+                // This is required on init to have the optionnaly
+                // templateFieldDirective initialized first so
+                // that the template is properly computed.
+                $timeout(function () {
+                  $("#" + scope.templateFieldId)
+                    .val(scope.xmlSnippet)
+                    .change();
+                });
+              }
+            });
+          }
         }
       };
     }]);
