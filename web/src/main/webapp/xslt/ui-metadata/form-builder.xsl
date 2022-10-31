@@ -657,11 +657,38 @@
                               id="{$id}_{@label}"/>
                       </xsl:when>
                       <xsl:when test="@use = 'data-gn-keyword-picker'">
+                        <!-- To use this directive in template fields should be provided the following attributes:
+                               - data-template-field: true to indicate a template field
+                               - data-template-field-value: value of the element
+                               - data-template-field-concept-id-value: value for the anchor link
+                               - data-template-field-element: usually gco:CharacterString
+                               - data-template-field-element-with-concept-id: usually gmx:Anchor
+
+                            Example:
+
+                            <key label="nameOfMeasure"
+                                xpath="gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure"
+                                use="data-gn-keyword-picker"
+                                tooltip="gmd:nameOfMeasure">
+                             <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistQualityOfServiceCriteria-QualityOfServiceCriteria"
+                                                  data-order-by-id="true"
+                                                  data-display-definition="true"
+                                                  data-template-field="true"
+                                                  data-template-field-element="gco:CharacterString"
+                                                  data-template-field-element-with-concept-id="gmx:Anchor"
+                                                  data-template-field-value="eval#gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/*/text()"
+                                                  data-template-field-concept-id-value="eval#gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor/@xlink:href"
+                                                  data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+                           </key>
+
+                           The id of the following element should start with: template_, "real" id associated with
+                           the template field: {$id}_{@label} is created inside the directive when using template mode
+                        -->
                         <input class="form-control"
                                value="{value}"
                                data-gn-field-tooltip="{$schema}|{@tooltip}"
                                data-gn-keyword-picker=""
-                               id="{$id}_{@label}">
+                               id="template_{$id}_{@label}">
 
                           <xsl:for-each select="directiveAttributes/attribute::*">
                             <xsl:variable name="directiveAttributeName" select="name()"/>
