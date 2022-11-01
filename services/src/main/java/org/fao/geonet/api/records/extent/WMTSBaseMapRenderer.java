@@ -41,7 +41,7 @@ import java.util.Map;
  * wmtsGetCapabilitiesURL - (required) URL to the GetCapabilities for the WMTS service
  * layerName - (required)  Name of the layer to use (in the WMTS GetCapabilities)
  * <p>
- * matrixSet - (optional, default is the same as SRID) Name of the WMTS GetCapabilities matrixSet to use (hardcoded)
+ * matrixSet - (optional, default is the same as SRID) Name of the WMTS GetCapabilities matrixSet to use (hardcoded for all requests)
  * SRID2MatrixSet - (optional, default is no translation)
  * flip4326 - (optional, default is NO)
  * <p>
@@ -69,6 +69,7 @@ import java.util.Map;
  * <p>
  * A request for SRID EPSG:1234 will use the "EPSG:1234" matrixSet.
  * A request for SRID EPSG:900913 will use the "EPSG:3857" matrixSet (SRID2MatrixSet).
+ * If the request is for EPSG:4326, the request bbox (AOI) will be flipped from XY to YX.
  */
 public class WMTSBaseMapRenderer implements BaseMapRenderingEngine {
 

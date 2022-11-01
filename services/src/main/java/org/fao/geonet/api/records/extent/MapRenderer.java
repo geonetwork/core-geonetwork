@@ -174,7 +174,7 @@ public class MapRenderer {
             // * request param is a full url
             if (background.equalsIgnoreCase(MetadataExtentApi.SETTING_BACKGROUND)) {
                 String bgSetting = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
-                if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://")) {
+                if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://") || bgSetting.startsWith("{")) {
                     background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
                 } else if (regionGetMapBackgroundLayers.containsKey(bgSetting)) {
                     background = regionGetMapBackgroundLayers.get(bgSetting);
