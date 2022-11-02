@@ -166,7 +166,8 @@
               "group*",
               "resource*",
               "owner*",
-              "isTemplate"
+              "isTemplate",
+              "valid"
             ]
           },
           track_total_hits: true
