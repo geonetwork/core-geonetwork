@@ -908,8 +908,8 @@ public class MetadataUtils {
 
             Element finalResponseRoot = responseRoot;
             ((ArrayList) values).forEach(recordLink -> {
-                if (recordLink instanceof HashMap) {
-                    HashMap<String, String> linkProperties = (HashMap) recordLink;
+                if (recordLink instanceof Map) {
+                    Map<String, String> linkProperties = (Map) recordLink;
                     if (type.equals(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TYPE))
                         && "remote".equals(linkProperties.get("origin"))) {
                         Element record = new Element("metadata");

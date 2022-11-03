@@ -34,8 +34,8 @@ import org.fao.geonet.api.records.formatters.groovy.template.FileResult;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents the summary of a metadata element.  It is often the top section of a metadata view and
@@ -81,7 +81,7 @@ public class Summary {
     }
 
     public FileResult getResult() throws Exception {
-        HashMap<String, Object> params = Maps.newHashMap();
+        Map<String, Object> params = Maps.<String,Object>newHashMap();
 
         params.put("logo", logo);
         params.put("title", title != null ? title : "");

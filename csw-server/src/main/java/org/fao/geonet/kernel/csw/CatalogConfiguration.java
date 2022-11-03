@@ -240,7 +240,7 @@ public class CatalogConfiguration {
             List<Element> xpathList = param.getChildren(Csw.ConfigFile.Parameter.Child.XPATH);
             Iterator<Element> itXPath = xpathList.iterator();
             String schema, path;
-            HashMap<String, String> xpathMap = new HashMap<String, String>();
+            Map<String, String> xpathMap = new HashMap<String, String>();
             while (itXPath.hasNext()) {
                 Element xpath = itXPath.next();
 

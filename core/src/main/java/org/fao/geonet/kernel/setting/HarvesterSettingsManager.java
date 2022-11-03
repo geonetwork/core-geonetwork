@@ -91,7 +91,7 @@ public class HarvesterSettingsManager {
         Element el = null;
         if (s != null) {
             HarvesterSetting r = null;
-            HashMap<Integer, List<HarvesterSetting>> mapSettings = new HashMap<Integer, List<HarvesterSetting>>();
+            Map<Integer, List<HarvesterSetting>> mapSettings = new HashMap<Integer, List<HarvesterSetting>>();
             List<HarvesterSetting> settings = null;
             // create Map where keys are idParent
             // this is avoid to multiple call in base
@@ -351,7 +351,7 @@ public class HarvesterSettingsManager {
     /**
      * Create recursively the tree of harvesterSettings
      */
-    private Element buildFromMap(HarvesterSetting s, HashMap<Integer, List<HarvesterSetting>> mapSettings) {
+    private Element buildFromMap(HarvesterSetting s, Map<Integer, List<HarvesterSetting>> mapSettings) {
         if (s == null) {
             return null;
         }
