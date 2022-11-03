@@ -417,7 +417,7 @@ public class EsSearchManager implements ISearchManager {
         String jsonDocument = mapper.writeValueAsString(doc);
 
         if (forceRefreshReaders) {
-            HashMap<String, String> document = new HashMap<>();
+            Map<String, String> document = new HashMap<>();
             document.put(id, jsonDocument);
             final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
             checkIndexResponse(bulkItemResponses, document);

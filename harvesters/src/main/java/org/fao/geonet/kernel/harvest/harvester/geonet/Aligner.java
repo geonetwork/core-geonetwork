@@ -104,7 +104,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private String preferredSchema;
     private Map<String, Object> processParams = new HashMap<String, Object>();
     private MetadataRepository metadataRepository;
-    private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+    private Map<String, Map<String, String>> hmRemoteGroups = new HashMap<String, Map<String, String>>();
     private SettingManager settingManager;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
@@ -139,12 +139,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     //--------------------------------------------------------------------------
 
-    private void setupLocEntity(List<Element> list, HashMap<String, HashMap<String, String>> hmEntity) {
+    private void setupLocEntity(List<Element> list, Map<String, Map<String, String>> hmEntity) {
 
         for (Element entity : list) {
             String name = entity.getChildText("name");
 
-            HashMap<String, String> hm = new HashMap<String, String>();
+            Map<String, String> hm = new HashMap<String, String>();
             hmEntity.put(name, hm);
 
             @SuppressWarnings("unchecked")

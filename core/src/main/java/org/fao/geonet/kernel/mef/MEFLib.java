@@ -419,7 +419,7 @@ public class MEFLib {
         Integer grpOwnerId = md.getSourceInfo().getGroupOwner();
         String grpOwnerName = "";
 
-        HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
+        Map<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
 
         // --- retrieve accessible groups
 
