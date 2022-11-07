@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.logging.log4j.Level;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -37,19 +38,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
@@ -713,6 +705,22 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 @Override
                 public Iterator<File> iterator() {
+                    if (!root.exists()) {
+                        throw new IllegalArgumentException(String.format("%s doesn't exist. It could be a missing library. " +
+                            "Check the source if you have all dependency files required.", root));
+                    }
+                    if (root.isFile()) {
+                        List<String> suffixes = Arrays.stream(extToCollect).map(sufix -> "." + sufix).collect(Collectors.toList());
+                        SuffixFileFilter suffixFilter = new SuffixFileFilter(suffixes);
+                        if (suffixFilter.accept(root)) {
+                            List<File> files = new ArrayList<>(1);
+                            files.add(root);
+                            return files.iterator();
+                        } else {
+                            throw new IllegalArgumentException(String.format("%s exist but doesn't match the filter %s",
+                                root, Arrays.toString(extToCollect)));
+                        }
+                    }
                     // More detailed error about
                     // Parameter 'directory' is not a directory
                     // when a missing lib is not found by wro4j when geonetwork initialized.
