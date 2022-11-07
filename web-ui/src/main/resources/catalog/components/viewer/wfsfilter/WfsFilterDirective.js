@@ -731,7 +731,6 @@
           };
 
           function searchResponseHandler(resp, filterInputUpdate) {
-            indexObject.pushState();
             scope.count = resp.count;
 
             // if a facet was clicked, keep the previous facet object
@@ -894,12 +893,12 @@
            * filters loaded from the context. This must only happen once
            */
           scope.restoreInitialFilters = function() {
+            var initialFilters = indexObject.initialFilters || indexObject.getState();
+
             // no initial filter: leave
-            if (!indexObject.initialFilters) {
+            if (!initialFilters) {
               return;
             }
-
-            var initialFilters = indexObject.initialFilters;
 
             // apply filters to form
             scope.output = initialFilters.qParams || {};
