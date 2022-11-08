@@ -30,7 +30,7 @@
     <jsSource webappPath="/catalog/templates/"/>
     <cssSource webappPath="/catalog/views/"/>
     <cssSource webappPath="/catalog/style/"/>
-    <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/>
+    <cssSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.css" />
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
