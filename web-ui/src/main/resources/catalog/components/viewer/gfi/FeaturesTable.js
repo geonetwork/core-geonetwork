@@ -87,6 +87,10 @@
           angular.extend({
             height: 250,
             sortable: true,
+            iconsPrefix: "fa",
+            icons: {
+              export: "fa-download"
+            },
             onPostBody: function() {
               var trs = element.find('tbody').children();
               for (var i = 0; i < trs.length; i++) {
