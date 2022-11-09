@@ -114,7 +114,7 @@
           <gmd:onlineResource>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://www.swisstopo.admin.ch</gmd:URL>
+                <gmd:URL>https://geonetwork-opensource.org</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
                 <gco:CharacterString>text/html</gco:CharacterString>
@@ -355,7 +355,7 @@
               <gmd:onlineResource>
                 <gmd:CI_OnlineResource>
                   <gmd:linkage>
-                    <gmd:URL>http://www.swisstopo.ch</gmd:URL>
+                    <gmd:URL>https://geonetwork-opensource.org/</gmd:URL>
                   </gmd:linkage>
                   <gmd:protocol>
                     <gco:CharacterString>text/html</gco:CharacterString>
