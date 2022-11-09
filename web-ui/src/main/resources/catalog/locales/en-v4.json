@@ -129,6 +129,7 @@
   "facet-valid_inspire": "INSPIRE validation status",
   "valid_inspire-1": "Valid",
   "valid_inspire-0": "Invalid",
+  "valid_inspire-3": "No rule applies",
   "valid_inspire--1": "Unknown",
   "facet-OrgForResource": "Organizations",
   "facet-sourceCatalogue": "Catalogues",
