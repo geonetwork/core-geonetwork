@@ -1,32 +1,43 @@
 <ul class="list-group gn-resultview">
-  <li class="list-group-item gn-list panel panel-default gn-card"
-      data-ng-repeat="md in searchResults.records"
-      gn-displayextent-onhover=""
-      gn-zoomto-onclick=""
-      gn-fix-mdlinks="">
-    <div class="panel-heading gn-card-heading"
-         data-ng-class="{'gn-record-selected': md.selected}">
-      <div class="gn-md-select">
-        <input data-gn-selection-md="md"
-               data-bucket="searchResults.selectionBucket"
-               data-results="searchResults"
-               type="checkbox"
-               data-ng-model="md.selected"
-               aria-label="{{'clickToSelect' | translate}}"/>
+  <li
+    class="list-group-item gn-list panel panel-default gn-card"
+    data-ng-repeat="md in searchResults.records"
+    gn-displayextent-onhover=""
+    gn-zoomto-onclick=""
+  >
+    <div
+      class="panel-heading gn-card-heading"
+      data-ng-class="{'gn-record-selected': md.selected}"
+    >
+      <div class="gn-md-select" data-ng-if="showBatchDropdown">
+        <input
+          data-gn-selection-md="md"
+          data-bucket="searchResults.selectionBucket"
+          data-results="searchResults"
+          type="checkbox"
+          data-ng-model="md.selected"
+          aria-label="{{'clickToSelect' | translate}}"
+        />
       </div>
 
       <div class="gn-md-title">
-        <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
+        <i
+          class="fa gn-icon-{{md.resourceType[0]}}"
+          title="{{md.resourceType[0] | translate}}"
+        />
         <h1>
-          <a href=""
-             gn-metadata-open="md"
-             gn-index="$index"
-             gn-records="searchResults.records"
-             gn-formatter="formatter.defaultUrl"
-             title="{{md.title || md.defaultTitle}}"
-             aria-label="{{md.resourceTitle}}">
-
-            {{md.resourceTitle}}</a>
+          <a
+            href=""
+            gn-metadata-open="md"
+            gn-index="$index"
+            gn-records="searchResults.records"
+            gn-formatter="formatter.defaultUrl"
+            title="{{md.title || md.defaultTitle}}"
+            aria-label="{{md.resourceTitle}}"
+            class="gn-break"
+          >
+            {{md.resourceTitle}}</a
+          >
         </h1>
       </div>
     </div>
@@ -35,48 +46,66 @@
       <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-3">
           <div class="gn-md-thumbnail">
-            <div class="gn-md-no-thumbnail"
-                  data-ng-if="!md.overview[0].url"></div>
-            <img class="gn-img-thumbnail"
-                  alt="{{md.title || md.defaultTitle}}"
-                  data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
-                  data-ng-if="md.overview[0].url"/>
+            <div class="gn-md-no-thumbnail" data-ng-if="!md.overview[0].url"></div>
+            <img
+              class="gn-img-thumbnail"
+              alt="{{md.title || md.defaultTitle}}"
+              data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
+              data-ng-if="md.overview[0].url"
+            />
           </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="gn-md-abstract text-muted">
-            <p title="{{md.resourceAbstract}}">{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
+            <p title="{{md.resourceAbstract}}">
+              {{md.resourceAbstract.split('\n')[0] | striptags}}
+            </p>
 
-            <div data-gn-related-list="md"
-                 data-user="user"
-                 data-title="{{::('associatedResources' | translate)}}">
-            </div>
+            <div
+              data-gn-related-list="md"
+              data-user="user"
+              data-title="{{::('associatedResources' | translate)}}"
+            ></div>
           </div>
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3">
           <div class="gn-md-contact">
-
-            <p data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForResource'">
-              <img data-ng-if="::c.logo"
-                    data-ng-src="{{::c.logo}}"
-                    class="gn-source-logo"
-                    title="{{::c.organisation}} ({{::c.role}})"/>
+            <p
+              data-ng-repeat="c in ::md.getAllContacts().resource | limitTo: 4 track by $index"
+              data-ng-if="searchResultContact == 'OrgForResource'"
+            >
+              <img
+                data-ng-if="::c.logo"
+                data-ng-src="{{::c.logo}}"
+                class="gn-source-logo"
+                title="{{::c.organisation}} ({{::c.role}})"
+              />
               {{::c.organisation}} ({{::c.role | translate}})
             </p>
 
-            <p data-ng-repeat="c in ::md.getAllContacts().distribution | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'OrgForDistribution'">
-              <img data-ng-if="::c.logo"
-                   data-ng-src="{{::c.logo}}"
-                   class="gn-source-logo"
-                   title="{{::c.organisation}} ({{::c.role}})"/>
+            <p
+              data-ng-repeat="c in ::md.getAllContacts().distribution | limitTo: 4 track by $index"
+              data-ng-if="searchResultContact == 'OrgForDistribution'"
+            >
+              <img
+                data-ng-if="::c.logo"
+                data-ng-src="{{::c.logo}}"
+                class="gn-source-logo"
+                title="{{::c.organisation}} ({{::c.role}})"
+              />
               {{::c.organisation}} ({{::c.role | translate}})
             </p>
 
-            <p data-ng-repeat="c in ::md.getAllContacts().metadata | limitTo: 4 track by $index" data-ng-if="searchResultContact == 'Org'">
-              <img data-ng-if="::c.logo"
-                   data-ng-src="{{::c.logo}}"
-                   class="gn-source-logo"
-                   title="{{::c.organisation}} ({{::c.role}})"/>
+            <p
+              data-ng-repeat="c in ::md.getAllContacts().metadata | limitTo: 4 track by $index"
+              data-ng-if="searchResultContact == 'Org'"
+            >
+              <img
+                data-ng-if="::c.logo"
+                data-ng-src="{{::c.logo}}"
+                class="gn-source-logo"
+                title="{{::c.organisation}} ({{::c.role}})"
+              />
               {{::c.organisation}} ({{::c.role | translate}})
             </p>
           </div>
@@ -84,37 +113,51 @@
       </div>
     </div>
     <!-- /.gn-card-body -->
-    <div class="panel-footer gn-card-footer clearfix"
-         data-ng-class="{
+    <div
+      class="panel-footer gn-card-footer clearfix"
+      data-ng-class="{
          'gn-status-bg': showStatusFooterFor && showStatusFooterFor.length > 0,
          'gn-status-bg-default gn-status-{{md.cl_status[0].key}}-bg':
           showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1
-          }">
-      <div data-ng-if="md.cl_status.length > 0"
-           title="{{md.cl_status[0].key | translate}}"
-           class="gn-status gn-status-{{md.cl_status[0].key}}">{{md.cl_status[0].key | translate}}
+          }"
+    >
+      <div
+        data-ng-if="md.cl_status.length > 0"
+        title="{{md.cl_status[0].key | translate}}"
+        class="gn-status gn-status-{{md.cl_status[0].key}}"
+      >
+        {{md.cl_status[0].key | translate}}
       </div>
       <div class="gn-toolbar">
-        <div class="pull-left gn-md-category"
-             title="{{'listOfCategories' | translate}}"
-             data-ng-class="md.category.length > 0 ||
+        <div
+          class="pull-left gn-md-category"
+          title="{{'listOfCategories' | translate}}"
+          data-ng-class="md.category.length > 0 ||
                             md.topic.length > 0 ||
-                            md.inspireThemeUri.length > 0 ? '' : 'invisible'">
-          <i class="fa"
-             data-ng-repeat="cat in ::md.category"
-             title="{{('cat-' + cat) | translate}}"
-             aria-label="{{('cat-' + cat) | translate}}">
+                            md.inspireThemeUri.length > 0 ? '' : 'invisible'"
+        >
+          <i
+            class="fa"
+            data-ng-repeat="cat in ::md.category"
+            title="{{('cat-' + cat) | translate}}"
+            aria-label="{{('cat-' + cat) | translate}}"
+          >
             <span class="fa gn-icon-{{cat}}"></span>
           </i>
-          <i  data-ng-repeat="t in md.inspireThemeUri track by $index"
-              data-ng-init="code = t.slice(t.lastIndexOf('/') + 1)"
-              class="fa" title="{{::(md.inspireTheme_syn && md.inspireTheme_syn[$index]) || code}}">
+          <i
+            data-ng-repeat="t in md.inspireThemeUri track by $index"
+            data-ng-init="code = t.slice(t.lastIndexOf('/') + 1)"
+            class="fa"
+            title="{{::(md.inspireTheme_syn && md.inspireTheme_syn[$index]) || code}}"
+          >
             <span class="fa iti-{{::code}}"></span>
           </i>
-          <i data-ng-repeat="t in md.topic"
-             title="{{t | translate}}"
-             aria-label="{{t | translate}}"
-             class="fa gn-icon-{{t}}">
+          <i
+            data-ng-repeat="t in md.topic"
+            title="{{t | translate}}"
+            aria-label="{{t | translate}}"
+            class="fa gn-icon-{{t}}"
+          >
           </i>
         </div>
 

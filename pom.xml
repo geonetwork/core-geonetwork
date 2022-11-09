@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.1-SNAPSHOT</version>
+  <version>4.2.2-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -371,7 +371,7 @@
       <dependency>
         <groupId>org.locationtech.jts</groupId>
         <artifactId>jts-core</artifactId>
-        <version>1.16.1</version>
+        <version>${jts.version}</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -428,11 +428,11 @@
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
-      <!--dependency>
-        <groupId>com.lowagie</groupId>
-        <artifactId>itext</artifactId>
-        <version>2.0.6</version>
-      </dependency-->
+      <dependency>
+        <groupId>com.github.librepdf</groupId>
+        <artifactId>openpdf</artifactId>
+        <version>1.3.26</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
@@ -507,7 +507,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
@@ -524,20 +524,26 @@
         <artifactId>batik-transcoder</artifactId>
         <version>1.10</version>
       </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+      <!-- logging -->
+      <dependency> <!-- usedf for camel -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j18-impl</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency> <!-- used for LDAP test dependency in core -->
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${slf4j.version}</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jcl</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-1.2-api</artifactId>
+        <version>${log4j2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -547,6 +553,11 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-jul</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
       <dependency>
@@ -770,8 +781,12 @@
       <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
         <artifactId>mime-util</artifactId>
-        <version>2.1.2</version>
+        <version>2.1.3</version>
         <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -813,7 +828,13 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>2.1.6</version>
+        <version>2.2.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Lib utils -->
@@ -841,6 +862,12 @@
         <groupId>com.yammer.metrics</groupId>
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Tests -->
@@ -887,6 +914,14 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-all</artifactId>
+        <version>2.0.0-M24</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- other stuff -->
+      <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>2.1.212</version>
@@ -910,27 +945,14 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.20</version>
+        <version>8.0.29</version>
       </dependency>
-      <!-- Not permitted under oracle licensing rules
-      <dependency>
-        <groupId>ojdbc</groupId>
-        <artifactId>ojdbc</artifactId>
-        <version>14</version>
-      </dependency>
-      -->
-      <!-- Oracle changed policy, this is from maven central -->
-      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
       <dependency>
          <groupId>com.oracle.database.jdbc</groupId>
          <artifactId>ojdbc8</artifactId>
          <version>19.6.0.0</version>
+         <!-- Oracle Free Use Terms and Conditions (FUTC) -->
        </dependency>
-      <dependency>
-        <groupId>org.codehaus.izpack</groupId>
-        <artifactId>izpack-standalone-compiler</artifactId>
-        <version>4.3.1</version>
-      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
@@ -1108,14 +1130,8 @@
       </dependency>
       <dependency>
         <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf-itext5</artifactId>
+        <artifactId>flying-saucer-pdf-openpdf</artifactId>
         <version>${flying-saucer}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -1173,9 +1189,9 @@
         <version>${jasypt.version}</version>
       </dependency>
       <dependency>
-        <groupId>diff_match_patch</groupId>
-        <artifactId>diff_match_patch</artifactId>
-        <version>current</version>
+          <groupId>org.bitbucket.cowwoc</groupId>
+          <artifactId>diff-match-patch</artifactId>
+          <version>1.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1205,70 +1221,42 @@
 
   <!-- ================================================================== -->
   <!--     Repositories. This is where Maven looks for dependencies. The  -->
-  <!--     Maven repository is implicit and doesn't need to be specified. -->
+  <!--     Maven central repo is implicit and doesn't need to be listed.  -->
+  <!--                                                                    -->
+  <!--     Please do not add additional repositories as this increases    -->
+  <!--     build times, instead upload third-party dependencies to osgeo  -->
+  <!--     repo.osgeo.org geonetwork-cache repository, or configure osgeo -->
+  <!--     releases repository to cache additional repos of interest:     -->
+  <!--                                                                    -->
+  <!--     The following are cached for geonetwork:                       -->
+  <!--     http://maven.k-int.com/content/repositories/releases/          -->
+  <!--     repo.osgeo.org geonetwork-cache                                -->
+  <!--     https://raw.githubusercontent.com/geonetwork/core-maven-repo/  -->
+  <!--     http://maven.seasar.org/maven2                                 -->
   <!-- ================================================================== -->
   <repositories>
+
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>osgeo</id>
-      <name>OSGeo repository</name>
+      <name>OSGeo Release repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <id>redhat</id>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
 
-    <!-- managed by repo.osgeo.org k-int-cache -->
-    <!-- /marcxml/marcxml/*                    -->
-    <!-- /marc4j/marc4j/*                      -->
-    <!--repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>k-int</id>
-      <name>Developer k-int repository</name>
-      <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository-->
-
-    <!-- managed by repo.osgeo.org geonetwork-cache     -->
-    <!-- third party jar upload                         -->
-    <!-- TODO: move this content to geonetwork-releases -->
-    <!--
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
       <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </releases>
-      <id>core-maven-repo</id>
-      <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>osgeo-snapshot</id>
+      <name>OSGeo Snapshot repository</name>
+      <url>https://repo.osgeo.org/repository/snapshot/</url>
     </repository>
-    -->
-    <!-- managed by repo.osgeo.org seasar-cache       -->
-    <!-- /net.arnx.jsonic/jsonic/*                    -->
-    <!-- seasar repo, has jsonic - used by langdetect -->
-    <!--
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-    -->
-    <!-- managed by repo.osgeo.org geonetwork-releases  -->
-    <!-- third party jar upload                        -->
-    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
-    <!--
-    <repository>
-      <id>georchestra-mfprint</id>
-      <name>build-releases</name>
-      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
-    </repository>
-    -->
+
   </repositories>
 
 
@@ -1546,17 +1534,18 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.46.v20220331</jetty.version>
+    <jetty.version>9.4.48.v20220622</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>23.0</geotools.version>
+    <geotools.version>27.1</geotools.version>
+    <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
     <spring.version>5.2.20.RELEASE</spring.version>
-    <spring.security.version>5.2.15.RELEASE</spring.security.version>
+    <spring.security.version>5.7.3</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.2.2.RELEASE</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
@@ -1567,22 +1556,24 @@
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.7.9</wro.version>
     <wro.debug>true</wro.debug>
-    <fop.version>2.4</fop.version>
+    <fop.version>2.7</fop.version>
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
     <jackson.version>2.10.4</jackson.version>
-    <flying-saucer>9.0.7</flying-saucer>
+    <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
-    <log4j.version>1.2.17</log4j.version>
-    <log4j2.version>2.17.1</log4j2.version>
+    <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
-    <jupiter.version>5.7.0</jupiter.version>
+    <jupiter.version>5.9.1</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>
+
+    <sonar.organization>geonetwork</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>

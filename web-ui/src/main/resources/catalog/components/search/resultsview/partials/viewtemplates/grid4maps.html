@@ -1,25 +1,28 @@
 <ul class="row list-group gn-info-list gn-resultview-sumup">
-  <li class="list-group-item panel panel-default gn-card"
-      data-ng-repeat="md in searchResults.records"
-      data-gn-fix-mdlinks=""
-      title="{{(md.resourceAbstract) | striptags}}"
-      ng-click="loadMap(maps[0], md)">
-
+  <li
+    class="list-group-item panel panel-default gn-card"
+    data-ng-repeat="md in searchResults.records"
+    title="{{(md.resourceAbstract) | striptags}}"
+    ng-click="loadMap(md.linksByType.maps[0], md)"
+  >
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
         <a>
-          <h1>{{md.resourceTitle}}</h1>
+          <h1 class="gn-break">{{md.resourceTitle}}</h1>
         </a>
       </div>
     </div>
 
     <div class="panel-body gn-card-body">
       <div class="gn-md-contents">
-        <div class="gn-md-thumbnail"
-             data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
-          <div class="gn-img-thumbnail"
-               style="background-image: url('{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}')">
-          </div>
+        <div
+          class="gn-md-thumbnail"
+          data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}"
+        >
+          <div
+            class="gn-img-thumbnail"
+            style="background-image: url('{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}') !important"
+          ></div>
         </div>
       </div>
     </div>

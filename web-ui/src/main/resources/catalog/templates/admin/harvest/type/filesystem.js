@@ -21,7 +21,8 @@ var gnHarvesterfilesystem = {
             },
             "content" : {
                 "validate" : "NOVALIDATION",
-                "importxslt" : "none"
+                "importxslt" : "none",
+                "batchEdits" : ""
             },
             "options" : {
                 "every" : "0 0 0 ? * *",
@@ -68,6 +69,7 @@ var gnHarvesterfilesystem = {
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
                 + '    <importxslt>' + _.escape(h.content.importxslt) + '</importxslt>'
+                + '    <batchEdits><![CDATA[' + (h.content.batchEdits == '' ? '[]' : h.content.batchEdits) + ']]></batchEdits>'
                 + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';

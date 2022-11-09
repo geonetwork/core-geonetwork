@@ -677,6 +677,7 @@ public class SiteApi {
         @ApiResponse(responseCode = "201", description = "Changes committed.")
     })
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('Administrator')")
     public void commitIndexChanges(
     ) throws Exception {
         ApplicationContextHolder.get()
@@ -696,6 +697,7 @@ public class SiteApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Build info.")
     })
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public SystemInfo getSystemInfo(
     ) throws Exception {
@@ -729,7 +731,7 @@ public class SiteApi {
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @PreAuthorize("hasAuthority('UserAdmin')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Logo set."),

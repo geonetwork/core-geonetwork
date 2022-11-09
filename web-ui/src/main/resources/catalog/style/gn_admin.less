@@ -1,31 +1,42 @@
 @import "gn.less";
 
-.gn-chart{
-  height:500px;
+.gn-chart {
+  height: 500px;
 }
 
-.gn-chart-small{
-  height:50%;
+.gn-chart-small {
+  height: 50%;
 }
 
-.gn-btn-admin{
-  width:31% !important;
+.gn-btn-admin {
+  width: 31% !important;
   height: 150px;
-  float:left;
-  margin:5px;
+  float: left;
+  margin: 5px;
   padding-top: 25px;
 }
-.gn-btn-admin p{
+.gn-btn-admin p {
   white-space: normal;
 }
 
-[data-ng-controller="GnLogoSettingsController"] {
+[data-ng-controller="GnLogoSettingsController"],
+[data-ng-controller="GnUserGroupController"],
+[data-ng-controller="GnHarvestSettingsController"],
+[data-ng-controller="GnSourcesController"] {
   .progress {
     height: 10px;
     margin-bottom: 0;
   }
+  .gn-selected-logo {
+    max-height: 50px;
+  }
   .gn-logo-list {
-    .panel-body {
+    .panel-body,
+    .modal-body {
+      .list-group-container {
+        max-height: 500px;
+        overflow: auto;
+      }
       .list-group {
         @media (min-width: @screen-lg-min) {
           column-count: 2;
@@ -66,6 +77,12 @@
         }
       }
     }
+    &.gn-logo-list-lg {
+      .modal-dialog {
+        width: 1000px;
+        max-width: 90%;
+      }
+    }
   }
 }
 .bootstrap-table {
@@ -75,7 +92,7 @@
 }
 
 .harvester-logo {
- height:20px;
+  height: 20px;
 }
 
 .gn-action:not([disabled]) {
@@ -91,7 +108,8 @@
   outline-color: #ff0000;
 }
 
-fieldset.cswCriteriaInfo, ul.list-group {
+fieldset.cswCriteriaInfo,
+ul.list-group {
   padding-right: 1em;
   overflow-y: auto;
   overflow-x: hidden;
@@ -113,7 +131,8 @@ fieldset.cswCriteriaInfo, ul.list-group {
   }
 }
 
-fieldset.cswCriteriaInfo, ul.criteria-list-group {
+fieldset.cswCriteriaInfo,
+ul.criteria-list-group {
   padding-right: 1em;
   overflow-x: hidden;
 }
@@ -140,12 +159,13 @@ fieldset.cswCriteriaInfo, ul.criteria-list-group {
 }
 ul.error-message {
   .left-offset {
-  left: -2em;
+    left: -2em;
   }
 
   overflow-x: auto;
   z-index: 9999999;
-  dl,pre {
+  dl,
+  pre {
     margin-left: 5px;
     margin-right: 5px;
     padding-bottom: 0px;
@@ -190,9 +210,15 @@ ul.pager {
   margin-bottom: 0px;
 }
 
-#gn-thesaurus-container, #gn-categories-container,
-#gn-logo-container, #gn-group-container, #gn-user-container,
-#gn-uiconfig-container {
+#gn-thesaurus-container,
+#gn-categories-container,
+#gn-logo-container,
+#gn-group-container,
+#gn-user-container,
+#gn-uiconfig-container,
+#gn-mapservers-container,
+#gn-sources-container,
+#gn-metadatatemplates-container {
   // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
   [gn-modal] {
     max-width: none;
@@ -225,7 +251,7 @@ ul.pager {
 .list-group-interne {
   background-color: #d9edf7;
 }
-ul > li > a.privilege-check-order{
+ul > li > a.privilege-check-order {
   margin-right: 20px;
 }
 ul > li.list-group-item > input {

@@ -34,20 +34,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataRelation;
-import org.fao.geonet.domain.MetadataRelationId;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
@@ -55,13 +42,10 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -74,13 +58,7 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
@@ -381,10 +359,10 @@ public class Importer {
                     //
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null, docType = null, title = null, category = null;
-                    boolean ufo = false, indexImmediate = true;
+                    boolean ufo = false;
                     String fcId = dm
                         .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate.codeString, docType,
-                            category, createDate, changeDate, ufo, indexImmediate);
+                            category, createDate, changeDate, ufo, IndexingMode.full);
 
                     if (Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -424,6 +402,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
+
                         if (finalGroupId == null || finalGroupId.equals("")) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
@@ -435,9 +414,20 @@ public class Importer {
                                 Integer.valueOf(finalGroupId));
                             allowedRepository.saveAll(allowedSet);
                         }
-
                     }
                 });
+
+                if (validate) {
+                    java.util.Optional<Metadata> md = context.getBean(MetadataRepository.class).findById(iMetadataId);
+
+                    if (md.isPresent()) {
+                        // Persist the validation status
+                        IMetadataValidator metadataValidator = context.getBean(IMetadataValidator.class);
+
+                        metadataValidator.doValidate(md.get(), context.getLanguage());
+                    }
+                }
+
                 dm.indexMetadata(metadataIdMap.get(index), true);
             }
 
@@ -547,11 +537,11 @@ public class Importer {
         //
         int userid = context.getUserSession().getUserIdAsInt();
         String docType = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        boolean ufo = false;
 
         String metadataId = metadataManager
             .insertMetadata(context, schema, md.get(index), uuid, userid, groupId, source, isTemplate.codeString, docType, category,
-                createDate, changeDate, ufo, indexImmediate);
+                createDate, changeDate, ufo, IndexingMode.none);
 
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);
 

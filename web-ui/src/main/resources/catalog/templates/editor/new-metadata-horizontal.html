@@ -3,22 +3,28 @@
     <div class="col-md-12 gn-margin-bottom">
       <h1>{{resourceTitle | translate}}</h1>
 
-      <div class="alert alert-warning" data-ng-hide="hasTemplates"
-          data-translate="">noTemplatesAvailable
+      <div class="alert alert-warning" data-ng-hide="hasTemplates" data-translate="">
+        noTemplatesAvailable
       </div>
-      <div class="alert alert-warning" data-ng-show="groups.length === 0"
-          data-translate="">youAreNotMemberOfAnyGroup
+      <div
+        class="alert alert-warning"
+        data-ng-show="groups.length === 0"
+        data-translate=""
+      >
+        youAreNotMemberOfAnyGroup
       </div>
 
-      <div class="progress progress-striped active"
-          data-ng-show="hasTemplates && mdList === null">
-        <div class="progress-bar" style="width: 100%"/>
+      <div
+        class="progress progress-striped active"
+        data-ng-show="hasTemplates && mdList === null"
+      >
+        <div class="progress-bar" style="width: 100%" />
       </div>
     </div>
   </div>
 
   <div class="row" data-ng-show="hasTemplates && groups.length > 0">
-    <div class="col-sm-2">
+    <div class="col-sm-2" data-ng-if="filterField">
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
           <span data-translate="">createA</span>
@@ -26,13 +32,15 @@
         </div>
         <div class="panel-body">
           <div class="list-group gn-record-type">
-            <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
-               data-ng-click="getTemplateNamesByType(type)"
-               data-ng-class="{'active': type==activeType}">
-              <i class="fa {{getTypeIcon(type)}} fa-3x"></i>
-              <p>
-                {{type | translate}}
-              </p>
+            <a
+              data-ng-repeat="type in mdTypes | orderBy: 'label'"
+              href=""
+              class="list-group-item"
+              data-ng-click="getTemplateNamesByType(type.key)"
+              data-ng-class="{'active': type.key == activeType}"
+            >
+              <i class="fa {{getTypeIcon(type.key)}} fa-3x"></i>
+              <p>{{type.label}}</p>
             </a>
           </div>
         </div>
@@ -45,36 +53,45 @@
           <strong>{{(activeTpl.title || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
-          <input type="text"
-                 autofocus=""
-                 placeholder="{{'filter' | translate}}"
-                 class="form-control"
-                 data-ng-show="tpls.length > 10"
-                 data-ng-model="tplFilter.resourceTitle"
-                 data-ng-model-options="{debounce: 200}"
+          <input
+            type="text"
+            autofocus=""
+            placeholder="{{'filter' | translate}}"
+            class="form-control"
+            data-ng-show="tpls.length > 10"
+            data-ng-model="tplFilter.resourceTitle"
+            data-ng-model-options="{debounce: 200}"
           />
 
           <div class="list-group">
-            <a data-ng-repeat="tpl in tpls | filter:tplFilter" href="" class="list-group-item"
-               data-ng-click="setActiveTpl(tpl)"
-               data-ng-class="{'active': tpl==activeTpl}">{{tpl.resourceTitle}}</a>
+            <a
+              data-ng-repeat="tpl in tpls | filter:tplFilter"
+              href=""
+              class="list-group-item"
+              data-ng-click="setActiveTpl(tpl)"
+              data-ng-class="{'active': tpl==activeTpl}"
+              >{{tpl.resourceTitle}}</a
+            >
           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-3" data-ng-show="groups && groups.length > 1">
       <div class="panel-default panel">
-        <div class="panel-heading"><span data-translate="">inGroup</span>
+        <div class="panel-heading">
+          <span data-translate="">inGroup</span>
           <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
-          <div data-groups-combo=""
-               data-optional="false"
-               data-owner-group="ownerGroup"
-               lang="lang"
-               data-groups="groups"
-               data-profile="Editor"
-               data-exclude-special-groups="true"/>
+          <div
+            data-groups-combo=""
+            data-optional="false"
+            data-owner-group="ownerGroup"
+            lang="lang"
+            data-groups="groups"
+            data-profile="Editor"
+            data-exclude-special-groups="true"
+          />
         </div>
       </div>
     </div>
@@ -86,52 +103,82 @@
         <div class="panel-body">
           <div class="form-group">
             <label for="mdIdentifierTemplates" data-translate="">template</label>
-            <select id="mdIdentifierTemplates" name="mdIdentifierTemplates"
-                    data-ng-model="mdIdentifierSelectedTemplateId"
-                    data-ng-change="updateMdIdentifierTemplate()">
-              <option data-ng-repeat="option in mdIdentifierTemplates | orderBy:'id'"
-                      value="{{option.id}}">{{option.name}}
+            <select
+              id="mdIdentifierTemplates"
+              name="mdIdentifierTemplates"
+              data-ng-model="mdIdentifierSelectedTemplateId"
+              data-ng-change="updateMdIdentifierTemplate()"
+            >
+              <option
+                data-ng-repeat="option in mdIdentifierTemplates | orderBy:'id'"
+                value="{{option.id}}"
+              >
+                {{option.name}}
               </option>
             </select>
           </div>
           <div class="form-group">
             <span>{{mdIdSelectedTemplateForLabel}}</span>
           </div>
-          <div class="form-group" ng-repeat="(key, val) in mdIdentifierTemplateTokens"
-               data-ng-show="!showCustomMdIdentifierField()">
+          <div
+            class="form-group"
+            ng-repeat="(key, val) in mdIdentifierTemplateTokens"
+            data-ng-show="!showCustomMdIdentifierField()"
+          >
             <label>{{ val.label }}</label>
-            <input type="text" class="form-control" name="{{ val.label }}" data-ng-model="val.value"
-                   data-ng-change="updateMdIdentifierTemplateLabel()"/>
+            <input
+              type="text"
+              class="form-control"
+              name="{{ val.label }}"
+              data-ng-model="val.value"
+              data-ng-change="updateMdIdentifierTemplateLabel()"
+            />
           </div>
           <div class="form-group" data-ng-show="showCustomMdIdentifierField()">
             <label for="urn" data-translate="">urn</label>
-            <input type="text" class="form-control" id="urn" name="urn" data-ng-model="urnCustom"/>
+            <input
+              type="text"
+              class="form-control"
+              id="urn"
+              name="urn"
+              data-ng-model="urnCustom"
+            />
           </div>
         </div>
       </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-success"
-                data-gn-click-and-spin="createNewMetadata()"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))">
-          <i class="fa fa-plus"/>
+        <button
+          type="button"
+          class="btn btn-success"
+          data-gn-click-and-spin="createNewMetadata()"
+          data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
+        >
+          <i class="fa fa-plus" />
           <span data-translate="">createMetadata</span>
         </button>
-        <button type="button"
-                class="btn btn-success dropdown-toggle"
-                data-ng-disabled="(!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
-                data-toggle="dropdown">
+        <button
+          type="button"
+          class="btn btn-success dropdown-toggle"
+          data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
+          data-toggle="dropdown"
+        >
           <span class="caret"></span>&nbsp;
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-          <li><a
-            title="{{'createMetadataForGroup-help' | translate}}"
-            data-gn-click-and-spin="createNewMetadata(true)"
-            href="" data-translate="">
-            createMetadataForGroup</a></li>
+          <li>
+            <a
+              title="{{'createMetadataForGroup-help' | translate}}"
+              data-gn-click-and-spin="createNewMetadata(true)"
+              href=""
+              data-translate=""
+            >
+              createMetadataForGroup</a
+            >
+          </li>
         </ul>
       </div>
       <a data-ng-click="cancelCreateMetadata()" class="btn btn-default">
-        <i class="fa fa-close"/>&nbsp;
+        <i class="fa fa-close" />&nbsp;
         <span data-translate="">cancel</span>
       </a>
     </div>
@@ -139,8 +186,7 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
+      <div data-gn-need-help="creating-metadata"></div>
     </div>
   </div>
-
 </div>

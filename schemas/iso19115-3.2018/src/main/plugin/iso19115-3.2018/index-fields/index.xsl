@@ -58,14 +58,13 @@
   <xsl:import href="common/index-utils.xsl"/>
   <xsl:import href="link-utility.xsl"/>
 
-
-  <xsl:output method="xml" indent="yes"/>
-
   <xsl:output name="default-serialize-mode"
               indent="no"
               omit-xml-declaration="yes"
               encoding="utf-8"
               escape-uri-attributes="yes"/>
+
+  <xsl:param name="fastIndexMode" select="false()"/>
 
 
   <!-- If identification creation, publication and revision date
@@ -79,7 +78,7 @@
   -->
   <xsl:variable name="operatesOnSetByProtocol" select="false()"/>
 
-  <xsl:variable name="processRemoteDocs" select="true()" />
+  <xsl:variable name="processRemoteDocs" select="false()" />
 
   <!-- Define if search for regulation title should be strict or light. -->
   <xsl:variable name="inspireRegulationLaxCheck" select="false()"/>
@@ -402,13 +401,6 @@
         <xsl:for-each select="$overviews">
           <overview type="object">{
             "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="count(../../mcc:fileDescription) > 0">,
               "text":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
@@ -1115,6 +1107,11 @@
           </xsl:element>
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape(cit:protocol/*/text())"/>",
+            "mimeType":"<xsl:value-of select="if (*/gcx:MimeFileType)
+                                              then gn-fn-index:json-escape(*/gcx:MimeFileType/@type)
+                                              else if (starts-with(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
+                                              then gn-fn-index:json-escape(replace(cit:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', ''))
+                                              else ''"/>",
             "url":"<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())"/>",
             "name":"<xsl:value-of select="gn-fn-index:json-escape((cit:name/*/text())[1])"/>",
             "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>",
@@ -1309,7 +1306,7 @@
         <xsl:variable name="getRecordByIdId">
           <xsl:if test="@xlink:href != ''">
             <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([\w\-\.\{{\}}]*).*">
+                                regex=".*[i|I][d|D]=([_\w\-\.\{{\}}]*).*">
               <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
               </xsl:matching-substring>
@@ -1335,6 +1332,7 @@
 
           <xsl:variable name="resolvedDoc">
             <xsl:if test="$processRemoteDocs
+                          and not($fastIndexMode)
                           and $xlink != ''
                           and not(@xlink:title)
                           and not(starts-with($xlink, $siteUrl))">
@@ -1425,7 +1423,8 @@
 
             <xsl:choose>
               <!-- 1) Is the link referencing an external metadata? -->
-              <xsl:when test="string(normalize-space($xlinkHref))
+              <xsl:when test="not($fastIndexMode)
+                              and string(normalize-space($xlinkHref))
                               and not(starts-with(replace($xlinkHref, 'http://', 'https://'), replace($siteUrl, 'http://', 'https://')))">
 
                 <!-- remote url: request the document to index data -->

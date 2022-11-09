@@ -1,75 +1,74 @@
 <div data-ng-if="::layout === 'icon'">
   <ul>
-
-    <li class="gn-contact-card"
-        data-ng-if="mode == 'default'"
-        data-ng-repeat="c in mdContacts track by $index"
-        gn-popover
-        gn-popover-dismiss=".content">
-      <div gn-popover-anchor
-           class="row">
-        <div class="col-md-4"
-             data-gn-circle-letter-icon="c.organisation"
-             data-org-key="c.email | getMailDomain"/>
+    <li
+      class="gn-contact-card"
+      data-ng-if="mode == 'default'"
+      data-ng-repeat="c in mdContacts track by $index"
+      gn-popover
+      gn-popover-dismiss=".content"
+    >
+      <div gn-popover-anchor class="row">
+        <div
+          class="col-md-4"
+          data-gn-circle-letter-icon="c.organisation"
+          data-org-key="c.email | getMailDomain"
+        />
 
         <div class="col-md-8">
-          <div class="gn-contact-card-role">
-            {{c.role | translate}}
-          </div>
+          <div class="gn-contact-card-role">{{c.role | translate}}</div>
           <div class="gn-contact-card-org">
-          <span data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
-          </span>
-            <span data-ng-if="::!c.website">
-            {{c.organisation}}
-          </span>
+            <span data-ng-if="::c.website">
+              <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
+            </span>
+            <span data-ng-if="::!c.website"> {{c.organisation}} </span>
           </div>
         </div>
       </div>
 
       <div gn-popover-content>
-        <div data-gn-metadata-individual="c"/>
+        <div data-gn-metadata-individual="c" />
 
         <address data-ng-if="c.address != '' || c.phone != ''">
           <div data-ng-if="c.address != ''">{{c.address}}</div>
-          <a href="tel:{{c.phone}}"
-             data-ng-if="c.phone != ''">
+          <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
             <span data-translate="">call</span> {{c.phone}}
           </a>
         </address>
 
-        <div data-gn-search-filter-link="OrgForResource"
-             data-filter="c.organisation"
-             data-label="focusOnFrom">{{c.organisation}}</div>
+        <div
+          data-gn-search-filter-link="OrgForResource"
+          data-filter="c.organisation"
+          data-label="focusOnFrom"
+        >
+          {{c.organisation}}
+        </div>
       </div>
     </li>
 
     <!-- Group by role -->
-    <li class="gn-contact-card"
-        data-ng-if="mode == 'role'"
-        data-ng-repeat="cnts in mdContacts | groupBy:'role' track by $index"
-        gn-popover
-        gn-popover-dismiss=".content">
-
-      <div gn-popover-anchor
-           class="row">
+    <li
+      class="gn-contact-card"
+      data-ng-if="mode == 'role'"
+      data-ng-repeat="cnts in mdContacts | groupBy:'role' track by $index"
+      gn-popover
+      gn-popover-dismiss=".content"
+    >
+      <div gn-popover-anchor class="row">
         <div class="col-md-12">
-          <div class="gn-contact-card-role">
-            {{cnts[0].role | translate}}
-          </div>
+          <div class="gn-contact-card-role">{{cnts[0].role | translate}}</div>
           <div class="col-md-12" data-ng-repeat="c in cnts | orderBy:'organisation'">
             <div class="row">
-              <div class="col-md-4"
-                   data-gn-circle-letter-icon="c.organisation"
-                   data-org-key="c.email | getMailDomain"/>
+              <div
+                class="col-md-4"
+                data-gn-circle-letter-icon="c.organisation"
+                data-org-key="c.email | getMailDomain"
+              />
               <div class="col-md-8">
                 <div class="gn-contact-card-org-group">
                   <span data-ng-if="::c.website">
                     <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
                   </span>
-                  <span data-ng-if="::!c.website">
-                    {{c.organisation}}
-                  </span>
+                  <span data-ng-if="::!c.website"> {{c.organisation}} </span>
                 </div>
               </div>
             </div>
@@ -78,84 +77,91 @@
       </div>
 
       <div gn-popover-content>
-<!--     Removing for now, because if you close open popup
+        <!--     Removing for now, because if you close open popup
    the title disappear. <h3 class="popover-title">{{cnts[0].role | translate}}</h3>-->
         <div data-ng-repeat="c in cnts | orderBy:'organisation'">
-          <div data-gn-metadata-individual="c"/>
+          <div data-gn-metadata-individual="c" />
 
           <address data-ng-if="c.address != '' || c.phone != ''">
             <div data-ng-if="c.address != ''">{{c.address}}</div>
-            <a href="tel:{{c.phone}}"
-               data-ng-if="c.phone != ''">
+            <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
               <span data-translate="">call</span> {{c.phone}}
             </a>
           </address>
 
-          <div data-gn-search-filter-link="OrgForResource"
-               data-filter="c.organisation"
-               data-label="focusOnFrom">{{c.organisation}}</div>
+          <div
+            data-gn-search-filter-link="OrgForResource"
+            data-filter="c.organisation"
+            data-label="focusOnFrom"
+          >
+            {{c.organisation}}
+          </div>
 
-          <hr data-ng-if="!$last"/>
+          <hr data-ng-if="!$last" />
         </div>
       </div>
     </li>
 
     <!-- Group by organisation/role -->
-    <li class="gn-contact-card"
-        data-ng-if="mode == 'org-role'"
-        data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole"
-        gn-popover
-        gn-popover-dismiss=".content">
-
-      <div gn-popover-anchor
-           class="row">
-        <div class="col-md-4"
-             data-gn-circle-letter-icon="org"
-             data-org-key="contactByOrgRole[0].email | getMailDomain"/>
+    <li
+      class="gn-contact-card"
+      data-ng-if="mode == 'org-role'"
+      data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole"
+      gn-popover
+      gn-popover-dismiss=".content"
+    >
+      <div gn-popover-anchor class="row">
+        <div
+          class="col-md-4"
+          data-gn-circle-letter-icon="org"
+          data-org-key="contactByOrgRole[0].email | getMailDomain"
+        />
 
         <div class="col-md-8" ng-repeat="c in contactByOrgRole">
           <div class="gn-contact-card-org-group">
             <span data-ng-if="::c.website">
               <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
             </span>
-            <span data-ng-if="::!c.website">
-              {{c.organisation}}
-            </span>
+            <span data-ng-if="::!c.website"> {{c.organisation}} </span>
           </div>
 
           <div class="gn-contact-card-group-role" data-ng-repeat="r in ::c.roles">
-            {{r | translate}} <span data-ng-if="!$last"><br/></span>
+            {{r | translate}} <span data-ng-if="!$last"><br /></span>
           </div>
-
-          </div>
+        </div>
       </div>
 
       <div gn-popover-content>
         <div data-ng-repeat="c in contactByOrgRole">
-          <div data-gn-metadata-individual="c"/>
+          <div data-gn-metadata-individual="c" />
 
           <address data-ng-if="c.address != '' || c.phone != ''">
             <div data-ng-if="c.address != ''">{{c.address}}</div>
-            <a href="tel:{{c.phone}}"
-               data-ng-if="c.phone != ''">
+            <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
               <span data-translate="">call</span> {{c.phone}}
             </a>
           </address>
 
-          <div data-gn-search-filter-link="OrgForResource"
-               data-filter="c.organisation"
-               data-label="focusOnFrom">{{c.organisation}}</div>
+          <div
+            data-gn-search-filter-link="OrgForResource"
+            data-filter="c.organisation"
+            data-label="focusOnFrom"
+          >
+            {{c.organisation}}
+          </div>
 
-          <hr data-ng-if="!$last"/>
+          <hr data-ng-if="!$last" />
         </div>
       </div>
     </li>
   </ul>
 </div>
 <div data-ng-if="::layout !== 'icon'">
-  <div class="gn-contact"
-       data-ng-if="mode == 'default'"
-       data-ng-repeat="c in mdContacts track by $index">
+  <div
+    class="gn-contact"
+    data-ng-if="mode == 'default'"
+    data-ng-repeat="c in mdContacts track by $index"
+  >
     <h3>
       <i class="fa fa-envelope"></i>
       {{c.role | translate}}
@@ -164,99 +170,93 @@
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br />
           </strong>
-          <strong data-ng-if="::!c.website">
-            {{c.organisation}}<br/>
-          </strong>
+          <strong data-ng-if="::!c.website"> {{c.organisation}}<br /> </strong>
 
-          <div data-gn-metadata-individual="c"/>
+          <div data-gn-metadata-individual="c" />
 
           <div data-ng-if="c.address != ''">{{c.address}}</div>
-          <a href="tel:{{c.phone}}"
-             data-ng-if="c.phone != ''">
+          <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
             <span data-translate="">call</span> {{c.phone}}
           </a>
         </address>
       </div>
       <div class="col-md-4">
-        <img data-ng-if="c.logo"
-             class="gn-source-logo"
-             data-ng-src="{{::c.logo}}"/>
+        <img data-ng-if="c.logo" class="gn-source-logo" data-ng-src="{{::c.logo}}" />
       </div>
     </div>
   </div>
 
-
   <!-- Group by role -->
-  <div class="gn-contact"
-       data-ng-if="mode == 'role'"
-       data-ng-repeat="(roles, contactByRole) in mdContactsByRole">
+  <div
+    class="gn-contact"
+    data-ng-if="mode == 'role'"
+    data-ng-repeat="(roles, contactByRole) in mdContactsByRole"
+  >
     <h3>
       <i class="fa fa-envelope"></i>
-      <span>
-      {{translateRoles(roles)}}
-      </span>
+      <span> {{translateRoles(roles)}} </span>
     </h3>
-    <div class="row" data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'">
+    <div
+      class="row"
+      data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'"
+    >
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br />
           </strong>
-          <strong data-ng-if="::!c.website">
-            {{c.organisation}}<br/>
-          </strong>
+          <strong data-ng-if="::!c.website"> {{c.organisation}}<br /> </strong>
 
           <span data-ng-repeat="c in contact track by $index">
-            <div data-gn-metadata-individual="c"/>
+            <div data-gn-metadata-individual="c" />
           </span>
 
           <!-- Address for organisation: display for 1st contact in organisation -->
           <span data-ng-repeat="c in contact | limitTo:1">
             <div data-ng-if="c.address != ''">{{c.address}}</div>
-            <a href="tel:{{c.phone}}"
-               data-ng-if="c.phone != ''">
+            <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
               <span data-translate="">call</span> {{c.phone}}
             </a>
           </span>
-
         </address>
       </div>
       <!-- Logo for organisation: display for 1st contact in organisation -->
       <div class="col-md-4" data-ng-repeat="c in contact | limitTo:1">
-        <img data-ng-if="c.logo"
-             class="gn-source-logo"
-             data-ng-src="{{::c.logo}}"/>
+        <img data-ng-if="c.logo" class="gn-source-logo" data-ng-src="{{::c.logo}}" />
       </div>
     </div>
-   </div>
-
+  </div>
 
   <!-- Group by organisation/role -->
-  <div class="gn-contact flex-row"
-       data-ng-if="mode == 'org-role'"
-       data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole">
+  <div
+    class="gn-contact flex-row"
+    data-ng-if="mode == 'org-role'"
+    data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole"
+  >
     <address>
       <strong data-ng-if="::orgWebsite[org]">
         <i class="fa fa-fw fa-link"></i>
-        <a data-ng-href="{{::orgWebsite[org]}}">{{org}}</a><br/>
+        <a data-ng-href="{{::orgWebsite[org]}}">{{org}}</a><br />
       </strong>
-      <strong data-ng-if="::!orgWebsite[org]">
-        {{org}}
-      </strong>
+      <strong data-ng-if="::!orgWebsite[org]"> {{org}} </strong>
 
-      <div ng-repeat="(key, contactGroupByAddress) in contactByOrgRole | groupBy:'address'">
+      <div
+        ng-repeat="(key, contactGroupByAddress) in contactByOrgRole | groupBy:'address'"
+      >
         <span data-ng-if="key != ''">
           <i class="fa fa-fw fa-map-marker"></i>
-          {{key}}<br/>
+          {{key}}<br />
         </span>
         <ul>
-          <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
-            {{translateRoles(roles)}}:<br/>
+          <li
+            ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'"
+          >
+            {{translateRoles(roles)}}:<br />
             <span data-ng-repeat="c in contactGroupByRole track by $index">
-              <div data-gn-metadata-individual="c"/>
-              <span data-ng-if="!$last"><hr/></span>
+              <div data-gn-metadata-individual="c" />
+              <span data-ng-if="!$last"><hr /></span>
             </span>
           </li>
         </ul>

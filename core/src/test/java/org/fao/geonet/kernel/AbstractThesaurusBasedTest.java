@@ -70,7 +70,7 @@ public abstract class AbstractThesaurusBasedTest {
 
             Files.copy(template, thesaurusFile);
             this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), "test", "test",
-                thesaurusFile, "http://concept");
+                thesaurusFile, "http://concept", 0);
         }
         this.thesaurus.initRepository();
     }
@@ -93,7 +93,7 @@ public abstract class AbstractThesaurusBasedTest {
 
         this.thesaurusFile = directory.resolve("testThesaurus.rdf");
         this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getFileName().toString(), null, null, "test", "test",
-            thesaurusFile, "http://concept", true);
+            thesaurusFile, "http://concept", true, 0);
         this.thesaurus.initRepository();
     }
 

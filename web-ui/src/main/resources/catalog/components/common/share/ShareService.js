@@ -21,32 +21,32 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_share_service');
+(function () {
+  goog.provide("gn_share_service");
 
-  var module = angular.module('gn_share_service', []);
+  var module = angular.module("gn_share_service", []);
 
-  module.value('gnShareConstants', {
+  module.value("gnShareConstants", {
     // Customize column to be displayed and the order
     // TODO: Move config to DB using order in operations table
-    columnOrder: ['view', 'dynamic', 'download', 'editing', 'notify'],
+    columnOrder: ["view", "dynamic", "download", "editing", "notify"],
     icons: {
-      'view': 'fa-unlock',
-      'dynamic': 'fa-globe',
-      'download': 'fa-download',
-      'notify': 'fa-envelope',
-      'process': 'fa-cog',
-      'editing': 'fa-pencil'},
-    internalOperations: ['editing', 'notify'],
+      view: "fa-unlock",
+      dynamic: "fa-globe",
+      download: "fa-download",
+      notify: "fa-envelope",
+      process: "fa-cog",
+      editing: "fa-pencil"
+    },
+    internalOperations: ["editing", "notify"],
     internalGroups: [-1, 0, 1],
-    internalGroupsProfiles: ['Administrator', 'UserAdmin', 'Reviewer'],
+    internalGroupsProfiles: ["Administrator", "UserAdmin", "Reviewer"],
     // Use topGroups to place those groups with internet, intranet groups
     // on top of the privileges panel.
     // TODO: Move config to DB using isTopGroups in groups table
     // or using reserved column ?
     topGroups: []
   });
-
 
   /**
    * @ngdoc service
@@ -61,24 +61,37 @@
    * privileges on metadata records. Privileges define which type operation
    * (eg. view, download, edit) a group of user can do.
    */
-  module.factory('gnShareService', [
-    '$q', '$http', 'gnShareConstants',
-    function($q, $http, gnShareConstants) {
-      var isAdminOrReviewer = function(userProfile, groupOwner,
-                                       privileges, batchMode) {
-        if ($.inArray(userProfile,
-                      gnShareConstants.internalGroupsProfiles) === -1) {
+  module.factory("gnShareService", [
+    "$q",
+    "$http",
+    "gnShareConstants",
+    "gnConfig",
+    function ($q, $http, gnShareConstants, gnConfig) {
+      var isAdminOrReviewer = function (userProfile, groupOwner, privileges, batchMode) {
+        var publicationbyrevieweringroupowneronly =
+          gnConfig["system.metadataprivs.publicationbyrevieweringroupowneronly"] === false
+            ? false
+            : true;
+
+        if ($.inArray(userProfile, gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
-        } else if (userProfile === 'Administrator' ||
-            (userProfile === 'Reviewer' && batchMode)) {
+        } else if (
+          userProfile === "Administrator" ||
+          (userProfile === "Reviewer" && batchMode)
+        ) {
           return true;
         } else {
           // Check if user is member of groupOwner
           // or check if user is Reviewer and can edit record
-          var ownerGroupInfo = $.grep(privileges, function(g) {
-            return g.group == groupOwner ||
-                   (g.operations.editing &&
-                    $.inArray('Reviewer', g.userProfiles) !== -1);
+          var ownerGroupInfo = $.grep(privileges, function (g) {
+            if (publicationbyrevieweringroupowneronly) {
+              return g.group == groupOwner;
+            } else {
+              return (
+                g.group == groupOwner ||
+                (g.operations.editing && $.inArray("Reviewer", g.userProfiles) !== -1)
+              );
+            }
           });
 
           var profiles = [];
@@ -93,7 +106,7 @@
             }
           }
           // Check profile for the group where the metadata was created
-          return $.inArray('Reviewer', profiles) !== -1;
+          return $.inArray("Reviewer", profiles) !== -1;
         }
       };
 
@@ -132,59 +145,66 @@
          * @return {HttpPromise} Future object which return an Object
          * containing groups, operations and isAdminOrReviewer properties.
          */
-        loadPrivileges: function(metadataId, userProfile) {
+        loadPrivileges: function (metadataId, userProfile) {
           var defer = $q.defer();
-          var url = '../api/records' +
-              (angular.isDefined(metadataId) ? '/' + metadataId : '') +
-              '/sharing';
+          var url =
+            "../api/records" +
+            (angular.isDefined(metadataId) ? "/" + metadataId : "") +
+            "/sharing";
 
-          $http.get(url)
-              .success(function(data) {
-                var groups = data.privileges;
+          $http.get(url).success(function (data) {
+            var groups = data.privileges;
 
-                // Promote custom topgroups
-                angular.forEach(groups, function(g) {
-                  if ($.inArray(g.group, gnShareConstants.topGroups) !== -1) {
-                    g.reserved = 'true';
-                  }
-                });
+            // Promote custom topgroups
+            angular.forEach(groups, function (g) {
+              if ($.inArray(g.group, gnShareConstants.topGroups) !== -1) {
+                g.reserved = "true";
+              }
+            });
 
-                var operations = [];
-                if (angular.isArray(gnShareConstants.columnOrder)) {
-                  operations = gnShareConstants.columnOrder;
-                } else {
-                  angular.forEach(data.privileges[0].operations,
-                      function(value, key) {
-                        ops.push(key);
-                      });
-                }
-
-                defer.resolve({
-                  privileges: groups,
-                  operations: operations,
-                  isAdminOrReviewer:
-                      isAdminOrReviewer(userProfile, data.groupOwner,
-                      groups, angular.isUndefined(metadataId))});
+            var operations = [];
+            if (angular.isArray(gnShareConstants.columnOrder)) {
+              operations = gnShareConstants.columnOrder;
+            } else {
+              angular.forEach(data.privileges[0].operations, function (value, key) {
+                ops.push(key);
               });
+            }
+
+            defer.resolve({
+              privileges: groups,
+              operations: operations,
+              isAdminOrReviewer: isAdminOrReviewer(
+                userProfile,
+                data.groupOwner,
+                groups,
+                angular.isUndefined(metadataId)
+              )
+            });
+          });
           return defer.promise;
         },
 
-        publish: function(metadataId, bucket, publish, user) {
+        publish: function (metadataId, bucket, publish, user) {
           var defer = $q.defer();
-          var url = '../api/records' + (
-              angular.isDefined(metadataId) ? '/' + metadataId : '') +
-            '/' + (publish?'publish':'unpublish');
+          var url =
+            "../api/records" +
+            (angular.isDefined(metadataId) ? "/" + metadataId : "") +
+            "/" +
+            (publish ? "publish" : "unpublish");
 
           if (angular.isDefined(bucket)) {
-            url += '?bucket=' + bucket;
+            url += "?bucket=" + bucket;
           }
 
-          $http.put(url)
-            .then(function(response) {
+          $http.put(url).then(
+            function (response) {
               defer.resolve(response);
-            }, function(response) {
+            },
+            function (response) {
               defer.reject(response);
-          });
+            }
+          );
 
           return defer.promise;
         },
@@ -203,24 +223,24 @@
          *
          * @return {HttpPromise} Future object.
          */
-        savePrivileges: function(
-            metadataId, bucket, privileges, user, replace) {
+        savePrivileges: function (metadataId, bucket, privileges, user, replace) {
           var defer = $q.defer();
-          var url = '../api/records' + (
-              angular.isDefined(metadataId) ? '/' + metadataId : '') +
-              '/sharing';
+          var url =
+            "../api/records" +
+            (angular.isDefined(metadataId) ? "/" + metadataId : "") +
+            "/sharing";
 
           if (angular.isDefined(bucket)) {
-            url += '?bucket=' + bucket;
+            url += "?bucket=" + bucket;
           }
           var ops = [];
-          angular.forEach(privileges, function(g) {
+          angular.forEach(privileges, function (g) {
             // Do not submit internal groups info
             // If user is not allowed.
-            var allowed = (
-                $.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
+            var allowed =
+              ($.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
                 user.isReviewerOrMore()) ||
-                ($.inArray(g.group, gnShareConstants.internalGroups) === -1);
+              $.inArray(g.group, gnShareConstants.internalGroups) === -1;
 
             if (allowed) {
               ops.push({
@@ -230,15 +250,19 @@
             }
           });
 
-          $http.put(url, {
-            clear: replace,
-            privileges: ops
-          })
-              .then(function(response) {
+          $http
+            .put(url, {
+              clear: replace,
+              privileges: ops
+            })
+            .then(
+              function (response) {
                 defer.resolve(response);
-              }, function(response) {
+              },
+              function (response) {
                 defer.reject(response);
-              });
+              }
+            );
           return defer.promise;
         }
       };

@@ -44,13 +44,11 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
-    <xsl:import href="protocol-mapping.xsl"></xsl:import>
-
     <xsl:output method="xml" indent="yes"/>
     <xsl:strip-space elements="*"/>
 
     <xsl:template match="/record">
-      <xsl:variable name="cataloglang" select="'fr'"></xsl:variable>
+      <xsl:variable name="cataloglang" select="'fre'"></xsl:variable>
 
       <mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                        xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
@@ -416,7 +414,16 @@
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
                 <xsl:for-each select="distribution">
-                  <xsl:variable name="format" select="format"/>
+                  <xsl:variable name="protocol">
+                    <xsl:choose>
+                      <xsl:when test="contains(accessURL, 'WFSServer')">
+                        OGC:WFS
+                      </xsl:when>
+                      <xsl:otherwise>
+                        ESRI:REST
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                   <mrd:onLine>
                     <cit:CI_OnlineResource>
                       <cit:linkage>
@@ -426,17 +433,15 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
+                          <xsl:value-of select="$protocol"/>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
-                        <gco:CharacterString>
-                          <xsl:value-of select="title"/>
-                        </gco:CharacterString>
+                        <gco:CharacterString/> <!-- this is empty to allow automatic detection of feature type -->
                       </cit:name>
                       <cit:description>
                         <gco:CharacterString>
-                          <xsl:value-of select="$format"/>
+                          <xsl:value-of select="title"/>
                         </gco:CharacterString>
                       </cit:description>
                     </cit:CI_OnlineResource>

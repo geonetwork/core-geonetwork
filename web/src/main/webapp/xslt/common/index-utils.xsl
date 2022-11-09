@@ -54,7 +54,7 @@
   <xsl:variable name="openDataKeywords"
                 select="'opendata|open data|donnees ouvertes'"/>
 
-  <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
+  <xsl:variable name="isStoringOverviewInIndex" select="false()"/>
 
 
   <!-- A date, dateTime, Year or Year and Month
@@ -317,6 +317,17 @@
                             '[^a-zA-Z0-9_-]', '')"/>
   </xsl:function>
 
+
+  <!-- Template to build the following index fields for the metadata keywords:
+          - tag: contains all the keywords.
+          - tagNumber: total number of keywords.
+          - isOpenData: checks if any keyword is defined in openDataKeywords to flag it as open data.
+          - keywordType-{TYPE}: Index field per keyword type (examples: keywordType-theme, keywordType-place).
+          - th_{THESAURUSID}: Field with keywords of a thesaurus, eg. th_regions
+          - th_{THESAURUSID}Number: Field with keywords of a thesaurus, eg. th_regionsNumber
+          - allKeywords: Object field with all thesaurus and all keywords.
+          - {THESAURUSID}_tree: Object with keywords tree per thesaurus.
+  -->
   <xsl:template name="build-all-keyword-fields" as="node()*">
     <xsl:param name="allKeywords" as="node()?"/>
 
@@ -331,10 +342,12 @@
     </xsl:for-each>]
     </tag>
 
+    <!-- Total number of keywords -->
     <tagNumber>
       <xsl:value-of select="count($allKeywords//keyword)"/>
     </tagNumber>
 
+    <!-- Checks if any keyword is defined in openDataKeywords to flag it as open data -->
     <isOpenData>
       <xsl:value-of select="count(
                         $allKeywords//keyword/values/value[matches(
@@ -363,12 +376,14 @@
       </xsl:element>
     </xsl:for-each-group>
 
-    <!-- Field with keyword count eg. th_regionsNumber -->
+    <!-- Fields with keywords and keyword count of a thesaurus, eg. th_regions, th_regionsNumber -->
     <xsl:for-each select="$allKeywords/thesaurus[info/@field]">
+      <!-- Keyword count of a thesaurus -->
       <xsl:element name="{info/@field}Number">
         <xsl:value-of select="count(keywords/keyword)"/>
       </xsl:element>
 
+      <!-- Keywords of a thesaurus -->
       <xsl:element name="{info/@field}">
         <xsl:attribute name="type" select="'object'"/>
         [<xsl:for-each select="keywords/keyword">
@@ -407,6 +422,7 @@
       }
     </allKeywords>
 
+    <!-- Object with keywords tree per thesaurus -->
     <xsl:for-each select="$allKeywords/thesaurus[keywords/keyword/tree/*/value]">
       <xsl:element name="{info/@field}_tree">
         <xsl:attribute name="type" select="'object'"/>{
@@ -556,16 +572,22 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start castable as xs:date or $start castable as xs:dateTime">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
+      <xsl:if test="$start/text() castable as xs:date
+                    or $start/text() castable as xs:dateTime
+                    or $start/text() castable as xs:gYearMonth
+                    or $start/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$start/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end castable as xs:date or $end castable as xs:dateTime">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
+      <xsl:if test="$end/text() castable as xs:date
+                    or $end/text() castable as xs:dateTime
+                    or $end/text() castable as xs:gYearMonth
+                    or $end/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$end/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
@@ -583,6 +605,7 @@
         }</resourceTemporalExtentDetails>
     </xsl:if>
   </xsl:template>
+
 
 
   <!-- Produce a thesaurus field name valid in an XML document

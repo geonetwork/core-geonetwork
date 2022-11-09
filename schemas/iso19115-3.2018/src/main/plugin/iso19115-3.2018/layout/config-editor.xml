@@ -414,22 +414,32 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default">
-
+    <view name="default"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
-        <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-need-help="creating-metadata"/>
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-file-uploader=""
+                   data-type="onlines"/>
+
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo"/>
-        <section xpath="/mdb:MD_Metadata/mdb:contentInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo" collapsible="false"/>
+        <section xpath="/mdb:MD_Metadata/mdb:contentInfo" collapsible="false"/>
         <section xpath="/mdb:MD_Metadata/mdb:distributionInfo"/>
         <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"/>
         <section xpath="/mdb:MD_Metadata/mdb:resourceLineage"/>
@@ -440,7 +450,7 @@
         <section xpath="/mdb:MD_Metadata/mdb:metadataConstraints"/>
         <section xpath="/mdb:MD_Metadata/mdb:metadataMaintenance"/>
         <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo"/>
-        <section name="metadata">
+        <section name="metadata" collapsed="true">
           <field xpath="/mdb:MD_Metadata/mdb:metadataIdentifier"/>
           <field xpath="/mdb:MD_Metadata/mdb:defaultLocale" or="defaultLocale"
                  in="/mdb:MD_Metadata"/>
@@ -481,8 +491,10 @@
     </view>
 
 
-    <view name="advanced">
+    <view name="advanced"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -490,7 +502,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="identificationInfo" default="true">
@@ -583,6 +594,7 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -590,7 +602,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="xml" default="true"/>

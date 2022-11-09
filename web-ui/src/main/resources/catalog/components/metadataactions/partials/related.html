@@ -1,71 +1,82 @@
-<div class="gn-related-resources gn-info-list-blocks"
-      data-ng-if="relationFound"
-      title="{{::altTitle}}">
+<div
+  class="gn-related-resources gn-info-list-blocks"
+  data-ng-if="relationFound"
+  title="{{::altTitle}}"
+>
   <h2 data-ng-if="title.indexOf('<') === -1">{{::title}}</h2>
-  <div data-ng-if="title.indexOf('<') === 0"
-       data-ng-bind-html="title"></div>
+  <div data-ng-if="title.indexOf('<') === 0" data-ng-bind-html="title"></div>
 
-  <div class=""
-       data-ng-repeat="(type, items) in relations track by $index"
-       data-ng-if="layout !== 'card'
+  <div
+    class=""
+    data-ng-repeat="(type, items) in relations track by $index"
+    data-ng-if="layout !== 'card'
                    && layout !== 'title'
-                   && type && type !== 'thumbnails'">
-    <div data-ng-init="mainType = config.getType(r, type);
+                   && type && type !== 'thumbnails'"
+  >
+    <div
+      data-ng-init="mainType = config.getType(r, type);
                        badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
-         class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
-         data-ng-repeat="r in items | orderBy:getOrderBy"
-         gn-popover="">
-      <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
-        <strong>
-          <div class="clearfix">
-            <i class="fa"
-               data-ng-class="icon"/>
-          </div>
-          <span data-ng-if="badge != ''"
-                class="label label-default"
-                data-ng-class="{
-                  'label-primary': icon === 'fa-download' || icon === 'fa-file-pdf-o',
-                  'label-success': icon === 'fa-globe'}">{{badge}}</span>
-        </strong>
-      </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-10 col-sm-7'"
-           gn-popover-anchor="">
+      class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
+      data-ng-repeat="r in items | orderBy:getOrderBy"
+      gn-popover=""
+    >
+      <div
+        class="gn-related-icon-col col-xs-2 col-sm-2 text-center"
+        data-gn-link-icon="r"
+      ></div>
+      <div
+        data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-10 col-sm-7'"
+        gn-popover-anchor=""
+      >
         <div gn-popover-content="">
           <p class="text-muted">
-              <span data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
-                    data-translate-values="{
+            <span
+              data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
+              data-translate-values="{
                       url:{{r.locUrl | json}},
                       layer:{{r.locTitle | json}}
-                      }"></span>
+                      }"
+            ></span>
           </p>
 
-          <div data-ng-if="r.locUrl"
-               data-gn-search-filter-link="linkUrl"
-               data-filter="r.locUrl"
-               data-label="focusOnFrom">{{r.locUrl}}</div><br/>
-          <div data-ng-if="r.protocol"
-               data-gn-search-filter-link="linkProtocol"
-               data-filter="r.protocol">{{r.protocol}}</div>
+          <div
+            data-ng-if="r.locUrl"
+            data-gn-search-filter-link="linkUrl"
+            data-filter="r.locUrl"
+            data-label="focusOnFrom"
+          >
+            {{r.locUrl}}
+          </div>
+          <br />
+          <div
+            data-ng-if="r.protocol"
+            data-gn-search-filter-link="linkProtocol"
+            data-filter="r.protocol"
+          >
+            {{r.protocol}}
+          </div>
         </div>
         <!-- Always display title if available -->
         <h3>
-          <a data-ng-href="{{::r.locUrl}}">
-            {{::r.locTitle || r.locUrl}}
-          </a>
+          <a data-ng-href="{{::r.locUrl}}"> {{::r.locTitle || r.locUrl}} </a>
         </h3>
         <!-- Display description if available -->
-        <p data-ng-if="::r.locDescription.length > 0
-                       && r.locDescription !== r.locTitle">
+        <p
+          data-ng-if="::r.locDescription.length > 0
+                       && r.locDescription !== r.locTitle"
+          title="{{::r.locDescription}}"
+        >
           {{::r.locDescription | striptags | characters:150}}
         </p>
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WFS">
-            <div data-ng-if="isLayerProtocol(r)"
-                 data-gn-no-map-wfs-download=""
-                 data-typename="{{isLayerProtocol(r) ? r.locTitle : ''}}"
-                 data-url="{{r.locUrl}}">
-            </div>
+            <div
+              data-ng-if="isLayerProtocol(r)"
+              data-gn-no-map-wfs-download=""
+              data-typename="{{isLayerProtocol(r) ? r.locTitle : ''}}"
+              data-url="{{r.locUrl}}"
+            ></div>
           </div>
 
           <div data-ng-switch-when="ATOM">
@@ -73,35 +84,43 @@
               data-gn-atom-download="r.title"
               data-layer-name="{{r.title | gnLocalized: lang}}"
               data-url="{{r.locUrl}}"
-              data-md="md">
-            </div>
+              data-md="md"
+            ></div>
           </div>
 
           <div data-ng-switch-when="DB">
             <p class="text-muted">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}">
-              databaseLayerDetails</span>
+              <span
+                data-translate=""
+                data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}"
+              >
+                databaseLayerDetails</span
+              >
             </p>
           </div>
 
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
-              <span data-translate=""
-                    data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}">
-                fileLayerDetails</span>
-              <input class="form-control"
-                     type="text"
-                     onClick="this.setSelectionRange(0, this.value.length)"
-                     value="{{::r.locUrl}}"/>
+              <span
+                data-translate=""
+                data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}"
+              >
+                fileLayerDetails</span
+              >
+              <input
+                class="form-control"
+                type="text"
+                onClick="this.setSelectionRange(0, this.value.length)"
+                value="{{::r.locUrl}}"
+              />
             </p>
           </div>
 
-          <div data-ng-switch-when="MDFCATS"
-               data-ng-if="r.featureType">
+          <div data-ng-switch-when="MDFCATS" data-ng-if="r.featureType">
             <p data-translate="">technicalInformation</p>
-            <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
-            </div>
+            <div
+              data-gn-attribute-table-renderer="r.featureType.attributeTable.element"
+            ></div>
           </div>
         </div>
       </div>
@@ -109,102 +128,140 @@
       <div class="col-xs-12 col-sm-3">
         <div class="row">
           <div class="col-md-8 gn-nopadding-left gn-nopadding-right">
-            <div data-gn-record-links-button="[r]"
-                 data-type="type"
-                 data-icon-mode="none"
-                 data-btn-class="btn btn-default btn-block"
-                 data-record="md">
-            </div>
+            <div
+              data-gn-record-links-button="[r]"
+              data-type="type"
+              data-icon-mode="none"
+              data-btn-class="btn btn-default btn-block"
+              data-record="md"
+            ></div>
           </div>
           <div class="col-md-4 gn-nopadding-right">
-            <div data-btn-class="btn btn-default btn-sm"
-                 gn-copy-to-clipboard-button=""
-                 data-text="{{::r.locUrl}}"
-                 data-tooltip="copyUrlToClipboard"></div>
+            <div
+              data-btn-class="btn btn-default btn-sm"
+              gn-copy-to-clipboard-button=""
+              data-text="{{::r.locUrl}}"
+              data-tooltip="copyUrlToClipboard"
+            ></div>
           </div>
         </div>
 
-        <button type="button"
-                class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
-                data-ng-if="externalViewerActionEnabled
+        <button
+          type="button"
+          class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+          data-ng-if="externalViewerActionEnabled
                           && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
-                data-ng-click="externalViewerAction(mainType, r, md)"
-                data-translate="">viewInExternalViewer</button>
+          data-ng-click="externalViewerAction(mainType, r, md)"
+          data-translate=""
+        >
+          viewInExternalViewer
+        </button>
       </div>
-
     </div>
   </div>
 
-  <ul class="gn-related-list"
-      data-ng-repeat="(type, items) in relations track by $index"
-      data-ng-if="layout === 'title'
+  <div
+    data-ng-repeat="(type, items) in relations track by $index"
+    data-ng-if="layout === 'title'
                   && type && type !== 'thumbnails' && type !== 'onlines'"
-      data-ng-init="mainType = config.getType(md, type);
+    data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
-                    icon = config.getClassIcon(mainType);" >
-    <li data-ng-repeat="md in items | orderBy:getOrderBy">
-      <a data-ng-hide="md.remoteUrl"
-         href=""
-         title="{{md.resourceTitle}}"
-         gn-metadata-open="md"
-         gn-formatter="formatter.defaultUrl">
-        <i class="fa {{icon}}"/>
-        {{md.resourceTitle}}
-      </a>
-      <a data-ng-show="md.remoteUrl"
-         data-ng-href="{{md.remoteUrl}}"
-         rel="noopener noreferrer"
-         target="_blank"
-         title="{{md.resourceTitle}}">
-        <i class="fa {{icon}}"/>
-        {{md.resourceTitle}}
-        <i data-ng-if="md.origin === 'remote'"
-           class="fa fa-external-link"
-           title="{{'remoteRecord' | translate}}"></i>
-      </a>
-    </li>
-  </ul>
+                    icon = config.getClassIcon(mainType);"
+  >
+    <h3 data-ng-if="groupSiblingsByType && items.length > 0">
+      {{type.replace('siblings', '') | translate}}
+    </h3>
 
-  <ul class="row list-group gn-info-list"
-      data-ng-repeat="(type, items) in relations track by $index"
-      data-ng-if="layout === 'card'
+    <ul class="gn-related-list">
+      <li data-ng-repeat="md in items | orderBy:getOrderBy">
+        <a
+          data-ng-hide="md.remoteUrl"
+          href=""
+          title="{{md.resourceTitle}}"
+          gn-metadata-open="md"
+          gn-formatter="formatter.defaultUrl"
+        >
+          <i class="fa {{icon}}" />
+          {{md.resourceTitle}}
+        </a>
+        <a
+          data-ng-show="md.remoteUrl"
+          data-ng-href="{{md.remoteUrl}}"
+          rel="noopener noreferrer"
+          target="_blank"
+          title="{{md.resourceTitle}}"
+        >
+          <i class="fa {{icon}}" />
+          {{md.resourceTitle}}
+          <i
+            data-ng-if="md.origin === 'remote'"
+            class="fa fa-external-link"
+            title="{{'remoteRecord' | translate}}"
+          ></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div
+    data-ng-repeat="(type, items) in relations track by $index"
+    data-ng-if="layout === 'card'
                   && type && type !== 'thumbnails' && type !== 'onlines'"
-      data-ng-init="mainType = config.getType(md, type);
+    data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
-                    icon = config.getClassIcon(mainType);" >
-    <gn-metadata-card data-ng-repeat="md in items | orderBy:getOrderBy"
-                      data-ng-if="!size || $index < sizeConfig[type]"
-                      md="md"
-                      formatter-url="formatter.defaultUrl">
-      <span class="label label-default gn-card-badge"
-            data-ng-class="{
+                    icon = config.getClassIcon(mainType);"
+  >
+    <h3 data-ng-if="groupSiblingsByType && items.length > 0">
+      {{type.replace('siblings', '') | translate}}
+    </h3>
+    <ul class="row list-group gn-info-list">
+      <gn-metadata-card
+        data-ng-repeat="md in items | orderBy:getOrderBy"
+        data-ng-if="!size || $index < sizeConfig[type]"
+        md="md"
+        formatter-url="formatter.defaultUrl"
+      >
+        <span
+          class="label label-default gn-card-badge"
+          data-ng-class="{
             'gn-card-series': type === 'parent',
             'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
             'gn-card-service': type === 'services' || type === 'application',
             'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
-            }">
-        <i class="fa {{icon}}"/>
-        <span data-ng-hide="md.properties && md.properties.associationType != ''">
-          {{(config.getLabel(mainType, type)) | translate}}</span>
-        <span data-ng-show="md.properties && md.properties.associationType != ''"
-              title="{{(config.getLabel(mainType, type)) | translate}}">
-          {{md.properties.associationType | translate}}
-          <span data-ng-if="md.properties && md.properties.initiativeType != ''">
-            ({{md.properties.initiativeType | translate}})
+            }"
+        >
+          <i class="fa {{icon}}" />
+          <span data-ng-hide="md.properties && md.properties.associationType != ''">
+            {{(config.getLabel(mainType, type)) | translate}}</span
+          >
+          <span
+            data-ng-show="md.properties && md.properties.associationType != ''"
+            title="{{(config.getLabel(mainType, type)) | translate}}"
+          >
+            {{md.properties.associationType | translate}}
+            <span data-ng-if="md.properties && md.properties.initiativeType != ''">
+              ({{md.properties.initiativeType | translate}})
+            </span>
           </span>
+          <i
+            data-ng-if="md.origin === 'remote'"
+            class="fa fa-external-link"
+            title="{{'remoteRecord' | translate}}"
+          ></i>
         </span>
-        <i data-ng-if="md.origin === 'remote'"
-           class="fa fa-external-link"
-           title="{{'remoteRecord' | translate}}"></i>
-      </span>
-    </gn-metadata-card>
-    <button class="btn btn-link"
-            data-ng-if="size && items.length > sizeConfig[type]"
-            data-ng-click="showAllItems(type)">
-      <span data-ng-if="items.length !== sizeConfig[type]">
-        {{items.length - sizeConfig[type]}} more</span>
-      <span data-ng-if="items.length === sizeConfig[type]"
-            data-translate="">showLess</span>
-    </button>
-  </ul>
+      </gn-metadata-card>
+      <button
+        class="btn btn-link"
+        data-ng-if="size && items.length > sizeConfig[type]"
+        data-ng-click="showAllItems(type)"
+      >
+        <span data-ng-if="items.length !== sizeConfig[type]">
+          {{items.length - sizeConfig[type]}} more</span
+        >
+        <span data-ng-if="items.length === sizeConfig[type]" data-translate=""
+          >showLess</span
+        >
+      </button>
+    </ul>
+  </div>
 </div>

@@ -21,8 +21,8 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wfsfilter_directive');
+(function () {
+  goog.provide("gn_wfsfilter_directive");
 
   // Custom feature and facet configuration example
   // var TMP_PROFILE =
@@ -95,9 +95,7 @@
   // }
   // };
 
-
-  var module = angular.module('gn_wfsfilter_directive', [
-  ]);
+  var module = angular.module("gn_wfsfilter_directive", []);
 
   /**
    * @ngdoc directive
@@ -105,61 +103,86 @@
    *
    * @description
    */
-  module.directive('gnWfsFilterFacets', [
-    '$http',
-    'wfsFilterService',
-    '$q',
-    '$rootScope',
-    '$translate',
-    'gnIndexRequestManager',
-    'gnIndexService',
-    'gnGlobalSettings',
-    'gnSearchSettings',
-    'gnFeaturesTableManager',
-    'gnFeaturesTableService',
-    'gnAlertService',
-    'gnWfsService',
-    'gnOwsCapabilities',
-    function($http, wfsFilterService, $q, $rootScope, $translate,
-             gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, gnFeaturesTableManager, gnFeaturesTableService,
-             gnAlertService, gnWfsService, gnOwsCapabilities) {
+  module.directive("gnWfsFilterFacets", [
+    "$http",
+    "wfsFilterService",
+    "$q",
+    "$timeout",
+    "$rootScope",
+    "$translate",
+    "gnIndexRequestManager",
+    "gnIndexService",
+    "gnGlobalSettings",
+    "gnSearchSettings",
+    "gnFeaturesTableManager",
+    "gnFeaturesTableService",
+    "gnAlertService",
+    "gnWfsService",
+    "gnOwsCapabilities",
+    function (
+      $http,
+      wfsFilterService,
+      $q,
+      $timeout,
+      $rootScope,
+      $translate,
+      gnIndexRequestManager,
+      gnIndexService,
+      gnGlobalSettings,
+      gnSearchSettings,
+      gnFeaturesTableManager,
+      gnFeaturesTableService,
+      gnAlertService,
+      gnWfsService,
+      gnOwsCapabilities
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: false,
-        templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-          'partials/wfsfilterfacet.html',
+        templateUrl:
+          "../../catalog/components/viewer/wfsfilter/" + "partials/wfsfilterfacet.html",
         scope: {
-          featureTypeName: '@?',
-          wfsUrl: '@',
-          displayCount: '@',
-          baseLayer: '=?baseLayer',
-          layer: '=?layer',
-          md: '=?',
-          managerOnly: '@?'
+          featureTypeName: "@?",
+          wfsUrl: "@",
+          displayCount: "@",
+          displayTableOnLoad: "@",
+          baseLayer: "=?baseLayer",
+          layer: "=?layer",
+          md: "=?",
+          managerOnly: "@?"
         },
-        controller: function() {},
-        link: function(scope, element, attrs, ctrl) {
+        controller: function () {},
+        link: function (scope, element, attrs, ctrl) {
           if (gnGlobalSettings.gnCfg.mods.map.disabledTools.filter) {
             return;
           }
-          var indexUrl, uuid, ftName, appProfile,
-            appProfilePromise, wfsIndexJobSavedPromise;
-          scope.managerOnly = scope.managerOnly === 'true';
+          var indexUrl,
+            uuid,
+            ftName,
+            appProfile,
+            appProfilePromise,
+            wfsIndexJobSavedPromise;
+          scope.managerOnly = scope.managerOnly === "true";
           scope.map = scope.$parent.map;
           var map = scope.map;
 
-          scope.strategy = attrs['strategy'] || 'investigator';
-          var mode = attrs['mode'] || 'replacement';
+          scope.strategy = attrs["strategy"] || "investigator";
+          var mode = attrs["mode"] || "replacement";
 
           // Only admin can index the features
           scope.user = $rootScope.user;
 
           // Display or not the results count
-          scope.showCount = angular.isDefined(attrs['showcount']);
+          scope.showCount = angular.isDefined(attrs["showcount"]);
 
           scope.ctrl = {
-            searchGeometry: undefined
+            searchGeometry: undefined,
+            query: {},
+            filter: {
+              params: {},
+              fullTextSearch: "",
+              geometry: ""
+            }
           };
 
           scope.output = {};
@@ -169,7 +192,7 @@
           scope.filtersChanged = false;
           scope.previousFilterState = {
             params: {},
-            geometry: ''
+            geometry: ""
           };
 
           // this will hold filters entered by the user for each facet
@@ -186,10 +209,10 @@
           var textInputsHistory = {};
 
           // use nested wms if we're in a group
-          if (scope.baseLayer && scope.baseLayer.get('originalWms')) {
-            scope.layer = scope.baseLayer.get('originalWms');
+          if (scope.baseLayer && scope.baseLayer.get("originalWms")) {
+            scope.layer = scope.baseLayer.get("originalWms");
           } else if (scope.baseLayer) {
-            scope.layer = scope.baseLayer
+            scope.layer = scope.baseLayer;
           }
 
           /**
@@ -200,41 +223,53 @@
            */
           function init() {
             if (scope.layer == null && scope.wfsUrl == null) {
-              console.warn("WFS data view can only work on a layer " +
-                "or with a wfsUrl attribute.")
+              console.warn(
+                "WFS data view can only work on a layer " + "or with a wfsUrl attribute."
+              );
 
               if (scope.featureTypeName == null) {
-                console.warn("WFS data view can only work with a wfsUrl attribute " +
-                  "if featureTypeName attribute is also set.")
+                console.warn(
+                  "WFS data view can only work with a wfsUrl attribute " +
+                    "if featureTypeName attribute is also set."
+                );
               }
               return;
             }
 
             if (scope.layer != null) {
               var source = scope.layer.getSource();
-              if (!source || !(source instanceof ol.source.ImageWMS ||
-                source instanceof ol.source.TileWMS)) {
-                console.warn("WFS data view can only work with a ImageWMS or TileWMS source");
+              if (
+                !source ||
+                !(
+                  source instanceof ol.source.ImageWMS ||
+                  source instanceof ol.source.TileWMS
+                )
+              ) {
+                console.warn(
+                  "WFS data view can only work with a ImageWMS or TileWMS source"
+                );
                 return;
               }
             }
 
             function getWfsUrl(mode, layer) {
-              if (mode === 'scope') {
+              if (mode === "scope") {
                 // Use the WFS URL provided
                 return scope.wfsUrl;
-              } else if (mode === 'replacement') {
+              } else if (mode === "replacement") {
                 // Simply try to replace wms in URL by wfs
                 // expecting that the layer as a corresponding feature type
                 // with same name.
-                return (layer != null ? layer.get('url') : scope.wfsUrl)
-                  .replace(/wms|WMS/i, 'wfs');
-              } else if (mode === 'group') {
+                return (layer != null ? layer.get("url") : scope.wfsUrl).replace(
+                  /wms|WMS/i,
+                  "wfs"
+                );
+              } else if (mode === "group") {
                 // Collect WFS URL in the same transfer option group
                 // as the WMS URL. Get the group
-                var group = layer.get('md').getLinkGroup(scope.layer);
+                var group = layer.get("md").getLinkGroup(scope.layer);
                 // Get the corresponding WFS and optional application profile
-                var wfs = layer.get('md').getLinksByType(group, '#OGC:WFS');
+                var wfs = layer.get("md").getLinksByType(group, "#OGC:WFS");
                 if (wfs.length > 0) {
                   return wfs[0].url;
                 }
@@ -243,6 +278,8 @@
 
             scope.originalUrl = scope.wfsUrl;
             scope.wfsUrl = getWfsUrl(mode, scope.layer);
+            scope.enableHeatmap = false;
+            scope.featuresInMapExtent = false;
 
             angular.extend(scope, {
               fields: [],
@@ -250,19 +287,20 @@
               isFeatureTypeAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
-              // FIXME: On page reload the md is undefined and the filter does not work
-              md: scope.layer ? scope.layer.get('md') : scope.md,
-              mdUrl: scope.layer ? scope.layer.get('url') : null,
+              md: scope.layer ? scope.layer.get("md") : scope.md,
+              mdUrl: scope.layer ? scope.layer.get("url") : null,
               url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
             });
 
             uuid = scope.md && scope.md.uuid;
 
-            scope.mapAddCmd = angular.toJson([{
-              url: scope.originalUrl,
-              name: scope.featureTypeName,
-              uuid: uuid
-            }]);
+            scope.mapAddCmd = angular.toJson([
+              {
+                url: scope.originalUrl,
+                name: scope.featureTypeName,
+                uuid: uuid
+              }
+            ]);
 
             ftName = scope.layer
               ? scope.layer.getSource().getParams().LAYERS
@@ -270,75 +308,96 @@
             scope.featureTypeName = ftName;
 
             appProfile = null;
-            appProfilePromise = wfsFilterService.getApplicationProfile(scope.md, uuid,
-              ftName,
-              gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
-              // A WFS URL is in the metadata or we're guessing WFS has
-              // same URL as WMS
-              scope.wfsUrl ? 'WFS' : 'WFS').then(
-              function (response) {
+            appProfilePromise = wfsFilterService
+              .getApplicationProfile(
+                scope.md,
+                uuid,
+                ftName,
+                gnGlobalSettings.getNonProxifiedUrl(
+                  scope.wfsUrl ? scope.url : scope.mdUrl
+                ),
+                // A WFS URL is in the metadata or we're guessing WFS has
+                // same URL as WMS
+                scope.wfsUrl ? "WFS" : "WFS"
+              )
+              .then(function (response) {
                 if (response.status == 200) {
-                  appProfile = angular.fromJson(response.data['0']);
+                  appProfile = angular.fromJson(response.data["0"]);
                   return appProfile;
                 }
-              }).catch(function () {
-            });
+              })
+              .catch(function () {});
             indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
-            scope.layer && scope.layer.set('indexObject', indexObject);
+            scope.layer && scope.layer.set("indexObject", indexObject);
 
             // check whether the WFS service is already in the database
-            scope.messageProducersApiUrl = '../api/msg_producers';
-            wfsIndexJobSavedPromise = $http.get(
-              scope.messageProducersApiUrl + '/find?url=' + encodeURIComponent(scope.url) + '&featureType=' + scope.featureTypeName
-            )
-              .then(function() {
-                return true
-              }, function() {
-                return false
-              });
+            scope.messageProducersApiUrl = "../api/msg_producers";
+            wfsIndexJobSavedPromise = $http
+              .get(
+                scope.messageProducersApiUrl +
+                  "/find?url=" +
+                  encodeURIComponent(scope.url) +
+                  "&featureType=" +
+                  scope.featureTypeName
+              )
+              .then(
+                function () {
+                  return true;
+                },
+                function () {
+                  return false;
+                }
+              );
 
             scope.checkWFSServerUrl();
             scope.initIndexRequest();
-          };
+          }
 
           /**
            * Check if the provided WFS server url return a response.
            * @return {HttpPromise} promise
            */
-          scope.checkWFSServerUrl = function() {
+          scope.checkWFSServerUrl = function () {
             var url = scope.url;
-            if (url.indexOf('GetCapabilities') === -1) {
-              url = url + (url.indexOf('?') === -1 ? '?' : '&') + 'request=GetCapabilities';
+            if (url.indexOf("GetCapabilities") === -1) {
+              url =
+                url + (url.indexOf("?") === -1 ? "?" : "&") + "request=GetCapabilities";
             }
-            return $http.head(url)
-              .then(function() {
+            return $http.head(url).then(
+              function () {
                 scope.isWfsAvailable = true;
-              }, function() {
+              },
+              function () {
                 scope.isWfsAvailable = false;
-              });
+              }
+            );
           };
 
-          scope.checkFeatureTypeInWfs = function() {
-            gnWfsService.getCapabilities(scope.url).then(function(capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(scope.featureTypeName, capObj, scope.uuid);
+          scope.checkFeatureTypeInWfs = function () {
+            gnWfsService.getCapabilities(scope.url).then(function (capObj) {
+              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(
+                scope.featureTypeName,
+                capObj,
+                scope.uuid
+              );
               scope.isFeatureTypeAvailable = angular.isDefined(capL);
             });
-          }
+          };
 
           /**
            * Init the index Request Object, either from meta index or from
            * application profile.
            */
           function loadFields() {
-
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
             // appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
-              indexObject.indexFields =
-                wfsFilterService.indexMergeApplicationProfile(
-                  indexObject.filteredDocTypeFieldsInfo, appProfile);
+              indexObject.indexFields = wfsFilterService.indexMergeApplicationProfile(
+                indexObject.filteredDocTypeFieldsInfo,
+                appProfile
+              );
               indexObject.initBaseParams();
               if (!appProfile.extendOnly) {
                 indexObject.setFielsdOrder();
@@ -347,7 +406,7 @@
 
             scope.resetFacets(true).then(scope.restoreInitialFilters);
           }
-          scope.initIndexRequest = function() {
+          scope.initIndexRequest = function () {
             var config = {
               wfsUrl: scope.url,
               featureTypeName: ftName
@@ -358,44 +417,63 @@
             var docFields = [];
             scope.countTotal = null;
 
-            indexObject.getDocTypeInfo(config).then(function() {
-              scope.isFeaturesIndexed = true;
-              scope.status = null;
-              docFields = indexObject.filteredDocTypeFieldsInfo;
-              scope.countTotal = indexObject.totalCount;
+            indexObject.getDocTypeInfo(config).then(
+              function () {
+                scope.isFeaturesIndexed = true;
+                scope.status = null;
+                docFields = indexObject.filteredDocTypeFieldsInfo;
+                scope.countTotal = indexObject.totalCount;
 
-              if (scope.md) {
-                gnFeaturesTableService.loadFeatureCatalogue(scope.md.uuid, scope.md)
-                  .then(function(catalogue) {
-                    if (Object.keys(catalogue).length) {
-                      for (var i = 0; i < docFields.length; i++) {
-                        var fieldSpec = catalogue[docFields[i].label];
-                        if (fieldSpec) {
-                          // TODO: Multilingual
-                          docFields[i].label = fieldSpec.name != ''
-                            ? fieldSpec.name : docFields[i].label;
-                          docFields[i].definition = fieldSpec.definition + '(' + fieldSpec.code + ')';
+                if (scope.displayTableOnLoad) {
+                  scope.showTable();
+                }
+                if (scope.md) {
+                  gnFeaturesTableService
+                    .loadFeatureCatalogue(scope.md.uuid, scope.md)
+                    .then(function (catalogue) {
+                      if (Object.keys(catalogue).length) {
+                        for (var i = 0; i < docFields.length; i++) {
+                          var fieldSpec = catalogue[docFields[i].label];
+                          if (fieldSpec) {
+                            // TODO: Multilingual
+                            docFields[i].label =
+                              fieldSpec.name != "" ? fieldSpec.name : docFields[i].label;
+                            docFields[i].definition =
+                              fieldSpec.definition + "(" + fieldSpec.code + ")";
+                          }
                         }
                       }
-                    }
-                  });
+                    });
+                }
+                appProfilePromise.then(loadFields);
+              },
+              function (error) {
+                scope.status = error.data ? "indexAccessError" : error.statusText;
+                scope.statusTitle = error.statusText;
+                $timeout(function () {
+                  scope.status = null;
+                  scope.statusTitle = null;
+                }, 2000);
+                scope.checkFeatureTypeInWfs();
               }
-              appProfilePromise.then(loadFields);
-            }, function(error) {
-              scope.status = error.data ? 'indexAccessError' : error.statusText;
-              scope.statusTitle = error.statusText;
-              scope.checkFeatureTypeInWfs();
-            });
+            );
           };
-          scope.dropFeatures = function() {
-            return $http.delete(
-              '../api/workers/data/wfs/actions?serviceUrl=' +
-              encodeURIComponent(scope.url) +
-              '&typeName=' + encodeURIComponent(ftName)).then(function() {
-              scope.initIndexRequest();
-            }, function() {
-              console.warn('Failed to remove features for type ' + id);
-            });
+          scope.dropFeatures = function () {
+            return $http
+              .delete(
+                "../api/workers/data/wfs/actions?serviceUrl=" +
+                  encodeURIComponent(scope.url) +
+                  "&typeName=" +
+                  encodeURIComponent(ftName)
+              )
+              .then(
+                function () {
+                  scope.initIndexRequest();
+                },
+                function () {
+                  console.warn("Failed to remove features for type " + id);
+                }
+              );
           };
           /**
            * Update the state of the facet search.
@@ -406,15 +484,14 @@
            * @param {string} facetKey facet key for this field
            * @param {string} type facet type
            */
-          scope.onCheckboxClick = function(field, facet) {
-
+          scope.onCheckboxClick = function (field, facet) {
             var fieldName = field.name;
             var facetKey = facet.value;
             var output = scope.output;
             scope.lastClickedField = null;
 
-            if(textInputsHistory[fieldName] && !scope.facetFilters[fieldName]) {
-              textInputsHistory[fieldName].lastValue = '';
+            if (textInputsHistory[fieldName] && !scope.facetFilters[fieldName]) {
+              textInputsHistory[fieldName].lastValue = "";
             }
 
             if (output[fieldName]) {
@@ -425,13 +502,11 @@
                 } else {
                   scope.lastClickedField = fieldName;
                 }
-              }
-              else {
+              } else {
                 scope.lastClickedField = fieldName;
                 output[fieldName].values[facetKey] = true;
               }
-            }
-            else {
+            } else {
               scope.lastClickedField = fieldName;
               output[fieldName] = {
                 type: field.type,
@@ -444,12 +519,11 @@
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
 
-          scope.isFacetSelected = function(fName, value) {
+          scope.isFacetSelected = function (fName, value) {
             try {
               var iS = scope.output[fName].values[value];
               return iS;
-            }
-            catch (e) {
+            } catch (e) {
               return false;
             }
           };
@@ -457,11 +531,11 @@
           // this returns a callback with the fieldname & type available
           // the callback is called when the date range is updated, with
           // 'from' and 'to' properties as arguments
-          scope.onUpdateDateRange = function(field, dateFrom, dateTo) {
+          scope.onUpdateDateRange = function (field, dateFrom, dateTo) {
             scope.lastClickedField = null;
 
             scope.output[field.name] = {
-              type: field.type || 'date',
+              type: field.type || "date",
               values: {
                 from: dateFrom,
                 to: dateTo
@@ -471,13 +545,13 @@
             scope.filterFacets();
           };
 
-          scope.onFilterInputChange = function(field) {
+          scope.onFilterInputChange = function (field) {
             var name = field.name;
             var history = textInputsHistory[name];
-            if(!history) {
+            if (!history) {
               history = textInputsHistory[name] = {
                 facet: getFieldByName(name),
-                lastValue: '',
+                lastValue: "",
                 newValue: scope.facetFilters[name]
               };
             } else {
@@ -490,6 +564,41 @@
             scope.filterFacets(field.name);
           };
 
+          scope.featuresInMapExtent = false;
+
+          onMoveEnd = function (evt) {
+            var extent = scope.map.getView().calculateExtent(map.getSize());
+            var wgsExtent = ol.extent.applyTransform(
+              extent,
+              ol.proj.getTransform(scope.map.getView().getProjection(), "EPSG:4326")
+            );
+            scope.ctrl.searchGeometry = wgsExtent.join(",");
+            scope.filterFacets();
+          };
+
+          scope.setFeaturesInMapExtent = function () {
+            scope.featuresInMapExtent = !scope.featuresInMapExtent;
+            if (scope.featuresInMapExtent) {
+              scope.map.on("moveend", onMoveEnd);
+            } else {
+              scope.map.un("moveend", onMoveEnd);
+            }
+          };
+
+          function setSearchState(facetsState) {
+            if (scope.ctrl.filter.fullTextSearch != "") {
+              var param = {};
+              param[scope.ctrl.filter.fullTextSearch] = true;
+              facetsState.any = {
+                values: param
+              };
+            } else {
+              delete facetsState.any;
+            }
+            scope.ctrl.filter.params = facetsState;
+            scope.ctrl.filter.geometry = scope.filterGeometry;
+            scope.ctrl.query = indexObject.buildESParams(scope.ctrl.filter, {});
+          }
           /**
            * Send a new filtered request to index to update the facet ui
            * structure.
@@ -498,12 +607,12 @@
            * @param filterInputUpdate if the search comes from text input,
            *   then the value of the field of the text input
            */
-          scope.filterFacets = function(filterInputUpdate) {
-            scope.$broadcast('FiltersChanged');
+          scope.filterFacets = function (filterInputUpdate) {
+            scope.$broadcast("FiltersChanged");
 
             // Update the facet UI
             var expandedFields = [];
-            angular.forEach(scope.fields, function(f) {
+            angular.forEach(scope.fields, function (f) {
               if (f.expanded) {
                 expandedFields.push(f.name);
               }
@@ -513,9 +622,11 @@
 
             // use value filters for facets
             var aggs = {};
-            Object.keys(scope.facetFilters).forEach(function(facetName) {
+            Object.keys(scope.facetFilters).forEach(function (facetName) {
               var filter = scope.facetFilters[facetName];
-              if (!filter) { return; }
+              if (!filter) {
+                return;
+              }
 
               // Regex filter can only be apply to string type.
               if (facetName.match(/^ft_.*_s$/)) {
@@ -525,12 +636,14 @@
                 filter = filter.replace(/./g, function (match) {
                   var upperMatch = scope.accentify(match).toUpperCase();
                   var lowerMatch = scope.accentify(match).toLowerCase();
-                  return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': "\\" + match; // escape special char
+                  return lettersRegexOnly.test(match)
+                    ? "[" + lowerMatch + upperMatch + "]"
+                    : "\\" + match; // escape special char
                 });
 
                 aggs[facetName] = {
                   terms: {
-                    include: '.*' + filter + '.*'
+                    include: ".*" + filter + ".*"
                   }
                 };
               } else if (facetName.match(/^ft_.*_ti$/)) {
@@ -543,7 +656,7 @@
 
               // apply a text search on all possible values of the facets
               // for this, remove current facet checkbox filters
-              if(facetName === scope.lastClickedField && filterInputUpdate) {
+              if (facetName === scope.lastClickedField && filterInputUpdate) {
                 facetsState = angular.copy(facetsState);
                 delete facetsState[facetName];
               }
@@ -551,23 +664,23 @@
 
             addBboxAggregation(aggs);
 
-            //indexObject is only available if Elastic is configured
             if (indexObject) {
-              indexObject.searchWithFacets({
-                params: facetsState,
-                geometry: scope.filterGeometry
-              }, aggs).
-              then(function(resp) {
+              setSearchState(facetsState);
+
+              indexObject.searchWithFacets(scope.ctrl.filter, aggs).then(function (resp) {
                 searchResponseHandler(resp, filterInputUpdate);
-                angular.forEach(scope.fields, function(f) {
+                angular.forEach(scope.fields, function (f) {
                   if (expandedFields.indexOf(f.name) >= 0) {
                     f.expanded = true;
                   }
                 });
+
+                if (scope.displayTableOnLoad) {
+                  scope.showTable();
+                }
               });
             }
           };
-
 
           // Compute bbox of returned object
           // At some point we may be able to use geo_bounds aggregation
@@ -581,33 +694,47 @@
           //   }
           // }
           function addBboxAggregation(aggs) {
-            aggs['bbox_xmin'] = {'min': {'field': 'bbox_xmin'}};
-            aggs['bbox_ymin'] = {'min': {'field': 'bbox_ymin'}};
-            aggs['bbox_xmax'] = {'max': {'field': 'bbox_xmax'}};
-            aggs['bbox_ymax'] = {'max': {'field': 'bbox_ymax'}};
-          };
+            aggs["bbox_xmin"] = { min: { field: "bbox_xmin" } };
+            aggs["bbox_ymin"] = { min: { field: "bbox_ymin" } };
+            aggs["bbox_xmax"] = { max: { field: "bbox_xmax" } };
+            aggs["bbox_ymax"] = { max: { field: "bbox_ymax" } };
+          }
 
           function setFeatureExtent(agg) {
             if (scope.layer) {
-              scope.autoZoomToExtent = true;
-              if (scope.autoZoomToExtent
-                && agg.bbox_xmin.value && agg.bbox_ymin.value
-                && agg.bbox_xmax.value && agg.bbox_ymax.value) {
-                var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
-                  && agg.bbox_ymin.value === agg.bbox_ymax.value,
-                  radius = .05,
-                  extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
-                    agg.bbox_xmax.value, agg.bbox_ymax.value];
+              scope.autoZoomToExtent = scope.featuresInMapExtent === false;
+              if (
+                scope.autoZoomToExtent &&
+                agg.bbox_xmin.value &&
+                agg.bbox_ymin.value &&
+                agg.bbox_xmax.value &&
+                agg.bbox_ymax.value
+              ) {
+                var isPoint =
+                    agg.bbox_xmin.value === agg.bbox_xmax.value &&
+                    agg.bbox_ymin.value === agg.bbox_ymax.value,
+                  radius = 0.05,
+                  extent = [
+                    agg.bbox_xmin.value,
+                    agg.bbox_ymin.value,
+                    agg.bbox_xmax.value,
+                    agg.bbox_ymax.value
+                  ];
 
                 if (isPoint) {
-                  var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
+                  var point = new ol.geom.Point([
+                    agg.bbox_xmin.value,
+                    agg.bbox_ymin.value
+                  ]);
                   extent = new ol.extent.buffer(point.getExtent(), radius);
                 }
-                scope.featureExtent = ol.extent.applyTransform(extent,
-                  ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
+                scope.featureExtent = ol.extent.applyTransform(
+                  extent,
+                  ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection())
+                );
               }
             }
-          };
+          }
 
           scope.zoomToResults = function () {
             if (scope.layer) {
@@ -615,32 +742,34 @@
             }
           };
 
-          // scope.$watch('featureExtent', function(n, o) {
-          //   if (n && n !== o) {
-          //     scope.zoomToResults();
-          //   }
-          // });
-
-
-          scope.accentify = function(str) {
-            var searchStr = str.toLocaleLowerCase()
-            var accents = {
-              a: 'àáâãäåæa',
-              c: 'çc',
-              e: 'èéêëæe',
-              i: 'ìíîïi',
-              n: 'ñn',
-              o: 'òóôõöøo',
-              s: 'ßs',
-              u: 'ùúûüu',
-              y: 'ÿy'
+          scope.$watch("featureExtent", function (n, o) {
+            if (n && n !== o) {
+              scope.zoomToResults();
             }
-            return accents.hasOwnProperty(searchStr) ? accents[searchStr] : str
-          }
+          });
 
-          scope.getMore = function(field) {
-            indexObject.getFacetMoreResults(field).then(function(response) {
-              field.values = mergeResponseItemsWithCheckedItems(response.facets[0].values, field.values);
+          scope.accentify = function (str) {
+            var searchStr = str.toLocaleLowerCase();
+            var accents = {
+              a: "àáâãäåæa",
+              c: "çc",
+              e: "èéêëæe",
+              i: "ìíîïi",
+              n: "ñn",
+              o: "òóôõöøo",
+              s: "ßs",
+              u: "ùúûüu",
+              y: "ÿy"
+            };
+            return accents.hasOwnProperty(searchStr) ? accents[searchStr] : str;
+          };
+
+          scope.getMore = function (field) {
+            indexObject.getFacetMoreResults(field).then(function (response) {
+              field.values = mergeResponseItemsWithCheckedItems(
+                response.facets[0].values,
+                field.values
+              );
               field.more = response.facets[0].more;
             });
           };
@@ -651,29 +780,30 @@
            * to the output structure to generate the ui.
            * @param init Tells if it's call for init or reset
            */
-          scope.resetFacets = function(init) {
+          scope.resetFacets = function (init) {
             scope.output = {};
             scope.lastClickedField = null;
+            scope.ctrl.filter.fullTextSearch = "";
 
-            if(!init) {
+            if (!init) {
               scope.resetSLDFilters();
             }
 
             // reset expanded status
-            angular.forEach(scope.fields, function(f) {
+            angular.forEach(scope.fields, function (f) {
               f.expanded = false;
             });
             if (scope.indexObject && scope.indexObject.geomField) {
               scope.indexObject.geomField.expanded = false;
             }
 
-            var boxElt = element.find('.gn-bbox-input');
+            var boxElt = element.find(".gn-bbox-input");
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
 
-            scope.layer && scope.layer.set('esConfig', null);
-            scope.$broadcast('FiltersChanged');
+            scope.layer && scope.layer.set("esConfig", null);
+            scope.$broadcast("FiltersChanged");
 
             // reset text search in facets
             scope.facetFilters = {};
@@ -682,9 +812,14 @@
             addBboxAggregation(aggs);
             textInputsHistory = {};
 
+            setSearchState({});
+
             // load all facet and fill ui structure for the list
-            return indexObject.searchWithFacets({}, aggs).
-            then(function(resp) {
+            return indexObject.searchWithFacets({}, aggs).then(function (resp) {
+              if (scope.displayTableOnLoad) {
+                scope.showTable();
+              }
+
               searchResponseHandler(resp, false);
             });
           };
@@ -694,22 +829,27 @@
             scope.count = resp.count;
 
             // if a facet was clicked, keep the previous facet object
-            var lastClickedFacet = scope.fields.filter(function(e) {
+            var lastClickedFacet = scope.fields.filter(function (e) {
               return e.name === scope.lastClickedField;
             })[0];
-            scope.fields = resp.facets.map(function(e) {
+            scope.fields = resp.facets.map(function (e) {
               if (lastClickedFacet && lastClickedFacet.name === e.name) {
-                var history = filterInputUpdate && textInputsHistory[lastClickedFacet.name];
+                var history =
+                  filterInputUpdate && textInputsHistory[lastClickedFacet.name];
 
                 // if we clear text-filter, we restore last history saved facets
                 // we merge this history of items with the actual checked items
-                if(history && history.resetInput) {
-                  history.facet.values = mergeResponseItemsWithCheckedItems(history.facet.values,
-                    lastClickedFacet.values);
+                if (history && history.resetInput) {
+                  history.facet.values = mergeResponseItemsWithCheckedItems(
+                    history.facet.values,
+                    lastClickedFacet.values
+                  );
                   return history.facet;
-                } else if(history) { // text input is init or changed
+                } else if (history) {
+                  // text input is init or changed
                   return e;
-                } else  { // checkbox click update
+                } else {
+                  // checkbox click update
                   return lastClickedFacet;
                 }
               } else {
@@ -725,9 +865,8 @@
             });
 
             scope.sortAggregation();
-            resp.indexData.aggregations &&
-            setFeatureExtent(resp.indexData.aggregations);
-          };
+            resp.indexData.aggregations && setFeatureExtent(resp.indexData.aggregations);
+          }
 
           /**
            * Each aggregations are sorted based as defined in the application profil config
@@ -735,7 +874,7 @@
            *
            * The values of each aggregations are sorted, checked first.
            */
-          scope.sortAggregation = function() {
+          scope.sortAggregation = function () {
             // Disable sorting of aggregations by alpha order and based on expansion
             // Order comes from application profile
             // scope.fields.sort(function (a, b) {
@@ -754,21 +893,21 @@
                 var aChecked = scope.isFacetSelected(facette.name, a.value);
                 var bChecked = scope.isFacetSelected(facette.name, b.value);
                 if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
-                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                  if (gnSearchSettings.facetOrdering === "alphabetical") {
                     return a.value.localeCompare(b.value);
                   }
                   return b.count - a.count;
                 }
-                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
-              })
-            })
-          }
+                return aChecked === bChecked ? 0 : aChecked ? -1 : 1;
+              });
+            });
+          };
 
           /**
            * alter form values & resend a search in case there are initial
            * filters loaded from the context. This must only happen once
            */
-          scope.restoreInitialFilters = function() {
+          scope.restoreInitialFilters = function () {
             // no initial filter: leave
             if (!indexObject.initialFilters) {
               return;
@@ -780,9 +919,12 @@
             scope.output = initialFilters.qParams || {};
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
-                initialFilters.geometry[0][0] + ',' +
-                initialFilters.geometry[1][1] + ',' +
-                initialFilters.geometry[1][0] + ',' +
+                initialFilters.geometry[0][0] +
+                "," +
+                initialFilters.geometry[1][1] +
+                "," +
+                initialFilters.geometry[1][0] +
+                "," +
                 initialFilters.geometry[0][1];
             }
 
@@ -790,37 +932,45 @@
             addBboxAggregation(aggs);
 
             // resend a search with initial filters to alter the facets
-            return indexObject.searchWithFacets({
-              params: initialFilters.qParams,
-              geometry: initialFilters.geometry
-            }, aggs).then(function(resp) {
-              // display selected values that do not appear in first result page
-              for (var prop in initialFilters.qParams) {
-                var field = getFieldByName(prop);
-                var respFacet = resp.facets.filter(function(res) {
-                  return res.name === prop;
-                })[0];
-                if( respFacet && respFacet.type === 'terms') {
-                  field.values = mergeResponseItemsWithCheckedItems(respFacet.values, field.values);
+            return indexObject
+              .searchWithFacets(
+                {
+                  params: initialFilters.qParams,
+                  geometry: initialFilters.geometry
+                },
+                aggs
+              )
+              .then(function (resp) {
+                // display selected values that do not appear in first result page
+                for (var prop in initialFilters.qParams) {
+                  var field = getFieldByName(prop);
+                  var respFacet = resp.facets.filter(function (res) {
+                    return res.name === prop;
+                  })[0];
+                  if (respFacet && respFacet.type === "terms") {
+                    field.values = mergeResponseItemsWithCheckedItems(
+                      respFacet.values,
+                      field.values
+                    );
+                  }
                 }
-              }
-              indexObject.pushState();
-              scope.fields = resp.facets;
-              scope.sortAggregation();
-              scope.count = resp.count;
+                indexObject.pushState();
+                scope.fields = resp.facets;
+                scope.sortAggregation();
+                scope.count = resp.count;
 
-              // look for date graph fields; call onUpdateDate to refresh them
-              angular.forEach(scope.fields, function(field) {
-                if (field.display == 'graph') {
-                  // scope.onUpdateDate(field);
-                }
+                // look for date graph fields; call onUpdateDate to refresh them
+                angular.forEach(scope.fields, function (field) {
+                  if (field.display == "graph") {
+                    // scope.onUpdateDate(field);
+                  }
+                });
+
+                scope.$broadcast("FiltersChanged");
               });
-
-              scope.$broadcast('FiltersChanged');
-            });
           };
 
-          scope.resetSLDFilters = function() {
+          scope.resetSLDFilters = function () {
             if (scope.layer) {
               scope.layer.getSource().updateParams({
                 SLD: null
@@ -833,7 +983,7 @@
            * On filter click, build from the UI the SLD rules config object
            * that will be send to generateSLD service.
            */
-          scope.filterWMS = function() {
+          scope.filterWMS = function () {
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
@@ -841,42 +991,45 @@
             scope.zoomToResults();
 
             var defer = $q.defer();
-            var sldConfig = wfsFilterService.createSLDConfig(scope.output,
-              appProfile);
+            var sldConfig = wfsFilterService.createSLDConfig(scope.output, appProfile);
             var layer = scope.layer;
 
             indexObject.pushState();
-            layer.set('esConfig', indexObject);
+            layer.set("esConfig", indexObject);
             if (!extentFilter) {
               layer.setExtent();
-            }
-            else {
+            } else {
               layer.setExtent(
-                ol.proj.transformExtent(extentFilter, 'EPSG:4326',
-                  scope.map.getView().getProjection()));
-
+                ol.proj.transformExtent(
+                  extentFilter,
+                  "EPSG:4326",
+                  scope.map.getView().getProjection()
+                )
+              );
             }
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, layer.get('directUrl') || layer.get('url'),
-                ftName).success(function(sldURL) {
-                // Do not activate it
-                // Usually return 414 Request-URI Too Large
-                var useSldBody = false;
-                if (useSldBody) {
-                  $http.get(sldURL).then(function(response) {
-                    layer.getSource().updateParams({
-                      SLD_BODY: response.data
+              wfsFilterService
+                .getSldUrl(sldConfig, layer.get("directUrl") || layer.get("url"), ftName)
+                .success(function (sldURL) {
+                  // Do not activate it
+                  // Usually return 414 Request-URI Too Large
+                  var useSldBody = false;
+                  if (useSldBody) {
+                    $http.get(sldURL).then(function (response) {
+                      layer.getSource().updateParams({
+                        SLD_BODY: response.data
+                      });
                     });
-                  });
-                } else {
-                  layer.getSource().updateParams({
-                    SLD: sldURL
-                  });
-                }
-              }).finally(function() {
-                scope.filtersChanged = false;   // reset 'apply filters' button
-                defer.resolve();
-              });
+                  } else {
+                    layer.getSource().updateParams({
+                      SLD: sldURL
+                    });
+                  }
+                })
+                .finally(function () {
+                  scope.filtersChanged = false; // reset 'apply filters' button
+                  defer.resolve();
+                });
             } else {
               layer.getSource().updateParams({
                 SLD: null
@@ -891,8 +1044,8 @@
            * Trigger the indexation of the feature type.
            * Only available for administrators.
            */
-          scope.indexWFSFeatures = function(version) {
-            appProfilePromise.then(function() {
+          scope.indexWFSFeatures = function (version) {
+            appProfilePromise.then(function () {
               wfsFilterService.indexWFSFeatures(
                 scope.url,
                 ftName,
@@ -900,7 +1053,8 @@
                 appProfile ? appProfile.treeFields : null,
                 uuid,
                 version,
-                scope.strategy);
+                scope.strategy
+              );
 
               scope.saveWfsIndexingJob();
             });
@@ -909,9 +1063,8 @@
           // Init the directive
           if (scope.layer || (scope.wfsUrl && scope.featureTypeName)) {
             init();
-          }
-          else {
-            scope.$watch('layer', function(n, o) {
+          } else {
+            scope.$watch("layer", function (n, o) {
               if (n !== o) {
                 init();
               }
@@ -919,77 +1072,100 @@
           }
 
           //Manage geographic search
-          scope.$watch(function() {
-            return (scope.ctrl.searchGeometry || '').replace(',,,', '');
-          }, function(geom, old) {
-            extentFilter = undefined;
-            scope.filterGeometry = undefined;
-            scope.lastClickedField = null;
+          scope.$watch(
+            function () {
+              return (scope.ctrl.searchGeometry || "").replace(",,,", "");
+            },
+            function (geom, old) {
+              extentFilter = undefined;
+              scope.filterGeometry = undefined;
+              scope.lastClickedField = null;
 
-            if (geom !== '') {
-              extentFilter = geom.split(',')
-                .map(parseFloat)
-                .map(function (val, i) {
-                  // clamping on X and Y otherwise ES throws an error
-                  if (i === 0) return Math.max(-180, val)
-                  if (i === 1) return Math.max(-90, val)
-                  if (i === 2) return Math.min(180, val)
-                  if (i === 3) return Math.min(90, val)
-                });
+              if (geom !== "") {
+                extentFilter = geom
+                  .split(",")
+                  .map(parseFloat)
+                  .map(function (val, i) {
+                    // clamping on X and Y otherwise ES throws an error
+                    if (i === 0) return Math.max(-180, val);
+                    if (i === 1) return Math.max(-90, val);
+                    if (i === 2) return Math.min(180, val);
+                    if (i === 3) return Math.min(90, val);
+                  });
 
-              scope.filterGeometry = [
-                [extentFilter[0], extentFilter[3]],
-                [extentFilter[2], extentFilter[1]]
-              ];
+                scope.filterGeometry = [
+                  [extentFilter[0], extentFilter[3]],
+                  [extentFilter[2], extentFilter[1]]
+                ];
 
-              // update geom filter after clamping
-              scope.ctrl.searchGeometry =
-                scope.filterGeometry[0][0] + ',' +
-                scope.filterGeometry[1][1] + ',' +
-                scope.filterGeometry[1][0] + ',' +
-                scope.filterGeometry[0][1];
+                // update geom filter after clamping
+                scope.ctrl.searchGeometry =
+                  scope.filterGeometry[0][0] +
+                  "," +
+                  scope.filterGeometry[1][1] +
+                  "," +
+                  scope.filterGeometry[1][0] +
+                  "," +
+                  scope.filterGeometry[0][1];
 
-              scope.filterFacets();
+                scope.filterFacets();
+              }
+              // when reset from gnBbox directive
+              else {
+                scope.filterFacets();
+              }
+              // reset from wfsFilter directive: only signal change of filter
+              scope.$broadcast("FiltersChanged");
             }
-            // when reset from gnBbox directive
-            else {
-              scope.filterFacets();
-            }
-            // reset from wfsFilter directive: only signal change of filter
-            scope.$broadcast('FiltersChanged');
-          });
+          );
 
-          scope.showTable = function() {
-            gnFeaturesTableManager.clear();
-            gnFeaturesTableManager.addTable({
-              name: scope.layer.get('label') || scope.layer.get('name'),
-              type: 'index'
-            }, {
-              map: scope.map,
-              indexObject: indexObject,
-              layer: scope.layer
-            });
+          scope.enableHeatmap = false;
+          scope.showHeatmap = function () {
+            scope.enableHeatmap = !scope.enableHeatmap;
           };
 
-          element.on('$destroy', function() {
+          scope.enableTable = false;
+          scope.showTable = function () {
+            scope.enableTable = !scope.enableTable;
+            gnFeaturesTableManager.clear();
+            gnFeaturesTableManager.addTable(
+              {
+                name: scope.layer.get("label") || scope.layer.get("name"),
+                type: "index"
+              },
+              {
+                map: scope.map,
+                indexObject: indexObject,
+                layer: scope.layer
+              }
+            );
+          };
+
+          element.on("$destroy", function () {
             scope.$destroy();
+            gnFeaturesTableManager.clear();
           });
 
           // triggered when the filter state is changed
           // (compares with previous state)
-          scope.$on('FiltersChanged', function(event, args) {
+          scope.$on("FiltersChanged", function (event, args) {
             // this handles the cases where bbox string value is undefined
             // or equal to ',,,' or '', which all amount to the same thing
-            function normalize(s) { return (s || '').replace(',,,', ''); }
+            function normalize(s) {
+              return (s || "").replace(",,,", "");
+            }
 
-            var geomChanged = normalize(scope.ctrl.searchGeometry) !==
+            var geomChanged =
+              normalize(scope.ctrl.searchGeometry) !==
               normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
             if (!geomChanged) {
               paramsChanged = !angular.equals(
-                scope.previousFilterState.params, scope.output);
+                scope.previousFilterState.params,
+                scope.output
+              );
             }
 
             scope.filtersChanged = paramsChanged || geomChanged;
@@ -997,9 +1173,9 @@
 
           // returns true if there is an active filter for this field
           // field object is optional
-          scope.isFilterActive = function(facetName, field) {
+          scope.isFilterActive = function (facetName, field) {
             // special case for geometry
-            if (facetName == 'geometry') {
+            if (facetName == "geometry") {
               return !!scope.filterGeometry;
             }
 
@@ -1009,8 +1185,10 @@
             }
 
             // special case for dates
-            if (scope.output[facetName].type == 'date' ||
-              scope.output[facetName].type == 'rangeDate') {
+            if (
+              scope.output[facetName].type == "date" ||
+              scope.output[facetName].type == "rangeDate"
+            ) {
               var values = scope.output[facetName].values;
 
               // no dates defined: leave
@@ -1021,12 +1199,12 @@
               // check if there is a valid "higher than" or "lower than" filter
               var lowerBound = field.dates && field.dates[0];
               var upperBound = field.dates && field.dates[field.dates.length - 1];
-              var lowerActive = values.from &&
-                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
-                lowerBound;
-              var upperActive = values.to &&
-                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
-                upperBound;
+              var lowerActive =
+                values.from &&
+                moment(values.from, "DD-MM-YYYY").startOf("day").valueOf() > lowerBound;
+              var upperActive =
+                values.to &&
+                moment(values.to, "DD-MM-YYYY").endOf("day").valueOf() < upperBound;
               return lowerActive || upperActive;
             }
 
@@ -1035,26 +1213,26 @@
           };
 
           function getFieldByName(name) {
-            return scope.fields.filter(function(field) {
+            return scope.fields.filter(function (field) {
               return field.name === name;
             })[0];
           }
 
           function mergeResponseItemsWithCheckedItems(newItems, oldItems) {
-            var checkedItems = oldItems.filter(function(f) {
+            var checkedItems = oldItems.filter(function (f) {
               return f.count;
             });
-            checkedItems.forEach(function(item) {
-              newItems = newItems.filter(function(value) {
+            checkedItems.forEach(function (item) {
+              newItems = newItems.filter(function (value) {
                 return value.value !== item.value;
-              })
+              });
             });
             newItems = checkedItems.concat(newItems);
             return newItems;
           }
 
-          scope.saveWfsIndexingJob = function() {
-            wfsIndexJobSavedPromise.then(function(saved) {
+          scope.saveWfsIndexingJob = function () {
+            wfsIndexJobSavedPromise.then(function (saved) {
               if (saved) return;
               var payload = {
                 wfsHarvesterParam: {
@@ -1067,15 +1245,16 @@
               };
               $http.post(scope.messageProducersApiUrl, payload).then(function () {
                 gnAlertService.addAlert({
-                  msg: $translate.instant('wfsIndexingJobSaved'),
-                  type: 'success'
+                  msg: $translate.instant("wfsIndexingJobSaved"),
+                  type: "success"
                 });
               });
-            })
-          }
+            });
+          };
         }
       };
-    }]);
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -1087,30 +1266,28 @@
    *
    * This directive is used to be the controller of all the tree.
    */
-  module.directive('gnWfsFilterFacetsTree', [
-    function() {
+  module.directive("gnWfsFilterFacetsTree", [
+    function () {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          field: '<gnWfsFilterFacetsTree',
-          isSelectedFn: '&gnWfsFilterFacetsTreeIsselected'
+          field: "<gnWfsFilterFacetsTree",
+          isSelectedFn: "&gnWfsFilterFacetsTreeIsselected"
         },
         require: {
-          wfsFilterCrl: '^^gnWfsFilterFacets'
+          wfsFilterCrl: "^^gnWfsFilterFacets"
         },
-        template: '<div gn-wfs-filter-facets-tree-item=' +
-          '"treeCtrl.field.tree"></div>',
+        template: "<div gn-wfs-filter-facets-tree-item=" + '"treeCtrl.field.tree"></div>',
         bindToController: true,
-        controllerAs: 'treeCtrl',
-        controller: function() {
-          this.$onInit = function() {
-            this.onCheckboxTreeClick = function(value) {
-
+        controllerAs: "treeCtrl",
+        controller: function () {
+          this.$onInit = function () {
+            this.onCheckboxTreeClick = function (value) {
               this.wfsFilterCrl.onCheckboxClick(this.field, {
                 value: value
               });
             };
-            this.isSelected = function(value) {
+            this.isSelected = function (value) {
               return this.isSelectedFn({
                 name: this.field.name,
                 value: value
@@ -1119,7 +1296,8 @@
           };
         }
       };
-    }]);
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -1128,98 +1306,106 @@
    * @description
    * The tree node structure of the wfs filter facet tree.
    */
-  module.directive('gnWfsFilterFacetsTreeItem', [
-    function() {
+  module.directive("gnWfsFilterFacetsTreeItem", [
+    function () {
       return {
-        restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-          'partials/wfsfilterfacetTreeItem.html',
+        restrict: "A",
+        templateUrl:
+          "../../catalog/components/viewer/wfsfilter/" +
+          "partials/wfsfilterfacetTreeItem.html",
         scope: {
-          node: '<gnWfsFilterFacetsTreeItem'
+          node: "<gnWfsFilterFacetsTreeItem"
         },
         require: {
-          treeCtrl: '^^gnWfsFilterFacetsTree',
-          parentCtrl: '?^^gnWfsFilterFacetsTreeItem'
+          treeCtrl: "^^gnWfsFilterFacetsTree",
+          parentCtrl: "?^^gnWfsFilterFacetsTreeItem"
         },
         bindToController: true,
-        controllerAs: 'ctrl',
-        controller: ['$attrs', '$element', function($attrs, $element) {
-          this.element = $element;
-          this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
-            undefined;
+        controllerAs: "ctrl",
+        controller: [
+          "$attrs",
+          "$element",
+          function ($attrs, $element) {
+            this.element = $element;
+            this.isRoot = $attrs["gnWfsFilterFacetsTreeItemNotroot"] === undefined;
 
-          this.$onInit = function() {
-            this.onCheckboxTreeClick = function() {
-              // when the parent is clicked and all children are selected, deselect the children
-              // and if the parent is unselected unselect all children
-              if (this.node.nodes) {
-                var allChildrenSelected = true;
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
-                    // at least one child is not selected
-                    allChildrenSelected = false;
-                    break
+            this.$onInit = function () {
+              this.onCheckboxTreeClick = function () {
+                // when the parent is clicked and all children are selected, deselect the children
+                // and if the parent is unselected unselect all children
+                if (this.node.nodes) {
+                  var allChildrenSelected = true;
+                  for (var i = 0; i < this.node.nodes.length; i++) {
+                    if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                      // at least one child is not selected
+                      allChildrenSelected = false;
+                      break;
+                    }
                   }
-                }
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key) || allChildrenSelected) {
-                    this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
+                  for (var i = 0; i < this.node.nodes.length; i++) {
+                    if (
+                      !this.treeCtrl.isSelected(this.node.nodes[i].key) ||
+                      allChildrenSelected
+                    ) {
+                      this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
+                    }
                   }
+                  return;
                 }
-                return
+                // do the event
+                this.treeCtrl.onCheckboxTreeClick(this.node.key);
+              };
+
+              this.isSelected = function () {
+                // if at least one child is selected then we check the parent
+                if (this.node.nodes) {
+                  for (var i = 0; i < this.node.nodes.length; i++) {
+                    if (this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                      return true;
+                    }
+                  }
+                  return false;
+                }
+                return this.treeCtrl.isSelected(this.node.key);
+              };
+
+              function toggleClass(controller) {
+                if (!controller) return;
+                if (!controller.selectedOninit && !controller.isRoot) {
+                  controller.selectedOninit = true;
+                  controller.element
+                    .find(".fa")
+                    .first()
+                    .toggleClass("fa-minus-square")
+                    .toggleClass("fa-plus-square");
+                  controller.element.children(".list-group").toggle();
+                }
+
+                return toggleClass(controller.parentCtrl);
               }
-              // do the event
-              this.treeCtrl.onCheckboxTreeClick(this.node.key);
+
+              if (this.isSelected() && !this.isRoot) {
+                toggleClass(this.parentCtrl);
+              }
             };
-
-            this.isSelected = function() {
-              // if at least one child is selected then we check the parent
-              if (this.node.nodes) {
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (this.treeCtrl.isSelected(this.node.nodes[i].key)) {
-                    return true
-                  }
-                }
-                return false
-              }
-              return this.treeCtrl.isSelected(this.node.key);
-            };
-
-
-            function toggleClass (controller) {
-              if (!controller) return
-              if (!controller.selectedOninit && !controller.isRoot) {
-                controller.selectedOninit = true;
-                controller.element.find('.fa').first().toggleClass('fa-minus-square')
-                  .toggleClass('fa-plus-square');
-                controller.element.children('.list-group').toggle();
-              }
-
-              return toggleClass(controller.parentCtrl);
-            }
-
-            if(this.isSelected() && !this.isRoot) {
-              toggleClass(this.parentCtrl);
-            }
-          };
-        }],
-        link: function(scope, el, attrs, ctrls) {
-          scope.toggleNode = function(evt) {
-            var parentEL = el.find('.fa').first()
+          }
+        ],
+        link: function (scope, el, attrs, ctrls) {
+          scope.toggleNode = function (evt) {
+            var parentEL = el.find(".fa").first();
             // for some reason both classes are on the element
             // this must be delt with in a better way TODO
-            if (parentEL.attr('class').indexOf('fa-minus-square fa-plus-square') !=0 ){
-              parentEL.removeClass('fa-plus-square');
+            if (parentEL.attr("class").indexOf("fa-minus-square fa-plus-square") != 0) {
+              parentEL.removeClass("fa-plus-square");
             }
-            parentEL.toggleClass('fa-minus-square')
-              .toggleClass('fa-plus-square');
-            el.children('.list-group').toggle();
+            parentEL.toggleClass("fa-minus-square").toggleClass("fa-plus-square");
+            el.children(".list-group").toggle();
             !evt || evt.preventDefault();
             evt.stopPropagation();
             return false;
           };
         }
       };
-    }]);
-
+    }
+  ]);
 })();

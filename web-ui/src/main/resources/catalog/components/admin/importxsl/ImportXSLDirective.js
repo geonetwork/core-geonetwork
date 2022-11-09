@@ -21,41 +21,41 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_importxsl_directive');
+(function () {
+  goog.provide("gn_importxsl_directive");
 
-  var module = angular.module('gn_importxsl_directive', []);
+  var module = angular.module("gn_importxsl_directive", []);
 
   /**
    * Provide a list of available XSLT transformation
    *
    */
-  module.directive('gnImportXsl', ['$http',
-    function($http) {
-
+  module.directive("gnImportXsl", [
+    "$http",
+    function ($http) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
         transclude: true,
         scope: {
-          element: '=gnImportXsl',
-          mode: '@'
+          element: "=gnImportXsl",
+          mode: "@"
         },
-        templateUrl: '../../catalog/components/admin/importxsl/partials/' +
-            'importxsl.html',
-        link: function(scope, element, attrs) {
-          $http.get('../api/site/info/transforms')
-              .success(function(data) {
-                scope.stylesheets = data;
-                scope.stylesheets.unshift('');
-                if (angular.isUndefined(scope.element) || angular.isObject(scope.element)) {
-                  scope.element = scope.stylesheets[0];
-                }
-              });
-          scope.setValue = function(c) {
+        templateUrl:
+          "../../catalog/components/admin/importxsl/partials/" + "importxsl.html",
+        link: function (scope, element, attrs) {
+          $http.get("../api/site/info/transforms").success(function (data) {
+            scope.stylesheets = data;
+            scope.stylesheets.unshift("");
+            if (angular.isUndefined(scope.element) || angular.isObject(scope.element)) {
+              scope.element = scope.stylesheets[0];
+            }
+          });
+          scope.setValue = function (c) {
             scope.element = c;
-          }
+          };
         }
       };
-    }]);
+    }
+  ]);
 })();

@@ -20,15 +20,13 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-(function() {
-  goog.provide('gn_related_observer_directive');
+(function () {
+  goog.provide("gn_related_observer_directive");
 
-  var module = angular.module('gn_related_observer_directive', []);
+  var module = angular.module("gn_related_observer_directive", []);
 
-
-  module.directive('gnRelatedObserver', [
-    function() {
-
+  module.directive("gnRelatedObserver", [
+    function () {
       function GnRelatedObserverController(scope, $rootScope) {
         this.managedAnnotations = [];
         this.currentRequests = [];
@@ -38,21 +36,17 @@
         this.rootScope = $rootScope;
       }
 
-      GnRelatedObserverController.prototype.registerGnRelated =
-          function(gnRelated) {
+      GnRelatedObserverController.prototype.registerGnRelated = function (gnRelated) {
         this.managedAnnotations.push(gnRelated);
       };
 
-      GnRelatedObserverController.prototype.unregisterGnRelated =
-          function(gnRelated) {
-        this.managedAnnotations = $.grep(this.managedAnnotations,
-            function(elem) {
-              return elem != gnRelated;
-            });
+      GnRelatedObserverController.prototype.unregisterGnRelated = function (gnRelated) {
+        this.managedAnnotations = $.grep(this.managedAnnotations, function (elem) {
+          return elem != gnRelated;
+        });
       };
 
-      GnRelatedObserverController.prototype.startGnRelatedRequest =
-          function(gnRelated) {
+      GnRelatedObserverController.prototype.startGnRelatedRequest = function (gnRelated) {
         if (this.scope.gnRelatedLoadFinished) {
           this.scope.relatedsFound = false;
         }
@@ -60,8 +54,10 @@
         this.scope.gnRelatedLoadFinished = false;
       };
 
-      GnRelatedObserverController.prototype.finishRequest =
-          function(gnRelatedElement, found) {
+      GnRelatedObserverController.prototype.finishRequest = function (
+        gnRelatedElement,
+        found
+      ) {
         var index = $.inArray(gnRelatedElement, this.currentRequests);
         if (index != -1) {
           this.currentRequests.splice(index, 1);
@@ -72,35 +68,30 @@
         this.updateGnRelatedLoadFinished();
       };
 
-      GnRelatedObserverController.prototype.updateGnRelatedLoadFinished =
-          function() {
+      GnRelatedObserverController.prototype.updateGnRelatedLoadFinished = function () {
         if (this.currentRequests.length == 0) {
           this.scope.gnRelatedLoadFinished = true;
           if (!this.scope.relatedsFound) {
-            this.rootScope.$broadcast('tabChangeRequested', 'general');
+            this.rootScope.$broadcast("tabChangeRequested", "general");
           } else {
             // Issue the event to update the proper tab if the user requested
             // a different tab in the url, for example:
             // /metadata/UUID?tab=contact
-            this.rootScope.$broadcast('tabChangeRequested', 'relations');
+            this.rootScope.$broadcast("tabChangeRequested", "relations");
           }
         }
       };
 
-
-
       return {
-        restrict: 'A',
+        restrict: "A",
         transclude: true,
-        templateUrl: '../../catalog/components/' +
-            'metadataactions/partials/relatedObserverTemplate.html',
+        templateUrl:
+          "../../catalog/components/" +
+          "metadataactions/partials/relatedObserverTemplate.html",
         scope: {},
-        controller: ['$scope', '$rootScope',
-          GnRelatedObserverController],
-        controllerAs: 'observerController',
-        link: function(scope, element, attrs, controller) {
-
-        }
+        controller: ["$scope", "$rootScope", GnRelatedObserverController],
+        controllerAs: "observerController",
+        link: function (scope, element, attrs, controller) {}
       };
     }
   ]);

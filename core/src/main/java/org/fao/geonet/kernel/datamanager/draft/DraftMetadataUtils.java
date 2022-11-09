@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
@@ -515,12 +516,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
 
         try {
-            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, true, true,
+            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, IndexingMode.full, true,
                 UpdateDatestamp.YES, false, true);
 
             Integer finalId = newMetadata.getId();
-
-            cloneFiles(templateMetadata, newMetadata);
 
             // Remove all default privileges:
             metadataOperations.deleteMetadataOper(String.valueOf(finalId), false);
@@ -539,6 +538,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                     Log.trace(Geonet.DATA_MANAGER, "Skipping operation: " + op);
                 }
             }
+
+            cloneFiles(templateMetadata, newMetadata);
 
             // Copy validation status from original metadata
             List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(templateMetadata.getId());

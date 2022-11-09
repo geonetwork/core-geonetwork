@@ -1,66 +1,71 @@
 <div title="{{xsMode ? ('createDoiForRecord-help' | translate) : ''}}">
-  <h2 data-translate=""
-      data-ng-hide="xsMode">createDoiForRecord</h2>
-  <div data-ng-hide="xsMode"
-       class="text-muted" data-translate="">createDoiForRecord-help</div>
+  <h2 data-translate="" data-ng-hide="xsMode">createDoiForRecord</h2>
+  <div data-ng-hide="xsMode" class="text-muted" data-translate="">
+    createDoiForRecord-help
+  </div>
 
-  <div class="btn-group"
-       data-ng-class="{'btn-group-xs': xsMode}"
-       role="group">
-    <button class="btn btn-default"
-       data-gn-click-and-spin="check()"
-       data-ng-class="{
+  <div class="btn-group" data-ng-class="{'btn-group-xs': xsMode}" role="group">
+    <button
+      class="btn btn-default"
+      data-gn-click-and-spin="check()"
+      data-ng-class="{
           'btn-default': response.check == null,
           'btn-success': response.check.status === 200,
           'btn-warning': response.check.data.code === 'resource_already_exist',
-          'btn-danger': response.check.status === 400 && response.check.data.code !== 'resource_already_exist'}">
-      <i class="fa fa-fw"
-         data-ng-class="{
+          'btn-danger': response.check.status === 400 && response.check.data.code !== 'resource_already_exist'}"
+    >
+      <i
+        class="fa fa-fw"
+        data-ng-class="{
           'fa-check': response.check == null,
           'fa-thumbs-up': response.check.status === 200,
           'fa-thumbs-up': response.check.data.code === 'resource_already_exist',
-          'fa-thumbs-down': response.check.status === 400 && response.check.data.code !== 'resource_already_exist'}"></i>
+          'fa-thumbs-down': response.check.status === 400 && response.check.data.code !== 'resource_already_exist'}"
+      ></i>
       <span data-translate="">doiCreationTaskCheckAction</span>
     </button>
 
-    <button class="btn btn-primary"
-       data-ng-disabled="response.check.status !== 200 && response.check.data.code !== 'resource_already_exist'"
-       data-gn-click-and-spin="create()">
+    <button
+      class="btn btn-primary"
+      data-ng-disabled="response.check.status !== 200 && response.check.data.code !== 'resource_already_exist'"
+      data-gn-click-and-spin="create()"
+    >
       <i class="fa fa-fw fa-play"></i>
-      <span data-ng-if="!isUpdate"
-            data-translate="">doiCreationTaskCreateAction</span>
-      <span data-ng-if="isUpdate"
-            data-translate="">doiCreationTaskUpdateAction</span>
+      <span data-ng-if="!isUpdate" data-translate="">doiCreationTaskCreateAction</span>
+      <span data-ng-if="isUpdate" data-translate="">doiCreationTaskUpdateAction</span>
     </button>
 
-    <a class="btn btn-default"
-       data-ng-if="doiUrl"
-       data-ng-href="{{doiUrl}}"
-       title="{{'doiViewLink' | translate}}"
-       target="_blank">
+    <a
+      class="btn btn-default"
+      data-ng-if="doiUrl"
+      data-ng-href="{{doiUrl}}"
+      title="{{'doiViewLink' | translate}}"
+      target="_blank"
+    >
       <i class="fa fa-fw fa-link"></i>
-      <span data-ng-hide="xsMode"
-            data-translate="">doi</span>
+      <span data-ng-hide="xsMode" data-translate="">doi</span>
     </a>
 
-    <a class="btn btn-default"
-       data-ng-if="doiUrl"
-       data-ng-href="{{doiUrl.replace('/doi/', '/metadata/')}}"
-       title="{{'doiCheckExistingMetadata' | translate}}"
-       target="_blank">
+    <a
+      class="btn btn-default"
+      data-ng-if="doiUrl"
+      data-ng-href="{{doiUrl.replace('/doi/', '/metadata/')}}"
+      title="{{'doiCheckExistingMetadata' | translate}}"
+      target="_blank"
+    >
       <i class="fa fa-fw fa-file"></i>
-      <span data-ng-hide="xsMode"
-            data-translate="">doiViewMetadata</span>
+      <span data-ng-hide="xsMode" data-translate="">doiViewMetadata</span>
     </a>
   </div>
 
-  <div data-ng-if="response.check"
-       data-ng-class="{'text-danger': response.check.status === 400}"
-       data-ng-bind-html="response.check.data.description">
-  </div>
-  <div data-ng-if="response.create"
-       data-ng-class="{'text-danger': response.create.status === 400}"
-       data-ng-bind-html="response.create.data.description">
-  </div>
-
+  <div
+    data-ng-if="response.check"
+    data-ng-class="{'text-danger': response.check.status === 400}"
+    data-ng-bind-html="response.check.data.description"
+  ></div>
+  <div
+    data-ng-if="response.create"
+    data-ng-class="{'text-danger': response.create.status === 400}"
+    data-ng-bind-html="response.create.data.description"
+  ></div>
 </div>

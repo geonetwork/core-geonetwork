@@ -3764,8 +3764,8 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Africa"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/TUR">
-    <skos:prefLabel xml:lang="en">Turkey</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Turkey</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Türkiye</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Türkiye</skos:prefLabel>
     <skos:altLabel>TUR</skos:altLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">

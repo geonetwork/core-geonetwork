@@ -1,101 +1,128 @@
 <div data-ng-class="{'gn-facet-list panel panel-default': !isTabMode}">
-  <div class="panel-heading"
-       ng-if="!isTabMode">
+  <div class="panel-heading" ng-if="!isTabMode">
     <i class="fa fa-filter">&nbsp;</i><span translate>filter</span>
     <!--Collapse all button for first panel-->
     <div class="pull-right">
-      <div class="gn-facet-toggle btn-group"
-           role="group">
-        <button type="button"
-                class="btn btn-default btn-xs gn-facet-toggle-btn"
-                ng-click="ctrl.collapseAll()"
-                title="{{'collapseAllFacet' | translate}}">
-          <i class="fa fa-fw fa-caret-right"/>
+      <div class="gn-facet-toggle btn-group" role="group">
+        <button
+          type="button"
+          class="btn btn-default btn-xs gn-facet-toggle-btn"
+          ng-click="ctrl.collapseAll()"
+          title="{{'collapseAllFacet' | translate}}"
+        >
+          <i class="fa fa-fw fa-caret-right" />
         </button>
-        <button type="button"
-                class="btn btn-default btn-xs gn-facet-toggle-btn"
-                ng-click="ctrl.expandAll()"
-                title="{{'expandAllFacet' | translate}}">
-          <i class="fa fa-fw fa-caret-down"/>
+        <button
+          type="button"
+          class="btn btn-default btn-xs gn-facet-toggle-btn"
+          ng-click="ctrl.expandAll()"
+          title="{{'expandAllFacet' | translate}}"
+        >
+          <i class="fa fa-fw fa-caret-down" />
         </button>
       </div>
     </div>
   </div>
 
   <div data-ng-class="{'panel-body': !isTabMode}">
-    <ul class="nav nav-pills"
-        ng-repeat="facet in ctrl.list track by facet.key"
-        ng-if="isTabMode && facet.key === ctrl.tabField">
-      <li class="gn-facet-container"
-          es-facet="::facet"
-          es-facet-item="::item"
-          data-template="../../catalog/components/elasticsearch/directives/partials/facet-tab.html"
-          ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)">
-      </li>
+    <ul
+      class="nav nav-pills"
+      ng-repeat="facet in ctrl.list track by facet.key"
+      ng-if="isTabMode && facet.key === ctrl.tabField"
+    >
+      <li
+        class="gn-facet-container"
+        es-facet="::facet"
+        es-facet-item="::item"
+        data-template="../../catalog/components/elasticsearch/directives/partials/facet-tab.html"
+        ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)"
+      ></li>
     </ul>
-    <div ng-repeat="facet in ctrl.list track by facet.key"
-         ng-if="!isTabMode && facet.key !== appTabField"
-         ng-show="ctrl.isVisibleForUser(facet) && (
+    <div
+      ng-repeat="facet in ctrl.list track by facet.key"
+      ng-if="!isTabMode && facet.key !== appTabField"
+      ng-show="ctrl.isVisibleForUser(facet) && (
                   facet.items.length > 0 ||
                   facet.include.length > 0 ||
                   (facet.dates && facet.dates.length > 0))"
-         class="gn-facet">
-      <a href
+      class="gn-facet"
+    >
+      <a
+        href
         class="gn-facet-header flex-row width-100"
         ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch(facet.path)}"
-        gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
-        <span class="flex-shrink text-ellipsis">{{('facet-' + facet.key) | facetKeyTranslator}}</span>
-        <span class="fa fa-fw"
-              ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"></span>
+        gn-collapsible="::ctrl.fLvlCollapse[facet.key]"
+      >
+        <span class="flex-shrink text-ellipsis"
+          >{{('facet-' + facet.key) | facetKeyTranslator}}</span
+        >
+        <span
+          class="fa fa-fw"
+          ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"
+        ></span>
       </a>
-      <div class="gn-facet-root-container"
-          ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
-
-        <div class="input-group input-group-sm gn-facet-input-group"
-             ng-if="facet.type === 'terms' && facet.includeFilter
+      <div
+        class="gn-facet-root-container"
+        ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}"
+      >
+        <div
+          class="input-group input-group-sm gn-facet-input-group"
+          ng-if="facet.type === 'terms'
+                    && (facet.meta ? facet.meta.displayFilter !== false : facet.includeFilter)
                     && (facet.more
-                    || facet.include.length > 0
-                    || facet.meta && facet.meta.displayFilter)">
+                    || (facet.include && facet.include.length > 0)
+                    || (facet.meta && facet.meta.displayFilter === true))"
+        >
           <span class="input-group-addon" id="sizing-addon3">
             <span class="fa fa-filter"></span>
           </span>
-          <input title="{{'facetIncludeFilter' | translate}}"
-                aria-label="{{'facetIncludeFilter' | translate}}"
-                ng-model="facet.include"
-                ng-model-options="{debounce: 300}"
-                ng-change="ctrl.filterTerms(facet)"
-                placeholder="{{'filter' | translate}}"
-                autocomplete="false"
-                class="form-control input-sm"
-                type="text"
-                />
-          <span class="input-group-btn clear"
-                ng-show="facet.include && facet.include !== ''"
-                title="{{'clear'|translate}}">
-            <button class="btn btn-default" type="button" data-ng-click="facet.include = '';ctrl.filterTerms(facet);">
+          <input
+            title="{{'facetIncludeFilter' | translate}}"
+            aria-label="{{'facetIncludeFilter' | translate}}"
+            ng-model="facet.include"
+            ng-model-options="{debounce: 300}"
+            ng-change="ctrl.filterTerms(facet)"
+            placeholder="{{'filter' | translate}}"
+            autocomplete="false"
+            class="form-control input-sm"
+            type="text"
+          />
+          <span
+            class="input-group-btn clear"
+            ng-show="facet.include && facet.include !== ''"
+            title="{{'clear'|translate}}"
+          >
+            <button
+              class="btn btn-default"
+              type="button"
+              data-ng-click="facet.include = '';ctrl.filterTerms(facet);"
+            >
               <span class="fa fa-times-circle"></span>
             </button>
           </span>
         </div>
 
-        <div class="gn-facet-container"
-             ng-if="::facet.type !== 'dates' && !(facet.meta && facet.meta.vega)"
-             es-facet="::facet"
-             es-facet-item="::item"
-             ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)">
-        </div>
+        <div
+          class="gn-facet-container"
+          ng-if="::facet.type !== 'dates' && !(facet.meta && facet.meta.vega)"
+          es-facet="::facet"
+          es-facet-item="::item"
+          ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)"
+        ></div>
 
-        <div class=""
-             ng-if="::facet.meta && (facet.meta.vega === 'arc' || facet.meta.vega === 'bar')"
-             gn-facet-vega="facet"
-             callback="ctrl.filter(facet, item)">
-        </div>
-        <div class=""
-             ng-if="::facet.type === 'dates'
+        <div
+          class=""
+          ng-if="::facet.meta && (facet.meta.vega === 'arc' || facet.meta.vega === 'bar')"
+          gn-facet-vega="facet"
+          callback="ctrl.filter(facet, item)"
+        ></div>
+        <div
+          class=""
+          ng-if="::facet.type === 'dates'
                     || (facet.meta && facet.meta.vega === 'timeline')"
-             gn-facet-temporalrange="facet"
-             callback="ctrl.onUpdateDateRange(facet, from, to)">
-        </div>
+          gn-facet-temporalrange="facet"
+          callback="ctrl.onUpdateDateRange(facet, from, to)"
+        ></div>
 
         <!--<div class="gn-facet-date-histogram"
             ng-if="::facet.type === 'dates'"
@@ -107,10 +134,12 @@
             callback="ctrl.onUpdateDateRange(facet, from, to)">
         </div>-->
 
-        <a href
+        <a
+          href
           class="gn-facet-more"
           ng-if="facet.more"
-          ng-click="ctrl.loadMoreTerms(facet)">
+          ng-click="ctrl.loadMoreTerms(facet)"
+        >
           <span translate>more</span>
         </a>
       </div>

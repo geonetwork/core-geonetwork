@@ -540,5 +540,12 @@
     "esriCapabilitiesNoValid": "La réponse n'est pas un document de ESRI Rest valide.",
     "seriesComposedOf": "Composé de ",
     "seriesCoveringPeriod": "Couvre la période",
-    "approve": "Approuver"
+    "approve": "Approuver",
+    "fieldRequired": "Champ requis",
+    "fieldTooLong": "La valeur est trop longue",
+    "fieldTooLongMax": "La valeur est trop longue (max {{maxChar}})",
+    "fieldTooShort": "La valeur est trop courte",
+    "fieldEmailNotValid": "Un email valide est requis",
+    "addLayerPrefix": "Ajouter une couche",
+    "addLayerPostfix": "à la carte"
 }

@@ -41,19 +41,22 @@
 
   <xsl:template name="css-load">
     <link href="{/root/gui/url}/static/gn_fonts.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
 
     <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
+
+    <link href="{/root/gui/url}/static/gn_print_default.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="print"/>
 
     <link href="{/root/gui/url}/static/bootstrap-table.min.css?v={$buildNumber}" rel="stylesheet"
-          media="screen"></link>
+          media="all"></link>
 
     <link href="{/root/gui/url}/static/gn_pickers.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
     <link href="{/root/gui/url}/static/gn_inspire.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
-          media="screen"/>
+          media="all"/>
 
     <xsl:if test="$withD3">
       <link href="{/root/gui/url}/static/nv.d3.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
@@ -62,7 +65,7 @@
 
     <link href="{/root/gui/url}/static/ng-skos.css?v={$buildNumber}" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css?v={$buildNumber}&amp;{$minimizedParam}"
-          rel="stylesheet" media="screen"/>
+          rel="stylesheet" media="all"/>
   </xsl:template>
 
   <xsl:template name="css-load-nojs">
@@ -109,7 +112,7 @@
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/franc-min/franc-min.js?v={$buildNumber}"></script>
 
@@ -118,6 +121,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-cookies.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-messages.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-translate.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular-filter.min.js?v={$buildNumber}"></script>
@@ -188,7 +192,7 @@
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>

@@ -21,18 +21,15 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_maps_manager');
+(function () {
+  goog.provide("gn_maps_manager");
 
-  goog.require('gn_ows');
+  goog.require("gn_ows");
 
+  var module = angular.module("gn_maps_manager", ["gn_ows"]);
 
-  var module = angular.module('gn_maps_manager', [
-    'gn_ows'
-  ]);
-
-  var configProjections = function(projectionConfig) {
-    $.each(projectionConfig, function(i, p) {
+  var configProjections = function (projectionConfig) {
+    $.each(projectionConfig, function (i, p) {
       if (!ol.proj.get(p.code)) {
         if (p.def && p.code) {
           // Define an OL3 projection based on the included Proj4js projection
@@ -41,38 +38,63 @@
             proj4.defs(p.code, p.def);
             ol.proj.proj4.register(proj4);
           } catch (e) {
-            console.error("Trying to use incorrectly defined projection '" + p.code +
-              "'. Please update definitions on Admin > Settings.");
+            console.error(
+              "Trying to use incorrectly defined projection '" +
+                p.code +
+                "'. Please update definitions on Admin > Settings."
+            );
           }
         } else {
-          console.error("Trying to use unknown projection '" + p.code +
-              "'. Please update definitions on Admin > Settings.");
+          console.error(
+            "Trying to use unknown projection '" +
+              p.code +
+              "'. Please update definitions on Admin > Settings."
+          );
         }
       }
 
       var projection = ol.proj.get(p.code);
       if (projection) {
-        if (p.extent && p.extent.length && p.extent.length === 4 &&
-          !isNaN(p.extent[0]) && p.extent[0] != null &&
-          !isNaN(p.extent[1]) && p.extent[1] != null &&
-          !isNaN(p.extent[2]) && p.extent[2] != null &&
-          !isNaN(p.extent[3]) && p.extent[3] != null) {
+        if (
+          p.extent &&
+          p.extent.length &&
+          p.extent.length === 4 &&
+          !isNaN(p.extent[0]) &&
+          p.extent[0] != null &&
+          !isNaN(p.extent[1]) &&
+          p.extent[1] != null &&
+          !isNaN(p.extent[2]) &&
+          p.extent[2] != null &&
+          !isNaN(p.extent[3]) &&
+          p.extent[3] != null
+        ) {
           projection.setExtent(p.extent);
         }
-        if (p.worldExtent && p.worldExtent.length && p.worldExtent.length === 4 &&
-          !isNaN(p.worldExtent[0]) && p.worldExtent[0] != null &&
-          !isNaN(p.worldExtent[1]) && p.worldExtent[1] != null &&
-          !isNaN(p.worldExtent[2]) && p.worldExtent[2] != null &&
-          !isNaN(p.worldExtent[3]) && p.worldExtent[3] != null) {
+        if (
+          p.worldExtent &&
+          p.worldExtent.length &&
+          p.worldExtent.length === 4 &&
+          !isNaN(p.worldExtent[0]) &&
+          p.worldExtent[0] != null &&
+          !isNaN(p.worldExtent[1]) &&
+          p.worldExtent[1] != null &&
+          !isNaN(p.worldExtent[2]) &&
+          p.worldExtent[2] != null &&
+          !isNaN(p.worldExtent[3]) &&
+          p.worldExtent[3] != null
+        ) {
           projection.setWorldExtent(p.worldExtent);
         }
       }
     });
   };
 
-  module.config(['gnViewerSettings', function(gnViewerSettings) {
-    configProjections(gnViewerSettings.mapConfig.switcherProjectionList);
-  }]);
+  module.config([
+    "gnViewerSettings",
+    function (gnViewerSettings) {
+      configProjections(gnViewerSettings.mapConfig.switcherProjectionList);
+    }
+  ]);
 
   /**
    * @ngdoc service
@@ -83,18 +105,25 @@
    * The `gnMapsManager` service is used to create maps throughout the
    * application in a standardized way.
    */
-  module.service('gnMapsManager', [
-    '$q',
-    'gnMap',
-    'gnOwsContextService',
-    'gnViewerSettings',
-    '$rootScope',
-    '$location',
-    'gnSearchLocation',
-    'gnLangs',
-    function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope,
-             $location, gnSearchLocation, gnLangs) {
-
+  module.service("gnMapsManager", [
+    "$q",
+    "gnMap",
+    "gnOwsContextService",
+    "gnViewerSettings",
+    "$rootScope",
+    "$location",
+    "gnSearchLocation",
+    "gnLangs",
+    function (
+      $q,
+      gnMap,
+      gnOwsContextService,
+      gnViewerSettings,
+      $rootScope,
+      $location,
+      gnSearchLocation,
+      gnLangs
+    ) {
       var mapParams = {};
       if (gnSearchLocation.isMap()) {
         mapParams = $location.search();
@@ -106,9 +135,10 @@
          * The keys are used in the UI config, so that config.map.<KEY>
          * points to a description of the map context & layers.
          */
-        VIEWER_MAP: 'viewer',
-        SEARCH_MAP: 'search',
-        EDITOR_MAP: 'editor',
+        VIEWER_MAP: "viewer",
+        SEARCH_MAP: "search",
+        EDITOR_MAP: "editor",
+        GENERATE_THUMBNAIL_MAP: "thumbnail",
 
         /**
          * @ngdoc method
@@ -120,7 +150,7 @@
          * adds the definition to OL.
          *
          * @param {array} list of projection definitions (p.code,p.def,p.extent,p.worldExtent):
-        **/
+         **/
 
         initProjections: configProjections,
 
@@ -151,8 +181,8 @@
          *
          * @return {ol.Map} map created with the correct parameters
          */
-        createMap: function(type) {
-          var config = gnMap.getMapConfig()['map-' + type];
+        createMap: function (type) {
+          var config = gnMap.getMapConfig()["map-" + type];
           var map = new ol.Map({
             layers: [],
             view: new ol.View({
@@ -161,44 +191,53 @@
               zoom: 2
             }),
             // show zoom control in editor maps only
-            controls: type !== this.EDITOR_MAP ? [new ol.control.Attribution()] : [
-              new ol.control.Zoom(),
-              new ol.control.Attribution()
-            ]
+            controls:
+              type !== this.EDITOR_MAP
+                ? [new ol.control.Attribution()]
+                : [new ol.control.Zoom(), new ol.control.Attribution()]
           });
 
           // Store map type name property
-          map.set('type', type);
+          map.set("type", type);
 
           var defer = $q.defer();
           var sizeLoadPromise = defer.promise;
-          map.set('sizePromise', sizeLoadPromise);
+          map.set("sizePromise", sizeLoadPromise);
 
           // This is done to have no delay for the map size $watch
-          var unBindFn = $rootScope.$on('$locationChangeSuccess', function() {
-            setTimeout(function() {
-              $rootScope.$apply();
-            });
-          }.bind(this));
+          var unBindFn = $rootScope.$on(
+            "$locationChangeSuccess",
+            function () {
+              setTimeout(function () {
+                $rootScope.$apply();
+              });
+            }.bind(this)
+          );
 
-          var unWatchFn = $rootScope.$watch(function() {
-            return map.getTargetElement() && Math.min(
-                map.getTargetElement().offsetWidth,
-                map.getTargetElement().offsetHeight
-            );
-          }, function(size) {
-            if (size > 0) {
-              map.updateSize();
-              map.renderSync();
-              defer.resolve();
-              unWatchFn();
-              unBindFn();
+          var unWatchFn = $rootScope.$watch(
+            function () {
+              return (
+                map.getTargetElement() &&
+                Math.min(
+                  map.getTargetElement().offsetWidth,
+                  map.getTargetElement().offsetHeight
+                )
+              );
+            },
+            function (size) {
+              if (size > 0) {
+                map.updateSize();
+                map.renderSync();
+                defer.resolve();
+                unWatchFn();
+                unBindFn();
+              }
             }
-          });
+          );
 
           // no config found: return empty map
           if (!config) {
-            console.warn('Map config not found for type \'' + type + '\'');
+            console.warn("Map config not found for type '" + type + "'");
             return map;
           }
 
@@ -207,30 +246,29 @@
           var mapReady;
           var urlContext;
           if (type === this.VIEWER_MAP) {
-
-            $rootScope.$on('$locationChangeSuccess', function() {
-              if (gnSearchLocation.isMap()) {
-                var params = $location.search();
-                var newContext = params.owscontext || params.map;
-                if (newContext && newContext !== urlContext) {
-                  newContext = newContext.replace('{lang}', gnLangs.current);
-                  urlContext = newContext;
-                  gnOwsContextService.loadContextFromUrl(
-                      urlContext, map);
+            $rootScope.$on(
+              "$locationChangeSuccess",
+              function () {
+                if (gnSearchLocation.isMap()) {
+                  var params = $location.search();
+                  var newContext = params.owscontext || params.map;
+                  if (newContext && newContext !== urlContext) {
+                    newContext = newContext.replace("{lang}", gnLangs.current);
+                    urlContext = newContext;
+                    gnOwsContextService.loadContextFromUrl(urlContext, map);
+                  }
                 }
-              }
-            }.bind(this));
+              }.bind(this)
+            );
 
             urlContext = mapParams.owscontext || mapParams.map;
             if (urlContext) {
-              mapReady = gnOwsContextService.loadContextFromUrl(
-                  urlContext, map);
+              mapReady = gnOwsContextService.loadContextFromUrl(urlContext, map);
             } else {
               var storage = gnMap.getMapConfig().storage;
               if (storage) {
                 storage = window[storage];
-                var key = 'owsContext_' +
-                    window.location.host + window.location.pathname;
+                var key = "owsContext_" + window.location.host + window.location.pathname;
                 var context = storage.getItem(key);
                 if (context) {
                   gnOwsContextService.loadContext(context, map);
@@ -241,49 +279,51 @@
           }
 
           if (!mapReady && config.context) {
-              var contextFile = config.context.replace('{lang}', gnLangs.current);
+            var contextFile = config.context.replace("{lang}", gnLangs.current);
 
-              mapReady = gnOwsContextService.loadContextFromUrl(
-                contextFile, map);
+            mapReady = gnOwsContextService.loadContextFromUrl(contextFile, map);
           }
 
-          var creationPromise = $q.when(mapReady).then(function() {
-
-            // Override context extent from UI settings for non-search maps
-            if (type !== this.SEARCH_MAP && config.extent &&
-              ol.extent.getWidth(config.extent) && ol.extent.getHeight(config.extent)) {
-                var newPromise = map.get('sizePromise').then(function () {
+          var creationPromise = $q.when(mapReady).then(
+            function () {
+              // Override context extent from UI settings for non-search maps
+              if (
+                type !== this.SEARCH_MAP &&
+                config.extent &&
+                ol.extent.getWidth(config.extent) &&
+                ol.extent.getHeight(config.extent)
+              ) {
+                var newPromise = map.get("sizePromise").then(function () {
                   map.getView().fit(config.extent, map.getSize());
                 });
-                map.set('sizePromise', newPromise);
-            }
+                map.set("sizePromise", newPromise);
+              }
 
-            // layers: if defined a context file ignore layers
-            if (!config.context && config.layers && config.layers.length) {
-              config.layers.forEach(function(layerInfo) {
-                gnMap.createLayerFromProperties(layerInfo, map)
-                    .then(function(layer) {
-                      if (layer) {
-                        map.addLayer(layer);
-                      }
-                    });
-              });
-            }
-            if (type === this.VIEWER_MAP) {
-              if (mapParams.wmsurl && mapParams.layername) {
-                gnMap.addWmsFromScratch(map, mapParams.wmsurl,
-                    mapParams.layername, true).
-
-                    then(function(layer) {
-                      layer.set('group', mapParams.layergroup);
+              // layers: if defined a context file ignore layers
+              if (!config.context && config.layers && config.layers.length) {
+                config.layers.forEach(function (layerInfo) {
+                  gnMap.createLayerFromProperties(layerInfo, map).then(function (layer) {
+                    if (layer) {
+                      map.addLayer(layer);
+                    }
+                  });
+                });
+              }
+              if (type === this.VIEWER_MAP) {
+                if (mapParams.wmsurl && mapParams.layername) {
+                  gnMap
+                    .addWmsFromScratch(map, mapParams.wmsurl, mapParams.layername, true)
+                    .then(function (layer) {
+                      layer.set("group", mapParams.layergroup);
                       map.addLayer(layer);
                     });
+                }
               }
-            }
-          }.bind(this));
+            }.bind(this)
+          );
 
           // save the promise on the map
-          map.set('creationPromise', creationPromise);
+          map.set("creationPromise", creationPromise);
 
           return map;
         }

@@ -1,61 +1,91 @@
-<form name="wfsFilterForm"
-      ng-if="isFeatureTypeAvailable !== false">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
+<form name="wfsFilterForm" ng-if="isFeatureTypeAvailable !== false">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
   <!--WFS not available alert-->
-  <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
-    <button type="button" class="close"><i class="fa fa-times"/></button>
-    <span data-translate=""
-          data-translate-values="{'url': '{{wfsUrl}}'}">wfsNotAvailable</span>
+  <div
+    data-ng-show="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))
+                      && isWfsAvailable == false"
+    class="alert alert-warning"
+  >
+    <button type="button" class="close"><i class="fa fa-times" /></button>
+    <span data-translate="" data-translate-values="{'url': '{{wfsUrl}}'}"
+      >wfsNotAvailable</span
+    >
   </div>
 
   <div data-ng-show="isWfsAvailable">
-    <!--WFS not indexed alert-->
-    <div data-ng-show="status"
-         class="alert alert-warning" title="{{statusTitle}}">
-      <button type="button" class="close"
-              data-ng-click="status = null"><i class="fa fa-times"/></button>
-      <span>{{status | translate}}</span>
-    </div>
-
     <!--admin buttons-->
     <div class="btn-group dropup wfs-filter-group">
       <!--Facet count-->
-      <div class="btn btn-default btn-xs disabled"
-           data-ng-if="isFeaturesIndexed" class="count text-center"
-           data-ng-if="showCount">
-        {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+      <div
+        class="btn btn-default btn-xs disabled"
+        data-ng-if="isFeaturesIndexed"
+        class="count text-center"
+        data-ng-if="showCount"
+      >
+        {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate=""
+          >features</span
+        >
       </div>
 
-      <button class="btn btn-default btn-xs"
-              data-ng-if="!managerOnly && isFeaturesIndexed"
-              title="{{::'Table' | translate}}"
-              ng-click="showTable()">
+      <button
+        class="btn btn-default btn-xs"
+        data-ng-if="!managerOnly
+                          && isFeaturesIndexed
+                          && displayTableOnLoad != 'true'"
+        title="{{::'Table' | translate}}"
+        ng-click="showTable()"
+      >
         <i class="fa fa-table"></i>
       </button>
-      <button class="btn btn-default btn-xs"
-              ng-class="{ disabled: !filtersChanged }"
-              data-ng-if="!managerOnly && isFeaturesIndexed"
-              title="{{::'applyFilter' | translate}}"
-              data-gn-click-and-spin="filterWMS()"
-              data-gn-click-and-spin-stay-disabled="true">
+      <button
+        class="btn btn-default btn-xs"
+        data-ng-disabled="!indexObject.isPointOnly"
+        data-ng-if="!managerOnly
+                          && isFeaturesIndexed"
+        title="{{(indexObject.isPointOnly ? 'Heatmap' : 'heatmapAvailableForPointOnly') | translate}}"
+        data-ng-class="{'active': enableHeatmap}"
+        ng-click="showHeatmap()"
+      >
+        <i class="fa fa-th-large"></i>
+      </button>
+      <button
+        class="btn btn-default btn-xs"
+        ng-class="{ disabled: !filtersChanged }"
+        data-ng-if="!managerOnly && isFeaturesIndexed"
+        title="{{::'applyFilter' | translate}}"
+        data-gn-click-and-spin="filterWMS()"
+        data-gn-click-and-spin-stay-disabled="true"
+      >
         <i class="fa fa-filter"></i>
       </button>
-      <button class="btn btn-default btn-xs"
-              title="{{::'refresh' | translate}}"
-              data-ng-click="initIndexRequest()">
+      <button
+        class="btn btn-default btn-xs"
+        title="{{::'refresh' | translate}}"
+        data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
+        data-ng-click="initIndexRequest()"
+      >
         <i class="fa fa-refresh"></i>
       </button>
-      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'"
-              type="button"
-              class="btn btn-default btn-xs dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
+      <button
+        data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
+        type="button"
+        class="btn btn-default btn-xs dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'">
+      <ul
+        class="dropdown-menu"
+        aria-labelledby="dropdownMenu1"
+        data-ng-if="(user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
+      >
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
             <i class="fa fa-cloud-download"></i>&nbsp;
@@ -69,90 +99,190 @@
           </a>
         </li>
       </ul>
-      <a data-ng-if="managerOnly"
-         title="{{'addToMap' | translate}}"
-         data-ng-href="catalog.search#/map?add={{mapAddCmd | encodeURIComponent}}"
-         class="btn btn-default btn-xs">
+      <a
+        data-ng-if="managerOnly"
+        title="{{'addToMap' | translate}}"
+        data-ng-href="catalog.search#/map?add={{mapAddCmd | encodeURIComponent}}"
+        class="btn btn-default btn-xs"
+      >
         <i class="fa fa-globe"></i>
       </a>
     </div>
 
+    <!--WFS not indexed alert-->
+    <div
+      data-ng-show="status && (user.canEditRecord(md)
+                      || (user.isAdministrator() && md.isHarvested == 'true'))"
+      class="alert alert-warning"
+      title="{{statusTitle}}"
+    >
+      <button type="button" class="close" data-ng-click="status = null">
+        <i class="fa fa-times" />
+      </button>
+      <span>{{status | translate}}</span>
+    </div>
 
-    <!--Facet fields-->
-    <div data-ng-if="!managerOnly && isFeaturesIndexed"
-         class="gn-facet"
-         data-ng-repeat="field in fields track by field.name">
-      <h5 gn-collapsible="field.expanded"
-          title="{{field.definition}}">
-        <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
-        {{field.label}}
-      </h5>
+    <gn-heatmap
+      data-ng-if="!managerOnly && featureTypeName"
+      map="map"
+      feature-type="indexObject.config.docTypeId"
+      filter="ctrl.query"
+      enabled="enableHeatmap"
+    />
 
-      <!-- value filter field -->
-      <div class="filter-input sxt-layertree-filter"
-           ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
-        <span class="fa fa-times-circle clear" title="clear"
-              ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
-              ng-show="facetFilters[field.name]"></span>
-        <input type="text" class="form-control input-sm layerfilter"
-               placeholder="{{ 'filter' | translate }}"
-               ng-model="facetFilters[field.name]"
-               ng-model-options="{debounce: 300}"
-               ng-change="onFilterInputChange(field)">
-      </div>
+    <!-- Search -->
+    <div
+      data-ng-if="!managerOnly && isFeaturesIndexed"
+      class="input-group input-group-sm"
+    >
+      <input
+        class="form-control input-xs"
+        data-ng-keyup="$event.keyCode == 13 && filterFacets()"
+        type="text"
+        placeholder="{{::'anyPlaceHolder' | translate}}"
+        data-ng-model="ctrl.filter.fullTextSearch"
+      />
+      <span class="input-group-btn">
+        <button
+          data-ng-if="!managerOnly && isFeaturesIndexed"
+          data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
+          title="{{'reset' | translate}}"
+          class="btn btn-default btn-xs gn-reset-facets"
+        >
+          <i class="fa fa-fw fa-times"></i>
+        </button>
+        <button
+          data-ng-if="!managerOnly && isFeaturesIndexed"
+          title="{{'featuresInMapExtent' | translate}}"
+          data-ng-click="setFeaturesInMapExtent()"
+          data-ng-class="{'active': featuresInMapExtent}"
+          class="btn btn-default btn-xs"
+        >
+          <i class="fa fa-pencil-square-o fa-fw"></i>
+        </button>
+        <button
+          class="btn btn-default btn-xs"
+          title="{{'search' | translate}}"
+          data-ng-click="filterFacets()"
+        >
+          <i class="fa fa-fw fa-search"></i>
+        </button>
+      </span>
+    </div>
 
-      <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
-        <div class="list-group">
-          <div class="list-group-item"
-               data-ng-repeat="facet in field.values"
-               data-ng-click="onCheckboxClick(field, facet)"
-               data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
-            <i class="fa fa-fw text-primary"
-               data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square-o' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
-          </div>
-          <div data-ng-if="field.tree"
-               gn-wfs-filter-facets-tree="field"
-               gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
-          </div>
+    <!-- Facets -->
+    <div class="gn-facet-container">
+      <div
+        data-ng-if="!managerOnly && isFeaturesIndexed"
+        class="gn-facet"
+        data-ng-repeat="field in fields track by field.name"
+      >
+        <h5
+          gn-collapsible="field.expanded"
+          title="{{field.definition}}"
+          data-ng-class="{'text-primary': isFilterActive(field.name, field)}"
+        >
+          <span
+            class="fa fa-arrow-circle-right"
+            data-ng-class="{
+              'fa-rotate-90': field.expanded,
+              'gn-field-empty': !isFilterActive(field.name, field)
+            }"
+          ></span>
+          {{field.label}}
+        </h5>
 
-          <div ng-if="field.dates"
-               gn-facet-daterange="output[field.name].values"
-               available-dates="field.dates"
-               show-graph="{{field.display == 'graph'}}"
-               graph-expanded="field.expanded"
-               dates-count="field.datesCount"
-               callback="onUpdateDateRange(field, from, to)">
-          </div>
+        <!-- value filter field -->
+        <div
+          class="filter-input sxt-layertree-filter"
+          ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))"
+          ng-show="field.expanded"
+        >
+          <span
+            class="fa fa-times-circle clear"
+            title="clear"
+            ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
+            ng-show="facetFilters[field.name]"
+          ></span>
+          <input
+            type="text"
+            class="form-control input-sm layerfilter"
+            placeholder="{{ 'filter' | translate }}"
+            ng-model="facetFilters[field.name]"
+            ng-model-options="{debounce: 300}"
+            ng-change="onFilterInputChange(field)"
+          />
         </div>
-        <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
-          <span translate>more</span>...
-        </a>
+
+        <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
+          <div class="list-group">
+            <div
+              class="list-group-item"
+              data-ng-repeat="facet in field.values"
+              data-ng-click="onCheckboxClick(field, facet)"
+              data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}"
+            >
+              <i
+                class="fa fa-fw text-primary"
+                data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square-o' : 'fa-square-o'"
+              ></i
+              >{{::facet.value}}&nbsp;({{::facet.count | number:0}})
+            </div>
+            <div
+              data-ng-if="field.tree"
+              gn-wfs-filter-facets-tree="field"
+              gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)"
+            ></div>
+
+            <div
+              ng-if="field.dates"
+              gn-facet-daterange="output[field.name].values"
+              available-dates="field.dates"
+              show-graph="{{field.display == 'graph'}}"
+              graph-expanded="field.expanded"
+              dates-count="field.datesCount"
+              callback="onUpdateDateRange(field, from, to)"
+            ></div>
+          </div>
+          <a
+            href
+            class="see-more"
+            data-ng-click="getMore(field)"
+            data-ng-if="field.more && !field.dates && !field.tree"
+          >
+            <span translate>more</span>...
+          </a>
+        </div>
+      </div>
+      <!--Geometry Field-->
+      <div
+        class="gn-facet"
+        ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField"
+      >
+        <h5
+          gn-collapsible="indexObject.geomField.expanded"
+          data-ng-class="{'text-primary': isFilterActive('geometry')}"
+        >
+          <span
+            class="fa fa-arrow-circle-right"
+            data-ng-class="{
+              'fa-rotate-90': indexObject.geomField.expanded,
+              'gn-field-empty': !isFilterActive('geometry')
+            }"
+          ></span>
+          {{'gnbbox' | translate}}
+        </h5>
+        <div
+          class="list-group"
+          data-ng-class="{'collapse': !indexObject.geomField.expanded}"
+        >
+          <gn-bbox-input
+            data-value="ctrl.searchGeometry"
+            data-map="map"
+            data-watch-value-change="true"
+          />
+        </div>
       </div>
     </div>
-    <!--Geometry Field-->
-    <div class="gn-facet"
-         ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField">
-      <h5 gn-collapsible="indexObject.geomField.expanded">
-        <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
-        {{'gnbbox' | translate}}
-      </h5>
-      <div class="list-group"
-           data-ng-class="{'collapse': !indexObject.geomField.expanded}">
-        <gn-bbox-input data-value="ctrl.searchGeometry"
-                       data-map="map"
-                       data-watch-value-change="true"
-        />
-      </div>
-    </div>
-
-    <button data-ng-if="!managerOnly && isFeaturesIndexed"
-            data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
-            class="btn btn-primary btn-xs gn-reset-facets">
-      <span translate>reset</span>
-    </button>
-
   </div>
-
 </form>

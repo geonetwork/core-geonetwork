@@ -10,30 +10,31 @@
 //url is wrong on original file
 // Import the fonts
 @font-face {
-  font-family: 'Glyphicons Halflings';
+  font-family: "Glyphicons Halflings";
   src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot')";
   src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot?#iefix') format('embedded-opentype')",
-       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.woff') format('woff')",
-       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.ttf') format('truetype')",
-       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg')";
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.woff') format('woff')",
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.ttf') format('truetype')",
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg')";
 }
 
 body {
 }
 
 .gn-line-height {
-       line-height: 1.8 !important;
- }
+  line-height: 1.8 !important;
+}
 
-input[type=text], input[type=number], select {
+input[type="text"],
+input[type="number"],
+select {
   .form-control;
 }
 
-
 .gn-geopublisher-panel {
   .map {
-   height: 300px;
-   width: 100%;
+    height: 300px;
+    width: 100%;
   }
 }
 .gn-thumbnail-maker-panel {
@@ -62,7 +63,6 @@ input[type=text], input[type=number], select {
     margin-top: 100px;
   }
 }
-
 
 #gn-directory-container {
   .gn-facet-dropdown {
@@ -175,7 +175,10 @@ input[type=text], input[type=number], select {
         border-radius: 4px;
       }
     }
-    .col-lg-8, .col-md-8, .col-lg-4, .col-md-4 {
+    .col-lg-8,
+    .col-md-8,
+    .col-lg-4,
+    .col-md-4 {
       padding-left: 0;
       padding-right: 0;
     }
@@ -194,7 +197,8 @@ form.gn-editor {
   /**
    * Make space on the following element of a well
    */
-  div.well + fieldset, div.well + div {
+  div.well + fieldset,
+  div.well + div {
     padding-top: 10px;
   }
 
@@ -224,12 +228,12 @@ form.gn-editor {
    */
   fieldset > div.form-group.gn-field,
   fieldset > div.row.gn-field {
-//    border-top: 1px solid #EEE;
-//    padding-left:  (@grid-gutter-width / 2);
+    //    border-top: 1px solid #EEE;
+    //    padding-left:  (@grid-gutter-width / 2);
     padding-top: 5px;
   }
   fieldset > div.form-group.gn-extra-field,
-  fieldset > div.row.gn-extra-field{
+  fieldset > div.row.gn-extra-field {
     border-top: none;
   }
   /**
@@ -280,19 +284,18 @@ form.gn-editor {
   }
 
   .control-label {
-      color: #6a6a6a;
-      font-weight: 200;
-      padding-top: 0px;
-      line-height: 22px;
-
+    color: #6a6a6a;
+    font-weight: 200;
+    padding-top: 0px;
+    line-height: 22px;
   }
 
   .gn-required > label {
- //   color: #333333;
+    //   color: #333333;
   }
 
   .gn-move {
-//    .pull-right();
+    //    .pull-right();
   }
 
   legend > div.gn-move {
@@ -307,8 +310,9 @@ form.gn-editor {
   }
 
   .gn-has-xlink {
-    label, fieldset > legend {
-  //    opacity: .7;
+    label,
+    fieldset > legend {
+      //    opacity: .7;
     }
   }
 
@@ -330,12 +334,12 @@ form.gn-editor {
       width: 15%;
     }
     > input.gn-date.gn-notime {
-      width: 100%;
+      width: 100% !important;
     }
     > input.gn-time.hidden,
     > select.gn-timezone.hidden,
-    > input.gn-timezone.hidden{
-      width: 0%;
+    > input.gn-timezone.hidden {
+      width: 0% !important;
     }
     .gn-indeterminate-position {
       display: table-cell;
@@ -348,10 +352,10 @@ form.gn-editor {
       > select.gn-indeterminate-position {
         width: 20%;
       }
-      > input[type=date] {
+      > input[type="date"] {
         width: 40%;
       }
-      > input[type=time] {
+      > input[type="time"] {
         width: 40%;
       }
     }
@@ -365,7 +369,6 @@ form.gn-editor {
     margin-bottom: 0px;
   }
 
-
   /* Avoid white on white when i:hover
    */
   .btn:hover {
@@ -375,9 +378,9 @@ form.gn-editor {
   /**
    * Keyword selector directive
    */
-   *[data-gn-keyword-selector] {
-       margin-bottom: 10px;
-   }
+  *[data-gn-keyword-selector] {
+    margin-bottom: 10px;
+  }
 
   .bootstrap-tagsinput {
     min-height: 34px;
@@ -394,11 +397,12 @@ form.gn-editor {
     .tt-input {
       border: none;
       box-shadow: none;
-      background-color: #FFFFFF !important;
+      background-color: #ffffff !important;
     }
   }
   .gn-maxtags .bootstrap-tagsinput {
-    .twitter-typeahead, .twitter-typeahead > input {
+    .twitter-typeahead,
+    .twitter-typeahead > input {
       display: none !important;
     }
   }
@@ -408,53 +412,59 @@ form.gn-editor {
     max-height: inherit;
   }
   fieldset {
-      padding: 5px;
-      border: 1px solid #ebebeb;
-      border-radius: 3px;
-      margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    margin-top: 10px;
   }
   .gn-field {
-      border-radius: 3px;
-      margin: 0px;
-      padding-top: 4px;
-      padding-bottom: 4px;
+    border-radius: 3px;
+    margin: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
   .field-bg {
-      background-color: #f7f7f7;
+    background-color: #f7f7f7;
   }
   .gn-move {
-      border: none;
+    border: none;
   }
   i.btn.fa-times.text-danger {
-      visibility: hidden;
-      padding: 5px;
+    visibility: hidden;
+    padding: 5px;
+  }
+  .gn-file-uploader i.btn.fa-times.text-danger {
+    visibility: visible;
   }
   .show {
-      visibility: visible;
+    visibility: visible;
   }
   .gn-value .col-xs-8 {
-      padding-left: 0px;
+    padding-left: 0px;
   }
   .gn-value .col-xs-4 {
-      padding-right: 0px;
+    padding-right: 0px;
   }
 
   div.th-inner {
     font-size: 12px;
   }
 
-  .gn-required > div.th-inner:after, legend.gn-required:after,
-  label.gn-required:after, .gn-required > label:after,
-  label.gn-mandatory:after, .gn-mandatory > label:after {
-      content: "*";
-      font-size: 2.5em;
-      margin: 7px 0 0 7px;
-      position: absolute;
-      color: #a94442;
-      font-weight: normal;
+  .gn-required > div.th-inner:after,
+  legend.gn-required:after,
+  label.gn-required:after,
+  .gn-required > label:after,
+  label.gn-mandatory:after,
+  .gn-mandatory > label:after {
+    content: "*";
+    font-size: 2.5em;
+    margin: 7px 0 0 7px;
+    position: absolute;
+    color: #a94442;
+    font-weight: normal;
   }
 
-  .gn-required > div.th-inner:after{
+  .gn-required > div.th-inner:after {
     font-size: 2em;
     margin: -7px 0 0 7px;
   }
@@ -464,8 +474,8 @@ form.gn-editor {
   }
 
   .form-horizontal .form-group {
-      margin-left: 0px;
-      margin-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 
   /* Multilingual badge positionning when
@@ -596,9 +606,10 @@ form.gn-tab-inspire {
     margin-top: 10px;
   }
 }
-.onlinesrc-container, [gn-directory-entry-list-selector] {
+.onlinesrc-container,
+[gn-directory-entry-list-selector] {
   .list-group {
-    max-height:50%;
+    max-height: 50%;
     overflow: auto;
   }
   .list-group.fixed {
@@ -621,7 +632,6 @@ form.gn-tab-inspire {
       background-color: #428bca;
     }
   }
-
 }
 .onlinesrc-container {
   .gn-layers-grid-container {
@@ -704,7 +714,7 @@ table.gn-data-store {
 
 form.gn-tab-xml {
   div[data-gn-toggle] {
-    display:none;
+    display: none;
   }
 }
 
@@ -796,7 +806,7 @@ form.gn-tab-xml {
 
 [gn-directory-entry-list-selector] {
   .gn-form-any {
-    margin-bottom:30px;
+    margin-bottom: 30px;
   }
 
   .gn-record {
@@ -834,7 +844,7 @@ form.gn-tab-xml {
 
 [data-gn-directory-entry-selector] {
   .gn-autocomplete-list {
-    top:0 !important;
+    top: 0 !important;
     width: 100%;
   }
 }
@@ -878,7 +888,8 @@ gn-directory-associated-md {
 }
 
 // md type widget (used only in editor for now)
-gn-md-type-widget, gn-md-type-inspire-validation-widget {
+gn-md-type-widget,
+gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -894,13 +905,16 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1, &.valid-inspire-status-1 {
+    &.valid-status-1,
+    &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0, &.valid-inspire-status0 {
+    &.valid-status0,
+    &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1, &.valid-inspire-status1 {
+    &.valid-status1,
+    &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
@@ -913,7 +927,7 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
       }
     }
     &::after {
-      content: '';
+      content: "";
       background-color: rgba(255, 255, 255, 0.25);
       position: absolute;
       top: 0px;
@@ -923,7 +937,6 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
     }
   }
 }
-
 
 // md type widget (used only in editor for now)
 gn-draft-validation-widget {
@@ -956,7 +969,7 @@ gn-draft-validation-widget {
     }
 
     &::after {
-      content: '';
+      content: "";
       background-color: rgba(255, 255, 255, 0.25);
       position: absolute;
       top: 0px;
@@ -969,7 +982,8 @@ gn-draft-validation-widget {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    gn-md-type-widget, gn-md-type-inspire-validation-widget {
+    gn-md-type-widget,
+    gn-md-type-inspire-validation-widget {
       margin-top: 5px;
     }
   }
@@ -1003,9 +1017,9 @@ gn-bounding-polygon {
   }
 }
 
- // scrollspy
-  .gn-scroll-spy {
-    .btn.btn-round {
-      border-radius: 50% !important;
-    }
+// scrollspy
+.gn-scroll-spy {
+  .btn.btn-round {
+    border-radius: 50% !important;
   }
+}

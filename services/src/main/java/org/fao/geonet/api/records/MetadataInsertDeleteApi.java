@@ -75,9 +75,11 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -181,6 +183,9 @@ public class MetadataInsertDeleteApi {
     @Autowired
     RoleHierarchy roleHierarchy;
 
+    @Autowired
+    IMetadataValidator metadataValidator;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
         + "the record attachments are removed, the document removed "
@@ -208,6 +213,11 @@ public class MetadataInsertDeleteApi {
         boolean approved=true;
         if (metadata instanceof MetadataDraft) {
             approved=false;
+        }
+
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
+            checkUserProfileToDeletePublishedMetadata(userSession);
         }
 
         store.delResources(context, metadata.getUuid(), approved);
@@ -240,6 +250,7 @@ public class MetadataInsertDeleteApi {
         Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
@@ -250,6 +261,17 @@ public class MetadataInsertDeleteApi {
                 || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
+
+                if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
+                    try {
+                        checkUserProfileToDeletePublishedMetadata(userSession);
+                    } catch (NotAllowedException ex) {
+                        report.addMetadataInfos(metadata, "The user has no permissions to delete published metadata.");
+                        continue;
+                    }
+                }
+
+
                 MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
                 ApplicationContextHolder.get().publishEvent(preRemoveEvent);
 
@@ -459,7 +481,7 @@ public class MetadataInsertDeleteApi {
         String metadataUuid = null;
 
 
-        if (generateUuid && !StringUtils.isEmpty(targetUuid)) {
+        if (!generateUuid && !StringUtils.isEmpty(targetUuid)) {
             // Check if the UUID exists
             try {
                 ApiUtils.getRecord(targetUuid);
@@ -727,8 +749,8 @@ public class MetadataInsertDeleteApi {
             transformedMd = Xml.transform(transformedMd,
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
+                null, true, IndexingMode.none);
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
@@ -742,8 +764,8 @@ public class MetadataInsertDeleteApi {
             transformedMd = Xml.transform(transformedMd,
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
+                null, true, IndexingMode.none);
         }
 
         int iId = Integer.parseInt(id.get(0));
@@ -959,6 +981,13 @@ public class MetadataInsertDeleteApi {
             });
         }
 
+        if (rejectIfInvalid) {
+            // Persist the validation status
+            AbstractMetadata metadata = metadataRepository.findOneById(iId);
+
+            metadataValidator.doValidate(metadata, context.getLanguage());
+        }
+
         dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
@@ -976,6 +1005,24 @@ public class MetadataInsertDeleteApi {
             // Is the user profile is higher than the profile allowed to import metadata?
             if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to import metadata.");
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the user profile is allowed to import metadata.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToDeletePublishedMetadata(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+                throw new NotAllowedException("The user has no permissions to delete published metadata.");
             }
         }
 

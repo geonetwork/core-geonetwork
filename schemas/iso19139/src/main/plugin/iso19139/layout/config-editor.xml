@@ -514,6 +514,7 @@
     -->
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -521,7 +522,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="inspire" default="true" mode="flat">
@@ -3170,19 +3170,22 @@
     <!--
     Customize the editor layout by adding a class attribute
     <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
-    <view name="default">
+    <view name="default" 
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
-        <!-- General online source manager
-        <directive data-gn-onlinesrc-list=""/>
-        -->
-
         <!-- Simple overview manager + online source manger for other types
         Limit the max number of overviews with data-number-of-overviews="3" attribute.
         In the full view, editor can access and manage the file store and
         thumbnail name and description not supported by the overview manager.
         -->
-        <directive data-gn-validation-report=""/>
-        <directive data-gn-overview-manager=""/>
+        <directive data-gn-need-help="creating-metadata"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-file-uploader=""
+                   data-type="onlines"/>
+
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
 
@@ -3191,18 +3194,47 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
 
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
-        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
+        <!--
+        Example for file upload in the main form
+        <section>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo//gmd:title"/>
+
+          * Manage uploaded file with a WWW:DOWNLOAD protocol
+          <directive data-gn-file-uploader=""
+                     data-type="onlines"/>
+
+          * Same but with custom titles and icons
+          <directive data-gn-file-uploader=""
+                     data-title="Resource for download"
+                     data-btn-label="Drop a file here"
+                     data-icon="fa-cloud"
+                     data-type="onlines"/>
+
+          * Without the panel
+          <directive data-gn-file-uploader=""
+                     data-title=""
+                     data-type="onlines"/>
+
+          * With a custom protocol
+          <directive data-gn-file-uploader=""
+                     data-protocol="DIRECTDOWNLOAD"
+                     data-type="onlines"/>
+        </section>-->
+
+        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" collapsible="false"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
-        <section>
+        <section name="metadata" collapsed="true">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
@@ -3266,8 +3298,10 @@
       </thesaurusList>
 
     </view>
-    <view name="advanced">
+    <view name="advanced"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -3275,7 +3309,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="identificationInfo" default="true">
@@ -3344,6 +3377,7 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -3351,7 +3385,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

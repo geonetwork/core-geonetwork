@@ -21,13 +21,16 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_cors_interceptor');
+(function () {
+  goog.provide("gn_cors_interceptor");
 
-  goog.require('gn_urlutils_service');
-  goog.require('gn_map_service');
+  goog.require("gn_urlutils_service");
+  goog.require("gn_map_service");
 
-  var module = angular.module('gn_cors_interceptor', ['gn_urlutils_service', 'gn_map_service']);
+  var module = angular.module("gn_cors_interceptor", [
+    "gn_urlutils_service",
+    "gn_map_service"
+  ]);
 
   /**
    * CORS Interceptor
@@ -37,87 +40,98 @@
    */
 
   module.config([
-    '$httpProvider',
-    function($httpProvider) {
+    "$httpProvider",
+    function ($httpProvider) {
       $httpProvider.interceptors.push([
-        '$q',
-        '$injector',
-        'gnGlobalSettings',
-        'gnLangs',
-        'gnUrlUtils',
-        'gnMapServicesCache',
-        '$templateCache',
-        function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils, gnMapServicesCache, $templateCache) {
+        "$q",
+        "$injector",
+        "gnGlobalSettings",
+        "gnLangs",
+        "gnUrlUtils",
+        "gnMapServicesCache",
+        "$templateCache",
+        function (
+          $q,
+          $injector,
+          gnGlobalSettings,
+          gnLangs,
+          gnUrlUtils,
+          gnMapServicesCache,
+          $templateCache
+        ) {
           return {
-            request: function(config) {
+            request: function (config) {
               // Do not manipulate url which are available in the template
               // cache built by WRO4J.
               if ($templateCache.get(config.url) !== undefined) {
                 return config;
               }
               var isGnUrl =
-                  config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
-                  (config.url.indexOf('http') !== 0 &&
-                  config.url.indexOf('//') !== 0);
+                config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
+                (config.url.indexOf("http") !== 0 && config.url.indexOf("//") !== 0);
 
               // If this is an authorized mapservice then we need to adjust the url or add auth headers
               // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
-              if (config.url !== null && config.url.startsWith("http") && !config.url.startsWith(gnGlobalSettings.proxyUrl)) {
-                 var mapservice = gnMapServicesCache.getMapservice(config.url);
-                 if (mapservice !== null) {
-                    if (mapservice.useProxy) {
-                       // If we need to use the proxy then add it to requireProxy list.
-                       if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
-                         var url = config.url.split('/');
-                         url = url[0] + '/' + url[1] + '/' + url[2] + '/';
-                         gnGlobalSettings.requireProxy.push(url);
-                       }
-                    } else {
-                       // If we are not using a proxy then add the headers.
-                       // Note that is may still end up using the proxy if there is a cors issue.
-                       if (gnMapServicesCache.getAuthorizationHeaderValue(mapservice)) {
-                          config.headers['Authorization'] = gnMapServicesCache.getAuthorizationHeaderValue(mapservice);
-                       }
+              if (
+                config.url !== null &&
+                config.url.startsWith("http") &&
+                !config.url.startsWith(gnGlobalSettings.proxyUrl)
+              ) {
+                var mapservice = gnMapServicesCache.getMapservice(config.url);
+                if (mapservice !== null) {
+                  if (mapservice.useProxy) {
+                    // If we need to use the proxy then add it to requireProxy list.
+                    if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
+                      var url = config.url.split("/");
+                      url = url[0] + "/" + url[1] + "/" + url[2] + "/";
+                      gnGlobalSettings.requireProxy.push(url);
                     }
-                 }
+                  } else {
+                    // If we are not using a proxy then add the headers.
+                    // Note that is may still end up using the proxy if there is a cors issue.
+                    if (gnMapServicesCache.getAuthorizationHeaderValue(mapservice)) {
+                      config.headers["Authorization"] =
+                        gnMapServicesCache.getAuthorizationHeaderValue(mapservice);
+                    }
+                  }
+                }
               }
 
               //Add language headers manually or some servers fail
-              if (isGnUrl && gnLangs.current &&
-                  !config.headers['Accept-Language']) {
-                config.headers['Accept-Language'] = gnLangs.current;
-              } else if (!config.headers['Accept-Language']) {
-                config.headers['Accept-Language'] = navigator.language;
+              if (isGnUrl && gnLangs.current && !config.headers["Accept-Language"]) {
+                config.headers["Accept-Language"] = gnLangs.current;
+              } else if (!config.headers["Accept-Language"]) {
+                config.headers["Accept-Language"] = navigator.language;
               }
               // For HTTP url and those which
               // are not targeting the catalog
               // add proxy if needed
-              if (config.url.indexOf('http', 0) === 0 &&
-                  config.url.indexOf(gnGlobalSettings.gnUrl) !== 0) {
-                var url = config.url.split('/');
-                url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+              if (
+                config.url.indexOf("http", 0) === 0 &&
+                config.url.indexOf(gnGlobalSettings.gnUrl) !== 0
+              ) {
+                var url = config.url.split("/");
+                url = url[0] + "/" + url[1] + "/" + url[2] + "/";
 
                 if ($.inArray(url, gnGlobalSettings.requireProxy) !== -1) {
                   // require proxy
-                  config.url = gnGlobalSettings.proxyUrl +
-                      encodeURIComponent(config.url);
+                  config.url = gnGlobalSettings.proxyUrl + encodeURIComponent(config.url);
                 }
               } else if (gnGlobalSettings.gnUrl) {
                 // Relative URL in API mode
                 // are prefixed with catalog URL
                 // console.log(config.url);
-                config.url = gnGlobalSettings.gnUrl +
-                             (gnLangs.current || 'eng') + '/' +
-                             config.url;
+                config.url =
+                  gnGlobalSettings.gnUrl + (gnLangs.current || "eng") + "/" + config.url;
               }
 
               return config;
             },
-            responseError: function(response) {
+            responseError: function (response) {
               var config = response.config;
 
               if (config.nointercept) {
-                if(response.status > 199 && response.status < 400) {
+                if (response.status > 199 && response.status < 400) {
                   // let it pass
                   return $q.resolve(config);
                 } else {
@@ -131,7 +145,7 @@
               if (response.status === -1) {
                 var defer = $q.defer();
 
-                if (config.url.indexOf('http', 0) === 0) {
+                if (config.url.indexOf("http", 0) === 0) {
                   if (gnUrlUtils.urlIsSameOrigin(config.url)) {
                     // if the target URL is in the GN host,
                     // don't use proxy and reject the promise.
@@ -139,25 +153,31 @@
                   } else {
                     // if the target URL is in other site/protocol that GN,
                     // use the proxy to make the request.
-                    var url = config.url.split('/');
-                    url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+                    var url = config.url.split("/");
+                    url = url[0] + "/" + url[1] + "/" + url[2] + "/";
 
                     if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
                       gnGlobalSettings.requireProxy.push(url);
                     }
 
-                    $injector.invoke(['$http', function($http) {
-                      // This modification prevents interception (infinite
-                      // loop):
-                      config.nointercept = true;
+                    $injector.invoke([
+                      "$http",
+                      function ($http) {
+                        // This modification prevents interception (infinite
+                        // loop):
+                        config.nointercept = true;
 
-                      // retry again
-                      $http(config).then(function(resp) {
-                        defer.resolve(resp);
-                      }, function(resp) {
-                        defer.reject(resp);
-                      });
-                    }]);
+                        // retry again
+                        $http(config).then(
+                          function (resp) {
+                            defer.resolve(resp);
+                          },
+                          function (resp) {
+                            defer.reject(resp);
+                          }
+                        );
+                      }
+                    ]);
                   }
                 } else {
                   //It is not an http request, it looks like an internal request
@@ -169,10 +189,9 @@
                 return $q.reject(response);
               }
             }
-          }
+          };
         }
       ]);
     }
   ]);
-
 })();

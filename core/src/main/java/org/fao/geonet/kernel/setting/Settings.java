@@ -85,6 +85,7 @@ public class Settings {
     public static final String SYSTEM_USER_LASTNOTIFICATIONDATE = "system/userFeedback/lastNotificationDate";
     public static final String SYSTEM_LOCALRATING_ENABLE = "system/localrating/enable";
     public static final String SYSTEM_LOCALRATING_NOTIFICATIONLEVEL = "system/localrating/notificationLevel";
+    public static final String SYSTEM_LOCALRATING_NOTIFICATIONGROUPS = "system/localrating/notificationGroups";
     public static final String SYSTEM_XLINK_RESOLVER_IGNORE = "system/xlinkResolver/ignore";
     public static final String SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING = "system/hidewithheldelements/enableLogging";
     public static final String SYSTEM_AUTOFIXING_ENABLE = "system/autofixing/enable";
@@ -96,6 +97,10 @@ public class Settings {
     public static final String SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT = "system/harvester/enablePrivilegesManagement";
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
     public static final String SYSTEM_HARVESTING_MAIL_RECIPIENT = "system/harvesting/mail/recipient";
     public static final String SYSTEM_HARVESTING_MAIL_LEVEL3 = "system/harvesting/mail/level3";
@@ -125,6 +130,7 @@ public class Settings {
     public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
+    public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";

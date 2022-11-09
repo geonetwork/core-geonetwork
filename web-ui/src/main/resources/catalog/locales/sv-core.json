@@ -430,7 +430,7 @@
     "link-fcats": "Objekttypskatalog",
     "link-associated": "Associerade resurser",
     "indexAccessError": "Fel under indexåtkomst.",
-    "applyFilter": "Använd filter",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Bekräfta åtgärd",
     "close": "Stäng",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Satsvis godkännande av metadata",
     "batchApproveInfo": "Det här alternativet godkänner de valda metadata som ägs av användaren. Som standard godkänns endast metadata med status inskickad. Välj alternativet nedan för att direkt godkänna metadata som inte har status inskickad.",
     "batchApproveDirect": "Godkänn metadata utan att de behöver ha status inskickad",
-    "facet-mdStatus": "Status i arbetsflödet"
+    "facet-mdStatus": "Status i arbetsflödet",
+    "skipLink": "Skip and go to the content"
 }

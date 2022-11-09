@@ -53,7 +53,7 @@
                         select=".//gmd:individualName[1]"/>
 
           <xsl:for-each select="$name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
@@ -114,7 +114,7 @@
                         select=".//gmd:individualName[1]"/>
 
           <xsl:for-each select="$name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>

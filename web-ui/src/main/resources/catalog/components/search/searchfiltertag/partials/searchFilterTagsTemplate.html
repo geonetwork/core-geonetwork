@@ -1,36 +1,47 @@
-<div class="search-filter-tags panel panel-default"
-     ng-if="currentFilters.length">
+<div class="search-filter-tags panel panel-default" ng-if="currentFilters.length">
   <div class="panel-heading flex-row">
     <span translate>activeFilters</span>
     <div class="flex-spacer flex-grow"></div>
-    <a href ng-click="removeAll()"
-       title="{{'ClearTitle' | translate}}"
-       class="btn btn-default btn-xs">
+    <a
+      href
+      ng-click="removeAll()"
+      title="{{'ClearTitle' | translate}}"
+      class="btn btn-default btn-xs"
+    >
       <i class="fa fa-fw fa-times text-danger delete-icon"></i>
     </a>
   </div>
   <div class="panel-body">
-    <a href
-       class="filter-group flex-row flex-wrap"
-       title="{{'removeThisFilter' | translate}}"
-       ng-repeat="filter in currentFilters"
-       ng-init="specific = isSpecificParameter(filter.key); type = getFilterType(filter);"
-       ng-click="removeFilter(filter)">
+    <a
+      href
+      class="filter-group flex-row flex-wrap"
+      title="{{'removeThisFilter' | translate}}"
+      ng-repeat="filter in currentFilters"
+      ng-init="specific = isSpecificParameter(filter.key); type = getFilterType(filter);"
+      ng-click="removeFilter(filter)"
+    >
       <strong class="text-no-wrap">
         <span ng-if="::!specific">{{('facet-' + filter.key) | facetKeyTranslator}}</span>
         <span ng-if="::specific">{{filter.key}}</span>
       </strong>
       <div class="flex-spacer"></div>
-      <span ng-if="::specific">
-        {{::filter.value | characters:180}}
-      </span>
+      <span ng-if="::specific"> {{::filter.value | characters:180}} </span>
       <span ng-if="::type === 'RANGE'">
         {{::filter.value.replace('+' + filter.key + ':', '') | renderRangeExpression}}
       </span>
-      <span ng-if="::!specific && type === undefined"
-            ng-repeat="(key, value) in filter.value track by $index"
-            ng-class="{'gn-filter-negative': isNegative(value)}"
-            translate>{{::key | facetTranslator: filter.key | capitalize}}</span>
+      <span
+        ng-if="::filter.label"
+        ng-class="{'gn-filter-negative': isNegative(filter.value['#MISSING#'])}"
+      >
+        {{::filter.label | translate}}
+      </span>
+      <span
+        ng-if="::!specific && filter.label === undefined && type === undefined"
+        ng-repeat="(key, value) in filter.value track by $index"
+        ng-class="{'gn-filter-negative': isNegative(value)}"
+        translate
+        >{{::key | facetTranslator: filter.key | capitalize}}</span
+      >
       <!-- TODO: Nested aggs support -->
       <div class="flex-grow"></div>
       <span class="fa fa-times text-danger delete-icon pull-right"></span>

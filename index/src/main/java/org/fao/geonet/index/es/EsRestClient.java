@@ -37,6 +37,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -299,6 +300,7 @@ public class EsRestClient implements InitializingBean {
         searchSourceBuilder.fetchSource(includedFields.toArray(new String[includedFields.size()]), null);
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(size);
+        searchSourceBuilder.trackTotalHits(true);
         if (postFilterBuilder != null) {
             searchSourceBuilder.postFilter(postFilterBuilder);
         }
@@ -307,7 +309,6 @@ public class EsRestClient implements InitializingBean {
             sort.forEach(s -> searchSourceBuilder.sort(s));
         }
 
-//        searchSourceBuilder.sort(new FieldSortBuilder("_id").order(SortOrder.ASC));
         searchRequest.source(searchSourceBuilder);
 
         try {
@@ -382,9 +383,11 @@ public class EsRestClient implements InitializingBean {
             // TODO: Use _doc API?
             final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1, null);
             if (searchResponse.status().getStatus() == 200) {
-                if (searchResponse.getHits().getTotalHits().value == 0) {
+                TotalHits totalHits = searchResponse.getHits().getTotalHits();
+                long matches = totalHits == null ? -1 : totalHits.value; 
+                if (matches == 0) {
                     return fieldValues;
-                } else if (searchResponse.getHits().getTotalHits().value == 1) {
+                } else if (matches == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();
 
                     fields.forEach(f -> {
@@ -399,7 +402,7 @@ public class EsRestClient implements InitializingBean {
                     throw new IOException(String.format(
                         "Your query '%s' returned more than one record, %d in fact. Can't retrieve field values for more than one record.",
                         query,
-                        searchResponse.getHits().getTotalHits()
+                        matches
                     ));
                 }
             } else {

@@ -81,21 +81,20 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     // ---------------------------------------------------------------------------
 
     /**
-     * Constructs an instance of {@code ISODate} with the time and format passed as parameters, local timezone.
+     * Constructs an instance of {@code ISODate} with the time and format passed as parameters.
+     *
+     * The local timezone is used, unless the argument {@code shortDate} value {@code true} is supplied
+     * to to force the timezone to UTC. THis setting is used to respect a time provided in the short
+     * format {@code yyyy-mm-dd}.
      *
      * @param timeInEpochMillis milliseconds passed from 1970-01-01T00:00:00Z (Unix epoch).
-     * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd}.
+     * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd} forcing timezone to UTC.
      */
     public ISODate(final long timeInEpochMillis, final boolean shortDate) {
-        ZoneId zoneId;
-        if (shortDate) {
-            zoneId = ZoneOffset.UTC;
-        } else {
-            zoneId = ZoneId.systemDefault();
-        }
-        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
-        internalDateTime = ZonedDateTime.ofInstant(instantParam, zoneId).truncatedTo(ChronoUnit.MILLIS);
         _shortDate = shortDate;
+
+        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
+        internalDateTime = instantParam.atZone(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS);
     }
 
     /**

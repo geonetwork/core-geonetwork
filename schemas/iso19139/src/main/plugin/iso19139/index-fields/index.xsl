@@ -45,15 +45,13 @@
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
-  <xsl:output method="xml" indent="yes"/>
-
   <xsl:output name="default-serialize-mode"
               indent="no"
               omit-xml-declaration="yes"
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-
+  <xsl:param name="fastIndexMode" select="false()"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -152,6 +150,10 @@
 
       <xsl:for-each select="gmd:metadataStandardVersion">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="gmd:hierarchyLevelName">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
@@ -370,13 +372,6 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -985,6 +980,7 @@
         </xsl:for-each>
       </xsl:for-each>
 
+      <xsl:variable name="atomProtocol" select="util:getSettingValue('system/inspire/atomProtocol')" />
 
       <xsl:for-each select="gmd:distributionInfo/*">
         <xsl:for-each
@@ -1019,8 +1015,16 @@
           <xsl:element name="linkUrlProtocol{replace($protocol[1], '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </xsl:element>
+          <xsl:if test="$protocol = $atomProtocol">
+            <atomfeed><xsl:value-of select="gmd:linkage/gmd:URL"/></atomfeed>
+          </xsl:if>
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape((gmd:protocol/*/text())[1])"/>",
+            "mimeType":"<xsl:value-of select="if (*/gmx:MimeFileType)
+                                              then gn-fn-index:json-escape(*/gmx:MimeFileType/@type)
+                                              else if (starts-with(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
+                                              then gn-fn-index:json-escape(replace(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', ''))
+                                              else ''"/>",
             "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
             "name":"<xsl:value-of select="$linkName"/>",
             "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>",
@@ -1195,7 +1199,7 @@
         <xsl:variable name="getRecordByIdId">
           <xsl:if test="@xlink:href != ''">
             <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([\w\-\.\{{\}}]*).*">
+                                regex=".*[i|I][d|D]=([_\w\-\.\{{\}}]*).*">
               <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
               </xsl:matching-substring>
@@ -1221,6 +1225,7 @@
 
           <xsl:variable name="resolvedDoc">
             <xsl:if test="$processRemoteDocs
+                          and not($fastIndexMode)
                           and $xlink != ''
                           and not(@xlink:title)
                           and not(starts-with($xlink, $siteUrl))">

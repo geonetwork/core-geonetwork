@@ -22,128 +22,132 @@
  */
 
 (function () {
-  goog.provide('gn_es_query_parser')
+  goog.provide("gn_es_query_parser");
 
-  var module = angular.module('gn_es_query_parser', [])
+  var module = angular.module("gn_es_query_parser", []);
 
-  module.service('gnEsLuceneQueryParser', [function () {
+  module.service("gnEsLuceneQueryParser", [
+    function () {
+      this.facetGroupToLuceneQuery = function (indexKey, values) {
+        return values && values.length
+          ? ("+" + indexKey + ':("' + values.join('" "') + '")').trim()
+          : "";
+      };
 
-    this.facetGroupToLuceneQuery = function (indexKey, values) {
-      return (values && values.length) ? ('+' + indexKey + ':("' + values.join('" "') + '")').trim() : ''
-    }
+      this.combineQueryGroups = function (queryGroups) {
+        return queryGroups ? queryGroups.join(" AND ").trim() : "";
+      };
 
-    this.combineQueryGroups = function (queryGroups) {
-      return queryGroups ? queryGroups.join(' AND ').trim() : ''
-    }
-
-    /**
-     * Facet state is an object like this:
-     *
-     * {
-     *   'tag': {
-     *     'world': true,
-     *     'vector': true
-     *   },
-     *   'availableInService' : {
-     *     'availableInViewService': '+linkProtocol:\/OGC:WMS.*\/'
-     *   },
-     *   'resourceType': {
-     *     'service': {
-     *       'serviceType': {
-     *         'OGC:WMS': true
-     *         'OGC:WFS': false
-     *       }
-     *     },
-     *     'download': {
-     *       'serviceType': {
-     *       }
-     *     },
-     *     'dataset': true
-     *   }
-     * }
-     *
-     * @param facetsState
-     * @returns {string}
-     */
-    this.facetsToLuceneQuery = function (facetsState) {
-      var query = []
-      for (var indexKey in facetsState) {
-
-        var query_chunk = parseStateNode(indexKey, facetsState[indexKey])
-        if (query_chunk) {
-          query.push(query_chunk)
-        }
-      }
-      return this.combineQueryGroups(query)
-    }
-
-    function parseStateNode(nodeName, node, indexKey) {
-      var query_string = ''
-      if (angular.isObject(node)) {
-        var chunks = []
-        for (var p in node) {
-
-          // nesting
-          if (angular.isObject(node[p])) {
-            var nextLvlKey = Object.keys(node[p])[0]
-            var nextLvlState = node[p][nextLvlKey]
-            if(Object.keys(nextLvlState).length) {
-              var nestedChunks = [nodeName + ':' + '"' + p + '"']
-              var chunk = parseStateNode(nextLvlKey, nextLvlState, nextLvlKey).trim()
-              if (chunk) {
-                nestedChunks.push(chunk)
-              }
-              chunks.push('(' + nestedChunks.join(' AND ') + ')')
-            }
-          } else {
-            var chunk = parseStateNode(p, node[p], nodeName).trim()
-            if (chunk) {
-              chunks.push(chunk)
-            }
+      /**
+       * Facet state is an object like this:
+       *
+       * {
+       *   'tag': {
+       *     'world': true,
+       *     'vector': true,
+       *     '#MISSING#': true
+       *   },
+       *   'availableInService' : {
+       *     'availableInViewService': '+linkProtocol:\/OGC:WMS.*\/'
+       *   },
+       *   'resourceType': {
+       *     'service': {
+       *       'serviceType': {
+       *         'OGC:WMS': true
+       *         'OGC:WFS': false
+       *       }
+       *     },
+       *     'download': {
+       *       'serviceType': {
+       *       }
+       *     },
+       *     'dataset': true
+       *   }
+       * }
+       *
+       * @param facetsState
+       * @returns {string}
+       */
+      this.facetsToLuceneQuery = function (facetsState) {
+        var query = [];
+        for (var indexKey in facetsState) {
+          var query_chunk = parseStateNode(indexKey, facetsState[indexKey]);
+          if (query_chunk) {
+            query.push(query_chunk);
           }
         }
-        if (chunks && chunks.length) {
-          query_string += '('
-          query_string += chunks.join(' OR ')
-          query_string += ')'
+        return this.combineQueryGroups(query);
+      };
+
+      function parseStateNode(nodeName, node, indexKey) {
+        var query_string = "";
+        if (angular.isObject(node)) {
+          var chunks = [];
+          for (var p in node) {
+            // nesting
+            if (angular.isObject(node[p])) {
+              var nextLvlKey = Object.keys(node[p])[0];
+              var nextLvlState = node[p][nextLvlKey];
+              if (Object.keys(nextLvlState).length) {
+                var nestedChunks = [nodeName + ":" + '"' + p + '"'];
+                var chunk = parseStateNode(nextLvlKey, nextLvlState, nextLvlKey).trim();
+                if (chunk) {
+                  nestedChunks.push(chunk);
+                }
+                chunks.push("(" + nestedChunks.join(" AND ") + ")");
+              }
+            } else {
+              var chunk = parseStateNode(p, node[p], nodeName).trim();
+              if (chunk) {
+                chunks.push(chunk);
+              }
+            }
+          }
+          if (chunks && chunks.length) {
+            query_string += "(";
+            query_string += chunks.join(" OR ");
+            query_string += ")";
+          }
+        } else if (angular.isString(node)) {
+          query_string += node;
+        } else if (node === true || node === false) {
+          var value = nodeName.endsWith("*")
+            ? nodeName.replace(" ", "\\\\ ")
+            : '"' + nodeName.replaceAll('"', '\\"') + '"';
+          if (nodeName === "#MISSING#") {
+            query_string += "(" + (node ? "-" : "") + "_exists_:" + indexKey + ")";
+          } else {
+            query_string += (node ? "" : "-") + indexKey + ":" + value;
+          }
         }
-      } else if (angular.isString(node)) {
-        query_string += node
-      } else if (node === true || node === false) {
-        var value = nodeName.endsWith('*')
-          ? nodeName.replace(' ', '\\\\ ')
-          : '"' + nodeName + '"';
-        query_string += (node ? '' : '-') + indexKey + ':' + value;
-      }
-      return query_string
-    }
-
-    function parseAstNode(node, facets) {
-      if (!node) return
-
-      var left = node.left
-      var right = node.right
-      var field = node.field
-      var operator = node.operator
-      var term = node.term
-      var nextGroup = facets
-
-      if (field) {
-        var indexKey = field.field
-        facets[indexKey] = facets[indexKey] || []
-        nextGroup = facets[indexKey]
+        return query_string;
       }
 
-      if (Array.isArray(facets)) {
-        if (term) {
-          facets.push(term)
+      function parseAstNode(node, facets) {
+        if (!node) return;
+
+        var left = node.left;
+        var right = node.right;
+        var field = node.field;
+        var operator = node.operator;
+        var term = node.term;
+        var nextGroup = facets;
+
+        if (field) {
+          var indexKey = field.field;
+          facets[indexKey] = facets[indexKey] || [];
+          nextGroup = facets[indexKey];
         }
-      } else if (typeof facets == 'object') {
 
+        if (Array.isArray(facets)) {
+          if (term) {
+            facets.push(term);
+          }
+        } else if (typeof facets == "object") {
+        }
+        parseAstNode(left, nextGroup);
+        parseAstNode(right, nextGroup);
       }
-      parseAstNode(left, nextGroup)
-      parseAstNode(right, nextGroup)
-
     }
-  }])
-})()
+  ]);
+})();

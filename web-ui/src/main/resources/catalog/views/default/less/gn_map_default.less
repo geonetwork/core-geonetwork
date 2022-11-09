@@ -3,7 +3,7 @@
 @btn-link-disabled-color: #707070;
 @dropdown-link-disabled-color: #707070;
 
-.gn-map-fixed { 
+.gn-map-fixed {
   [ol-map] {
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -29,6 +29,11 @@
   right: 0px;
   [ol-map] {
     height: calc(~"100vh - @{gn-menubar-height} - @{gn-bottombar-height} - 2px");
+    border: 1px solid transparent;
+    &:focus {
+      outline: 1px auto @brand-primary;
+      border-color: @brand-primary;
+    }
   }
   .ol-attribution {
     .gn-attribution();
@@ -44,7 +49,6 @@
   }
 
   .panel-tools {
-    max-height: ~"calc(100% - 2em - @{gn-bottombar-height} + 3px)";
     .panel-heading {
       background-color: transparent;
     }

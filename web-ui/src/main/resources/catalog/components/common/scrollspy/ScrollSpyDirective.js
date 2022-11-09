@@ -21,12 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_scroll_spy_directive');
+(function () {
+  goog.provide("gn_scroll_spy_directive");
 
-  goog.require('gn_utility_service');
+  goog.require("gn_utility_service");
 
-  var module = angular.module('gn_scroll_spy_directive', []);
+  var module = angular.module("gn_scroll_spy_directive", []);
 
   /**
    * Scroll spy navigation bar. Only cover 2 levels of fieldsets.
@@ -42,52 +42,52 @@
    * By default, the scroll spy div is displayed. Use collapse
    * attribute to collapsed it.
    */
-  module.directive('gnScrollSpy', [
-    'gnUtilityService', '$timeout',
-    function(gnUtilityService, $timeout) {
-
+  module.directive("gnScrollSpy", [
+    "gnUtilityService",
+    "$timeout",
+    function (gnUtilityService, $timeout) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: false,
         scope: {
-          id: '@gnScrollSpy',
-          watch: '=',
-          depth: '@',
-          allDepth: '@',
-          collapse: '@'
+          id: "@gnScrollSpy",
+          watch: "=",
+          depth: "@",
+          allDepth: "@",
+          collapse: "@"
         },
-        templateUrl: '../../catalog/components/common/scrollspy/partials/' +
-            'scrollspy.html',
-        link: function(scope, element, attrs) {
+        templateUrl:
+          "../../catalog/components/common/scrollspy/partials/" + "scrollspy.html",
+        link: function (scope, element, attrs) {
           var counter = 0,
-              depth = scope.depth || 2,
-              rootElementDepth = 0,
-              isInView = gnUtilityService.isInView,
-              childrenSearch =
-              (scope.allDepth == 'true' ?
-              'fieldset > legend' : 'fieldset > fieldset > legend');
+            depth = scope.depth || 2,
+            rootElementDepth = 0,
+            isInView = gnUtilityService.isInView,
+            childrenSearch =
+              scope.allDepth == "true"
+                ? "fieldset > legend"
+                : "fieldset > fieldset > legend";
 
           scope.scrollTo = gnUtilityService.scrollTo;
           // Ordered list in an array of elements to spy
           scope.spyElems = [];
           scope.isEnabled = false;
 
-          var previousLabel = '';
-          var registerSpy = function() {
-            var id = $(this).attr('id'),
-                currentDepth = $(this).parents(
-                'fieldset').length - 1 - rootElementDepth;
+          var previousLabel = "";
+          var registerSpy = function () {
+            var id = $(this).attr("id"),
+              currentDepth = $(this).parents("fieldset").length - 1 - rootElementDepth;
 
             if (currentDepth <= depth) {
               // Get the element id or create an id for the element to spy
               if (!id) {
-                id = scope.id + '-' + currentDepth + '-' + (counter++);
-                $(this).attr('id', id);
+                id = scope.id + "-" + currentDepth + "-" + counter++;
+                $(this).attr("id", id);
               }
 
               // Spy link configuration
               var spy = {
-                id: '#' + id,
+                id: "#" + id,
                 label: $(this).text(),
                 elem: $(this).parent(),
                 active: false,
@@ -101,14 +101,15 @@
                 // Children registration
                 // Skip on fieldset if requested
                 var parent =
-                    scope.allDepth == 'true' ?
-                    $(this) : $(this).parent('fieldset');
+                  scope.allDepth == "true" ? $(this) : $(this).parent("fieldset");
                 var parentFieldsetId = parent
-                    .parent('fieldset').parent('fieldset')
-                    .children('legend').attr('id');
+                  .parent("fieldset")
+                  .parent("fieldset")
+                  .children("legend")
+                  .attr("id");
                 if (parentFieldsetId) {
-                  var parentSpy = $.grep(scope.spyElems, function(spy) {
-                    return spy.id === '#' + parentFieldsetId;
+                  var parentSpy = $.grep(scope.spyElems, function (spy) {
+                    return spy.id === "#" + parentFieldsetId;
                   });
 
                   // Only register section if not the same
@@ -124,52 +125,50 @@
                 }
               }
 
-              $(this).parent().find(childrenSearch).each(
-                  registerSpy);
+              $(this).parent().find(childrenSearch).each(registerSpy);
             }
           };
 
-          scope.toggle = function() {
+          scope.toggle = function () {
             scope.isEnabled = !scope.isEnabled;
           };
 
           // Look for fieldsets and register spy
-          var init = function() {
+          var init = function () {
             // Remove current spy elements
             while (scope.spyElems.length) {
               scope.spyElems.pop();
             }
 
-            rootElement = $('#' + scope.id);
+            rootElement = $("#" + scope.id);
 
             // Get the number of fieldset above the current element
             // to compute depth later.
-            rootElementDepth = rootElement.parents('fieldset').length;
-            if (rootElement.prop('tagName') === undefined) {
-              console.log(scope.id +
-                  ' element is not available for scroll spy.');
+            rootElementDepth = rootElement.parents("fieldset").length;
+            if (rootElement.prop("tagName") === undefined) {
+              console.log(scope.id + " element is not available for scroll spy.");
               return;
             }
-            if (rootElement.prop('tagName').toLowerCase() === 'fieldset') {
+            if (rootElement.prop("tagName").toLowerCase() === "fieldset") {
               rootElementDepth++;
             }
 
             // Spy only first level of fieldsets
             rootElement
-              .find('> fieldset > legend, > div > fieldset > legend')
+              .find("> fieldset > legend, > div > fieldset > legend")
               .each(registerSpy);
-            $(window).scroll(function() {
+            $(window).scroll(function () {
               if (scope.isEnabled) {
-                scope.$apply(function() {
+                scope.$apply(function () {
                   // Check position of each first and second
                   // level element to spy and activate them
                   // if in the current viewport.
-                  angular.forEach(scope.spyElems, function(spy) {
+                  angular.forEach(scope.spyElems, function (spy) {
                     spy.active = isInView(spy.elem) ? true : false;
                     spy.children &&
-                        angular.forEach(spy.children, function(child) {
-                          child.active = isInView(child.elem) ? true : false;
-                        });
+                      angular.forEach(spy.children, function (child) {
+                        child.active = isInView(child.elem) ? true : false;
+                      });
                   });
                 });
               }
@@ -180,19 +179,24 @@
           // This is required as the scrollspy need the element
           // to be available in the DOM to be initialized.
           if (scope.watch) {
-            scope.$watch('watch', function(n, o) {
-              // Wait for the template to render
-              // FIXME: may not work properly ?
-              if (n !== o) {
-                $timeout(function() {
-                  init();
-                }, 200);
-              }
-            }, true);
+            scope.$watch(
+              "watch",
+              function (n, o) {
+                // Wait for the template to render
+                // FIXME: may not work properly ?
+                if (n !== o) {
+                  $timeout(function () {
+                    init();
+                  }, 200);
+                }
+              },
+              true
+            );
           } else {
             init();
           }
         }
       };
-    }]);
+    }
+  ]);
 })();

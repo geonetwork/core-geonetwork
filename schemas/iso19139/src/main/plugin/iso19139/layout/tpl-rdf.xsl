@@ -39,6 +39,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:ogc="http://www.opengis.net/rdf#"
+                xmlns:geo="http://www.opengis.net/ont/geosparql#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
                 version="2.0"
@@ -69,7 +70,7 @@
     -->
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="to-dcat">
 
-  
+
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
 
@@ -149,7 +150,7 @@
         <!-- "The size of a distribution.":N/A
           <dcat:size></dcat:size>
         -->
-        
+
           <xsl:if test="(gmd:protocol/gmx:Anchor/@xlink:href)[1]!=''">
           <dcat:mediaType>
             <xsl:attribute name="rdf:resource" select="(gmd:protocol/gmx:Anchor/@xlink:href)[1]"/>
@@ -161,7 +162,7 @@
             <xsl:value-of select="(gmd:protocol/gco:CharacterString)[1]"/>
           </dct:format>
           </xsl:if>
-          
+
       </dcat:Distribution>
     </xsl:for-each-group>
 
@@ -300,7 +301,7 @@
       <dcat:theme
         rdf:resource="{$resourcePrefix}/registries/vocabularies/{encode-for-uri(iso19139:getThesaurusCode(../../gmd:thesaurusName))}/concepts/{encode-for-uri(.)}"/>
     </xsl:for-each>
-    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->    
+    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->
     <xsl:for-each
       select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gmx:Anchor">
       <dcat:theme rdf:resource="{@xlink:href}">
@@ -316,7 +317,7 @@
     <!-- Thumbnail -->
     <xsl:for-each
       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[normalize-space(.)!='']">
-      <foaf:thumbnail rdf:resource="{.}"/>
+      <foaf:thumbnail rdf:resource="{replace(., ' ', '%20')}" />
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString -->
 
@@ -332,10 +333,9 @@
       </xsl:variable>
       <dct:spatial>
         <ogc:Polygon>
-          <ogc:asWKT rdf:datatype="http://www.opengis.net/rdf#WKTLiteral">
-            &lt;http://www.opengis.net/def/crs/OGC/1.3/CRS84&gt;
+          <geo:asWKT rdf:datatype="http://www.opengis.net/rdf#wktLiteral">
             Polygon((<xsl:value-of select="string-join($coords, ', ')"/>))
-          </ogc:asWKT>
+          </geo:asWKT>
         </ogc:Polygon>
       </dct:spatial>
     </xsl:for-each>
@@ -430,7 +430,7 @@
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
       <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/*/text())}"/>
     </xsl:for-each>
- 
+
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->
 
 

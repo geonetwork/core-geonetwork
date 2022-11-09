@@ -1,23 +1,24 @@
 <form name="myForm" id="gn-workflow-status-change">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
   <div data-ng-if="statusType === 'workflow'">
-
     <div class="form-group">
-      <label for="gn-change-message"
-            data-translate="">statusLogMessage</label>
-      <textarea class="form-control"
-                id="gn-change-message"
-                rows="4"
-                data-ng-model="newStatus.changeMessage"></textarea>
+      <label for="gn-change-message" data-translate="">statusLogMessage</label>
+      <textarea
+        class="form-control"
+        id="gn-change-message"
+        rows="4"
+        data-ng-model="newStatus.changeMessage"
+      ></textarea>
     </div>
 
     <div class="modal-footer-inline clearfix">
-      <div data-gn-need-help="user-guide/workflow/life-cycle.html"
-          data-icon-only="true"
-          class="pull-left"></div>
+      <div data-gn-need-help="life-cycle" data-icon-only="true" class="pull-left"></div>
       <div class="btn-toolbar pull-right">
-        <button class="btn btn-default" data-ng-disabled="newStatus.status == -1"
-                data-gn-click-and-spin="updateStatus()">
+        <button
+          class="btn btn-default"
+          data-ng-disabled="newStatus.status == -1"
+          data-gn-click-and-spin="updateStatus()"
+        >
           {{"mdStatusButton-" + statusToSelect | translate}}
         </button>
         <button class="btn btn-default" type="button" data-dismiss="modal">
@@ -32,37 +33,44 @@
     <div class="col-md-12">
       <h2>{{taskName}}</h2>
 
-
-      <div class="form-group"
-           data-ng-hide="task.notificationLevel === 'catalogueAdministrator'">
-        <label for="gn-task-owner"
-               data-translate="">taskOwner</label>
-        <input class="form-control"
-               id="gn-task-owner"
-               data-gn-user-picker="newStatus.owner"
-               type="text"></input>
+      <div
+        class="form-group"
+        data-ng-hide="task.notificationLevel === 'catalogueAdministrator'"
+      >
+        <label for="gn-task-owner" data-translate="">taskOwner</label>
+        <input
+          class="form-control"
+          id="gn-task-owner"
+          data-gn-user-picker="newStatus.owner"
+          type="text"
+        />
       </div>
 
       <div class="form-group">
-        <label for="gn-task-dueDate"
-               data-translate="">taskDueDate</label>
+        <label for="gn-task-dueDate" data-translate="">taskDueDate</label>
         <!-- Due date is after now - add check. -->
-        <input class="form-control"
-               id="gn-task-dueDate"
-               type="date"
-               data-ng-model="newStatus.dueDate"></input>
+        <input
+          class="form-control"
+          id="gn-task-dueDate"
+          type="date"
+          data-ng-model="newStatus.dueDate"
+        />
       </div>
 
       <div class="form-group">
-        <label for="gn-task-message"
-               data-translate="">taskMessage</label>
-        <textarea class="form-control"
-                  id="gn-task-message"
-                  data-ng-model="newStatus.changeMessage"></textarea>
+        <label for="gn-task-message" data-translate="">taskMessage</label>
+        <textarea
+          class="form-control"
+          id="gn-task-message"
+          data-ng-model="newStatus.changeMessage"
+        ></textarea>
       </div>
 
-      <button class="btn btn-default" data-ng-disabled="newStatus.status == -1"
-              data-gn-click-and-spin="updateStatus()">
+      <button
+        class="btn btn-default"
+        data-ng-disabled="newStatus.status == -1"
+        data-gn-click-and-spin="updateStatus()"
+      >
         <i class="fa fa-mail-forward"></i>&nbsp;
         <span data-translate="">triggerTask</span>
       </button>

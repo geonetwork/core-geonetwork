@@ -25,8 +25,12 @@ package org.fao.geonet.inspireatom.harvester;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
+import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.util.Builder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -61,8 +65,6 @@ import java.util.*;
  * @author Jose García
  */
 public class InspireAtomHarvester {
-    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
-    private final static String EXTRACT_DATASET_ID_XSLT = "extract-datasetid.xsl";
     private Logger logger = Log.createLogger(Geonet.ATOM);
     /**
      * GeoNetwork context.
@@ -125,7 +127,7 @@ public class InspireAtomHarvester {
                 processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result);
 
             // Process DATASET metadata feeds related to the service metadata
-            logger.info("ATOM feed harvest : processing dataset metadata feeds (" + datasetsInformation.size() + ")");
+            logger.info("ATOM feed harvest: processing dataset metadata feeds (" + datasetsInformation.size() + ")");
             processDatasetsMetadataFeeds(dataMan, datasetsInformation, result);
 
             logger.info("ATOM feed harvest finished");
@@ -222,10 +224,9 @@ public class InspireAtomHarvester {
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
-
                 String atomUrl = entry.getValue();
-                logger.debug("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
+                logger.info("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
 
                 String atomFeedDocument = InspireAtomUtil.retrieveRemoteAtomFeedDocument(gc, atomUrl);
                 logger.debug("Atom feed Document for service metadata (" + metadataUuid + "): " + atomFeedDocument);
@@ -455,25 +456,29 @@ public class InspireAtomHarvester {
         if (!d.isDirectory()) {
             directory = d.getParent() + File.separator;
         }
-
-        FileAppender fa = new FileAppender();
-        fa.setName(harvesterName);
         String logfile = directory + "atomharvester_" + packageType + "_"
             + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
-        fa.setFile(logfile);
 
         SettingManager settingManager = gc.getBean(SettingManager.class);
-
         String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
         if (StringUtils.isBlank(timeZoneSetting)) {
             timeZoneSetting = TimeZone.getDefault().getID();
         }
-        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
 
-        fa.setThreshold(logger.getThreshold());
-        fa.setAppend(true);
-        fa.activateOptions();
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+
+        PatternLayout layout = PatternLayout.newBuilder()
+            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
+            .build();
+
+        Builder<org.apache.logging.log4j.core.appender.FileAppender> fileBuilder = org.apache.logging.log4j.core.appender.FileAppender.newBuilder()
+            .setName(harvesterName)
+            .withFileName(logfile)
+            .setLayout(layout)
+            .withAppend(true);
+
+        FileAppender fa = fileBuilder.build();
 
         logger.setAppender(fa);
 

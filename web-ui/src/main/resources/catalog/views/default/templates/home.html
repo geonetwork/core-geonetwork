@@ -1,89 +1,97 @@
-<div class="row gn-row-main">
+<div class="row gn-row-main hidden-print">
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-    <div class="col-sm-4 col-sm-offset-6 ng-cloak"
-          data-ng-if="showHealthIndexError">
-      <div class="alert alert-warning text-center">
-        <h3 data-translate="">indexNotAvailable</h3>
-        <i class="fa fa-fw fa-cogs fa-3x"/>
-      </div>
-    </div>
+    <div class="col-sm-offset-6" data-gn-index-error-panel=""></div>
 
-    <div class="col-md-3 well well-sm"
-         data-ng-if="serviceMetadataForPortal != null">
+    <div class="col-md-3 well well-sm" data-ng-if="serviceMetadataForPortal != null">
+      <p ng-bind-html="serviceMetadataForPortal.resourceAbstract | linky:'_blank'"></p>
+
       <p
-        ng-bind-html="serviceMetadataForPortal.resourceAbstract | linky:'_blank'"></p>
-
-      <p data-ng-if="serviceMetadataForPortal.contactForResource
-                     && serviceMetadataForPortal.contactForResource.length > 0">
+        data-ng-if="serviceMetadataForPortal.contactForResource
+                     && serviceMetadataForPortal.contactForResource.length > 0"
+      >
         <span data-translate="">forMoreInformationContact</span>
-        <span data-ng-repeat="c in serviceMetadataForPortal.contactForResource"
-            data-ng-if="c.email != ''">
+        <span
+          data-ng-repeat="c in serviceMetadataForPortal.contactForResource"
+          data-ng-if="c.email != ''"
+        >
           <a href="mailto:{{c.email}}">{{c.email}}</a>
           <span data-ng-if="!$last">,</span>
         </span>
       </p>
     </div>
 
-    <div class="col-md-6"
-         data-ng-class="{'col-md-offset-3': serviceMetadataForPortal == null}"
-          data-ng-if="!showHealthIndexError">
-
+    <div
+      class="col-md-6"
+      data-ng-class="{'col-md-offset-3': serviceMetadataForPortal == null}"
+      data-ng-if="!showHealthIndexError"
+    >
       <div class="input-group gn-form-any">
-        <input type="text"
-              role="combobox"
-              class="form-control input-lg"
-              autofocus=""
-              autocomplete="off"
-              data-ng-model="homeAnyField"
-              data-ng-model-options="modelOptions"
-              placeholder="{{'anyPlaceHolder' | translate}}"
-              aria-label="{{'anyPlaceHolder' | translate}}"
-              data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
-              data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
-              data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
-              data-typeahead-loading="anyLoading"
-              data-typeahead-min-length="1"
-              data-typeahead-focus-first="false"
-              data-typeahead-wait-ms="300"/>
+        <input
+          type="text"
+          role="combobox"
+          class="form-control input-lg"
+          autofocus=""
+          autocomplete="off"
+          data-ng-model="homeAnyField"
+          data-ng-model-options="modelOptions"
+          placeholder="{{'anyPlaceHolder' | translate}}"
+          aria-label="{{'anyPlaceHolder' | translate}}"
+          data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
+          data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
+          data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
+          data-typeahead-loading="anyLoading"
+          data-typeahead-min-length="1"
+          data-typeahead-focus-first="false"
+          data-typeahead-wait-ms="300"
+        />
         <span class="input-group-btn">
-          <a class="btn btn-default btn-lg"
-              type="button"
-              data-ng-disabled="searchInfo.hits.total.value == 0"
-              data-ng-href="#/search?any={{homeAnyField}}">
+          <a
+            class="btn btn-default btn-lg"
+            type="button"
+            data-ng-disabled="searchInfo.hits.total.value == 0"
+            data-ng-href="#/search?any={{homeAnyField}}"
+          >
             <i class="fa fa-search"></i>
             <span class="sr-only" data-translate="">search</span>
           </a>
         </span>
       </div>
 
-      <div data-translate="" class="search-over"
-          data-translate-values="{records: '{{searchInfo.hits.total.value}}'}">searchOver</div>
-
+      <div
+        data-translate=""
+        class="search-over"
+        data-translate-values="{records: '{{searchInfo.hits.total.value}}'}"
+      >
+        searchOver
+      </div>
     </div>
   </div>
 </div>
 <!-- /.gn-row-main -->
-<div data-ng-if="showMosaic"
-     data-gn-record-mosaic="-cl_status.key:obsolete" size="9"/>
+<div data-ng-if="showMosaic" data-gn-record-mosaic="-cl_status.key:obsolete" size="9" />
 
-<form data-ng-if="showMaps"
-      class="form-horizontal"
-      role="form"
-      data-ng-controller="gnsSearchTopEntriesController"
-      data-ng-search-form=""
-      data-runSearch="true"
-      data-ng-show="searchResults.records.length > 0">
+<form
+  data-ng-if="showMaps"
+  class="form-horizontal"
+  role="form"
+  data-ng-controller="gnsSearchTopEntriesController"
+  data-ng-search-form=""
+  data-runSearch="true"
+  data-ng-show="searchResults.records.length > 0"
+>
   <div class="row gn-top-records" role="row">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <h1 data-translate="">topMaps</h1>
 
-      <input type="hidden" name="_csrf" value="{{csrf}}"/>
+      <input type="hidden" name="_csrf" value="{{csrf}}" />
 
-      <div data-ng-show="searchResults.records.length > 0"
-            data-gn-results-container=""
-            class="gn-info-list-blocks"
-            data-search-results="searchResults"
-            data-template-url="resultTemplate"></div>
+      <div
+        data-ng-show="searchResults.records.length > 0"
+        data-gn-results-container=""
+        class="gn-info-list-blocks"
+        data-search-results="searchResults"
+        data-template-url="resultTemplate"
+      ></div>
     </div>
   </div>
   <!-- /.gn-top-records -->
@@ -93,14 +101,15 @@
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-md-offset-2 col-md-8 alert alert-warning">
       <span data-translate="">noDataInCatalog</span>
-      <div data-gn-need-help="user-guide/quick-start/index.html"></div>
+      <div data-gn-need-help="quick-start-home"></div>
     </div>
   </div>
 </div>
 
-
-<div class="gn-row-topics"
-     data-ng-show="searchInfo.hits.total.value > 0 && searchInfo.aggregations">
+<div
+  class="gn-row-topics"
+  data-ng-show="searchInfo.hits.total.value > 0 && searchInfo.aggregations"
+>
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div data-ng-show="homeFacet.list.length > 0">
       <div class="row">
@@ -108,91 +117,47 @@
           <span data-translate="">browseBy</span>
         </h1>
         <div class="gn-topic-select col-md-12">
-          <label data-ng-repeat="facetKey in homeFacet.list"
-                 data-ng-init="agg = searchInfo.aggregations[facetKey]"
-                 data-ng-show="agg.buckets.length > 0 && facetKey != homeFacet.lastKey">
-            <input type="radio" name="homeFacet"
-                   class="sr-only"
-                   data-ng-model="homeFacet.key"
-                   data-ng-value="facetKey"/>
-            <span data-translate="">{{::('facet-' + facetKey) | facetKeyTranslator}}</span>&nbsp;
+          <label
+            data-ng-repeat="facetKey in homeFacet.list"
+            data-ng-init="agg = searchInfo.aggregations[facetKey]"
+            data-ng-show="agg.buckets.length > 0 && facetKey != homeFacet.lastKey"
+          >
+            <input
+              type="radio"
+              name="homeFacet"
+              class="sr-only"
+              data-ng-model="homeFacet.key"
+              data-ng-value="facetKey"
+            />
+            <span data-translate="">{{::('facet-' + facetKey) | facetKeyTranslator}}</span
+            >&nbsp;
           </label>
         </div>
       </div>
       <div class="row">
-        <span data-ng-show="homeFacet.key.indexOf('th_httpinspireeceuropaeutheme') !== 0"
-              data-ng-init="aggResponse = searchInfo.aggregations[homeFacet.key]"
-              data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets
-                                | orderBy:facetSorter(searchInfo.aggregations[homeFacet.key], homeFacet.key) track by facet.key"
-              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default gn-facet-{{homeFacet.key}}">
-            <div class="panel-body">
-              <a class="clearfix"
-                title="{{facet.key}}"
-                role="link"
-                data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key; value = aggResponse.meta && aggResponse.meta.wildcard ? (facet.key + '*') : facet.key"
-                data-ng-href='#/search?query_string={"{{field}}": {"{{value}}": true} }'>
-                <!-- TODOES Link label to icons? -->
-                <i class="fa fa-2x gn-icon-{{facet.key.replace('/', '').replace(' ', '')}} pull-left"
-                   data-ng-show="homeFacet.key === 'cl_topic.key' || homeFacet.key === 'cl_hierarchyLevel.key'">
-                </i>
-                <h2>
-                  <span class="clamp-2">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
-            </div>
-          </div>
-        </span>
-        <!-- TODOES Sort alpha -->
-        <span data-ng-repeat="(key, facet) in searchInfo.aggregations['th_httpinspireeceuropaeutheme-theme_tree.key'].buckets"
-              data-ng-show="homeFacet.key.indexOf('th_httpinspireeceuropaeutheme') === 0"
-              data-ng-init="code = facet.key.slice(facet.key.lastIndexOf('/')+1)"
-              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic bg-iti-{{::code}}">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <a class=" clearfix"
-                 data-ng-href='#/search?query_string={"th_httpinspireeceuropaeutheme-theme_tree.key": {"{{facet.key}}": true} }'>
-                <i class="fa fa-2x gn-icon iti-{{::code}} pull-left"></i>
-                <h2 class="inspire-{{::code}}-{{iso2lang}}">
-                  <span class="inspire-label clamp-2"></span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}</div>
-          </div>
-        </span>
+        <div
+          data-ng-if="homeFacet"
+          es-facet-cards="homeFacet.key"
+          data-home-facet="homeFacet"
+          data-search-info="searchInfo"
+          data-agg-config="aggConfig"
+        />
       </div>
     </div>
     <div data-ng-show="searchInfo.aggregations[homeFacet.lastKey].buckets.length > 0">
       <div class="row">
-        <h1 class="col-md-12" data-translate="">{{('facet-' + homeFacet.lastKey) | facetKeyTranslator}}</h1>
+        <h1 class="col-md-12" data-translate="">
+          {{('facet-' + homeFacet.lastKey) | facetKeyTranslator}}
+        </h1>
       </div>
       <div class="row">
-        <div data-ng-repeat="(key, facet) in searchInfo.aggregations[homeFacet.lastKey].buckets"
-             data-ng-show="facet.key"
-             class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default gn-facet-{{homeFacet.lastKey}}">
-            <div class="panel-body">
-              <a title="{{facet.key}}"
-                 class="clearfix"
-                 data-ng-href='#/search?query_string={"{{homeFacet.lastKey}}": {"{{facet.key}}": true} }'>
-                <i class="fa fa-2x gn-icon-{{facet.key.replace('/', '').replace(' ', '')}} pull-left"
-                   data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'cl_hierarchyLevel.key'">
-                </i>
-                <h2>
-                  <span class="clamp-2">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
-                </h2>
-              </a>
-            </div>
-            <div class="panel-footer">
-              <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
-            </div>
-          </div>
-        </div>
+        <div
+          data-ng-if="homeFacet.lastKey"
+          es-facet-cards="homeFacet.lastKey"
+          data-home-facet="homeFacet"
+          data-search-info="searchInfo"
+          data-agg-config="aggConfig"
+        />
       </div>
     </div>
   </div>
@@ -200,78 +165,103 @@
 
 <!-- /.gn-row-topics -->
 
-<div class="row gn-row-info"
-      data-ng-show="searchInfo.hits.total.value > 0"
-      data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">
+<div
+  class="row gn-row-info"
+  data-ng-show="searchInfo.hits.total.value > 0"
+  data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}"
+>
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-sm-12">
+      <!-- toggle buttons -->
+      <div
+        id="info-toggle-buttons"
+        class="btn-group pull-right hidden-print"
+        data-toggle="buttons"
+      >
+        <button
+          id="btn-toggle-blocks"
+          type="button"
+          class="btn btn-default"
+          data-ng-click="toggleListType('blocks')"
+          data-ng-model="type"
+          data-ng-class="{'active': type === 'blocks' || type === undefined}"
+          aria-label="{{'listTypeBlocks' | translate}}"
+        >
+          <i class="fa fa-th-large" aria-hidden="true"></i>
+        </button>
+        <button
+          id="btn-toggle-large"
+          type="button"
+          class="btn btn-default"
+          data-ng-click="toggleListType('large')"
+          data-ng-model="type"
+          data-ng-class="{'active': type === 'large'}"
+          aria-label="{{'listTypeLarge' | translate}}"
+        >
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+        <button
+          id="btn-toggle-small"
+          type="button"
+          class="btn btn-default"
+          data-ng-click="toggleListType('small')"
+          data-ng-model="type"
+          data-ng-class="{'active': type === 'small'}"
+          aria-label="{{'listTypeSmall' | translate}}"
+        >
+          <i class="fa fa-align-justify" aria-hidden="true"></i>
+        </button>
+      </div>
 
-    <!-- toggle buttons -->
-    <div id="info-toggle-buttons" class="btn-group pull-right" data-toggle="buttons">
-      <button id="btn-toggle-blocks" type="button" class="btn btn-default"
-              data-ng-click="toggleListType('blocks')"
-              data-ng-model="type"
-              data-ng-class="{'active': type === 'blocks' || type === undefined}"
-              aria-label="{{'listTypeBlocks' | translate}}">
-        <i class="fa fa-th-large" aria-hidden="true"></i>
-      </button>
-      <button id="btn-toggle-large" type="button" class="btn btn-default"
-              data-ng-click="toggleListType('large')"
-              data-ng-model="type"
-              data-ng-class="{'active': type === 'large'}"
-              aria-label="{{'listTypeLarge' | translate}}">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-      </button>
-      <button id="btn-toggle-small" type="button" class="btn btn-default"
-              data-ng-click="toggleListType('small')"
-              data-ng-model="type"
-              data-ng-class="{'active': type === 'small'}"
-              aria-label="{{'listTypeSmall' | translate}}">
-        <i class="fa fa-align-justify" aria-hidden="true"></i>
-      </button>
-    </div>
+      <tabset id="info-tabset" type="pills" justified="false" role="tablist">
+        <tab heading="{{'lastRecords' | translate}}" active="infoTabs.lastRecords.active">
+          <form
+            class="form-horizontal"
+            data-ng-controller="gnsSearchLatestController"
+            data-ng-search-form=""
+            data-runSearch="true"
+            data-ng-show="searchResults.records.length > 0"
+          >
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
 
-    <tabset id="info-tabset pull-left" type="pills" justified="false" role="tablist">
-      <tab heading="{{'lastRecords' | translate}}"
-           active="infoTabs.lastRecords.active">
-        <form class="form-horizontal"
-              data-ng-controller="gnsSearchLatestController"
-              data-ng-search-form=""
-              data-runSearch="true"
-              data-ng-show="searchResults.records.length > 0">
-            <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
-          <div data-gn-info-list=""></div>
-        </form>
-      </tab>
-      <tab heading="{{'preferredRecords' | translate}}"
-           active="infoTabs.preferredRecords.active">
-        <form class="form-horizontal"
-              role="form"
-              data-ng-controller="gnsSearchPopularController"
-              data-ng-search-form=""
-              data-runSearch="true"
-              data-ng-show="searchResults.records.length > 0">
-            <input type="hidden" name="_csrf" value="{{csrf}}"/>
-          <div data-gn-info-list=""></div>
-        </form>
-      </tab>
-      <tab heading="{{'featuredUserSearches' | translate}}"
-           data-ng-if="isUserSearchesEnabled && displayFeaturedSearchesPanel"
-           active="infoTabs.featuredSearches.active">
-        <form class="form-horizontal">
-          <div data-gn-user-searches-list></div>
-        </form>
-      </tab>
-      <tab heading="{{'Comments' | translate}}"
-           data-ng-if="isUserFeedbackEnabled"
-           active="infoTabs.commentsalt.active">
-        <form class="form-horizontal">
-          <div class="data-gn-userfeedbacklasthome"
-                data-nb-of-comments="10"></div>
-        </form>
-      </tab>
-    </tabset>
+            <div data-gn-info-list=""></div>
+          </form>
+        </tab>
+        <tab
+          heading="{{'preferredRecords' | translate}}"
+          active="infoTabs.preferredRecords.active"
+        >
+          <form
+            class="form-horizontal"
+            role="form"
+            data-ng-controller="gnsSearchPopularController"
+            data-ng-search-form=""
+            data-runSearch="true"
+            data-ng-show="searchResults.records.length > 0"
+          >
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
+            <div data-gn-info-list=""></div>
+          </form>
+        </tab>
+        <tab
+          heading="{{'featuredUserSearches' | translate}}"
+          data-ng-if="isUserSearchesEnabled && displayFeaturedSearchesPanel"
+          active="infoTabs.featuredSearches.active"
+        >
+          <form class="form-horizontal">
+            <div data-gn-user-searches-list></div>
+          </form>
+        </tab>
+        <tab
+          heading="{{'Comments' | translate}}"
+          data-ng-if="isUserFeedbackEnabled"
+          active="infoTabs.commentsalt.active"
+        >
+          <form class="form-horizontal">
+            <div class="data-gn-userfeedbacklasthome" data-nb-of-comments="10"></div>
+          </form>
+        </tab>
+      </tabset>
     </div>
   </div>
 </div>

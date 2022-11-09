@@ -78,10 +78,6 @@
       <param-name>loginService</param-name>
       <param-value>signin</param-value>
     </init-param>
-    <init-param>
-      <param-name>trustedHost</param-name>
-      <param-value>localhost</param-value>
-    </init-param>
   </filter>
 
   <filter-mapping>
@@ -235,6 +231,11 @@
   <filter-mapping>
     <filter-name>resources</filter-name>
     <url-pattern>/images/logos/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>resources</filter-name>
+    <url-pattern>/config/*</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
