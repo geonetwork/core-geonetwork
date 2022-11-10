@@ -341,9 +341,7 @@
                       0.95;
 
                     var closeBtn =
-                      '<button onclick="$(this).' +
-                      'closest(\'div.popover\').remove();" type="button" ' +
-                      'class="fa fa-times btn btn-link pull-right"></button>';
+                      '<a class="fa fa-times btn btn-link pull-right close-popover"></a>';
 
                     tooltipTarget.popover({
                       title: info.label,
@@ -366,6 +364,10 @@
                         '<h3 class="popover-title"></h3>' +
                         '<div class="popover-content"><p></p></div></div></div>',
                       trigger: isField ? "focus" : "click"
+                    });
+
+                    $(document).on("click", ".popover .close-popover", function () {
+                      $(this).closest("div.popover").remove();
                     });
 
                     if (event === "click" && !isField) {
