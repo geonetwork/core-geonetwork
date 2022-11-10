@@ -15,10 +15,10 @@
     <div class="col-lg-12">
       <label data-translate="">chooseOptionsToCustomize</label>
       <multiselect
-      data-ng-model="uiSelectedOptions"
-      options="c.name for c in configOptionsHeaders"
-      data-multiple="true"
-      scroll-after-rows="20"
+        data-ng-model="uiSelectedOptions"
+        options="c.name for c in configOptionsHeaders"
+        data-multiple="true"
+        scroll-after-rows="20"
       ></multiselect>
     </div>
   </div>
@@ -44,7 +44,10 @@
           />
 
           <div id="gn-ui-spy-target">
-            <fieldset data-ng-repeat="(m, mCfg) in jsonConfig.mods" data-ng-show="isUiSectionSelected(m)">
+            <fieldset
+              data-ng-repeat="(m, mCfg) in jsonConfig.mods"
+              data-ng-show="isUiSectionSelected(m)"
+            >
               <legend data-ng-if="mCfg.enabled !== undefined">
                 <input
                   type="checkbox"
@@ -80,7 +83,6 @@
 
                 <!-- arrays -->
                 <div data-ng-switch-when="hitsperpageValues">
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
 
@@ -128,7 +130,6 @@
                   data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
                   data-ng-switch-when-separator="|"
                 >
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
 
@@ -179,15 +180,14 @@
                       </tr>
                     </table>
                   </div>
-
-                  </div>
+                </div>
 
                 <div data-ng-switch-when="addWMSLayersToMap">
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5">
                     <label class="control-label" for="{{key + 'urlLayerParam'}}"
-                    >{{('ui-' + key + '-urlLayerParam') | translate}}</label
+                      >{{('ui-' + key + '-urlLayerParam') | translate}}</label
                     >
 
                     <p
@@ -207,7 +207,6 @@
                       class="form-control"
                       data-ng-model="mCfg[key].urlLayerParam"
                     />
-
                   </div>
                 </div>
 
@@ -215,11 +214,9 @@
                   data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig"
                   data-ng-switch-when-separator="|"
                 >
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -338,7 +335,6 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -392,7 +388,6 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
                 </div>
 
@@ -400,7 +395,6 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -426,7 +420,7 @@
 
                           <div class="row">
                             <label class="control-label"
-                            >{{('ui-' + key + '-conditional-views') | translate}}</label
+                              >{{('ui-' + key + '-conditional-views') | translate}}</label
                             >
                             <gn-json-edit height="300" model="opt.views"></gn-json-edit>
                           </div>
@@ -454,16 +448,13 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="downloadFormatter">
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -510,9 +501,7 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="linkTypes">
@@ -560,7 +549,6 @@
                         </tr>
                       </table>
                     </div>
-
                   </div>
                 </div>
 
@@ -581,11 +569,10 @@
                         data-ng-model="mCfg[key][type]"
                       />&nbsp;
                       <label for="{{key + type}}-checkbox"
-                      >{{('ui-' + type) | translate}}</label
+                        >{{('ui-' + type) | translate}}</label
                       >
                     </div>
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="savedSelection">
@@ -604,12 +591,10 @@
                         data-ng-model="mCfg[key][type]"
                       />&nbsp;
                       <label class="control-label" for="{{key + type}}-checkbox"
-                      >{{('ui-' + type) | translate}}</label
+                        >{{('ui-' + type) | translate}}</label
                       >
                     </div>
                   </div>
-
-
                 </div>
 
                 <div data-ng-switch-when="listOfServices">
@@ -618,7 +603,6 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -668,13 +652,10 @@
                         </tr>
                       </table>
                     </div>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="projectionList">
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
@@ -724,9 +705,7 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
-
                 </div>
 
                 <!-- Projection Switcher -->
@@ -734,7 +713,6 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
                   <div class="col-lg-7">
                     <div
@@ -763,11 +741,9 @@
 
                 <!-- numbers -->
                 <div data-ng-switch-when="paginationInfo">
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -784,10 +760,9 @@
                   data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink"
                   data-ng-switch-when-separator="|"
                 >
-
                   <div class="col-lg-5">
                     <label class="control-label" for="{{key}}-checkbox"
-                    >{{('ui-' + key) | translate}}</label
+                      >{{('ui-' + key) | translate}}</label
                     >
 
                     <gn-ui-config-help />
@@ -799,7 +774,6 @@
                       data-ng-model="mCfg[key]"
                     />&nbsp;
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="showCitation">
@@ -807,7 +781,6 @@
 
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
-
                   </div>
 
                   <div class="col-lg-7">
@@ -817,19 +790,19 @@
                       data-ng-model="mCfg[key].enabled"
                     />&nbsp;
                     <label for="{{key}}enabled-checkbox"
-                    >{{('ui-enabled') | translate}}</label
+                      >{{('ui-enabled') | translate}}</label
                     >
                   </div>
 
                   <div class="col-lg-5">
                     <label class="control-label"
-                    >{{('ui-' + key + '-condition') | translate}}</label>
+                      >{{('ui-' + key + '-condition') | translate}}</label
+                    >
                   </div>
 
                   <div class="col-lg-7">
                     <gn-json-edit height="300" model="mCfg[key].if"></gn-json-edit>
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="searchOptions">
@@ -859,7 +832,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="disabledTools">
@@ -890,7 +862,6 @@
                         </label>
                       </div>
                     </div>
-
                   </div>
                 </div>
 
@@ -916,11 +887,9 @@
                 </div>
 
                 <div data-ng-switch-when="graticuleOgcService">
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -944,9 +913,7 @@
                         data-ng-model="mCfg[key].url"
                       />
                     </div>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="grid">
@@ -959,7 +926,6 @@
                     <p class="help-block">
                       {{ 'gridConfigRelatedTypes-help' | translate }}
                     </p>
-
                   </div>
 
                   <div class="col-lg-7">
@@ -997,9 +963,7 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="logoInHeaderPosition">
@@ -1007,7 +971,6 @@
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
 
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -1032,9 +995,7 @@
                         <span data-translate="">right</span>
                       </label>
                     </div>
-
                   </div>
-
                 </div>
 
                 <!-- map configs -->
@@ -1092,11 +1053,9 @@
                 </div>
 
                 <div data-ng-switch-when="createPageTpl">
-
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -1127,10 +1086,13 @@
                         <input type="radio" data-ng-model="mCfg[key]" value="" />
                         <span data-translate="">ui-createPageTpl-other</span>
 
-                        <input type="text" class="form-control" data-ng-model="mCfg[key]" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          data-ng-model="mCfg[key]"
+                        />
                       </label>
                     </div>
-
                   </div>
                 </div>
 
@@ -1138,7 +1100,6 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -1164,42 +1125,43 @@
                         <span data-translate="">ui-editorIndentType-colored</span>
                       </label>
                     </div>
-
                   </div>
                 </div>
 
                 <div data-ng-switch-when="externalViewer">
-
                   <div class="col-lg-12">
                     <h3>{{('ui-' + key) | translate}}</h3>
                     <gn-ui-config-help />
 
-                    <br/>
+                    <br />
                   </div>
 
                   <div class="col-lg-5">
-                    <label class="control-label" for="ui-externalViewer-enabled" translate>ui-externalViewer-enabled</label>
+                    <label class="control-label" for="ui-externalViewer-enabled" translate
+                      >ui-externalViewer-enabled</label
+                    >
                     <p class="help-block" translate>ui-externalViewer-enabled-help</p>
                   </div>
 
                   <div class="col-lg-7">
-
-                      <input
-                        type="checkbox"
-                        id="ui-externalViewer-enabled"
-                        data-ng-model="mCfg[key]['enabled']"
-                      />
-
+                    <input
+                      type="checkbox"
+                      id="ui-externalViewer-enabled"
+                      data-ng-model="mCfg[key]['enabled']"
+                    />
                   </div>
 
-                  <div class="col-lg-12" style="padding: 0" ng-show="mCfg[key]['enabled']">
-                    <div class="col-lg-5" >
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
+                    <div class="col-lg-5">
                       <label class="control-label" translate>
                         ui-externalViewer-baseUrl
                       </label>
                       <p class="help-block" translate>ui-externalViewer-baseUrl-help</p>
                     </div>
-
 
                     <div class="col-lg-7">
                       <input
@@ -1210,13 +1172,18 @@
                     </div>
                   </div>
 
-                  <div class="col-lg-12" style="padding: 0" ng-show="mCfg[key]['enabled']">
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
                     <div class="col-lg-5">
                       <label class="control-label" translate>
                         ui-externalViewer-urlTemplate
                       </label>
-                      <p class="help-block" translate>ui-externalViewer-urlTemplate-help</p>
-
+                      <p class="help-block" translate>
+                        ui-externalViewer-urlTemplate-help
+                      </p>
                     </div>
 
                     <div class="col-lg-7">
@@ -1228,7 +1195,11 @@
                     </div>
                   </div>
 
-                  <div class="col-lg-12" style="padding: 0" ng-show="mCfg[key]['enabled']">
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
                     <div class="col-lg-5">
                       <label
                         class="control-label"
@@ -1240,7 +1211,6 @@
                       <p class="help-block" translate>
                         ui-externalViewer-openNewWindow-help
                       </p>
-
                     </div>
 
                     <div class="col-lg-7">
@@ -1252,7 +1222,11 @@
                     </div>
                   </div>
 
-                  <div class="col-lg-12" style="padding: 0" ng-show="mCfg[key]['enabled']">
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
                     <div class="col-lg-5">
                       <label class="control-label" translate>
                         ui-externalViewer-valuesSeparator
@@ -1274,14 +1248,12 @@
                   <div class="col-lg-12">
                     <hr style="border: 1px; border-bottom: 1px solid lightgray" />
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="searchResultContact">
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -1305,23 +1277,20 @@
                           <ul class="dropdown-menu dropdown-menu-right">
                             <li data-ng-repeat="o in searchResultContactChoices">
                               <a href="" data-ng-click="mCfg[key] = o"
-                              >{{o | translate}} ({{o}})</a
+                                >{{o | translate}} ({{o}})</a
                               >
                             </li>
                           </ul>
                         </div>
                       </div>
                     </div>
-
                   </div>
-
                 </div>
 
                 <div data-ng-switch-when="workflowAssistApps">
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
@@ -1329,9 +1298,9 @@
                       <tr data-ng-repeat="opt in mCfg[key] track by $index">
                         <td>
                           <div class="input-group">
-                          <span class="input-group-addon"
-                          >{{'ui-workflowAssistApps-appUrl' | translate}}</span
-                          >
+                            <span class="input-group-addon"
+                              >{{'ui-workflowAssistApps-appUrl' | translate}}</span
+                            >
                             <input
                               type="text"
                               class="form-control"
@@ -1339,7 +1308,7 @@
                               data-ng-model="opt.appUrl"
                             />
                             <span class="input-group-addon"
-                            >{{'ui-workflowAssistApps-appLabelKey' | translate}}</span
+                              >{{'ui-workflowAssistApps-appLabelKey' | translate}}</span
                             >
                             <input
                               type="text"
@@ -1371,7 +1340,6 @@
                         </td>
                       </tr>
                     </table>
-
                   </div>
                 </div>
 
@@ -1379,13 +1347,11 @@
                   <div class="col-lg-5">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <gn-ui-config-help />
-
                   </div>
 
                   <div class="col-lg-7">
                     <input type="text" class="form-control" data-ng-model="mCfg[key]" />
                   </div>
-
                 </div>
               </div>
             </fieldset>
