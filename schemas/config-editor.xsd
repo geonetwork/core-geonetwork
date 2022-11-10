@@ -22,7 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
   <xs:element name="editor">
     <xs:annotation>
       <xs:documentation>
@@ -494,14 +495,37 @@ relevant to have parent defined to have more control over the list.
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
       <xs:attribute name="xpath" type="xs:string" use="optional"/>
+      <xs:attribute name="includeFrom" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+Used in for elements in flatModeException to include them from this mode if the parent or xpath of the element is listed in this attribute (comma separated value).
+
+For example, apply flatModeExceptions only to all mcc:description in resource identifier.
+
+.. code-block:: xml
+
+        <for name="mcc:description"
+             includeFrom="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"/>
+
+          ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="excludeFrom" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-        Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute.
+Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute (comma separated value).
 
-        For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
-        ]]>
+For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
+
+.. code-block:: xml
+
+        <for name="gmd:contact"
+             excludeFrom="gmd:MD_MaintenanceInformation"/>
+
+          ]]>
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -1015,6 +1039,18 @@ the mandatory section with no name and then the inner elements.
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>
       <xs:attribute ref="displayIfServiceInfo"/>
+      <xs:attribute name="collapsed" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to collapse the section. If not set the section is expanded.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="collapsible" type="xs:boolean" fixed="false">
+        <xs:annotation>
+          <xs:documentation>An optional attribute to not allow collapse for the section. If not set the section is expandable.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
@@ -1349,7 +1385,27 @@ The fragment is defined in localization file strings.xml:
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="ref" use="required" type="xs:string">
+      <xs:sequence>
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Any HTML to directly embed in the editor (if not multilingual content is required, use @ref if not).
+
+.. code-block:: xml
+
+        <section name="metadata" collapsed="true">
+          <text>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="alert alert-info">Describe here whatever you want</div>
+              </div>
+            </div>
+          </text>
+
+          ]]></xs:documentation>
+        </xs:annotation>
+        <xs:any/>
+      </xs:sequence>
+      <xs:attribute name="ref" type="xs:string">
         <xs:annotation>
           <xs:documentation>The tag name of the element to insert in the localization file.
           </xs:documentation>

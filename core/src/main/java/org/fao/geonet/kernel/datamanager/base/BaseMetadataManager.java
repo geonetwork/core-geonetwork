@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -188,7 +189,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Sort.Direction.DESC, Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
             PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
@@ -450,7 +451,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         newMetadata.getMetadataCategories().addAll(filteredCategories);
 
-        int finalId = insertMetadata(context, newMetadata, xml, true, true, UpdateDatestamp.YES,
+        int finalId = insertMetadata(context, newMetadata, xml, IndexingMode.full, true, UpdateDatestamp.YES,
             fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
@@ -514,14 +515,14 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param createDate   date of creation
      * @param changeDate   date of modification
      * @param ufo          whether to apply automatic changes
-     * @param index        whether to index this metadata
+     * @param indexingMode        whether to index this metadata
      * @return id, as a string
      * @throws Exception hmm
      */
     @Override
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner,
                                  String groupOwner, String source, String metadataType, String docType, String category, String createDate,
-                                 String changeDate, boolean ufo, boolean index) throws Exception {
+                                 String changeDate, boolean ufo, IndexingMode indexingMode) throws Exception {
         if (source == null) {
             source = settingManager.getSiteId();
         }
@@ -555,15 +556,15 @@ public class BaseMetadataManager implements IMetadataManager {
 
         boolean fullRightsForGroup = false;
 
-        int finalId = insertMetadata(context, newMetadata, metadataXml, index, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, index).getId();
+        int finalId = insertMetadata(context, newMetadata, metadataXml, indexingMode, ufo, UpdateDatestamp.NO,
+            fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
     }
 
     @Override
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml,
-                                           boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
+                                           IndexingMode indexingMode, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
                                            boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
@@ -598,8 +599,8 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
-        if (index) {
-            metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
+        if (indexingMode != IndexingMode.none) {
+            metadataIndexer.indexMetadata(stringId, forceRefreshReaders, indexingMode);
         }
 
         return savedMetadata;
@@ -716,8 +717,8 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                                        final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-                                                        final boolean updateDateStamp) throws Exception {
+                                                        final boolean validate, final boolean ufo, final String lang, final String changeDate,
+                                                        final boolean updateDateStamp, final IndexingMode indexingMode) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
         Element metadataXml = md;
@@ -761,27 +762,24 @@ public class BaseMetadataManager implements IMetadataManager {
                 metadataValidator.doValidate(session, schema, metadataId, metadataXml, lang, false);
             }
         } finally {
-            if (index) {
+            if (indexingMode != IndexingMode.none) {
                 // Delete old record if UUID changed
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
-                metadataIndexer.indexMetadata(metadataId, true);
+                metadataIndexer.indexMetadata(metadataId, true, indexingMode);
             }
         }
 
-        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-            if (!index) {
-                metadataIndexer.indexMetadata(metadataId, true);
-            }
-//			TODOES
+//		  TODO: TODOES Searhc for related records with an XLink pointing to this subtemplate
+//        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
 //            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
 //            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
 //            for (Integer id : result.keySet()) {
 //                IndexingList list = context.getBean(IndexingList.class);
 //                list.add(id);
 //            }
-        }
+//        }
 
         Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
         // Return an up to date metadata record

@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -428,8 +429,8 @@ public class DoiManager {
         //--- needed to detach md from the document
 //        md.detach();
 
-        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
-            context.getLanguage(), new ISODate().toString(), true);
+        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true,
+            context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
     }
 
 
@@ -468,8 +469,8 @@ public class DoiManager {
 
             Element recordWithoutDoi = removeDOIValue(doiUrl, metadata.getDataInfo().getSchemaId(), md);
 
-            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true, true,
-                context.getLanguage(), new ISODate().toString(), true);
+            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true,
+                context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
         } catch (Exception ex) {
             throw new DoiClientException(ex.getMessage());
         }

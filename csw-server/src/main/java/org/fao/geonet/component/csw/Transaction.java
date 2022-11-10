@@ -23,6 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -75,12 +76,6 @@ import java.util.UUID;
  */
 @Component(CatalogService.BEAN_PREFIX + Transaction.NAME)
 public class Transaction extends AbstractOperation implements CatalogService {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
-
     static final String NAME = "Transaction";
     @Autowired
     SchemaManager _schemaManager;
@@ -268,9 +263,9 @@ public class Transaction extends AbstractOperation implements CatalogService {
         // insert metadata
         //
         String docType = null, isTemplate = null;
-        boolean ufo = true, indexImmediate = false;
+        boolean ufo = true;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-            isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+            isTemplate, docType, category, createDate, changeDate, ufo, IndexingMode.none);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -360,9 +355,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
             boolean validate = false;
             boolean ufo = false;
-            boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, true);
+            dataMan.updateMetadata(context, id, xml, validate, ufo, language, changeDate, true, IndexingMode.none);
 
             toIndex.add(id);
 
@@ -457,14 +451,13 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 if (metadataChanged) {
                     boolean validate = false;
                     boolean ufo = false;
-                    boolean index = false;
                     try {
                         changeDate = metadataUtils.extractDateModified(schemaId, metadata);
                     } catch (Exception ex) {
                         changeDate = new ISODate().toString();
                     }
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, true);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, language, changeDate, true, IndexingMode.none);
 
                     updatedMd.add(id);
 
@@ -634,5 +627,3 @@ public class Transaction extends AbstractOperation implements CatalogService {
     }
 
 }
-
-//=============================================================================

@@ -64,6 +64,7 @@
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
+        $scope.isNew = false;
       };
 
       function filterSources() {
@@ -149,7 +150,11 @@
           });
       };
 
-      $scope.removeSource = function () {
+      $scope.deleteSourceConfig = function () {
+        $("#gn-confirm-remove-source").modal("show");
+      };
+
+      $scope.confirmDeleteSourceConfig = function () {
         $http
           .delete("../api/sources/" + $scope.source.uuid)
           .success(function (data) {
@@ -160,6 +165,7 @@
             });
 
             loadSources();
+            $scope.source = null;
           })
           .error(function (data) {
             $rootScope.$broadcast("StatusUpdated", {

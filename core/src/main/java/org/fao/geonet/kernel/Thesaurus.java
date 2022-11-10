@@ -22,6 +22,8 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -39,14 +41,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.openrdf.model.BNode;
-import org.openrdf.model.Graph;
-import org.openrdf.model.GraphException;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
+import org.openrdf.model.*;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.admin.AdminListener;
 import org.openrdf.sesame.admin.DummyAdminListener;
@@ -63,6 +58,7 @@ import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,12 +67,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 public class Thesaurus {
+
     private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
 
     private String fname;
@@ -110,6 +106,9 @@ public class Thesaurus {
     // see #retrieveDublinCore() for example
     private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<String,Map<String,String>>();
 
+    private Cache<String, Object> THESAURUS_SEARCH_CACHE;
+
+
     /**
      * Available for subclasses.
      */
@@ -119,18 +118,26 @@ public class Thesaurus {
     /**
      * @param fname file name
      * @param dname category/domain name of thesaurus
+     * @param thesaurusCacheMaxSize
      */
-    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl) {
-        this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String type, String dname, Path thesaurusFile, String siteUrl, int thesaurusCacheMaxSize) {
+        this(isoLanguageMapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false, thesaurusCacheMaxSize);
     }
 
-    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
-        this(isoLanguageMapper, fname, null, null, null, type, dname, thesaurusFile, siteUrl, false);
+    public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname, String tname, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError, int thesaurusCacheMaxSize) {
+        this(isoLanguageMapper, fname, null, null, null, type, dname, thesaurusFile, siteUrl, false, thesaurusCacheMaxSize);
     }
 
     public Thesaurus(IsoLanguagesMapper isoLanguageMapper, String fname,
-                     String tname, String description, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+                     String tname, String description, String tnamespace, String type, String dname, Path thesaurusFile, String siteUrl,
+                     boolean ignoreMissingError, int thesaurusCacheMaxSize) {
         super();
+
+        THESAURUS_SEARCH_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(thesaurusCacheMaxSize)
+            .expireAfterAccess(25, TimeUnit.HOURS)
+            .build();
+
         this.isoLanguageMapper = isoLanguageMapper;
         this.fname = fname;
         this.type = type;
@@ -358,6 +365,7 @@ public class Thesaurus {
      * @param keyword The keyword to add
      */
     public synchronized URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
+        THESAURUS_SEARCH_CACHE.invalidateAll();
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -487,6 +495,7 @@ public class Thesaurus {
      */
     public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
         MalformedQueryException, QueryEvaluationException, GraphException {
+        THESAURUS_SEARCH_CACHE.invalidateAll();
 
         // Get thesaurus graph
         Graph myGraph = repository.getGraph();
@@ -965,6 +974,7 @@ public class Thesaurus {
      */
     public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
         MalformedQueryException, QueryEvaluationException, GraphException {
+        THESAURUS_SEARCH_CACHE.invalidateAll();
 
         Graph myGraph = repository.getGraph();
 
@@ -987,6 +997,12 @@ public class Thesaurus {
      * @return keyword
      */
     public KeywordBean getKeyword(String uri, String... languages) {
+        String cacheKey = "getKeyword" + uri + Arrays.stream(languages).collect(Collectors.joining(""));
+        Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
+        if (cacheValue != null) {
+            return (KeywordBean) cacheValue;
+        }
+
         List<KeywordBean> keywords;
 
         try {
@@ -1004,7 +1020,9 @@ public class Thesaurus {
             throw new TermNotFoundException(getTermNotFoundMessage(uri));
         }
 
-        return keywords.get(0);
+        KeywordBean keywordBean = keywords.get(0);
+        THESAURUS_SEARCH_CACHE.put(cacheKey, keywordBean);
+        return keywordBean;
     }
 
     /**
@@ -1062,6 +1080,10 @@ public class Thesaurus {
 
     public List<KeywordBean> getBroader(String uri, String... languages) {
         return getRelated(uri, KeywordRelation.NARROWER, languages);
+    }
+
+    public List<KeywordBean> getNarrower(String uri, String... languages) {
+        return getRelated(uri, KeywordRelation.BROADER, languages);
     }
 
     /**
@@ -1219,11 +1241,16 @@ public class Thesaurus {
     }
 
     public List <String> getKeywordHierarchy(String keywordLabel, String langCode) {
+        String cacheKey = "getKeywordHierarchy" + keywordLabel + langCode;
+        Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
+        if (cacheValue != null) {
+            return (List<String>) cacheValue;
+        }
         boolean isUri = keywordLabel.startsWith("http");
         KeywordBean term =
             isUri
-            ? this.getKeyword(keywordLabel, langCode)
-            : this.getKeywordWithLabel(keywordLabel, langCode);
+                ? this.getKeyword(keywordLabel, langCode)
+                : this.getKeywordWithLabel(keywordLabel, langCode);
 
         List<ArrayList <KeywordBean>> result = this.classify(term, langCode);
 
@@ -1234,6 +1261,7 @@ public class Thesaurus {
                 .collect(Collectors.joining("^"));
             hierarchies.add(path);
         }
+        THESAURUS_SEARCH_CACHE.put(cacheKey, hierarchies);
         return hierarchies;
     }
 
@@ -1259,9 +1287,12 @@ public class Thesaurus {
 
     private List<ArrayList <KeywordBean>> classifyBroaderTerms(KeywordBean term, String langCode) {
         List<ArrayList<KeywordBean>> result = new ArrayList<>();
-
+        List<KeywordBean> narrowerList = this.getNarrower(term.getUriCode(), langCode);
         for (KeywordBean broaderTerm : this.getBroader(term.getUriCode(), langCode)) {
-            result.addAll(this.classify(broaderTerm, langCode));
+            // Avoid loop eg. http://www.eionet.europa.eu/gemet/concept/1462
+            if (!narrowerList.contains(broaderTerm)) {
+                result.addAll(this.classify(broaderTerm, langCode));
+            }
         }
         return result;
     }

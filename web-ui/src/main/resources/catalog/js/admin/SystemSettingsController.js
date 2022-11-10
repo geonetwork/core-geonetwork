@@ -167,6 +167,8 @@
           });
       };
 
+      $scope.defaultConfigId = "srv";
+
       $scope.loadTplReport = null;
       $scope.atomFeedType = "";
 
@@ -331,10 +333,23 @@
        * one defined in CatController.
        */
       $scope.createDefaultUiConfig = function () {
-        var defaultConfigId = "srv";
-        $scope.lastUiConfiguration = defaultConfigId;
-        $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
+        $scope.lastUiConfiguration = $scope.defaultConfigId;
+        $scope.createOrUpdateUiConfiguration(false, $scope.defaultConfigId);
       };
+
+      $scope.canDeleteUiConfig = function () {
+        if ($scope.uiConfiguration) {
+          // UI configuration for 'srv' can be deleted only by Administrator users
+          return (
+            $scope.uiConfiguration.id !== $scope.defaultConfigId ||
+            ($scope.uiConfiguration.id === $scope.defaultConfigId &&
+              $scope.user.isAdministratorOrMore())
+          );
+        } else {
+          return false;
+        }
+      };
+
       $scope.updateUiConfig = function () {
         return $scope.createOrUpdateUiConfiguration(true);
       };
@@ -358,7 +373,7 @@
               function (r) {
                 $rootScope.$broadcast("StatusUpdated", {
                   title: $translate.instant("uiConfigUpdateError"),
-                  error: r.data,
+                  error: r.data.message || r.data.description,
                   timeout: 0,
                   type: "danger"
                 });
@@ -373,9 +388,19 @@
 
       $scope.confirmDeleteUiConfig = function () {
         $scope.lastUiConfiguration = undefined;
-        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(function (r) {
-          loadUiConfigurations();
-        });
+        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(
+          function (r) {
+            loadUiConfigurations();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("uiConfigDeleteError"),
+              error: r.data.message || r.data.description,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
       function loadUsers() {
