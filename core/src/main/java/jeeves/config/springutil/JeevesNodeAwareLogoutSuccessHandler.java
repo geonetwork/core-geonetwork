@@ -24,6 +24,7 @@
 package jeeves.config.springutil;
 
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -50,6 +51,9 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
     @Autowired
     ServletContext context;
 
+    @Autowired
+    SettingInfo settingInfo;
+
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         super.handle(request, response, authentication);
@@ -62,6 +66,17 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
         NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
 
         String urlPattern = super.determineTargetUrl(request, response);
+
+        if (urlPattern != null) {
+            // Check the url to redirect it's from the same site, otherwise use the default target url
+            String siteUrl = settingInfo.getSiteUrl().toLowerCase();
+
+            if (!urlPattern.toLowerCase().startsWith(siteUrl.toLowerCase())) {
+                urlPattern = getDefaultTargetUrl();
+            }
+        } else {
+            urlPattern = getDefaultTargetUrl();
+        }
 
         return urlPattern.replace("@@nodeId@@", nodeInfo.getId());
     }
