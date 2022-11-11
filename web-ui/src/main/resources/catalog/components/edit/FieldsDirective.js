@@ -366,9 +366,13 @@
                       trigger: isField ? "focus" : "click"
                     });
 
-                    $(document).on("click", ".popover .close-popover", function () {
-                      $(this).closest("div.popover").remove();
-                    });
+                    // Remove first the event, to avoid ending with multiple events
+                    // every time a new popup is displayed.
+                    $(document)
+                      .off("click", ".popover .close-popover")
+                      .on("click", ".popover .close-popover", function () {
+                        $(this).closest("div.popover").remove();
+                      });
 
                     if (event === "click" && !isField) {
                       tooltipTarget.click("show");
