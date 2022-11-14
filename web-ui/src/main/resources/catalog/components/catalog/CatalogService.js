@@ -690,7 +690,8 @@
         for (var i = 0; i < links.length; ++i) {
           var link = links[i];
           var layerUrl = layer.get('directUrl') || layer.get('url');
-          if (layerUrl.indexOf(link.url) >= 0 && link.name == layer.getSource().getParams().LAYERS) {
+          if (layerUrl.indexOf(link.url.replace(/^https?:\/\//, '')) >= 0
+            && link.name == layer.getSource().getParams().LAYERS) {
             return link.group;
           }
         }
