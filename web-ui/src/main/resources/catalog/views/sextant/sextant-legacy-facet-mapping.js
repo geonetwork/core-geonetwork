@@ -743,42 +743,6 @@
         }
       }
     },
-    'fem_data_types': {
-      'th_fem_data_types_tree.key':
-        {
-          'terms': {
-            'field': 'th_fem_data_types_tree.key',
-            'size': 300
-          }
-        }
-    },
-    'fem_facades': {
-      'th_fem_facades_tree.key':
-        {
-          'terms': {
-            'field': 'th_fem_facades_tree.key',
-            'size': 300
-          }
-        }
-    },
-    'fem_projects': {
-      'th_fem_projects_tree.key':
-        {
-          'terms': {
-            'field': 'th_fem_projects_tree.key',
-            'size': 300
-          }
-        }
-    },
-    'fem_technologies': {
-      'th_fem_technologies_tree.key':
-        {
-          'terms': {
-            'field': 'th_fem_technologies_tree.key',
-            'size': 300
-          }
-        }
-    },
     'mission-atlantic-resources': {
       'th_mission-atlantic-resources.default':
         {
