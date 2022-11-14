@@ -29,6 +29,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,28 +54,67 @@ class SimpleOidcUser {
     private Address address;
 
 
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken) {
+    /**
+     *
+     * @param oidcConfiguration OIDC Configuration (mostly controlled by environment vars)
+     * @param oidcRoleProcessor Processes roles from the ID Token
+     * @param idToken  The User's ID token
+     * @param attributes All the user's claims (ID Token claims + USERINFO claims)
+     */
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map attributes) {
+        if (attributes == null) {
+            attributes = new HashMap(); // easier if we remove all the null checks
+        }
+
+        // -- get user name.  Should be in ID Token, but could be in the USERINFO
         username = idToken.getPreferredUsername();
         if (username == null) {
             username = idToken.getFullName();
         }
+        if ( (username == null) && attributes.containsKey(StandardClaimNames.PREFERRED_USERNAME) ) {
+            username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
+        }
+        if  ( (username == null) && attributes.containsKey(StandardClaimNames.EMAIL) ){
+            username =  (String) attributes.get(StandardClaimNames.EMAIL);
+        }
+        if  ( (username == null) && attributes.containsKey(StandardClaimNames.NAME) ){
+            username =  (String) attributes.get(StandardClaimNames.NAME);
+        }
+
         if (username != null) {
             username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
         }
         if (!StringUtils.isBlank(username)) {
+            // -- get user surname and given name.  Should be in ID Token, but could be in the USERINFO
             surname = idToken.getFamilyName();
+            if ( (surname == null) && (attributes.containsKey(StandardClaimNames.FAMILY_NAME)) ) {
+                surname = (String) attributes.get(StandardClaimNames.FAMILY_NAME);
+            }
             firstname = idToken.getGivenName();
+            if ( (firstname == null) && (attributes.containsKey(StandardClaimNames.GIVEN_NAME)) ) {
+                firstname = (String) attributes.get(StandardClaimNames.GIVEN_NAME);
+            }
             email = idToken.getEmail();
+            if ( (email == null) && (attributes.containsKey(StandardClaimNames.EMAIL)) ) {
+                email = (String) attributes.get(StandardClaimNames.EMAIL);
+            }
 
 
             if (idToken.getClaims() != null && idToken.getClaims().containsKey(oidcConfiguration.organizationProperty)) {
                 organisation = (String) idToken.getClaims().get(oidcConfiguration.organizationProperty);
+            }
+            if ( (organisation == null) && attributes.containsKey(oidcConfiguration.organizationProperty) ) {
+                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
             }
 
 
             if (idToken.getAddress() != null) {
                 address = new Address();
                 address.setAddress(idToken.getAddress().getStreetAddress());
+                if ( (address.getAddress() == null) && attributes.containsKey(StandardClaimNames.ADDRESS)) {
+                    address.setAddress((String) attributes.get(StandardClaimNames.ADDRESS));
+
+                }
                 address.setCity(idToken.getAddress().getLocality());
                 address.setState(idToken.getAddress().getRegion());
                 address.setZip(idToken.getAddress().getPostalCode());

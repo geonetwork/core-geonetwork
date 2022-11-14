@@ -62,7 +62,7 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         if (auth != null && auth.getPrincipal() instanceof OidcUser) {
             OidcUser user = (OidcUser) auth.getPrincipal();
             OidcIdToken idToken = user.getIdToken();
-            return oidcUser2GeonetworkUser.getUserDetails(idToken, withDbUpdate);
+            return oidcUser2GeonetworkUser.getUserDetails(idToken,user.getAttributes(), withDbUpdate);
         } else if (auth != null && auth.getPrincipal() instanceof OAuth2User) {
             OAuth2User user = (OAuth2User) auth.getPrincipal();
             return oidcUser2GeonetworkUser.getUserDetails(user.getAttributes(), withDbUpdate);
