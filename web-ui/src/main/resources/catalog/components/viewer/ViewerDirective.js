@@ -148,8 +148,8 @@
                 if (angular.isDefined(gnSearchSettings.searchMap)) {
                   scope.doSync();
                 }
-              };
-  
+              }
+
               scope.map.getLayers().on("add", syncEvent);
               scope.map.getLayers().on("change:length", syncEvent);
 
