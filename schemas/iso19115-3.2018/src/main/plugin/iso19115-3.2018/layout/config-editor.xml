@@ -135,7 +135,7 @@
                           &lt;/cit:party&gt;
                         &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"_root": "cit:CI_Responsibility"}'
@@ -184,7 +184,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty"}'
@@ -227,7 +227,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="distributor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty"}'
@@ -270,7 +270,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="processor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty"}'
@@ -313,7 +313,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="author"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty"}'
@@ -1065,7 +1065,7 @@
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty", "groupPublished": "CONTACTS_CDS-SAT"}'
@@ -1712,7 +1712,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"_groupPublished": "CONTACTS_EDMERP"}'
@@ -1820,7 +1820,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -1938,7 +1938,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'

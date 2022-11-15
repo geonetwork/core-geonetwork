@@ -151,7 +151,7 @@
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -160,7 +160,7 @@
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -169,7 +169,7 @@
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -178,7 +178,7 @@
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -187,7 +187,7 @@
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -547,7 +547,7 @@
             <directiveAttributes
               data-template-add-action="true"
               data-template-type="contact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
@@ -946,7 +946,7 @@
                   in="/gmd:MD_Metadata">
             <directiveAttributes
               data-template-add-action="true"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -3795,7 +3795,7 @@
               <directiveAttributes
                 data-template-add-action="true"
                 data-template-type="contact"
-                data-search-action="false"
+                data-search-action="true"
                 data-popup-action="true"
                 data-display-if="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
                 data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
