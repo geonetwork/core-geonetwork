@@ -347,7 +347,18 @@
                   </xsl:call-template>
                 </h2>
 
-                <xsl:apply-templates mode="citation" select="$citationInfo"/>
+                <xsl:choose>
+                  <xsl:when test="count($forcedCitation) > 0">
+                    <xsl:for-each select="$forcedCitation">
+                      <xsl:call-template name="localised">
+                        <xsl:with-param name="langId" select="$langId"/>
+                      </xsl:call-template>
+                    </xsl:for-each>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates mode="citation" select="$citationInfo"/>
+                  </xsl:otherwise>
+                </xsl:choose>
               </div>
             </div>
           </blockquote>
