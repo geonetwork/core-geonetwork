@@ -1472,7 +1472,9 @@ var bsBody = typeof gnShadowRoot === 'undefined' ? document.body : gnShadowRoot.
     this.type      = type
     this.$element  = $(element)
     this.options   = this.getOptions(options)
-    this.$viewport = this.options.viewport && $(bsRoot).find($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.$viewport = this.options.viewport && $(bsRoot).find($.isFunction(this.options.viewport)
+        ? this.options.viewport.call(this, this.$element)
+        : (this.options.viewport.selector || this.options.viewport))
     this.inState   = { click: false, hover: false, focus: false }
 
     if (this.$element[0] instanceof document.constructor && !this.options.selector) {
@@ -1609,7 +1611,10 @@ var bsBody = typeof gnShadowRoot === 'undefined' ? document.body : gnShadowRoot.
     if (this.hasContent() && this.enabled) {
       this.$element.trigger(e)
 
-      var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
+      var inDom = $.contains(
+        typeof gnShadowRoot === 'undefined'
+          ? this.$element[0].ownerDocument.documentElement : gnShadowRoot,
+        this.$element[0])
       if (e.isDefaultPrevented() || !inDom) return
       var that = this
 
