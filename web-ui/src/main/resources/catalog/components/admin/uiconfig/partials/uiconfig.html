@@ -41,7 +41,9 @@
                   data-ng-model="mCfg.enabled"
                 />&nbsp;
                 <h2>
-                  <label for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label>
+                  <label for="{{m}}-checkbox"
+                    >{{('ui-mod-' + m) | translate}}</label
+                  >
                 </h2>
               </legend>
               <legend data-ng-if="mCfg.enabled === undefined">
@@ -70,7 +72,9 @@
                 <!-- arrays -->
                 <div class="row" data-ng-switch-when="hitsperpageValues">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                   </div>
@@ -118,7 +122,9 @@
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                   </div>
@@ -203,7 +209,9 @@
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -214,14 +222,18 @@
 
                 <div class="row" data-ng-switch-when="languages">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
                     <table class="table table-striped table-bordered">
-                      <tr data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index">
+                      <tr
+                        data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index"
+                      >
                         <td>
                           <div class="input-group">
                             <input
@@ -269,7 +281,9 @@
 
                 <div class="row" data-ng-switch-when="sortbyValues">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                   </div>
@@ -321,7 +335,9 @@
 
                 <div class="row" data-ng-switch-when="resultViewTpls">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -381,13 +397,17 @@
 
                 <div class="row" data-ng-switch-when="formatter">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
                     <table class="table table-striped table-bordered">
-                      <tr data-ng-repeat="opt in mCfg[key].list track by $index">
+                      <tr
+                        data-ng-repeat="opt in mCfg[key].list track by $index"
+                      >
                         <td>
                           <div class="input-group">
                             <span class="input-group-addon">Label </span>
@@ -408,9 +428,13 @@
 
                           <div class="row">
                             <label class="control-label"
-                              >{{('ui-' + key + '-conditional-views') | translate}}</label
+                              >{{('ui-' + key + '-conditional-views') |
+                              translate}}</label
                             >
-                            <gn-json-edit height="300" model="opt.views"></gn-json-edit>
+                            <gn-json-edit
+                              height="300"
+                              model="opt.views"
+                            ></gn-json-edit>
                           </div>
                         </td>
                         <td class="w-30-px">
@@ -441,7 +465,9 @@
 
                 <div class="row" data-ng-switch-when="downloadFormatter">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -496,12 +522,16 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                    <div
+                      data-ng-repeat="(type, value) in mCfg[key] track by $index"
+                    >
                       <label class="control-label">{{type}}</label>
                       <table class="table table-striped table-bordered">
                         <tr data-ng-repeat="protocol in value track by $index">
@@ -545,12 +575,16 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                    <div
+                      data-ng-repeat="(type, value) in mCfg[key] track by $index"
+                    >
                       <input
                         type="checkbox"
                         id="{{key + type}}-checkbox"
@@ -567,12 +601,16 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                    <div
+                      data-ng-repeat="(type, value) in mCfg[key] track by $index"
+                    >
                       <input
                         type="checkbox"
                         id="{{key + type}}-checkbox"
@@ -589,12 +627,16 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                    <div
+                      data-ng-repeat="(type, value) in mCfg[key] track by $index"
+                    >
                       <label class="control-label">{{type}}</label>
                       <table class="table table-striped table-bordered">
                         <tr data-ng-repeat="s in value track by $index">
@@ -645,7 +687,9 @@
 
                 <div class="row" data-ng-switch-when="projectionList">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -699,7 +743,9 @@
                 <!-- Projection Switcher -->
                 <div class="row" data-ng-switch-when="switcherProjectionList">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
                   <div class="col-lg-7 gn-nopadding-right">
@@ -711,7 +757,9 @@
 
                 <div class="row" data-ng-switch-when="timezone">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -730,7 +778,9 @@
                 <!-- numbers -->
                 <div class="row" data-ng-switch-when="paginationInfo">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -769,7 +819,9 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
@@ -790,7 +842,10 @@
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <gn-json-edit height="300" model="mCfg[key].if"></gn-json-edit>
+                    <gn-json-edit
+                      height="300"
+                      model="mCfg[key].if"
+                    ></gn-json-edit>
                   </div>
                 </div>
 
@@ -798,7 +853,9 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                     <!--<p
@@ -817,7 +874,9 @@
                           id="{{key}}-{{t}}-checkbox"
                           data-ng-model="mCfg[key][t]"
                         />&nbsp;
-                        <label for="{{key}}-{{t}}-checkbox"> {{(t) | translate}} </label>
+                        <label for="{{key}}-{{t}}-checkbox">
+                          {{(t) | translate}}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -827,7 +886,9 @@
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <p
                       class="help-block"
                       data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
@@ -856,7 +917,9 @@
 
                 <div class="row" data-ng-switch-when="defaultSearchString">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <p
                       class="help-block"
@@ -877,7 +940,9 @@
 
                 <div class="row" data-ng-switch-when="graticuleOgcService">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -910,7 +975,9 @@
                   <!--<gn-ui-config-help />-->
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label" translate>gridConfigRelatedTypes</label>
+                    <label class="control-label" translate
+                      >gridConfigRelatedTypes</label
+                    >
 
                     <p class="help-block">
                       {{ 'gridConfigRelatedTypes-help' | translate }}
@@ -957,7 +1024,9 @@
 
                 <div class="row" data-ng-switch-when="logoInHeaderPosition">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
                     <gn-ui-config-help />
                   </div>
@@ -965,21 +1034,33 @@
                   <div class="col-lg-7 gn-nopadding-right">
                     <div>
                       <label>
-                        <input type="radio" data-ng-model="mCfg[key]" value="left" />
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="left"
+                        />
                         <i class="fa fa-fw fa-align-left"></i>&nbsp;
                         <span data-translate="">left</span>
                       </label>
                     </div>
                     <div>
                       <label>
-                        <input type="radio" data-ng-model="mCfg[key]" value="center" />
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="center"
+                        />
                         <i class="fa fa-fw fa-align-center"></i>&nbsp;
                         <span data-translate="">center</span>
                       </label>
                     </div>
                     <div>
                       <label>
-                        <input type="radio" data-ng-model="mCfg[key]" value="right" />
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="right"
+                        />
                         <i class="fa fa-fw fa-align-right"></i>&nbsp;
                         <span data-translate="">right</span>
                       </label>
@@ -1043,7 +1124,9 @@
 
                 <div class="row" data-ng-switch-when="createPageTpl">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -1056,7 +1139,9 @@
                           value="../../catalog/templates/editor/new-metadata-horizontal.html"
                         />
                         <i class="fa fa-align-center fa-rotate-90"></i>&nbsp;
-                        <span data-translate="">ui-createPageTpl-horizontal</span>
+                        <span data-translate=""
+                          >ui-createPageTpl-horizontal</span
+                        >
                       </label>
                     </div>
                     <div>
@@ -1072,7 +1157,11 @@
                     </div>
                     <div>
                       <label>
-                        <input type="radio" data-ng-model="mCfg[key]" value="" />
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value=""
+                        />
                         <span data-translate="">ui-createPageTpl-other</span>
 
                         <input
@@ -1087,7 +1176,9 @@
 
                 <div class="row" data-ng-switch-when="editorIndentType">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -1100,7 +1191,9 @@
                           value="gn-indent-default"
                         />
                         <i class="fa fa-fw fa-align-justify"></i>&nbsp;
-                        <span data-translate="">ui-editorIndentType-default</span>
+                        <span data-translate=""
+                          >ui-editorIndentType-default</span
+                        >
                       </label>
                     </div>
                     <div>
@@ -1111,7 +1204,9 @@
                           value="gn-indent-colored"
                         />
                         <i class="fa fa-fw fa-indent"></i>&nbsp;
-                        <span data-translate="">ui-editorIndentType-colored</span>
+                        <span data-translate=""
+                          >ui-editorIndentType-colored</span
+                        >
                       </label>
                     </div>
                   </div>
@@ -1126,10 +1221,15 @@
                   </div>
 
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label" for="ui-externalViewer-enabled" translate
+                    <label
+                      class="control-label"
+                      for="ui-externalViewer-enabled"
+                      translate
                       >ui-externalViewer-enabled</label
                     >
-                    <p class="help-block" translate>ui-externalViewer-enabled-help</p>
+                    <p class="help-block" translate>
+                      ui-externalViewer-enabled-help
+                    </p>
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
@@ -1149,7 +1249,9 @@
                       <label class="control-label" translate>
                         ui-externalViewer-baseUrl
                       </label>
-                      <p class="help-block" translate>ui-externalViewer-baseUrl-help</p>
+                      <p class="help-block" translate>
+                        ui-externalViewer-baseUrl-help
+                      </p>
                     </div>
 
                     <div class="col-lg-7 gn-nopadding-right">
@@ -1241,7 +1343,9 @@
 
                 <div class="row" data-ng-switch-when="searchResultContact">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -1264,7 +1368,9 @@
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu dropdown-menu-right">
-                            <li data-ng-repeat="o in searchResultContactChoices">
+                            <li
+                              data-ng-repeat="o in searchResultContactChoices"
+                            >
                               <a href="" data-ng-click="mCfg[key] = o"
                                 >{{o | translate}} ({{o}})</a
                               >
@@ -1278,7 +1384,9 @@
 
                 <div class="row" data-ng-switch-when="workflowAssistApps">
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
@@ -1288,7 +1396,8 @@
                         <td>
                           <div class="input-group">
                             <span class="input-group-addon"
-                              >{{'ui-workflowAssistApps-appUrl' | translate}}</span
+                              >{{'ui-workflowAssistApps-appUrl' |
+                              translate}}</span
                             >
                             <input
                               type="text"
@@ -1297,7 +1406,8 @@
                               data-ng-model="opt.appUrl"
                             />
                             <span class="input-group-addon"
-                              >{{'ui-workflowAssistApps-appLabelKey' | translate}}</span
+                              >{{'ui-workflowAssistApps-appLabelKey' |
+                              translate}}</span
                             >
                             <input
                               type="text"
@@ -1334,12 +1444,18 @@
 
                 <div class="row" data-ng-switch-default>
                   <div class="col-lg-5 gn-nopadding-left">
-                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <label class="control-label"
+                      >{{('ui-' + key) | translate}}</label
+                    >
                     <gn-ui-config-help />
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <input type="text" class="form-control" data-ng-model="mCfg[key]" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      data-ng-model="mCfg[key]"
+                    />
                   </div>
                 </div>
               </div>
@@ -1350,7 +1466,9 @@
           <h2 data-translate="" class="gn-margin-bottom">ui-advancedConfig</h2>
 
           <gn-json-edit model="jsonConfig"></gn-json-edit>
-          <textarea name="{{id}}" id="uiconfig" class="hidden">{{jsonConfig}}</textarea>
+          <textarea name="{{id}}" id="uiconfig" class="hidden">
+{{jsonConfig}}</textarea
+          >
           <br />
 
           <!--<button class="btn btn-default"

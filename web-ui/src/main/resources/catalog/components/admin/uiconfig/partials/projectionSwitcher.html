@@ -1,5 +1,8 @@
 <table class="table table-striped table-bordered">
-  <tr data-ng-repeat="opt in mCfg[key] track by $index" ng-init="parentIndex=$index">
+  <tr
+    data-ng-repeat="opt in mCfg[key] track by $index"
+    ng-init="parentIndex=$index"
+  >
     <td>
       <div class="input-group">
         <span class="input-group-addon" data-translate="">ui-code</span>
@@ -25,7 +28,12 @@
       </div>
       <div class="input-group">
         <span class="input-group-addon" data-translate="">ui-label</span>
-        <input type="text" class="form-control" data-ng-model="opt.label" required />
+        <input
+          type="text"
+          class="form-control"
+          data-ng-model="opt.label"
+          required
+        />
       </div>
       <div class="input-group">
         <p class="help-block" data-translate="">ui-label-help</p>
