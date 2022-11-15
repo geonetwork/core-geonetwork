@@ -32,7 +32,9 @@
   module.service("gnUserfeedbackService", [
     "$http",
     "$q",
-    function ($http, $q) {
+    "$translate",
+    "$rootScope",
+    function ($http, $q, $translate, $rootScope) {
       this.isBlank = function (str) {
         if (angular.isUndefined(str) || str == null || str == "") {
           return true;
@@ -99,6 +101,24 @@
           }
         );
         return deferred.promise;
+      };
+
+      this.publish = function (id, scope) {
+        if (window.confirm($translate.instant("GUFpublishConfirm"))) {
+          return $http
+            .get("../api/userfeedback/" + id + "/publish")
+            .success(function (data, status) {
+              $rootScope.$broadcast("reloadCommentList");
+            });
+        }
+      };
+
+      this.deleteC = function (id, scope) {
+        if (window.confirm($translate.instant("GUFdeleteConfirm"))) {
+          return $http.delete("../api/userfeedback/" + id).success(function (data) {
+            $rootScope.$broadcast("reloadCommentList");
+          });
+        }
       };
     }
   ]);
@@ -259,23 +279,15 @@
           };
 
           scope.publish = function (id) {
-            if (window.confirm($translate.instant("GUFpublishConfirm"))) {
-              $http
-                .get("../api/userfeedback/" + id + "/publish")
-                .success(function (data, status) {
-                  scope.initPopup();
-                  $rootScope.$broadcast("reloadCommentList");
-                });
-            }
+            gnUserfeedbackService.publish(id).then(function () {
+              scope.initPopup();
+            });
           };
 
           scope.deleteC = function (id) {
-            if (window.confirm($translate.instant("GUFdeleteConfirm"))) {
-              $http.delete("../api/userfeedback/" + id).success(function (data) {
-                scope.initPopup();
-                $rootScope.$broadcast("reloadCommentList");
-              });
-            }
+            gnUserfeedbackService.deleteC(id).then(function () {
+              scope.initPopup();
+            });
           };
         }
       };
@@ -417,7 +429,8 @@
 
   module.directive("gnUserfeedbacklasthome", [
     "$http",
-    function ($http) {
+    "gnUserfeedbackService",
+    function ($http, gnUserfeedbackService) {
       return {
         restrict: "AEC",
         replace: true,
@@ -426,10 +439,11 @@
         },
         templateUrl:
           "../../catalog/components/userfeedback/partials/userfeedbacklasthome.html",
-        link: function (scope) {
+        link: function (scope, element, attrs) {
           var defaultSize = 6,
             increment = 6;
           scope.lastCommentsList = [];
+          scope.allowDelete = attrs.allowDelete == "true" || false;
           scope.allCommentsLoaded = false;
           scope.loadLastComments = function (size) {
             $http({
@@ -446,9 +460,17 @@
               }
             );
           };
+
+          scope.deleteC = function (id) {
+            gnUserfeedbackService.deleteC(id).then(function () {
+              scope.loadLastComments(scope.nbOfComments || defaultSize);
+            });
+          };
+
           scope.loadMore = function () {
             scope.loadLastComments(scope.lastCommentsList.length + increment);
           };
+
           scope.loadLastComments(scope.nbOfComments || defaultSize);
         }
       };
