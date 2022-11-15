@@ -61,10 +61,8 @@ class SimpleOidcUser {
      * @param idToken  The User's ID token
      * @param attributes All the user's claims (ID Token claims + USERINFO claims)
      */
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map attributes) {
-        if (attributes == null) {
-            attributes = new HashMap(); // easier if we remove all the null checks
-        }
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) {
+        Map attributes = (userAttributes == null) ? new HashMap() : userAttributes;
 
         // -- get user name.  Should be in ID Token, but could be in the USERINFO
         username = idToken.getPreferredUsername();
