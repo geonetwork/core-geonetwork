@@ -236,15 +236,25 @@
 }
 
 // styling for all search results
-ul.gn-resultview {
+.gn-resultview {
   margin-right: -15px;
   .metadata {
     position: absolute;
     top: 0;
     width: 100%;
-    width: 100%;
     height: 100%;
     z-index: 2050;
+  }
+  .gn-toolbar {
+    .gn-md-links {
+      display: flex;
+      gap: 3px;
+    }
+    // open sub menu to the left
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
   }
   // both list types
   li.gn-card {
@@ -323,10 +333,6 @@ table.gn-resultview {
     font-size: 14px;
     padding: 0;
     margin: 0;
-  }
-  .gn-md-links {
-    display: flex;
-    gap: 3px;
   }
   .gn-status {
     position: inherit;

@@ -33,11 +33,33 @@
                 priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="xpath"
+                  select="gn-fn-metadata:getXPath(.)"/>
+
+    <xsl:variable name="isoType"
+                  select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:variable name="labelCfg">
+      <xsl:choose>
+        <xsl:when test="$overrideLabel != ''">
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$labelConfig"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
 
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+      <xsl:with-param name="label" select="$labelCfg/*"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -300,7 +322,7 @@
     <xsl:apply-templates mode="mode-iso19115-3.2018" select="*"/>
   </xsl:template>
 
-  
+
   <!--
     Display contact as table when mode is flat (eg. simple view) or if using xsl mode
     Match first node (or added one)

@@ -60,7 +60,7 @@ public class CatalogDispatcher {
     //---------------------------------------------------------------------------
 
     public static Map<String, String> extractParams(Element request) {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        Map<String, String> hm = new HashMap<String, String>();
 
         @SuppressWarnings("unchecked")
         List<Element> params = request.getChildren();

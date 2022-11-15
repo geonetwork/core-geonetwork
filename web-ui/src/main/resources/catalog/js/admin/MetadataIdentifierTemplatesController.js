@@ -46,10 +46,13 @@
           event.preventDefault();
       });
 
+      $scope.isNew = false;
       $scope.mdIdentifierTemplates = [];
       $scope.mdIdentifierTemplateSelected = {};
 
       $scope.selectTemplate = function (template) {
+        $scope.isNew = false;
+
         if ($(".ng-dirty").length > 0 && confirm($translate.instant("doSaveConfirm"))) {
           $scope.saveMetadataIdentifierTemplate(false);
         }
@@ -70,6 +73,7 @@
       }
 
       $scope.addMetadataIdentifierTemplate = function () {
+        $scope.isNew = true;
         $scope.mdIdentifierTemplateSelected = {
           id: "-99",
           name: "",
@@ -77,14 +81,18 @@
         };
       };
 
-      $scope.deleteMetadataIdentifierTemplate = function (id) {
+      $scope.deleteTemplateConfig = function () {
+        $("#gn-confirm-remove-metadataidentifiertpl").modal("show");
+      };
+
+      $scope.confirmDeleteTemplateConfig = function () {
         $http
-          .delete("../api/identifiers/" + id)
+          .delete("../api/identifiers/" + $scope.mdIdentifierTemplateSelected.id)
           .success(function (data) {
             $(".ng-dirty").removeClass("ng-dirty");
             loadMetadataUrnTemplates();
             $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("metadataUrnTemplateDeleted"),
+              msg: $translate.instant("metadataIdentifierTemplateDeleted"),
               timeout: 2,
               type: "success"
             });
@@ -92,7 +100,7 @@
           .error(function (data) {
             $(".ng-dirty").removeClass("ng-dirty");
             $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("metadataUrnTemplateDeletedError"),
+              title: $translate.instant("metadataIdentifierTemplateDeletedError"),
               error: data,
               timeout: 0,
               type: "danger"

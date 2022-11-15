@@ -118,7 +118,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getPack(
         String language, String key,
         ServiceContext context) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         if (packages.get(key) != null) {
             packages.get(key).forEach(resource -> {
                 String[] config = resource.split(TYPE_SEPARATOR);
@@ -173,7 +173,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getStandardCodelist(
         String language, String schema, List<String> codelist,
         ServiceContext context) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         context.setLanguage(language);
 
         for (String c : codelist) {
@@ -195,7 +195,7 @@ public class TranslationPackBuilder {
 
     @Cacheable(value = "translations", cacheManager = "cacheManager")
     public Map<String, String> getDbTranslation(String language, List<String> type) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
 
         validateDbType(type);
 
@@ -282,7 +282,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getJsonTranslation(
         String language,
         List<String> fileNameKeys) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         String iso2letterLangCode = XslUtil.twoCharLangCode(language, "eng");
 

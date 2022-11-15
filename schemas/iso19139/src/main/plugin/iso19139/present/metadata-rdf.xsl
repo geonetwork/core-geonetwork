@@ -36,6 +36,7 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:ogc="http://www.opengis.net/rdf#"
+                xmlns:geo="http://www.opengis.net/ont/geosparql#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
                 version="2.0"
@@ -341,7 +342,7 @@
     <!-- Thumbnail -->
     <xsl:for-each
       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString">
-      <foaf:thumbnail rdf:resource="{.}"/>
+      <foaf:thumbnail rdf:resource="{replace(., ' ', '%20')}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString -->
 
@@ -358,10 +359,9 @@
       </xsl:variable>
       <dct:spatial>
         <ogc:Polygon>
-          <ogc:asWKT rdf:datatype="http://www.opengis.net/rdf#WKTLiteral">
-            &lt;http://www.opengis.net/def/crs/OGC/1.3/CRS84&gt;
+          <geo:asWKT rdf:datatype="http://www.opengis.net/rdf#wktLiteral">
             Polygon((<xsl:value-of select="string-join($coords, ', ')"/>))
-          </ogc:asWKT>
+          </geo:asWKT>
         </ogc:Polygon>
       </dct:spatial>
     </xsl:for-each>

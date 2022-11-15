@@ -58,6 +58,7 @@
     "gnGlobalSettings",
     "gnSearchSettings",
     "gnUrlUtils",
+    "gnESFacet",
     function (
       $rootScope,
       $timeout,
@@ -74,7 +75,8 @@
       gnPopup,
       gnGlobalSettings,
       gnSearchSettings,
-      gnUrlUtils
+      gnUrlUtils,
+      gnESFacet
     ) {
       return {
         restrict: "A",
@@ -145,8 +147,9 @@
               };
 
               if (scope.$eval(scope.showValidOnly)) {
-                scope.searchObj.valid = 1;
+                scope.searchObj.params.valid = "1";
               }
+              scope.facetConfig = gnESFacet.configs.directoryInEditor.facets;
 
               scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
             },

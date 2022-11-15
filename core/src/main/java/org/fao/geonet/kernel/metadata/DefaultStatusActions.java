@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
@@ -55,7 +56,6 @@ import com.google.common.base.Joiner;
 
 public class DefaultStatusActions implements StatusActions {
 
-    public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
     protected ServiceContext context;
     protected String language;
     protected DataManager dm;
@@ -244,8 +244,8 @@ public class DefaultStatusActions implements StatusActions {
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
 
-        subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
-        message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
+        subject = MailUtil.compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
+        message = MailUtil.compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
         for (User user : userToNotify) {
             String salutation = Joiner.on(" ").skipNulls().join( user.getName(), user.getSurname());
             //If we have a salutation then end it with a ","
@@ -331,6 +331,18 @@ public class DefaultStatusActions implements StatusActions {
         return users;
     }
 
+    static public List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+        List<Group> groups = new ArrayList<>();
+
+        if ((notificationLevel != null) && (notificationLevel == StatusValueNotificationLevel.recordGroupEmail)) {
+            groups = groupRepository.findAll(GroupSpecs.inGroupNames(groupNames));
+        }
+
+        return groups;
+    }
+
+
     /**
      * Unset all operations on 'All' Group. Used when status
      * changes from approved to something else.
@@ -344,29 +356,6 @@ public class DefaultStatusActions implements StatusActions {
         for (ReservedOperation op : ReservedOperation.values()) {
             dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
         }
-    }
-
-    /**
-     *
-     * @param message  The message to work on
-     * @param uuid     The record UUID
-     * @param language The language (define the index to look into)
-     * @return The message with field substituted by values
-     */
-    public static String compileMessageWithIndexFields(String message, String uuid, String language) {
-        // Search lucene field to replace
-        Matcher m = metadataLuceneField.matcher(message);
-        ArrayList<String> fields = new ArrayList<String>();
-        while (m.find()) {
-            fields.add(m.group(1));
-        }
-
-        // First substitution for variables not stored in the index
-        for (String f : fields) {
-            String mdf = XslUtil.getIndexField(null, uuid, f, language);
-            message = message.replace("{{index:" + f + "}}", mdf);
-        }
-        return message;
     }
 
     private String getTranslatedStatusName(int statusValueId) {

@@ -63,7 +63,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         Path file = locateThesaurus(ThesaurusTest.class.getSimpleName() + "_empyt.rdf");
 
         this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
-            file.getFileName().toString(), file, "http://test.com", true);
+            file.getFileName().toString(), file, "http://test.com", true, 0);
         writableThesaurus.initRepository();
     }
 

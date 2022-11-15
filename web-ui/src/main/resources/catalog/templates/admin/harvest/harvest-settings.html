@@ -169,10 +169,7 @@
       </div>
     </div>
 
-    <div
-      id="gn-harvest-select-help-button"
-      data-gn-need-help="user-guide/harvesting/index.html"
-    ></div>
+    <div id="gn-harvest-select-help-button" data-gn-need-help="harvesting-home"></div>
   </div>
 
   <div class="col-lg-7" data-ng-hide="harvesterSelected['@id'] == null">
@@ -457,12 +454,11 @@
         </div>
       </tab>
       <tab
-        heading="{{ searchResults.count }} {{'metadataRecords' | translate}}"
+        heading="{{ searchResultsTotal }} {{'metadataRecords' | translate}}"
         data-ng-hide="harvesterSelected['@id'] == ''
-                          || searchResults.count == '-1'
+                          || searchResultsTotal == 0
                           || isLoadingOneHarvester
                           || deleting.indexOf(harvesterSelected['@id']) > -1"
-        data-ng-show="searchResults.count > 0"
         role="tab"
       >
         <div id="gn-harvest-records-panel" data-ng-search-form="" class="gn-margin-top">
@@ -484,7 +480,7 @@
               </div>
             </div>
           </div>
-          <div class="panel panel-default" data-ng-if="searchResults.count > 0">
+          <div class="panel panel-default" data-ng-show="searchResults.count > 0">
             <div class="panel-heading">
               <span id="gn-harvest-records-title" data-translate=""
                 >harvesterRecords</span
@@ -499,6 +495,7 @@
                   class="btn btn-primary btn-warning"
                   data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                   data-gn-click-and-spin="assignHarvestedRecordToLocalNode()"
+                  data-ng-show="user.isAdministratorOrMore()"
                 >
                   <span class="fa fa-database"></span>
                   <span

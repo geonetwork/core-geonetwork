@@ -67,11 +67,16 @@
           <fieldset data-gn-field-highlight="" class="gn-{@name}">
             <!-- Get translation for labels.
             If labels contains ':', search into labels.xml. -->
-            <legend data-gn-slide-toggle="">
+            <legend>
+              <xsl:if test="not(@collapsible)">
+                <xsl:attribute name="data-gn-slide-toggle" select="exists(@collapsed)"/>
+              </xsl:if>
               <xsl:value-of
                 select="if (contains($sectionName, ':'))
                   then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
-                  else $strings/*[name() = $sectionName]"
+                  else if ($strings/*[name() = $sectionName] != '')
+                  then $strings/*[name() = $sectionName]
+                  else $sectionName"
               />
             </legend>
             <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
@@ -93,7 +98,9 @@
   localization files. -->
   <xsl:template mode="form-builder" match="text">
     <xsl:variable name="id" select="@ref"/>
-    <xsl:variable name="text" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="translation" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="text"
+                  select="if ($translation) then $translation else ."/>
 
     <xsl:variable name="isDisplayed"
                   as="xs:boolean"
@@ -172,7 +179,7 @@
 
 
   <!-- Element to ignore in that mode -->
-  <xsl:template mode="form-builder" match="@name"/>
+  <xsl:template mode="form-builder" match="@name|@collapsed|@collapsible"/>
 
   <!-- For each field, fieldset and section, check the matching xpath
     is in the current document. In that case dispatch to the schema mode
@@ -251,8 +258,13 @@
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
+            <xsl:variable name="translation"
+                          select="$strings/*[name() = $configName]"/>
+            <xsl:variable name="overrideLabel"
+                          select="if ($translation != '')
+                                  then $translation
+                                  else $configName"/>
 
-            <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
             <xsl:if test="$configName != '' and not($overrideLabel)">
               <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>

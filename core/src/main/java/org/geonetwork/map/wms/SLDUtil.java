@@ -46,8 +46,8 @@ public class SLDUtil {
      * @throws ServiceException if the server responds with an error
      * @throws ParseException if unable to parse content type header from server
      */
-    public static HashMap<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
-        HashMap<String, String> hash = new HashMap<String, String>();
+    public static Map<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
+        Map<String, String> hash = new HashMap<String, String>();
 
         String requestUrl = SLDUtil.getGetStyleRequest(url, layers);
 

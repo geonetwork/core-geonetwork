@@ -69,6 +69,17 @@ public final class GroupSpecs {
         };
     }
 
+    public static Specification<Group> inGroupNames(final List<String> groupNames) {
+        return new Specification<Group>() {
+            @Override
+            public Predicate toPredicate(Root<Group> root,
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.and(root.get(Group_.name).in(groupNames),
+                    cb.not(getIsReserved(root, cb)));
+            }
+        };
+    }
+
     private static Predicate getIsReserved(Root<Group> root,
                                            CriteriaBuilder cb) {
         int maxId = Integer.MIN_VALUE;
