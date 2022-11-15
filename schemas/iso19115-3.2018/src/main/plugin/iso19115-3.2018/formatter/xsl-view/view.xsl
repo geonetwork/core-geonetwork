@@ -311,6 +311,7 @@
       <xsl:choose>
         <!-- Landing page case -->
         <xsl:when test="$language = 'all'">
+
           <xsl:variable name="citationInfo">
             <xsl:call-template name="get-iso19115-3.2018-citation">
               <xsl:with-param name="metadata" select="$metadata"/>
