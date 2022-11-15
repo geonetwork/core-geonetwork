@@ -103,21 +103,21 @@
         return deferred.promise;
       };
 
-      this.publish = function(id, scope) {
-        if (window.confirm($translate.instant('GUFpublishConfirm'))) {
-          return $http.get('../api/userfeedback/' + id + '/publish')
-            .success(function(data, status) {
-              $rootScope.$broadcast('reloadCommentList');
+      this.publish = function (id, scope) {
+        if (window.confirm($translate.instant("GUFpublishConfirm"))) {
+          return $http
+            .get("../api/userfeedback/" + id + "/publish")
+            .success(function (data, status) {
+              $rootScope.$broadcast("reloadCommentList");
             });
         }
       };
 
-      this.deleteC = function(id, scope) {
-        if (window.confirm($translate.instant('GUFdeleteConfirm'))) {
-          return $http.delete('../api/userfeedback/' + id)
-            .success(function(data) {
-              $rootScope.$broadcast('reloadCommentList');
-            });
+      this.deleteC = function (id, scope) {
+        if (window.confirm($translate.instant("GUFdeleteConfirm"))) {
+          return $http.delete("../api/userfeedback/" + id).success(function (data) {
+            $rootScope.$broadcast("reloadCommentList");
+          });
         }
       };
     }
@@ -279,13 +279,13 @@
           };
 
           scope.publish = function (id) {
-            gnUserfeedbackService.publish(id).then(function() {
+            gnUserfeedbackService.publish(id).then(function () {
               scope.initPopup();
             });
           };
 
           scope.deleteC = function (id) {
-            gnUserfeedbackService.deleteC(id).then(function() {
+            gnUserfeedbackService.deleteC(id).then(function () {
               scope.initPopup();
             });
           };
@@ -439,11 +439,11 @@
         },
         templateUrl:
           "../../catalog/components/userfeedback/partials/userfeedbacklasthome.html",
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
           var defaultSize = 6,
             increment = 6;
           scope.lastCommentsList = [];
-          scope.allowDelete = attrs.allowDelete == 'true' || false;
+          scope.allowDelete = attrs.allowDelete == "true" || false;
           scope.allCommentsLoaded = false;
           scope.loadLastComments = function (size) {
             $http({
@@ -461,9 +461,9 @@
             );
           };
 
-          scope.deleteC = function(id) {
-            gnUserfeedbackService.deleteC(id).then(function() {
-              scope.loadLastComments(scope.nbOfComments || defaultSize)
+          scope.deleteC = function (id) {
+            gnUserfeedbackService.deleteC(id).then(function () {
+              scope.loadLastComments(scope.nbOfComments || defaultSize);
             });
           };
 
