@@ -117,7 +117,7 @@ public class OidcUser2GeonetworkUser {
      * @param withDbUpdate
      * @return
      */
-    public UserDetails getUserDetails(OidcIdToken idToken,Map attributes, boolean withDbUpdate) {
+    public UserDetails getUserDetails(OidcIdToken idToken, Map attributes, boolean withDbUpdate) {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken,  attributes);
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
