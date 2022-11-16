@@ -40,7 +40,7 @@
             <span data-translate="">recordsInSelection</span>
           </li>
           <li class="pull-right">
-            <div data-gn-need-help="user-guide/workflow/batchediting.html"></div>
+            <div data-gn-need-help="batchediting"></div>
           </li>
         </ul>
         <br />
@@ -79,7 +79,7 @@
                           placeholder="{{'anyPlaceHolder' | translate}}"
                           aria-label="{{'anyPlaceHolder' | translate}}"
                           data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
-                          data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+                          data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
                           data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
                           data-typeahead-loading="anyLoading"
                           class="form-control"

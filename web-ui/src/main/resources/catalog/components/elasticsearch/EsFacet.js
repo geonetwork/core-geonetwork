@@ -129,38 +129,7 @@
           track_total_hits: true
         },
         directory: {
-          facets: {
-            valid: {
-              terms: {
-                field: "valid",
-                size: 10
-              }
-            },
-            groupOwner: {
-              terms: {
-                field: "groupOwner",
-                size: 10
-              }
-            },
-            recordOwner: {
-              terms: {
-                field: "recordOwner",
-                size: 10
-              }
-            },
-            groupPublished: {
-              terms: {
-                field: "groupPublished",
-                size: 10
-              }
-            },
-            isHarvested: {
-              terms: {
-                field: "isHarvested",
-                size: 2
-              }
-            }
-          },
+          facets: gnGlobalSettings.gnCfg.mods.directory.facetConfig,
           source: {
             includes: [
               "id",
@@ -190,7 +159,16 @@
             }
           },
           source: {
-            includes: ["id", "uuid", "creat*", "group*", "resource*", "owner*"]
+            includes: [
+              "id",
+              "uuid",
+              "creat*",
+              "group*",
+              "resource*",
+              "owner*",
+              "isTemplate",
+              "valid"
+            ]
           },
           track_total_hits: true
         },
@@ -245,7 +223,8 @@
                 include: "Warning.*"
               },
               meta: {
-                displayFilter: false
+                displayFilter: false,
+                field: "indexingErrorMsg"
               }
             }
           },

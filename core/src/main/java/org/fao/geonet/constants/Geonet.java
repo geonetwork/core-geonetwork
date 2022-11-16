@@ -650,7 +650,7 @@ public final class Geonet {
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
         public static final String GROUP_PUBLISHED = "groupPublished";
-        public static final String CAT = "_cat";
+        public static final String CAT = "cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";

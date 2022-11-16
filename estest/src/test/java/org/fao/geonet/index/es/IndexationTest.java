@@ -34,7 +34,7 @@ public class IndexationTest {
 //        toTest.index(schemaDir, metadata, id, moreFields, metadataType, root, forceRefreshReaders);
 //
 //        String docToBeIndexed = toTest.listOfDocumentsToIndex.get(id);
-//        HashMap<String,Object> result = new ObjectMapper().readValue(docToBeIndexed, HashMap.class);
+//        Map<String,Object> result = new ObjectMapper().readValue(docToBeIndexed, HashMap.class);
 //        Assert.assertEquals(3, result.size());
 //        Assert.assertEquals("test-id", result.get("id"));
 //        Assert.assertEquals("metadata", result.get("docType"));

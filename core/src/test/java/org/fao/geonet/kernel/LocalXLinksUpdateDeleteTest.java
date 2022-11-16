@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
@@ -78,10 +79,10 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             contactElement,
             false,
             false,
-            true,
             null,
             null,
-            false);
+            false,
+            IndexingMode.full);
 
 //     TODOES   assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
 //        assertTrue(context.getBean(IndexingList.class).getIdentifiers().contains(vicinityMapMetadata.getId()));
@@ -144,7 +145,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             context,
             metadata,
             element,
-                true,
+            IndexingMode.full,
             false,
             NO,
             false,

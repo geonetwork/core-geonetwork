@@ -678,7 +678,10 @@
             Object.keys(this).forEach(function (th) {
               record.translate(th, record.allKeywords[th].keywords);
             });
-          } else if (key.match(/th_.*(?<!_tree|Number)$/) != null) {
+          } else if (
+            key.match(/th_.*$/) !== null &&
+            key.match(/.*(_tree|Number)$/) === null
+          ) {
             record.translate(key, this);
           }
         });

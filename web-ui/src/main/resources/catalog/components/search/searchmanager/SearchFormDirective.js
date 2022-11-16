@@ -123,7 +123,7 @@
 
     var cleanSearchParams = function (params) {
       for (v in params) {
-        if (params[v] == "") {
+        if (v !== "sortOrder" && params[v] == "") {
           delete params[v];
         }
       }
@@ -261,6 +261,8 @@
               );
               paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
             }
+
+            $scope.$emit("searchFinished", { count: $scope.searchResults.count });
           },
           function (data) {
             console.warn(
@@ -278,47 +280,6 @@
         .then(function () {
           $scope.searching--;
         });
-    };
-
-    /**
-     * triggerWildSubtemplateSearch
-     *
-     * Run a search with the actual $scope.params
-     * Update the paginationInfo object with the total
-     * count of metadata found. Note that this search
-     * is for subtemplates with _root element provided as function
-     * param and wildcard char appended
-     */
-    this.triggerWildSubtemplateSearch = function (element) {
-      angular.extend($scope.params, defaultParams);
-
-      var params = angular.copy($scope.params);
-
-      // Add wildcard char to search, limit to subtemplates and the _root
-      // element of the subtemplate we want
-      if (params.any) params.any = params.any + "*";
-      else params.any = "*";
-
-      params.isTemplate = "s";
-      params._root = element;
-      params.from = "1";
-      params.to = "20";
-
-      // TODOES: use ES client
-
-      // gnSearchManagerService.gnSearch(params).then(
-      //     function(data) {
-      //       $scope.searchResults.records = data.metadata;
-      //       $scope.searchResults.count = data.count;
-
-      //       // compute page number for pagination
-      //       if ($scope.searchResults.records.length > 0 &&
-      //           $scope.hasPagination) {
-      //         $scope.paginationInfo.pages = Math.ceil(
-      //             $scope.searchResults.count /
-      //                 $scope.paginationInfo.hitsPerPage, 0);
-      //       }
-      //     });
     };
 
     /**
@@ -437,7 +398,6 @@
     });
 
     $scope.triggerSearch = this.triggerSearch;
-    $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
 
     /*
      * Implement AngularJS $parse without the restriction of expressions

@@ -10,6 +10,7 @@ import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.LinkStatusRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
@@ -291,7 +292,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
                 context,
                 metadata,
                 element,
-                true,
+                IndexingMode.full,
                 false,
                 NO,
                 false,

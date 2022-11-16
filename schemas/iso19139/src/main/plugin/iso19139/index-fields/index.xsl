@@ -45,15 +45,13 @@
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
-  <xsl:output method="xml" indent="yes"/>
-
   <xsl:output name="default-serialize-mode"
               indent="no"
               omit-xml-declaration="yes"
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-
+  <xsl:param name="fastIndexMode" select="false()"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -152,6 +150,10 @@
 
       <xsl:for-each select="gmd:metadataStandardVersion">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="gmd:hierarchyLevelName">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
@@ -370,13 +372,6 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -1230,6 +1225,7 @@
 
           <xsl:variable name="resolvedDoc">
             <xsl:if test="$processRemoteDocs
+                          and not($fastIndexMode)
                           and $xlink != ''
                           and not(@xlink:title)
                           and not(starts-with($xlink, $siteUrl))">

@@ -720,21 +720,29 @@
 
             var isLabelSet = false;
             function appendExtraOptions() {
-              if (baseList && angular.isArray(scope.extraOptions)) {
-                if (!isLabelSet) {
-                  scope.extraOptions.unshift({
-                    value: "",
-                    label: $translate.instant("recordFormats"),
-                    disabled: true
-                  });
-                  scope.extraOptions.push({
-                    value: "",
-                    label: $translate.instant("commonProtocols"),
-                    disabled: true
-                  });
+              if (baseList) {
+                // Only add the header options if there are extra options defined.
+                if (
+                  angular.isArray(scope.extraOptions) &&
+                  scope.extraOptions.length > 0
+                ) {
+                  if (!isLabelSet) {
+                    scope.extraOptions.unshift({
+                      value: "",
+                      label: $translate.instant("recordFormats"),
+                      disabled: true
+                    });
+                    scope.extraOptions.push({
+                      value: "",
+                      label: $translate.instant("commonProtocols"),
+                      disabled: true
+                    });
+                    isLabelSet = true;
+                  }
+                  scope.infos = scope.extraOptions.concat(baseList);
+                } else {
                   isLabelSet = true;
                 }
-                scope.infos = scope.extraOptions.concat(baseList);
               }
             }
 

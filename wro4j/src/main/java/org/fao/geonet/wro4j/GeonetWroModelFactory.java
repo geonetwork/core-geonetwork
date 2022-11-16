@@ -1,9 +1,31 @@
+/*
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.wro4j;
 
 import com.google.common.collect.Lists;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.logging.log4j.Level;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -14,7 +36,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import ro.isdc.wro.config.ReadOnlyContext;
 import ro.isdc.wro.model.WroModel;
 import ro.isdc.wro.model.factory.WroModelFactory;
@@ -24,6 +45,10 @@ import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 import ro.isdc.wro.util.StopWatch;
 
+import javax.servlet.ServletContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,25 +62,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-import javax.servlet.ServletContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.wro4j.GeonetworkWrojManagerFactory.WRO4J_LOG;
 
@@ -548,7 +558,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     /**
      * If a JS file ends with {@See TEMPLATE_PATTERN} or is a view template
      * then check all HTML files which are templates.
-     *
+     * <p>
      * TODO: Add for all views ?
      */
     private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
@@ -713,6 +723,22 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
                 @Override
                 public Iterator<File> iterator() {
+                    if (!root.exists()) {
+                        throw new IllegalArgumentException(String.format("%s doesn't exist. It could be a missing library. " +
+                            "Check the source if you have all dependency files required.", root));
+                    }
+                    if (root.isFile()) {
+                        List<String> suffixes = Arrays.stream(extToCollect).map(sufix -> "." + sufix).collect(Collectors.toList());
+                        SuffixFileFilter suffixFilter = new SuffixFileFilter(suffixes);
+                        if (suffixFilter.accept(root)) {
+                            List<File> files = new ArrayList<>(1);
+                            files.add(root);
+                            return files.iterator();
+                        } else {
+                            throw new IllegalArgumentException(String.format("%s exist but doesn't match the filter %s",
+                                root, Arrays.toString(extToCollect)));
+                        }
+                    }
                     // More detailed error about
                     // Parameter 'directory' is not a directory
                     // when a missing lib is not found by wro4j when geonetwork initialized.
