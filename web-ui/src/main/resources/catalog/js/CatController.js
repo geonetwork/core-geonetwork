@@ -1089,7 +1089,7 @@
             // Add some fuzziness when search on directory entries
             // but boost exact match.
             queryBase:
-              'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
+              'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any})^5 OR resourceTitleObject.${searchLang}:(${any}~2)'
           },
           admin: {
             enabled: true,
