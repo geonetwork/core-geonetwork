@@ -61,27 +61,32 @@ class SimpleOidcUser {
      * @param idToken  The User's ID token
      * @param attributes All the user's claims (ID Token claims + USERINFO claims)
      */
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) {
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) throws Exception {
         Map attributes = (userAttributes == null) ? new HashMap() : userAttributes;
 
-        // -- get user name.  Should be in ID Token, but could be in the USERINFO
-        username = idToken.getPreferredUsername();
+        username = (String) idToken.getClaims().get(oidcConfiguration.getUserNameAttribute());
         if (username == null) {
-            username = idToken.getFullName();
+            username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
         }
-        if ( (username == null) && attributes.containsKey(StandardClaimNames.PREFERRED_USERNAME) ) {
+        if (username == null) {
+            username = idToken.getPreferredUsername();
+        }
+        if (username == null) {
             username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
         }
-        if  ( (username == null) && attributes.containsKey(StandardClaimNames.EMAIL) ){
-            username =  (String) attributes.get(StandardClaimNames.EMAIL);
+        if (username == null) {
+            username = idToken.getEmail();
         }
-        if  ( (username == null) && attributes.containsKey(StandardClaimNames.NAME) ){
-            username =  (String) attributes.get(StandardClaimNames.NAME);
+        if (username == null) {
+            username = (String) attributes.get(StandardClaimNames.EMAIL);
         }
 
-        if (username != null) {
-            username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
+        if  (username == null) {
+            throw new Exception("OIDC: could not extract user ID from ID Token or userinfo.  tried PREFERRED_USERNAME, EMAIL, and "+oidcConfiguration.getUserNameAttribute());
         }
+
+        username = org.apache.commons.lang.StringUtils.left(username, 256); //first max 256 chars
+
         if (!StringUtils.isBlank(username)) {
             // -- get user surname and given name.  Should be in ID Token, but could be in the USERINFO
             surname = idToken.getFamilyName();
@@ -127,10 +132,19 @@ class SimpleOidcUser {
         }
     }
 
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) {
+    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) throws Exception {
         username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
-        if (username == null)
+        if (username == null) {
             username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
+        }
+        if (username == null) {
+            username = (String) attributes.get(StandardClaimNames.EMAIL);
+        }
+
+        if  (username == null) {
+            throw new Exception("OIDC: could not extract user ID from ID Token or userinfo.  tried PREFERRED_USERNAME, EMAIL, and "+oidcConfiguration.getUserNameAttribute());
+        }
+
         if (username == null) {
             username = (String) attributes.get(StandardClaimNames.NAME);
         }
