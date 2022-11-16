@@ -125,19 +125,20 @@ public class Importer {
 
             public void handleMetadataFiles(DirectoryStream<Path> metadataXmlFiles, Element info, int index) throws Exception {
                 String infoSchema = "_none_";
+                String uuid = null;
                 if (info != null && info.getContentSize() != 0) {
                     Element general = info.getChild("general");
                     if (general != null && general.getContentSize() != 0) {
                         if (general.getChildText("schema") != null) {
                             infoSchema = general.getChildText("schema");
                         }
+                        if (general.getChildText("uuid") != null) {
+                            uuid = general.getChildText("uuid");
+                        }
                     }
                 }
 
                 Path lastUnknownMetadataFolderName = null;
-                if (Log.isDebugEnabled(Geonet.MEF))
-                    Log.debug(Geonet.MEF, "Multiple metadata files");
-
                 if (Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "info.xml says schema should be " + infoSchema);
 
@@ -147,6 +148,10 @@ public class Importer {
                 for (Path file : metadataXmlFiles) {
                     if (file != null && java.nio.file.Files.isRegularFile(file)) {
                         Element metadata = Xml.loadFile(file);
+
+                        // Important folder name to identify metadata should be ../../
+                        lastUnknownMetadataFolderName = file.getParent().getParent().relativize(file);
+
                         try {
                             String metadataSchema = dm.autodetectSchema(metadata, null);
                             // If local node doesn't know metadata
@@ -160,15 +165,13 @@ public class Importer {
                             mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                         } catch (NoSchemaMatchesException e) {
-                            // Important folder name to identify metadata should be ../../
-                            lastUnknownMetadataFolderName = file.getParent().getParent().relativize(file);
                             Log.debug(Geonet.MEF, "No schema match for " + lastUnknownMetadataFolderName + ".");
                         }
                     }
                 }
 
                 if (mdFiles.size() == 0) {
-                    throw new BadFormatEx("No valid metadata file found" + ((lastUnknownMetadataFolderName == null) ?
+                    throw new BadFormatEx(uuid + " / No valid metadata file found" + ((lastUnknownMetadataFolderName == null) ?
                         "" :
                         (" in " + lastUnknownMetadataFolderName)) + ".");
                 }
