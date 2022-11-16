@@ -381,7 +381,11 @@
 
               var recordValue = this.getObjectValueByPath(record, key);
               if (angular.isArray(recordValue)) {
-                if (values.filter((value) => recordValue.includes(value)).length > 0) {
+                if (
+                  values.filter(function (value) {
+                    return recordValue.includes(value);
+                  }).length > 0
+                ) {
                   cb();
                 }
               } else {
