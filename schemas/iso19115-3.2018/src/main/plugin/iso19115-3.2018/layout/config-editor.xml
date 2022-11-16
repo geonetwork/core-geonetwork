@@ -135,7 +135,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
@@ -188,7 +188,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
@@ -230,7 +230,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="distributor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
@@ -272,7 +272,7 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="processor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "cit:CI_Responsibility"}'
