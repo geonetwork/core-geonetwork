@@ -116,7 +116,7 @@
                 </xsl:if>
               </xsl:otherwise>
             </xsl:choose>
-            <strong><xsl:value-of select="translatedTitle"/>.</strong>
+            <strong><xsl:copy-of select="translatedTitle/(text()|*)"/>.</strong>
             <xsl:value-of select="string-join(publishersNameAndOrgList/*, ', ')"/>
             <br/>
             <xsl:variable name="url"

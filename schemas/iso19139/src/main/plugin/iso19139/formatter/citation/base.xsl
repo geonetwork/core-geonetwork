@@ -128,6 +128,9 @@
                                 or contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]/*/(@xlink:href|text()))[1]"/>
 
+    <xsl:variable name="doiProtocolRegex"
+               select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
+
     <xsl:variable name="doiInOnline"
                   select="//gmd:distributionInfo//gmd:onLine/*[
                               matches(gmd:protocol/gco:CharacterString,
@@ -171,7 +174,7 @@
         select="$metadata/gmd:fileIdentifier/gco:CharacterString[. != '']"/></uuid>
       <authorsNameAndOrgList><xsl:copy-of select="$authorsNameAndOrgList"/></authorsNameAndOrgList>
       <lastPublicationDate><xsl:value-of select="$lastPublicationDate"/></lastPublicationDate>
-      <translatedTitle><xsl:value-of select="$translatedTitle"/></translatedTitle>
+      <translatedTitle><xsl:copy-of select="$translatedTitle/(text()|*)"/></translatedTitle>
       <publishersNameAndOrgList><xsl:copy-of select="$publishersNameAndOrgList"/></publishersNameAndOrgList>
       <landingPageUrl><xsl:value-of select="$landingPageUrl"/></landingPageUrl>
       <doi><xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/></doi>
