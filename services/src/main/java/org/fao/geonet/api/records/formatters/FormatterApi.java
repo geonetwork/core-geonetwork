@@ -243,9 +243,15 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language;
         if (StringUtils.isNotEmpty(iso3lang)) {
-            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
+            if (languageUtils.getUiLanguages().contains(iso3lang)) {
+                language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
+            } else {
+                language = languageUtils.getDefaultUiLanguage();
+            }
+        } else {
+            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
