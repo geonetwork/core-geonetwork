@@ -122,7 +122,8 @@
           uiConfig: "",
           filter: "",
           serviceRecord: null,
-          groupOwner: null
+          groupOwner: null,
+          listableInHeaderSelector: true
         };
         // TODO: init labels
       };
