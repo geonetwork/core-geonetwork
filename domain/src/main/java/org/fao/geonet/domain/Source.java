@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,17 +24,19 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Entity representing a source catalogue.
- *
+ * <p>
  * A source is created for the default catalogue,
  * when a harvester is created,
  * when a MEF is imported flagging an external catalogue,
@@ -60,6 +62,7 @@ public class Source extends Localized {
     private String serviceRecord;
     private ISODate creationDate = new ISODate();
     private Integer groupOwner;
+    private Boolean listableInHeaderSelector = true;
 
     /**
      * Default constructor.  Required by framework.
@@ -69,9 +72,10 @@ public class Source extends Localized {
 
     /**
      * Convenience constructor for quickly making a Source object.
-     *  @param uuid  the uuid of the source (also the ID)
-     * @param name  the name
-     * @param type
+     *
+     * @param uuid the uuid of the source (also the ID)
+     * @param name the name.
+     * @param type the type of source (harvester, subportal...).
      */
     public Source(String uuid, String name, Map<String, String> translations, SourceType type) {
         this._uuid = uuid;
@@ -269,5 +273,15 @@ public class Source extends Localized {
 
     public void setServiceRecord(String serviceRecord) {
         this.serviceRecord = serviceRecord;
+    }
+
+    @Column(name = "isListableInHeaderSelector", nullable = false, length = 1, columnDefinition="CHAR(1) DEFAULT 'y'")
+    @Convert(converter = BooleanToYNConverter.class)
+    public boolean isListableInHeaderSelector() {
+        return this.listableInHeaderSelector;
+    }
+
+    public void setListableInHeaderSelector(Boolean listableInHeaderSelector) {
+        this.listableInHeaderSelector = listableInHeaderSelector;
     }
 }
