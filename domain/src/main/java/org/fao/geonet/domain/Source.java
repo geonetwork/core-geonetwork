@@ -138,11 +138,13 @@ public class Source extends Localized {
         this._name = name;
         return this;
     }
+
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
     @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false, length = 255)
+    @Nonnull
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }
@@ -151,13 +153,8 @@ public class Source extends Localized {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Source source = (Source) o;
-
-        if (_name != null ? !_name.equals(source._name) : source._name != null) return false;
-        if (_uuid != null ? !_uuid.equals(source._uuid) : source._uuid != null) return false;
-
-        return true;
+        return Objects.equals(_uuid, source._uuid) && Objects.equals(_name, source._name);
     }
 
     @Override
@@ -170,6 +167,7 @@ public class Source extends Localized {
     /**
      * Property indicating if the source is the local catalogue,
      * an external one, a harvester source or a sub portal.
+     *
      * @return
      */
     @Column(nullable = true, name = "type")
@@ -185,6 +183,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getLogo() {
@@ -199,6 +198,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getFilter() {
@@ -212,6 +212,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getUiConfig() {
@@ -254,6 +255,7 @@ public class Source extends Localized {
      * Get the group id that this subportal is managed by.
      * When assigning a subportal to a group, user admin of that group
      * can manage it.
+     *
      * @return the group that owns this source.
      */
     @Column(name = "groupOwner")
@@ -265,6 +267,7 @@ public class Source extends Localized {
         this.groupOwner = groupOwner;
         return this;
     }
+
 
     @Column(name = "serviceRecord")
     public String getServiceRecord() {

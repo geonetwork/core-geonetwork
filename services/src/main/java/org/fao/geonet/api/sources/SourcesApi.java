@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -95,9 +95,9 @@ public class SourcesApi {
         @RequestParam(
             value = "group",
             required = false)
-            Integer group,
+        Integer group,
         @Parameter(hidden = true)
-            HttpServletResponse response
+        HttpServletResponse response
     ) throws Exception {
         setHeaderVaryOnAccept(response);
         if (group != null) {
@@ -120,7 +120,7 @@ public class SourcesApi {
     @ResponseBody
     public void getSubPortals(
         @Parameter(hidden = true)
-            HttpServletResponse response
+        HttpServletResponse response
     ) throws Exception {
         final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
         Element sourcesList = new Element("sources");
@@ -170,9 +170,9 @@ public class SourcesApi {
             name = "source"
         )
         @RequestBody
-            Source source,
+        Source source,
         @Parameter(hidden = true)
-            HttpServletRequest request) {
+        HttpServletRequest request) {
         Optional<Source> existing = sourceRepository.findById(source.getUuid());
         if (existing.isPresent()) {
             throw new IllegalArgumentException(String.format(
@@ -232,14 +232,14 @@ public class SourcesApi {
             required = true
         )
         @PathVariable
-            String sourceIdentifier,
+        String sourceIdentifier,
         @Parameter(
             name = "source"
         )
         @RequestBody
-            Source source,
+        Source source,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
         if (existingSource.isPresent()) {
             // Rebuild translation pack cache if there are changes in the translations
@@ -282,9 +282,9 @@ public class SourcesApi {
             required = true
         )
         @PathVariable
-            String sourceIdentifier,
+        String sourceIdentifier,
         @Parameter(hidden = true)
-            HttpServletRequest request
+        HttpServletRequest request
     ) throws ResourceNotFoundException {
         Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
         if (existingSource.isPresent()) {
@@ -322,11 +322,11 @@ public class SourcesApi {
             entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
+            entity.setListableInHeaderSelector(source.isListableInHeaderSelector());
             Map<String, String> labelTranslations = source.getLabelTranslations();
-            if (labelTranslations != null) {
-                entity.getLabelTranslations().clear();
-                entity.getLabelTranslations().putAll(labelTranslations);
-            }
+            entity.getLabelTranslations().clear();
+            entity.getLabelTranslations().putAll(labelTranslations);
+
         });
     }
 }
