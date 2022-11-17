@@ -93,6 +93,12 @@
         }
         $http.get(url).success(function (data) {
           $scope.sources = data;
+          if ($scope.source && $scope.source.uuid !== null) {
+            var selectedSource = _.find($scope.sources, { uuid: $scope.source.uuid });
+            if (selectedSource) {
+              $scope.source = selectedSource;
+            }
+          }
           filterSources();
           $scope.isNew = false;
         });
