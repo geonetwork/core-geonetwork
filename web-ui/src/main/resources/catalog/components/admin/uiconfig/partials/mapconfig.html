@@ -5,11 +5,7 @@
 <div class="col-lg-7" data-ng-controller="GnSearchController">
   <div data-ng-search-form="" data-ng-controller="GnMapContextRecordController">
     <div class="input-group dropdown" id="serviceList">
-      <input
-        type="text"
-        class="form-control"
-        data-ng-model="mCfg[key]['context']"
-      />
+      <input type="text" class="form-control" data-ng-model="mCfg[key]['context']" />
 
       <div class="input-group-btn">
         <button
@@ -38,10 +34,7 @@
             />
           </li>
           <li data-ng-repeat="md in searchResults.records">
-            <a
-              href=""
-              data-ng-click="mCfg[key]['context'] = md.linkUrlProtocolOGCOWSC"
-            >
+            <a href="" data-ng-click="mCfg[key]['context'] = md.linkUrlProtocolOGCOWSC">
               {{md.resourceTitleObject.default}}
             </a>
           </li>

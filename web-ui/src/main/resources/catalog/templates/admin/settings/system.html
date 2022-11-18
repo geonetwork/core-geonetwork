@@ -173,16 +173,10 @@
                         class="form-control"
                         name="{{s.name}}"
                       >
-                        <option
-                          value="Editor"
-                          ng-selected="'Editor' == s.value"
-                        >
+                        <option value="Editor" ng-selected="'Editor' == s.value">
                           {{'Editor' | translate}}
                         </option>
-                        <option
-                          value="Reviewer"
-                          ng-selected="'Reviewer' == s.value"
-                        >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
                           {{'Reviewer' | translate}}
                         </option>
                         <option
@@ -198,16 +192,10 @@
                         class="form-control"
                         name="{{s.name}}"
                       >
-                        <option
-                          value="Editor"
-                          ng-selected="'Editor' == s.value"
-                        >
+                        <option value="Editor" ng-selected="'Editor' == s.value">
                           {{'Editor' | translate}}
                         </option>
-                        <option
-                          value="Reviewer"
-                          ng-selected="'Reviewer' == s.value"
-                        >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
                           {{'Reviewer' | translate}}
                         </option>
                         <option
@@ -218,9 +206,7 @@
                         </option>
                       </select>
 
-                      <div
-                        data-ng-switch-when="system/metadatacreate/preferredGroup"
-                      >
+                      <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
                           id="{{s.name}}"
@@ -238,9 +224,7 @@
                         />
                       </div>
 
-                      <div
-                        data-ng-switch-when="system/metadatacreate/preferredTemplate"
-                      >
+                      <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
                         <div
                           data-gn-metadata-selector="s.value"
                           data-search-obj="metadataTemplateSearchObj"
@@ -249,9 +233,7 @@
                         />
                       </div>
 
-                      <div
-                        data-ng-switch-when="metadata/workflow/draftWhenInGroup"
-                      >
+                      <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                         <input
                           type="radio"
                           class="gn-no-setting"
@@ -332,9 +314,7 @@
                         class="form-control"
                         name="{{s.name}}"
                       >
-                        <option value="http" ng-selected="'http' == s.value">
-                          http
-                        </option>
+                        <option value="http" ng-selected="'http' == s.value">http</option>
                         <option value="https" ng-selected="'https' == s.value">
                           https
                         </option>
@@ -393,8 +373,7 @@
                           {{'system/oai/mdmode-valueTemporaExtent' | translate}}
                         </option>
                         <option value="2" ng-selected="'2' == s.value">
-                          {{'system/oai/mdmode-valueModificationDate' |
-                          translate}}
+                          {{'system/oai/mdmode-valueModificationDate' | translate}}
                         </option>
                       </select>
                       <select
@@ -408,10 +387,7 @@
                         <option value="basic" ng-selected="'basic' == s.value">
                           {{'basic' | translate}}
                         </option>
-                        <option
-                          value="advanced"
-                          ng-selected="'advanced' == s.value"
-                        >
+                        <option value="advanced" ng-selected="'advanced' == s.value">
                           {{'advanced' | translate}}
                         </option>
                       </select>
@@ -422,16 +398,10 @@
                         name="{{s.name}}"
                         data-ng-model="atomFeedType"
                       >
-                        <option
-                          value="disabled"
-                          ng-selected="'disabled' == s.value"
-                        >
+                        <option value="disabled" ng-selected="'disabled' == s.value">
                           {{'system/inspire/atomDisabled' | translate}}
                         </option>
-                        <option
-                          value="remote"
-                          ng-selected="'remote' == s.value"
-                        >
+                        <option value="remote" ng-selected="'remote' == s.value">
                           {{'system/inspire/atomRemote' | translate}}
                         </option>
                       </select>
@@ -481,9 +451,7 @@
                                   {{loadTplReport.length}}
                                 </p>
 
-                                <p data-translate="">
-                                  inspireatom-harvestedfeeds
-                                </p>
+                                <p data-translate="">inspireatom-harvestedfeeds</p>
 
                                 <ul class="icons-ul">
                                   <li
@@ -507,11 +475,7 @@
                               </div>
                             </div>
                             <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn"
-                                data-dismiss="modal"
-                              >
+                              <button type="button" class="btn" data-dismiss="modal">
                                 <i class="fa fa-ban-circle"></i>&nbsp;
                                 <span data-translate="">close</span>
                               </button>
@@ -572,9 +536,7 @@
                         name="{{s.name}}"
                         value="{{s.value}}"
                       />
-                      <div
-                        data-ng-switch-when="system/feedback/mailServer/host"
-                      >
+                      <div data-ng-switch-when="system/feedback/mailServer/host">
                         <div class="input-group">
                           <input
                             type="text"
@@ -592,9 +554,7 @@
                               data-gn-click-and-spin="testMailConfiguration()"
                             >
                               <i class="fa fa-envelope"></i>&nbsp;
-                              <span data-translate=""
-                                >testMailConfiguration</span
-                              >
+                              <span data-translate="">testMailConfiguration</span>
                             </button>
                           </span>
                         </div>
@@ -612,9 +572,7 @@
                         </div>
                       </div>
 
-                      <div
-                        data-ng-switch-when="metadata/resourceIdentifierPrefix"
-                      >
+                      <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
                         <div>
                           <input
                             type="text"
@@ -724,8 +682,7 @@
                 data-ng-disabled="!gnSettings.$valid"
                 data-ng-click="saveSettings('#gn-settings')"
               >
-                <span class="fa fa-save"></span>&nbsp;
-                {{"saveSettings"|translate}}
+                <span class="fa fa-save"></span>&nbsp; {{"saveSettings"|translate}}
               </button>
             </fieldset>
           </div>

@@ -29,8 +29,7 @@
 
   var module = angular.module("gn_system_settings_controller", [
     "gn_ui_config",
-    "gn_timezone_selector",
-    "ui.multiselect"
+    "gn_timezone_selector"
   ]);
 
   module.filter("hideLanguages", function () {
