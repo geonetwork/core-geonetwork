@@ -30,6 +30,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
             new ISODate().getDateAndTime(),
             new ISODate().getDateAndTime(),
             false,
-            false);
+            IndexingMode.none);
 
         FilesystemStore filesystemStore = new FilesystemStore();
         filesystemStore.settingManager = this.settingManager;

@@ -360,7 +360,7 @@
         return promise;
       };
       $scope.saveAndClose = function () {
-        return gnEditor.save(false).then(
+        return gnEditor.save(false, null, true).then(
           function (form) {
             $scope.gnCurrentEdit = "";
             $scope.closeEditor();

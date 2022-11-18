@@ -50,15 +50,21 @@
           from: 1,
           to: 50,
           type: "service",
+          isTemplate: "n",
           sortBy: "resourceTitleObject.default.keyword",
           sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
+        $scope.isNew = false;
       };
 
       function filterSources() {
@@ -120,35 +126,6 @@
         };
         // TODO: init labels
       };
-      function loadServiceRecords() {
-        var id = $scope.source.serviceRecord;
-
-        if (angular.isDefined(id) && id != -1) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: id
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
-          });
-        }
-      }
-      $scope.$watchCollection("source.serviceRecord", function (n, o) {
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
 
       $scope.updateSource = function () {
         var url = "../api/sources" + ($scope.isNew ? "" : "/" + $scope.source.uuid);
@@ -173,7 +150,11 @@
           });
       };
 
-      $scope.removeSource = function () {
+      $scope.deleteSourceConfig = function () {
+        $("#gn-confirm-remove-source").modal("show");
+      };
+
+      $scope.confirmDeleteSourceConfig = function () {
         $http
           .delete("../api/sources/" + $scope.source.uuid)
           .success(function (data) {
@@ -184,6 +165,7 @@
             });
 
             loadSources();
+            $scope.source = null;
           })
           .error(function (data) {
             $rootScope.$broadcast("StatusUpdated", {

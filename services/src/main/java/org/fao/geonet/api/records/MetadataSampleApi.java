@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -265,7 +266,7 @@ public class MetadataSampleApi {
                         }
                         if (dataManager.existsMetadataUuid(uuid)) {
                             String upid = dataManager.getMetadataId(uuid);
-                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
+                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, context.getLanguage(), null, true, IndexingMode.none);
                             report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' updated.",
@@ -288,7 +289,7 @@ public class MetadataSampleApi {
                             if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
                                 xml = dataManager.setUUID(schemaName, uuid, xml);
                             }
-                            dataManager.insertMetadata(context, metadata, xml, true, true, UpdateDatestamp.NO, false, true);
+                            dataManager.insertMetadata(context, metadata, xml, IndexingMode.full, true, UpdateDatestamp.NO, false, true);
                             report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' added.",

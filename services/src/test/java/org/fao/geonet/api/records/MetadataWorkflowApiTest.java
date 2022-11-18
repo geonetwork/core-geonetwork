@@ -1,23 +1,8 @@
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.google.gson.Gson;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.MetadataBatchSubmitParameter;
 import org.fao.geonet.domain.*;
@@ -25,29 +10,35 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.StatusValueRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.locationtech.jts.util.Assert;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
 
@@ -111,7 +102,7 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo()
             .setHarvested(false);
 
-        int id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, true, false, UpdateDatestamp.NO,
+        int id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.full, false, UpdateDatestamp.NO,
             false, false).getId();
 
         MetadataStatus metadataStatus = new MetadataStatus();
@@ -144,7 +135,7 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
         metadata2.getHarvestInfo()
             .setHarvested(false);
 
-        id = dataManager.insertMetadata(context, metadata2, sampleMetadataXml, true, false, UpdateDatestamp.NO,
+        id = dataManager.insertMetadata(context, metadata2, sampleMetadataXml, IndexingMode.full, false, UpdateDatestamp.NO,
             false, false).getId();
 
         metadataStatus = new MetadataStatus();
