@@ -81,6 +81,7 @@ Ce schéma est également composé des normes :
               xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
               xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
               xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+              xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
               xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
               xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
               xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
@@ -94,6 +95,7 @@ Ce schéma est également composé des normes :
       <cit:CI_Responsibility/>
       <cit:CI_Organisation/>
       <mcc:MD_BrowseGraphic/>
+      <mrs:MD_ReferenceSystem/>
       <mrd:MD_Format/>
       <mdq:DQ_DomainConsistency/>
       <mdq:DQ_CompletenessCommission/>
