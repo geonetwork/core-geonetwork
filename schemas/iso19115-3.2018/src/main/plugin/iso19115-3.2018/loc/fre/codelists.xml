@@ -352,6 +352,52 @@
       </description>
     </entry>
   </codelist>
+
+
+  <codelist name="cit:CI_RoleCode" alias="roleCode"
+            displayIf="ancestor::node()[name()='mdb:MD_Metadata' and contains(mdb:metadataStandard/*/cit:title/*:CharacterString, 'ISO 19115-3:2018 - Remote Sensing')]">
+
+    <entry>
+      <code>funder</code>
+      <label>Financeur</label>
+      <description>Partie offrant un soutien financier pour la ressource
+      </description>
+    </entry>
+    <entry>
+      <code>principalInvestigator</code>
+      <label>Investigateur principal</label>
+      <description>Personne clé pour obtenir des informations sur la ressource
+        et les recherches conduites autour de la ressource&#xA;Acteur qui a
+        assuré la réalisation de la ressource,éventuellement en faisant appel à
+        des co-traitants ou des sous traitants
+      </description>
+    </entry>
+    <entry>
+      <code>distributor</code>
+      <label>Distributeur</label>
+      <description>Organisme qui distribue la ressource. Diffuseur de second
+        niveau de la ressource
+      </description>
+    </entry>
+    <entry>
+      <code>originator</code>
+      <label>Producteur</label>
+      <description>Organisme qui a commandé la ressource. Acteur qui a été
+        habilité à créer la ressource et qui a mis en place les moyens pour la
+        constituer
+      </description>
+    </entry>
+    <entry>
+      <code>pointOfContact</code>
+      <label>Point de contact</label>
+      <description>Organisme que l’on peut contacter pour avoir des
+        renseignements détaillés sur la ressource. Acteur à contacter en premier
+        lieu pour obtenir des informations relatives à la ressource
+      </description>
+    </entry>
+  </codelist>
+
+
   <codelist name="cit:CI_RoleCode" alias="roleCode">
     <entry>
       <code>resourceProvider</code>
