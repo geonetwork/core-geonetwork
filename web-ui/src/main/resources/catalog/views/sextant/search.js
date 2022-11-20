@@ -44,7 +44,7 @@
   function removeLoadingScreen() {
     var loadingScreen = $('.gn .sxt-loading');
     var cssLoaded = false;
-    if (!loadingScreen.size()) {
+    if (!loadingScreen.length) {
       setTimeout(removeLoadingScreen, 500);
       return;
     }
@@ -514,7 +514,7 @@
 
       // attempt to update map sizes
       // note: this is required in sextant because of API mode; should be handled in a cleaner way eventually
-      $(window).load(function() {
+      $(window).on('load',function() {
         setTimeout(function () {
           viewerMap.updateSize();
           searchMap.updateSize();
