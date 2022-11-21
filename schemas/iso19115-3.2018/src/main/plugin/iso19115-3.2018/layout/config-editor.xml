@@ -583,6 +583,19 @@
         <col del=".."/>
       </row>
     </table>
+    <table for="gfc:FC_ListedValue">
+      <header>
+        <col label="gfc:code"/>
+        <col label="gfc:label"/>
+        <col label="gfc:definition"/>
+      </header>
+      <row>
+        <col xpath="gfc:code"/>
+        <col xpath="gfc:label"/>
+        <col xpath="gfc:definition"/>
+        <col del=".."/>
+      </row>
+    </table>
   </tableFields>
 
 
@@ -654,9 +667,11 @@
         <for name="mri:pointOfContact"/>
         <for name="mdb:contact"/>
         <for name="mcc:processor"/>
+        <for name="gfc:carrierOfCharacteristics"/>
         <for name="cit:party"/>
         <for name="cit:CI_Individual"/>
         <for name="cit:CI_Organisation"/>
+        <for name="gfc:listedValue"/>
       </flatModeExceptions>
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>

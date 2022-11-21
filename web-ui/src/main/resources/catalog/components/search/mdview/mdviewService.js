@@ -235,7 +235,7 @@
           types ||
           "parent|children|sources|hassources|" +
             "brothersAndSisters|services|datasets|" +
-            "siblings|associated|fcats|related";
+            "siblings|associated|fcats|hasfeaturecats|related";
         return "relatedType=" + types.split("|").join("&relatedType=");
       };
 

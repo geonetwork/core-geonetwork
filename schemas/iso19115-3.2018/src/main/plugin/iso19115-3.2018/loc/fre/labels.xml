@@ -751,6 +751,31 @@
     </description>
     <condition>optional</condition>
   </element>
+  <element name="xsi:nil">
+    <label>Néant</label>
+    <description>Indique qu'un certain élément n'a pas de valeur ou que la valeur est inconnue.</description>
+  </element>
+  <element name="isInfinite">
+    <label>Est infini</label>
+  </element>
+  <element name="gco:Multiplicity">
+    <label>Cardinalité</label>
+  </element>
+  <element name="gco:range">
+    <label>Intervalle</label>
+  </element>
+  <element name="gco:MultiplicityRange">
+    <label>Intervalle</label>
+  </element>
+  <element name="gfc:FC_Binding">
+    <label>Jointure</label>
+  </element>
+  <element name="gfc:FC_BoundAssociationRole">
+    <label>Bound association role</label>
+  </element>
+  <element name="gfc:FC_BoundFeatureAttribute">
+    <label>Bound feature attribute</label>
+  </element>
   <element name="gfc:identifier">
     <label>Identifiant</label>
   </element>

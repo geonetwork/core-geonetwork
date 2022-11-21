@@ -824,7 +824,8 @@
             showStatusTopBarFor: "",
             showCitation: {
               enabled: false,
-              if: null // {'documentStandard': ['iso19115-3.2018']}
+              // if: {'documentStandard': ['iso19115-3.2018']}
+              if: { resourceType: ["series", "dataset", "nonGeographicDataset"] }
             },
             sortKeywordsAlphabetically: true,
             mainThesaurus: ["th_gemet", "th_gemet-theme"],
