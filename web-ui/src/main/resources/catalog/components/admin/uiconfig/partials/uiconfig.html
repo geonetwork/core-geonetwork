@@ -1,20 +1,22 @@
-<div>
-  <p class="help-block" data-translate="">ui/config-help</p>
-
-  <div class="row">
-    <div class="col-lg-12">
-      <label data-translate="">chooseOptionsToCustomize</label>
+<div class="row">
+  <div
+    id="gn-uiconfig-customize"
+    class="col-lg-6 col-lg-offset-6 gn-nopadding-right height-70-px"
+  >
+    <div class="pull-right">
+      <label class="d-block" data-translate="">chooseOptionsToCustomize</label>
       <select
         class="form-control"
         data-ng-options="o.label group by o.group for o in configOptions"
         data-ng-model="optionsToAdd"
       />
-      <br />
     </div>
   </div>
 
+  <p class="help-block" data-translate="">ui/config-help</p>
+
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
       <p data-ng-show="config === 'null'" class="help-block" data-translate="">
         ui/chooseAnOption-help
       </p>
@@ -34,7 +36,8 @@
           />
 
           <div id="gn-ui-spy-target">
-            <fieldset data-ng-repeat="(m, mCfg) in jsonConfig.mods">
+            <fieldset
+              data-ng-repeat="(m, mCfg) in jsonConfig.mods">
               <legend data-ng-if="mCfg.enabled !== undefined">
                 <input
                   type="checkbox"
@@ -69,400 +72,29 @@
                 ></div>
 
                 <!-- arrays -->
-                <div data-ng-switch-when="hitsperpageValues">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="v in mCfg[key] track by $index">
-                      <td>
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="{{key}}-{{$index}}"
-                          data-ng-model="mCfg[key][$index]"
-                        />
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
+                <div class="row" data-ng-switch-when="hitsperpageValues">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
 
-                <div
-                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
-                  data-ng-switch-when-separator="|"
-                >
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="v in mCfg[key] track by $index">
-                      <td>
-                        <input
-                          type="text"
-                          data-ng-if="key === 'languageWhitelist'"
-                          data-gn-language-picker=""
-                          class="form-control"
-                          id="{{key}}-{{$index}}"
-                          data-ng-model="mCfg[key][$index]"
-                        />
-                        <input
-                          type="text"
-                          data-ng-if="key !== 'languageWhitelist'"
-                          class="form-control"
-                          id="{{key}}-{{$index}}"
-                          data-ng-model="mCfg[key][$index]"
-                        />
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
+                    <gn-ui-config-help />
+                  </div>
 
-                <div data-ng-switch-when="addWMSLayersToMap">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-
-                  <label class="control-label" for="{{key + 'urlLayerParam'}}"
-                    >{{('ui-' + key + '-urlLayerParam') | translate}}</label
-                  >
-
-                  <input
-                    type="text"
-                    id="{{key + 'urlLayerParam'}}"
-                    data-ng-disabled="mCfg[key].mode == 'resource-name'"
-                    class="form-control"
-                    data-ng-model="mCfg[key].urlLayerParam"
-                  />
-
-                  <p
-                    class="help-block"
-                    data-ng-show="(('ui-' + key + '-urlLayerParam-help') | translate) != ('ui-' + key + '-urlLayerParam-help')"
-                    translate
-                  >
-                    ui-addWMSLayersToMap-urlLayerParam-help
-                  </p>
-                </div>
-
-                <div
-                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig"
-                  data-ng-switch-when-separator="|"
-                >
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="languages">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="{{iso3}}-{{$index}}"
-                            data-gn-language-picker=""
-                            data-ng-change="updateKey(mCfg[key], iso3, $index)"
-                            data-ng-model="iso3"
-                          />
-                          <span class="input-group-addon">=</span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="{{iso2}}-{{$index}}"
-                            data-ng-model="mCfg[key][iso3]"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], iso3)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'iso3code': 'iso2code'})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="sortbyValues">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="opt in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-sortBy-{{$index}}"
-                            data-ng-model="opt.sortBy"
-                          />
-                          <span class="input-group-addon"> order </span>
-                          <select
-                            class="form-control"
-                            id="ui-sortOrder-{{$index}}"
-                            data-ng-options="o for o in sortOrderChoices"
-                            data-ng-model="opt.sortOrder"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'sortBy': 'fieldName', 'sortOrder': ''})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="resultViewTpls">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="opt in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <span class="input-group-addon">Icon </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-tplIcon-{{$index}}"
-                            data-ng-model="opt.icon"
-                          />
-                          <span class="input-group-addon">Template URL </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-tplURL-{{$index}}"
-                            data-ng-model="opt.tplUrl"
-                          />
-                          <span class="input-group-addon">Tooltip </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-tplTooltip-{{$index}}"
-                            data-ng-model="opt.tooltip"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'icon': 'fa-fw', 'tplUrl': '', 'tooltip': ''})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="formatter">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="opt in mCfg[key].list track by $index">
-                      <td>
-                        <div class="input-group">
-                          <span class="input-group-addon">Label </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-formatterLabel-{{$index}}"
-                            data-ng-model="opt.label"
-                          />
-                          <span class="input-group-addon">URL </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-formatterURL-{{$index}}"
-                            data-ng-model="opt.url"
-                          />
-                        </div>
-
-                        <div class="row">
-                          <label class="control-label"
-                            >{{('ui-' + key + '-conditional-views') | translate}}</label
-                          >
-                          <gn-json-edit height="300" model="opt.views"></gn-json-edit>
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key].list, $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key].list, {'label': '', 'url': ''})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="downloadFormatter">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="opt in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <span class="input-group-addon">Label </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-formatterLabel-{{$index}}"
-                            data-ng-model="opt.label"
-                          />
-                          <span class="input-group-addon">URL </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-formatterURL-{{$index}}"
-                            data-ng-model="opt.url"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'label': '', 'url': ''})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="linkTypes">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-                    <label class="control-label">{{type}}</label>
+                  <div class="col-lg-7 gn-nopadding-right">
                     <table class="table table-striped table-bordered">
-                      <tr data-ng-repeat="protocol in value track by $index">
+                      <tr data-ng-repeat="v in mCfg[key] track by $index">
                         <td>
                           <input
-                            type="text"
+                            type="number"
                             class="form-control"
-                            id="ui-protocol-{{$index}}"
-                            data-ng-model="mCfg[key][type][$index]"
+                            id="{{key}}-{{$index}}"
+                            data-ng-model="mCfg[key][$index]"
                           />
                         </td>
-                        <td>
+                        <td class="w-30-px">
                           <a
                             class="btn btn-link text-danger"
                             title="{{'remove' | translate}}"
-                            data-ng-click="removeItem(mCfg[key][type], $index)"
+                            data-ng-click="removeItem(mCfg[key], $index)"
                           >
                             <i class="fa fa-times text-danger" />
                           </a>
@@ -473,7 +105,7 @@
                           <a
                             class="btn btn-default"
                             title="{{'add' | translate}}"
-                            data-ng-click="addItem(mCfg[key][type], 'protocol')"
+                            data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)"
                           >
                             <i class="fa fa-fw fa-plus" />
                             <span translate="">add</span>
@@ -482,71 +114,314 @@
                       </tr>
                     </table>
                   </div>
-                  <gn-ui-config-help />
                 </div>
 
-                <!-- user custom searches -->
-                <div data-ng-switch-when="usersearches">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-                    <input
-                      type="checkbox"
-                      id="{{key + type}}-checkbox"
-                      data-ng-model="mCfg[key][type]"
-                    />&nbsp;
-                    <label for="{{key + type}}-checkbox"
-                      >{{('ui-' + type) | translate}}</label
-                    >
+                <div
+                  class="row"
+                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
+                  data-ng-switch-when-separator="|"
+                >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
 
                     <gn-ui-config-help />
                   </div>
-                </div>
 
-                <div data-ng-switch-when="savedSelection">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-                    <input
-                      type="checkbox"
-                      id="{{key + type}}-checkbox"
-                      data-ng-model="mCfg[key][type]"
-                    />&nbsp;
-                    <label class="control-label" for="{{key + type}}-checkbox"
-                      >{{('ui-' + type) | translate}}</label
-                    >
-
-                    <gn-ui-config-help />
-                  </div>
-                </div>
-
-                <div data-ng-switch-when="listOfServices">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
-                    <label class="control-label">{{type}}</label>
+                  <div class="col-lg-7 gn-nopadding-right">
                     <table class="table table-striped table-bordered">
-                      <tr data-ng-repeat="s in value track by $index">
+                      <tr data-ng-repeat="v in mCfg[key] track by $index">
+                        <td>
+                          <input
+                            type="text"
+                            data-ng-if="key === 'languageWhitelist'"
+                            data-gn-language-picker=""
+                            class="form-control"
+                            id="{{key}}-{{$index}}"
+                            data-ng-model="mCfg[key][$index]"
+                          />
+                          <input
+                            type="text"
+                            data-ng-if="key !== 'languageWhitelist'"
+                            class="form-control"
+                            id="{{key}}-{{$index}}"
+                            data-ng-model="mCfg[key][$index]"
+                          />
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="addWMSLayersToMap">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label" for="{{key + 'urlLayerParam'}}"
+                      >{{('ui-' + key + '-urlLayerParam') | translate}}</label
+                    >
+
+                    <p
+                      class="help-block"
+                      data-ng-show="(('ui-' + key + '-urlLayerParam-help') | translate) != ('ui-' + key + '-urlLayerParam-help')"
+                      translate
+                    >
+                      ui-addWMSLayersToMap-urlLayerParam-help
+                    </p>
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="text"
+                      id="{{key + 'urlLayerParam'}}"
+                      data-ng-disabled="mCfg[key].mode == 'resource-name'"
+                      class="form-control"
+                      data-ng-model="mCfg[key].urlLayerParam"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="row"
+                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig"
+                  data-ng-switch-when-separator="|"
+                >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <gn-json-edit height="300" model="mCfg[key]"></gn-json-edit>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="languages">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="{{iso3}}-{{$index}}"
+                              data-gn-language-picker=""
+                              data-ng-change="updateKey(mCfg[key], iso3, $index)"
+                              data-ng-model="iso3"
+                            />
+                            <span class="input-group-addon">=</span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="{{iso2}}-{{$index}}"
+                              data-ng-model="mCfg[key][iso3]"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], iso3)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'iso3code': 'iso2code'})"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="sortbyValues">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+                    <gn-ui-config-help />
+                  </div>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="opt in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-sortBy-{{$index}}"
+                              data-ng-model="opt.sortBy"
+                            />
+                            <span class="input-group-addon"> order </span>
+                            <select
+                              class="form-control"
+                              id="ui-sortOrder-{{$index}}"
+                              data-ng-options="o for o in sortOrderChoices"
+                              data-ng-model="opt.sortOrder"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'sortBy': 'fieldName', 'sortOrder': ''})"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="resultViewTpls">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="opt in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <span class="input-group-addon">Icon </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-tplIcon-{{$index}}"
+                              data-ng-model="opt.icon"
+                            />
+                            <span class="input-group-addon">Template URL </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-tplURL-{{$index}}"
+                              data-ng-model="opt.tplUrl"
+                            />
+                            <span class="input-group-addon">Tooltip </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-tplTooltip-{{$index}}"
+                              data-ng-model="opt.tooltip"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'icon': 'fa-fw', 'tplUrl': '', 'tooltip': ''})"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="formatter">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="opt in mCfg[key].list track by $index">
                         <td>
                           <div class="input-group">
                             <span class="input-group-addon">Label </span>
                             <input
                               type="text"
                               class="form-control"
-                              id="ui-service{{type}}-{{$index}}"
-                              data-ng-model="s.name"
+                              id="ui-formatterLabel-{{$index}}"
+                              data-ng-model="opt.label"
                             />
                             <span class="input-group-addon">URL </span>
                             <input
                               type="text"
                               class="form-control"
-                              id="ui-serviceUrl{{type}}-{{$index}}"
-                              data-ng-model="s.url"
+                              id="ui-formatterURL-{{$index}}"
+                              data-ng-model="opt.url"
                             />
                           </div>
+
+                          <div class="row">
+                            <label class="control-label"
+                              >{{('ui-' + key + '-conditional-views') | translate}}</label
+                            >
+                            <gn-json-edit height="300" model="opt.views"></gn-json-edit>
+                          </div>
                         </td>
-                        <td>
+                        <td class="w-30-px">
                           <a
                             class="btn btn-link text-danger"
                             title="{{'remove' | translate}}"
-                            data-ng-click="removeItem(mCfg[key][type], $index)"
+                            data-ng-click="removeItem(mCfg[key].list, $index)"
                           >
                             <i class="fa fa-times text-danger" />
                           </a>
@@ -557,7 +432,7 @@
                           <a
                             class="btn btn-default"
                             title="{{'add' | translate}}"
-                            data-ng-click="addItem(mCfg[key][type], {'name': 'Service label', 'url': 'http://'})"
+                            data-ng-click="addItem(mCfg[key].list, {'label': '', 'url': ''})"
                           >
                             <i class="fa fa-fw fa-plus" />
                             <span translate="">add</span>
@@ -566,179 +441,397 @@
                       </tr>
                     </table>
                   </div>
-                  <gn-ui-config-help />
                 </div>
 
-                <div data-ng-switch-when="projectionList">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped table-bordered">
-                    <tr data-ng-repeat="opt in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <span class="input-group-addon">Label </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-projectionLabel-{{$index}}"
-                            data-ng-model="opt.label"
-                          />
-                          <span class="input-group-addon">Code </span>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-projectionCode-{{$index}}"
-                            data-ng-model="opt.code"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:'})"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="downloadFormatter">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="opt in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <span class="input-group-addon">Label </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-formatterLabel-{{$index}}"
+                              data-ng-model="opt.label"
+                            />
+                            <span class="input-group-addon">URL </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-formatterURL-{{$index}}"
+                              data-ng-model="opt.url"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'label': '', 'url': ''})"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="linkTypes">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                      <label class="control-label">{{type}}</label>
+                      <table class="table table-striped table-bordered">
+                        <tr data-ng-repeat="protocol in value track by $index">
+                          <td>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-protocol-{{$index}}"
+                              data-ng-model="mCfg[key][type][$index]"
+                            />
+                          </td>
+                          <td class="w-30-px">
+                            <a
+                              class="btn btn-link text-danger"
+                              title="{{'remove' | translate}}"
+                              data-ng-click="removeItem(mCfg[key][type], $index)"
+                            >
+                              <i class="fa fa-times text-danger" />
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <a
+                              class="btn btn-default"
+                              title="{{'add' | translate}}"
+                              data-ng-click="addItem(mCfg[key][type], 'protocol')"
+                            >
+                              <i class="fa fa-fw fa-plus" />
+                              <span translate="">add</span>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- user custom searches -->
+                <div class="row" data-ng-switch-when="usersearches">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                      <input
+                        type="checkbox"
+                        id="{{key + type}}-checkbox"
+                        data-ng-model="mCfg[key][type]"
+                      />&nbsp;
+                      <label for="{{key + type}}-checkbox"
+                        >{{('ui-' + type) | translate}}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="savedSelection">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                      <input
+                        type="checkbox"
+                        id="{{key + type}}-checkbox"
+                        data-ng-model="mCfg[key][type]"
+                      />&nbsp;
+                      <label class="control-label" for="{{key + type}}-checkbox"
+                        >{{('ui-' + type) | translate}}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="listOfServices">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                      <label class="control-label">{{type}}</label>
+                      <table class="table table-striped table-bordered">
+                        <tr data-ng-repeat="s in value track by $index">
+                          <td>
+                            <div class="input-group">
+                              <span class="input-group-addon">Label </span>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="ui-service{{type}}-{{$index}}"
+                                data-ng-model="s.name"
+                              />
+                              <span class="input-group-addon">URL </span>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="ui-serviceUrl{{type}}-{{$index}}"
+                                data-ng-model="s.url"
+                              />
+                            </div>
+                          </td>
+                          <td class="w-30-px">
+                            <a
+                              class="btn btn-link text-danger"
+                              title="{{'remove' | translate}}"
+                              data-ng-click="removeItem(mCfg[key][type], $index)"
+                            >
+                              <i class="fa fa-times text-danger" />
+                            </a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <a
+                              class="btn btn-default"
+                              title="{{'add' | translate}}"
+                              data-ng-click="addItem(mCfg[key][type], {'name': 'Service label', 'url': 'http://'})"
+                            >
+                              <i class="fa fa-fw fa-plus" />
+                              <span translate="">add</span>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="projectionList">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr data-ng-repeat="opt in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <span class="input-group-addon">Label </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-projectionLabel-{{$index}}"
+                              data-ng-model="opt.label"
+                            />
+                            <span class="input-group-addon">Code </span>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-projectionCode-{{$index}}"
+                              data-ng-model="opt.code"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:'})"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
 
                 <!-- Projection Switcher -->
-                <div data-ng-switch-when="switcherProjectionList">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <gn-ui-config-help />
-                  <div
-                    ng-include="'../../catalog/components/admin/uiconfig/partials/projectionSwitcher.html'"
-                  ></div>
+                <div class="row" data-ng-switch-when="switcherProjectionList">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div
+                      ng-include="'../../catalog/components/admin/uiconfig/partials/projectionSwitcher.html'"
+                    ></div>
+                  </div>
                 </div>
 
-                <div data-ng-switch-when="timezone">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Australia/Hobart"
-                    data-gn-timezone-selector=""
-                    data-element-timezone="{{value}}"
-                    data-ng-model="mCfg[key]"
-                  />
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="timezone">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Australia/Hobart"
+                      data-gn-timezone-selector=""
+                      data-element-timezone="{{value}}"
+                      data-ng-model="mCfg[key]"
+                    />
+                  </div>
                 </div>
 
                 <!-- numbers -->
-                <div data-ng-switch-when="paginationInfo">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    data-ng-model="value.hitsPerPage"
-                  />
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="paginationInfo">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="number"
+                      class="form-control"
+                      data-ng-model="value.hitsPerPage"
+                    />
+                  </div>
                 </div>
 
                 <!-- boolean -->
                 <div
+                  class="row"
                   data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink"
                   data-ng-switch-when-separator="|"
                 >
-                  <input
-                    type="checkbox"
-                    id="{{key}}-checkbox"
-                    data-ng-model="mCfg[key]"
-                  />&nbsp;
-                  <label class="control-label" for="{{key}}-checkbox"
-                    >{{('ui-' + key) | translate}}</label
-                  >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label" for="{{key}}-checkbox"
+                      >{{('ui-' + key) | translate}}</label
+                    >
 
-                  <gn-ui-config-help />
+                    <gn-ui-config-help />
+                  </div>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="checkbox"
+                      id="{{key}}-checkbox"
+                      data-ng-model="mCfg[key]"
+                    />&nbsp;
+                  </div>
                 </div>
 
-                <div data-ng-switch-when="showCitation">
-                  <h3>{{('ui-' + key) | translate}}</h3>
+                <div class="row" data-ng-switch-when="showCitation">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
-                  <input
-                    type="checkbox"
-                    id="{{key}}enabled-checkbox"
-                    data-ng-model="mCfg[key].enabled"
-                  />&nbsp;
-                  <label for="{{key}}enabled-checkbox"
-                    >{{('ui-enabled') | translate}}</label
-                  >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                  </div>
 
-                  <div class="row">
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="checkbox"
+                      id="{{key}}enabled-checkbox"
+                      data-ng-model="mCfg[key].enabled"
+                    />&nbsp;
+                    <label for="{{key}}enabled-checkbox"
+                      >{{('ui-enabled') | translate}}</label
+                    >
+                  </div>
+
+                  <div class="col-lg-5 gn-nopadding-left">
                     <label class="control-label"
                       >{{('ui-' + key + '-condition') | translate}}</label
                     >
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
                     <gn-json-edit height="300" model="mCfg[key].if"></gn-json-edit>
                   </div>
                 </div>
 
-                <div data-ng-switch-when="searchOptions">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <p
-                    class="help-block"
-                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                  >
-                    {{('ui-' + key + '-help') | translate}}
-                  </p>
-                  <div data-ng-repeat="(t, value) in mCfg[key]">
-                    <div>
-                      <input
-                        type="checkbox"
-                        id="{{key}}-{{t}}-checkbox"
-                        data-ng-model="mCfg[key][t]"
-                      />&nbsp;
-                      <label for="{{key}}-{{t}}-checkbox"> {{(t) | translate}} </label>
+                <div class="row" data-ng-switch-when="searchOptions">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+                    <gn-ui-config-help />
+                    <!--<p
+                      class="help-block"
+                      data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
+                    >
+                      {{('ui-' + key + '-help') | translate}}
+                    </p>-->
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(t, value) in mCfg[key]">
+                      <div>
+                        <input
+                          type="checkbox"
+                          id="{{key}}-{{t}}-checkbox"
+                          data-ng-model="mCfg[key][t]"
+                        />&nbsp;
+                        <label for="{{key}}-{{t}}-checkbox"> {{(t) | translate}} </label>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div data-ng-switch-when="disabledTools">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <p
-                    class="help-block"
-                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                  >
-                    {{('ui-' + key + '-help') | translate}}
-                  </p>
-                  <div data-ng-repeat="(t, value) in mCfg[key]">
-                    <div>
-                      <input
-                        type="checkbox"
-                        id="{{key}}-{{t}}-checkbox"
-                        data-ng-model="mCfg[key][t]"
-                        ng-true-value="false"
-                        ng-false-value="true"
-                      />&nbsp;
-                      <label for="{{key}}-{{t}}-checkbox">
-                        {{(t + 'Tool') | translate}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                <div class="row" data-ng-switch-when="disabledTools">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 
-                <div data-ng-switch-when="defaultSearchString">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <div>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key]"
-                    />&nbsp;
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
                     <p
                       class="help-block"
                       data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
@@ -746,362 +839,512 @@
                       {{('ui-' + key + '-help') | translate}}
                     </p>
                   </div>
-                </div>
 
-                <div data-ng-switch-when="graticuleOgcService">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <div class="input-group">
-                    <span class="input-group-addon">Type </span>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key].type"
-                    />
-                    <span class="input-group-addon">Layer </span>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key].layer"
-                    />
-                    <span class="input-group-addon">Url </span>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key].url"
-                    />
-                  </div>
-                  <gn-ui-config-help />
-                </div>
-
-                <div data-ng-switch-when="grid">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <label class="control-label" translate>gridConfigRelatedTypes</label>
-                  <table class="table table-striped table-bordered">
-                    <tr
-                      data-ng-repeat="relatedType in mCfg[key]['related'] track by $index"
-                    >
-                      <td>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(t, value) in mCfg[key]">
+                      <div>
                         <input
-                          type="text"
-                          class="form-control"
-                          ng-model="mCfg[key]['related'][$index]"
-                        />
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key]['related'], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-default"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key]['related'], '')"
-                        >
-                          <i class="fa fa-fw fa-plus" />
-                          <span translate="">add</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <p class="help-block">
-                    {{ 'gridConfigRelatedTypes-help' | translate }}
-                  </p>
-                  <gn-ui-config-help />
+                          type="checkbox"
+                          id="{{key}}-{{t}}-checkbox"
+                          data-ng-model="mCfg[key][t]"
+                          ng-true-value="false"
+                          ng-false-value="true"
+                        />&nbsp;
+                        <label for="{{key}}-{{t}}-checkbox">
+                          {{(t + 'Tool') | translate}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div data-ng-switch-when="logoInHeaderPosition">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
+                <div class="row" data-ng-switch-when="defaultSearchString">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
 
-                  <div class="checkbox">
-                    <label>
-                      <input type="radio" data-ng-model="mCfg[key]" value="left" />
-                      <i class="fa fa-fw fa-align-left"></i>&nbsp;
-                      <span data-translate="">left</span>
-                    </label>
+                    <p
+                      class="help-block"
+                      data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
+                    >
+                      {{('ui-' + key + '-help') | translate}}
+                    </p>
                   </div>
-                  <div class="checkbox">
-                    <label>
-                      <input type="radio" data-ng-model="mCfg[key]" value="center" />
-                      <i class="fa fa-fw fa-align-center"></i>&nbsp;
-                      <span data-translate="">center</span>
-                    </label>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="text"
+                      class="form-control"
+                      data-ng-model="mCfg[key]"
+                    />&nbsp;
                   </div>
-                  <div class="checkbox">
-                    <label>
-                      <input type="radio" data-ng-model="mCfg[key]" value="right" />
-                      <i class="fa fa-fw fa-align-right"></i>&nbsp;
-                      <span data-translate="">right</span>
-                    </label>
+                </div>
+
+                <div class="row" data-ng-switch-when="graticuleOgcService">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
                   </div>
-                  <gn-ui-config-help />
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div class="input-group">
+                      <span class="input-group-addon">Type </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key].type"
+                      />
+                      <span class="input-group-addon">Layer </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key].layer"
+                      />
+                      <span class="input-group-addon">Url </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key].url"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="grid">
+                  <!--<h3>{{('ui-' + key) | translate}}</h3>-->
+                  <!--<gn-ui-config-help />-->
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label" translate>gridConfigRelatedTypes</label>
+
+                    <p class="help-block">
+                      {{ 'gridConfigRelatedTypes-help' | translate }}
+                    </p>
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped table-bordered">
+                      <tr
+                        data-ng-repeat="relatedType in mCfg[key]['related'] track by $index"
+                      >
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            ng-model="mCfg[key]['related'][$index]"
+                          />
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key]['related'], $index)"
+                          >
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-default"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key]['related'], '')"
+                          >
+                            <i class="fa fa-fw fa-plus" />
+                            <span translate="">add</span>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row" data-ng-switch-when="logoInHeaderPosition">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div>
+                      <label>
+                        <input type="radio" data-ng-model="mCfg[key]" value="left" />
+                        <i class="fa fa-fw fa-align-left"></i>&nbsp;
+                        <span data-translate="">left</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input type="radio" data-ng-model="mCfg[key]" value="center" />
+                        <i class="fa fa-fw fa-align-center"></i>&nbsp;
+                        <span data-translate="">center</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input type="radio" data-ng-model="mCfg[key]" value="right" />
+                        <i class="fa fa-fw fa-align-right"></i>&nbsp;
+                        <span data-translate="">right</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- map configs -->
-                <div data-ng-switch-when="map-viewer">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="map-viewer">
+                  <div class="col-lg-12 gn-nopadding-left">
+                    <h3>{{('ui-' + key) | translate}}</h3>
+                    <gn-ui-config-help />
+                  </div>
                   <div
                     ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
                   ></div>
+
+                  <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
+                    <hr />
+                  </div>
                 </div>
-                <div data-ng-switch-when="map-search">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="map-search">
+                  <div class="col-lg-12 gn-nopadding-left">
+                    <h3>{{('ui-' + key) | translate}}</h3>
+                    <gn-ui-config-help />
+                  </div>
                   <div
                     ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
                   ></div>
+
+                  <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
+                    <hr />
+                  </div>
                 </div>
-                <div data-ng-switch-when="map-editor">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="map-editor">
+                  <div class="col-lg-12 gn-nopadding-left">
+                    <h3>{{('ui-' + key) | translate}}</h3>
+                    <gn-ui-config-help />
+                  </div>
                   <div
                     ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
                   ></div>
+
+                  <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
+                    <hr />
+                  </div>
                 </div>
-                <div data-ng-switch-when="map-thumbnail">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-when="map-thumbnail">
+                  <div class="col-lg-12 gn-nopadding-left">
+                    <h3>{{('ui-' + key) | translate}}</h3>
+                    <gn-ui-config-help />
+                  </div>
                   <div
                     ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
                   ></div>
+
+                  <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
+                    <hr />
+                  </div>
                 </div>
 
-                <div data-ng-switch-when="createPageTpl">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-
-                  <div class="checkbox">
-                    <label>
-                      <input
-                        type="radio"
-                        data-ng-model="mCfg[key]"
-                        value="../../catalog/templates/editor/new-metadata-horizontal.html"
-                      />
-                      <i class="fa fa-align-center fa-rotate-90"></i>&nbsp;
-                      <span data-translate="">ui-createPageTpl-horizontal</span>
-                    </label>
-                  </div>
-                  <div class="checkbox">
-                    <label>
-                      <input
-                        type="radio"
-                        data-ng-model="mCfg[key]"
-                        value="../../catalog/templates/editor/new-metadata-vertical.html"
-                      />
-                      <i class="fa fa-align-center"></i>&nbsp;
-                      <span data-translate="">ui-createPageTpl-vertical</span>
-                    </label>
-                  </div>
-                  <div class="checkbox">
-                    <label>
-                      <input type="radio" data-ng-model="mCfg[key]" value="" />
-                      <span data-translate="">ui-createPageTpl-other</span>
-
-                      <input type="text" class="form-control" data-ng-model="mCfg[key]" />
-                    </label>
+                <div class="row" data-ng-switch-when="createPageTpl">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
                   </div>
 
-                  <gn-ui-config-help />
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div>
+                      <label>
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="../../catalog/templates/editor/new-metadata-horizontal.html"
+                        />
+                        <i class="fa fa-align-center fa-rotate-90"></i>&nbsp;
+                        <span data-translate="">ui-createPageTpl-horizontal</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="../../catalog/templates/editor/new-metadata-vertical.html"
+                        />
+                        <i class="fa fa-align-center"></i>&nbsp;
+                        <span data-translate="">ui-createPageTpl-vertical</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input type="radio" data-ng-model="mCfg[key]" value="" />
+                        <span data-translate="">ui-createPageTpl-other</span>
+
+                        <input
+                          type="text"
+                          class="form-control"
+                          data-ng-model="mCfg[key]"
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
-                <div data-ng-switch-when="editorIndentType">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
+                <div class="row" data-ng-switch-when="editorIndentType">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
 
-                  <div class="checkbox">
-                    <label>
-                      <input
-                        type="radio"
-                        data-ng-model="mCfg[key]"
-                        value="gn-indent-default"
-                      />
-                      <i class="fa fa-fw fa-align-justify"></i>&nbsp;
-                      <span data-translate="">ui-editorIndentType-default</span>
-                    </label>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div>
+                      <label>
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="gn-indent-default"
+                        />
+                        <i class="fa fa-fw fa-align-justify"></i>&nbsp;
+                        <span data-translate="">ui-editorIndentType-default</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input
+                          type="radio"
+                          data-ng-model="mCfg[key]"
+                          value="gn-indent-colored"
+                        />
+                        <i class="fa fa-fw fa-indent"></i>&nbsp;
+                        <span data-translate="">ui-editorIndentType-colored</span>
+                      </label>
+                    </div>
                   </div>
-                  <div class="checkbox">
-                    <label>
-                      <input
-                        type="radio"
-                        data-ng-model="mCfg[key]"
-                        value="gn-indent-colored"
-                      />
-                      <i class="fa fa-fw fa-indent"></i>&nbsp;
-                      <span data-translate="">ui-editorIndentType-colored</span>
-                    </label>
-                  </div>
-                  <gn-ui-config-help />
                 </div>
 
-                <div data-ng-switch-when="externalViewer">
-                  <h3>{{('ui-' + key) | translate}}</h3>
-                  <p
-                    class="help-block"
-                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')"
-                  >
-                    {{('ui-' + key + '-help') | translate}}
-                  </p>
-                  <div>
+                <div class="row" data-ng-switch-when="externalViewer">
+                  <div class="col-lg-12 gn-nopadding-left">
+                    <h3>{{('ui-' + key) | translate}}</h3>
+                    <gn-ui-config-help />
+
+                    <br />
+                  </div>
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label" for="ui-externalViewer-enabled" translate
+                      >ui-externalViewer-enabled</label
+                    >
+                    <p class="help-block" translate>ui-externalViewer-enabled-help</p>
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
                     <input
                       type="checkbox"
                       id="ui-externalViewer-enabled"
                       data-ng-model="mCfg[key]['enabled']"
-                    />&nbsp;
-                    <label
-                      class="control-label"
-                      for="ui-externalViewer-enabled"
-                      translate
-                    >
-                      ui-externalViewer-enabled
-                    </label>
-                    <p class="help-block" translate>ui-externalViewer-enabled-help</p>
-                  </div>
-                  <div ng-show="mCfg[key]['enabled']">
-                    <label class="control-label" translate>
-                      ui-externalViewer-baseUrl
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key]['baseUrl']"
                     />
-                    <p class="help-block" translate>ui-externalViewer-baseUrl-help</p>
                   </div>
-                  <div ng-show="mCfg[key]['enabled']">
-                    <label class="control-label" translate>
-                      ui-externalViewer-urlTemplate
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key]['urlTemplate']"
-                    />
-                    <p class="help-block" translate>ui-externalViewer-urlTemplate-help</p>
+
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
+                    <div class="col-lg-5 gn-nopadding-left">
+                      <label class="control-label" translate>
+                        ui-externalViewer-baseUrl
+                      </label>
+                      <p class="help-block" translate>ui-externalViewer-baseUrl-help</p>
+                    </div>
+
+                    <div class="col-lg-7 gn-nopadding-right">
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key]['baseUrl']"
+                      />
+                    </div>
                   </div>
-                  <div ng-show="mCfg[key]['enabled']">
-                    <input
-                      type="checkbox"
-                      id="ui-externalViewer-openNewWindow"
-                      data-ng-model="mCfg[key]['openNewWindow']"
-                    />&nbsp;
-                    <label
-                      class="control-label"
-                      for="ui-externalViewer-openNewWindow"
-                      translate
-                    >
-                      ui-externalViewer-openNewWindow
-                    </label>
-                    <p class="help-block" translate>
-                      ui-externalViewer-openNewWindow-help
-                    </p>
+
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
+                    <div class="col-lg-5 gn-nopadding-left">
+                      <label class="control-label" translate>
+                        ui-externalViewer-urlTemplate
+                      </label>
+                      <p class="help-block" translate>
+                        ui-externalViewer-urlTemplate-help
+                      </p>
+                    </div>
+
+                    <div class="col-lg-7 gn-nopadding-right">
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key]['urlTemplate']"
+                      />
+                    </div>
                   </div>
-                  <div ng-show="mCfg[key]['enabled']">
-                    <label class="control-label" translate>
-                      ui-externalViewer-valuesSeparator
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      data-ng-model="mCfg[key]['valuesSeparator']"
-                    />
-                    <p class="help-block" translate>
-                      ui-externalViewer-valuesSeparator-help
-                    </p>
+
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
+                    <div class="col-lg-5 gn-nopadding-left">
+                      <label
+                        class="control-label"
+                        for="ui-externalViewer-openNewWindow"
+                        translate
+                      >
+                        ui-externalViewer-openNewWindow
+                      </label>
+                      <p class="help-block" translate>
+                        ui-externalViewer-openNewWindow-help
+                      </p>
+                    </div>
+
+                    <div class="col-lg-7 gn-nopadding-right">
+                      <input
+                        type="checkbox"
+                        id="ui-externalViewer-openNewWindow"
+                        data-ng-model="mCfg[key]['openNewWindow']"
+                      />&nbsp;
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-lg-12"
+                    style="padding: 0"
+                    ng-show="mCfg[key]['enabled']"
+                  >
+                    <div class="col-lg-5 gn-nopadding-left">
+                      <label class="control-label" translate>
+                        ui-externalViewer-valuesSeparator
+                      </label>
+                      <p class="help-block" translate>
+                        ui-externalViewer-valuesSeparator-help
+                      </p>
+                    </div>
+
+                    <div class="col-lg-7 gn-nopadding-right">
+                      <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="mCfg[key]['valuesSeparator']"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
+                    <hr />
                   </div>
                 </div>
 
-                <div data-ng-switch-when="searchResultContact">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <div class="input-group">
-                    <input
-                      class="form-control"
-                      id="ui-searchResultContact-{{$index}}"
-                      data-ng-model="mCfg[key]"
-                    />
-                    <div class="input-group-btn">
-                      <div class="btn-group">
-                        <button
-                          type="button"
-                          class="btn btn-default dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                          <li data-ng-repeat="o in searchResultContactChoices">
-                            <a href="" data-ng-click="mCfg[key] = o"
-                              >{{o | translate}} ({{o}})</a
-                            >
-                          </li>
-                        </ul>
+                <div class="row" data-ng-switch-when="searchResultContact">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        id="ui-searchResultContact-{{$index}}"
+                        data-ng-model="mCfg[key]"
+                      />
+                      <div class="input-group-btn">
+                        <div class="btn-group">
+                          <button
+                            type="button"
+                            class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <li data-ng-repeat="o in searchResultContactChoices">
+                              <a href="" data-ng-click="mCfg[key] = o"
+                                >{{o | translate}} ({{o}})</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <gn-ui-config-help />
                 </div>
 
-                <div data-ng-switch-when="workflowAssistApps">
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <table class="table table-striped">
-                    <tr data-ng-repeat="opt in mCfg[key] track by $index">
-                      <td>
-                        <div class="input-group">
-                          <span class="input-group-addon"
-                            >{{'ui-workflowAssistApps-appUrl' | translate}}</span
+                <div class="row" data-ng-switch-when="workflowAssistApps">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <table class="table table-striped">
+                      <tr data-ng-repeat="opt in mCfg[key] track by $index">
+                        <td>
+                          <div class="input-group">
+                            <span class="input-group-addon"
+                              >{{'ui-workflowAssistApps-appUrl' | translate}}</span
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-appUrl-{{$index}}"
+                              data-ng-model="opt.appUrl"
+                            />
+                            <span class="input-group-addon"
+                              >{{'ui-workflowAssistApps-appLabelKey' | translate}}</span
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="ui-appLabelKey-{{$index}}"
+                              data-ng-model="opt.appLabelKey"
+                            />
+                          </div>
+                        </td>
+                        <td class="w-30-px">
+                          <a
+                            class="btn btn-link text-danger"
+                            title="{{'remove' | translate}}"
+                            data-ng-click="removeItem(mCfg[key], $index)"
                           >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-appUrl-{{$index}}"
-                            data-ng-model="opt.appUrl"
-                          />
-                          <span class="input-group-addon"
-                            >{{'ui-workflowAssistApps-appLabelKey' | translate}}</span
+                            <i class="fa fa-times text-danger" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a
+                            class="btn btn-link"
+                            title="{{'add' | translate}}"
+                            data-ng-click="addItem(mCfg[key], {'appUrl': '', 'appLabelKey': ''})"
                           >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="ui-appLabelKey-{{$index}}"
-                            data-ng-model="opt.appLabelKey"
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-link text-danger"
-                          title="{{'remove' | translate}}"
-                          data-ng-click="removeItem(mCfg[key], $index)"
-                        >
-                          <i class="fa fa-times text-danger" />
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <a
-                          class="btn btn-link"
-                          title="{{'add' | translate}}"
-                          data-ng-click="addItem(mCfg[key], {'appUrl': '', 'appLabelKey': ''})"
-                        >
-                          <i class="fa fa-plus" />
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                  <gn-ui-config-help />
+                            <i class="fa fa-plus" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
 
-                <div data-ng-switch-default>
-                  <label class="control-label">{{('ui-' + key) | translate}}</label>
-                  <input type="text" class="form-control" data-ng-model="mCfg[key]" />
-                  <gn-ui-config-help />
+                <div class="row" data-ng-switch-default>
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input type="text" class="form-control" data-ng-model="mCfg[key]" />
+                  </div>
                 </div>
               </div>
             </fieldset>

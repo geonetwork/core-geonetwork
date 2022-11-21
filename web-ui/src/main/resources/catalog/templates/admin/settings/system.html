@@ -119,16 +119,10 @@
                   data-ng-if="s.name != ''"
                 >
                   <div data-ng-switch-when="BOOLEAN" class="form-group">
-                    <label class="col-sm-4 control-label" for="{{s['name']}}">
-                      {{s['name'] | translate}}
-                    </label>
-                    <div class="col-sm-8">
-                      <input
-                        type="checkbox"
-                        id="{{s['name']}}"
-                        name="{{s.name}}"
-                        data-ng-model="s.value"
-                      />
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}">
+                        {{s['name'] | translate}}
+                      </label>
 
                       <p class="help-block">
                         <span
@@ -139,6 +133,15 @@
                         </span>
                       </p>
                     </div>
+
+                    <div class="col-sm-7">
+                      <input
+                        type="checkbox"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                      />
+                    </div>
                   </div>
                   <div
                     data-ng-switch-default=""
@@ -146,11 +149,22 @@
                                     gnSettings[s.name].$error.json ? 'has-error' : ''"
                     class="form-group"
                   >
-                    <label class="col-sm-4 control-label" for="{{s['name']}}"
-                      >{{s['name'] | translate}}</label
-                    >
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}"
+                        >{{s['name'] | translate}}</label
+                      >
+
+                      <p class="help-block">
+                        <span
+                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                          data-translate=""
+                        >
+                          {{(s['name'] + '-help')}}
+                        </span>
+                      </p>
+                    </div>
                     <!-- According to entry -->
-                    <div class="col-sm-8" data-ng-switch="s['name']">
+                    <div class="col-sm-7" data-ng-switch="s['name']">
                       <select
                         data-ng-switch-when="metadata/import/userprofile"
                         class="form-control"
@@ -662,15 +676,6 @@
                         name="{{s.name}}"
                         value="{{s.value}}"
                       />
-
-                      <p class="help-block">
-                        <span
-                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
-                          data-translate=""
-                        >
-                          {{(s['name'] + '-help')}}
-                        </span>
-                      </p>
                     </div>
                   </div>
                 </div>
