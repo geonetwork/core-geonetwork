@@ -177,19 +177,29 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         long currval = 0L;
         long loopCount = 0L;
         try {
-            preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
-            // There may be a better way to adjust the sequence other than looping though them
-            // but this is the only database agnostic approach that could be found at the moment..
-            while (currval < desiredVal) {
-                resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    currval = resultSet.getLong(1);
-                    loopCount++;
-                } else {
-                    break;
+            // For Postgres, use setval
+            if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
+                preparedStatement = connection.prepareStatement("SELECT setval(?, ?);");
+                preparedStatement.setString(1, sequenceName);
+                preparedStatement.setLong(2, desiredVal);
+
+                preparedStatement.executeQuery();
+            } else {
+                preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
+
+                // There may be a better way to adjust the sequence other than looping though them
+                // but this is the only database agnostic approach that could be found at the moment..
+                while (currval < desiredVal) {
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        currval = resultSet.getLong(1);
+                        loopCount++;
+                    } else {
+                        break;
+                    }
+                    resultSet.close();
+                    resultSet = null;
                 }
-                resultSet.close();
-                resultSet = null;
             }
         } catch (SQLException e) {
             throw e;
