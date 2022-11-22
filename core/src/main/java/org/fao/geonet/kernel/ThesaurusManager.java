@@ -380,20 +380,31 @@ public class ThesaurusManager implements ThesaurusFinder {
 
     @Override
     public Thesaurus getThesaurusByConceptScheme(String uri) {
-
         for (Map.Entry<String, Thesaurus> entry : getThesauriMap().entrySet()) {
             try {
                 Thesaurus thesaurus = entry.getValue();
-
                 if (thesaurus.hasConceptScheme(uri)) {
                     return thesaurus;
                 }
-
             } catch (Exception e) {
                 Log.error(Geonet.THESAURUS_MAN, "Get Thesaurus By Concept Scheme error", e);
             }
         }
 
+        return null;
+    }
+
+    public Thesaurus getThesaurusByTitle(String title) {
+        for (Map.Entry<String, Thesaurus> entry : getThesauriMap().entrySet()) {
+            try {
+                Thesaurus thesaurus = entry.getValue();
+                if (thesaurus.getTitle().equals(title)) {
+                    return thesaurus;
+                }
+            } catch (Exception e) {
+                Log.error(Geonet.THESAURUS_MAN, "Get thesaurus by title error", e);
+            }
+        }
         return null;
     }
 
