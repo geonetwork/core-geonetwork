@@ -1346,6 +1346,14 @@ public final class XslUtil {
         return thesaurusManager.getThesauriDirectory().toString();
     }
 
+    public static String getThesaurusIdByTitle(String title) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByTitle(title);
+
+        return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
+    }
+
 
     /**
      * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.

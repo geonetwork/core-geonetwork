@@ -541,7 +541,9 @@
                                           mcc:code/(gco:CharacterString|gcx:Anchor)"/>
 
             <xsl:variable name="thesaurusId"
-                          select="normalize-space($thesaurusRef/text())"/>
+                          select="if ($thesaurusRef != '')
+                                  then normalize-space($thesaurusRef/text())
+                                  else util:getThesaurusIdByTitle($thesaurusTitle)"/>
 
             <xsl:variable name="thesaurusUri"
                           select="$thesaurusRef/@xlink:href"/>
