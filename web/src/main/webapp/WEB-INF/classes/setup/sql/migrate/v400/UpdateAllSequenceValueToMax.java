@@ -35,6 +35,9 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
+import org.hibernate.tool.schema.extract.spi.ExtractionContext;
+import org.hibernate.tool.schema.extract.spi.SequenceInformation;
+import org.hibernate.tool.schema.extract.spi.SequenceInformationExtractor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -184,6 +187,8 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
                 preparedStatement.setLong(2, desiredVal);
 
                 preparedStatement.executeQuery();
+
+                Log.info(Geonet.DB, "  Sequence " + sequenceName + " updated. Currval: " + desiredVal);
             } else {
                 preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
 
@@ -200,6 +205,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
                     resultSet.close();
                     resultSet = null;
                 }
+                Log.info(Geonet.DB, "  Sequence " + sequenceName + " updated. Increased by: " + loopCount + ".  Currval: " + currval);
             }
         } catch (SQLException e) {
             throw e;
@@ -211,8 +217,6 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
                 resultSet.close();
             }
         }
-
-        Log.debug(Geonet.DB, "  Sequence " + sequenceName + " updated. Increased by: " + loopCount + ".  Currval: " + currval);
     }
 
     public static String getFieldName(Method method) {
