@@ -1909,7 +1909,7 @@
                 scope.mode = iAttrs["gnLinkToMetadata"];
                 scope.popupid = "#linkto" + scope.mode + "-popup";
                 scope.btn = {};
-                
+
                 scope.updateParams = function () {
                   scope.searchObj.params.any = scope.searchObj.any;
                 };

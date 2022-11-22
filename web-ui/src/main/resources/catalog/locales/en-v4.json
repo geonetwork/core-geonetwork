@@ -368,5 +368,6 @@
   "mimeType": "Format",
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
   "switchPortals": "Switch to another Portal",
-  "dataPreview":  "Discover data"
+  "dataPreview":  "Discover data",
+  "tableOfContents": "Table of Contents"
 }
