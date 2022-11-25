@@ -1,0 +1,196 @@
+<div class="row" data-ng-controller="GnStaticPagesController" id="gn-static-pages-container">
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">manageStaticPages</div>
+      <div class="panel-body">
+        <input
+          class="form-control"
+          data-ng-model="staticPagesSearch.$"
+          autofocus=""
+          placeholder="{{'filter' | translate}}"
+        />
+        <input type="hidden" data-ng-model="staticPageSelected.id" />
+
+        <div class="list-group">
+          <a
+            href=""
+            class="list-group-item"
+            data-ng-repeat="v in staticPages | filter:staticPagesSearch | orderBy:'linkText'"
+            data-ng-click="selectStaticPage(v)"
+            title="{{v.pageId}}"
+          >
+            {{v.pageId}}
+          </a>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          data-ng-click="addStaticPage()"
+        >
+          <i class="fa fa-plus" />
+          <span data-translate="">newStaticPage</span>
+        </button>
+      </div>
+    </div>
+
+    <div data-gn-need-help="static-page-configuration"></div>
+  </div>
+
+  <div class="col-lg-8" data-ng-if="staticPageSelected !== null">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-ng-hide="!isUpdate" data-translate=""
+        >updateStaticPage</span
+        >
+        <span data-ng-hide="isUpdate" data-translate=""
+        >newStaticPage</span
+        >
+
+        <div class="btn-toolbar pull-right">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-ng-click="saveStaticPage('#gn-static-page-edit')"
+          >
+            <i class="fa fa-save"></i>&nbsp;
+            <span data-translate="">save</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-danger"
+            data-ng-hide="!isUpdate"
+            data-ng-click="deleteStaticPageConfig()"
+          >
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">delete</span>
+          </button>
+        </div>
+      </div>
+      <div class="panel-body">
+
+
+        <form
+          id="gn-static-page-edit"
+          name="gnStaticPageEdit"
+          class="form-horizontal"
+        >
+          <input type="hidden" name="_csrf" value="{{csrf}}" />
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >language</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="language"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.language"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >pageId</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="pageId"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.pageId"
+              />
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >link</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="link"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.link"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >format</label
+            >
+
+            <div class="col-sm-9">
+              <select
+                name="format"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.format"
+              >
+                <option value="LINK">LINK</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >section</label
+            >
+
+            <div class="col-sm-9">
+              <select
+                name="section"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.section"
+              >
+                <option value="TOP">TOP</option>
+                <option value="FOOTER">FOOTER</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+            >status</label
+            >
+
+            <div class="col-sm-9">
+              <select
+                name="status"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.status"
+              >
+                <option value="HIDDEN">Visible only to the administrator</option>
+                <option value="PRIVATE">Visible to logged users</option>
+                <option value="PUBLIC">Visible to everyone</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteStaticPageConfig}"
+    id="gn-confirm-remove-static-page"
+  >
+    <p translate>confirmStaticPageDelete</p>
+  </div>
+</div>
