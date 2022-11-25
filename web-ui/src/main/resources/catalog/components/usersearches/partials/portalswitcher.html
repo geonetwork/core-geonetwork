@@ -25,8 +25,15 @@
         {{::info['system/site/name']}}
       </a>
     </li>
-    <li class="divider" data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0 && (nodeId != 'srv')"></li>
-    <li class="dropdown-header" translate="" data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0">
+    <li
+      class="divider"
+      data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0 && (nodeId != 'srv')"
+    ></li>
+    <li
+      class="dropdown-header"
+      translate=""
+      data-ng-if="(portals | filter: {listableInHeaderSelector: true}).length > 0"
+    >
       switchPortals
     </li>
     <li
