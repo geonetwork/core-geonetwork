@@ -1416,6 +1416,9 @@
     "uiConfigDeleteError": "Error deleting user interface configuration",
     "sourceRemoved": "Source removed",
     "sourceRemovedError": "Error while removing the source",
-    "saveThesaurus": "Save"
+    "saveThesaurus": "Save",
+    "manageStaticPages": "Static pages",
+    "newStaticPage": "New static page",
+    "updateStaticPage": "Update static page"
 }
 
