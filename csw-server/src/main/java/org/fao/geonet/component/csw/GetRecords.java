@@ -721,15 +721,16 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     /**
      * TODO javadoc.
      */
-    private List<SortBuilder<FieldSortBuilder>>  getSortFields(Element request, ServiceContext context) {
+    private List<SortBuilder<FieldSortBuilder>> getSortFields(Element request, ServiceContext context) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
+
         if (query == null) {
-            return null;
+            return getDefaultSort();
         }
 
         Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
         if (sortBy == null) {
-            return null;
+            return getDefaultSort();
         }
 
         List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
@@ -753,6 +754,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         return sortFields;
     }
 
+    private List<SortBuilder<FieldSortBuilder>> getDefaultSort() {
+        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
+        FieldSortBuilder defaultSortField = new FieldSortBuilder("resourceTitleObject.default.keyword")
+            .order(SortOrder.ASC);
+
+        sortFields.add(defaultSortField);
+        return sortFields;
+    }
 
     /**
      * Returns the values of ElementNames in the query, or null if there are none.
