@@ -40,7 +40,7 @@ for identityMapping in "${identityMappings[@]}"; do
     then
       extension='no_extension'
     fi
-    if [ -z "$extension" ]
+    if [ -z "$extension" ] # has extension
     then
       urlPublique=$(echo ${urlPubliques[$configCounter]} | sed -e 's/\r//g')
       urlInterne=$(echo ${urlInternes[$configCounter]} | sed -e 's/\r//g')
@@ -70,7 +70,10 @@ for identityMapping in "${identityMappings[@]}"; do
         arrVar+=($newbaseName)
       elif [[ -f "${f}" ]] && [ "${extension}" == "no_extension" ]
       then
-        arrVar+=("$(basename "${f%.*}")")
+        echo "$difference"
+        newbaseName="$difference"
+        newbaseName+="/$(basename "${f%.*}")"
+        arrVar+=($newbaseName)
       fi
       done
 
