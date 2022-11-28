@@ -174,7 +174,7 @@
         select="$metadata/gmd:fileIdentifier/gco:CharacterString[. != '']"/></uuid>
       <authorsNameAndOrgList><xsl:copy-of select="$authorsNameAndOrgList"/></authorsNameAndOrgList>
       <lastPublicationDate><xsl:value-of select="$lastPublicationDate"/></lastPublicationDate>
-      <translatedTitle><xsl:copy-of select="$translatedTitle/(text()|*)"/></translatedTitle>
+      <translatedTitle><xsl:copy-of select="$translatedTitle"/></translatedTitle>
       <publishersNameAndOrgList><xsl:copy-of select="$publishersNameAndOrgList"/></publishersNameAndOrgList>
       <landingPageUrl><xsl:value-of select="$landingPageUrl"/></landingPageUrl>
       <doi><xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/></doi>
