@@ -166,7 +166,7 @@
         select="$metadata/mdb:metadataIdentifier/*/mcc:code/gco:CharacterString[. != '']"/></uuid>
       <authorsNameAndOrgList><xsl:copy-of select="$authorsNameAndOrgList"/></authorsNameAndOrgList>
       <lastPublicationDate><xsl:value-of select="$lastPublicationDate"/></lastPublicationDate>
-      <translatedTitle><xsl:value-of select="$translatedTitle"/></translatedTitle>
+      <translatedTitle><xsl:copy-of select="$translatedTitle"/></translatedTitle>
       <publishersNameAndOrgList><xsl:copy-of select="$publishersNameAndOrgList"/></publishersNameAndOrgList>
       <landingPageUrl><xsl:value-of select="$landingPageUrl"/></landingPageUrl>
       <doi><xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/></doi>
