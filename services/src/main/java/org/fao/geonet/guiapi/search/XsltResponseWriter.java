@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -118,12 +118,16 @@ public class XsltResponseWriter {
     public void asPdf(HttpServletResponse response, String fileName) throws Exception {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());
+        try {
+            response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+            response.setContentLength((int) file.toFile().length());
+            response.getOutputStream().write(Files.readAllBytes(file));
+            response.getOutputStream().flush();
+        } finally {
+            Files.deleteIfExists(file);
+        }
 
-        response.setContentType("application/pdf");
-        response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-        response.setContentLength((int) file.toFile().length());
-        response.getOutputStream().write(Files.readAllBytes(file));
-        response.getOutputStream().flush();
     }
 
     public XsltResponseWriter withJson(String json) {

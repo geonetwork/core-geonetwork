@@ -1,3 +1,27 @@
+/*
+ * =============================================================================
+ * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * ===	and United Nations Environment Programme (UNEP)
+ * ===
+ * ===	This program is free software; you can redistribute it and/or modify
+ * ===	it under the terms of the GNU General Public License as published by
+ * ===	the Free Software Foundation; either version 2 of the License, or (at
+ * ===	your option) any later version.
+ * ===
+ * ===	This program is distributed in the hope that it will be useful, but
+ * ===	WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * ===	General Public License for more details.
+ * ===
+ * ===	You should have received a copy of the GNU General Public License
+ * ===	along with this program; if not, write to the Free Software
+ * ===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ * ===
+ * ===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * ===	Rome - Italy. email: geonetwork@osgeo.org
+ * ==============================================================================
+ */
 package org.fao.geonet.resources;
 
 import com.amazonaws.AmazonServiceException;
@@ -282,11 +306,11 @@ public class S3Resources extends Resources {
             }
             final String[] splittedKey = key.split("/");
             try {
-                path = java.nio.file.Files.createTempFile("", splittedKey[splittedKey.length - 1]);
+                path = Files.createTempFile("", splittedKey[splittedKey.length - 1]);
                 try {
                     final S3Object object = s3.getClient().getObject(s3.getBucket(), key);
                     try (S3ObjectInputStream in = object.getObjectContent()) {
-                        java.nio.file.Files.copy(in, path,
+                        Files.copy(in, path,
                                                  StandardCopyOption.REPLACE_EXISTING);
                     }
                 } catch (AmazonServiceException e) {
@@ -327,7 +351,16 @@ public class S3Resources extends Resources {
             if (writeOnClose && Files.isReadable(path)) {
                 s3.getClient().putObject(s3.getBucket(), key, path.toFile());
             }
-            java.nio.file.Files.delete(path);
+            Files.deleteIfExists(path);
+        }
+
+        /** Cleanup temporary file. */
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            if (path != null) {
+                Files.deleteIfExists(path);
+            }
         }
     }
 }

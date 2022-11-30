@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -43,7 +43,6 @@ import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
@@ -229,7 +228,7 @@ public class MetadataUtils {
                         if (isRemote) {
                             remoteRecords.add(r.getUuid());
                         }
-                    };
+                    }
                     queries.put(type,
                         new RelatedTypeDetails(
                             String.format("(uuid:(%s)%s) AND (draft:\"n\" OR draft:\"e\")",

@@ -146,6 +146,9 @@ class MEFExporter {
 
                 }
             }
+        } catch (Exception e) {
+            Files.deleteIfExists(file);
+            throw e;
         }
         return file;
     }
