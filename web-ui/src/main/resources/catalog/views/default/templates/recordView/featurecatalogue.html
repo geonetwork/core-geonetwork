@@ -1,6 +1,6 @@
 <div
   class="panel panel-default gn-margin-top width-50"
-  data-ng-show="mdView.current.record.featureTypes.length > 0"
+  data-ng-show="mdView.current.record.featureTypes.length > 1"
 >
   <div class="panel-heading" data-gn-slide-toggle="true">
     <span class="text-uppercase" data-translate="">tableOfContents</span>
@@ -10,6 +10,7 @@
       <li
         class="list-group-item"
         data-ng-repeat="featureType in mdView.current.record.featureTypes"
+        data-ng-if="featureType.typeName !== ''"
       >
         <a
           href
@@ -27,8 +28,12 @@
   id="gn-featurecatalog-spy-target-{{featureType.code}}"
   class="gn-margin-bottom"
 >
-  <h3><span data-translate="">featureAttributeTable</span> - {{featureType.typeName}}</h3>
-  <table class="table table-striped table-bordered">
+  <h3>
+    <span data-translate="">featureAttributeTable</span>
+    <span data-ng-if="featureType.typeName !== ''"> - </span>
+    {{featureType.typeName}}
+  </h3>
+  <table class="table table-striped table-bordered gn-margin-left-lg gn-margin-top-lg">
     <tbody>
       <tr data-ng-if="featureType.typeName">
         <th></th>
