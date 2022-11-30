@@ -14,7 +14,7 @@
       >
         <a
           href
-          data-ng-click="scrollToSection('gn-featurecatalog-spy-target-' + featureType.code)"
+          data-ng-click="scrollToSection('gn-featurecatalog-spy-target-' + ((featureType.code + '-' + featureType.typeName) | md5))"
         >
           {{featureType.typeName}}
         </a>
@@ -25,7 +25,7 @@
 
 <div
   data-ng-repeat="featureType in mdView.current.record.featureTypes"
-  id="gn-featurecatalog-spy-target-{{featureType.code}}"
+  id="gn-featurecatalog-spy-target-{{((featureType.code + '-' + featureType.typeName) | md5)}}"
   class="gn-margin-bottom"
 >
   <h3>
