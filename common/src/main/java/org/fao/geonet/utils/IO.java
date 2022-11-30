@@ -81,7 +81,7 @@ public final class IO {
 
     public static void deleteFile(Path file, boolean throwException, Logger context) {
         try {
-            Files.deleteIfExists(file);
+            Files.delete(file);
         } catch (IOException e) {
             if (throwException) {
                 throw new RuntimeException(e);
