@@ -173,9 +173,9 @@ public class NetLib {
             }
         } else {
             System.clearProperty("http.proxyHost");
-            System.clearProperty("http.proxyHost");
+            System.clearProperty("http.proxyPort");
             System.clearProperty("https.proxyHost");
-            System.clearProperty("https.proxyHost");
+            System.clearProperty("https.proxyPort");
             System.clearProperty("http.nonProxyHosts");
         }
     }

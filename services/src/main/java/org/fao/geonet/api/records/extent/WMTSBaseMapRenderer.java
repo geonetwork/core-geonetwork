@@ -73,6 +73,12 @@ import java.util.Map;
  */
 public class WMTSBaseMapRenderer implements BaseMapRenderingEngine {
 
+    public static final String JSON_CapabilitiesURLTag= "wmtsGetCapabilitiesURL";
+    public static final String JSON_layerNameTagTag= "layerName";
+    public static final String JSON_matrixSetTag= "matrixSet";
+    public static final String JSON_SRIDConvertTag= "SRID2MatrixSet";
+    public static final String JSON_flip4326Tag= "flip4326";
+
 
     Envelope bbox;
     String srs;
@@ -107,14 +113,18 @@ public class WMTSBaseMapRenderer implements BaseMapRenderingEngine {
                           Dimension imageDimensions,
                           ServiceContext context) throws Exception {
 
-        if (configJsonString == null)
+        if (configJsonString == null) {
             throw new Exception("GetMapBaseMapRenderer: null json/configuration");
-        if (bbox == null)
+        }
+        if (bbox == null) {
             throw new Exception("GetMapBaseMapRenderer: null ubboxrl");
-        if (srs == null)
+        }
+        if (srs == null) {
             throw new Exception("GetMapBaseMapRenderer: null srs");
-        if (imageDimensions == null)
+        }
+        if (imageDimensions == null) {
             throw new Exception("GetMapBaseMapRenderer: null imageDimensions");
+        }
 
 
         this.bbox = bbox;
@@ -125,42 +135,42 @@ public class WMTSBaseMapRenderer implements BaseMapRenderingEngine {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> configuration = mapper.readValue(configJsonString, Map.class);
 
-        if (!configuration.containsKey("wmtsGetCapabilitiesURL")
-            || (configuration.get("wmtsGetCapabilitiesURL") == null)
-            || (!configuration.get("wmtsGetCapabilitiesURL").toString().toLowerCase().startsWith("http"))
+        if (!configuration.containsKey(JSON_CapabilitiesURLTag)
+            || (configuration.get(JSON_CapabilitiesURLTag) == null)
+            || (!configuration.get(JSON_CapabilitiesURLTag).toString().toLowerCase().startsWith("http"))
         ) {
             throw new Exception("WMTSBaseMapRenderer: json config key=wmtsGetCapabilitiesURL should be start with http or https");
         }
 
-        getCapabilitiesURL = new URL(configuration.get("wmtsGetCapabilitiesURL").toString());
+        getCapabilitiesURL = new URL(configuration.get(JSON_CapabilitiesURLTag).toString());
 
-        if (!configuration.containsKey("layerName")
-            || (configuration.get("layerName") == null)
-            || (configuration.get("layerName").toString().trim().isEmpty())
+        if (!configuration.containsKey(JSON_layerNameTagTag)
+            || (configuration.get(JSON_layerNameTagTag) == null)
+            || (configuration.get(JSON_layerNameTagTag).toString().trim().isEmpty())
         ) {
             throw new Exception("WMTSBaseMapRenderer: json config key=layerName must be present");
         }
 
-        layerName = configuration.get("layerName").toString().trim();
+        layerName = configuration.get(JSON_layerNameTagTag).toString().trim();
 
-        if (configuration.containsKey("matrixSet")
-            && (configuration.get("matrixSet") != null)
-            && (!configuration.get("matrixSet").toString().trim().isEmpty())
+        if (configuration.containsKey(JSON_matrixSetTag)
+            && (configuration.get(JSON_matrixSetTag) != null)
+            && (!configuration.get(JSON_matrixSetTag).toString().trim().isEmpty())
         ) {
-            this.matrixSet = configuration.get("matrixSet").toString().trim();
+            this.matrixSet = configuration.get(JSON_matrixSetTag).toString().trim();
         } else {
             this.matrixSet = srs;
         }
 
-        if ((configuration.get("SRID2MatrixSet") != null) && (configuration.get("SRID2MatrixSet") instanceof Map)) {
-            this.SRID2MatrixSet = (Map) configuration.get("SRID2MatrixSet");
+        if ((configuration.get(JSON_SRIDConvertTag) != null) && (configuration.get(JSON_SRIDConvertTag) instanceof Map)) {
+            this.SRID2MatrixSet = (Map) configuration.get(JSON_SRIDConvertTag);
             if (SRID2MatrixSet.containsKey(matrixSet)) {
                 matrixSet = SRID2MatrixSet.get(matrixSet);
             }
         }
 
-        if ((configuration.get("flip4326") != null) && (configuration.get("flip4326") instanceof Boolean)) {
-            if ((Boolean) configuration.get("flip4326") && (srs.equals("EPSG:4326"))) {
+        if ((configuration.get(JSON_flip4326Tag) != null) && (configuration.get(JSON_flip4326Tag) instanceof Boolean)) {
+            if ((Boolean) configuration.get(JSON_flip4326Tag) && (srs.equals("EPSG:4326"))) {
                 // if we are flipping, then we should use the YX definition
                 this.srs = urn4326;
                 flip4326 = true;
