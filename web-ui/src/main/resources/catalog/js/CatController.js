@@ -1271,7 +1271,7 @@
               result = result.concat(
                 that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key)
               );
-            } else {
+            } else if (key !== "mods") {
               result.push(prefix + key);
             }
             return result;
