@@ -203,6 +203,19 @@
         );
       };
 
+      /**
+       * Scroll to an element in the page using it's ID
+       *
+       * @param id  unique element identifier
+       */
+      $scope.scrollToSection = function (id) {
+        var scrollToElement = document.getElementById(id);
+
+        if (scrollToElement) {
+          scrollToElement.scrollIntoView();
+        }
+      };
+
       // activate the tabs in the full metadata view
       $scope.activateTabs = function () {
         // attach click to tab
