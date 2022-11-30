@@ -95,6 +95,8 @@ public class LoggingOidcAuthorizationCodeAuthenticationProvider extends OidcAuth
         Log.debug(Geonet.SECURITY, "OIDC LOGIN");
         Log.debug(Geonet.SECURITY, "----------");
 
+        Log.debug(Geonet.SECURITY,this.oidcConfiguration);
+
         OAuth2AuthorizationResponse authorizationResponse = authentication.getAuthorizationExchange().getAuthorizationResponse();
         if (authorizationResponse != null) {
             // logging the CODE should be ok at this stage, because it should have already called the OIDC server with

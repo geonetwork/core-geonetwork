@@ -247,4 +247,20 @@ public class OIDCConfiguration implements SecurityProviderConfiguration {
     }
 
 
+    @Override
+    public String toString() {
+        String result = "OIDC CONFIG: \n";
+        result += "      idTokenRoleLocation" +"=" +idTokenRoleLocation+  "\n";
+        result += "      updateGroup" +"=" +updateGroup+  "\n";
+        result += "      updateProfile" +"=" +updateProfile+  "\n";
+        result += "      scopes" +"=" +scopes+  "\n";
+
+        if ( (roleConverter != null) && (!roleConverter.isEmpty()) ){
+            result += "      roleConverter: \n";
+            for (Map.Entry<String, String> role : roleConverter.entrySet()) {
+                result += "            + "+ role.getKey()+" -> "+ role.getValue();
+            }
+        }
+        return result;
+    }
 }

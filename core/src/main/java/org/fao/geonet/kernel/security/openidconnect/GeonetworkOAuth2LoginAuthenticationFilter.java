@@ -99,7 +99,11 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         OidcUser oidcUser = (OidcUser) oAuth2AuthenticationToken.getPrincipal();
 
         //save user
-        UserDetails userDetails = oAuth2SecurityProviderUtil.getUserDetails(authResult, true);
+        try {
+            UserDetails userDetails = oAuth2SecurityProviderUtil.getUserDetails(authResult, true);
+        } catch (Exception e) {
+            throw new IOException("OIDC: couldnt save user details",e);
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authResult);
 

@@ -69,7 +69,7 @@ public class OidcUser2GeonetworkUser {
     private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
 
-    public UserDetails getUserDetails(Map attributes, boolean withDbUpdate) {
+    public UserDetails getUserDetails(Map attributes, boolean withDbUpdate) throws Exception {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(attributes);
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
@@ -117,8 +117,8 @@ public class OidcUser2GeonetworkUser {
      * @param withDbUpdate
      * @return
      */
-    public UserDetails getUserDetails(OidcIdToken idToken, boolean withDbUpdate) {
-        SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken);
+    public UserDetails getUserDetails(OidcIdToken idToken, Map attributes, boolean withDbUpdate) throws Exception {
+        SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken, attributes);
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
