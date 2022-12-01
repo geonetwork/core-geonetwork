@@ -90,7 +90,7 @@ public class CMISStore extends AbstractStore {
                 FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
         try {
-            Folder parentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(resourceTypeDir);
+            Folder parentFolder = cmisUtils.getFolderCache(resourceTypeDir);
 
             OperationContext oc = cmisUtils.createOperationContext();
             if (cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty()) {
@@ -112,8 +112,8 @@ public class CMISStore extends AbstractStore {
                     }
                 }
             }
-        } catch (CmisObjectNotFoundException e) {
-            // ignore as it means that there is not data to list.
+        } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
+            // ignore as it means that there is no data to list.
         }
 
 
@@ -369,7 +369,7 @@ public class CMISStore extends AbstractStore {
             int lastFolderDelimiterDestKeyIndex = destKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
             String parentDestFolderKey = destKey.substring(0, lastFolderDelimiterDestKeyIndex);
 
-            Folder parentDestFolder = cmisUtils.getFolderCache(parentDestFolderKey, true);
+            Folder parentDestFolder = cmisUtils.getFolderCache(parentDestFolderKey, true, true);
 
             // Move the object from source to destination
             CmisObject object;
@@ -395,15 +395,11 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public String delResources(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
-        // Don't use caching for this process.
-        OperationContext oc = cmisConfiguration.getClient().createOperationContext();
-        oc.setCacheEnabled(false);
-
         int metadataId = canEdit(context, metadataUuid, approved);
         String folderKey = null;
         try {
             folderKey = getMetadataDir(context, metadataId);
-            final Folder folder = (Folder) cmisConfiguration.getClient().getObjectByPath(folderKey, oc);
+            final Folder folder = cmisUtils.getFolderCache(folderKey, true);
 
             folder.deleteTree(true, UnfileObject.DELETE, true);
             cmisUtils.invalidateFolderCache(folderKey);
@@ -526,7 +522,7 @@ public class CMISStore extends AbstractStore {
         final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
         final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
         try {
-            Folder sourceParentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
+            Folder sourceParentFolder = cmisUtils.getFolderCache(sourceResourceTypeDir, true);
 
             OperationContext oc = cmisUtils.createOperationContext();
             // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
