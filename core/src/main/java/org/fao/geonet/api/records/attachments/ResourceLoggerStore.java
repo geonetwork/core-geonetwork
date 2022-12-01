@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -51,6 +52,10 @@ import javax.annotation.Nullable;
  * Decorate a store and record put/get/delete operations in database for reporting statistics.
  */
 public class ResourceLoggerStore extends AbstractStore {
+
+    public Store getDecoratedStore() {
+        return decoratedStore;
+    }
 
     private Store decoratedStore;
 
@@ -93,6 +98,14 @@ public class ResourceLoggerStore extends AbstractStore {
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         throw new UnsupportedOperationException("ResourceLoggerStore does not support getResourceInternal.");
     }
+
+    @Override
+    public void streamResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, OutputStream out) throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.streamResource(context, metadataUuid, resourceId, approved, out);
+        }
+    }
+
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,

@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,6 +123,11 @@ public class S3Store extends AbstractStore {
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         throw new UnsupportedOperationException("S3Store does not support getResourceInternal.");
+    }
+
+    @Override
+    public void streamResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException(String.format("%s does not support streamResource.", this.getClass().getSimpleName()));
     }
 
     private String getKey(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws Exception {

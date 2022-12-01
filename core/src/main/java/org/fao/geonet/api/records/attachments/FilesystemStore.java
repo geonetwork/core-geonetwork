@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,6 +141,11 @@ public class FilesystemStore extends AbstractStore {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
+    }
+
+    @Override
+    public void streamResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException(String.format("%s does not support streamResource.", this.getClass().getSimpleName()));
     }
 
     public MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,

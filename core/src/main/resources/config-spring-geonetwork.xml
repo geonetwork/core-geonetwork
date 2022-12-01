@@ -248,6 +248,7 @@
      default - Default file system store
      s3      - AWS S3 storage (see config-store/config-s3.xml for more details)
      cmis    - CMIS storage (see config-store/config-cmis.xml for more details)
+     fme     - FME storage (see config-store/config-fme.xml for more details)
   -->
   <import resource="config-store/config-${geonetwork.store.type:default}.xml"/>
 </beans>

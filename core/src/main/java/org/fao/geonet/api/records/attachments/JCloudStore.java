@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -164,6 +165,11 @@ public class JCloudStore extends AbstractStore {
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         throw new UnsupportedOperationException("JCloud does not support getResourceInternal.");
+    }
+
+    @Override
+    public void streamResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException(String.format("%s does not support streamResource.", this.getClass().getSimpleName()));
     }
 
     private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
