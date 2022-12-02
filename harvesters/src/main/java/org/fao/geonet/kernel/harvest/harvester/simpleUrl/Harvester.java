@@ -143,6 +143,8 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                     log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
                 } catch (Exception e) {
+                    log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
+                        params.numberOfRecordPath, e.getMessage()));
                 }
             }
             Map<String, Element> allUuids = new HashMap<String, Element>();
@@ -187,7 +189,13 @@ class Harvester implements IHarvester<HarvestResult> {
                                 });
                             } else if (nodes != null) {
                                 nodes.forEach(record -> {
-                                    String uuid = this.extractUuidFromIdentifier(record.get(params.recordIdPath).asText());
+                                    String uuid = null;
+                                    try {
+                                        uuid = this.extractUuidFromIdentifier(record.at(params.recordIdPath).asText());
+                                    } catch (Exception e) {
+                                        log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
+                                            params.recordIdPath, e.getMessage()));
+                                    }
                                     String apiUrlPath = params.url.split("\\?")[0];
                                     URL apiUrl = null;
                                     try {
@@ -203,7 +211,8 @@ class Harvester implements IHarvester<HarvestResult> {
                             aligner.align(uuids, errors);
                             allUuids.putAll(uuids);
                         } catch (Exception e) {
-                            log.warning("Failed to collect record in response");
+                            log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
+                                params.loopElement, e.getMessage()));
                         }
                     }
                 }
