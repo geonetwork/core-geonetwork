@@ -293,22 +293,27 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .then(function (response) {
-                    try {
-                      defer.resolve(displayFileContent(response.data, withGroupLayer, url));
-                    } catch (e) {
-                      defer.reject($translate.instant("failedToParseCapabilities"));
+                  .then(
+                    function (response) {
+                      try {
+                        defer.resolve(
+                          displayFileContent(response.data, withGroupLayer, url)
+                        );
+                      } catch (e) {
+                        defer.reject($translate.instant("failedToParseCapabilities"));
+                      }
+                    },
+                    function (response) {
+                      defer.reject(
+                        $translate.instant(
+                          response.status === 401
+                            ? "checkCapabilityUrlUnauthorized"
+                            : "checkCapabilityUrl",
+                          { url: url, status: response.status }
+                        )
+                      );
                     }
-                  }, function (response) {
-                    defer.reject(
-                      $translate.instant(
-                        response.status === 401
-                          ? "checkCapabilityUrlUnauthorized"
-                          : "checkCapabilityUrl",
-                        { url: url, status: response.status }
-                      )
-                    );
-                  });
+                  );
               }
             } else {
               defer.reject();
@@ -330,17 +335,20 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .then(function (response) {
-                    var data = response.data;
+                  .then(
+                    function (response) {
+                      var data = response.data;
 
-                    if (data) {
-                      defer.resolve(parseWMTSCapabilities(data));
-                    } else {
-                      defer.reject();
+                      if (data) {
+                        defer.resolve(parseWMTSCapabilities(data));
+                      } else {
+                        defer.reject();
+                      }
+                    },
+                    function (response) {
+                      defer.reject(response.status);
                     }
-                  }, function (response) {
-                    defer.reject(response.status);
-                  });
+                  );
               }
             }
             return defer.promise;
@@ -363,20 +371,23 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .then(function (response) {
-                    var xfsCap = parseWFSCapabilities(response.data);
+                  .then(
+                    function (response) {
+                      var xfsCap = parseWFSCapabilities(response.data);
 
-                    if (!xfsCap || xfsCap.exception != undefined) {
-                      defer.reject({
-                        msg: $translate.instant("wfsGetCapabilitiesFailed"),
-                        owsExceptionReport: xfsCap
-                      });
-                    } else {
-                      defer.resolve(xfsCap);
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({
+                          msg: $translate.instant("wfsGetCapabilitiesFailed"),
+                          owsExceptionReport: xfsCap
+                        });
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
+                    },
+                    function (response) {
+                      defer.reject($translate.instant("wfsGetCapabilitiesFailed"));
                     }
-                  }, function (response) {
-                    defer.reject($translate.instant("wfsGetCapabilitiesFailed"));
-                  });
+                  );
               }
             }
             return defer.promise;
@@ -398,20 +409,23 @@
                   .get(url, {
                     cache: true
                   })
-                  .then(function (response) {
-                    var xfsCap = parseWCSCapabilities(response.data);
+                  .then(
+                    function (response) {
+                      var xfsCap = parseWCSCapabilities(response.data);
 
-                    if (!xfsCap || xfsCap.exception != undefined) {
-                      defer.reject({
-                        msg: "wcsGetCapabilitiesFailed",
-                        owsExceptionReport: xfsCap
-                      });
-                    } else {
-                      defer.resolve(xfsCap);
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({
+                          msg: "wcsGetCapabilitiesFailed",
+                          owsExceptionReport: xfsCap
+                        });
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
+                    },
+                    function (response) {
+                      defer.reject(response.status);
                     }
-                  }, function (response) {
-                    defer.reject(response.status);
-                  });
+                  );
               }
             }
             return defer.promise;

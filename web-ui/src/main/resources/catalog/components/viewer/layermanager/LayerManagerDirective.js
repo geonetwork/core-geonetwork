@@ -208,9 +208,8 @@
                       headers: new Headers(headerDict),
                       responseType: "blob"
                     };
-                    legendPromise = $http
-                      .get(urlGetLegend, requestOptions)
-                      .then(function (response) {
+                    legendPromise = $http.get(urlGetLegend, requestOptions).then(
+                      function (response) {
                         var contentType = headers("content-type");
                         if (contentType.indexOf("image") === 0) {
                           // encode data to base 64 url
@@ -225,10 +224,12 @@
                           console.log("Error getting legend image (" + contentType + ")");
                           console.log(this.responseText);
                         }
-                      }, function (response) {
+                      },
+                      function (response) {
                         console.log("Error getting legend image");
                         console.log(this.responseText);
-                      });
+                      }
+                    );
                     return legendPromise;
                   }
                 }

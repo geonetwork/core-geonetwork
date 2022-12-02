@@ -540,13 +540,14 @@
 
       this.assignGroup = function (metadataId, groupId) {
         var defer = $q.defer();
-        $http
-          .put("../api/records/" + metadataId + "/group", groupId)
-          .then(function (response) {
+        $http.put("../api/records/" + metadataId + "/group", groupId).then(
+          function (response) {
             defer.resolve(response.data);
-          }, function (response) {
+          },
+          function (response) {
             defer.reject(response.data);
-          });
+          }
+        );
         return defer.promise;
       };
 
@@ -554,23 +555,27 @@
         var defer = $q.defer();
         $http
           .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
-          .then(function (response) {
-            defer.resolve(response.data);
-          }, function (response) {
-            defer.reject(response.data);
-          });
+          .then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
+              defer.reject(response.data);
+            }
+          );
         return defer.promise;
       };
 
       this.startVersioning = function (metadataId) {
         var defer = $q.defer();
-        $http
-          .get("md.versioning.start?id=" + metadataId)
-          .then(function (response) {
+        $http.get("md.versioning.start?id=" + metadataId).then(
+          function (response) {
             defer.resolve(response.data);
-          }, function (response) {
+          },
+          function (response) {
             defer.reject(response.data);
-          });
+          }
+        );
         return defer.promise;
       };
 

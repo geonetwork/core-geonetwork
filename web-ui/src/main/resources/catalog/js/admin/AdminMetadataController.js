@@ -186,24 +186,30 @@
           .put(
             "../api/records/templates?schema=" + $scope.selectedSchemas.join("&schema=")
           )
-          .then(function (response) {
-            $scope.loadTplReport = response.data;
-            $scope.tplLoadRunning = false;
-          }, function (response) {
-            $scope.tplLoadRunning = false;
-          });
+          .then(
+            function (response) {
+              $scope.loadTplReport = response.data;
+              $scope.tplLoadRunning = false;
+            },
+            function (response) {
+              $scope.tplLoadRunning = false;
+            }
+          );
       };
 
       $scope.loadSamples = function () {
         $scope.sampleLoadRunning = true;
         $http
           .put("../api/records/samples?schema=" + $scope.selectedSchemas.join("&schema="))
-          .then(function (response) {
-            $scope.loadReport = response.data;
-            $scope.sampleLoadRunning = false;
-          }, function (response) {
-            $scope.sampleLoadRunning = false;
-          });
+          .then(
+            function (response) {
+              $scope.loadReport = response.data;
+              $scope.sampleLoadRunning = false;
+            },
+            function (response) {
+              $scope.sampleLoadRunning = false;
+            }
+          );
       };
 
       $scope.templates = null;
@@ -219,17 +225,18 @@
 
       loadFormatter = function () {
         $scope.formatters = [];
-        $http
-          .get("../api/formatters")
-          .then(function (response) {
+        $http.get("../api/formatters").then(
+          function (response) {
             var data = response.data;
 
             if (data !== "null") {
               $scope.formatters = data.formatters;
             }
-          }, function (response) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       };
 
       /**
@@ -260,9 +267,8 @@
         $scope.formatterFiles = [];
 
         var url = "../api/formatters/" + f.schema + "/" + f.id + "/files";
-        $http
-          .get(url)
-          .then(function (response) {
+        $http.get(url).then(
+          function (response) {
             var data = response.data;
 
             if (data !== "null") {
@@ -286,9 +292,11 @@
               });
               $scope.selectedFile = $scope.formatterFiles[0];
             }
-          }, function (response) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       };
 
       $scope.selectFormatter = function (f) {
@@ -303,19 +311,20 @@
 
       $scope.formatterDelete = function (f) {
         var url = "../api/formatters/" + f.schema + "/" + f.id;
-        $http
-          .delete(url)
-          .then(function (response) {
+        $http.delete(url).then(
+          function (response) {
             $scope.formatterSelected = null;
             loadFormatter();
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("formatterRemovalError"),
               error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.$watch("selectedFile", function () {

@@ -149,21 +149,22 @@
       };
       $scope.stagingProfiles = ["production", "development", "testing"];
       $scope.updateProfile = function () {
-        $http
-          .put("../api/site/info/staging/" + $scope.systemInfo.stagingProfile)
-          .then(function (response) {
+        $http.put("../api/site/info/staging/" + $scope.systemInfo.stagingProfile).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("profileUpdated"),
               timeout: 2,
               type: "success"
             });
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("profileUpdatedFailed"),
               timeout: 2,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.defaultConfigId = "srv";
@@ -205,9 +206,8 @@
           $scope.logfiles = response.data;
         });
 
-        $http
-          .get("../api/site/settings/details")
-          .then(function (response) {
+        $http.get("../api/site/settings/details").then(
+          function (response) {
             var data = response.data;
 
             var sectionsLevel1 = [];
@@ -271,9 +271,11 @@
                 }, 900);
               }
             }
-          }, function (response) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
         loadUiConfigurations();
       }
 
@@ -438,26 +440,29 @@
           .post("../api/site/settings", gnUtilityService.serialize(formId), {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .then(function (response) {
-            $(".gn-no-setting").attr("disabled", false);
+          .then(
+            function (response) {
+              $(".gn-no-setting").attr("disabled", false);
 
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("settingsUpdated"),
-              timeout: 2,
-              type: "success"
-            });
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("settingsUpdated"),
+                timeout: 2,
+                type: "success"
+              });
 
-            $scope.loadCatalogInfo();
-          }, function (response) {
-            $(".gn-no-setting").attr("disabled", false);
+              $scope.loadCatalogInfo();
+            },
+            function (response) {
+              $(".gn-no-setting").attr("disabled", false);
 
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("settingsUpdateError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("settingsUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.filterForm = function (e, formId) {
@@ -567,17 +572,18 @@
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function () {
-        return $http
-          .get("../api/atom/scan")
-          .then(function (response) {
+        return $http.get("../api/atom/scan").then(
+          function (response) {
             $scope.loadTplReport = response.data;
 
             $("#atomHarvesterModal").modal();
-          }, function (response) {
+          },
+          function (response) {
             $scope.loadTplReport = response.data;
 
             $("#atomHarvesterModal").modal();
-          });
+          }
+        );
       };
 
       /**

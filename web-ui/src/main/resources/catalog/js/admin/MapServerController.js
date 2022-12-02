@@ -85,21 +85,24 @@
               ($scope.isUpdate ? "/" + $scope.mapserverSelected.id : ""),
             $scope.mapserverSelected
           )
-          .then(function (response) {
-            loadMapservers();
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("mapserverUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          }, function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("mapserverUpdateError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              loadMapservers();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("mapserverUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("mapserverUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.resetPassword = null;
@@ -120,12 +123,15 @@
           .post("../api/mapservers/" + $scope.mapserverSelected.id + "/auth", data, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .then(function (response) {
-            $scope.resetPassword = null;
-            $("#passwordResetModal").modal("hide");
-          }, function (response) {
-            // TODO
-          });
+          .then(
+            function (response) {
+              $scope.resetPassword = null;
+              $("#passwordResetModal").modal("hide");
+            },
+            function (response) {
+              // TODO
+            }
+          );
       };
 
       $scope.deleteMapserverConfig = function () {
@@ -133,18 +139,19 @@
       };
 
       $scope.confirmDeleteMapserverConfig = function () {
-        $http
-          .delete("../api/mapservers/" + $scope.mapserverSelected.id)
-          .then(function (response) {
+        $http.delete("../api/mapservers/" + $scope.mapserverSelected.id).then(
+          function (response) {
             loadMapservers();
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("mapserverDeleteError"),
               error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
       loadMapservers();
     }

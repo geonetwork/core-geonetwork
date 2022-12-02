@@ -130,9 +130,8 @@
           threadActivityEl.collapse("toggle");
         }
         $scope.threadInfoLoading = true;
-        $http
-          .get("../api/site/threads/status")
-          .then(function (response) {
+        $http.get("../api/site/threads/status").then(
+          function (response) {
             $scope.threadInfoLoading = false;
             $scope.threadStatus = response.data;
 
@@ -150,9 +149,11 @@
                 $scope.openThreadActivity(true);
               }
             }, 2000);
-          }, function (response) {
+          },
+          function (response) {
             $scope.threadInfoLoading = false;
-          });
+          }
+        );
       };
       $scope.showStackTrace = function (thread, $event) {
         $scope.selectedThread = thread;
@@ -162,25 +163,27 @@
           $scope.threadStackTrace = response.data.stackTrace;
         });
       };
-      $http
-        .get("../../criticalhealthcheck")
-        .then(function (response) {
+      $http.get("../../criticalhealthcheck").then(
+        function (response) {
           $scope.healthy = true;
           $scope.criticalhealthcheck = response.data;
-        }, function (response) {
+        },
+        function (response) {
           $scope.healthy = false;
           $scope.criticalhealthcheck = response.data;
-        });
+        }
+      );
 
-      $http
-        .get("../../warninghealthcheck")
-        .then(function (response) {
+      $http.get("../../warninghealthcheck").then(
+        function (response) {
           $scope.nowarnings = true;
           $scope.warninghealthcheck = response.data;
-        }, function (response) {
+        },
+        function (response) {
           $scope.nowarnings = false;
           $scope.warninghealthcheck = response.data;
-        });
+        }
+      );
 
       // log activity
       $scope.openLogActivity = function (leaveOpen) {
@@ -197,9 +200,8 @@
           logActivityEl.collapse("toggle");
         }
         $scope.logInfoLoading = true;
-        $http
-          .get("../api/site/logging/activity")
-          .then(function (response) {
+        $http.get("../api/site/logging/activity").then(
+          function (response) {
             $scope.logInfoLoading = false;
             $scope.logActivity = response.data;
 
@@ -217,9 +219,11 @@
                 $scope.openLogActivity(true);
               }
             }, 2000);
-          }, function (response) {
+          },
+          function (response) {
             $scope.logInfoLoading = false;
-          });
+          }
+        );
       };
 
       $scope.downloadLog = function () {

@@ -136,22 +136,26 @@
               "Accept-Language": options.key
             },
             cache: true
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               deferredInst.resolve(response.data);
-            },function () {
+            },
+            function () {
               // Load english locale file if not available
               var url = buildUrl(options.prefix, "en", value, options.suffix);
               $http({
                 method: "GET",
                 url: url
-              })
-                .then(function (response) {
+              }).then(
+                function (response) {
                   deferredInst.resolve(response.data);
-                }, function () {
+                },
+                function () {
                   deferredInst.resolve({});
-                });
-            });
+                }
+              );
+            }
+          );
         });
 
         // Finally, create a single promise containing all the promises

@@ -91,19 +91,20 @@
       $scope.loadHarvesters = function () {
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
-        return $http
-          .get("admin.harvester.list?_content_type=json&id=-1")
-          .then(function (response) {
+        return $http.get("admin.harvester.list?_content_type=json&id=-1").then(
+          function (response) {
             if (data != "null") {
               $scope.harvesters = response.data;
               gnUtilityService.parseBoolean($scope.harvesters);
               pollHarvesterStatus();
             }
             $scope.isLoadingHarvester = false;
-          }, function (response) {
+          },
+          function (response) {
             // TODO
             $scope.isLoadingHarvester = false;
-          });
+          }
+        );
       };
 
       var getRunningHarvesterIds = function () {
@@ -133,36 +134,39 @@
             "admin.harvester.list?onlyInfo=true&_content_type=json&id=" +
               runningHarvesters.join("&id=")
           )
-          .then(function (response) {
-            var data = response.data;
+          .then(
+            function (response) {
+              var data = response.data;
 
-            isPolling = false;
-            if (data != "null") {
-              if (!angular.isArray(data)) {
-                data = [data];
-              }
-              var harvesterIndex = {};
-              angular.forEach($scope.harvesters, function (oldH) {
-                harvesterIndex[oldH["@id"]] = oldH;
-              });
-
-              for (var i = 0; i < data.length; i++) {
-                var h = data[i];
-                gnUtilityService.parseBoolean(h.info);
-                var old = harvesterIndex[h["@id"]];
-                if (old && !angular.equals(old.info, h.info)) {
-                  old.info = h.info;
+              isPolling = false;
+              if (data != "null") {
+                if (!angular.isArray(data)) {
+                  data = [data];
                 }
-                if (old && !angular.equals(old.error, h.error)) {
-                  old.error = h.error;
-                }
-              }
+                var harvesterIndex = {};
+                angular.forEach($scope.harvesters, function (oldH) {
+                  harvesterIndex[oldH["@id"]] = oldH;
+                });
 
-              setTimeout(pollHarvesterStatus, 5000);
+                for (var i = 0; i < data.length; i++) {
+                  var h = data[i];
+                  gnUtilityService.parseBoolean(h.info);
+                  var old = harvesterIndex[h["@id"]];
+                  if (old && !angular.equals(old.info, h.info)) {
+                    old.info = h.info;
+                  }
+                  if (old && !angular.equals(old.error, h.error)) {
+                    old.error = h.error;
+                  }
+                }
+
+                setTimeout(pollHarvesterStatus, 5000);
+              }
+            },
+            function (response) {
+              isPolling = false;
             }
-          }, function (response) {
-            isPolling = false;
-          });
+          );
       };
 
       $scope.refreshHarvester = function () {

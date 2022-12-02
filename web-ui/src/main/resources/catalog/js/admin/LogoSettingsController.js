@@ -82,16 +82,16 @@
        * if favicon parameter is set to true.
        */
       $scope.setCatalogLogo = function (logoName, asFavicon) {
-        $http
-          .put("../api/site/logo?file=" + logoName + "&asFavicon=" + asFavicon)
-          .then(function (response) {
+        $http.put("../api/site/logo?file=" + logoName + "&asFavicon=" + asFavicon).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("logoUpdated"),
               timeout: 2,
               type: "success"
             });
             $rootScope.$broadcast("loadCatalogInfo");
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("logoUpdateError"),
               error: response.data,
@@ -99,7 +99,8 @@
               type: "danger"
             });
             loadLogo();
-          });
+          }
+        );
       };
 
       /**
@@ -114,16 +115,16 @@
        * Remove the logo and refresh the list when done.
        */
       $scope.confirmRemoveLogo = function (logoName) {
-        $http
-          .delete("../api/logos/" + $scope.remLogoName)
-          .then(function (response) {
+        $http.delete("../api/logos/" + $scope.remLogoName).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("logoRemoved"),
               timeout: 2,
               type: "success"
             });
             loadLogo();
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("logoRemoveError"),
               error: response.data,
@@ -131,7 +132,8 @@
               type: "danger"
             });
             loadLogo();
-          });
+          }
+        );
       };
 
       $scope.filterLogoList = function (e, formId) {

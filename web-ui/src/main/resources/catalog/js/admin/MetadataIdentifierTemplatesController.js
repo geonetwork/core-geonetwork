@@ -86,9 +86,8 @@
       };
 
       $scope.confirmDeleteTemplateConfig = function () {
-        $http
-          .delete("../api/identifiers/" + $scope.mdIdentifierTemplateSelected.id)
-          .then(function (response) {
+        $http.delete("../api/identifiers/" + $scope.mdIdentifierTemplateSelected.id).then(
+          function (response) {
             $(".ng-dirty").removeClass("ng-dirty");
             loadMetadataUrnTemplates();
             $rootScope.$broadcast("StatusUpdated", {
@@ -96,7 +95,8 @@
               timeout: 2,
               type: "success"
             });
-          }, function (response) {
+          },
+          function (response) {
             $(".ng-dirty").removeClass("ng-dirty");
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("metadataIdentifierTemplateDeletedError"),
@@ -104,7 +104,8 @@
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.saveMetadataIdentifierTemplate = function () {
@@ -116,23 +117,26 @@
                 : ""),
             $scope.mdIdentifierTemplateSelected
           )
-          .then(function (response) {
-            $(".ng-dirty").removeClass("ng-dirty");
-            loadMetadataUrnTemplates();
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("metadataIdentifierTemplateUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          }, function (response) {
-            $(".ng-dirty").removeClass("ng-dirty");
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("metadataIdentifier TemplateUpdateError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $(".ng-dirty").removeClass("ng-dirty");
+              loadMetadataUrnTemplates();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("metadataIdentifierTemplateUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $(".ng-dirty").removeClass("ng-dirty");
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("metadataIdentifier TemplateUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       loadMetadataUrnTemplates();

@@ -110,8 +110,8 @@
             params: {
               id: criteria.id
             }
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               var list, idx;
               updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
               list = group.criteria;
@@ -119,9 +119,11 @@
               if (idx !== -1) {
                 list.splice(idx, 1);
               }
-            }, function (response) {
+            },
+            function (response) {
               alert("Error deleting criteria: " + criteria.id);
-            });
+            }
+          );
         },
         update: function (updated, original, group) {
           $http({
@@ -134,14 +136,16 @@
               uitype: updated.uitype,
               uivalue: updated.uivalue
             }
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
 
               angular.copy(updated, original);
-            }, function (response) {
+            },
+            function (response) {
               alert("Error updating criteria: " + original.id);
-            });
+            }
+          );
         },
         add: function (criteria, original, group) {
           $http({
@@ -155,8 +159,8 @@
               groupName: group.id.name,
               schematronId: group.id.schematronid
             }
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
               var added = angular.copy(criteria);
               added.id = response.id;
@@ -165,7 +169,8 @@
               }
               group.criteria.push(added);
               angular.copy(original, criteria);
-            }, function (response) {
+            },
+            function (response) {
               alert(
                 "Error adding criteria: {\n\ttype:" +
                   criteria.type +
@@ -176,7 +181,8 @@
                   "schematronId: " +
                   group.id.schematronid
               );
-            });
+            }
+          );
         }
       };
       this.group = {
@@ -188,17 +194,19 @@
               groupName: group.id.name,
               schematronId: group.id.schematronid
             }
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               updateCacheOnGroupChange(group.id.schematronid);
               var idx = findIndex(groupList, group, groupComparator);
               if (idx !== -1) {
                 groupList.splice(idx, 1);
               }
               successCallback();
-            }, function (response) {
+            },
+            function (response) {
               alert("Error deleting Schematron Criteria Group: " + group.id);
-            });
+            }
+          );
         },
         update: function (updated, original) {
           var params = {
@@ -216,14 +224,16 @@
             method: "GET",
             url: "admin.schematroncriteriagroup.update?_content_type=json",
             params: params
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               original.id.name = updated.id.name;
               original.id.schematronId = updated.id.schematronid;
               original.requirement = updated.requirement;
-            }, function (response) {
+            },
+            function (response) {
               alert("Error editing Schematron Criteria Group: " + original.id);
-            });
+            }
+          );
         },
         add: function (group, groupList, successCallback) {
           $http({
@@ -234,14 +244,16 @@
               schematronId: group.id.schematronid,
               requirement: group.requirement
             }
-          })
-            .then(function (response) {
+          }).then(
+            function (response) {
               updateCacheOnGroupChange(group.id.schematronid);
               groupList.push(group);
               successCallback(group);
-            }, function (response) {
+            },
+            function (response) {
               alert("Error adding new Schematron Criteria Group: " + group.id);
-            });
+            }
+          );
         },
         list: function (schematronId, successFunction) {
           var data = getDataFromCache(groupCacheId(schematronId));
@@ -255,8 +267,8 @@
                 includeCriteria: true,
                 schematronId: schematronId
               }
-            })
-              .then(function (response) {
+            }).then(
+              function (response) {
                 var data = response.data;
 
                 if (data === "null") {
@@ -264,13 +276,15 @@
                 }
                 putDataIntoCache(groupCacheId(schematronId), data);
                 successFunction(data);
-              }, function (response) {
+              },
+              function (response) {
                 alert(
                   "Error occurred during loading schematron criteria " +
                     " groups for schematron: " +
                     schematronId
                 );
-              });
+              }
+            );
           }
         }
       };
@@ -309,23 +323,24 @@
           if (cachedCriteriaTypes) {
             successCallback(cachedCriteriaTypes);
           } else {
-            $http
-              .get("admin.schematrontype?_content_type=json")
-              .then(function (response) {
+            $http.get("admin.schematrontype?_content_type=json").then(
+              function (response) {
                 var data = response.data;
                 putDataIntoCache("criteriaTypes", data);
                 angular.forEach(data.schemas, function (schema) {
                   schema.schematron.sort(sortByDisplayPriority);
                 });
                 successCallback(data);
-              }, function (data) {
+              },
+              function (data) {
                 alert(
                   "An Error occurred with the " +
                     "admin.schematrontype " +
                     " request:" +
                     data
                 );
-              });
+              }
+            );
           }
         }
       };

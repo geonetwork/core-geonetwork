@@ -164,18 +164,21 @@
               "Accept-Language": gnLangs.current
             }
           })
-          .then(function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0
-            });
-          }, function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
       /**
        * Remind user password.
@@ -192,20 +195,23 @@
               }
             }
           )
-          .then(function (response) {
-            $scope.sendPassword = false;
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0
-            });
-            $scope.usernameToRemind = null;
-          }, function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $scope.sendPassword = false;
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0
+              });
+              $scope.usernameToRemind = null;
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
@@ -225,18 +231,21 @@
               }
             }
           )
-          .then(function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0
-            });
-          }, function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.nodeChangeRedirect = function (redirectTo) {

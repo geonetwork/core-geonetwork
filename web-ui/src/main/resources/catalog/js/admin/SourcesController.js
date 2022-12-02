@@ -138,9 +138,8 @@
 
       $scope.updateSource = function () {
         var url = "../api/sources" + ($scope.isNew ? "" : "/" + $scope.source.uuid);
-        $http
-          .put(url, $scope.source)
-          .then(function (response) {
+        $http.put(url, $scope.source).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("sourceUpdated"),
               timeout: 2,
@@ -148,14 +147,16 @@
             });
 
             loadSources();
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("sourceUpdateError"),
               error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.deleteSourceConfig = function () {
@@ -163,9 +164,8 @@
       };
 
       $scope.confirmDeleteSourceConfig = function () {
-        $http
-          .delete("../api/sources/" + $scope.source.uuid)
-          .then(function (response) {
+        $http.delete("../api/sources/" + $scope.source.uuid).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("sourceRemoved"),
               timeout: 2,
@@ -174,14 +174,16 @@
 
             loadSources();
             $scope.source = null;
-          }, function (response) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("sourceRemovedError"),
               error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       var uploadLogoDone = function (e, data) {

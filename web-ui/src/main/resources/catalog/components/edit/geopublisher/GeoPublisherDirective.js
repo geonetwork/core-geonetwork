@@ -266,12 +266,15 @@
                   scope.resource.title,
                   scope.resource["abstract"]
                 )
-                .then(function (response) {
-                  readResponse(response.data, "publish");
-                }, function (response) {
-                  scope.statusCode = response.data.description;
-                  scope.isPublished = false;
-                });
+                .then(
+                  function (response) {
+                    readResponse(response.data, "publish");
+                  },
+                  function (response) {
+                    scope.statusCode = response.data.description;
+                    scope.isPublished = false;
+                  }
+                );
             };
 
             /**
@@ -281,15 +284,16 @@
               if (scope.layer != null) {
                 map.removeLayer(scope.layer);
               }
-              return gnGeoPublisher
-                .unpublishNode(scope.gsNode.id, scope.name)
-                .then(function (response) {
+              return gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name).then(
+                function (response) {
                   scope.statusCode = response.data;
                   scope.isPublished = false;
-                }, function (response) {
+                },
+                function (response) {
                   scope.statusCode = response.data.description;
                   scope.isPublished = false;
-                });
+                }
+              );
             };
 
             /**

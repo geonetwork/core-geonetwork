@@ -639,15 +639,16 @@
       };
 
       function init() {
-        $http
-          .get("../api/standards/batchconfiguration")
-          .then(function (response) {
+        $http.get("../api/standards/batchconfiguration").then(
+          function (response) {
             $scope.fieldConfig = response.data;
             gnSchemaManagerService.getNamespaces();
             $scope.setType($scope.editTypes[0].id);
-          }, function (response) {
+          },
+          function (response) {
             console.warn(response.data);
-          });
+          }
+        );
       }
       init();
     }

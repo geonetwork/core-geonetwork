@@ -195,20 +195,23 @@
               size +
               "&_content_type=json"
           )
-          .data(function (response) {
-            var data = response.data;
+          .data(
+            function (response) {
+              var data = response.data;
 
-            $scope.harvesterHistory = data.harvesthistory;
-            $scope.harvesterHistoryPaging.pages = parseInt(data.pages);
-            $scope.harvesterHistoryPaging.total = parseInt(data.total);
-            $scope.isLoadingHarvesterHistory = false;
-            if (list) {
-              list.removeClass("loading");
+              $scope.harvesterHistory = data.harvesthistory;
+              $scope.harvesterHistoryPaging.pages = parseInt(data.pages);
+              $scope.harvesterHistoryPaging.total = parseInt(data.total);
+              $scope.isLoadingHarvesterHistory = false;
+              if (list) {
+                list.removeClass("loading");
+              }
+            },
+            function (response) {
+              // TODO
+              $scope.isLoadingHarvesterHistory = false;
             }
-          }, function (response) {
-            // TODO
-            $scope.isLoadingHarvesterHistory = false;
-          });
+          );
       }
 
       $scope.historyFirstPage = function () {
@@ -238,28 +241,31 @@
           .get("admin.harvester.info?_content_type=json&type=harvesterTypes", {
             cache: true
           })
-          .then(function (response) {
-            angular.forEach(response.data[0], function (value) {
-              $scope.harvesterTypes[value] = {
-                type: value,
-                label: "harvester-" + value
-              };
+          .then(
+            function (response) {
+              angular.forEach(response.data[0], function (value) {
+                $scope.harvesterTypes[value] = {
+                  type: value,
+                  label: "harvester-" + value
+                };
 
-              $.getScript("../../catalog/templates/admin/harvest/type/" + value + ".js")
-                .done(function (script, textStatus) {
-                  $scope.$apply(function () {
-                    $scope.harvesterTypes[value].loaded = true;
+                $.getScript("../../catalog/templates/admin/harvest/type/" + value + ".js")
+                  .done(function (script, textStatus) {
+                    $scope.$apply(function () {
+                      $scope.harvesterTypes[value].loaded = true;
+                    });
+                    // FIXME: could we make those harvester specific
+                    // function a controller
+                  })
+                  .fail(function (jqxhr, settings, exception) {
+                    $scope.harvesterTypes[value].loaded = false;
                   });
-                  // FIXME: could we make those harvester specific
-                  // function a controller
-                })
-                .fail(function (jqxhr, settings, exception) {
-                  $scope.harvesterTypes[value].loaded = false;
-                });
-            });
-          }, function (response) {
-            // TODO
-          });
+              });
+            },
+            function (response) {
+              // TODO
+            }
+          );
       }
 
       $scope.getTplForHarvester = function () {
@@ -294,9 +300,8 @@
       };
 
       $scope.cloneHarvester = function (id) {
-        $http
-          .get("admin.harvester.clone?_content_type=json&id=" + id)
-          .then(function (response) {
+        $http.get("admin.harvester.clone?_content_type=json&id=" + id).then(
+          function (response) {
             $scope.$parent.loadHarvesters().then(function () {
               // Select the clone
               angular.forEach($scope.$parent.harvesters, function (h) {
@@ -305,9 +310,11 @@
                 }
               });
             });
-          }, function (response) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       };
 
       $scope.addFromClipboard = function () {
@@ -380,32 +387,35 @@
               headers: { "Content-type": "application/xml" }
             }
           )
-          .then(function (data) {
-            var data = response.data;
+          .then(
+            function (data) {
+              var data = response.data;
 
-            if (!$scope.harvesterSelected["@id"]) {
-              $scope.harvesterSelected["@id"] = data[0];
+              if (!$scope.harvesterSelected["@id"]) {
+                $scope.harvesterSelected["@id"] = data[0];
+              }
+              // Activate or disable it
+              $scope.setHarvesterSchedule().finally(function () {
+                $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
+              });
+
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("harvesterUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+              deferred.resolve(data);
+            },
+            function (response) {
+              deferred.reject(response.data);
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("harvesterUpdated"),
+                error: response.data,
+                timeout: 2,
+                type: "danger"
+              });
             }
-            // Activate or disable it
-            $scope.setHarvesterSchedule().finally(function () {
-              $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
-            });
-
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("harvesterUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-            deferred.resolve(data);
-          }, function (response) {
-            deferred.reject(response.data);
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("harvesterUpdated"),
-              error: response.data,
-              timeout: 2,
-              type: "danger"
-            });
-          });
+          );
 
         return deferred.promise;
       };
@@ -464,16 +474,19 @@
             "admin.harvester.remove?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .then(function (response) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
 
-            $scope.deleting.splice($scope.deleting.indexOf(3), 1);
-          }, function (response) {
-            console.log(response.data);
-          });
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1);
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
 
       $scope.deleteHarvesterRecord = function () {
@@ -482,14 +495,17 @@
             "admin.harvester.clear?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .then(function (response) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          }, function (response) {
-            console.log(response.data);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
       $scope.assignHarvestedRecordToLocalNode = function () {
         $http
@@ -499,14 +515,17 @@
               "/assign?source=" +
               gnConfig["system.site.siteId"]
           )
-          .then(function (response) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          }, function (response) {
-            console.log(response.data);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
       $scope.deleteHarvesterHistory = function () {
         return $http
@@ -559,19 +578,22 @@
               "?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .then(function (response) {
-            deferred.resolve(response.data);
-          }, function (response) {
-            var data = response.data;
+          .then(
+            function (response) {
+              deferred.resolve(response.data);
+            },
+            function (response) {
+              var data = response.data;
 
-            deferred.reject(data);
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("harvesterSchedule" + status),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+              deferred.reject(data);
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterSchedule" + status),
+                error: data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
         return deferred.promise;
       };
 
@@ -602,25 +624,28 @@
       $scope.geonetworkGetSources = function (url) {
         $http
           .get($scope.proxyUrl + encodeURIComponent(url + "/srv/eng/info?type=sources"))
-          .then(function (response) {
-            $scope.geonetworkSources = [];
-            var i = 0;
-            var xmlDoc = $.parseXML(response.data);
-            var $xml = $(xmlDoc);
-            $sources = $xml.find("uuid");
-            $names = $xml.find("name");
+          .then(
+            function (response) {
+              $scope.geonetworkSources = [];
+              var i = 0;
+              var xmlDoc = $.parseXML(response.data);
+              var $xml = $(xmlDoc);
+              $sources = $xml.find("uuid");
+              $names = $xml.find("name");
 
-            angular.forEach($sources, function (s) {
-              // FIXME: probably some issue on IE ?
-              $scope.geonetworkSources.push({
-                uuid: s.textContent,
-                name: $names[i].textContent
+              angular.forEach($sources, function (s) {
+                // FIXME: probably some issue on IE ?
+                $scope.geonetworkSources.push({
+                  uuid: s.textContent,
+                  name: $names[i].textContent
+                });
+                i++;
               });
-              i++;
-            });
-          }, function (response) {
-            // TODO
-          });
+            },
+            function (response) {
+              // TODO
+            }
+          );
       };
 
       // OGCWxS
@@ -718,16 +743,19 @@
           .post("admin.harvester.info?_content_type=json", body, {
             headers: { "Content-type": "application/xml" }
           })
-          .then(function (response) {
-            var data = response.data;
+          .then(
+            function (response) {
+              var data = response.data;
 
-            if (data[0].sets && data[0].formats) {
-              $scope.oaipmhSets = data[0].sets;
-              $scope.oaipmhPrefix = data[0].formats;
-            } else {
-              $scope.oaipmhInfo = $translate.instant("oaipmh-FailedToGetSetsAndPrefix");
-            }
-          }, function (response) {});
+              if (data[0].sets && data[0].formats) {
+                $scope.oaipmhSets = data[0].sets;
+                $scope.oaipmhPrefix = data[0].formats;
+              } else {
+                $scope.oaipmhInfo = $translate.instant("oaipmh-FailedToGetSetsAndPrefix");
+              }
+            },
+            function (response) {}
+          );
       };
 
       // TODO : enable watch only if OAIPMH
@@ -820,9 +848,8 @@
               "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
           }
 
-          $http
-            .get($scope.proxyUrl + encodeURIComponent(url))
-            .then(function (response) {
+          $http.get($scope.proxyUrl + encodeURIComponent(url)).then(
+            function (response) {
               $scope.cswCriteria = [];
 
               var i = 0;
@@ -889,9 +916,11 @@
                   "csw-FailedToParseCapabilities"
                 );
               }
-            }, function (response) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
         }
       };
 

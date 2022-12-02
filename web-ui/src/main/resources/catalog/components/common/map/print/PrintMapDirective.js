@@ -284,17 +284,20 @@
         $scope.config.createURL + "?url=" + encodeURIComponent("../../pdf"),
         spec
       );
-      http.then(function (response) {
-        $scope.printing = false;
-        $scope.downloadUrl(response.data.getURL);
-        //After standard print, download the pdf Legends
-        //if there are any
-        for (var i = 0; i < pdfLegendsToDownload.length; i++) {
-          $window.open(pdfLegendsToDownload[i]);
+      http.then(
+        function (response) {
+          $scope.printing = false;
+          $scope.downloadUrl(response.data.getURL);
+          //After standard print, download the pdf Legends
+          //if there are any
+          for (var i = 0; i < pdfLegendsToDownload.length; i++) {
+            $window.open(pdfLegendsToDownload[i]);
+          }
+        },
+        function (response) {
+          $scope.printing = false;
         }
-      }, function (response) {
-        $scope.printing = false;
-      });
+      );
     };
 
     // Encode ol.Layer to a basic js object

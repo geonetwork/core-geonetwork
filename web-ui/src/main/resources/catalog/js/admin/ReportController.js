@@ -148,17 +148,17 @@
         if ($scope.user.profile == null) return;
 
         if ($scope.user.profile === "Administrator") {
-          $http
-            .get("../api/groups")
-            .then(function (response) {
+          $http.get("../api/groups").then(
+            function (response) {
               $scope.groups = response.data;
-            }, function (response) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
         } else {
-          $http
-            .get("../api/users/" + $scope.user.id + "/groups")
-            .then(function (response) {
+          $http.get("../api/users/" + $scope.user.id + "/groups").then(
+            function (response) {
               // Extract the group property from user groups array
               var groups = _.map(response.data, "group");
 
@@ -166,9 +166,11 @@
               $scope.groups = _.uniq(groups, function (e) {
                 return e.id;
               });
-            }, function (response) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
         }
       }
     }

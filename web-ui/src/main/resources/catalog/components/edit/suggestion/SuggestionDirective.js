@@ -52,9 +52,8 @@
             scope.load = function () {
               scope.loading = true;
               scope.suggestions = [];
-              gnSuggestion
-                .load(scope.$parent.lang || "eng")
-                .then(function (response) {
+              gnSuggestion.load(scope.$parent.lang || "eng").then(
+                function (response) {
                   var data = response.data;
 
                   scope.loading = false;
@@ -67,7 +66,8 @@
                   } else {
                     scope.suggestions = [];
                   }
-                }, function (response) {
+                },
+                function (response) {
                   scope.loading = false;
                   $rootScope.$broadcast("StatusUpdated", {
                     title: $translate.instant("suggestionListError"),
@@ -75,7 +75,8 @@
                     timeout: 0,
                     type: "danger"
                   });
-                });
+                }
+              );
             };
 
             // Reload suggestions list when a directive requires it

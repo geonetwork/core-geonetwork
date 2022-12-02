@@ -343,9 +343,8 @@
           }
 
           function loadUserGroup() {
-            $http
-              .get("../api/users/" + userIdForGroups + "/groups")
-              .then(function (response) {
+            $http.get("../api/users/" + userIdForGroups + "/groups").then(
+              function (response) {
                 var data = response.data;
                 var choices = [];
 
@@ -374,9 +373,11 @@
                   scope.userSearchGroupsTextList = scope.userSearch.groups.join(",");
                 }
                 scope.userSearchGroups.groups = searchGroup;
-              }, function (response) {
+              },
+              function (response) {
                 // TODO
-              });
+              }
+            );
           }
 
           //loadUserGroup();
@@ -532,9 +533,8 @@
 
           scope.tableEl = element;
 
-          $http
-            .get("../api/groups")
-            .then(function (response) {
+          $http.get("../api/groups").then(
+            function (response) {
               scope.groups = response.data;
               scope.bsTableControl = {
                 options: {
@@ -649,9 +649,11 @@
                   ]
                 }
               };
-            }, function (response) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
 
           var findUserSeachById = function (userSearches, searchId) {
             var search = _.find(userSearches, function (search) {

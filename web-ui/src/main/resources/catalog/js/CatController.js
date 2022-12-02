@@ -1706,9 +1706,8 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function (value) {
-          return $http
-            .get("../api/site")
-            .then(function (response) {
+          return $http.get("../api/site").then(
+            function (response) {
               $scope.info = response.data;
               // Add the last time catalog info where updated.
               // That could be useful to append to catalog image URL
@@ -1716,14 +1715,16 @@
               // reloaded.
               $scope.info["system/site/lastUpdate"] = new Date().getTime();
               $scope.initialized = true;
-            }, function (response) {
+            },
+            function (response) {
               $rootScope.$broadcast("StatusUpdated", {
                 id: "catalogueStatus",
                 title: $translate.instant("somethingWrong"),
                 msg: $translate.instant("msgNoCatalogInfo"),
                 type: "danger"
               });
-            });
+            }
+          );
         });
 
         // Utility functions for user

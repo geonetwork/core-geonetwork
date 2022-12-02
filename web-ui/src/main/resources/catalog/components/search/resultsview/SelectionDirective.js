@@ -266,12 +266,12 @@
           element[0] &&
             element[0].addEventListener("click", function (e) {
               var method = element[0].checked ? "select" : "unselect";
-              gnSearchManagerService[method](scope.md.uuid, scope.bucket).then(
-                function (response) {
-                  scope.md.selected = element[0].checked;
-                  scope.results.selectedCount = parseInt(response.data, 10);
-                }
-              );
+              gnSearchManagerService[method](scope.md.uuid, scope.bucket).then(function (
+                response
+              ) {
+                scope.md.selected = element[0].checked;
+                scope.results.selectedCount = parseInt(response.data, 10);
+              });
               e.stopPropagation();
             });
         }
