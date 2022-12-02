@@ -858,7 +858,7 @@
 
 
         <!-- Service information -->
-        <xsl:for-each select="srv:serviceType/gco:ScopedName">
+        <xsl:for-each select="srv:serviceType/gco:ScopedName[string(text())]">
           <serviceType>
             <xsl:value-of select="text()"/>
           </serviceType>
