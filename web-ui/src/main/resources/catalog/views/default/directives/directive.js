@@ -145,8 +145,8 @@
           function loadTasks() {
             return $http
               .get("../api/status/task", { cache: true })
-              .success(function (data) {
-                scope.tasks = data;
+              .then(function (response) {
+                scope.tasks = response.data;
                 scope.getVisibleTasks();
               });
           }
