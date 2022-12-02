@@ -767,14 +767,14 @@ public class CMISConfiguration {
                     if (secondaryType.getId().equals(splitPropertyNames[0]) || secondaryType.getDisplayName().equals(splitPropertyNames[0])) {
                         for (Map.Entry<String, PropertyDefinition<?>> entry : secondaryType.getPropertyDefinitions().entrySet()) {
                             if (entry.getValue().getId().equals(splitPropertyNames[1]) || entry.getValue().getDisplayName().equals(splitPropertyNames[1])) {
-                                String ParsedPropertyName=secondaryType.getId() + CMIS_SECONDARY_PROPERTY_SEPARATOR + entry.getKey();
+                                String parsedPropertyName = secondaryType.getId() + CMIS_SECONDARY_PROPERTY_SEPARATOR + entry.getKey();
                                 // The parsed property equals to the original property then we can simply return null as there were no changes.
-                                if (ParsedPropertyName.equals(propertyName)) {
+                                if (parsedPropertyName.equals(propertyName)) {
                                     return null;
                                 } else {
                                     Log.info(Geonet.RESOURCES,
-                                        String.format("Parsed CMIS secondary properties from '%s' to '%s'", propertyName, ParsedPropertyName));
-                                    return ParsedPropertyName;
+                                        String.format("Parsed CMIS secondary properties from '%s' to '%s'", propertyName, parsedPropertyName));
+                                    return parsedPropertyName;
                                 }
                             }
                         }
