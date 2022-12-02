@@ -222,15 +222,16 @@
           );
           $http
             .get(url, { cache: true })
-            .success(function (data, status) {
+            .then(function (response) {
+              var data = response.data;
+
               if (data != null && data.narrower) {
                 defer.resolve(data);
               } else {
                 // not a top concept
                 defer.reject();
               }
-            })
-            .error(function (data, status) {
+            }, function (response) {
               //                TODO handle error
               defer.reject();
             });
@@ -249,10 +250,9 @@
           );
           $http
             .get(url, { cache: true })
-            .success(function (data, status) {
-              defer.resolve(data);
-            })
-            .error(function (data, status) {
+            .then(function (response) {
+              defer.resolve(response.data);
+            }, function (response) {
               //                TODO handle error
               //                defer.reject(error);
             });
@@ -365,12 +365,11 @@
                   Accept: "application/xml"
                 }
               })
-              .success(function (data, status) {
+              .then(function (response) {
                 // TODO: could be a global constant ?
                 var xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
-                defer.resolve(data.replace(xmlDeclaration, ""));
-              })
-              .error(function (data, status) {
+                defer.resolve(response.data.replace(xmlDeclaration, ""));
+              }, function (response) {
                 //                TODO handle error
                 //                defer.reject(error);
               });
@@ -388,17 +387,16 @@
                   (schema || "iso19139"),
                 { cache: true }
               )
-              .success(function (data, status) {
+              .then(function (response) {
                 var listOfThesaurus = [];
                 //converted and non-converted value
                 // i.e. fra and fre
                 var uiLangs = getUILangs();
-                angular.forEach(data[0], function (k) {
+                angular.forEach(response.data[0], function (k) {
                   listOfThesaurus.push(new Thesaurus(k, uiLangs));
                 });
                 defer.resolve(listOfThesaurus);
-              })
-              .error(function (data, status) {
+              }, function (response) {
                 //                TODO handle error
                 //                defer.reject(error);
               });
@@ -428,10 +426,9 @@
             );
             $http
               .get(url, { cache: true })
-              .success(function (data, status) {
-                defer.resolve(parseKeywordsResponse(data));
-              })
-              .error(function (data, status) {
+              .then(function (response) {
+                defer.resolve(parseKeywordsResponse(response.data));
+              }, function (response) {
                 //                TODO handle error
                 //                defer.reject(error);
               });

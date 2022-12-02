@@ -54,7 +54,9 @@
               scope.suggestions = [];
               gnSuggestion
                 .load(scope.$parent.lang || "eng")
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.loading = false;
                   if (data && !angular.isString(data)) {
                     scope.suggestions = data;
@@ -65,12 +67,11 @@
                   } else {
                     scope.suggestions = [];
                   }
-                })
-                .error(function (error) {
+                }, function (response) {
                   scope.loading = false;
                   $rootScope.$broadcast("StatusUpdated", {
                     title: $translate.instant("suggestionListError"),
-                    error: error,
+                    error: response.data,
                     timeout: 0,
                     type: "danger"
                   });
@@ -116,7 +117,9 @@
           link: function (scope, element, attrs) {
             scope.sugg = undefined;
             scope.gnSuggestion = gnSuggestion;
-            gnSuggestion.load(scope.$parent.lang || "eng").success(function (data) {
+            gnSuggestion.load(scope.$parent.lang || "eng").then(function (response) {
+              var data = response.data;
+
               if (data && !angular.isString(data)) {
                 scope.suggestions = data;
                 for (var i = 0; i < data.length; i++) {

@@ -94,7 +94,7 @@
       $scope.saveCategory = function () {
         $http
           .put("../api/tags/" + $scope.categorySelected.id, $scope.categorySelected)
-          .success(function (data) {
+          .then(function (response) {
             $scope.unselectCategory();
             loadCategories();
             $rootScope.$broadcast("StatusUpdated", {
@@ -102,11 +102,10 @@
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("categoryUpdateError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -132,8 +131,8 @@
       };
 
       function loadCategories() {
-        $http.get("../api/tags").success(function (data) {
-          $scope.categories = data;
+        $http.get("../api/tags").then(function (response) {
+          $scope.categories = response.data;
         });
       }
       loadCategories();

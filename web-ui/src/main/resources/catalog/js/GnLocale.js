@@ -137,20 +137,18 @@
             },
             cache: true
           })
-            .success(function (data) {
-              deferredInst.resolve(data);
-            })
-            .error(function () {
+            .then(function (response) {
+              deferredInst.resolve(response.data);
+            },function () {
               // Load english locale file if not available
               var url = buildUrl(options.prefix, "en", value, options.suffix);
               $http({
                 method: "GET",
                 url: url
               })
-                .success(function (data) {
-                  deferredInst.resolve(data);
-                })
-                .error(function () {
+                .then(function (response) {
+                  deferredInst.resolve(response.data);
+                }, function () {
                   deferredInst.resolve({});
                 });
             });

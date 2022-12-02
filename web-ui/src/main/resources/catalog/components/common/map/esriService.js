@@ -194,7 +194,9 @@
               cache: true,
               timeout: timeout
             })
-            .success(function (data, status, headers, config) {
+            .then(function (response) {
+              var data = response.data;
+
               // Check if the response contains a mapName property,
               // to verify it's an ESRI Rest Capabilities document.
               if (!!data.mapName) {
@@ -202,8 +204,7 @@
               } else {
                 defer.reject($translate.instant("esriCapabilitiesNoValid"));
               }
-            })
-            .error(function (data, status, headers, config) {
+            }, function (response) {
               defer.reject($translate.instant("esriCapabilitiesFailed"));
             });
 

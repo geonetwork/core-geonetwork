@@ -542,11 +542,10 @@
         var defer = $q.defer();
         $http
           .put("../api/records/" + metadataId + "/group", groupId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
+          .then(function (response) {
+            defer.resolve(response.data);
+          }, function (response) {
+            defer.reject(response.data);
           });
         return defer.promise;
       };
@@ -555,11 +554,10 @@
         var defer = $q.defer();
         $http
           .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
+          .then(function (response) {
+            defer.resolve(response.data);
+          }, function (response) {
+            defer.reject(response.data);
           });
         return defer.promise;
       };
@@ -568,11 +566,10 @@
         var defer = $q.defer();
         $http
           .get("md.versioning.start?id=" + metadataId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
+          .then(function (response) {
+            defer.resolve(response.data);
+          }, function (response) {
+            defer.reject(response.data);
           });
         return defer.promise;
       };

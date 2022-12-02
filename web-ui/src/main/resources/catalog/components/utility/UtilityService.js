@@ -505,8 +505,8 @@
               },
               cache: true
             })
-            .success(function (response) {
-              var data = response.region;
+            .then(function (response) {
+              var data = response.data.region;
 
               var defaultLang = gnGlobalSettings.gnCfg.langDetector.default;
 
@@ -533,7 +533,9 @@
         loadList: function () {
           if (!listDefer) {
             listDefer = $q.defer();
-            $http.get("../api/regions/types").success(function (data) {
+            $http.get("../api/regions/types").then(function (response) {
+              var data = response.data;
+
               angular.forEach(data, function (value, key) {
                 if (value.id) {
                   var tokens = value.id.split("#"),

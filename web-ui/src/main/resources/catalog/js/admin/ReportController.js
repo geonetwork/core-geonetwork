@@ -150,25 +150,23 @@
         if ($scope.user.profile === "Administrator") {
           $http
             .get("../api/groups")
-            .success(function (data) {
-              $scope.groups = data;
-            })
-            .error(function (data) {
+            .then(function (response) {
+              $scope.groups = response.data;
+            }, function (response) {
               // TODO
             });
         } else {
           $http
             .get("../api/users/" + $scope.user.id + "/groups")
-            .success(function (data) {
+            .then(function (response) {
               // Extract the group property from user groups array
-              var groups = _.map(data, "group");
+              var groups = _.map(response.data, "group");
 
               // Get unique groups
               $scope.groups = _.uniq(groups, function (e) {
                 return e.id;
               });
-            })
-            .error(function (data) {
+            }, function (response) {
               // TODO
             });
         }

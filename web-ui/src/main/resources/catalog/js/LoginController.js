@@ -164,15 +164,14 @@
               "Accept-Language": gnLangs.current
             }
           })
-          .success(function (data) {
+          .then(function (response) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0
             });
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -193,17 +192,16 @@
               }
             }
           )
-          .success(function (data) {
+          .then(function (response) {
             $scope.sendPassword = false;
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0
             });
             $scope.usernameToRemind = null;
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -227,15 +225,14 @@
               }
             }
           )
-          .success(function (data) {
+          .then(function (response) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0
             });
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: data,
+              title: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -243,7 +240,7 @@
       };
 
       $scope.nodeChangeRedirect = function (redirectTo) {
-        $http.get("../../signout").success(function (data) {
+        $http.get("../../signout").then(function (response) {
           window.location.href = redirectTo;
         });
       };

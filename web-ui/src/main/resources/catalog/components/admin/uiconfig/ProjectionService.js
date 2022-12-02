@@ -133,21 +133,20 @@
                   cache: true,
                   timeout: REQUEST_TIMEOUT
                 })
-                .success(function (data) {
+                .then(function (response) {
                   try {
-                    defer.resolve(parseProjDef(data));
+                    defer.resolve(parseProjDef(response.data));
                   } catch (e) {
                     console.error(e);
                     defer.reject($translate.instant("failedToParseProjDefinition"));
                   }
-                })
-                .error(function (data, status) {
+                }, function (response) {
                   defer.reject(
                     $translate.instant(
-                      status === 401
+                      response.status === 401
                         ? "checkProjectionUrlUnauthorized"
                         : "checkProjectionUrl",
-                      { url: url, status: status }
+                      { url: url, status: response.status }
                     )
                   );
                 });

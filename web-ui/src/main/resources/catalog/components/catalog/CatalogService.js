@@ -223,8 +223,8 @@
             isChild,
             metadataUuid,
             hasCategoryOfSource
-          ).success(function (id) {
-            var path = "/metadata/" + id;
+          ).then(function (response) {
+            var path = "/metadata/" + response.id;
             if (tab) {
               path += "/tab/" + tab;
             }

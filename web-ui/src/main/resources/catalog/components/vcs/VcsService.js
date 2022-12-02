@@ -48,11 +48,10 @@
         var defer = $q.defer();
         $http
           .get(url)
-          .success(function (data, status) {
-            defer.resolve(format(data));
-          })
-          .error(function (data, status) {
-            defer.reject(data);
+          .then(function (response) {
+            defer.resolve(format(response.data));
+          }, function (response) {
+            defer.reject(response.data);
           });
         return defer.promise;
       };

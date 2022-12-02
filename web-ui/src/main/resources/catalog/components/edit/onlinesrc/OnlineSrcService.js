@@ -201,13 +201,12 @@
         return gnEditor.save(false, true).then(function () {
           gnHttp
             .callService(service, params)
-            .success(function () {
+            .then(function (response) {
               refreshForm(scope);
-            })
-            .error(function (error) {
+            }, function (response) {
               $rootScope.$broadcast("StatusUpdated", {
                 title: $translate.instant("runServiceError"),
-                error: error,
+                error: response.data,
                 timeout: 0,
                 type: "danger"
               });

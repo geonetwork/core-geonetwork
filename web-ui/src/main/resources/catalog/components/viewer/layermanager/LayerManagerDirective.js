@@ -210,7 +210,7 @@
                     };
                     legendPromise = $http
                       .get(urlGetLegend, requestOptions)
-                      .success(function (data, status, headers, config) {
+                      .then(function (response) {
                         var contentType = headers("content-type");
                         if (contentType.indexOf("image") === 0) {
                           // encode data to base 64 url
@@ -220,13 +220,12 @@
                             layer.set("legend", fileReader.result);
                             layer.set("currentStyle", style);
                           };
-                          fileReader.readAsDataURL(data);
+                          fileReader.readAsDataURL(response.data);
                         } else {
                           console.log("Error getting legend image (" + contentType + ")");
                           console.log(this.responseText);
                         }
-                      })
-                      .error(function (data, status, headers, config) {
+                      }, function (response) {
                         console.log("Error getting legend image");
                         console.log(this.responseText);
                       });

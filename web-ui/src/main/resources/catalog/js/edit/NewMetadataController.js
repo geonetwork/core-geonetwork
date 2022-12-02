@@ -435,8 +435,8 @@
       function loadMetadataIdentifierTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get("../api/identifiers").success(function (data) {
-          $scope.mdIdentifierTemplates = data;
+        $http.get("../api/identifiers").then(function (response) {
+          $scope.mdIdentifierTemplates = response.data;
         });
       }
 

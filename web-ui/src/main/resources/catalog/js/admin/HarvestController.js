@@ -93,15 +93,14 @@
         $scope.harvesters = null;
         return $http
           .get("admin.harvester.list?_content_type=json&id=-1")
-          .success(function (data) {
+          .then(function (response) {
             if (data != "null") {
-              $scope.harvesters = data;
+              $scope.harvesters = response.data;
               gnUtilityService.parseBoolean($scope.harvesters);
               pollHarvesterStatus();
             }
             $scope.isLoadingHarvester = false;
-          })
-          .error(function (data) {
+          }, function (response) {
             // TODO
             $scope.isLoadingHarvester = false;
           });
@@ -134,7 +133,9 @@
             "admin.harvester.list?onlyInfo=true&_content_type=json&id=" +
               runningHarvesters.join("&id=")
           )
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             isPolling = false;
             if (data != "null") {
               if (!angular.isArray(data)) {
@@ -159,8 +160,7 @@
 
               setTimeout(pollHarvesterStatus, 5000);
             }
-          })
-          .error(function (data) {
+          }, function (response) {
             isPolling = false;
           });
       };

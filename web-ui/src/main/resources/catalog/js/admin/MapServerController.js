@@ -45,8 +45,8 @@
 
       function loadMapservers() {
         $scope.mapserverSelected = null;
-        $http.get("../api/mapservers").success(function (data) {
-          $scope.mapservers = data;
+        $http.get("../api/mapservers").then(function (response) {
+          $scope.mapservers = response.data;
         });
       }
 
@@ -85,18 +85,17 @@
               ($scope.isUpdate ? "/" + $scope.mapserverSelected.id : ""),
             $scope.mapserverSelected
           )
-          .success(function (data) {
+          .then(function (response) {
             loadMapservers();
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("mapserverUpdated"),
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("mapserverUpdateError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -121,11 +120,10 @@
           .post("../api/mapservers/" + $scope.mapserverSelected.id + "/auth", data, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .success(function (data) {
+          .then(function (response) {
             $scope.resetPassword = null;
             $("#passwordResetModal").modal("hide");
-          })
-          .error(function (data) {
+          }, function (response) {
             // TODO
           });
       };
@@ -137,13 +135,12 @@
       $scope.confirmDeleteMapserverConfig = function () {
         $http
           .delete("../api/mapservers/" + $scope.mapserverSelected.id)
-          .success(function (data) {
+          .then(function (response) {
             loadMapservers();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("mapserverDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });

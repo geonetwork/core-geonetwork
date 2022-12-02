@@ -210,8 +210,8 @@
                 "&pLang=" +
                 langsList.join(",")
             )
-            .success(function (data) {
-              $scope.keywords = data;
+            .then(function (response) {
+              $scope.keywords = response.data;
               var idTokens = $scope.thesaurusSelected.key.split(".");
               $http
                 .post("../api/search/records/_search", {
@@ -368,15 +368,14 @@
           .post("thesaurus.update", xml, {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
+          .then(function (response) {
             $scope.thesaurusSelected = null;
             $("#thesaurusModal").modal("hide");
             loadThesaurus();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusCreationError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -472,16 +471,15 @@
       $scope.confirmDeleteThesaurus = function () {
         $http
           .delete("../api/registries/vocabularies/" + $scope.delEntryId)
-          .success(function (data) {
+          .then(function (response) {
             $scope.thesaurusSelected = null;
             $scope.delEntryId = null;
             loadThesaurus();
-          })
-          .error(function (data) {
+          }, function (response) {
             $scope.delEntryId = null;
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -501,8 +499,8 @@
               "&activated=" +
               ($scope.thesaurusSelected.activated == "y" ? "n" : "y")
           )
-          .success(function (data) {
-            $scope.thesaurusSelected.activated = data.activated;
+          .then(function (response) {
+            $scope.thesaurusSelected.activated = response.data.activated;
           });
       };
 
@@ -548,8 +546,8 @@
                 "&id=" +
                 encodeURIComponent(k.uri)
             )
-            .success(function (data) {
-              $scope.keywordSelectedRelation[value] = data.descKeys;
+            .then(function (response) {
+              $scope.keywordSelectedRelation[value] = response.data.descKeys;
             });
         });
       };
@@ -692,8 +690,8 @@
             buildKeywordXML($scope.keywordSelected),
             { headers: { "Content-type": "application/xml" } }
           )
-          .success(function (data) {
-            var response = data[0];
+          .then(function (response) {
+            var response = response.data[0];
             if (response && response["@message"]) {
               var statusConfig = {
                 title: $translate.instant("keywordCreationError"),
@@ -708,11 +706,10 @@
               searchThesaurusKeyword();
               creatingKeyword = false;
             }
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("keywordCreationError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -727,16 +724,15 @@
           .post("thesaurus.keyword.update", buildKeywordXML($scope.keywordSelected), {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
+          .then(function (response) {
             $scope.keywordSelected = null;
             $("#keywordModal").modal("hide");
             searchThesaurusKeyword();
             selectedKeywordOldId = null;
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("keywordUpdateError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -759,13 +755,12 @@
               "&id=" +
               encodeURIComponent(k.uri)
           )
-          .success(function (data) {
+          .then(function (response) {
             searchThesaurusKeyword();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("keywordDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -844,13 +839,12 @@
       function loadThesaurus() {
         $http
           .get("thesaurus?_content_type=json")
-          .success(function (data) {
-            $scope.thesaurus = data[0];
-          })
-          .error(function (data) {
+          .then(function (response) {
+            $scope.thesaurus = response.data[0];
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusListError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });

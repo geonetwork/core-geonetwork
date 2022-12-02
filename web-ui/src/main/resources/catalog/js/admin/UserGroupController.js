@@ -142,10 +142,10 @@
       $http.defaults.headers.get["Cache-Control"] = "no-cache";
       $http.defaults.headers.get["Pragma"] = "no-cache";
 
-      $http.get("../api/tags").success(function (data) {
+      $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(data);
+        $scope.categories = [nullTag].concat(response.data);
       });
 
       function loadGroups() {
@@ -155,18 +155,13 @@
 
         $http
           .get("../api/groups" + profile)
-          .success(function (data) {
-            $scope.groups = data;
+          .then(function (response) {
+            $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
             });
             $scope.isLoadingGroups = false;
-          })
-          .error(function (data) {
-            // TODO
-            $scope.isLoadingGroups = false;
-          })
-          .then(function () {
+
             // Search if requested group in location is
             // in the list and trigger selection.
             // TODO: change route path when selected (issue - controller is
@@ -181,6 +176,9 @@
                 }
               });
             }
+          }, function (response) {
+            // TODO
+            $scope.isLoadingGroups = false;
           });
       }
 
@@ -188,15 +186,10 @@
         $scope.isLoadingUsers = true;
         $http
           .get("../api/users")
-          .success(function (data) {
-            $scope.users = data;
+          .then(function (response) {
+            $scope.users = response.data;
             $scope.isLoadingUsers = false;
-          })
-          .error(function (data) {
-            // TODO
-            $scope.isLoadingUsers = false;
-          })
-          .then(function () {
+
             // Search if requested user in location is
             // in the list and trigger user selection.
             if ($routeParams.userOrGroup) {
@@ -209,6 +202,9 @@
                 }
               });
             }
+          }, function (response) {
+            // TODO
+            $scope.isLoadingUsers = false;
           });
       }
 
@@ -220,10 +216,9 @@
       function loadGroupUsers(groupId) {
         $http
           .get("../api/groups/" + groupId + "/users")
-          .success(function (data) {
-            $scope.groupusers = data;
-          })
-          .error(function (data) {
+          .then(function (response) {
+            $scope.groupusers = response.data;
+          }, function (response) {
             $scope.groupusers = [];
           });
       }
@@ -293,7 +288,9 @@
 
         $http
           .get("../api/users/" + u.id)
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             $scope.userSelected = data;
             $scope.userIsAdmin = data.profile === "Administrator";
 
@@ -302,14 +299,12 @@
             // Load user group and then select user
             $http
               .get("../api/users/" + u.id + "/groups")
-              .success(function (groups) {
-                $scope.userGroups = groups;
-              })
-              .error(function (data) {
+              .then(function (response) {
+                $scope.userGroups = response.groups;
+              }, function (response) {
                 // TODO
               });
-          })
-          .error(function (data) {
+          }, function (response) {
             // TODO
           });
 
@@ -349,15 +344,14 @@
             "../api/users/" + $scope.userSelected.id + "/actions/forget-password",
             params
           )
-          .success(function (data) {
+          .then(function (response) {
             $scope.resetPassword1 = null;
             $scope.resetPassword2 = null;
             $("#passwordResetModal").modal("hide");
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("resetPasswordError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -615,7 +609,7 @@
       $scope.confirmRemoveUser = function () {
         $http
           .delete("../api/users/" + $scope.userSelected.id)
-          .success(function (data) {
+          .then(function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("userRemoved"),
               timeout: 2,
@@ -624,11 +618,10 @@
 
             $scope.unselectUser();
             loadUsers();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("userDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -710,8 +703,8 @@
               ($scope.groupSelected.id != -99 ? "/" + $scope.groupSelected.id : ""),
             $scope.groupSelected
           )
-          .success(createOrModifyGroupSuccess)
-          .error(createOrModifyGroupError);
+          .then(createOrModifyGroupSuccess,
+            createOrModifyGroupError);
       };
 
       $scope.deleteGroupLogo = function () {
@@ -757,7 +750,7 @@
       $scope.confirmRemoveGroup = function () {
         $http
           .delete("../api/groups/" + $scope.groupSelected.id + "?force=true")
-          .success(function (data) {
+          .then(function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("groupRemoved"),
               timeout: 2,
@@ -766,11 +759,10 @@
 
             $scope.unselectGroup();
             loadGroups();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("groupDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });

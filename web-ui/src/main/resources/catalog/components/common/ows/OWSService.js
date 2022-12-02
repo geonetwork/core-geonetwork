@@ -293,20 +293,19 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .success(function (data) {
+                  .then(function (response) {
                     try {
-                      defer.resolve(displayFileContent(data, withGroupLayer, url));
+                      defer.resolve(displayFileContent(response.data, withGroupLayer, url));
                     } catch (e) {
                       defer.reject($translate.instant("failedToParseCapabilities"));
                     }
-                  })
-                  .error(function (data, status) {
+                  }, function (response) {
                     defer.reject(
                       $translate.instant(
-                        status === 401
+                        response.status === 401
                           ? "checkCapabilityUrlUnauthorized"
                           : "checkCapabilityUrl",
-                        { url: url, status: status }
+                        { url: url, status: response.status }
                       )
                     );
                   });
@@ -331,15 +330,16 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .success(function (data, status, headers, config) {
+                  .then(function (response) {
+                    var data = response.data;
+
                     if (data) {
                       defer.resolve(parseWMTSCapabilities(data));
                     } else {
                       defer.reject();
                     }
-                  })
-                  .error(function (data, status, headers, config) {
-                    defer.reject(status);
+                  }, function (response) {
+                    defer.reject(response.status);
                   });
               }
             }
@@ -363,8 +363,8 @@
                     cache: true,
                     timeout: timeout
                   })
-                  .success(function (data, status, headers, config) {
-                    var xfsCap = parseWFSCapabilities(data);
+                  .then(function (response) {
+                    var xfsCap = parseWFSCapabilities(response.data);
 
                     if (!xfsCap || xfsCap.exception != undefined) {
                       defer.reject({
@@ -374,8 +374,7 @@
                     } else {
                       defer.resolve(xfsCap);
                     }
-                  })
-                  .error(function (data, status, headers, config) {
+                  }, function (response) {
                     defer.reject($translate.instant("wfsGetCapabilitiesFailed"));
                   });
               }
@@ -399,8 +398,8 @@
                   .get(url, {
                     cache: true
                   })
-                  .success(function (data, status, headers, config) {
-                    var xfsCap = parseWCSCapabilities(data);
+                  .then(function (response) {
+                    var xfsCap = parseWCSCapabilities(response.data);
 
                     if (!xfsCap || xfsCap.exception != undefined) {
                       defer.reject({
@@ -410,9 +409,8 @@
                     } else {
                       defer.resolve(xfsCap);
                     }
-                  })
-                  .error(function (data, status, headers, config) {
-                    defer.reject(status);
+                  }, function (response) {
+                    defer.reject(response.status);
                   });
               }
             }

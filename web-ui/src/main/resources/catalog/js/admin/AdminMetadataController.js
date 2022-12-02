@@ -113,8 +113,8 @@
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       function loadSchemas() {
-        $http.get("../api/standards").success(function (data) {
-          $scope.schemas = data;
+        $http.get("../api/standards").then(function (response) {
+          $scope.schemas = response.data;
 
           // Trigger load action according to route params
           launchActions();
@@ -186,11 +186,10 @@
           .put(
             "../api/records/templates?schema=" + $scope.selectedSchemas.join("&schema=")
           )
-          .success(function (data) {
-            $scope.loadTplReport = data;
+          .then(function (response) {
+            $scope.loadTplReport = response.data;
             $scope.tplLoadRunning = false;
-          })
-          .error(function (data) {
+          }, function (response) {
             $scope.tplLoadRunning = false;
           });
       };
@@ -199,11 +198,10 @@
         $scope.sampleLoadRunning = true;
         $http
           .put("../api/records/samples?schema=" + $scope.selectedSchemas.join("&schema="))
-          .success(function (data) {
-            $scope.loadReport = data;
+          .then(function (response) {
+            $scope.loadReport = response.data;
             $scope.sampleLoadRunning = false;
-          })
-          .error(function (data) {
+          }, function (response) {
             $scope.sampleLoadRunning = false;
           });
       };
@@ -223,12 +221,13 @@
         $scope.formatters = [];
         $http
           .get("../api/formatters")
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             if (data !== "null") {
               $scope.formatters = data.formatters;
             }
-          })
-          .error(function (data) {
+          }, function (response) {
             // TODO
           });
       };
@@ -263,7 +262,9 @@
         var url = "../api/formatters/" + f.schema + "/" + f.id + "/files";
         $http
           .get(url)
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             if (data !== "null") {
               // Format files
               angular.forEach(data.file ? data.file : data, function (file) {
@@ -285,8 +286,7 @@
               });
               $scope.selectedFile = $scope.formatterFiles[0];
             }
-          })
-          .error(function (data) {
+          }, function (response) {
             // TODO
           });
       };
@@ -305,14 +305,13 @@
         var url = "../api/formatters/" + f.schema + "/" + f.id;
         $http
           .delete(url)
-          .success(function (data) {
+          .then(function (response) {
             $scope.formatterSelected = null;
             loadFormatter();
-          })
-          .error(function (data) {
+          }, function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("formatterRemovalError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
@@ -330,8 +329,8 @@
               "/files/" +
               $scope.selectedFile["@path"],
             method: "GET"
-          }).success(function (fileContent) {
-            $scope.formatterFile = fileContent;
+          }).then(function (response) {
+            $scope.formatterFile = response.data;
           });
         }
       });

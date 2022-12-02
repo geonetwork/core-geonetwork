@@ -128,10 +128,9 @@
             var url = getTopicCategoriesSearchUrl(schema);
             $http
               .get(url, { cache: true })
-              .success(function (data) {
-                defer.resolve(parseTopicCategoriesResponse(data));
-              })
-              .error(function (data, status) {});
+              .then(function (response) {
+                defer.resolve(parseTopicCategoriesResponse(response.data));
+              }, function (response) {});
             return defer.promise;
           },
 
