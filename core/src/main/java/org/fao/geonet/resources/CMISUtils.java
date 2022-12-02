@@ -139,7 +139,17 @@ public class CMISUtils {
                 }
             });
         } catch (ExecutionException | UncheckedExecutionException e) {
-            throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
+            if (e.getCause() instanceof CmisObjectNotFoundException) {
+                throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
+            } else if (e.getCause() instanceof CmisPermissionDeniedException) {
+                throw new CmisPermissionDeniedException("Error getting folder resource from cache: " + folderKey, e);
+            } else if (e.getCause() instanceof CmisConstraintException) {
+                throw new CmisConstraintException("Error getting folder resource from cache: " + folderKey, e);
+            } else {
+                Log.error(Geonet.RESOURCES, String.format(
+                    "\"Error getting resource from cache: '%s'.", folderKey), e);
+                throw new RuntimeException(e.getCause());
+            }
         }
         if (refresh && !foundWithoutCache[0]) {
             try {

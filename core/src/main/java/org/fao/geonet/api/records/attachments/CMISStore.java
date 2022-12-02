@@ -275,6 +275,7 @@ public class CMISStore extends AbstractStore {
             } catch (Exception e) {
                 Log.error(Geonet.RESOURCES,
                     String.format("Unable to update CMIS secondary property on metadata resource '%s' for metadata '%s'.", key, metadataUuid), e);
+                throw e;
             }
         }
 
