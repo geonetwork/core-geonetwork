@@ -759,9 +759,9 @@ public class MetadataUtils {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Backup record. Error: " + e.getMessage(), e);
+            throw new RuntimeException("Backup record. Error backing up record metadata.getUuid(): " + e.getMessage(), e);
         } finally {
-            if (file == null) {
+            if (file != null) {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
