@@ -52,6 +52,7 @@ public class CatalogConfiguration {
     private final Set<String> _isoQueryables = new HashSet<String>();
     private final Set<String> _additionalQueryables = new HashSet<String>();
     private final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
+
     private String defaultSortField = "_score";
     private String defaultSortOrder = "DESC";
     private final Set<String> _getRecordsOutputFormat = new HashSet<String>();
@@ -416,8 +417,16 @@ public class CatalogConfiguration {
         return _increasePopularity;
     }
 
+    public void setDefaultSortField(String defaultSortField) {
+        this.defaultSortField = defaultSortField;
+    }
+
     public String getDefaultSortField() {
         return defaultSortField;
+    }
+
+    public void setDefaultSortOrder(String defaultSortOrder) {
+        this.defaultSortOrder = defaultSortOrder;
     }
 
     public String getDefaultSortOrder() {
