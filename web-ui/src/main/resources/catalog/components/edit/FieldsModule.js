@@ -43,6 +43,7 @@
   goog.require("gn_field_upload_directive");
   goog.require("gn_multientry_combiner");
   goog.require("gn_multientry_combiner_onlineresourcesdescription");
+  goog.require("gn_uuid_template_builder_directive");
 
   angular.module("gn_fields", [
     "gn_fields_directive",
@@ -63,6 +64,7 @@
     "gn_anchor_switcher_directive",
     "gn_field_upload_directive",
     "gn_multientry_combiner",
-    "gn_multientry_combiner_onlineresourcesdescription"
+    "gn_multientry_combiner_onlineresourcesdescription",
+    "gn_uuid_template_builder_directive"
   ]);
 })();

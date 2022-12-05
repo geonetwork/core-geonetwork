@@ -1,3 +1,4 @@
+
 {
   "creating-metadata": "user-guide/describing-information/creating-metadata.html",
   "implementing-a-schema-plugin": "customizing-application/implementing-a-schema-plugin.html",
@@ -30,5 +31,6 @@
   "managing-directories": "administrator-guide/managing-classification-systems/managing-directories.html",
   "installing-index": "install-guide/installing-index.html",
   "maintainer-guide-home": "maintainer-guide/index.html",
-  "standards-home": "annexes/standards/index.html"
+  "standards-home": "annexes/standards/index.html",
+  "managing-identifier-template": "administrator-guide/managing-metadata-standards/metadata-identifier.html"
 }
