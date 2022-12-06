@@ -162,7 +162,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
-          <xsl:value-of select="$$doiId"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
