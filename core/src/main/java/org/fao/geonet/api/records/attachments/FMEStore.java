@@ -30,11 +30,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.CharStreams;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -266,12 +270,16 @@ public class FMEStore extends AbstractStore {
             + CREATE_DIRECTORIES_TRUE_OVERWRITE_TRUE;
         HttpPost httpPost = new HttpPost(url);
         addFmeTokenHeader(httpPost);
-        httpPost.setHeader("Content-Disposition",
+        httpPost.addHeader("Content-Disposition",
             String.format("attachment; filename=\"%s\"", filename));
-        httpPost.setEntity(new InputStreamEntity(is));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addBinaryBody("file", is, ContentType.APPLICATION_OCTET_STREAM, filename);
+        HttpEntity entity = builder.build();
+        httpPost.setEntity(entity);
 
         try (ClientHttpResponse httpResponse = httpRequestFactory.execute(httpPost)) {
-            if (httpResponse.getRawStatusCode() == 201) {
+            if (httpResponse.getRawStatusCode() == 200) {
                 return getResourceDescription(context, metadataUuid, visibility, filename, approved);
             } else {
                 throw new ResourceNotFoundException(
