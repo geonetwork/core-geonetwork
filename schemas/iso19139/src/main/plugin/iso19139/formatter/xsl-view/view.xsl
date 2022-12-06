@@ -1055,24 +1055,21 @@
 
   <!-- ########################## -->
   <!-- Render values for text ... -->
-   <xsl:template mode="render-value"
+  <xsl:template mode="render-value"
                 match="*[gco:CharacterString]">
-
      <xsl:variable name="txt">
        <xsl:apply-templates mode="localised" select=".">
          <xsl:with-param name="langId" select="$langId"/>
        </xsl:apply-templates>
      </xsl:variable>
      <span>
-      <xsl:choose>
-        <xsl:when test="name() = 'gmd:parentIdentifier'">
-          <a href="{$nodeUrl}api/records/{./gco:CharacterString}">
-            <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
-            <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
-          </a>
-        </xsl:when>
-
-      </xsl:choose><xsl:comment select="name()"/>
+      <xsl:if test="name() = 'gmd:parentIdentifier'">
+        <a href="{$nodeUrl}api/records/{./gco:CharacterString}">
+          <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
+          <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
+        </a>
+      </xsl:if>
+       <xsl:comment select="name()"/>
       <xsl:call-template name="addLineBreaksAndHyperlinks">
         <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
@@ -1081,25 +1078,17 @@
 
   <xsl:template mode="render-value-no-breaklines"
                 match="*[gco:CharacterString]">
-
-    <xsl:variable name="txtNonNormalized">
+    <span>
+      <xsl:if test="name() = 'gmd:parentIdentifier'">
+        <a href="{$nodeUrl}api/records/{./gco:CharacterString}">
+          <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
+          <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
+        </a>
+      </xsl:if>
+      <xsl:comment select="name()"/>
       <xsl:apply-templates mode="localised" select=".">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:apply-templates>
-    </xsl:variable>
-
-    <xsl:variable name="txt" select="normalize-space($txtNonNormalized)" />
-    <span>
-      <xsl:choose>
-        <xsl:when test="name() = 'gmd:parentIdentifier'">
-          <a href="{$nodeUrl}api/records/{./gco:CharacterString}">
-            <i class="fa fa-fw fa-link"><xsl:comment select="'link'"/></i>
-            <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
-          </a>
-        </xsl:when>
-
-      </xsl:choose><xsl:comment select="name()"/>
-      <xsl:value-of select="$txt" />
     </span>
   </xsl:template>
 
