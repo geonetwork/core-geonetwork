@@ -33,7 +33,7 @@
     var downloadTypes = panierEnabled ? allDownloadTypes : directDownloadTypes;
 
     var downloadTypesWithoutWxS = downloadTypes.filter(function (protocol) {
-      return protocol !== 'OGC:WFS' && protocol !== 'OGC:WCS';
+      return protocol !== '#OGC:WFS' && protocol !== '#OGC:WCS';
     });
 
     var layerTypes = gnGlobalSettings.gnCfg.mods.search.linkTypes.layers;
