@@ -389,11 +389,11 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
 
 
-        Element deleteNotExistinElement = new Element(EditLib.SpecialUpdateTags.DELETE);
+        Element deleteNotExistingElement = new Element(EditLib.SpecialUpdateTags.DELETE);
         final String xpathWithNoMatch = "gmd:referenceSystemInfo[*/referenceSystemIdentifier/*/gmd:code/*/text() = 'XYZ']";
         new EditLib(_schemaManager)
             .addElementOrFragmentFromXpath(metadataElement, schema,
-                xpathWithNoMatch, new AddElemValue(deleteNotExistinElement), true);
+                xpathWithNoMatch, new AddElemValue(deleteNotExistingElement), true);
 
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
 
