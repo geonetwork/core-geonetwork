@@ -39,11 +39,11 @@ public class SimpleOidcUserFactory {
     OIDCRoleProcessor oidcRoleProcessor;
 
 
-    public SimpleOidcUser create(OidcIdToken idToken) {
-        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken);
+    public SimpleOidcUser create(OidcIdToken idToken, Map attributes) throws Exception {
+        return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, idToken, attributes);
     }
 
-    public SimpleOidcUser create(Map attributes) {
+    public SimpleOidcUser create(Map attributes) throws Exception {
         return new SimpleOidcUser(oidcConfiguration, oidcRoleProcessor, attributes);
     }
 }

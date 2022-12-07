@@ -840,13 +840,13 @@
     <entry>
       <code>track</code>
       <label>Piste</label>
-      <description>Dans la direction de la ...</description>
+      <description>Dans la direction de la...</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>crossTrack</code>
       <label>Profil de piste</label>
-      <description>Perpendiculaire ...</description>
+      <description>Perpendiculaire...</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
@@ -1633,7 +1633,7 @@
     <entry>
       <code>farming</code>
       <label>Agriculture</label>
-      <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
+      <description>Élevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
@@ -1723,7 +1723,7 @@
     <entry>
       <code>society</code>
       <label>Société</label>
-      <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
+      <description>Caractéristiques des sociétés et des cultures. Exemples : lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
@@ -1735,7 +1735,7 @@
     <entry>
       <code>transportation</code>
       <label>Infrastructures de transport</label>
-      <description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
+      <description>Moyens de transports des personnes et des biens. Exemples : routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>

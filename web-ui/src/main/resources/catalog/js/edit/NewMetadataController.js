@@ -117,7 +117,7 @@
               terms: {
                 field: "resourceType",
                 exclude: ["map/static", "theme", "place"],
-                missing: "N/A"
+                missing: "other"
               }
             }
           };

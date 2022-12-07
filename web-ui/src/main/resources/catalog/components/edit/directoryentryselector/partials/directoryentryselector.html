@@ -1,22 +1,6 @@
 <span data-ng-search-form="">
   <!-- Form input mode -->
   <div class="input-group width-100" data-ng-hide="insertAsTags">
-    <div class="input-group-btn">
-      <span data-ng-show="templateAddAction" data-ng-transclude=""></span>
-
-      <button
-        class="btn btn-default"
-        type="button"
-        data-ng-show="popupAction"
-        data-ng-click="openSelector()"
-      >
-        <i class="fa fa-search" />&nbsp;
-        <span data-ng-hide="searchAction">
-          {{('searchA' + templateType) | translate}}
-        </span>
-      </button>
-    </div>
-
     <input
       type="text"
       class="form-control"
@@ -29,11 +13,17 @@
       autocomplete="false"
     />
 
+    <span
+      class="input-group-addon"
+      ng-show="entryFound === false
+                   || (entryFound && searchResults.records.length === 0 && !searching)"
+      data-translate=""
+      >noRecordFound</span
+    >
+
     <!-- spinner while searching -->
     <div ng-show="searching" class="list-group tt-menu gn-autocomplete-list text-center">
-      <br />
       <i class="fa fa-spinner fa-spin" />
-      <br /><br />
     </div>
 
     <!-- The autocomplete list -->
@@ -70,7 +60,7 @@
             gn-popover
             class="pull-right"
             gn-popover-dismiss=".content"
-            data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
+            data-ng-if="::insertAsXlink && hasDynamicVariable"
             title="{{'addContactAsLink-help' | translate}}"
           >
             <button gn-popover-anchor type="button" class="btn btn-default btn-sm">
@@ -129,6 +119,30 @@
       >
         <i class="fa fa-times"></i>
         <span>&nbsp;</span>
+      </button>
+    </div>
+
+    <div class="input-group-btn">
+      <button
+        class="btn btn-default"
+        type="button"
+        data-ng-show="popupAction"
+        data-ng-click="openSelector()"
+      >
+        <i class="fa fa-search" />&nbsp;
+        <span data-ng-hide="searchAction">
+          {{('searchA' + templateType) | translate}}
+        </span>
+      </button>
+
+      <span data-ng-show="templateAddAction" data-ng-transclude=""></span>
+
+      <button
+        data-ng-show="templateAddSnippet"
+        class="btn btn-default"
+        data-ng-click="addEntry(templateAddSnippet, undefined, false, true)"
+      >
+        <i class="fa fa-fw fa-plus" />
       </button>
     </div>
 

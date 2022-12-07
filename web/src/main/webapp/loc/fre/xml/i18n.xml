@@ -11,10 +11,10 @@
   <selectView>Sélectionner une vue</selectView>
   <moreTabs>Plus d'information</moreTabs>
   <addA>Ajouter un(e)</addA>
-  <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre noeud</nodeChangeWarning>
+  <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre nœud</nodeChangeWarning>
   <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.
   </nodeChangeInfo>
-  <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>
+  <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquez ici :</nodeChangeBack>
   <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer
     là :
   </nodeChangeForward>

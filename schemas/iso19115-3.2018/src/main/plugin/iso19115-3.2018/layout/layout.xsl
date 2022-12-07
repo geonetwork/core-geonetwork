@@ -200,7 +200,7 @@
 
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
-                match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
+                match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
        gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
@@ -266,7 +266,7 @@
     <xsl:variable name="forceDisplayAttributes" select="count(gcx:Anchor) > 0"/>
 
     <xsl:variable name="monoLingualValue"
-                  select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
+                  select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
                           gco:Boolean|gco:Real|gco:Measure|gco:Length|
                           gco:Distance|gco:Angle|gmx:FileName|
                           gco:Scale|gco:RecordType|gcx:MimeFileType|

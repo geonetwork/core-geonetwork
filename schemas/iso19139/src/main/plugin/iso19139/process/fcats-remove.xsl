@@ -32,15 +32,10 @@ Stylesheet used to detach a feature catalogue
 
   <xsl:param name="uuidref"/>
 
-  <!-- Detach -->
   <!-- Remove attributes uuidref and xlink:href -->
   <xsl:template
     match="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref = $uuidref]"
-    priority="2">
-    <xsl:copy>
-      <xsl:apply-templates select="node()"/>
-    </xsl:copy>
-  </xsl:template>
+    priority="2"/>
 
 
   <!-- Do a copy of every nodes and attributes -->

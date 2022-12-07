@@ -163,6 +163,7 @@
           scope.$watch("optionsToAdd", function (n, o) {
             if (n && (n.path != (o && o.path) || n.path === ".")) {
               scope.jsonConfig = addOptionToConfig(n, scope.jsonConfig);
+              scope.optionsToAdd = undefined;
             }
           });
 

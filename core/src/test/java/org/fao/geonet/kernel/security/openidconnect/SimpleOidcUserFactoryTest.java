@@ -59,7 +59,7 @@ public class SimpleOidcUserFactoryTest {
     public void testCreation() throws Exception {
         SimpleOidcUserFactory factory = createFactory();
         OidcIdToken idToken = createToken();
-        SimpleOidcUser user = factory.create(idToken);
+        SimpleOidcUser user = factory.create(idToken, null);
 
         assertNotNull(user);
         assertEquals("user@example.com", user.getUsername());
@@ -98,7 +98,7 @@ public class SimpleOidcUserFactoryTest {
     public void testUpdateUser() throws Exception {
         SimpleOidcUserFactory factory = createFactory();
         OidcIdToken idToken = createToken();
-        SimpleOidcUser user = factory.create(idToken);
+        SimpleOidcUser user = factory.create(idToken, null);
         User userGN = new User();
         userGN.setUsername(user.getUsername());
         user.updateUser(userGN);

@@ -31,6 +31,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class CatalogConfiguration {
     private final Set<String> _isoQueryables = new HashSet<String>();
     private final Set<String> _additionalQueryables = new HashSet<String>();
     private final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
+
+    private String defaultSortField = "_score";
+    private String defaultSortOrder = "DESC";
     private final Set<String> _getRecordsOutputFormat = new HashSet<String>();
     private final Set<String> _getRecordsOutputSchema = new HashSet<String>();
     private final Set<String> _getRecordsTypenames = new HashSet<String>();
@@ -199,6 +203,14 @@ public class CatalogConfiguration {
     }
 
     private void initGetRecordsConfig(Element operation) {
+        Attribute sortBy = operation.getAttribute("defaultSortField");
+        if (sortBy != null) {
+            defaultSortField = sortBy.getValue();
+        }
+        Attribute sortOrder = operation.getAttribute("defaultSortOrder");
+        if (sortOrder != null) {
+            defaultSortOrder = sortOrder.getValue();
+        }
         // Only one child parameters
         Element params = operation
             .getChild(Csw.ConfigFile.Operation.Child.PARAMETERS);
@@ -405,4 +417,19 @@ public class CatalogConfiguration {
         return _increasePopularity;
     }
 
+    public void setDefaultSortField(String defaultSortField) {
+        this.defaultSortField = defaultSortField;
+    }
+
+    public String getDefaultSortField() {
+        return defaultSortField;
+    }
+
+    public void setDefaultSortOrder(String defaultSortOrder) {
+        this.defaultSortOrder = defaultSortOrder;
+    }
+
+    public String getDefaultSortOrder() {
+        return defaultSortOrder;
+    }
 }

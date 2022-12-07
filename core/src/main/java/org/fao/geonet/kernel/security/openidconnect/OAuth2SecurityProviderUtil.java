@@ -22,7 +22,9 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.SecurityProviderUtil;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,17 +54,22 @@ public class OAuth2SecurityProviderUtil implements SecurityProviderUtil {
         return null;
     }
 
-    public UserDetails getUserDetails(Authentication auth) {
-        return getUserDetails(auth, false);
+    public UserDetails getUserDetails(Authentication auth)  {
+        try {
+            return getUserDetails(auth, false);
+        } catch (Exception e) {
+            Log.error(Geonet.SECURITY,"OIDC: couldnt get user details from OIDC user",e);
+            return null;
+        }
     }
 
     // get the user's details (spring).  This might update the GN database with the user
     // (see underlying  oidcUser2GeonetworkUser#getUserDetail for when).
-    public UserDetails getUserDetails(Authentication auth, boolean withDbUpdate) {
+    public UserDetails getUserDetails(Authentication auth, boolean withDbUpdate) throws Exception {
         if (auth != null && auth.getPrincipal() instanceof OidcUser) {
             OidcUser user = (OidcUser) auth.getPrincipal();
             OidcIdToken idToken = user.getIdToken();
-            return oidcUser2GeonetworkUser.getUserDetails(idToken, withDbUpdate);
+            return oidcUser2GeonetworkUser.getUserDetails(idToken, user.getAttributes(), withDbUpdate);
         } else if (auth != null && auth.getPrincipal() instanceof OAuth2User) {
             OAuth2User user = (OAuth2User) auth.getPrincipal();
             return oidcUser2GeonetworkUser.getUserDetails(user.getAttributes(), withDbUpdate);

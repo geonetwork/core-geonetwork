@@ -23,7 +23,9 @@
 </div>
 
 <!-- map & extent -->
-<div class="row gn-section gn-padding-top">
+<div
+  class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-top"
+>
   <div class="gn-record" data-ng-class="showDataBrowser ? 'col-md-12' : 'col-md-8'">
     <div data-ng-if="mdView.current.record.geom">
       <h2>{{(showDataBrowser ? 'dataPreview' : 'spatialExtent') | translate}}</h2>
@@ -41,7 +43,7 @@
 </div>
 
 <!-- links (Download, API, Others) -->
-<div class="row gn-section">
+<div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'" />
     <div
@@ -89,7 +91,7 @@
   </div>
 </div>
 
-<div class="row gn-section">
+<div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
   <div class="col-md-12 gn-record">
     <h2 data-translate="">technicalInformation</h2>
   </div>
@@ -108,7 +110,7 @@
 </div>
 
 <div
-  class="row gn-section"
+  class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}"
   data-ng-if="mdView.current.record.featureTypes.length
                  || mdView.current.record.related.fcats.length > 0"
 >
@@ -135,7 +137,7 @@
 </div>
 
 <div
-  class="row gn-section gn-padding-bottom-lg"
+  class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-bottom-lg"
   data-ng-if="mdView.current.record.specificationConformance"
 >
   <div class="col-md-8 gn-record">
@@ -143,7 +145,7 @@
   </div>
 </div>
 
-<div class="row gn-section">
+<div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
   <div class="col-md-8 gn-record gn-break">
     <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'" />
   </div>
@@ -165,7 +167,7 @@
 </div>
 
 <!-- metadata -->
-<div class="gn-section row">
+<div class="gn-section gn-section-{{mdView.current.record.resourceType[0]}} row">
   <h2 class="col-md-12" data-translate="">metadataInformation</h2>
   <div class="col-md-8">
     <div

@@ -25,10 +25,12 @@ package org.fao.geonet.kernel.csw.services.getrecords.es;
 
 import static junit.framework.TestCase.assertEquals;
 
+import org.checkerframework.checker.units.qual.A;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.services.getrecords.SortByParser;
 import org.jdom.Element;
 import org.junit.jupiter.api.Test;
@@ -57,6 +59,24 @@ class CswSortBy2EsTest {
 
     @Autowired
     SortByParser toTest;
+
+    @Autowired
+    CatalogConfiguration configuration;
+
+    @Test
+    void configureDefaultSort() {
+        configuration.setDefaultSortField("resourceTitleObject.default.keyword");
+        configuration.setDefaultSortOrder("DESC");
+        Element request =  createSortByBaseRequest(
+            new Element("Empty", Geonet.Namespaces.OGC));
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
+        assertEquals(1, sortFields.size());
+        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
+        assertEquals(sortField.getFieldName(), "resourceTitleObject.default.keyword");
+        assertEquals(sortField.order().toString(), "desc");
+    }
 
     @Test
     void sortByRelevanceDESC() {

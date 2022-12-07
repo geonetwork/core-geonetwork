@@ -12,9 +12,8 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:import href="sharedFormatterDir/xslt/render-variables.xsl"/>
-  <xsl:include href="../../layout/utility-fn.xsl"/>
-  <xsl:include href="../../../iso19115-3.2018/formatter/citation/citation-common.xsl"/>
+  <xsl:import href="base.xsl"/>
+  <xsl:include href="../../../iso19115-3.2018/formatter/citation/common.xsl"/>
 
   <xsl:variable name="metadata"
                 select="/root/simpledc"/>
@@ -25,104 +24,11 @@
                 select="/empty"/>
 
   <xsl:template match="/">
-
-    <!-- Who is the creator of the data set?  This can be an individual, a group of individuals, or an organization. -->
-    <xsl:variable name="authors"
-                  select="$metadata/dc:creator"/>
-    <xsl:variable name="authorsNameAndOrgList">
-      <xsl:for-each select="$authors">
-        <author>
-          <xsl:variable name="name"
-                        select="normalize-space(.)"/>
-          <xsl:value-of select="$name"/>
-        </author>
-      </xsl:for-each>
-    </xsl:variable>
-
-    <!-- What name is the data set called? -->
-    <xsl:variable name="title"
-                  select="$metadata/dc:title"/>
-
-    <xsl:variable name="translatedTitle">
-      <xsl:for-each select="$title">
-        <xsl:value-of select="normalize-space(.)"/>
-      </xsl:for-each>
-    </xsl:variable>
-
-    <!-- Is there a version or edition number associated with the data set? -->
-
-
-    <!-- What year was the data set published?  When was the data set posted online? -->
-    <xsl:variable name="dates"
-                  select="$metadata/dct:modified[. != '']"/>
-
-    <xsl:variable name="publicationDates">
-      <xsl:perform-sort select="$dates">
-        <xsl:sort select="." order="descending"/>
-      </xsl:perform-sort>
-    </xsl:variable>
-
-    <xsl:variable name="lastPublicationDate"
-                  select="$publicationDates[1]"/>
-
-    <!-- What entity is responsible for producing and/or distributing the data set?  Also, is there a physical location associated with the publisher? -->
-    <xsl:variable name="publishers"
-                  select="$metadata/dc:publisher"/>
-
-    <xsl:variable name="publishersNameAndOrgList">
-      <xsl:for-each select="$publishers">
-        <author>
-          <xsl:variable name="name"
-                        select="normalize-space(.)"/>
-          <xsl:value-of select="$name"/>
-        </author>
-      </xsl:for-each>
-    </xsl:variable>
-
-
-    <!-- Electronic Retrieval Location -->
-    <xsl:variable name="doiInResourceIdentifier"
-                  select="(//dc:identifier[
-                                contains(text(), 'datacite.org/doi/')
-                                or contains(text(), 'doi.org')])[1]"/>
-
-    <xsl:variable name="doiInOnline"
-                  select="//(dc:relation|dct:references)[
-                                contains(text(), 'datacite.org/doi/')
-                                or contains(text(), 'doi.org')]"/>
-
-    <xsl:variable name="doiUrl"
-                  select="if ($doiInResourceIdentifier != '')
-                          then $doiInResourceIdentifier
-                          else if ($doiInOnline != '')
-                          then $doiInOnline
-                          else ''"/>
-
-    <xsl:variable name="landingPageUrl"
-                  select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
-
-    <xsl:variable name="keywords"
-                  select="$metadata//dc:subject"/>
-
-    <xsl:variable name="translatedKeywords">
-      <xsl:for-each select="$keywords">
-        <keyword><xsl:value-of select="."/></keyword>
-      </xsl:for-each>
-    </xsl:variable>
-
     <xsl:variable name="citationInfo">
-      <citation>
-        <uuid><xsl:value-of
-          select="$metadata/dc:identifier[. != '']"/></uuid>
-        <authorsNameAndOrgList><xsl:copy-of select="$authorsNameAndOrgList"/></authorsNameAndOrgList>
-        <lastPublicationDate><xsl:value-of select="$lastPublicationDate"/></lastPublicationDate>
-        <translatedTitle><xsl:value-of select="$translatedTitle"/></translatedTitle>
-        <publishersNameAndOrgList><xsl:copy-of select="$publishersNameAndOrgList"/></publishersNameAndOrgList>
-        <landingPageUrl><xsl:value-of select="$landingPageUrl"/></landingPageUrl>
-        <doi><xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/></doi>
-        <doiUrl><xsl:value-of select="$doiUrl"/></doiUrl>
-        <xsl:copy-of select="$translatedKeywords"/>
-      </citation>
+      <xsl:call-template name="get-dublin-core-citation">
+        <xsl:with-param name="metadata" select="$metadata"/>
+        <xsl:with-param name="language" select="$language"/>
+      </xsl:call-template>
     </xsl:variable>
 
     <xsl:apply-templates mode="citation" select="$citationInfo"/>
