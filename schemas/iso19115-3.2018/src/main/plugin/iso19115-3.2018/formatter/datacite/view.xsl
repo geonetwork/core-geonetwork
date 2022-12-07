@@ -361,7 +361,7 @@
             </xsl:when>
             <xsl:otherwise>
               <datacite:creatorName nameType="Organizational">
-                <xsl:value-of select="cit:party/*/cit:name"/>
+              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
               </datacite:creatorName>
             </xsl:otherwise>
           </xsl:choose>
