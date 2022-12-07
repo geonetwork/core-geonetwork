@@ -38,6 +38,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
@@ -72,6 +73,9 @@ public class PagesAPI {
     @Autowired
     private PageRepository pageRepository;
 
+    @Autowired
+    private LanguageUtils languageUtils;
+
     @ApiOperation(value = "Add a new Page object in DRAFT section in status HIDDEN", notes = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>", nickname = "addPage")
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @ApiResponses(value = {
@@ -90,6 +94,7 @@ public class PagesAPI {
             @RequestParam(value = "format", required = true) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response) throws ResourceAlreadyExistException {
 
+        checkValidLanguage(language);
 
         checkMandatoryContent(data, link);
 
@@ -127,6 +132,8 @@ public class PagesAPI {
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
 
+        checkValidLanguage(language);
+
         checkUniqueContent(data, link);
 
         checkCorrectFormat(data, link, format);
@@ -151,6 +158,10 @@ public class PagesAPI {
             @RequestParam(value = "newLanguage", required = false) final String newLanguage,
             @RequestParam(value = "newPageId", required = false) final String newPageId,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException, ResourceAlreadyExistException {
+
+        checkValidLanguage(language);
+
+        checkValidLanguage(newLanguage);
 
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
@@ -410,7 +421,7 @@ public class PagesAPI {
             throw new IllegalArgumentException("Wrong format.");
         }
     }
-    
+
     /**
      * Check that link or a file is defined.
      *
@@ -450,6 +461,15 @@ public class PagesAPI {
             if (!ArrayUtils.contains(supportedExtensions, extension)) {
                 throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
             }
+        }
+    }
+
+    private void checkValidLanguage(String language) {
+        if (!languageUtils.getUiLanguages().contains(language)) {
+            throw new IllegalArgumentException(
+                String.format("Language value is not valid: %s. A valid application language is mandatory: %s.",
+                    language,
+                    String.join(",", languageUtils.getUiLanguages())));
         }
     }
 

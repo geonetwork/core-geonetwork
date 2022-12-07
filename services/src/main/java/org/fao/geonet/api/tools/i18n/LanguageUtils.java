@@ -31,7 +31,9 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
  * Created by francois on 05/02/16.
  */
 public class LanguageUtils {
+    /* The languages in the UI */
     private final Set<String> iso3code;
+    /* The default application language */
     private final String defaultLanguage;
     Collection<Locale> locales = new ArrayList<>();
 
@@ -106,9 +108,27 @@ public class LanguageUtils {
      * @return  provided locale if acceptable, or the default language as a fallback
      */
     public Locale parseAcceptLanguage(final Locale locale) {
-        Vector<Locale> locales = new Vector<>();
-        locales.add(locale);
+        List<Locale> localesToParse = Collections.singletonList(locale);
 
-        return parseAcceptLanguage(locales.elements());
+        return parseAcceptLanguage(Collections.enumeration(localesToParse));
+    }
+
+
+    /**
+     * Get the default application iso3 code language.
+     *
+     * @return
+     */
+    public String getDefaultUiLanguage() {
+        return defaultLanguage;
+    }
+
+    /**
+     * Get the UI iso3 code languages.
+     *
+     * @return
+     */
+    public Set<String> getUiLanguages() {
+        return iso3code;
     }
 }
