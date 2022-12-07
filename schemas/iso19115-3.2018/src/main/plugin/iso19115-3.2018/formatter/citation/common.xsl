@@ -93,7 +93,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="citation" match="citation[lower-case($format) = 'html']">
+  <xsl:template mode="citation" match="citation[lower-case($format) = ('html', '')]">
     <xsl:variable name="hasAuthor"
                   select="count(authorsNameAndOrgList/*) > 0"/>
     <xsl:variable name="hasPublisher"
@@ -105,19 +105,20 @@
         </div>
         <div class="col-md-9">
           <p>
-            <xsl:value-of select="string-join(authorsNameAndOrgList/*, ', ')"/>
-            <xsl:choose>
-              <xsl:when test="lastPublicationDate != ''">
-                (<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>).
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:if test="$hasAuthor">
-                  <xsl:text>. </xsl:text>
-                </xsl:if>
-              </xsl:otherwise>
-            </xsl:choose>
-            <strong><xsl:value-of select="translatedTitle"/>.</strong>
-            <xsl:value-of select="string-join(publishersNameAndOrgList/*, ', ')"/>
+            <xsl:call-template name="citation-contact">
+              <xsl:with-param name="contact" select="authorsNameAndOrgList"/>
+            </xsl:call-template>
+
+            <xsl:value-of select="if (lastPublicationDate != '')
+                      then concat('(', substring(lastPublicationDate, 1, 4), ').')
+                      else if ($hasAuthor) then '.'
+                      else ''"/>
+
+            <div><xsl:copy-of select="translatedTitle/(text()|*)"/>.</div>
+
+            <xsl:call-template name="citation-contact">
+              <xsl:with-param name="contact" select="publishersNameAndOrgList"/>
+            </xsl:call-template>
             <br/>
             <xsl:variable name="url"
                           select="if (doiUrl != '') then doiUrl else landingPageUrl"/>
@@ -125,10 +126,30 @@
               <xsl:value-of select="$url"/>
             </a>
             <br/>
+
+            <xsl:if test="additionalCitation != ''">
+              <br/>
+              <em><xsl:value-of select="$schemaStrings/citationAdditional"/></em>
+              <br/>
+              <xsl:value-of select="additionalCitation"/>
+            </xsl:if>
           </p>
         </div>
       </div>
     </blockquote>
   </xsl:template>
 
+  <xsl:template name="citation-contact">
+    <xsl:param name="contact" as="node()*"/>
+
+    <xsl:for-each select="$contact/author">
+      <xsl:for-each select="(text()|*)">
+        <span>
+          <xsl:copy-of select="@*"/>
+          <xsl:value-of select="."/>
+        </span>
+      </xsl:for-each>
+      <xsl:if test="position() != last()">, </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
 </xsl:stylesheet>
