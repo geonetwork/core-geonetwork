@@ -33,9 +33,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
-import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -49,7 +47,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @RequestMapping(value = {

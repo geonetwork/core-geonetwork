@@ -1,8 +1,0 @@
-FROM maven:3-eclipse-temurin-8 as downloader
-
-WORKDIR /tmp/geonetwork
-COPY . /tmp/geonetwork/
-
-RUN mvn -f pom.xml dependency:go-offline 
-RUN \
-    mvn install -DskipTests -T1C 
