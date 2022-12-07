@@ -369,7 +369,7 @@
     "shareOnLinkedIn": "Partager via Linkedln",
     "shareByEmail": "Partager via email",
     "zoomto": "Zoom vers",
-    "recordNotFound": "La fiche avec l'identifiant {{uuid}} n'a pas été trouvée ou n'est pas partagée avec vous. Essayez <a href=\"catalog.signin?redirect={{url}}\">de vous connecter </a> si vous avez un compte.",
+    "recordNotFound": "La fiche avec l'identifiant {{uuid}} n'a pas été trouvée ou n'est pas partagée avec vous. Essayer <a href=\"catalog.signin?redirect={{url}}\">de vous connecter </a> si vous avec un compte.",
     "intersectWith": "Intersection avec",
     "fullyOutsideOf": "Entièrement à l'extérieur de",
     "encloses": "Comprends au moins",
@@ -547,5 +547,6 @@
     "fieldTooShort": "La valeur est trop courte",
     "fieldEmailNotValid": "Un email valide est requis",
     "addLayerPrefix": "Ajouter une couche",
-    "addLayerPostfix": "à la carte"
+    "addLayerPostfix": "à la carte",
+    "submit": "Soumettre"
 }

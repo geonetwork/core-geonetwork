@@ -372,7 +372,7 @@
     "cl_status_text": "État",
     "_status": "État",
     "_schema": "Standard",
-    "checkCapabilityUrl": "L'URL {{url}} a retourné le statut '{{status}}'. Vous devez vérifier l'URL ou vérifier que le service est en actif.",
+    "checkCapabilityUrl": "L'URL {{url}} a retourné le statut '{{status}}'. Vous devez vérifier l'URL ou vérifier que le service est en actif.",
     "checkCapabilityUrlUnauthorized": "L'URL {{url}} a retourné l'état '{{status}}'. Cela indique que ce service nécessite une authentification. Essayez d'abord de vous y connecter.",
     "failedToParseCapabilities": "Erreur d'analyse du résultat de l'opération GetCapabilities. Essayez à nouveau plus tard ou contactez le fournisseur de service.",
     "checkProjectionUrlUnauthorized": "L'URL {{url}} renvoie le statut '{{status}}'. Cela signifie que le service a besoin d'une authentification. Essayez de vous y connecter au préalable.",
@@ -574,9 +574,12 @@
     "copyToClipboard": "Copier dans le presse-papier",
     "textCopied": "Texte copié.",
     "metadataApproved": "Fiche approuvée.",
+    "metadataSubmitted": "Fiche proposée.",
     "batchApproveTitle": "Approuver un lot de fiches",
     "batchApproveInfo": "Cette option permet d'approuver une sélection de fiches de l'utilisateur. Par défaut, seules les fiches soumises sont approuvées. Sélectionnez l'option ci-dessous pour approuver directement les fiches qui n'ont pas été soumises.",
     "batchApproveDirect": "Approuver les fiches directement sans qu'elles aient étés soumises.",
     "facet-mdStatus": "Cycle de vie de la fiche",
-    "skipLink": "Passer et aller au contenu"
+    "skipLink": "Passer et aller au contenu",
+    "batchSubmitTitle": "Lot de fiches proposé",
+    "batchSubmitInfo": "Cette option propose les fiches sélectionnées appartenant à l'utilisateur."
 }
