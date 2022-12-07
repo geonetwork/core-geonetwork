@@ -1296,7 +1296,7 @@
     <_condition>optional</_condition>
   </element>
   <element name="gex:verticalExtent" id="354.0">
-    <label>Etendue verticale</label>
+    <label>Étendue verticale</label>
     <description iso="true">Composant d’étendue verticale</description>
   </element>
   <element name="cit:individual" id="387.0">
@@ -1396,8 +1396,8 @@
     <description iso="true">Informations concernant l’acteur</description>
   </element>
   <element name="cit:extent" id="378.0" context="cit:CI_Responsibility">
-    <label>Etendue</label>
-    <description iso="true">Etendue spatiale ou temporelle du rôle</description>
+    <label>Étendue</label>
+    <description iso="true">Étendue spatiale ou temporelle du rôle</description>
   </element>
   <element name="lan:language" id="448.0">
     <label>Langue</label>
@@ -1902,7 +1902,7 @@
     Les guides accompagnant les spécifications des données INSPIRE proposent quelques exemples :
     <ul>
     <li>nombre de superpositions invalides,</li>
-    <li>nombre de noeuds pendants (undershoot, overshoot),</li>
+    <li>nombre de nœuds pendants (undershoot, overshoot),</li>
     <li>nombre d’auto-instersections,</li>
     <li>nombre d’auto-superpositions.</li>
     </ul>
@@ -1912,7 +1912,7 @@
 
   </element>
   <element name="gex:EX_BoundingPolygon" id="341.0">
-    <label>Etendue du polygone</label>
+    <label>Étendue du polygone</label>
     <description>Type de données pour la description d'une surface fermée,
       exprimée par un ensemble de paires de coordonnées (x, y), qui englobe le
       jeu de données. Le premier et le dernier points sont identiques
@@ -1927,7 +1927,7 @@
 
   </element>
   <element name="gex:EX_Extent" id="334.0">
-    <label>Etendue</label>
+    <label>Étendue</label>
     <description>Type de données pour l'information sur l'étendue horizontale,
       verticale et temporelle du jeu de données
     </description>
@@ -2017,7 +2017,7 @@ responsable du service.</li>
 
   </element>
   <element name="gex:EX_SpatialTemporalExtent" id="352.0">
-    <label>Etendue spatio-temporelle</label>
+    <label>Étendue spatio-temporelle</label>
     <description>Type de données pour la description de l'étendue en respectant
       les limites date/heure et spatiales
     </description>
@@ -2030,7 +2030,7 @@ responsable du service.</li>
 
   </element>
   <element name="gex:EX_TemporalExtent" id="350.0">
-    <label>Etendue temporelle</label>
+    <label>Étendue temporelle</label>
     <description>Type de données pour la description de la période de temps
       couverte par le contenu du jeu de donnée
     </description>
@@ -2042,7 +2042,7 @@ responsable du service.</li>
 
   </element>
   <element name="gex:EX_VerticalExtent" id="354.0">
-    <label>Etendue verticale</label>
+    <label>Étendue verticale</label>
     <description>Type de données pour la description de l'étendue verticale du
       jeu de données
     </description>
@@ -2401,7 +2401,7 @@ responsable du service.</li>
     <description>Classe pour un raster, dont les cellules sont disposées
       irrégulièrement en fonction de différents systèmes de projections, de
       telle manière qu''ils ne sont pas localisables avec les propriétés du
-      raster mais avec les informations de localisation disponible
+      raster mais avec les informations de localisation disponibles
     </description>
     <help>Classe réservée à une trame dont les cellules sont disposées de façon
       irrégulière dans un système de coordonnées quelconque (en projection /
@@ -2692,7 +2692,7 @@ responsable du service.</li>
       qualité sont gérées sur le même modèle. Vous trouverez d'autres
       informations sous MD_MaintenanceInformation et DQ_DataQuality.
     </help>
-    <condition>Il faut saisir un des attributs suivants: Attributs, Objets
+    <condition>Il faut saisir un des attributs suivants : Attributs, Objets
       Géométriques, Occurences d'objets, Occurences d'attributs, Jeu de données,
       Autre.
     </condition>
@@ -4035,7 +4035,7 @@ date de mise en ligne du service, en tant que date de publication.
   </element>
   <element name="gex:description" id="335.0" context="gex:EX_Extent">
     <label>Description</label>
-    <description>Etendue spatiale et temporelle pour l'objet en question
+    <description>Étendue spatiale et temporelle pour l'objet en question
     </description>
     <help>Description sous forme textuelle de l'extension spatiale et temporelle
       de l'objet considéré.
@@ -4168,7 +4168,7 @@ téléchargement direct ».</li>
 version en tant que mot-clé complémentaire(s). Le numéro de version doit comporter trois chiffres.
     </li>
     </ul>
-    Formattage : Les mots-clés doivent être fournis en minuscule, accentués, au pluriel.
+    Formattage : Les mots-clés doivent être fournis en minuscules, accentués, au pluriel.
     ]]></help>
     <help><![CDATA[<b>Exemple :</b> Zones à risque naturel,
       <br/>
@@ -4498,7 +4498,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <condition/>
   </element>
   <element name="gex:extent" id="53.0" context="cit:MD_Identification">
-    <label>Etendue</label>
+    <label>Étendue</label>
     <description>Information complémentaire sur les étendues spatiales et
       temporelles du jeu de données, incluant le polygone de délimitation et les
       dimensions verticales et temporelles
@@ -4511,7 +4511,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <condition>Condition</condition>
   </element>
   <element name="mcc:extent" id="140.0" context="mcc:MD_Scope">
-    <label>Etendue</label>
+    <label>Étendue</label>
     <description>Information sur les domaines horizontaux, verticaux et
       temporels des données spécifiées par l'attribut scope (79) du domaine
       d'applicabilité
@@ -4525,7 +4525,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
 
   </element>
   <element name="gex:extent" id="351.0">
-    <label>Etendue</label>
+    <label>Étendue</label>
     <description>Date et temps pour le contenu du jeu de donnée</description>
     <help>Date et heure du domaine de validité du jeu de données (texte).</help>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
@@ -4679,7 +4679,7 @@ période de temps couverte par le service.
   <element name="mcc:fileType" id="440.0">
     <label>Format de l'illustration</label>
     <description iso="true">format dans lequel l’illustration est encodée
-      Exemple: EPS, GIF, JPEG, PBM, PS, TIFF, PDF
+      Exemple : EPS, GIF, JPEG, PBM, PS, TIFF, PDF
     </description>
     <helper>
       <option value="PNG">PNG</option>
@@ -4739,7 +4739,7 @@ période de temps couverte par le service.
   </element>
   <element name="gex:geographicElement" id="336.0">
     <label>Elément géographique</label>
-    <description>Informations sur l'etendue géographique</description>
+    <description>Informations sur l'étendue géographique</description>
     <help>Informations concernant l'extension géographique. Ces informations
       sont gérées dans la classe EX_GeographicExtent.
     </help>
@@ -4986,7 +4986,7 @@ période de temps couverte par le service.
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (noms d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscules, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
     ]]></help>
@@ -5262,7 +5262,7 @@ période de temps couverte par le service.
   </element>
   <element name="mmi:maintenanceAndUpdateFrequency" id="143.0">
     <label>Fréquence de mise à jour</label>
-    <description>Fréquence avec laquelle des changements et des ajouts sont fait
+    <description>Fréquence avec laquelle des changements et des ajouts sont faits
       à la ressource après que la ressource initiale ait été complétée
     </description>
     <help>Fréquence à laquelle des changements et des ajouts sont apportés à la
@@ -6824,7 +6824,7 @@ diffusion restreinte.
 
   </element>
   <element name="cit:sourceExtent" id="97.0">
-    <label>Etendues des données sources</label>
+    <label>Étendues des données sources</label>
     <description>Information sur les étendues spatiales, verticales et
       temporelles des données sources
     </description>
@@ -6873,7 +6873,7 @@ diffusion restreinte.
 
   </element>
   <element name="gex:spatialExtent" id="353.0">
-    <label>Etendue spatiale</label>
+    <label>Étendue spatiale</label>
     <description>Information sur l'étendue spatiale de la composition
       spatio-temporelle de l'étendue
     </description>
@@ -7183,7 +7183,7 @@ diffusion restreinte.
     </helper>
 
 
-    <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
+    <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité :</b>
     Les exigences de conformité seront remplies au moyen des éléments
     de métadonnées « spécification » et « degré ».
     ]]>
@@ -7592,14 +7592,14 @@ l’IGN (WPS)
 
   <element name="mco:useLimitation" id="99.0">
     <label>Limitation d'utilisation</label>
-    <description>Limitation d'utilisation de la ressource où de métadonnées.
-      Exemple: "ne pas utiliser pour la navigation"
+    <description>Limitation d'utilisation de la ressource ou des métadonnées.
+      Exemple : "ne pas utiliser pour la navigation"
     </description>
     <description iso="true">limitation affectant les utilisations de la
       ressource ou des métadonnées. Exemple «Ne doit pas être utilisé pour la
       navigation».
     </description>
-    <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple:
+    <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple :
       "ne pas utiliser pour la navigation"
     </help>
 
