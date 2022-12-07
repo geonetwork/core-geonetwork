@@ -444,6 +444,9 @@
               url = this.urlUtils.append(val, field.suffix);
               outputValue = this.formatUrlValues_(url);
             }
+            if (Array.isArray(val) && field.hasOwnProperty('tokenSeparator')) {
+              outputValue = val.join(field.tokenSeparator);
+            }
             return outputValue;
           }.bind(this)
         });
