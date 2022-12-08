@@ -776,6 +776,8 @@
     "system/server/port": "Port",
     "system/server/protocol": "Preferred Protocol",
     "system/server/log": "Log level",
+    "system/server/sitemapLinkUrl": "Sitemap URL template",
+    "system/server/sitemapLinkUrl-help": "URL template to build the links to metadata document in <a href='../api/sitemap'>the catalogue sitemap</a>. String \\{\\{UUID\\}\\} will be replaced by the metadata UUID. For example, for the template http://www.example.com/external/metadata/html?uuid=\\{\\{UUID\\}\\} the resulting URL in sitemap document would be http://www.example.com/external/metadata/html?uuid=this-is-the-actual-uuid. If not set, the default URL is used.",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "Sets the timezone used to store dates in the database and interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
     "system/site": "Catalog description",
