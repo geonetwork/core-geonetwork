@@ -997,6 +997,16 @@
                 terms: {
                   field: "isPublishedToAll",
                   size: 2
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-lock",
+                      true: "fa-unlock"
+                    }
+                  }
                 }
               },
               groupPublishedId: {
