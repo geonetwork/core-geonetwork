@@ -465,9 +465,11 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
         User user = new User();
-        user.getSecurity().setPassword(
-            PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-                userDto.getPassword()));
+        if (userDto.getPassword() != null) {
+            user.getSecurity().setPassword(
+                PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
+                    userDto.getPassword()));
+        }
 
         fillUserFromParams(user, userDto);
 
