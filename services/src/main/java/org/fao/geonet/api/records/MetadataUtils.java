@@ -391,9 +391,10 @@ public class MetadataUtils {
     }
 
     private static String buildRemoteRecord(Map<String, String> props) {
-        return props == null ? "{}" : String.format(
-            "{\"resourceTitleObject\": {\"default\": \"%s\"}}",
-            StringEscapeUtils.escapeJson(props.get("resourceTitle")));
+        return props == null || props.get("resourceTitle") == null
+            ? "{}"
+            : String.format("{\"resourceTitleObject\": {\"default\": \"%s\"}}",
+                StringEscapeUtils.escapeJson(props.get("resourceTitle")));
     }
 
     @Deprecated
