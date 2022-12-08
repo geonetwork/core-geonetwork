@@ -915,6 +915,12 @@
               resourceType: {
                 terms: {
                   field: "resourceType"
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
+                  }
                 }
               },
               mdStatus: {
@@ -957,7 +963,11 @@
                   orderByTranslation: true,
                   filterByTranslation: true,
                   displayFilter: true,
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "img",
+                    path: "../../images/logos/{key}.png"
+                  }
                 }
               },
               groupOwner: {
@@ -1017,7 +1027,15 @@
                   size: 2
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-folder",
+                      true: "fa-cloud"
+                    }
+                  }
                 }
               },
               isTemplate: {
@@ -1026,7 +1044,15 @@
                   size: 5
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      n: "fa-file-text",
+                      y: "fa-file"
+                    }
+                  }
                 }
               }
             }
