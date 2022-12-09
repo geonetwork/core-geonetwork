@@ -386,6 +386,14 @@
     }
   ]);
 
+  module.filter("facetBgUrlBuilder", [
+    function () {
+      return function (key, decorator) {
+        return decorator.path ? decorator.path.replace("{key}", key) : decorator.map[key];
+      };
+    }
+  ]);
+
   module.filter("facetCssClassCode", [
     function () {
       return function (key, isInspire) {

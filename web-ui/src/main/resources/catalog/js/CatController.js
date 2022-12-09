@@ -963,11 +963,11 @@
                   orderByTranslation: true,
                   filterByTranslation: true,
                   displayFilter: true,
-                  collapsed: true,
-                  decorator: {
-                    type: "img",
-                    path: "../../images/logos/{key}.png"
-                  }
+                  collapsed: true
+                  // decorator: {
+                  //   type: "img",
+                  //   path: "../../images/logos/{key}.png"
+                  // }
                 }
               },
               groupOwner: {
