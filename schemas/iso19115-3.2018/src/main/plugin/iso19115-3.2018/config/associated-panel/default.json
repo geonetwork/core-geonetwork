@@ -564,7 +564,17 @@
           "url": {
             "isMultilingual": true
           },
-          "name": {}
+          "name": {},
+          "function": {
+            "value": "featureCatalogue",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -585,6 +595,16 @@
           "type": {
             "param": "type",
             "value": "qualityReport",
+            "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
             "isMultilingual": false
           }
         }
@@ -608,6 +628,16 @@
             "param": "type",
             "value": "qualitySpecification",
             "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
           }
         }
       },
@@ -630,6 +660,16 @@
             "param": "type",
             "value": "lineage",
             "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
           }
         }
       },
@@ -647,7 +687,17 @@
           "url": {
             "isMultilingual": true
           },
-          "name": {}
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -664,7 +714,17 @@
           "url": {
             "isMultilingual": true
           },
-          "name": {}
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -681,7 +741,17 @@
           "url": {
             "isMultilingual": true
           },
-          "name": {}
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {

@@ -375,8 +375,6 @@
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
 
-
-
         <xsl:for-each-group select="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode"
                             group-by="@codeListValue">
           <xsl:copy-of select="gn-fn-index:add-codelist-field(
@@ -1006,7 +1004,9 @@
 
 
       <xsl:variable name="additionalDocuments" as="node()*">
-        <xsl:call-template name="collect-documents"/>
+        <xsl:call-template name="collect-documents">
+          <xsl:with-param name="forIndexing" select="true()"/>
+        </xsl:call-template>
       </xsl:variable>
 
       <xsl:for-each select="$additionalDocuments">
@@ -1017,15 +1017,15 @@
                                         function/text())"/>",
           <xsl:if test="normalize-space(url) != ''">
             "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'url', url, $allLanguages)"/>,
+                                'url', url/*, $allLanguages)"/>,
           </xsl:if>
           <xsl:if test="normalize-space(title) != ''">
             "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', title, $allLanguages)"/>,
+                                'name', title/*, $allLanguages)"/>,
           </xsl:if>
           <xsl:if test="normalize-space(description) != ''">
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', description, $allLanguages)"/>,
+                                'description', description/*, $allLanguages)"/>,
           </xsl:if>
           "applicationProfile": "<xsl:value-of select="gn-fn-index:json-escape(
                                         applicationProfile/text())"/>"

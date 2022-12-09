@@ -309,7 +309,6 @@
       <name>cit:hoursOfService</name>
       <name>cit:ISBN</name>
       <name>cit:ISSN</name>
-      <name>cit:linkage</name>
       <name>cit:number</name>
       <name>cit:page</name>
       <name>cit:postalCode</name>
