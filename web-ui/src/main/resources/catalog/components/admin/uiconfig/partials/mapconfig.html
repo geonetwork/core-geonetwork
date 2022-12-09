@@ -1,6 +1,8 @@
-<label class="control-label" translate>mapConfigContext</label>
+<div class="col-lg-5 gn-nopadding-left">
+  <label class="control-label" translate>mapConfigContext</label>
+</div>
 
-<div data-ng-controller="GnSearchController">
+<div class="col-lg-7" data-ng-controller="GnSearchController">
   <div data-ng-search-form="" data-ng-controller="GnMapContextRecordController">
     <div class="input-group dropdown" id="serviceList">
       <input type="text" class="form-control" data-ng-model="mCfg[key]['context']" />
@@ -44,63 +46,74 @@
   </div>
 </div>
 
-<label class="control-label" translate>mapConfigExtent</label>
-<div class="input-group">
-  <span class="input-group-addon">MinX</span>
-  <input
-    type="number"
-    step="any"
-    class="form-control"
-    data-ng-model="mCfg[key]['extent'][0]"
-  />
-  <span class="input-group-addon">MinY</span>
-  <input
-    type="number"
-    step="any"
-    class="form-control"
-    data-ng-model="mCfg[key]['extent'][1]"
-  />
-  <span class="input-group-addon">MaxX</span>
-  <input
-    type="number"
-    step="any"
-    class="form-control"
-    data-ng-model="mCfg[key]['extent'][2]"
-  />
-  <span class="input-group-addon">MaxY</span>
-  <input
-    type="number"
-    step="any"
-    class="form-control"
-    data-ng-model="mCfg[key]['extent'][3]"
-  />
+<div class="col-lg-5 gn-nopadding-left">
+  <label class="control-label" translate>mapConfigExtent</label>
 </div>
-<label class="control-label" translate>mapConfigLayers</label>
-<table class="table table-striped table-bordered">
-  <tr data-ng-repeat="layer in mCfg[key]['layers'] track by $index">
-    <td style="width: 90%">
-      <gn-json-edit height="50" model="layer"></gn-json-edit>
-    </td>
-    <td>
-      <a
-        class="btn btn-link text-danger"
-        title="{{'remove' | translate}}"
-        data-ng-click="removeItem(mCfg[key]['layers'], $index)"
-      >
-        <i class="fa fa-times text-danger" />
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <a
-        class="btn btn-default"
-        title="{{'add' | translate}}"
-        data-ng-click="addItem(mCfg[key]['layers'], {type: 'osm'})"
-      >
-        <i class="fa fa-fw fa-plus" />
-        <span translate="">add</span>
-      </a>
-    </td>
-  </tr>
-</table>
+
+<div class="col-lg-7">
+  <div class="input-group">
+    <span class="input-group-addon">MinX</span>
+    <input
+      type="number"
+      step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][0]"
+    />
+    <span class="input-group-addon">MinY</span>
+    <input
+      type="number"
+      step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][1]"
+    />
+    <span class="input-group-addon">MaxX</span>
+    <input
+      type="number"
+      step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][2]"
+    />
+    <span class="input-group-addon">MaxY</span>
+    <input
+      type="number"
+      step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][3]"
+    />
+  </div>
+</div>
+
+<div class="col-lg-5 gn-nopadding-left">
+  <label class="control-label" translate>mapConfigLayers</label>
+</div>
+
+<div class="col-lg-7">
+  <table class="table table-striped table-bordered">
+    <tr data-ng-repeat="layer in mCfg[key]['layers'] track by $index">
+      <td>
+        <gn-json-edit height="50" model="layer"></gn-json-edit>
+      </td>
+      <td class="w-30-px">
+        <a
+          class="btn btn-link text-danger"
+          title="{{'remove' | translate}}"
+          data-ng-click="removeItem(mCfg[key]['layers'], $index)"
+        >
+          <i class="fa fa-times text-danger" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <a
+          class="btn btn-default"
+          title="{{'add' | translate}}"
+          data-ng-click="addItem(mCfg[key]['layers'], {type: 'osm'})"
+        >
+          <i class="fa fa-fw fa-plus" />
+          <span translate="">add</span>
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -300,35 +300,6 @@
       </mri:supplementalInformation>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
-  <mdb:contentInfo>
-    <mrc:MD_FeatureCatalogue>
-      <mrc:featureCatalogue>
-        <gfc:FC_FeatureCatalogue>
-          <gfc:producer></gfc:producer>
-          <gfc:featureType>
-            <gfc:FC_FeatureType>
-              <gfc:typeName>Table name</gfc:typeName>
-              <gfc:isAbstract>
-                <gco:Boolean>false</gco:Boolean>
-              </gfc:isAbstract>
-              <gfc:carrierOfCharacteristics>
-                <gfc:FC_FeatureAttribute>
-                  <gfc:memberName>Column name</gfc:memberName>
-                  <gfc:definition>
-                    <gco:CharacterString>Definition</gco:CharacterString>
-                  </gfc:definition>
-                  <gfc:cardinality gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gfc:cardinality>
-                </gfc:FC_FeatureAttribute>
-              </gfc:carrierOfCharacteristics>
-              <gfc:featureCatalogue/>
-            </gfc:FC_FeatureType>
-          </gfc:featureType>
-        </gfc:FC_FeatureCatalogue>
-      </mrc:featureCatalogue>
-    </mrc:MD_FeatureCatalogue>
-  </mdb:contentInfo>
   <mdb:distributionInfo>
     <mrd:MD_Distribution>
       <mrd:transferOptions>

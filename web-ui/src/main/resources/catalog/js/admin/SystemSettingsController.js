@@ -127,41 +127,14 @@
           from: 1,
           to: 50,
           isTemplate: "y",
-          sortBy: "resourceTitleObject.default.keyword",
-          sortOrder: "asc"
+          sortBy: "resourceType,resourceTitleObject.default.keyword",
+          sortOrder: "asc,asc"
         }
       };
-
-      function loadDefaultMetadataTemplate() {
-        var preferredTemplate = gnConfig["system.metadatacreate.preferredTemplate"];
-
-        if (preferredTemplate) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: preferredTemplate
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.defaultMetadataTemplate = md;
-            });
-          });
-        }
-      }
-
-      $scope.$watchCollection("settings", function (n, o) {
-        if (n != o) {
-          loadDefaultMetadataTemplate();
-        }
-      });
+      $scope.metadataTemplateSearchObj.params = angular.extend(
+        {},
+        $scope.metadataTemplateSearchObj.defaultParams
+      );
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -194,6 +167,8 @@
           });
       };
 
+      $scope.defaultConfigId = "srv";
+
       $scope.loadTplReport = null;
       $scope.atomFeedType = "";
 
@@ -217,23 +192,19 @@
        * element name in XML Jeeves request element).
        */
       function loadSettings() {
-        if ($scope.user.isAdministratorOrMore()) {
-          $http.get("../api/site/info/build").success(function (data) {
-            $scope.systemInfo = data;
-          });
-        }
+        $http.get("../api/site/info/build").success(function (data) {
+          $scope.systemInfo = data;
+        });
 
         $http.get("../api/site/info/notificationLevels").success(function (data) {
           $scope.notificationLevels = data;
           $scope.notificationLevels.unshift("");
         });
 
-        if ($scope.user.isAdministratorOrMore()) {
-          // load log files
-          $http.get("../api/site/logging").success(function (data) {
-            $scope.logfiles = data;
-          });
-        }
+        // load log files
+        $http.get("../api/site/logging").success(function (data) {
+          $scope.logfiles = data;
+        });
 
         $http
           .get("../api/site/settings/details")
@@ -362,10 +333,23 @@
        * one defined in CatController.
        */
       $scope.createDefaultUiConfig = function () {
-        var defaultConfigId = "srv";
-        $scope.lastUiConfiguration = defaultConfigId;
-        $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
+        $scope.lastUiConfiguration = $scope.defaultConfigId;
+        $scope.createOrUpdateUiConfiguration(false, $scope.defaultConfigId);
       };
+
+      $scope.canDeleteUiConfig = function () {
+        if ($scope.uiConfiguration) {
+          // UI configuration for 'srv' can be deleted only by Administrator users
+          return (
+            $scope.uiConfiguration.id !== $scope.defaultConfigId ||
+            ($scope.uiConfiguration.id === $scope.defaultConfigId &&
+              $scope.user.isAdministratorOrMore())
+          );
+        } else {
+          return false;
+        }
+      };
+
       $scope.updateUiConfig = function () {
         return $scope.createOrUpdateUiConfiguration(true);
       };
@@ -389,7 +373,7 @@
               function (r) {
                 $rootScope.$broadcast("StatusUpdated", {
                   title: $translate.instant("uiConfigUpdateError"),
-                  error: r.data,
+                  error: r.data.message || r.data.description,
                   timeout: 0,
                   type: "danger"
                 });
@@ -404,9 +388,19 @@
 
       $scope.confirmDeleteUiConfig = function () {
         $scope.lastUiConfiguration = undefined;
-        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(function (r) {
-          loadUiConfigurations();
-        });
+        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(
+          function (r) {
+            loadUiConfigurations();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("uiConfigDeleteError"),
+              error: r.data.message || r.data.description,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
       function loadUsers() {

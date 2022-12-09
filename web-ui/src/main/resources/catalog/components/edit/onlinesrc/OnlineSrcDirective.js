@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -77,11 +77,15 @@
                 scope.lang,
                 gnCurrentEdit.mdLanguage
               );
-              scope.relations = scope.isOverview
-                ? res.relations[scope.type]
-                : res.relations[scope.type].filter(function (l) {
+              if (angular.isArray(res.relations[scope.type])) {
+                scope.relations = scope.isOverview
+                  ? res.relations[scope.type]
+                  : res.relations[scope.type].filter(function (l) {
                     return l.protocol === scope.protocol;
                   });
+              } else {
+                scope.relations = {};
+              }
             });
           };
 
@@ -601,6 +605,9 @@
                 attrs.clearFormOnProtocolChange == "false"
               ); //default to true (old behavior)
               scope.popupid = attrs["gnPopupid"];
+              $(scope.popupid).on("hidden.bs.modal", function () {
+                scope.$broadcast("onlineSrcDialogHidden", { popupid: scope.popupid });
+              });
 
               scope.config = null;
               scope.linkType = null;
@@ -826,6 +833,38 @@
                     return c;
                   }
                 }
+
+                /* If the schema configuration file for the online
+                   resources panel defines a default type, return it
+                   instead of DEFAULT_CONFIG
+
+                   schema/config/associated-panel/default.json
+
+                   {"config": {"types": [
+                      {
+                          "default": true,
+                          "label": "addOnlinesrc"
+                          ...
+                      },
+                      {
+                          "label": "addThumbnail",
+                          ...
+                      }]
+                  }}
+                */
+                var defaultSchemaConfigIndex = _.findIndex(
+                  scope.config.types,
+                  function (t) {
+                    return t.default === true;
+                  }
+                );
+
+                if (defaultSchemaConfigIndex > -1) {
+                  return scope.config.types[defaultSchemaConfigIndex];
+                } else {
+                  return DEFAULT_CONFIG;
+                }
+
                 return DEFAULT_CONFIG;
               }
 
@@ -978,6 +1017,7 @@
                     scope.params.desc = "";
                     initMultilingualFields();
                   }
+                  scope.$broadcast("onlineSrcDialogInited", { popupid: scope.popupid });
                 };
                 function loadConfigAndInit(withInit) {
                   gnSchemaManagerService
@@ -1874,15 +1914,8 @@
                 scope.popupid = "#linkto" + scope.mode + "-popup";
                 scope.btn = {};
 
-                // Append * for like search
                 scope.updateParams = function () {
-                  var addWildcard =
-                    scope.searchObj.any.indexOf('"') === -1 &&
-                    scope.searchObj.any.indexOf("*") === -1 &&
-                    scope.searchObj.any.indexOf("q(") !== 0;
-                  scope.searchObj.params.any = addWildcard
-                    ? "*" + scope.searchObj.any + "*"
-                    : scope.searchObj.any;
+                  scope.searchObj.params.any = scope.searchObj.any;
                 };
 
                 /**
@@ -1894,7 +1927,7 @@
                   var searchParams = {};
                   if (scope.mode === "fcats") {
                     searchParams = {
-                      documentStandard: "iso19110",
+                      resourceType: "featureCatalog",
                       isTemplate: "n"
                     };
                     scope.btn = {

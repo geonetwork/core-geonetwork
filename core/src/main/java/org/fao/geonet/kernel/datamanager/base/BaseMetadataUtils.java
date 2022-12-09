@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -187,10 +188,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
             Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             boolean validate = false;
             boolean ufo = false;
-            boolean index = true;
             metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             metadataManager.updateMetadata(context, id, metadataBeforeAnyChanges, validate, ufo,
-                index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), true);
+                context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE),
+                true, IndexingMode.full);
             endEditingSession(id, session);
         } else {
             if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
@@ -419,7 +420,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), true);
+        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
     }
 
     @Override
@@ -436,7 +437,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), true);
+        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
     }
 
     /**
@@ -698,7 +699,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            metadataIndexer.indexMetadata(metadataId, true);
+            metadataIndexer.indexMetadata(metadataId, true, IndexingMode.full);
         }
     }
 

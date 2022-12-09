@@ -73,6 +73,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -233,8 +234,9 @@ public class EsWFSFeatureIndexer {
         void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature);
     }
 
-    public void indexFeatures(Exchange exchange) throws Exception {
+    public CompletableFuture<Void> indexFeatures(Exchange exchange) throws Exception {
         WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         String url = state.getParameters().getUrl();
         String typeName = state.getParameters().getTypeName();
@@ -441,7 +443,10 @@ public class EsWFSFeatureIndexer {
             throw e;
         } finally {
             report.saveHarvesterReport();
+            future.complete(null);
         }
+
+        return future;
     }
 
     private TitleResolver getTitleResolver(WFSHarvesterExchangeState state) {

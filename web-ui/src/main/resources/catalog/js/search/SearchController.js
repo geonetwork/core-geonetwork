@@ -73,13 +73,15 @@
       gnMetadataManager
     ) {
       /** Object to be shared through directives and controllers */
-      $scope.searchObj = {
-        params: {},
-        permalink: true,
-        sortbyValues: gnSearchSettings.sortbyValues,
-        sortbyDefault: gnSearchSettings.sortbyDefault,
-        hitsperpageValues: gnSearchSettings.hitsperpageValues
-      };
+      if (angular.isUndefined($scope.searchObj)) {
+        $scope.searchObj = {
+          params: {},
+          permalink: true,
+          sortbyValues: gnSearchSettings.sortbyValues,
+          sortbyDefault: gnSearchSettings.sortbyDefault,
+          hitsperpageValues: gnSearchSettings.hitsperpageValues
+        };
+      }
 
       $scope.isUserFeedbackEnabled = false;
       $scope.isInspireEnabled = false;
@@ -116,8 +118,11 @@
       /* Default contact to display */
       $scope.searchResultContact = gnSearchSettings.searchResultContact;
 
-      $scope.getAnySuggestions = function (val, searchObj) {
-        return suggestService.getAnySuggestions(val, searchObj);
+      /**
+       * @returns {Array.<Metadata>}
+       */
+      $scope.getAnySuggestions = function (val, searchObj, field) {
+        return suggestService.getAnySuggestions(val, searchObj, field);
       };
 
       $scope.keywordsOptions = {

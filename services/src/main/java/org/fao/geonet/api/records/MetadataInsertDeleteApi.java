@@ -79,6 +79,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -748,8 +749,8 @@ public class MetadataInsertDeleteApi {
             transformedMd = Xml.transform(transformedMd,
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
                 onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
+                null, true, IndexingMode.none);
         }
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
@@ -763,8 +764,8 @@ public class MetadataInsertDeleteApi {
             transformedMd = Xml.transform(transformedMd,
                 schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
                 onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
+            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, context.getLanguage(),
+                null, true, IndexingMode.none);
         }
 
         int iId = Integer.parseInt(id.get(0));

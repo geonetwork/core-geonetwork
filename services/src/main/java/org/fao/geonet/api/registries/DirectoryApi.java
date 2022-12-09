@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Xml;
@@ -452,7 +453,7 @@ public class DirectoryApi {
         Set<Integer> listOfRecordInternalId = new HashSet<>();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        boolean validate = false, ufo = false, index = false;
+        boolean validate = false, ufo = false;
         report.setTotalRecords(setOfUuidsToEdit.size());
         for (String recordUuid : setOfUuidsToEdit) {
             AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
@@ -476,8 +477,8 @@ public class DirectoryApi {
                             dataManager.updateMetadata(
                                 context, "" + record.getId(),
                                 collectResults.getUpdatedRecord(),
-                                validate, ufo, index, context.getLanguage(),
-                                new ISODate().toString(), true);
+                                validate, ufo, context.getLanguage(),
+                                new ISODate().toString(), true, IndexingMode.none);
                             listOfRecordInternalId.add(record.getId());
                             report.addMetadataInfos(record, "Metadata updated.");
                         } catch (Exception e) {

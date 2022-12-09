@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -320,7 +321,6 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         //
         boolean validate = false;
         boolean ufo = false;
-        boolean index = false;
         String language = context.getLanguage();
 
         String changeDate = null;
@@ -333,8 +333,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
             changeDate = new ISODate().toString();
         }
 
-        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
-            true);
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, validate, ufo, language, changeDate,
+            true, IndexingMode.none);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
@@ -389,7 +389,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

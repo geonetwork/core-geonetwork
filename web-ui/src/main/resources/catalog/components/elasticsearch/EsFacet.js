@@ -41,7 +41,7 @@
           "group*",
           "logo",
           "category",
-          "topic*",
+          "cl_topic*",
           "inspire*",
           "resource*",
           "draft*",
@@ -80,7 +80,7 @@
               "id",
               "uuid",
               "creat*",
-              "topicCat",
+              "cl_topic*",
               "inspire*",
               "overview.*",
               "resource*",
@@ -130,38 +130,7 @@
           track_total_hits: true
         },
         directory: {
-          facets: {
-            valid: {
-              terms: {
-                field: "valid",
-                size: 10
-              }
-            },
-            groupOwner: {
-              terms: {
-                field: "groupOwner",
-                size: 10
-              }
-            },
-            recordOwner: {
-              terms: {
-                field: "recordOwner",
-                size: 10
-              }
-            },
-            groupPublished: {
-              terms: {
-                field: "groupPublished",
-                size: 10
-              }
-            },
-            isHarvested: {
-              terms: {
-                field: "isHarvested",
-                size: 2
-              }
-            }
-          },
+          facets: gnGlobalSettings.gnCfg.mods.directory.facetConfig,
           source: {
             includes: [
               "id",
@@ -198,7 +167,8 @@
               "group*",
               "resource*",
               "owner*",
-              "isTemplate"
+              "isTemplate",
+              "valid"
             ]
           },
           track_total_hits: true
@@ -254,7 +224,8 @@
                 include: "Warning.*"
               },
               meta: {
-                displayFilter: false
+                displayFilter: false,
+                field: "indexingErrorMsg"
               }
             }
           },

@@ -1,4 +1,8 @@
-<div class="row" data-ng-controller="GnMetadataIdentifierTemplatesController">
+<div
+  class="row"
+  data-ng-controller="GnMetadataIdentifierTemplatesController"
+  id="gn-metadatatemplates-container"
+>
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">manageMetadataIdentifierTemplates</div>
@@ -37,13 +41,20 @@
   <div class="col-lg-8" data-ng-hide="mdIdentifierTemplateSelected.id == null">
     <div class="panel panel-default">
       <div class="panel-heading">
-        {{mdIdentifierTemplateSelected.name}}
+        <span data-ng-show="mdIdentifierTemplateSelected.id == -99" data-translate=""
+          >newMetadataIdentifierTemplate</span
+        >
+
+        <span data-ng-show="mdIdentifierTemplateSelected.id != -99"
+          >{{mdIdentifierTemplateSelected.name}}</span
+        >
+
         <div class="btn-toolbar">
           <button
             type="button"
             class="btn btn-primary btn-danger pull-right"
-            data-ng-hide="mdIdentifierTemplateSelected.id == ''"
-            data-ng-click="deleteMetadataIdentifierTemplate(mdIdentifierTemplateSelected.id)"
+            data-ng-hide="isNew"
+            data-ng-click="deleteTemplateConfig()"
           >
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">delete</span>
@@ -115,5 +126,14 @@
         </form>
       </div>
     </div>
+  </div>
+
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteTemplateConfig}"
+    id="gn-confirm-remove-metadataidentifiertpl"
+  >
+    <p translate>confirmMetadataIdentifierTemplateDelete</p>
   </div>
 </div>

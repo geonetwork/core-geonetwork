@@ -40,7 +40,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 @Service
@@ -182,7 +182,7 @@ public class SldApi {
         HttpServletRequest request) throws ServiceException, TransformerException, JSONException, ParseException, IOException, JDOMException, URISyntaxException {
 
         try {
-            HashMap<String, String> hash = SLDUtil.parseSLD(new URI(serverURL), layers);
+            Map<String, String> hash = SLDUtil.parseSLD(new URI(serverURL), layers);
 
             Element root = Xml.loadString(hash.get("content"), false);
 

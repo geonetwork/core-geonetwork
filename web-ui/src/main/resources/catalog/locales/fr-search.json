@@ -361,7 +361,7 @@
     "KMLfileURL": "URL d'un fichier KML",
     "refineSearch": "Precisez votre recherche",
     "backToList": "Retour à la liste",
-    "privilegesBatchAlert": "<span class='text-danger'>Les privilèges vont être mis à jour pour les fiches éditables de la sélection.  Le formulaire est vide et ne reflète pas les privilèges des fiches actuellement dans la sélection. Les privilèges sont supprimés et remplacer par les nouveaux.</span><br/><br/>Cliquer sur <strong>Fusionner</strong> pour ajouter ceux avec <strong>+</strong> et supprimer ceux avec <strong>-</strong>.<br/><br/>Cliquer sur <strong>Remplacer</strong> pour supprimer tout et ensuite ajouter ceux avec  <strong>+</strong>et supprimer ceux avec <strong>-</strong>.",
+    "privilegesBatchAlert": "<span class='text-danger'>Les privilèges vont être mis à jour pour les fiches éditables de la sélection.  Le formulaire est vide et ne reflète pas les privilèges des fiches actuellement dans la sélection. Les privilèges sont supprimés et remplacés par les nouveaux.</span><br/><br/>Cliquez sur <strong>Fusionner</strong> pour ajouter ceux avec <strong>+</strong> et supprimer ceux avec <strong>-</strong>.<br/><br/>Cliquez sur <strong>Remplacer</strong> pour supprimer tout et ensuite ajouter ceux avec  <strong>+</strong>et supprimer ceux avec <strong>-</strong>.",
     "permalink": "Permalien",
     "permalinkTo": "Permalien vers {{title}}",
     "shareOnTwitter": "Partager via Twitter",
@@ -547,5 +547,6 @@
     "fieldTooShort": "La valeur est trop courte",
     "fieldEmailNotValid": "Un email valide est requis",
     "addLayerPrefix": "Ajouter une couche",
-    "addLayerPostfix": "à la carte"
+    "addLayerPostfix": "à la carte",
+    "submit": "Soumettre"
 }

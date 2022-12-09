@@ -129,6 +129,7 @@
   "facet-valid_inspire": "Stav ověření INSPIRE",
   "valid_inspire-1": "Platné",
   "valid_inspire-0": "Neplatný",
+  "valid_inspire-3": "No rule applies",
   "valid_inspire--1": "Neznámý",
   "facet-OrgForResource": "Organizace",
   "facet-sourceCatalogue": "Katalogy",
@@ -267,10 +268,12 @@
   "ui/chooseAnOption-help": "Aktuální uživatelská konfigurace je prázdná. Vyberte jednu nebo více možností výše nebo vytvořte úplnou konfiguraci.",
   "uiConfigForm": "Konfigurační formulář",
   "uiConfigJsonForm": "formulář JSON",
+  "uiCurrentConfig": "Aktuální konfigurace",
   "uiBasicConfig": "Plná konfigurace",
   "uiRemoveDefaultOptions": "Odebrat výchozí možnosti",
   "preferredOptions": "Preferované možnosti",
-  "ui-full-configuration": "Všechny možnosti",
+  "ui-full-configuration": "Všechny výchozí možnosti (resetovat všechny aktuální možnosti)",
+  "ui-full-current-configuration": "Veškerá aktuální konfigurace",
   "ui-hitsPerPage": "Výchozí počet záznamů na stránku",
   "ui-queryTitle": "Dotaz na vyhledávání pouze podle názvu",
   "ui-related": "Výsledky / Typ souvisejících záznamů, které se mají hledat",
@@ -365,5 +368,6 @@
   "mimeType": "Formát",
   "uploadedResourceAlreadyExistException": "Soubor {{file}} již v tomto úložišti záznamů existuje. Nejprve jej odstraňte.",
   "switchPortals": "Přepnout na jiný portál",
-  "dataPreview":  "Objevte data"
+  "dataPreview":  "Objevte data",
+  "tableOfContents": "Obsah"
 }

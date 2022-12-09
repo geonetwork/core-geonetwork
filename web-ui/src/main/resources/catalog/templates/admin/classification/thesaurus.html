@@ -34,11 +34,13 @@
             <strong>{{t.title}}</strong> ({{t.dname}})
           </a>
         </div>
-        <span
+        <div
+          class="width-100"
           data-gn-pagination-list=""
           data-items="thesaurus | filter:thesaurusSearch | orderBy:'title'"
           data-cache="thesaurus"
         />
+        <div class="flex-spacer"></div>
 
         <!-- Add new thesauri button  -->
         <div class="btn-group btn-block">
@@ -82,9 +84,7 @@
     </div>
 
     <!-- get help  -->
-    <div
-      gn-need-help="administrator-guide/managing-classification-systems/managing-thesaurus.html"
-    ></div>
+    <div gn-need-help="managing-thesaurus"></div>
     <br />
     <br />
   </div>

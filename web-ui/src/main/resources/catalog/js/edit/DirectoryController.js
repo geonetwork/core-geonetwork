@@ -102,6 +102,8 @@
 
       var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
 
+      $scope.facetConfig = directorySearchSettings.facetConfig;
+
       $scope.defaultSearchObj = {
         selectionBucket: "d101",
         configId: "directory",
@@ -358,7 +360,7 @@
         return promise;
       };
       $scope.saveAndClose = function () {
-        return gnEditor.save(false).then(
+        return gnEditor.save(false, null, true).then(
           function (form) {
             $scope.gnCurrentEdit = "";
             $scope.closeEditor();

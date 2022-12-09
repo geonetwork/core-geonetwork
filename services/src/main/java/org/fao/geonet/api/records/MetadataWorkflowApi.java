@@ -59,6 +59,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -444,7 +445,7 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
 
         // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
         // status of the published and draft versions
@@ -452,7 +453,7 @@ public class MetadataWorkflowApi {
             Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
 
             if (metadataApproved != null) {
-                metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true);
+                metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
             }
         }
     }
@@ -776,8 +777,8 @@ public class MetadataWorkflowApi {
             Element md = Xml.loadString(previousStateText, false);
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
-            iMetadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, true, context.getLanguage(),
-                    null, false);
+            iMetadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
+                    null, false, IndexingMode.full);
             recoveredMetadataId = metadata.getId();
         } else {
             // Recover from delete
@@ -1031,10 +1032,10 @@ public class MetadataWorkflowApi {
         String date = new ISODate().toString();
 
         // insert record
-        boolean ufo = false, indexImmediate = false;
+        boolean ufo = false;
         String metadataId = iMetadataManager.insertMetadata(context, schema, md, uuid,
                 context.getUserSession().getUserIdAsInt(), groupId, settingManager.getSiteId(), MetadataType.METADATA.codeString
-                , null, null, date, date, ufo, indexImmediate);
+                , null, null, date, date, ufo, IndexingMode.none);
 
         int id = Integer.parseInt(metadataId);
 

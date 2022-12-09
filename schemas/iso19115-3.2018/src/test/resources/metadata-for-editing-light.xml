@@ -1118,13 +1118,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>track</code>
               <label>Piste</label>
-              <description>Dans la direction de la ...</description>
+              <description>Dans la direction de la...</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>crossTrack</code>
               <label>Profil de piste</label>
-              <description>Perpendiculaire ...</description>
+              <description>Perpendiculaire...</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -1881,7 +1881,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>farming</code>
               <label>Agriculture</label>
-              <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
+              <description>Élevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -1971,7 +1971,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>society</code>
               <label>Société</label>
-              <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
+              <description>Caractéristiques des sociétés et des cultures. Exemples : lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -1983,7 +1983,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>transportation</code>
               <label>Infrastructures de transport</label>
-              <description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
+              <description>Moyens de transports des personnes et des biens. Exemples : routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -2570,7 +2570,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Qualité des données</label>
             <description>Classe avec l'information sur la qualité pour les données spécifiées par un domaine de qualité des données</description>
             <help>
-              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
+              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. L'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
       Les prescriptions de qualité applicables au jeu de données à décrire figurent dans la classe DQ_Legislation.
               <!-- Réglement 1205-2008-->
               La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
@@ -2628,7 +2628,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
           <element name="gmd:DQ_Scope" id="138.0">
             <label>Domaine d'appliquabilité</label>
             <description>Description de l'étendue des charactéristiques des données pour lesquelles des informations de qualité sont rapportées</description>
-            <help>Description du domaine du jeu de données pour lequel des informations de qualité ont été saisies. d'autres indications peuvent être trouvées sous DQ_Dataquality.</help>
+            <help>Description du domaine du jeu de données pour lequel des informations de qualité ont été saisies. D'autres indications peuvent être trouvées sous DQ_Dataquality.</help>
             <condition>Obligatoire</condition>
           </element>
           <element name="gmd:DQ_TemporalConsistency" id="122.0">
@@ -2665,7 +2665,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
     Les guides accompagnant les spécifications des données INSPIRE proposent quelques exemples :
     <ul>
     <li>nombre de superpositions invalides,</li>
-    <li>nombre de noeuds pendants (undershoot, overshoot),</li>
+    <li>nombre de nœuds pendants (undershoot, overshoot),</li>
     <li>nombre d’auto-instersections,</li>
     <li>nombre d’auto-superpositions.</li>
     </ul>
@@ -2673,13 +2673,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <condition />
           </element>
           <element name="gmd:EX_BoundingPolygon" id="341.0">
-            <label>Etendue du polygone</label>
+            <label>Étendue du polygone</label>
             <description>Type de données pour la description d'une surface fermée, exprimée par un ensemble de paires de coordonnées (x, y), qui englobe le jeu de données. Le premier et le dernier points sont identiques</description>
             <help>Type de données destiné à la description d'une surface fermée (polygone) définie par un ensemble de paires de coordonnées (x, y) et englobant le jeu de données. Le premier et le dernier point sont identiques. Des informations supplémentaires peuvent être trouvées sous EX_Extent et EX_GeographicExtent.</help>
             <condition />
           </element>
           <element name="gmd:EX_Extent" id="334.0">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Type de données pour l'information sur l'étendue horizontale, verticale et temporelle du jeu de données</description>
             <help>Type de données contenant des informations relatives à l'extension horizontale, verticale et temporelle du jeu de données. Les types de données de cette classe contiennent des éléments de métadonnées décrivant l'extension spatiale et temporelle des données. EX_Extent est une agrégation des classes EX_GeographicExtent (description de l'extension géographique), EX_TemporalExtent (extension temporelle des données) et EX_VerticalExtent (extension verticale des données). l'extension géographique est spécifiée plus avant par une délimitation au moyen d'un polygone (EX_BoundingPolygon) comme par un rectangle de délimitation géographique (EX_GeographicBoundingBox) et une description textuelle (EX_GeographicDescription). Pour EX_Extent comme pour CI_Citation, il s'agit d'un regroupement de classes pouvant être appelées par plusieurs attributs de la norme.</help>
             <condition />
@@ -2731,19 +2731,19 @@ responsable du service.</li>
             <condition />
           </element>
           <element name="gmd:EX_SpatialTemporalExtent" id="352.0">
-            <label>Etendue spatio-temporelle</label>
+            <label>Étendue spatio-temporelle</label>
             <description>Type de données pour la description de l'étendue en respectant les limites date/heure et spatiales</description>
             <help>Type de données destiné à la description de l'extension dans le respect des limites spatiales et temporelles. Cette classe est une représentation de la classe EX_TemporalExtent. l'extension géographique est saisie en plus de l'indication de la validité temporelle.</help>
             <condition />
           </element>
           <element name="gmd:EX_TemporalExtent" id="350.0">
-            <label>Etendue temporelle</label>
+            <label>Étendue temporelle</label>
             <description>Type de données pour la description de la période de temps couverte par le contenu du jeu de donnée</description>
             <help>La validité temporelle du jeu de données est définie dans cette classe. Cette classe connaît la représentation EX_SpatialTemporalExtent. Des informations supplémentaires peuvent être trouvées sous EX_Extent.</help>
             <condition />
           </element>
           <element name="gmd:EX_VerticalExtent" id="354.0">
-            <label>Etendue verticale</label>
+            <label>Étendue verticale</label>
             <description>Type de données pour la description de l'étendue verticale du jeu de données</description>
             <help>Type de données permettant la description de la troisième dimension (axe Z) avec ses altitudes minimale et maximale ainsi que l'unité de mesure utilisée. Vous trouverez des informations supplémentaires sous EX_Extent.</help>
             <condition />
@@ -2838,7 +2838,7 @@ responsable du service.</li>
           <element name="gmd:MD_Dimension" id="179.0">
             <label>Dimension</label>
             <description>Classe contenant les propriétés des axes</description>
-            <help>Cette classe contient les propriétés des axes requises pour la définition de données tramées. Ces informations sont utilisées dans la classe MD_GridSpatialRepresentation. d'autres informations peuvent y être trouvées.</help>
+            <help>Cette classe contient les propriétés des axes requises pour la définition de données tramées. Ces informations sont utilisées dans la classe MD_GridSpatialRepresentation. D'autres informations peuvent y être trouvées.</help>
             <condition />
           </element>
           <element name="gmd:MD_Distribution" id="270.0">
@@ -2850,7 +2850,7 @@ responsable du service.</li>
           <element name="gmd:MD_Distributor" id="279.0">
             <label>Distributeur</label>
             <description>Classe avec l'information sur le distributeur</description>
-            <help>Classe contenant les informations relatives au distributeur des données (nom, rôle, adresse, etc.). d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant les informations relatives au distributeur des données (nom, rôle, adresse, etc.). D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_ExtendedElementInformation" id="306.0">
@@ -2885,7 +2885,7 @@ responsable du service.</li>
           </element>
           <element name="gmd:MD_Georeferenceable" id="170.0">
             <label>Raster géoréférencable</label>
-            <description>Classe pour un raster, dont les cellules sont disposées irrégulièrement en fonction de différents systèmes de projections, de telle manière qu''ils ne sont pas localisables avec les propriétés du raster mais avec les informations de localisation disponible</description>
+            <description>Classe pour un raster, dont les cellules sont disposées irrégulièrement en fonction de différents systèmes de projections, de telle manière qu''ils ne sont pas localisables avec les propriétés du raster mais avec les informations de localisation disponibles</description>
             <help>Classe réservée à une trame dont les cellules sont disposées de façon irrégulière dans un système de coordonnées quelconque (en projection / géographique), de sorte qu''elles ne peuvent être localisées qu''à l'aide d'informations de localisation fournies et non au moyen des propriétés de la trame. La classe MD_Georeferenceable contient la description des informations concernant le géoréférencement. Il est établi une distinction dans ce cadre entre un géoréférencement par des points d'appui et par des paramètres de transformation. l'attribut "parameterCitation" permet, via le type de données CI_Citation, de fournir d'autres informations encore concernant la provenance et le service compétent ayant transmis les informations de géoréférencement.</help>
             <condition />
           </element>
@@ -2922,13 +2922,13 @@ responsable du service.</li>
           <element name="gmd:MD_MaintenanceInformation" id="142.0">
             <label>Information de maintenance</label>
             <description>Classe sur la raison, l'étendue et la fréquence des mises à jour.</description>
-            <help>Les informations concernant l'étendue, la fréquence et la date de mise à jour des données sont contenues dans la classe MD_MaintenanceInformation. Cette classe recèle des attributs renseignant sur la fréquence et l'étendue de la mise à jour et de la réactualisation des données du jeu. Seule l'indication de la fréquence est impérative et doit être sélectionnée dans la liste MD_MaintenanceFrequencyCode. l'étendue de la mise à jour, les attributs qu''elle concerne et les descriptions associées sont des informations qu''il est possible d'indiquer via les attributs "updateScope" et "updateScopeDescription". Il n''est pas prévu d'indiquer l'extension spatiale de la mise à jour. Si seules des parties d'un jeu de données sont mises à jour ou si toutes ses parties ne sont pas mises à jour simultanément, alors les parties concernées par la description de la mise à jour peuvent être précisées via "+updateScopeDescription" dans la classe MD_ScopeDescription.</help>
+            <help>Les informations concernant l'étendue, la fréquence et la date de mise à jour des données sont contenues dans la classe MD_MaintenanceInformation. Cette classe recèle des attributs renseignant sur la fréquence et l'étendue de la mise à jour et de la réactualisation des données du jeu. Seule l'indication de la fréquence est impérative et doit être sélectionnée dans la liste MD_MaintenanceFrequencyCode. L'étendue de la mise à jour, les attributs qu''elle concerne et les descriptions associées sont des informations qu''il est possible d'indiquer via les attributs "updateScope" et "updateScopeDescription". Il n''est pas prévu d'indiquer l'extension spatiale de la mise à jour. Si seules des parties d'un jeu de données sont mises à jour ou si toutes ses parties ne sont pas mises à jour simultanément, alors les parties concernées par la description de la mise à jour peuvent être précisées via "+updateScopeDescription" dans la classe MD_ScopeDescription.</help>
             <condition />
           </element>
           <element name="gmd:MD_Medium" id="291.0">
             <label>Média</label>
             <description>Classe avec l'information sur les médias sur lesquels les données pouvent être distribuée</description>
-            <help>Classe contenant des informations relatives au support sur lequel les données peuvent être obtenues. Il s'agit d'un support hors ligne. d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant des informations relatives au support sur lequel les données peuvent être obtenues. Il s'agit d'un support hors ligne. D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_Metadata" id="1.0">
@@ -3001,7 +3001,7 @@ responsable du service.</li>
             <label>Description du domaine</label>
             <description>Description de la classe d'information concernée par les informations</description>
             <help>Description du domaine auquel se rapporte une information. Ces indications sont utilisées pour les informations de qualité (DQ_Quality) et les informations de mise à jour (MD_Maintenance) lorsque les caractéristiques ne sont pas homogènes sur l'ensemble du jeu de données décrit. l'un au moins de ces attributs doit être saisi. Exemple de la MO, jeu de données décrit : "Lot". La couche des biens-fonds est mise à jour en permanence, la couche de la nomenclature n''est quant à elle actualisée qu''au besoin. Si la mise à jour de la couche des biens-fonds est décrite, l'option "Biens-fonds" est entrée pour les propriétés. Les informations de qualité sont gérées sur le même modèle. Vous trouverez d'autres informations sous MD_MaintenanceInformation et DQ_DataQuality.</help>
-            <condition>Il faut saisir un des attributs suivants: Attributs, Objets Géométriques, Occurences d'objets, Occurences d'attributs, Jeu de données, Autre.</condition>
+            <condition>Il faut saisir un des attributs suivants : Attributs, Objets Géométriques, Occurences d'objets, Occurences d'attributs, Jeu de données, Autre.</condition>
           </element>
           <element name="gmd:MD_SecurityConstraints" id="73.0">
             <label>Contraintes de sécurité</label>
@@ -3018,7 +3018,7 @@ responsable du service.</li>
           <element name="gmd:MD_StandardOrderProcess" id="298.0">
             <label>Processus de commande standard</label>
             <description>Classe pour la description des instructions et des modes usuels d'obtention de la ressource, comprenant également les informations sur les coûts</description>
-            <help>Classe contenant des informations relatives aux émoluments et à la commande. d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant des informations relatives aux émoluments et à la commande. D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_Usage" id="62.0">
@@ -3779,7 +3779,7 @@ date de mise en ligne du service, en tant que date de publication.
           </element>
           <element name="gmd:description" id="335.0" context="gmd:EX_Extent">
             <label>Description</label>
-            <description>Etendue spatiale et temporelle pour l'objet en question</description>
+            <description>Étendue spatiale et temporelle pour l'objet en question</description>
             <help>Description sous forme textuelle de l'extension spatiale et temporelle de l'objet considéré.</help>
             <condition />
           </element>
@@ -3883,7 +3883,7 @@ téléchargement direct ».</li>
 version en tant que mot-clé complémentaire(s). Le numéro de version doit comporter trois chiffres.
     </li>
     </ul>
-    Formattage : Les mots-clés doivent être fournis en minuscule, accentués, au pluriel.]]></help>
+    Formattage : Les mots-clés doivent être fournis en minuscules, accentués, au pluriel.]]></help>
             <help><![CDATA[<b>Exemple :</b> Zones à risque naturel,
       <br/>
       Exemple pour un service CSW 2.0.2 : « csw 2.0.2 »
@@ -4084,19 +4084,19 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
             <condition />
           </element>
           <element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Information complémentaire sur les étendues spatiales et temporelles du jeu de données, incluant le polygone de délimitation et les dimensions verticales et temporelles</description>
             <help>Informations supplémentaires concernant l'extension spatiale et temporelle des données, incluant le polygone de délimitation, les altitudes et la durée de validité. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
           </element>
           <element name="gmd:extent" id="140.0" context="gmd:DQ_Scope">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Information sur les domaines horizontaux, verticaux et temporels des données spécifiées par l'attribut scope (79) du domaine d'applicabilité</description>
             <help>Informations relatives à l'extension horizontale, verticale et temporelle des données conformément au domaine de validité défini. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
           </element>
           <element name="gmd:extent" id="351.0" context="gmd:EX_TemporalExtent">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Date et temps pour le contenu du jeu de donnée</description>
             <help>Date et heure du domaine de validité du jeu de données (texte).</help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
@@ -4212,7 +4212,7 @@ période de temps couverte par le service.]]></help>
           </element>
           <element name="gmd:geographicElement" id="336.0">
             <label>Elément géographique</label>
-            <description>Informations sur l'etendue géographique</description>
+            <description>Informations sur l'étendue géographique</description>
             <help>Informations concernant l'extension géographique. Ces informations sont gérées dans la classe EX_GeographicExtent.</help>
             <condition>Condition</condition>
           </element>
@@ -4380,7 +4380,7 @@ période de temps couverte par le service.]]></help>
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (noms d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscules, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
    ]]></help>
@@ -4554,7 +4554,7 @@ période de temps couverte par le service.]]></help>
           </element>
           <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
             <label>Fréquence de mise à jour</label>
-            <description>Fréquence avec laquelle des changements et des ajouts sont fait à la ressource après que la ressource initiale ait été complétée</description>
+            <description>Fréquence avec laquelle des changements et des ajouts sont faits à la ressource après que la ressource initiale ait été complétée</description>
             <help>Fréquence à laquelle des changements et des ajouts sont apportés à la ressource. La valeur concernée est à sélectionner dans la liste suivante : en permanence, quotidienne, hebdomadaire, bimensuelle, mensuelle, trimestrielle, semestrielle, annuelle, au besoin, irrégulière, non prévue, inconnue, définie par l'utilisateur.</help>
             <condition>Obligatoire</condition>
           </element>
@@ -5335,7 +5335,7 @@ diffusion restreinte.]]></help>
             <condition />
           </element>
           <element name="gmd:sourceExtent" id="97.0">
-            <label>Etendues des données sources</label>
+            <label>Étendues des données sources</label>
             <description>Information sur les étendues spatiales, verticales et temporelles des données sources</description>
             <help>Informations concernant l'extension spatiale, verticale et temporelle des données source. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
@@ -5359,7 +5359,7 @@ diffusion restreinte.]]></help>
             <condition>Obligatoire</condition>
           </element>
           <element name="gmd:spatialExtent" id="353.0">
-            <label>Etendue spatiale</label>
+            <label>Étendue spatiale</label>
             <description>Information sur l'étendue spatiale de la composition spatio-temporelle de l'étendue</description>
             <help>Informations relatives à l'extension spatiale de la classe composée EX_SpatialTemporalExtent. Ces informations sont gérées dans la classe EX_Extent.</help>
             <condition />
@@ -5510,7 +5510,7 @@ diffusion restreinte.]]></help>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level2 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 2 (WFS pré-défini)</option>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level3 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 3 (WFS direct)</option>
             </helper>
-            <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
+            <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité :</b>
     Les exigences de conformité seront remplies au moyen des éléments
     de métadonnées « spécification » et « degré ».]]></help>
             <help for="france"><![CDATA[<b>Recommandations pour les séries de données:</b>
@@ -5797,8 +5797,8 @@ l’IGN (WPS)
           </element>
           <element name="gmd:useLimitation" id="68.0">
             <label>Limitation d'utilisation</label>
-            <description>Limitation d'utilisation de la ressource où de métadonnées. Exemple: "ne pas utiliser pour la navigation"</description>
-            <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple: "ne pas utiliser pour la navigation"</help>
+            <description>Limitation d'utilisation de la ressource ou des métadonnées. Exemple : "ne pas utiliser pour la navigation"</description>
+            <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple : "ne pas utiliser pour la navigation"</help>
             <help><![CDATA[<b>Conditions applicables à l’accès et à l’utilisation</b>]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Cet élément de métadonnées définit les conditions applicables à l’accès et à l’utilisation des séries et des services de données géographiques, et, le cas échéant, les frais correspondants :
@@ -5830,7 +5830,7 @@ l’IGN (WPS)
             <helper>
               <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
               <option value="Conditions inconnues">Conditions inconnues</option>
-              <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour" title="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source ...</option>
+              <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour" title="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source...</option>
               <option value="Données ouvertes">Données ouvertes</option>
             </helper>
           </element>
@@ -7262,7 +7262,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
             <example />
           </element>
           <element name="dc:coverage">
-            <label>Etendue géographique</label>
+            <label>Étendue géographique</label>
             <description>Couverture spatiale (point géographique, pays, régions, noms de lieux) ou
       temporelle.</description>
             <example>Par exemple: "North 90, South -90, East 180, West -180. Global".</example>
@@ -8234,13 +8234,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>track</code>
               <label>Piste</label>
-              <description>Dans la direction de la ...</description>
+              <description>Dans la direction de la...</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
               <code>crossTrack</code>
               <label>Profil de piste</label>
-              <description>Perpendiculaire ...</description>
+              <description>Perpendiculaire...</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -8988,7 +8988,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>farming</code>
               <label>Agriculture</label>
-              <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
+              <description>Élevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -9078,7 +9078,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>society</code>
               <label>Société</label>
-              <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
+              <description>Caractéristiques des sociétés et des cultures. Exemples : lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -9090,7 +9090,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <entry>
               <code>transportation</code>
               <label>Infrastructures de transport</label>
-              <description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
+              <description>Moyens de transports des personnes et des biens. Exemples : routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
             </entry>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
             <entry>
@@ -9624,7 +9624,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <label>Qualité des données</label>
             <description>Classe avec l'information sur la qualité pour les données spécifiées par un domaine de qualité des données</description>
             <help>
-              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
+              Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. L'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
       Les prescriptions de qualité applicables au jeu de données à décrire figurent dans la classe DQ_Legislation.
               <!-- Réglement 1205-2008-->
               La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
@@ -9682,7 +9682,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
           <element name="gmd:DQ_Scope" id="138.0">
             <label>Domaine d'appliquabilité</label>
             <description>Description de l'étendue des charactéristiques des données pour lesquelles des informations de qualité sont rapportées</description>
-            <help>Description du domaine du jeu de données pour lequel des informations de qualité ont été saisies. d'autres indications peuvent être trouvées sous DQ_Dataquality.</help>
+            <help>Description du domaine du jeu de données pour lequel des informations de qualité ont été saisies. D'autres indications peuvent être trouvées sous DQ_Dataquality.</help>
             <condition>Obligatoire</condition>
           </element>
           <element name="gmd:DQ_TemporalConsistency" id="122.0">
@@ -9719,7 +9719,7 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
     Les guides accompagnant les spécifications des données INSPIRE proposent quelques exemples :
     <ul>
     <li>nombre de superpositions invalides,</li>
-    <li>nombre de noeuds pendants (undershoot, overshoot),</li>
+    <li>nombre de nœuds pendants (undershoot, overshoot),</li>
     <li>nombre d’auto-instersections,</li>
     <li>nombre d’auto-superpositions.</li>
     </ul>
@@ -9727,13 +9727,13 @@ Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant 
             <condition />
           </element>
           <element name="gmd:EX_BoundingPolygon" id="341.0">
-            <label>Etendue du polygone</label>
+            <label>Étendue du polygone</label>
             <description>Type de données pour la description d'une surface fermée, exprimée par un ensemble de paires de coordonnées (x, y), qui englobe le jeu de données. Le premier et le dernier points sont identiques</description>
             <help>Type de données destiné à la description d'une surface fermée (polygone) définie par un ensemble de paires de coordonnées (x, y) et englobant le jeu de données. Le premier et le dernier point sont identiques. Des informations supplémentaires peuvent être trouvées sous EX_Extent et EX_GeographicExtent.</help>
             <condition />
           </element>
           <element name="gmd:EX_Extent" id="334.0">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Type de données pour l'information sur l'étendue horizontale, verticale et temporelle du jeu de données</description>
             <help>Type de données contenant des informations relatives à l'extension horizontale, verticale et temporelle du jeu de données. Les types de données de cette classe contiennent des éléments de métadonnées décrivant l'extension spatiale et temporelle des données. EX_Extent est une agrégation des classes EX_GeographicExtent (description de l'extension géographique), EX_TemporalExtent (extension temporelle des données) et EX_VerticalExtent (extension verticale des données). l'extension géographique est spécifiée plus avant par une délimitation au moyen d'un polygone (EX_BoundingPolygon) comme par un rectangle de délimitation géographique (EX_GeographicBoundingBox) et une description textuelle (EX_GeographicDescription). Pour EX_Extent comme pour CI_Citation, il s'agit d'un regroupement de classes pouvant être appelées par plusieurs attributs de la norme.</help>
             <condition />
@@ -9785,19 +9785,19 @@ responsable du service.</li>
             <condition />
           </element>
           <element name="gmd:EX_SpatialTemporalExtent" id="352.0">
-            <label>Etendue spatio-temporelle</label>
+            <label>Étendue spatio-temporelle</label>
             <description>Type de données pour la description de l'étendue en respectant les limites date/heure et spatiales</description>
             <help>Type de données destiné à la description de l'extension dans le respect des limites spatiales et temporelles. Cette classe est une représentation de la classe EX_TemporalExtent. l'extension géographique est saisie en plus de l'indication de la validité temporelle.</help>
             <condition />
           </element>
           <element name="gmd:EX_TemporalExtent" id="350.0">
-            <label>Etendue temporelle</label>
+            <label>Étendue temporelle</label>
             <description>Type de données pour la description de la période de temps couverte par le contenu du jeu de donnée</description>
             <help>La validité temporelle du jeu de données est définie dans cette classe. Cette classe connaît la représentation EX_SpatialTemporalExtent. Des informations supplémentaires peuvent être trouvées sous EX_Extent.</help>
             <condition />
           </element>
           <element name="gmd:EX_VerticalExtent" id="354.0">
-            <label>Etendue verticale</label>
+            <label>Étendue verticale</label>
             <description>Type de données pour la description de l'étendue verticale du jeu de données</description>
             <help>Type de données permettant la description de la troisième dimension (axe Z) avec ses altitudes minimale et maximale ainsi que l'unité de mesure utilisée. Vous trouverez des informations supplémentaires sous EX_Extent.</help>
             <condition />
@@ -9892,7 +9892,7 @@ responsable du service.</li>
           <element name="gmd:MD_Dimension" id="179.0">
             <label>Dimension</label>
             <description>Classe contenant les propriétés des axes</description>
-            <help>Cette classe contient les propriétés des axes requises pour la définition de données tramées. Ces informations sont utilisées dans la classe MD_GridSpatialRepresentation. d'autres informations peuvent y être trouvées.</help>
+            <help>Cette classe contient les propriétés des axes requises pour la définition de données tramées. Ces informations sont utilisées dans la classe MD_GridSpatialRepresentation. D'autres informations peuvent y être trouvées.</help>
             <condition />
           </element>
           <element name="gmd:MD_Distribution" id="270.0">
@@ -9904,7 +9904,7 @@ responsable du service.</li>
           <element name="gmd:MD_Distributor" id="279.0">
             <label>Distributeur</label>
             <description>Classe avec l'information sur le distributeur</description>
-            <help>Classe contenant les informations relatives au distributeur des données (nom, rôle, adresse, etc.). d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant les informations relatives au distributeur des données (nom, rôle, adresse, etc.). D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_ExtendedElementInformation" id="306.0">
@@ -9939,7 +9939,7 @@ responsable du service.</li>
           </element>
           <element name="gmd:MD_Georeferenceable" id="170.0">
             <label>Raster géoréférencable</label>
-            <description>Classe pour un raster, dont les cellules sont disposées irrégulièrement en fonction de différents systèmes de projections, de telle manière qu''ils ne sont pas localisables avec les propriétés du raster mais avec les informations de localisation disponible</description>
+            <description>Classe pour un raster, dont les cellules sont disposées irrégulièrement en fonction de différents systèmes de projections, de telle manière qu''ils ne sont pas localisables avec les propriétés du raster mais avec les informations de localisation disponibles</description>
             <help>Classe réservée à une trame dont les cellules sont disposées de façon irrégulière dans un système de coordonnées quelconque (en projection / géographique), de sorte qu''elles ne peuvent être localisées qu''à l'aide d'informations de localisation fournies et non au moyen des propriétés de la trame. La classe MD_Georeferenceable contient la description des informations concernant le géoréférencement. Il est établi une distinction dans ce cadre entre un géoréférencement par des points d'appui et par des paramètres de transformation. l'attribut "parameterCitation" permet, via le type de données CI_Citation, de fournir d'autres informations encore concernant la provenance et le service compétent ayant transmis les informations de géoréférencement.</help>
             <condition />
           </element>
@@ -9976,13 +9976,13 @@ responsable du service.</li>
           <element name="gmd:MD_MaintenanceInformation" id="142.0">
             <label>Information de maintenance</label>
             <description>Classe sur la raison, l'étendue et la fréquence des mises à jour.</description>
-            <help>Les informations concernant l'étendue, la fréquence et la date de mise à jour des données sont contenues dans la classe MD_MaintenanceInformation. Cette classe recèle des attributs renseignant sur la fréquence et l'étendue de la mise à jour et de la réactualisation des données du jeu. Seule l'indication de la fréquence est impérative et doit être sélectionnée dans la liste MD_MaintenanceFrequencyCode. l'étendue de la mise à jour, les attributs qu''elle concerne et les descriptions associées sont des informations qu''il est possible d'indiquer via les attributs "updateScope" et "updateScopeDescription". Il n''est pas prévu d'indiquer l'extension spatiale de la mise à jour. Si seules des parties d'un jeu de données sont mises à jour ou si toutes ses parties ne sont pas mises à jour simultanément, alors les parties concernées par la description de la mise à jour peuvent être précisées via "+updateScopeDescription" dans la classe MD_ScopeDescription.</help>
+            <help>Les informations concernant l'étendue, la fréquence et la date de mise à jour des données sont contenues dans la classe MD_MaintenanceInformation. Cette classe recèle des attributs renseignant sur la fréquence et l'étendue de la mise à jour et de la réactualisation des données du jeu. Seule l'indication de la fréquence est impérative et doit être sélectionnée dans la liste MD_MaintenanceFrequencyCode. L'étendue de la mise à jour, les attributs qu''elle concerne et les descriptions associées sont des informations qu''il est possible d'indiquer via les attributs "updateScope" et "updateScopeDescription". Il n''est pas prévu d'indiquer l'extension spatiale de la mise à jour. Si seules des parties d'un jeu de données sont mises à jour ou si toutes ses parties ne sont pas mises à jour simultanément, alors les parties concernées par la description de la mise à jour peuvent être précisées via "+updateScopeDescription" dans la classe MD_ScopeDescription.</help>
             <condition />
           </element>
           <element name="gmd:MD_Medium" id="291.0">
             <label>Média</label>
             <description>Classe avec l'information sur les médias sur lesquels les données pouvent être distribuée</description>
-            <help>Classe contenant des informations relatives au support sur lequel les données peuvent être obtenues. Il s'agit d'un support hors ligne. d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant des informations relatives au support sur lequel les données peuvent être obtenues. Il s'agit d'un support hors ligne. D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_Metadata" id="1.0">
@@ -10055,7 +10055,7 @@ responsable du service.</li>
             <label>Description du domaine</label>
             <description>Description de la classe d'information concernée par les informations</description>
             <help>Description du domaine auquel se rapporte une information. Ces indications sont utilisées pour les informations de qualité (DQ_Quality) et les informations de mise à jour (MD_Maintenance) lorsque les caractéristiques ne sont pas homogènes sur l'ensemble du jeu de données décrit. l'un au moins de ces attributs doit être saisi. Exemple de la MO, jeu de données décrit : "Lot". La couche des biens-fonds est mise à jour en permanence, la couche de la nomenclature n''est quant à elle actualisée qu''au besoin. Si la mise à jour de la couche des biens-fonds est décrite, l'option "Biens-fonds" est entrée pour les propriétés. Les informations de qualité sont gérées sur le même modèle. Vous trouverez d'autres informations sous MD_MaintenanceInformation et DQ_DataQuality.</help>
-            <condition>Il faut saisir un des attributs suivants: Attributs, Objets Géométriques, Occurences d'objets, Occurences d'attributs, Jeu de données, Autre.</condition>
+            <condition>Il faut saisir un des attributs suivants : Attributs, Objets Géométriques, Occurences d'objets, Occurences d'attributs, Jeu de données, Autre.</condition>
           </element>
           <element name="gmd:MD_SecurityConstraints" id="73.0">
             <label>Contraintes de sécurité</label>
@@ -10072,7 +10072,7 @@ responsable du service.</li>
           <element name="gmd:MD_StandardOrderProcess" id="298.0">
             <label>Processus de commande standard</label>
             <description>Classe pour la description des instructions et des modes usuels d'obtention de la ressource, comprenant également les informations sur les coûts</description>
-            <help>Classe contenant des informations relatives aux émoluments et à la commande. d'autres informations peuvent être trouvées sous MD_Distribution.</help>
+            <help>Classe contenant des informations relatives aux émoluments et à la commande. D'autres informations peuvent être trouvées sous MD_Distribution.</help>
             <condition />
           </element>
           <element name="gmd:MD_Usage" id="62.0">
@@ -10839,7 +10839,7 @@ date de mise en ligne du service, en tant que date de publication.
           </element>
           <element name="gmd:description" id="335.0" context="gmd:EX_Extent">
             <label>Description</label>
-            <description>Etendue spatiale et temporelle pour l'objet en question</description>
+            <description>Étendue spatiale et temporelle pour l'objet en question</description>
             <help>Description sous forme textuelle de l'extension spatiale et temporelle de l'objet considéré.</help>
             <condition />
           </element>
@@ -10943,7 +10943,7 @@ téléchargement direct ».</li>
 version en tant que mot-clé complémentaire(s). Le numéro de version doit comporter trois chiffres.
     </li>
     </ul>
-    Formattage : Les mots-clés doivent être fournis en minuscule, accentués, au pluriel.]]></help>
+    Formattage : Les mots-clés doivent être fournis en minuscules, accentués, au pluriel.]]></help>
             <help><![CDATA[<b>Exemple :</b> Zones à risque naturel,
       <br/>
       Exemple pour un service CSW 2.0.2 : « csw 2.0.2 »
@@ -11144,19 +11144,19 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
             <condition />
           </element>
           <element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Information complémentaire sur les étendues spatiales et temporelles du jeu de données, incluant le polygone de délimitation et les dimensions verticales et temporelles</description>
             <help>Informations supplémentaires concernant l'extension spatiale et temporelle des données, incluant le polygone de délimitation, les altitudes et la durée de validité. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
           </element>
           <element name="gmd:extent" id="140.0" context="gmd:DQ_Scope">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Information sur les domaines horizontaux, verticaux et temporels des données spécifiées par l'attribut scope (79) du domaine d'applicabilité</description>
             <help>Informations relatives à l'extension horizontale, verticale et temporelle des données conformément au domaine de validité défini. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
           </element>
           <element name="gmd:extent" id="351.0" context="gmd:EX_TemporalExtent">
-            <label>Etendue</label>
+            <label>Étendue</label>
             <description>Date et temps pour le contenu du jeu de donnée</description>
             <help>Date et heure du domaine de validité du jeu de données (texte).</help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
@@ -11272,7 +11272,7 @@ période de temps couverte par le service.]]></help>
           </element>
           <element name="gmd:geographicElement" id="336.0">
             <label>Elément géographique</label>
-            <description>Informations sur l'etendue géographique</description>
+            <description>Informations sur l'étendue géographique</description>
             <help>Informations concernant l'extension géographique. Ces informations sont gérées dans la classe EX_GeographicExtent.</help>
             <condition>Condition</condition>
           </element>
@@ -11440,7 +11440,7 @@ période de temps couverte par le service.]]></help>
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (noms d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscules, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
    ]]></help>
@@ -11611,7 +11611,7 @@ période de temps couverte par le service.]]></help>
           </element>
           <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
             <label>Fréquence de mise à jour</label>
-            <description>Fréquence avec laquelle des changements et des ajouts sont fait à la ressource après que la ressource initiale ait été complétée</description>
+            <description>Fréquence avec laquelle des changements et des ajouts sont faits à la ressource après que la ressource initiale ait été complétée</description>
             <help>Fréquence à laquelle des changements et des ajouts sont apportés à la ressource. La valeur concernée est à sélectionner dans la liste suivante : en permanence, quotidienne, hebdomadaire, bimensuelle, mensuelle, trimestrielle, semestrielle, annuelle, au besoin, irrégulière, non prévue, inconnue, définie par l'utilisateur.</help>
             <condition>Obligatoire</condition>
           </element>
@@ -12391,7 +12391,7 @@ diffusion restreinte.]]></help>
             <condition />
           </element>
           <element name="gmd:sourceExtent" id="97.0">
-            <label>Etendues des données sources</label>
+            <label>Étendues des données sources</label>
             <description>Information sur les étendues spatiales, verticales et temporelles des données sources</description>
             <help>Informations concernant l'extension spatiale, verticale et temporelle des données source. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>
             <condition>Condition</condition>
@@ -12415,7 +12415,7 @@ diffusion restreinte.]]></help>
             <condition>Obligatoire</condition>
           </element>
           <element name="gmd:spatialExtent" id="353.0">
-            <label>Etendue spatiale</label>
+            <label>Étendue spatiale</label>
             <description>Information sur l'étendue spatiale de la composition spatio-temporelle de l'étendue</description>
             <help>Informations relatives à l'extension spatiale de la classe composée EX_SpatialTemporalExtent. Ces informations sont gérées dans la classe EX_Extent.</help>
             <condition />
@@ -12566,7 +12566,7 @@ diffusion restreinte.]]></help>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level2 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 2 (WFS pré-défini)</option>
               <option value="Technical Guidance for the implementation of INSPIRE Download Services – level3 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 3 (WFS direct)</option>
             </helper>
-            <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
+            <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité :</b>
     Les exigences de conformité seront remplies au moyen des éléments
     de métadonnées « spécification » et « degré ».]]></help>
             <help for="france"><![CDATA[<b>Recommandations pour les séries de données:</b>
@@ -12849,8 +12849,8 @@ l’IGN (WPS)
           </element>
           <element name="gmd:useLimitation" id="68.0">
             <label>Limitation d'utilisation</label>
-            <description>Limitation d'utilisation de la ressource où de métadonnées. Exemple: "ne pas utiliser pour la navigation"</description>
-            <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple: "ne pas utiliser pour la navigation"</help>
+            <description>Limitation d'utilisation de la ressource ou des métadonnées. Exemple : "ne pas utiliser pour la navigation"</description>
+            <help>Restriction d'utilisation de la ressource ou des métadonnées. Exemple : "ne pas utiliser pour la navigation"</help>
             <help><![CDATA[<b>Conditions applicables à l’accès et à l’utilisation</b>]]></help>
             <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     Cet élément de métadonnées définit les conditions applicables à l’accès et à l’utilisation des séries et des services de données géographiques, et, le cas échéant, les frais correspondants :
@@ -14097,9 +14097,9 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
       </nojs>
       <selectView>Sélectionner une vue</selectView>
       <moreTabs>Plus d'information</moreTabs>
-      <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre noeud</nodeChangeWarning>
+      <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre nœud</nodeChangeWarning>
       <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.</nodeChangeInfo>
-      <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>
+      <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquez ici :</nodeChangeBack>
       <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer là :</nodeChangeForward>
     </i18n>
     <language>fre</language>

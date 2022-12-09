@@ -35,6 +35,9 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
 import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
+import org.hibernate.tool.schema.extract.spi.ExtractionContext;
+import org.hibernate.tool.schema.extract.spi.SequenceInformation;
+import org.hibernate.tool.schema.extract.spi.SequenceInformationExtractor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -177,19 +180,32 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         long currval = 0L;
         long loopCount = 0L;
         try {
-            preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
-            // There may be a better way to adjust the sequence other than looping though them
-            // but this is the only database agnostic approach that could be found at the moment..
-            while (currval < desiredVal) {
-                resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    currval = resultSet.getLong(1);
-                    loopCount++;
-                } else {
-                    break;
+            // For Postgres, use setval
+            if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
+                preparedStatement = connection.prepareStatement("SELECT setval(?, ?);");
+                preparedStatement.setString(1, sequenceName);
+                preparedStatement.setLong(2, desiredVal);
+
+                preparedStatement.executeQuery();
+
+                Log.info(Geonet.DB, "  Sequence " + sequenceName + " updated. Currval: " + desiredVal);
+            } else {
+                preparedStatement = connection.prepareStatement(dialect.getSequenceNextValString(sequenceName));
+
+                // There may be a better way to adjust the sequence other than looping though them
+                // but this is the only database agnostic approach that could be found at the moment..
+                while (currval < desiredVal) {
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        currval = resultSet.getLong(1);
+                        loopCount++;
+                    } else {
+                        break;
+                    }
+                    resultSet.close();
+                    resultSet = null;
                 }
-                resultSet.close();
-                resultSet = null;
+                Log.info(Geonet.DB, "  Sequence " + sequenceName + " updated. Increased by: " + loopCount + ".  Currval: " + currval);
             }
         } catch (SQLException e) {
             throw e;
@@ -201,8 +217,6 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
                 resultSet.close();
             }
         }
-
-        Log.debug(Geonet.DB, "  Sequence " + sequenceName + " updated. Increased by: " + loopCount + ".  Currval: " + currval);
     }
 
     public static String getFieldName(Method method) {

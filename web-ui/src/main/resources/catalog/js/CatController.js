@@ -193,6 +193,7 @@
             queryTitle: "resourceTitleObject.\\*:(${any})",
             queryTitleExactMatch: 'resourceTitleObject.\\*:"${any}"',
             searchOptions: {
+              fullText: true,
               titleOnly: true,
               exactMatch: true,
               language: true
@@ -249,6 +250,10 @@
               // }
               boost: "5",
               functions: [
+                {
+                  filter: { match: { resourceType: "series" } },
+                  weight: 1.5
+                },
                 // Boost down member of a series
                 {
                   filter: { exists: { field: "parentUuid" } },
@@ -292,6 +297,7 @@
                           "resourceTitleObject.${searchLang}^6",
                           "resourceAbstractObject.${searchLang}^.5",
                           "tag",
+                          "uuid",
                           "resourceIdentifier"
                           // "anytext",
                           // "anytext._2gram",
@@ -302,20 +308,7 @@
                   ]
                 }
               },
-              _source: ["resourceTitleObject"],
-              // Fuzzy autocomplete
-              // {
-              //   query: {
-              //     // match_phrase_prefix: match
-              //     "multi_match" : {
-              //       "query" : query,
-              //         // "type":       "phrase_prefix",
-              //         "fields" : [ field + "^3", "tag" ]
-              //     }
-              //   },
-              //   _source: [field]
-              // }
-              from: 0,
+              _source: ["resourceTitle*", "resourceType"],
               size: 20
             },
             moreLikeThisSameType: true,
@@ -707,7 +700,12 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              }
+              } /*,
+              {
+                label: "exportDCAT",
+                url: "/geonetwork/api/collections/main/items/${uuid}?f=dcat",
+                class: "fa-file-code-o"
+              }*/
             ],
             grid: {
               related: ["parent", "children", "services", "datasets"]
@@ -830,7 +828,8 @@
             showStatusTopBarFor: "",
             showCitation: {
               enabled: false,
-              if: null // {'documentStandard': ['iso19115-3.2018']}
+              // if: {'documentStandard': ['iso19115-3.2018']}
+              if: { resourceType: ["series", "dataset", "nonGeographicDataset"] }
             },
             sortKeywordsAlphabetically: true,
             mainThesaurus: ["th_gemet", "th_gemet-theme"],
@@ -1060,10 +1059,42 @@
               }
             ],
             sortBy: "relevance",
+            facetConfig: {
+              valid: {
+                terms: {
+                  field: "valid",
+                  size: 10
+                }
+              },
+              groupOwner: {
+                terms: {
+                  field: "groupOwner",
+                  size: 10
+                }
+              },
+              recordOwner: {
+                terms: {
+                  field: "recordOwner",
+                  size: 10
+                }
+              },
+              groupPublished: {
+                terms: {
+                  field: "groupPublished",
+                  size: 10
+                }
+              },
+              isHarvested: {
+                terms: {
+                  field: "isHarvested",
+                  size: 2
+                }
+              }
+            },
             // Add some fuzziness when search on directory entries
             // but boost exact match.
             queryBase:
-              'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
+              'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any})^5 OR resourceTitleObject.${searchLang}:(${any}~2)'
           },
           admin: {
             enabled: true,
@@ -1135,7 +1166,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/",
+        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",
@@ -1244,7 +1275,7 @@
               result = result.concat(
                 that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key)
               );
-            } else {
+            } else if (key !== "mods") {
               result.push(prefix + key);
             }
             return result;

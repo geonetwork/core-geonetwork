@@ -45,15 +45,13 @@
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
-  <xsl:output method="xml" indent="yes"/>
-
   <xsl:output name="default-serialize-mode"
               indent="no"
               omit-xml-declaration="yes"
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-
+  <xsl:param name="fastIndexMode" select="false()"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE
@@ -152,6 +150,10 @@
 
       <xsl:for-each select="gmd:metadataStandardVersion">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="gmd:hierarchyLevelName">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
@@ -277,7 +279,7 @@
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
             <xsl:variable name="zuluDateTime" as="xs:string?">
-              <xsl:if test="gn-fn-index:is-isoDate(.)">
+              <xsl:if test="gn-fn-index:is-isoDate($date)">
                 <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
               </xsl:if>
             </xsl:variable>
@@ -372,13 +374,6 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">
-              <xsl:variable name="data"
-                            select="util:buildDataUrl(., 140)"/>
-              <xsl:if test="$data != ''">,
-                "data": "<xsl:value-of select="$data"/>"
-              </xsl:if>
-            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -501,7 +496,9 @@
                                           gmd:code/(gco:CharacterString|gmx:Anchor)"/>
 
             <xsl:variable name="thesaurusId"
-                          select="normalize-space($thesaurusRef/text())"/>
+                          select="if ($thesaurusRef != '')
+                                  then normalize-space($thesaurusRef/text())
+                                  else util:getThesaurusIdByTitle($thesaurusTitle)"/>
 
             <xsl:variable name="thesaurusUri"
                           select="$thesaurusRef/@xlink:href"/>
@@ -814,7 +811,7 @@
 
 
         <!-- Service information -->
-        <xsl:for-each select="srv:serviceType/gco:LocalName">
+        <xsl:for-each select="srv:serviceType/gco:LocalName[string(text())]">
           <serviceType>
             <xsl:value-of select="text()"/>
           </serviceType>
@@ -1247,6 +1244,7 @@
 
           <xsl:variable name="resolvedDoc">
             <xsl:if test="$processRemoteDocs
+                          and not($fastIndexMode)
                           and $xlink != ''
                           and not(@xlink:title)
                           and not(starts-with($xlink, $siteUrl))">

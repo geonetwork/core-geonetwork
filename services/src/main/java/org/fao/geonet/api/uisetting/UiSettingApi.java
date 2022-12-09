@@ -202,24 +202,15 @@ public class UiSettingApi {
             UserSession session = ApiUtils.getUserSession(httpSession);
             boolean isUserAdmin = session.getProfile().equals(Profile.UserAdmin);
             if (isUserAdmin) {
-                Specification<UserGroup> spec =
-                    Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
-                spec = spec.and(UserGroupSpecs.hasProfile(Profile.UserAdmin));
-
-                Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
-
-                final List<Source> sources = sourceRepository.findByGroupOwnerIn(ids);
-                boolean isUiConfigForOneOfUserPortal = false;
-                for (Source s : sources) {
-                    if (uiIdentifier.equals(s.getUiConfig())) {
-                        uiSettingsRepository.save(uiConfiguration);
-                        return new ResponseEntity(HttpStatus.NO_CONTENT);
-                    }
+                if (canManageUISettings(uiIdentifier, session)) {
+                    uiSettingsRepository.save(uiConfiguration);
+                    return new ResponseEntity(HttpStatus.NO_CONTENT);
+                } else {
+                    throw new NotAllowedException(String.format(
+                        "UI configuration with id '%s' is not used in any portal managed by current user. You are not allowed to update this configuration.",
+                        uiIdentifier
+                    ));
                 }
-                throw new NotAllowedException(String.format(
-                    "UI configuration with id '%s' is not used in any portal managed by current user. You are not allowed to update this configuration.",
-                    uiIdentifier
-                ));
             } else {
                 uiSettingsRepository.save(uiConfiguration);
             }
@@ -252,11 +243,26 @@ public class UiSettingApi {
             required = true
         )
         @PathVariable
-            String uiIdentifier
+            String uiIdentifier,
+        @Parameter(hidden = true) HttpSession httpSession
     ) throws Exception {
         Optional<UiSetting> one = uiSettingsRepository.findById(uiIdentifier);
         if (one.isPresent()) {
-            uiSettingsRepository.deleteById(uiIdentifier);
+            UserSession session = ApiUtils.getUserSession(httpSession);
+            boolean isUserAdmin = session.getProfile().equals(Profile.UserAdmin);
+            if (isUserAdmin) {
+                if (canManageUISettings(uiIdentifier, session)) {
+                    uiSettingsRepository.deleteById(uiIdentifier);
+                    return new ResponseEntity(HttpStatus.NO_CONTENT);
+                }
+                throw new NotAllowedException(String.format(
+                    "UI configuration with id '%s' is not used in any portal managed by current user. You are not allowed to update this configuration.",
+                    uiIdentifier
+                ));
+            } else {
+                uiSettingsRepository.deleteById(uiIdentifier);
+            }
+
         } else {
             throw new ResourceNotFoundException(String.format(
                 "UI Configuration with id '%s' does not exist.",
@@ -264,5 +270,19 @@ public class UiSettingApi {
             ));
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    private boolean canManageUISettings(String uiIdentifier, UserSession session) {
+        Specification<UserGroup> spec =
+            Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+        spec = spec.and(UserGroupSpecs.hasProfile(Profile.UserAdmin));
+
+        Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
+
+        final List<Source> sources = sourceRepository.findByGroupOwnerIn(ids);
+
+        boolean isUiConfigForOneOfUserPortal = sources.stream().anyMatch(source -> uiIdentifier.equals(source.getUiConfig()));
+
+        return isUiConfigForOneOfUserPortal;
     }
 }

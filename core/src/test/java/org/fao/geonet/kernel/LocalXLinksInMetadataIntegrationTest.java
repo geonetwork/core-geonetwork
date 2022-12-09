@@ -29,6 +29,7 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Xml;
@@ -107,7 +108,7 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTes
         String changeDate;
         String createDate = changeDate = new ISODate().getDateAndTime();
         String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
-            null, createDate, changeDate, false, false);
+            null, createDate, changeDate, false, IndexingMode.none);
 
         SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
 

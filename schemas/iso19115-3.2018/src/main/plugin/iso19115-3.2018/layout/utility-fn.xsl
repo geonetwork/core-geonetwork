@@ -105,7 +105,7 @@
    -->
   <xsl:function name="gn-fn-iso19115-3.2018:fillTextElement" as="node()*">
     <xsl:param name="string" as="xs:string"/>
-    <xsl:param name="mainLanguage" as="xs:string"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="useOnlyPTFreeText" as="xs:boolean"/>
 
     <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($string, '\|', '#', $mainLanguage, $useOnlyPTFreeText)"/>
@@ -115,7 +115,7 @@
     <xsl:param name="string" as="xs:string"/>
     <xsl:param name="translationSeparator" as="xs:string"/>
     <xsl:param name="valueSeparator" as="xs:string"/>
-    <xsl:param name="mainLanguage" as="xs:string"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="useOnlyPTFreeText" as="xs:boolean"/>
 
     <xsl:choose>
