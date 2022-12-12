@@ -353,9 +353,18 @@
           <!--
           Expect the entry point to be CI_Organisation
           The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-          </datacite:creatorName>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
