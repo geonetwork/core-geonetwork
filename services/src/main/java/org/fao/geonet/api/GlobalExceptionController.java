@@ -26,11 +26,13 @@ package org.fao.geonet.api;
 import com.google.common.collect.Sets;
 import org.fao.geonet.api.exception.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.doi.client.DoiClientException;
 import org.fao.geonet.exceptions.ILocalizedException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.utils.Log;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -155,6 +157,8 @@ public class GlobalExceptionController {
     })
     public ApiError runtimeExceptionHandler(final Exception exception, final HttpServletRequest request) {
         storeApiErrorCause(exception);
+
+        Log.error(Geonet.GEONETWORK, exception.getMessage(), exception);
 
         if (contentTypeNeedsBody(request)) {
             return new ApiError("runtime_exception", exception);
