@@ -81,8 +81,8 @@
                 scope.relations = scope.isOverview
                   ? res.relations[scope.type]
                   : res.relations[scope.type].filter(function (l) {
-                    return l.protocol === scope.protocol;
-                  });
+                      return l.protocol === scope.protocol;
+                    });
               } else {
                 scope.relations = {};
               }
