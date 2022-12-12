@@ -1,18 +1,14 @@
 package org.fao.geonet.index.es;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.jdom.Element;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class IndexationTest {
