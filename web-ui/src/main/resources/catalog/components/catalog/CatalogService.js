@@ -224,7 +224,7 @@
             metadataUuid,
             hasCategoryOfSource
           ).then(function (response) {
-            var path = "/metadata/" + response.id;
+            var path = "/metadata/" + response.data;
             if (tab) {
               path += "/tab/" + tab;
             }
