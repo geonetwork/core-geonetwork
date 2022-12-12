@@ -6,7 +6,7 @@
 >
   <div
     class="panel panel-default gn-facet-{{facet.key}} gn-facet-type-{{decorator.type}}"
-    style="background-image:url('{{decorator.map[facet.key]}}')"
+    style="background-image:url('{{facet.key | facetBgUrlBuilder:decorator}}')"
   >
     <div class="panel-body">
       <a

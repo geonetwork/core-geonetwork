@@ -374,11 +374,22 @@
             if (scope.decorator.type == "img") {
               scope.ext =
                 "image/" + (key.substr(key.lastIndexOf(".") + 1, key.length) || "png");
+              if (scope.decorator.path) {
+                key = scope.decorator.path.replace("{key}", key);
+              }
             }
 
             scope.class = scope.decorator.prefix ? scope.decorator.prefix + key : key;
           }
         }
+      };
+    }
+  ]);
+
+  module.filter("facetBgUrlBuilder", [
+    function () {
+      return function (key, decorator) {
+        return decorator.path ? decorator.path.replace("{key}", key) : decorator.map[key];
       };
     }
   ]);
