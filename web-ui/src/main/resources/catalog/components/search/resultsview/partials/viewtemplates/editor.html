@@ -105,14 +105,6 @@
             </a>
             <a
               class="btn btn-default"
-              data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-              data-ng-href="#/create?childOf={{md.id}}"
-              title="{{'createChild' | translate}}"
-            >
-              <i class="fa fa-sitemap text-muted"></i>
-            </a>
-            <a
-              class="btn btn-default"
               data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
               data-ng-show="md.isTemplate != 's'"
               data-ng-href="#/create?from={{md.id}}"
