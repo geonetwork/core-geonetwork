@@ -1,0 +1,43 @@
+================================================================================
+===
+=== GeoNetwork 3.12.8: List of changes
+===
+================================================================================
+- [BP] Better error logging from ApiError runtime errors and fix potential NPE (#6703)
+- [BP] Validate language parameter in API services (#6673)
+- [BP] Updated folder cache logic to improve performance (#6690)
+- [BP] add numberofsuggestions to multientrycombiner_onlineresourcesdescription (#6655)
+- [BP] Add option to parse secondary properties names for (CmisMetadataUUIDPropertyName ExternalResourceManagementValidationStatusPropertyName) from a more human readable name (#6687)
+- [BP] Check the signout redirect url (#6666)
+- [BP] Fix close button in the metadata editor tooltips.  (#6665)
+- Fix schematron unit test (#6661)
+- [BP] Fix boostrap-table styling (#6658)
+- [BP] Allow files in cssSources in Wro4j (#6656)
+- Add bootstrap-table-export to wro lib module and fix file path in lib3d to use the file in dist folder (#6649)
+- [BP] JS / Moment / Timezone lib missing when 3D mode enabled (#6603)
+- Remove duplicated translation, related to a1c9dbaccaaf2fdd5dc22ccc5ed129c66579144a
+- [BP] Update thesaurus picker directive to work in the metadata editor template fields (#6503)
+- [BP] Map servers / sources / metadata template identifiers - delete confirmation dialog and fixes in display delete button in sources page. Related to #6641 (#6647)
+- Fix retrieve related resources in metadata API request to retrieve the attributes from a linked feature catalog metadata (#6594)
+- [BP] RDF export: Encode spaces in foaf:thumbnail urls and update geometry field (#6586)
+- [BP] Prevents browser from auto-completing proxy password in admin console (#6480)
+- [BP] Update bootstrap-table to v1.21.1 (#6628) (#6636)
+- [BP] Update bootstrap from 3.3.7 to 3.4.1 (#6627) (#6634)
+- [BP] Only allow Administrator users delete the UI settings for the default UI (srv)
+- [BP] Support for a process to update the metadata content when creating a duplicate
+- [BP] Thesaurus / Import from Re3gistry failing
+- [BP] Harvesters - display the button to assign the harvested records to the local node only to 'Administrator' users
+- [BP] Update moment to version 2.29.4 (#6577)
+- Merge branch '3.12.x' of https://github.com/geonetwork/core-geonetwork into 3.12.x
+- [BP] Configuration to notify by mail about metadata publication / unpublication (#6457) and (#6574)
+- [BP] Remove httpOnly from session timeout cookies (#6570)
+- Fix JS exception when user info is not loaded yet
+- Remove authorizationService adding by error in 8a4beee1
+- [BP] Security / Update Site API (#6569)
+- Update underscore.js to v1.13.6 (#6568)
+- [BP] Fix the privileges value before the update for RecordPrivilegesChangeEvent in metadata sharing API
+- Fix thesaurus management page structure (#6564)
+- [BP] Metadata workflow - Bulk metadata submit (#6474)
+- [BP] Dropdown / No pointer on header (#6547)
+- CSW queries should use the draft filter (#6459)
+- [BP] Remove non-needed code since multi-node support is not available (#6558)
