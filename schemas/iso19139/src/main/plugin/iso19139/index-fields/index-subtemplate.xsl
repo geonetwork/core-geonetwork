@@ -161,7 +161,7 @@
   <!-- Indexing constraints -->
   <xsl:template mode="index" match="gmd:resourceConstraints[count(ancestor::node()) =  1]">
     <xsl:variable name="constraint" select="concat(
-                        string-join(gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode/@codeListValue[@codeListValue != 'otherConstraints'], ', '),
+                        string-join(gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode/@codeListValue[. != 'otherConstraints'], ', '),
                         ' ',
                         string-join(gmd:MD_LegalConstraints/gmd:otherConstraints/*/text(), ', '))"/>
 
