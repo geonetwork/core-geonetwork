@@ -1,0 +1,17 @@
+sites:
+
+  - filename: /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/sextant/apache-proxy-ows/test/qgis-server/(*)
+    url_publique : http://secondTestAbsolute/$1
+    url_interne: /secondTestAbsolute/wms/$1
+
+  - filename: /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/sextant/apache-proxy-ows/test/mapserver/(*)
+    url_publique : http://secondTestAbsolute/$1
+    url_interne: /secondTestAbsolute/wms/$1
+
+  - filename: /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/sextant/apache-proxy-ows/python/tests(*).yml
+    url_publique : http://nope/$1
+    url_interne: /nope/supernope/$1
+
+  - filename: ./tests/(*).yml
+    url_publique : http://thirdTestAbsolute/$1
+    url_interne: /thirdTestAbsolute/wms/$1

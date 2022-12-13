@@ -1,0 +1,105 @@
+import pathlib
+import yaml
+import csv
+import os
+from yaml.loader import SafeLoader
+import sys
+from pathlib import Path
+
+
+def get_config_from_yaml(filename):
+    with open(filename) as f:
+        return yaml.load(f, Loader=SafeLoader)
+
+
+class ApacheProxy:
+    def __init__(self, csv_file, input_conf_path, header=False):
+        self.config_file_path = ""
+        self.filedir_path = ""  # /test/titi/(*).yaml
+        self.full_path = ""  # /test/titi/
+        self.publique_url = ""
+        self.interne_url = ""
+        self.input_conf_path = input_conf_path
+        self.f = open(csv_file, "w")
+        self.writer = csv.writer(self.f)
+        if header:
+            self.writer.writerow(["url_interne", "url_publique"])
+        self.publique_urls = []
+        self.interne_urls = []
+
+    def workflow(self):
+        sites = get_config_from_yaml(self.input_conf_path)
+        for site_config in sites["sites"]:
+            self.update_conf(site_config)
+            file_extension = str(self.get_file_extension())
+            print("Extension à rechercher: {}".format(file_extension))
+            matches_ = self.get_all_files_matching(file_extension)
+            print(
+                "{} Fichier(s) trouvé(s) dans le repertoire {}".format(
+                    len(matches_), self.full_path
+                )
+            )
+            self.build_lists(matches_)
+        if self.publique_urls == []:
+            print("Aucun fichier trouvé")
+        else:
+            self.write_to_csv()
+        self.f.close()
+
+    def write_to_csv(self):
+        ordered_interne_list, ordered_public_list = (
+            list(t) for t in zip(*sorted(zip(self.interne_urls, self.publique_urls)))
+        )
+        for i, j in enumerate(ordered_interne_list):
+            self.writer.writerow([ordered_interne_list[i], ordered_public_list[i]])
+
+    def update_conf(self, site_config):
+        self.config_file_path = site_config
+        self.filedir_path = site_config["filename"]  # /test/titi/(*).yaml
+        self.full_path = str(pathlib.Path(self.filedir_path).parent)  # /test/titi/
+        self.publique_url = site_config["url_publique"]
+        self.interne_url = site_config["url_interne"]
+
+    def get_file_extension(self):
+        if self.filedir_path.endswith("(*)"):
+            return "*"
+        else:
+            return pathlib.Path(self.filedir_path).suffix
+
+    def get_all_files_matching(self, extension):
+        matches = []
+        for root, dirnames, filenames in os.walk(self.full_path):
+            for filename in filenames:
+                if filename.endswith(extension):
+                    matches.append(os.path.join(root, filename))
+                elif extension == "*":
+                    matches.append(os.path.join(root, filename))
+        return matches
+
+    def build_lists(self, matches):
+        for match in matches:
+            value_to_add = str(
+                Path(os.path.relpath(match, self.full_path)).with_suffix("")
+            )
+            publique_url = self.publique_url.replace("$1", value_to_add)
+            interne_url = self.interne_url.replace("$1", value_to_add)
+            if interne_url not in self.interne_urls:
+                self.interne_urls.append(interne_url)
+                self.publique_urls.append(publique_url)
+            else:
+                print(
+                    "{} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
+                        interne_url
+                    )
+                )
+
+
+print("Début")
+add_header = False
+if len(sys.argv) == 3 and sys.argv[2] == "-c":
+    print("Rajout des headers")
+    add_header = True
+conf_file = sys.argv[1]
+a = ApacheProxy("/input_output/out.csv", conf_file, header=add_header)
+a.workflow()
+print("Fin")

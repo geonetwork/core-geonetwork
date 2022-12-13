@@ -1,0 +1,12 @@
+url_publique,url_interne
+/secondTestAbsolute/wms//wms/biologie.yml,http://secondTestAbsolute//wms/biologie.yml
+/secondTestAbsolute/wms//wms/sardinia.yml,http://secondTestAbsolute//wms/sardinia.yml
+/secondTestAbsolute/wms//wms/formation/groupe1.yml,http://secondTestAbsolute//wms/formation/groupe1.yml
+/secondTestAbsolute/wms//wms/formation/groupe2.yml,http://secondTestAbsolute//wms/formation/groupe2.yml
+/secondTestAbsolute/wms//wms/exp/bathymetrie.yml,http://secondTestAbsolute//wms/exp/bathymetrie.yml
+/secondTestAbsolute/wms//wms/exp/emodnet_bathymetry_whole_med.yml,http://secondTestAbsolute//wms/exp/emodnet_bathymetry_whole_med.yml
+/secondTestAbsolute/wms//wms/exp/biologie.yml,http://secondTestAbsolute//wms/exp/biologie.yml
+/secondTestAbsolute/wms//wms/co_argo_float_mapserver,http://secondTestAbsolute//wms/co_argo_float_mapserver
+/secondTestAbsolute/wms//wms/biologie,http://secondTestAbsolute//wms/biologie
+/secondTestAbsolute/wms//wms/dcsmm_mapserver,http://secondTestAbsolute//wms/dcsmm_mapserver
+/secondTestAbsolute/wms//wms/coriolis/co_dataselection_shape_mtreguer_mapserver,http://secondTestAbsolute//wms/coriolis/co_dataselection_shape_mtreguer_mapserver

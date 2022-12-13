@@ -17,14 +17,19 @@ sites:
 ```bash
 sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64                                                                                           
 sudo chmod a+x /usr/local/bin/yq 
+
+docker build . -t proxy-apache-sextant
 ```
 
 ### Utilisation
 
-```bash
-bash apache-proxy-ows.sh sample_conf.yml
+Déplacer le fichier de configuration dans le dossier input_output/
+```bash 
+bash apache_proxy.sh input_output/sample_conf.yml
 ```
 
-Avec `sample_conf.yaml` la configuration.
+`-c ` si besoin des headers
 
-Le fichier de sortie se trouve à l'endroit ou le script a été lancé `apache_conf.csv`
+
+Avec `sample_conf.yaml` la configuration.
+Le fichier de sortie se trouve dans le dossier input/output
