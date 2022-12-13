@@ -506,6 +506,25 @@
                 </mrd:MD_Format>
               </mrd:distributionFormat>
             </xsl:for-each-group>
+            <xsl:if test="metas/records_count > 0">
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">csv</xsl:with-param>
+              </xsl:call-template>
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">json</xsl:with-param>
+              </xsl:call-template>
+              <xsl:if test="count(features[. = 'geo']) > 0">
+                <xsl:call-template name="dataFormat">
+                  <xsl:with-param name="format">geojson</xsl:with-param>
+                </xsl:call-template>
+                <xsl:if test="metas/records_count &lt; 5000">
+                  <xsl:call-template name="dataFormat">
+                    <xsl:with-param name="format">shapefile</xsl:with-param>
+                  </xsl:call-template>
+                </xsl:if>
+              </xsl:if>
+            </xsl:if>
+
 
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
@@ -636,6 +655,23 @@
           </cit:function>
         </cit:CI_OnlineResource>
       </mrd:onLine>
+    </xsl:template>
+
+    <xsl:template name="dataFormat">
+      <xsl:param name="format" />
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>
+                  <xsl:value-of select="$format"/>
+                </gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
     </xsl:template>
 
 </xsl:stylesheet>
