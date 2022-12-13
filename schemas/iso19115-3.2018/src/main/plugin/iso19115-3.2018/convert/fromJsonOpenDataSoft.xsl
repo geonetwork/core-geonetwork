@@ -196,6 +196,39 @@
               <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue="{state}"/>
             </mri:status>-->
 
+            <!-- add publisher to resource organisation as well-->
+            <xsl:if test="not(organization)">
+              <mri:pointOfContact>
+                <cit:CI_Responsibility>
+                  <cit:role>
+                    <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher</cit:CI_RoleCode>
+                  </cit:role>
+                  <cit:party>
+                    <cit:CI_Organisation>
+                      <cit:name>
+                        <gco:CharacterString>
+                          <xsl:value-of select="metas/publisher"/>
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:contactInfo>
+                        <cit:CI_Contact>
+                          <cit:address>
+                            <cit:CI_Address>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="author_email"/>
+                                </gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </cit:CI_Contact>
+                      </cit:contactInfo>
+                    </cit:CI_Organisation>
+                  </cit:party>
+                </cit:CI_Responsibility>
+              </mri:pointOfContact>
+            </xsl:if>
+
             <xsl:for-each select="organization">
               <mri:pointOfContact>
                 <cit:CI_Responsibility>
