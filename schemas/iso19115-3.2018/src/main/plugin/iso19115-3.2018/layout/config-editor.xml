@@ -102,40 +102,40 @@
     <for name="mdb:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-snippet="&lt;cit:CI_Responsibility
-                         xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
-                         xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
-                          &lt;cit:role&gt;
-                            &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
-                            codeListValue='pointOfContact'/&gt;
-                          &lt;/cit:role&gt;
-                          &lt;cit:party&gt;
-                            &lt;cit:CI_Organisation&gt;
-                              &lt;cit:name&gt;
-                                &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                              &lt;/cit:name&gt;
-                              &lt;cit:contactInfo&gt;
-                                &lt;cit:CI_Contact&gt;
-                                  &lt;cit:address&gt;
-                                    &lt;cit:CI_Address&gt;
-                                      &lt;cit:electronicMailAddress&gt;
-                                        &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                                      &lt;/cit:electronicMailAddress&gt;
-                                    &lt;/cit:CI_Address&gt;
-                                  &lt;/cit:address&gt;
-                                &lt;/cit:CI_Contact&gt;
-                              &lt;/cit:contactInfo&gt;
-                              &lt;cit:individual&gt;
-                                &lt;cit:CI_Individual&gt;
-                                  &lt;cit:name&gt;
-                                    &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                                  &lt;/cit:name&gt;
-                                &lt;/cit:CI_Individual&gt;
-                              &lt;/cit:individual&gt;
-                            &lt;/cit:CI_Organisation&gt;
-                          &lt;/cit:party&gt;
-                        &lt;/cit:CI_Responsibility&gt;"
+                   xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
+                   xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'&gt;
+                    &lt;cit:role&gt;
+                      &lt;cit:CI_RoleCode codeList='http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode'
+                      codeListValue='pointOfContact'/&gt;
+                    &lt;/cit:role&gt;
+                    &lt;cit:party&gt;
+                      &lt;cit:CI_Organisation&gt;
+                        &lt;cit:name&gt;
+                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                        &lt;/cit:name&gt;
+                        &lt;cit:contactInfo&gt;
+                          &lt;cit:CI_Contact&gt;
+                            &lt;cit:address&gt;
+                              &lt;cit:CI_Address&gt;
+                                &lt;cit:electronicMailAddress&gt;
+                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                &lt;/cit:electronicMailAddress&gt;
+                              &lt;/cit:CI_Address&gt;
+                            &lt;/cit:address&gt;
+                          &lt;/cit:CI_Contact&gt;
+                        &lt;/cit:contactInfo&gt;
+                        &lt;cit:individual&gt;
+                          &lt;cit:CI_Individual&gt;
+                            &lt;cit:name&gt;
+                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                            &lt;/cit:name&gt;
+                          &lt;/cit:CI_Individual&gt;
+                        &lt;/cit:individual&gt;
+                      &lt;/cit:CI_Organisation&gt;
+                    &lt;/cit:party&gt;
+                  &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"_root": "cit:CI_Responsibility"}'
@@ -148,7 +148,11 @@
               data-filter='{"root": "cit:CI_Responsibility"}'
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>-->
       <!-- To use an ISO19139 contact directory in an ISO19115-3 record
-      use the following configuration: -->
+      use the following configuration:
+              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+       -->
       <directiveAttributes
         data-template-add-snippet="&lt;cit:CI_Responsibility
                    xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0'
@@ -184,12 +188,11 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="pointOfContact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -227,12 +230,11 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="distributor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="mrl:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -270,12 +272,11 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="processor"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="cit:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -313,18 +314,17 @@
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
               data-default-role="author"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
-              data-filter='{"root": "gmd:CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-filter='{"root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
     <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
         data-insert-modes=""/>
@@ -334,7 +334,7 @@
     <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-template-type="extent"
         data-filter='{"root": "gex:EX_Extent"}'
         data-insert-modes=""/>
@@ -343,12 +343,20 @@
     <for name="mcc:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-template-type="extent"
         data-filter='{"root": "gex:EX_Extent"}'
         data-insert-modes=""/>
     </for>
 
+    <for name="cit:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="extent"
+        data-filter='{"root": "gex:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
 
     <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -436,7 +444,6 @@
     <name>mdq:report</name>
     <name>mdq:result</name>
     <name>mrd:distributionFormat</name>
-    <name>mrd:MD_Distributor</name>
     <name>mrd:onLine</name>
     <name>mri:associatedResource</name>
     <name>mri:descriptiveKeywords</name>
@@ -595,6 +602,32 @@
         <col xpath="cit:party/cit:CI_Organisation/cit:name"/>
         <col xpath="cit:party/*/cit:individual/*/cit:name"/>
         <col xpath="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gfc:FC_ListedValue">
+      <header>
+        <col label="gfc:code"/>
+        <col label="gfc:label"/>
+        <col label="gfc:definition"/>
+      </header>
+      <row>
+        <col xpath="gfc:code"/>
+        <col xpath="gfc:label"/>
+        <col xpath="gfc:definition"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gfc:FC_ListedValue">
+      <header>
+        <col label="gfc:code"/>
+        <col label="gfc:label"/>
+        <col label="gfc:definition"/>
+      </header>
+      <row>
+        <col xpath="gfc:code"/>
+        <col xpath="gfc:label"/>
+        <col xpath="gfc:definition"/>
         <col del=".."/>
       </row>
     </table>
@@ -1354,22 +1387,32 @@
     </view>
 
 
-    <view name="default">
-
+    <view name="default"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
-        <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-need-help="creating-metadata"/>
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-file-uploader=""
+                   data-type="onlines"/>
+
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo"/>
-        <section xpath="/mdb:MD_Metadata/mdb:contentInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo" collapsible="false"/>
+        <section xpath="/mdb:MD_Metadata/mdb:contentInfo" collapsible="false"/>
         <section xpath="/mdb:MD_Metadata/mdb:distributionInfo"/>
         <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"/>
         <section xpath="/mdb:MD_Metadata/mdb:resourceLineage"/>
@@ -1380,13 +1423,14 @@
         <section xpath="/mdb:MD_Metadata/mdb:metadataConstraints"/>
         <section xpath="/mdb:MD_Metadata/mdb:metadataMaintenance"/>
         <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo"/>
-        <section name="metadata">
+        <section name="metadata" collapsed="true">
           <field xpath="/mdb:MD_Metadata/mdb:metadataIdentifier"/>
           <field xpath="/mdb:MD_Metadata/mdb:defaultLocale" or="defaultLocale"
                  in="/mdb:MD_Metadata"/>
           <field xpath="/mdb:MD_Metadata/mdb:otherLocale" or="otherLocale"
                  in="/mdb:MD_Metadata"/>
-          <field xpath="/mdb:MD_Metadata/mdb:contact" or="contact" in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:contact" or="contact"
+                 in="/mdb:MD_Metadata"/>
           <field xpath="/mdb:MD_Metadata/mdb:parentMetadata" or="parentMetadata"
                  in="/mdb:MD_Metadata"/>
           <field xpath="/mdb:MD_Metadata/mdb:metadataScope" or="metadataScope"
@@ -1404,13 +1448,16 @@
       <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
         <for name="mri:descriptiveKeywords"/>
+        <for name="mrl:processor"/>
+        <for name="cit:citedResponsibleParty"/>
         <for name="mri:pointOfContact"/>
-        <for name="mrd:distributor"/>
         <for name="mdb:contact"/>
         <for name="mcc:processor"/>
+        <for name="gfc:carrierOfCharacteristics"/>
         <for name="cit:party"/>
         <for name="cit:CI_Individual"/>
         <for name="cit:CI_Organisation"/>
+        <for name="gfc:listedValue"/>
       </flatModeExceptions>
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
@@ -1421,8 +1468,10 @@
     </view>
 
 
-    <view name="advanced">
+    <view name="advanced"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -1430,7 +1479,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="identificationInfo" default="true">
@@ -1523,6 +1571,7 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -1530,7 +1579,6 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="xml" default="true"/>

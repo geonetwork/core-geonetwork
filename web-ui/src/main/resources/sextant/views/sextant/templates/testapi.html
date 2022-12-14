@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
+  <head>
+    <title>Sextant API</title>
+  </head>
+
+  <body>
+    <div
+      ng-app="gn_search_sextant"
+      ng-controller="GnCatController"
+      class="gn sxt-max-md"
+      sxt-size="auto"
+      ng-include="'../../catalog/views/sextant/templates/index.html'"
+    ></div>
+
+    <script type="text/javascript">
+      var sxtSettings = {
+        langDetector: {
+          fromHtmlTag: true,
+          regexp: "^\/([a-z]+)\/",
+          lang: "fr"
+        },
+        configWhat: "AMBIO",
+        tabOverflow: {
+          search: true,
+          panier: true,
+          map: false
+        },
+        //viewerUrl: 'http://oceanbrowser.net/emodnet/',
+        layerFilter: true,
+        servicesUrl: {
+          wms: [
+            {
+              name: "Ifremer - Biologie",
+              url: "ttp://www.ifremer.fr/services/wms/biologie?"
+            }
+          ],
+          wmts: [
+            {
+              name: "Ifremer - maps.ngdc.noaa.gov",
+              url: "http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+            }
+          ]
+        },
+        localisations: [
+          {
+            name: "United States",
+            extent: [-13884991, 2870341, -7455066, 6338219]
+          },
+          {
+            name: "France",
+            extent: [-817059, 4675034, 1719426, 7050085]
+          },
+          {
+            name: "Brest",
+            extent: [-510281, 6164880, -490464, 6183435]
+          }
+        ],
+
+        panier: {
+          projs: [
+            {
+              value: "4326",
+              label: "Geographique - Datum WGS84"
+            }
+          ],
+          formats: {
+            vector: [
+              {
+                value: "ESRI Shapefile",
+                label: "ESRI Shapefile"
+              },
+              {
+                value: "GeoJSON",
+                label: "GeoJSON"
+              }
+            ],
+            raster: [
+              {
+                value: "GeoTiff",
+                label: "GeoTiff"
+              }
+            ]
+          }
+        },
+        processes: [
+          {
+            applicationProfile:
+              '{ "defaults": { "produit_id": "123456", "limits": "100, 200, 300, 400" } }',
+            label: "Extraction Surval",
+            name: "r:extractionsurval",
+            url: "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R"
+          },
+          {
+            labels: {
+              fre: "Essai de label (FR)",
+              eng: "Test label (EN)"
+            },
+            name: "r:extractionsurval",
+            url: "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R"
+          }
+        ],
+        theme: "test-theme",
+        graticule: {
+          type: "wms",
+          url: "http://www.ifremer.fr/services/wms1",
+          layer: "graticule_4326"
+        }
+      };
+    </script>
+
+    <script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+    <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+  </body>
+</html>

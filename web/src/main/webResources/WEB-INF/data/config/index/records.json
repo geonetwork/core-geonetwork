@@ -1113,11 +1113,37 @@
                   }
                 }
               },
+              "langdut": {
+                "type": "text",
+                "analyzer": "dutch",
+                "copy_to": [
+                  "any.langdut"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
               "langita": {
                 "type": "text",
                 "analyzer": "italian",
                 "copy_to": [
                   "any.langita"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "langspa": {
+                "type": "text",
+                "analyzer": "spanish",
+                "copy_to": [
+                  "any.langspa"
                 ],
                 "fields": {
                   "keyword": {
@@ -1225,10 +1251,22 @@
                   "any.langger"
                 ]
               },
+              "langdut": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langdut"
+                ]
+              },
               "langita": {
                 "type": "keyword",
                 "copy_to": [
                   "any.langita"
+                ]
+              },
+              "langspa": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langspa"
                 ]
               },
               "text": {
@@ -1261,7 +1299,7 @@
         "org": {
           "match": "*Org*",
           "mapping": {
-          "type": "keyword"
+            "type": "keyword"
           }
         }
       },
@@ -1404,9 +1442,17 @@
             "type": "text",
             "analyzer": "german"
           },
+          "langdut": {
+            "type": "text",
+            "analyzer": "dutch"
+          },
           "langita": {
             "type": "text",
             "analyzer": "italian"
+          },
+          "langspa": {
+            "type": "text",
+            "analyzer": "spanish"
           },
           "langroh": {
             "type": "text",
@@ -1445,11 +1491,23 @@
               "any.langger"
               ]
           },
+          "langdut": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langdut"
+              ]
+          },
           "langita": {
             "type": "keyword",
             "copy_to": [
               "any.langita"
               ]
+          },
+          "langspa": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langspa"
+            ]
           },
           "link": {
             "type": "keyword"
@@ -1548,6 +1606,26 @@
           },
           "date": {
             "type": "date"
+          }
+        }
+      },
+      "specificationConformance": {
+        "type": "nested",
+        "properties": {
+          "title": {
+            "type": "keyword"
+          },
+          "date": {
+            "type": "date"
+          },
+          "link": {
+            "type": "keyword"
+          },
+          "explanation": {
+            "type": "keyword"
+          },
+          "pass": {
+            "type": "keyword"
           }
         }
       },
@@ -1680,6 +1758,14 @@
       "resourceType": {
         "type": "keyword"
       },
+      "resourceTypeNameObject": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword"
+          }
+        }
+      },
       "resourceIdentifier": {
         "type": "object",
         "properties": {
@@ -1776,7 +1862,7 @@
       },
       "root": {
         "type": "keyword"
-      },
+      }
       "platforms": {
         "type": "keyword"
       },
@@ -1787,8 +1873,8 @@
         "type": "keyword"
       },
       "geoDescription": {
-      "type": "keyword"
-        },
+        "type": "keyword"
+      },
       "indexingError": {
         "type": "boolean"
       },
@@ -1797,6 +1883,9 @@
       },
       "statusWorkflow": {
         "type": "keyword"
+      },
+      "userSavedCount": {
+        "type": "long"
       }
     }
   }

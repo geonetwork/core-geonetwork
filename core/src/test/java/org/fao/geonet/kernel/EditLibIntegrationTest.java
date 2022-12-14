@@ -388,6 +388,28 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         ));
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
 
+
+        Element deleteNotExistingElement = new Element(EditLib.SpecialUpdateTags.DELETE);
+        final String xpathWithNoMatch = "gmd:referenceSystemInfo[*/referenceSystemIdentifier/*/gmd:code/*/text() = 'XYZ']";
+        new EditLib(_schemaManager)
+            .addElementOrFragmentFromXpath(metadataElement, schema,
+                xpathWithNoMatch, new AddElemValue(deleteNotExistingElement), true);
+
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+        new EditLib(_schemaManager)
+            .addElementOrFragmentFromXpath(metadataElement, schema,
+                xpathWithNoMatch, new AddElemValue("<gn_delete/>"), true);
+
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+        new EditLib(_schemaManager)
+            .addElementOrFragmentFromXpath(metadataElement, schema,
+                xpathWithNoMatch, new AddElemValue("<gn_delete></gn_delete>"), true);
+
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+
         Element newRefSystems = new Element(EditLib.SpecialUpdateTags.DELETE);
         final String refSysElemName = "gmd:referenceSystemInfo";
         // Delete first node
@@ -406,6 +428,32 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
             refSysElemName, new AddElemValue(newRefSystems), true);
 
         assertEquals(0, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
+
+    @Test
+    public void testReplaceAll() throws Exception {
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+            createReferenceSystemInfo(code1),
+            createReferenceSystemInfo(code2),
+            createReferenceSystemInfo(code3)
+        ));
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        String updateConfig = "<gn_replace_all><gmd:referenceSystemInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"><gmd:code>NEW</gmd:code></gmd:referenceSystemInfo></gn_replace_all>";
+
+        LinkedHashMap<String, AddElemValue> updates = new LinkedHashMap<String, AddElemValue>();
+        final String attXPath = "gmd:referenceSystemInfo";
+        updates.put(attXPath, new AddElemValue(updateConfig));
+        new EditLib(_schemaManager).addElementOrFragmentFromXpaths(metadataElement, updates, schema, true);
+
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+        assertEqualsText("NEW", metadataElement, refSysElemName + "[1]/gmd:code", GMD, GCO);
     }
 
     @Test

@@ -1,0 +1,2142 @@
+.iti-box.full.rs-sv .label:before {
+  content: "Referenskoordinatsystem";
+}
+.iti-box.full.el-sv .label:before {
+  content: "Höjd";
+}
+.iti-box.full.lc-sv .label:before {
+  content: "Landtäcke";
+}
+.iti-box.full.oi-sv .label:before {
+  content: "Ortofoto";
+}
+.iti-box.full.ge-sv .label:before {
+  content: "Geologi";
+}
+.iti-box.full.su-sv .label:before {
+  content: "Statistiska enheter";
+}
+.iti-box.full.bu-sv .label:before {
+  content: "Byggnader";
+}
+.iti-box.full.so-sv .label:before {
+  content: "Mark";
+}
+.iti-box.full.lu-sv .label:before {
+  content: "Markanvändning";
+}
+.iti-box.full.hh-sv .label:before {
+  content: "Människors hälsa och säkerhet";
+}
+.iti-box.full.us-sv .label:before {
+  content: "Allmännyttiga och offentliga tjänster";
+}
+.iti-box.full.gg-sv .label:before {
+  content: "Geografiska rutnätssystem";
+}
+.iti-box.full.ef-sv .label:before {
+  content: "Anläggningar för miljöövervakning";
+}
+.iti-box.full.pf-sv .label:before {
+  content: "Produktions- och industrianläggningar";
+}
+.iti-box.full.af-sv .label:before {
+  content: "Jordbruks- och vattenbruksanläggningar";
+}
+.iti-box.full.pd-sv .label:before {
+  content: "Befolkningsfördelning – demografi";
+}
+.iti-box.full.am-sv .label:before {
+  content: "Områden med särskild förvaltning/begränsningar/reglering samt enheter för rapportering";
+}
+.iti-box.full.nz-sv .label:before {
+  content: "Naturliga riskområden";
+}
+.iti-box.full.ac-sv .label:before {
+  content: "Atmosfäriska förhållanden";
+}
+.iti-box.full.mf-sv .label:before {
+  content: "Geografiska meteorologiska förhållanden";
+}
+.iti-box.full.of-sv .label:before {
+  content: "Geografiska oceanografiska förhållanden";
+}
+.iti-box.full.sr-sv .label:before {
+  content: "Havsområden";
+}
+.iti-box.full.gn-sv .label:before {
+  content: "Geografiska namn";
+}
+.iti-box.full.br-sv .label:before {
+  content: "Biogeografiska regioner";
+}
+.iti-box.full.hb-sv .label:before {
+  content: "Naturtyper och biotoper";
+}
+.iti-box.full.sd-sv .label:before {
+  content: "Arters utbredning";
+}
+.iti-box.full.er-sv .label:before {
+  content: "Energiresurser";
+}
+.iti-box.full.mr-sv .label:before {
+  content: "Mineralfyndigheter";
+}
+.iti-box.full.au-sv .label:before {
+  content: "Administrativa enheter";
+}
+.iti-box.full.ad-sv .label:before {
+  content: "Adresser";
+}
+.iti-box.full.cp-sv .label:before {
+  content: "Fastighetsområden";
+}
+.iti-box.full.tn-sv .label:before {
+  content: "Transportnät";
+}
+.iti-box.full.hy-sv .label:before {
+  content: "Hydrografi";
+}
+.iti-box.full.ps-sv .label:before {
+  content: "Skyddade områden";
+}
+.iti-box.full.rs-sl .label:before {
+  content: "Referenčni koordinatni sistemi";
+}
+.iti-box.full.el-sl .label:before {
+  content: "Digitalni model višin";
+}
+.iti-box.full.lc-sl .label:before {
+  content: "Pokrovnost tal";
+}
+.iti-box.full.oi-sl .label:before {
+  content: "Ortofoto";
+}
+.iti-box.full.ge-sl .label:before {
+  content: "Geologija";
+}
+.iti-box.full.su-sl .label:before {
+  content: "Statistični okoliši";
+}
+.iti-box.full.bu-sl .label:before {
+  content: "Stavbe";
+}
+.iti-box.full.so-sl .label:before {
+  content: "Tla";
+}
+.iti-box.full.lu-sl .label:before {
+  content: "Namenska raba tal";
+}
+.iti-box.full.hh-sl .label:before {
+  content: "Zdravje in varnost prebivalstva";
+}
+.iti-box.full.us-sl .label:before {
+  content: "Komunalne in javne storitve";
+}
+.iti-box.full.gg-sl .label:before {
+  content: "Geografska koordinatna mreža";
+}
+.iti-box.full.ef-sl .label:before {
+  content: "Naprave in objekti za monitoring okolja";
+}
+.iti-box.full.pf-sl .label:before {
+  content: "Proizvodni in industrijski objekti in naprave";
+}
+.iti-box.full.af-sl .label:before {
+  content: "Objekti in naprave za kmetijstvo in ribogojstvo";
+}
+.iti-box.full.pd-sl .label:before {
+  content: "Porazdelitev prebivalstva – demografski podatki";
+}
+.iti-box.full.am-sl .label:before {
+  content: "Območja upravljanja/zaprta območja/regulirana območja in poročevalske enote";
+}
+.iti-box.full.nz-sl .label:before {
+  content: "Območja nevarnosti naravnih nesreč";
+}
+.iti-box.full.ac-sl .label:before {
+  content: "Ozračje";
+}
+.iti-box.full.mf-sl .label:before {
+  content: "Meteorološke značilnosti";
+}
+.iti-box.full.of-sl .label:before {
+  content: "Oceanogeografske značilnosti";
+}
+.iti-box.full.sr-sl .label:before {
+  content: "Morske regije";
+}
+.iti-box.full.gn-sl .label:before {
+  content: "Zemljepisna imena";
+}
+.iti-box.full.br-sl .label:before {
+  content: "Biogeografske regije";
+}
+.iti-box.full.hb-sl .label:before {
+  content: "Habitati in biotopi";
+}
+.iti-box.full.sd-sl .label:before {
+  content: "Porazdelitev vrst";
+}
+.iti-box.full.er-sl .label:before {
+  content: "Energetski viri";
+}
+.iti-box.full.mr-sl .label:before {
+  content: "Mineralni viri";
+}
+.iti-box.full.au-sl .label:before {
+  content: "Upravne enote";
+}
+.iti-box.full.ad-sl .label:before {
+  content: "Naslovi";
+}
+.iti-box.full.cp-sl .label:before {
+  content: "Katastrske parcele";
+}
+.iti-box.full.tn-sl .label:before {
+  content: "Prometna omrežja";
+}
+.iti-box.full.hy-sl .label:before {
+  content: "Hidrografija";
+}
+.iti-box.full.ps-sl .label:before {
+  content: "Zavarovana območja";
+}
+.iti-box.full.rs-sk .label:before {
+  content: "Súradnicové referenčné systémy";
+}
+.iti-box.full.el-sk .label:before {
+  content: "Výška";
+}
+.iti-box.full.lc-sk .label:before {
+  content: "Krajinná pokrývka (land cover)";
+}
+.iti-box.full.oi-sk .label:before {
+  content: "Ortometria";
+}
+.iti-box.full.ge-sk .label:before {
+  content: "Geológia";
+}
+.iti-box.full.su-sk .label:before {
+  content: "Štatistické jednotky";
+}
+.iti-box.full.bu-sk .label:before {
+  content: "Stavby";
+}
+.iti-box.full.so-sk .label:before {
+  content: "Pôda";
+}
+.iti-box.full.lu-sk .label:before {
+  content: "Využitie územia";
+}
+.iti-box.full.hh-sk .label:before {
+  content: "Ľudské zdravie a bezpečnosť";
+}
+.iti-box.full.us-sk .label:before {
+  content: "Verejné a štátne služby";
+}
+.iti-box.full.gg-sk .label:before {
+  content: "Geografické systémy sietí";
+}
+.iti-box.full.ef-sk .label:before {
+  content: "Zariadenia na monitorovanie životného prostredia";
+}
+.iti-box.full.pf-sk .label:before {
+  content: "Výrobné a priemyselné zariadenia";
+}
+.iti-box.full.af-sk .label:before {
+  content: "Poľnohospodárske zariadenia a zariadenia akvakultúry";
+}
+.iti-box.full.pd-sk .label:before {
+  content: "Rozmiestnenie obyvateľstva – demografia";
+}
+.iti-box.full.am-sk .label:before {
+  content: "Spravované/obmedzené/regulované zóny a jednotky podávajúce správy";
+}
+.iti-box.full.nz-sk .label:before {
+  content: "Zóny prírodného rizika";
+}
+.iti-box.full.ac-sk .label:before {
+  content: "Atmosférické podmienky";
+}
+.iti-box.full.mf-sk .label:before {
+  content: "Meteorologické geografické prvky";
+}
+.iti-box.full.of-sk .label:before {
+  content: "Oceánografické geografické prvky";
+}
+.iti-box.full.sr-sk .label:before {
+  content: "Morské regióny";
+}
+.iti-box.full.gn-sk .label:before {
+  content: "Zemepisné názvy";
+}
+.iti-box.full.br-sk .label:before {
+  content: "Biogeografické regióny";
+}
+.iti-box.full.hb-sk .label:before {
+  content: "Habitaty a biotopy";
+}
+.iti-box.full.sd-sk .label:before {
+  content: "Výskyt druhov";
+}
+.iti-box.full.er-sk .label:before {
+  content: "Zdroje energie";
+}
+.iti-box.full.mr-sk .label:before {
+  content: "Zdroje nerastných surovín";
+}
+.iti-box.full.au-sk .label:before {
+  content: "Správne jednotky";
+}
+.iti-box.full.ad-sk .label:before {
+  content: "Adresy";
+}
+.iti-box.full.cp-sk .label:before {
+  content: "Katastrálne parcely";
+}
+.iti-box.full.tn-sk .label:before {
+  content: "Dopravné siete";
+}
+.iti-box.full.hy-sk .label:before {
+  content: "Hydrografia";
+}
+.iti-box.full.ps-sk .label:before {
+  content: "Chránené územia";
+}
+.iti-box.full.rs-ro .label:before {
+  content: "Sisteme de coordonate de referinţă";
+}
+.iti-box.full.el-ro .label:before {
+  content: "Elevaţie";
+}
+.iti-box.full.lc-ro .label:before {
+  content: "Acoperire terestră";
+}
+.iti-box.full.oi-ro .label:before {
+  content: "Ortoimagini";
+}
+.iti-box.full.ge-ro .label:before {
+  content: "Geologie";
+}
+.iti-box.full.su-ro .label:before {
+  content: "Unităţi statistice";
+}
+.iti-box.full.bu-ro .label:before {
+  content: "Clădiri";
+}
+.iti-box.full.so-ro .label:before {
+  content: "Soluri";
+}
+.iti-box.full.lu-ro .label:before {
+  content: "Utilizarea terenului";
+}
+.iti-box.full.hh-ro .label:before {
+  content: "Sănătate şi siguranţă umană";
+}
+.iti-box.full.us-ro .label:before {
+  content: "Servicii de utilitate publică şi servicii publice";
+}
+.iti-box.full.gg-ro .label:before {
+  content: "Sisteme de caroiaj geografic";
+}
+.iti-box.full.ef-ro .label:before {
+  content: "Instalaţii de supraveghere a mediului";
+}
+.iti-box.full.pf-ro .label:before {
+  content: "Instalaţii de producţie şi industriale";
+}
+.iti-box.full.af-ro .label:before {
+  content: "Instalaţii agricole şi pentru acvacultură";
+}
+.iti-box.full.pd-ro .label:before {
+  content: "Repartizarea populaţiei – demografie";
+}
+.iti-box.full.am-ro .label:before {
+  content: "Zone de administrare/restricţie/reglementare şi unităţi de raportare";
+}
+.iti-box.full.nz-ro .label:before {
+  content: "Zone de risc natural";
+}
+.iti-box.full.ac-ro .label:before {
+  content: "Condiţii atmosferice";
+}
+.iti-box.full.mf-ro .label:before {
+  content: "Caracteristici geografice meteorologice";
+}
+.iti-box.full.of-ro .label:before {
+  content: "Caracteristici geografice oceanografice";
+}
+.iti-box.full.sr-ro .label:before {
+  content: "Regiuni maritime";
+}
+.iti-box.full.gn-ro .label:before {
+  content: "Denumiri geografice";
+}
+.iti-box.full.br-ro .label:before {
+  content: "Regiuni biogeografice";
+}
+.iti-box.full.hb-ro .label:before {
+  content: "Habitate şi biotopuri";
+}
+.iti-box.full.sd-ro .label:before {
+  content: "Repartizarea speciilor";
+}
+.iti-box.full.er-ro .label:before {
+  content: "Resurse energetice";
+}
+.iti-box.full.mr-ro .label:before {
+  content: "Resurse minerale";
+}
+.iti-box.full.au-ro .label:before {
+  content: "Unităţi administrative";
+}
+.iti-box.full.ad-ro .label:before {
+  content: "Adrese";
+}
+.iti-box.full.cp-ro .label:before {
+  content: "Parcele cadastrale";
+}
+.iti-box.full.tn-ro .label:before {
+  content: "Reţele de transport";
+}
+.iti-box.full.hy-ro .label:before {
+  content: "Hidrografie";
+}
+.iti-box.full.ps-ro .label:before {
+  content: "Zone protejate";
+}
+.iti-box.full.rs-pl .label:before {
+  content: "Systemy odniesienia za pomocą współrzędnych";
+}
+.iti-box.full.el-pl .label:before {
+  content: "Ukształtowanie terenu";
+}
+.iti-box.full.lc-pl .label:before {
+  content: "Użytkowanie terenu";
+}
+.iti-box.full.oi-pl .label:before {
+  content: "Sporządzanie ortoobrazów";
+}
+.iti-box.full.ge-pl .label:before {
+  content: "Geologia";
+}
+.iti-box.full.su-pl .label:before {
+  content: "Jednostki statystyczne";
+}
+.iti-box.full.bu-pl .label:before {
+  content: "Budynki";
+}
+.iti-box.full.so-pl .label:before {
+  content: "Gleba";
+}
+.iti-box.full.lu-pl .label:before {
+  content: "Zagospodarowanie przestrzenne";
+}
+.iti-box.full.hh-pl .label:before {
+  content: "Zdrowie i bezpieczeństwo ludzi";
+}
+.iti-box.full.us-pl .label:before {
+  content: "Usługi użyteczności publicznej i służby państwowe";
+}
+.iti-box.full.gg-pl .label:before {
+  content: "Systemy siatek geograficznych";
+}
+.iti-box.full.ef-pl .label:before {
+  content: "Urządzenia do monitorowania środowiska";
+}
+.iti-box.full.pf-pl .label:before {
+  content: "Obiekty produkcyjne i przemysłowe";
+}
+.iti-box.full.af-pl .label:before {
+  content: "Obiekty rolnicze oraz akwakultury";
+}
+.iti-box.full.pd-pl .label:before {
+  content: "Rozmieszczenie ludności – demografia";
+}
+.iti-box.full.am-pl .label:before {
+  content: "Gospodarowanie obszarem/strefy ograniczone/regulacyjne oraz jednostki sprawozdawcze";
+}
+.iti-box.full.nz-pl .label:before {
+  content: "Strefy zagrożenia naturalnego";
+}
+.iti-box.full.ac-pl .label:before {
+  content: "Warunki atmosferyczne";
+}
+.iti-box.full.mf-pl .label:before {
+  content: "Warunki meteorologiczno-geograficzne";
+}
+.iti-box.full.of-pl .label:before {
+  content: "Warunki oceanograficzno-geograficzne";
+}
+.iti-box.full.sr-pl .label:before {
+  content: "Regiony morskie";
+}
+.iti-box.full.gn-pl .label:before {
+  content: "Nazwy geograficzne";
+}
+.iti-box.full.br-pl .label:before {
+  content: "Regiony biogeograficzne";
+}
+.iti-box.full.hb-pl .label:before {
+  content: "Siedliska i obszary przyrodniczo jednorodne";
+}
+.iti-box.full.sd-pl .label:before {
+  content: "Rozmieszczenie gatunków";
+}
+.iti-box.full.er-pl .label:before {
+  content: "Zasoby energetyczne";
+}
+.iti-box.full.mr-pl .label:before {
+  content: "Zasoby mineralne";
+}
+.iti-box.full.au-pl .label:before {
+  content: "Jednostki administracyjne";
+}
+.iti-box.full.ad-pl .label:before {
+  content: "Adresy";
+}
+.iti-box.full.cp-pl .label:before {
+  content: "Działki katastralne";
+}
+.iti-box.full.tn-pl .label:before {
+  content: "Sieci transportowe";
+}
+.iti-box.full.hy-pl .label:before {
+  content: "Hydrografia";
+}
+.iti-box.full.ps-pl .label:before {
+  content: "Obszary chronione";
+}
+.iti-box.full.rs-pt .label:before {
+  content: "Sistemas de referencia";
+}
+.iti-box.full.el-pt .label:before {
+  content: "Altitude";
+}
+.iti-box.full.lc-pt .label:before {
+  content: "Ocupação do solo";
+}
+.iti-box.full.oi-pt .label:before {
+  content: "Ortoimagens";
+}
+.iti-box.full.ge-pt .label:before {
+  content: "Geologia";
+}
+.iti-box.full.su-pt .label:before {
+  content: "Unidades estatísticas";
+}
+.iti-box.full.bu-pt .label:before {
+  content: "Edifícios";
+}
+.iti-box.full.so-pt .label:before {
+  content: "Solo";
+}
+.iti-box.full.lu-pt .label:before {
+  content: "Uso do solo";
+}
+.iti-box.full.hh-pt .label:before {
+  content: "Saúde humana e segurança";
+}
+.iti-box.full.us-pt .label:before {
+  content: "Serviços de utilidade pública e do Estado";
+}
+.iti-box.full.gg-pt .label:before {
+  content: "Sistemas de quadrículas geográficas";
+}
+.iti-box.full.ef-pt .label:before {
+  content: "Instalações de monitorização do ambiente";
+}
+.iti-box.full.pf-pt .label:before {
+  content: "Instalações industriais e de produção";
+}
+.iti-box.full.af-pt .label:before {
+  content: "Instalações agrícolas e aquícolas";
+}
+.iti-box.full.pd-pt .label:before {
+  content: "Distribuição da população — demografia";
+}
+.iti-box.full.am-pt .label:before {
+  content: "Zonas de gestão/restrição/regulamentação e unidades de referência";
+}
+.iti-box.full.nz-pt .label:before {
+  content: "Zonas de risco natural";
+}
+.iti-box.full.ac-pt .label:before {
+  content: "Condições atmosféricas";
+}
+.iti-box.full.mf-pt .label:before {
+  content: "Características geometeorológicas";
+}
+.iti-box.full.of-pt .label:before {
+  content: "Características oceanográficas";
+}
+.iti-box.full.sr-pt .label:before {
+  content: "Regiões marinhas";
+}
+.iti-box.full.gn-pt .label:before {
+  content: "Toponímia";
+}
+.iti-box.full.br-pt .label:before {
+  content: "Regiões biogeográficas";
+}
+.iti-box.full.hb-pt .label:before {
+  content: "Habitats e biótopos";
+}
+.iti-box.full.sd-pt .label:before {
+  content: "Distribuição das espécies";
+}
+.iti-box.full.er-pt .label:before {
+  content: "Recursos energéticos";
+}
+.iti-box.full.mr-pt .label:before {
+  content: "Recursos minerais";
+}
+.iti-box.full.au-pt .label:before {
+  content: "Unidades administrativas";
+}
+.iti-box.full.ad-pt .label:before {
+  content: "Endereços";
+}
+.iti-box.full.cp-pt .label:before {
+  content: "Parcelas cadastrais";
+}
+.iti-box.full.tn-pt .label:before {
+  content: "Redes de transporte";
+}
+.iti-box.full.hy-pt .label:before {
+  content: "Hidrografia";
+}
+.iti-box.full.ps-pt .label:before {
+  content: "Sítios protegidos";
+}
+.iti-box.full.rs-du .label:before {
+  content: "Systemen voor verwijzing door middel van coördinaten";
+}
+.iti-box.full.el-du .label:before {
+  content: "Hoogte";
+}
+.iti-box.full.lc-du .label:before {
+  content: "Bodemgebruik";
+}
+.iti-box.full.oi-du .label:before {
+  content: "Orthobeeldvorming";
+}
+.iti-box.full.ge-du .label:before {
+  content: "Geologie";
+}
+.iti-box.full.su-du .label:before {
+  content: "Statistische eenheden";
+}
+.iti-box.full.bu-du .label:before {
+  content: "Gebouwen";
+}
+.iti-box.full.so-du .label:before {
+  content: "Bodem";
+}
+.iti-box.full.lu-du .label:before {
+  content: "Landgebruik";
+}
+.iti-box.full.hh-du .label:before {
+  content: "Menselijke gezondheid en veiligheid";
+}
+.iti-box.full.us-du .label:before {
+  content: "Nutsdiensten en overheidsdiensten";
+}
+.iti-box.full.gg-du .label:before {
+  content: "Geografisch rastersysteem";
+}
+.iti-box.full.ef-du .label:before {
+  content: "Milieubewakingsvoorzieningen";
+}
+.iti-box.full.pf-du .label:before {
+  content: "Faciliteiten voor productie en industrie";
+}
+.iti-box.full.af-du .label:before {
+  content: "Faciliteiten voor landbouw en aquacultuur";
+}
+.iti-box.full.pd-du .label:before {
+  content: "Spreiding van de bevolking — demografie";
+}
+.iti-box.full.am-du .label:before {
+  content: "Gebiedsbeheer, gebieden waar beperkingen gelden, gereguleerde gebieden en rapportage-eenheden";
+}
+.iti-box.full.nz-du .label:before {
+  content: "Gebieden met natuurrisico'es";
+}
+.iti-box.full.ac-du .label:before {
+  content: "Atmosferische omstandigheden";
+}
+.iti-box.full.mf-du .label:before {
+  content: "Meteorologische geografische kenmerken";
+}
+.iti-box.full.of-du .label:before {
+  content: "Oceanografische geografische kenmerken";
+}
+.iti-box.full.sr-du .label:before {
+  content: "Zeegebieden";
+}
+.iti-box.full.gn-du .label:before {
+  content: "Geografische namen";
+}
+.iti-box.full.br-du .label:before {
+  content: "Biogeografische gebieden";
+}
+.iti-box.full.hb-du .label:before {
+  content: "Habitats en biotopen";
+}
+.iti-box.full.sd-du .label:before {
+  content: "Spreiding van soorten";
+}
+.iti-box.full.er-du .label:before {
+  content: "Energiebronnen";
+}
+.iti-box.full.mr-du .label:before {
+  content: "Minerale bronnen";
+}
+.iti-box.full.au-du .label:before {
+  content: "Administratieve eenheden";
+}
+.iti-box.full.ad-du .label:before {
+  content: "Adressen";
+}
+.iti-box.full.cp-du .label:before {
+  content: "Kadastrale percelen";
+}
+.iti-box.full.tn-du .label:before {
+  content: "Vervoersnetwerken";
+}
+.iti-box.full.hy-du .label:before {
+  content: "Hydrografie";
+}
+.iti-box.full.ps-du .label:before {
+  content: "Beschermde gebieden";
+}
+.iti-box.full.rs-mt .label:before {
+  content: "Sistemi ta' referenza ta' koordinati";
+}
+.iti-box.full.el-mt .label:before {
+  content: "Elevazzjoni";
+}
+.iti-box.full.lc-mt .label:before {
+  content: "Kopertura ta' l-art";
+}
+.iti-box.full.oi-mt .label:before {
+  content: "Orthoimagery";
+}
+.iti-box.full.ge-mt .label:before {
+  content: "Ġeologija";
+}
+.iti-box.full.su-mt .label:before {
+  content: "Unitajiet statistiċi";
+}
+.iti-box.full.bu-mt .label:before {
+  content: "Bini";
+}
+.iti-box.full.so-mt .label:before {
+  content: "Ħamrija";
+}
+.iti-box.full.lu-mt .label:before {
+  content: "Użu ta' l-art";
+}
+.iti-box.full.hh-mt .label:before {
+  content: "Is-saħħa u s-siġurtà tal-bniedem";
+}
+.iti-box.full.us-mt .label:before {
+  content: "Servizzi ta' utilità u tal-gvern";
+}
+.iti-box.full.gg-mt .label:before {
+  content: "Sistemi ta' grilji ġeografiċi";
+}
+.iti-box.full.ef-mt .label:before {
+  content: "Faċilitajiet ta' monitoraġġ ambjentali";
+}
+.iti-box.full.pf-mt .label:before {
+  content: "Faċilitajiet ta' produzzjoni u industrijali";
+}
+.iti-box.full.af-mt .label:before {
+  content: "Faċilitajiet agrikoli u ta' l-akwakultura";
+}
+.iti-box.full.pd-mt .label:before {
+  content: "Distribuzzjoni tal-popolazzjoni – demografija";
+}
+.iti-box.full.am-mt .label:before {
+  content: "Amministrazzjoni ta' żoni/restrizzjoni/żoni regolati u unitajiet ta' rapportar";
+}
+.iti-box.full.nz-mt .label:before {
+  content: "Żoni ta' riskju naturali";
+}
+.iti-box.full.ac-mt .label:before {
+  content: "Kondizzjonijiet atmosferiċi";
+}
+.iti-box.full.mf-mt .label:before {
+  content: "Karatteristiċi ġeografiċi meteoroloġiċi";
+}
+.iti-box.full.of-mt .label:before {
+  content: "Karatteristiċi ġeografiċi oċeanografiċi";
+}
+.iti-box.full.sr-mt .label:before {
+  content: "Reġjuni tal-baħar";
+}
+.iti-box.full.gn-mt .label:before {
+  content: "Ismijiet ġeografiċi";
+}
+.iti-box.full.br-mt .label:before {
+  content: "Reġjuni bijo-ġeografiċi";
+}
+.iti-box.full.hb-mt .label:before {
+  content: "L-abitati naturali u l-bijotopi";
+}
+.iti-box.full.sd-mt .label:before {
+  content: "Distribuzzjoni ta' l-ispeċi";
+}
+.iti-box.full.er-mt .label:before {
+  content: "Riżorsi ta' enerġija";
+}
+.iti-box.full.mr-mt .label:before {
+  content: "Riżorsi minerali";
+}
+.iti-box.full.au-mt .label:before {
+  content: "Unitajiet amministrattivi";
+}
+.iti-box.full.ad-mt .label:before {
+  content: "Indirizzi";
+}
+.iti-box.full.cp-mt .label:before {
+  content: "Pakketti katastali";
+}
+.iti-box.full.tn-mt .label:before {
+  content: "Networks tat-trasport";
+}
+.iti-box.full.hy-mt .label:before {
+  content: "Idrografija";
+}
+.iti-box.full.ps-mt .label:before {
+  content: "Siti protetti";
+}
+.iti-box.full.rs-lv .label:before {
+  content: "Koordinātu atskaites sistēmas";
+}
+.iti-box.full.el-lv .label:before {
+  content: "Augstums";
+}
+.iti-box.full.lc-lv .label:before {
+  content: "Zemes virsma";
+}
+.iti-box.full.oi-lv .label:before {
+  content: "Ortofotogrāfija";
+}
+.iti-box.full.ge-lv .label:before {
+  content: "Ģeoloģija";
+}
+.iti-box.full.su-lv .label:before {
+  content: "Statistikas vienības";
+}
+.iti-box.full.bu-lv .label:before {
+  content: "Ēkas";
+}
+.iti-box.full.so-lv .label:before {
+  content: "Augsne";
+}
+.iti-box.full.lu-lv .label:before {
+  content: "Zemes izmantošana";
+}
+.iti-box.full.hh-lv .label:before {
+  content: "Cilvēku veselība un drošība";
+}
+.iti-box.full.us-lv .label:before {
+  content: "Komunālie un valsts dienesti";
+}
+.iti-box.full.gg-lv .label:before {
+  content: "Ģeogrāfisko koordinātu tīklu sistēmas";
+}
+.iti-box.full.ef-lv .label:before {
+  content: "Vides monitoringa iekārtas";
+}
+.iti-box.full.pf-lv .label:before {
+  content: "Ražošanas un rūpniecības iekārtas";
+}
+.iti-box.full.af-lv .label:before {
+  content: "Lauksaimniecības un akvakultūras iekārtas";
+}
+.iti-box.full.pd-lv .label:before {
+  content: "Iedzīvotāju sadalījums – demogrāfija";
+}
+.iti-box.full.am-lv .label:before {
+  content: "Apgabala pārvaldības/ierobežojumu/reglamentētas zonas un ziņošanas vienības";
+}
+.iti-box.full.nz-lv .label:before {
+  content: "Dabas apdraudējuma zonas";
+}
+.iti-box.full.ac-lv .label:before {
+  content: "Atmosfēras apstākļi";
+}
+.iti-box.full.mf-lv .label:before {
+  content: "Meteoroloģiski ģeogrāfiskie raksturlielumi";
+}
+.iti-box.full.of-lv .label:before {
+  content: "Okeanogrāfiski ģeogrāfiskie raksturlielumi";
+}
+.iti-box.full.sr-lv .label:before {
+  content: "Jūru reģioni";
+}
+.iti-box.full.gn-lv .label:before {
+  content: "Toponīmi";
+}
+.iti-box.full.br-lv .label:before {
+  content: "Bioģeogrāfiskie reģioni";
+}
+.iti-box.full.hb-lv .label:before {
+  content: "Dzīvotnes un biotopi";
+}
+.iti-box.full.sd-lv .label:before {
+  content: "Sugu izplatība";
+}
+.iti-box.full.er-lv .label:before {
+  content: "Enerģijas resursi";
+}
+.iti-box.full.mr-lv .label:before {
+  content: "Derīgo izrakteņu resursi";
+}
+.iti-box.full.au-lv .label:before {
+  content: "Administratīvas vienības";
+}
+.iti-box.full.ad-lv .label:before {
+  content: "Adreses";
+}
+.iti-box.full.cp-lv .label:before {
+  content: "Kadastrāli zemes gabali";
+}
+.iti-box.full.tn-lv .label:before {
+  content: "Transporta tīkli";
+}
+.iti-box.full.hy-lv .label:before {
+  content: "Hidrogrāfija";
+}
+.iti-box.full.ps-lv .label:before {
+  content: "Aizsargājamas teritorijas";
+}
+.iti-box.full.rs-it .label:before {
+  content: "Sistemi di coordinate";
+}
+.iti-box.full.el-it .label:before {
+  content: "Elevazione";
+}
+.iti-box.full.lc-it .label:before {
+  content: "Copertura del suolo";
+}
+.iti-box.full.oi-it .label:before {
+  content: "Orto immagini";
+}
+.iti-box.full.ge-it .label:before {
+  content: "Geologia";
+}
+.iti-box.full.su-it .label:before {
+  content: "Unità statistiche";
+}
+.iti-box.full.bu-it .label:before {
+  content: "Edifici";
+}
+.iti-box.full.so-it .label:before {
+  content: "Suolo";
+}
+.iti-box.full.lu-it .label:before {
+  content: "Utilizzo del territorio";
+}
+.iti-box.full.hh-it .label:before {
+  content: "Salute umana e sicurezza";
+}
+.iti-box.full.us-it .label:before {
+  content: "Servizi di pubblica utilità e servizi amministrativi";
+}
+.iti-box.full.gg-it .label:before {
+  content: "Sistemi di griglie geografiche";
+}
+.iti-box.full.ef-it .label:before {
+  content: "Impianti di monitoraggio ambientale";
+}
+.iti-box.full.pf-it .label:before {
+  content: "Produzione e impianti industriali";
+}
+.iti-box.full.af-it .label:before {
+  content: "Impianti agricoli e di acquacoltura";
+}
+.iti-box.full.pd-it .label:before {
+  content: "Distribuzione della popolazione — demografia";
+}
+.iti-box.full.am-it .label:before {
+  content: "Zone sottoposte a gestione/limitazioni/regolamentazione e unità con obbligo di comunicare dati";
+}
+.iti-box.full.nz-it .label:before {
+  content: "Zone a rischio naturale";
+}
+.iti-box.full.ac-it .label:before {
+  content: "Condizioni atmosferiche";
+}
+.iti-box.full.mf-it .label:before {
+  content: "Elementi geografici meteorologici";
+}
+.iti-box.full.of-it .label:before {
+  content: "Elementi geografici oceanografici";
+}
+.iti-box.full.sr-it .label:before {
+  content: "Regioni marine";
+}
+.iti-box.full.gn-it .label:before {
+  content: "Nomi geografici";
+}
+.iti-box.full.br-it .label:before {
+  content: "Regioni biogeografiche";
+}
+.iti-box.full.hb-it .label:before {
+  content: "Habitat e biotopi";
+}
+.iti-box.full.sd-it .label:before {
+  content: "Distribuzione delle specie";
+}
+.iti-box.full.er-it .label:before {
+  content: "Risorse energetiche";
+}
+.iti-box.full.mr-it .label:before {
+  content: "Risorse minerarie";
+}
+.iti-box.full.au-it .label:before {
+  content: "Unità amministrative";
+}
+.iti-box.full.ad-it .label:before {
+  content: "Indirizzi";
+}
+.iti-box.full.cp-it .label:before {
+  content: "Parcelle catastali";
+}
+.iti-box.full.tn-it .label:before {
+  content: "Reti di trasporto";
+}
+.iti-box.full.hy-it .label:before {
+  content: "Idrografia";
+}
+.iti-box.full.ps-it .label:before {
+  content: "Siti protetti";
+}
+.iti-box.full.rs-lt .label:before {
+  content: "Koordinačių atskaitos sistemos";
+}
+.iti-box.full.el-lt .label:before {
+  content: "Aukštis";
+}
+.iti-box.full.lc-lt .label:before {
+  content: "Žemės danga";
+}
+.iti-box.full.oi-lt .label:before {
+  content: "Ortofotografinis vaizdavimas";
+}
+.iti-box.full.ge-lt .label:before {
+  content: "Geologija";
+}
+.iti-box.full.su-lt .label:before {
+  content: "Statistiniai vienetai";
+}
+.iti-box.full.bu-lt .label:before {
+  content: "Pastatai";
+}
+.iti-box.full.so-lt .label:before {
+  content: "Dirvožemis";
+}
+.iti-box.full.lu-lt .label:before {
+  content: "Žemės naudojimas";
+}
+.iti-box.full.hh-lt .label:before {
+  content: "Žmonių sveikata ir sauga";
+}
+.iti-box.full.us-lt .label:before {
+  content: "Komunalinės įmonės ir valstybės tarnybos";
+}
+.iti-box.full.gg-lt .label:before {
+  content: "Geografinio tinklelio sistemos";
+}
+.iti-box.full.ef-lt .label:before {
+  content: "Aplinkos stebėsenos priemonės";
+}
+.iti-box.full.pf-lt .label:before {
+  content: "Gamybos ir pramonės įrenginiai";
+}
+.iti-box.full.af-lt .label:before {
+  content: "Žemės ūkio ir akvakultūros infrastruktūra";
+}
+.iti-box.full.pd-lt .label:before {
+  content: "Gyventojų pasiskirstymas – demografija";
+}
+.iti-box.full.am-lt .label:before {
+  content: "Tvarkomos teritorijos, ribojamos ir reglamentuojamos zonos bei vienetai, už kuriuos atsiskaitoma";
+}
+.iti-box.full.nz-lt .label:before {
+  content: "Gamtinių pavojų zonos";
+}
+.iti-box.full.ac-lt .label:before {
+  content: "Atmosferos sąlygos";
+}
+.iti-box.full.mf-lt .label:before {
+  content: "Meteorologinės geografinės sąlygos";
+}
+.iti-box.full.of-lt .label:before {
+  content: "Okeanografinės geografinės sąlygos";
+}
+.iti-box.full.sr-lt .label:before {
+  content: "Jūrų regionai";
+}
+.iti-box.full.gn-lt .label:before {
+  content: "Geografiniai pavadinimai";
+}
+.iti-box.full.br-lt .label:before {
+  content: "Biogeografiniai regionai";
+}
+.iti-box.full.hb-lt .label:before {
+  content: "Buveinės ir biotopai";
+}
+.iti-box.full.sd-lt .label:before {
+  content: "Rūšių pasiskirstymas";
+}
+.iti-box.full.er-lt .label:before {
+  content: "Energijos ištekliai";
+}
+.iti-box.full.mr-lt .label:before {
+  content: "Naudingosios iškasenos";
+}
+.iti-box.full.au-lt .label:before {
+  content: "Administraciniai vienetai";
+}
+.iti-box.full.ad-lt .label:before {
+  content: "Adresai";
+}
+.iti-box.full.cp-lt .label:before {
+  content: "Kadastro sklypai";
+}
+.iti-box.full.tn-lt .label:before {
+  content: "Transporto tinklai";
+}
+.iti-box.full.hy-lt .label:before {
+  content: "Hidrografija";
+}
+.iti-box.full.ps-lt .label:before {
+  content: "Saugomos teritorijos";
+}
+.iti-box.full.rs-hu .label:before {
+  content: "Koordinátarendszerek";
+}
+.iti-box.full.el-hu .label:before {
+  content: "Domborzat";
+}
+.iti-box.full.lc-hu .label:before {
+  content: "A felszín borítása";
+}
+.iti-box.full.oi-hu .label:before {
+  content: "Ortofotók";
+}
+.iti-box.full.ge-hu .label:before {
+  content: "Földtan";
+}
+.iti-box.full.su-hu .label:before {
+  content: "Statisztikai egységek";
+}
+.iti-box.full.bu-hu .label:before {
+  content: "Épületek";
+}
+.iti-box.full.so-hu .label:before {
+  content: "Talaj";
+}
+.iti-box.full.lu-hu .label:before {
+  content: "Földhasználat";
+}
+.iti-box.full.hh-hu .label:before {
+  content: "Emberi egészség és biztonság";
+}
+.iti-box.full.us-hu .label:before {
+  content: "Közüzemi és közszolgáltatások";
+}
+.iti-box.full.gg-hu .label:before {
+  content: "Földrajzi rácsrendszerek";
+}
+.iti-box.full.ef-hu .label:before {
+  content: "Környezetvédelmi monitoringlétesítmények";
+}
+.iti-box.full.pf-hu .label:before {
+  content: "Termelő és ipari létesítmények";
+}
+.iti-box.full.af-hu .label:before {
+  content: "Mezőgazdasági és akvakultúra-ágazati létesítmények";
+}
+.iti-box.full.pd-hu .label:before {
+  content: "A népesség eloszlása – demográfia";
+}
+.iti-box.full.am-hu .label:before {
+  content: "Területgazdálkodási/-korlátozási/-szabályozási övezetek és adatszolgáltató egységek";
+}
+.iti-box.full.nz-hu .label:before {
+  content: "Természeti kockázati zónák";
+}
+.iti-box.full.ac-hu .label:before {
+  content: "Légköri viszonyok";
+}
+.iti-box.full.mf-hu .label:before {
+  content: "Meteorológiai földrajzi jellemzők";
+}
+.iti-box.full.of-hu .label:before {
+  content: "Oceanográfiai földrajzi jellemzők";
+}
+.iti-box.full.sr-hu .label:before {
+  content: "Tengeri régiók";
+}
+.iti-box.full.gn-hu .label:before {
+  content: "Földrajzi nevek";
+}
+.iti-box.full.br-hu .label:before {
+  content: "Biogeográfiai régiók";
+}
+.iti-box.full.hb-hu .label:before {
+  content: "Élőhelyek és biotópok";
+}
+.iti-box.full.sd-hu .label:before {
+  content: "A fajok megoszlása";
+}
+.iti-box.full.er-hu .label:before {
+  content: "Energiaforrások";
+}
+.iti-box.full.mr-hu .label:before {
+  content: "Ásványi nyersanyagok";
+}
+.iti-box.full.au-hu .label:before {
+  content: "Közigazgatási egységek";
+}
+.iti-box.full.ad-hu .label:before {
+  content: "Címek";
+}
+.iti-box.full.cp-hu .label:before {
+  content: "Kataszteri parcellák";
+}
+.iti-box.full.tn-hu .label:before {
+  content: "Közlekedési hálózatok";
+}
+.iti-box.full.hy-hu .label:before {
+  content: "Vízrajz";
+}
+.iti-box.full.ps-hu .label:before {
+  content: "Védett helyek";
+}
+.iti-box.full.rs-fr .label:before {
+  content: "Référentiels de coordonnées";
+}
+.iti-box.full.el-fr .label:before {
+  content: "Altitude";
+}
+.iti-box.full.lc-fr .label:before {
+  content: "Occupation des terres";
+}
+.iti-box.full.oi-fr .label:before {
+  content: "Ortho-imagerie";
+}
+.iti-box.full.ge-fr .label:before {
+  content: "Géologie";
+}
+.iti-box.full.su-fr .label:before {
+  content: "Unités statistiques";
+}
+.iti-box.full.bu-fr .label:before {
+  content: "Bâtiments";
+}
+.iti-box.full.so-fr .label:before {
+  content: "Sols";
+}
+.iti-box.full.lu-fr .label:before {
+  content: "Usage des sols";
+}
+.iti-box.full.hh-fr .label:before {
+  content: "Santé et sécurité des personnes";
+}
+.iti-box.full.us-fr .label:before {
+  content: "Services d'utilité publique et services publics";
+}
+.iti-box.full.gg-fr .label:before {
+  content: "Systèmes de maillage géographique";
+}
+.iti-box.full.ef-fr .label:before {
+  content: "Installations de suivi environnemental";
+}
+.iti-box.full.pf-fr .label:before {
+  content: "Lieux de production et sites industriels";
+}
+.iti-box.full.af-fr .label:before {
+  content: "Installations agricoles et aquacoles";
+}
+.iti-box.full.pd-fr .label:before {
+  content: "Répartition de la population — démographie";
+}
+.iti-box.full.am-fr .label:before {
+  content: "Zones de gestion, de restriction ou\A de réglementation et unités de déclaration";
+}
+.iti-box.full.nz-fr .label:before {
+  content: "Zones à risque naturel";
+}
+.iti-box.full.ac-fr .label:before {
+  content: "Conditions atmosphériques";
+}
+.iti-box.full.mf-fr .label:before {
+  content: "Caractéristiques géographiques météorologiques";
+}
+.iti-box.full.of-fr .label:before {
+  content: "Caractéristiques géographiques océanographiques";
+}
+.iti-box.full.sr-fr .label:before {
+  content: "Régions maritimes";
+}
+.iti-box.full.gn-fr .label:before {
+  content: "Dénominations géographiques";
+}
+.iti-box.full.br-fr .label:before {
+  content: "Régions biogéographiques";
+}
+.iti-box.full.hb-fr .label:before {
+  content: "Habitats et biotopes";
+}
+.iti-box.full.sd-fr .label:before {
+  content: "Répartition des espèces";
+}
+.iti-box.full.er-fr .label:before {
+  content: "Sources d'énergie";
+}
+.iti-box.full.mr-fr .label:before {
+  content: "Ressources minérales";
+}
+.iti-box.full.au-fr .label:before {
+  content: "Unités administratives";
+}
+.iti-box.full.ad-fr .label:before {
+  content: "Adresses";
+}
+.iti-box.full.cp-fr .label:before {
+  content: "Parcelles cadastrales";
+}
+.iti-box.full.tn-fr .label:before {
+  content: "Réseaux de transport";
+}
+.iti-box.full.hy-fr .label:before {
+  content: "Hydrographie";
+}
+.iti-box.full.ps-fr .label:before {
+  content: "Sites protégés";
+}
+.iti-box.full.rs-fi .label:before {
+  content: "Koordinaattijärjestelmät";
+}
+.iti-box.full.el-fi .label:before {
+  content: "Korkeus";
+}
+.iti-box.full.lc-fi .label:before {
+  content: "Maanpeite";
+}
+.iti-box.full.oi-fi .label:before {
+  content: "Ortoilmakuvat";
+}
+.iti-box.full.ge-fi .label:before {
+  content: "Geologia";
+}
+.iti-box.full.su-fi .label:before {
+  content: "Tilastoyksiköt";
+}
+.iti-box.full.bu-fi .label:before {
+  content: "Rakennukset";
+}
+.iti-box.full.so-fi .label:before {
+  content: "Maaperä";
+}
+.iti-box.full.lu-fi .label:before {
+  content: "Maankäyttö";
+}
+.iti-box.full.hh-fi .label:before {
+  content: "Väestön terveys ja turvallisuus";
+}
+.iti-box.full.us-fi .label:before {
+  content: "Yleishyödylliset ja muut julkiset palvelut";
+}
+.iti-box.full.gg-fi .label:before {
+  content: "Paikannusruudustot";
+}
+.iti-box.full.ef-fi .label:before {
+  content: "Ympäristön tilan seurantalaitteet";
+}
+.iti-box.full.pf-fi .label:before {
+  content: "Tuotanto- ja teollisuuslaitokset";
+}
+.iti-box.full.af-fi .label:before {
+  content: "Maatalous- ja vesiviljelylaitokset";
+}
+.iti-box.full.pd-fi .label:before {
+  content: "Väestöjakauma – demografia";
+}
+.iti-box.full.am-fi .label:before {
+  content: "Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt";
+}
+.iti-box.full.nz-fi .label:before {
+  content: "Luonnonriskialueet";
+}
+.iti-box.full.ac-fi .label:before {
+  content: "Ilmakehän tila";
+}
+.iti-box.full.mf-fi .label:before {
+  content: "Ilmaston maantieteelliset ominaispiirteet";
+}
+.iti-box.full.of-fi .label:before {
+  content: "Merentutkimuksen maantieteelliset ominaispiirteet";
+}
+.iti-box.full.sr-fi .label:before {
+  content: "Merialueet";
+}
+.iti-box.full.gn-fi .label:before {
+  content: "Paikannimet";
+}
+.iti-box.full.br-fi .label:before {
+  content: "Biomaantieteelliset alueet";
+}
+.iti-box.full.hb-fi .label:before {
+  content: "Elinympäristöt ja biotoopit";
+}
+.iti-box.full.sd-fi .label:before {
+  content: "Lajien levinneisyys";
+}
+.iti-box.full.er-fi .label:before {
+  content: "Energiavarat";
+}
+.iti-box.full.mr-fi .label:before {
+  content: "Mineraalivarat";
+}
+.iti-box.full.au-fi .label:before {
+  content: "Hallinnolliset yksiköt";
+}
+.iti-box.full.ad-fi .label:before {
+  content: "Osoitteet";
+}
+.iti-box.full.cp-fi .label:before {
+  content: "Kiinteistöt";
+}
+.iti-box.full.tn-fi .label:before {
+  content: "Liikenneverkot";
+}
+.iti-box.full.hy-fi .label:before {
+  content: "Hydrografia";
+}
+.iti-box.full.ps-fi .label:before {
+  content: "Suojellut alueet";
+}
+.iti-box.full.rs-et .label:before {
+  content: "Koordinaatsüsteemid";
+}
+.iti-box.full.el-et .label:before {
+  content: "Kõrgused";
+}
+.iti-box.full.lc-et .label:before {
+  content: "Maakate";
+}
+.iti-box.full.oi-et .label:before {
+  content: "Ortokujutised";
+}
+.iti-box.full.ge-et .label:before {
+  content: "Geoloogia";
+}
+.iti-box.full.su-et .label:before {
+  content: "Statistilised üksused";
+}
+.iti-box.full.bu-et .label:before {
+  content: "Ehitised";
+}
+.iti-box.full.so-et .label:before {
+  content: "Pinnas";
+}
+.iti-box.full.lu-et .label:before {
+  content: "Maakasutus";
+}
+.iti-box.full.hh-et .label:before {
+  content: "Inimeste tervis ja ohutus";
+}
+.iti-box.full.us-et .label:before {
+  content: "Kommunaal- ja riiklikud teenused";
+}
+.iti-box.full.gg-et .label:before {
+  content: "Geograafilised ruutvõrgud";
+}
+.iti-box.full.ef-et .label:before {
+  content: "Keskkonnaseirerajatised";
+}
+.iti-box.full.pf-et .label:before {
+  content: "Tootmis- ja tööstusrajatised";
+}
+.iti-box.full.af-et .label:before {
+  content: "Põllumajandus- ja vesiviljelusrajatised";
+}
+.iti-box.full.pd-et .label:before {
+  content: "Elanikkonna jaotumine – demograafia";
+}
+.iti-box.full.am-et .label:before {
+  content: "Üldplaneering/piirangu-/reguleeritud tsoonid ja aruandlusüksused";
+}
+.iti-box.full.nz-et .label:before {
+  content: "Looduslikud ohutsoonid";
+}
+.iti-box.full.ac-et .label:before {
+  content: "Atmosfääritingimused";
+}
+.iti-box.full.mf-et .label:before {
+  content: "Meteoroloogilis-geograafilised tunnusjooned";
+}
+.iti-box.full.of-et .label:before {
+  content: "Okeanograafilis-geograafilised tunnusjooned";
+}
+.iti-box.full.sr-et .label:before {
+  content: "Merepiirkonnad";
+}
+.iti-box.full.gn-et .label:before {
+  content: "Geograafilised nimed";
+}
+.iti-box.full.br-et .label:before {
+  content: "Bio-geograafilised piirkonnad";
+}
+.iti-box.full.hb-et .label:before {
+  content: "Elupaigad ja biotoobid";
+}
+.iti-box.full.sd-et .label:before {
+  content: "Liikide jaotumine";
+}
+.iti-box.full.er-et .label:before {
+  content: "Energiaressursid";
+}
+.iti-box.full.mr-et .label:before {
+  content: "Maavarad";
+}
+.iti-box.full.au-et .label:before {
+  content: "Haldusüksused";
+}
+.iti-box.full.ad-et .label:before {
+  content: "Aadressid";
+}
+.iti-box.full.cp-et .label:before {
+  content: "Katastriüksused";
+}
+.iti-box.full.tn-et .label:before {
+  content: "Transpordivõrgud";
+}
+.iti-box.full.hy-et .label:before {
+  content: "Hüdrograafia";
+}
+.iti-box.full.ps-et .label:before {
+  content: "Kaitsealused kohad";
+}
+.iti-box.full.rs-es .label:before {
+  content: "Sistemas de coordenadas de referencia";
+}
+.iti-box.full.el-es .label:before {
+  content: "Elevaciones";
+}
+.iti-box.full.lc-es .label:before {
+  content: "Cubierta terrestre";
+}
+.iti-box.full.oi-es .label:before {
+  content: "Ortoimágenes";
+}
+.iti-box.full.ge-es .label:before {
+  content: "Geología";
+}
+.iti-box.full.su-es .label:before {
+  content: "Unidades estadísticas";
+}
+.iti-box.full.bu-es .label:before {
+  content: "Edificios";
+}
+.iti-box.full.so-es .label:before {
+  content: "Suelo";
+}
+.iti-box.full.lu-es .label:before {
+  content: "Uso del suelo";
+}
+.iti-box.full.hh-es .label:before {
+  content: "Salud y seguridad humanas";
+}
+.iti-box.full.us-es .label:before {
+  content: "Servicios de utilidad pública y estatales";
+}
+.iti-box.full.gg-es .label:before {
+  content: "Sistema de cuadrículas geográficas";
+}
+.iti-box.full.ef-es .label:before {
+  content: "Instalaciones de observación del medio ambiente";
+}
+.iti-box.full.pf-es .label:before {
+  content: "Instalaciones de producción e industriales";
+}
+.iti-box.full.af-es .label:before {
+  content: "Instalaciones agrícolas y de acuicultura";
+}
+.iti-box.full.pd-es .label:before {
+  content: "Distribución de la población — demografía";
+}
+.iti-box.full.am-es .label:before {
+  content: "Zonas sujetas a ordenación, a restricciones o reglamentaciones y unidades de notificación";
+}
+.iti-box.full.nz-es .label:before {
+  content: "Zonas de riesgos naturales";
+}
+.iti-box.full.ac-es .label:before {
+  content: "Condiciones atmosféricas";
+}
+.iti-box.full.mf-es .label:before {
+  content: "Aspectos geográficos de carácter meteorológico";
+}
+.iti-box.full.of-es .label:before {
+  content: "Rasgos geográficos oceanográficos";
+}
+.iti-box.full.sr-es .label:before {
+  content: "Regiones marinas";
+}
+.iti-box.full.gn-es .label:before {
+  content: "Nombres geográficos";
+}
+.iti-box.full.br-es .label:before {
+  content: "Regiones biogeográficas";
+}
+.iti-box.full.hb-es .label:before {
+  content: "Hábitats y biotopos";
+}
+.iti-box.full.sd-es .label:before {
+  content: "Distribución de las especies";
+}
+.iti-box.full.er-es .label:before {
+  content: "Recursos energéticos";
+}
+.iti-box.full.mr-es .label:before {
+  content: "Recursos minerales";
+}
+.iti-box.full.au-es .label:before {
+  content: "Unidades administrativas";
+}
+.iti-box.full.ad-es .label:before {
+  content: "Direcciones";
+}
+.iti-box.full.cp-es .label:before {
+  content: "Parcelas catastrales";
+}
+.iti-box.full.tn-es .label:before {
+  content: "Redes de transporte";
+}
+.iti-box.full.hy-es .label:before {
+  content: "Hidrografía";
+}
+.iti-box.full.ps-es .label:before {
+  content: "Lugares protegidos";
+}
+.iti-box.full.rs-el .label:before {
+  content: "Συστήματα συντεταγμένων";
+}
+.iti-box.full.el-el .label:before {
+  content: "Υψομετρία";
+}
+.iti-box.full.lc-el .label:before {
+  content: "Κάλυψη γης";
+}
+.iti-box.full.oi-el .label:before {
+  content: "Ορθοφωτογραφία";
+}
+.iti-box.full.ge-el .label:before {
+  content: "Γεωλογία";
+}
+.iti-box.full.su-el .label:before {
+  content: "Στατιστικές μονάδες";
+}
+.iti-box.full.bu-el .label:before {
+  content: "Κτίρια";
+}
+.iti-box.full.so-el .label:before {
+  content: "Έδαφος";
+}
+.iti-box.full.lu-el .label:before {
+  content: "Χρήσεις γης";
+}
+.iti-box.full.hh-el .label:before {
+  content: "Ανθρώπινη υγεία και ασφάλεια";
+}
+.iti-box.full.us-el .label:before {
+  content: "Επιχειρήσεις κοινής ωφελείας και κρατικές υπηρεσίες";
+}
+.iti-box.full.gg-el .label:before {
+  content: "Συστήματα γεωγραφικού καννάβου";
+}
+.iti-box.full.ef-el .label:before {
+  content: "Εγκαταστάσεις παρακολούθησης του περιβάλλοντος";
+}
+.iti-box.full.pf-el .label:before {
+  content: "Εγκαταστάσεις παραγωγής και βιομηχανικές εγκαταστάσεις";
+}
+.iti-box.full.af-el .label:before {
+  content: "Γεωργικές εγκαταστάσεις και εγκαταστάσεις υδατοκαλλιέργειας";
+}
+.iti-box.full.pd-el .label:before {
+  content: "Κατανομή πληθυσμού — δημογραφία";
+}
+.iti-box.full.am-el .label:before {
+  content: "Ζώνες διαχείρισης/περιορισμού/ρύθμισης εκτάσεων και μονάδες αναφοράς";
+}
+.iti-box.full.nz-el .label:before {
+  content: "Ζώνες φυσικών κινδύνων";
+}
+.iti-box.full.ac-el .label:before {
+  content: "Ατμοσφαιρικές συνθήκες";
+}
+.iti-box.full.mf-el .label:before {
+  content: "Μετεωρολογικά γεωγραφικά χαρακτηριστικά";
+}
+.iti-box.full.of-el .label:before {
+  content: "Ωκεανογραφικά γεωγραφικά χαρακτηριστικά";
+}
+.iti-box.full.sr-el .label:before {
+  content: "Θαλάσσιες περιοχές";
+}
+.iti-box.full.gn-el .label:before {
+  content: "Τοπωνύμια";
+}
+.iti-box.full.br-el .label:before {
+  content: "Βιογεωγραφικές περιοχές";
+}
+.iti-box.full.hb-el .label:before {
+  content: "Ενδιαιτήματα και βιότοποι";
+}
+.iti-box.full.sd-el .label:before {
+  content: "Κατανομή ειδών";
+}
+.iti-box.full.er-el .label:before {
+  content: "Ενεργειακοί πόροι";
+}
+.iti-box.full.mr-el .label:before {
+  content: "Ορυκτοί πόροι";
+}
+.iti-box.full.au-el .label:before {
+  content: "Διοικητικές ενότητες";
+}
+.iti-box.full.ad-el .label:before {
+  content: "Διευθύνσεις";
+}
+.iti-box.full.cp-el .label:before {
+  content: "Γεωτεμάχια κτηματολογίου";
+}
+.iti-box.full.tn-el .label:before {
+  content: "Δίκτυα μεταφορών";
+}
+.iti-box.full.hy-el .label:before {
+  content: "Υδρογραφία";
+}
+.iti-box.full.ps-el .label:before {
+  content: "Προστατευόμενες τοποθεσίες";
+}
+.iti-box.full.rs-de .label:before {
+  content: "Koordinatenreferenzsysteme";
+}
+.iti-box.full.el-de .label:before {
+  content: "Höhe";
+}
+.iti-box.full.lc-de .label:before {
+  content: "Bodenbedeckung";
+}
+.iti-box.full.oi-de .label:before {
+  content: "Orthofotografie";
+}
+.iti-box.full.ge-de .label:before {
+  content: "Geologie";
+}
+.iti-box.full.su-de .label:before {
+  content: "Statistische Einheiten";
+}
+.iti-box.full.bu-de .label:before {
+  content: "Gebäude";
+}
+.iti-box.full.so-de .label:before {
+  content: "Boden";
+}
+.iti-box.full.lu-de .label:before {
+  content: "Bodennutzung";
+}
+.iti-box.full.hh-de .label:before {
+  content: "Gesundheit und Sicherheit";
+}
+.iti-box.full.us-de .label:before {
+  content: "Versorgungswirtschaft und staatliche Dienste";
+}
+.iti-box.full.gg-de .label:before {
+  content: "Geografische Gittersysteme";
+}
+.iti-box.full.ef-de .label:before {
+  content: "Umweltüberwachung";
+}
+.iti-box.full.pf-de .label:before {
+  content: "Produktions- und Industrieanlagen";
+}
+.iti-box.full.af-de .label:before {
+  content: "Landwirtschaftliche Anlagen und Aquakulturanlagen";
+}
+.iti-box.full.pd-de .label:before {
+  content: "Verteilung der Bevölkerung — Demografie";
+}
+.iti-box.full.am-de .label:before {
+  content: "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten";
+}
+.iti-box.full.nz-de .label:before {
+  content: "Gebiete mit naturbedingten Risiken";
+}
+.iti-box.full.ac-de .label:before {
+  content: "Atmosphärische Bedingungen";
+}
+.iti-box.full.mf-de .label:before {
+  content: "Meteorologisch-geografische Kennwerte";
+}
+.iti-box.full.of-de .label:before {
+  content: "Ozeanografisch-geografische Kennwerte";
+}
+.iti-box.full.sr-de .label:before {
+  content: "Meeresregionen";
+}
+.iti-box.full.gn-de .label:before {
+  content: "Geografische Bezeichnungen";
+}
+.iti-box.full.br-de .label:before {
+  content: "Biogeografische Regionen";
+}
+.iti-box.full.hb-de .label:before {
+  content: "Lebensräume und Biotope";
+}
+.iti-box.full.sd-de .label:before {
+  content: "Verteilung der Arten";
+}
+.iti-box.full.er-de .label:before {
+  content: "Energiequellen";
+}
+.iti-box.full.mr-de .label:before {
+  content: "Mineralische Bodenschätze";
+}
+.iti-box.full.au-de .label:before {
+  content: "Verwaltungseinheiten";
+}
+.iti-box.full.ad-de .label:before {
+  content: "Adressen";
+}
+.iti-box.full.cp-de .label:before {
+  content: "Flurstücke/Grundstücke (Katasterparzellen)";
+}
+.iti-box.full.tn-de .label:before {
+  content: "Verkehrsnetze";
+}
+.iti-box.full.hy-de .label:before {
+  content: "Gewässernetz";
+}
+.iti-box.full.ps-de .label:before {
+  content: "Schutzgebiete";
+}
+.iti-box.full.rs-bg .label:before {
+  content: "Координатни справочни системи";
+}
+.iti-box.full.el-bg .label:before {
+  content: "Релеф";
+}
+.iti-box.full.lc-bg .label:before {
+  content: "Земна покривка";
+}
+.iti-box.full.oi-bg .label:before {
+  content: "Ортоизображение";
+}
+.iti-box.full.ge-bg .label:before {
+  content: "Геология";
+}
+.iti-box.full.su-bg .label:before {
+  content: "Статистически единици";
+}
+.iti-box.full.bu-bg .label:before {
+  content: "Сгради";
+}
+.iti-box.full.so-bg .label:before {
+  content: "Почва";
+}
+.iti-box.full.lu-bg .label:before {
+  content: "Ползване на земята";
+}
+.iti-box.full.hh-bg .label:before {
+  content: "Здраве и безопасност на човека";
+}
+.iti-box.full.us-bg .label:before {
+  content: "Комунално-битови и обществени услуги";
+}
+.iti-box.full.gg-bg .label:before {
+  content: "Географски координатни системи";
+}
+.iti-box.full.ef-bg .label:before {
+  content: "Съоръжения за управление на околната среда";
+}
+.iti-box.full.pf-bg .label:before {
+  content: "Производствени и промишлени съоръжения";
+}
+.iti-box.full.af-bg .label:before {
+  content: "Селскостопански и водностопански съоръжения";
+}
+.iti-box.full.pd-bg .label:before {
+  content: "Разпределение на населението — демография";
+}
+.iti-box.full.am-bg .label:before {
+  content: "Управление на територията/ограничени/регулирани зони и отчетни единици";
+}
+.iti-box.full.nz-bg .label:before {
+  content: "Природни рискови зони";
+}
+.iti-box.full.ac-bg .label:before {
+  content: "Атмосферни условия";
+}
+.iti-box.full.mf-bg .label:before {
+  content: "Метеорологични географски характеристики";
+}
+.iti-box.full.of-bg .label:before {
+  content: "Океанографски географски характеристики";
+}
+.iti-box.full.sr-bg .label:before {
+  content: "Морски региони";
+}
+.iti-box.full.gn-bg .label:before {
+  content: "Географски наименования";
+}
+.iti-box.full.br-bg .label:before {
+  content: "Биогеографски региони";
+}
+.iti-box.full.hb-bg .label:before {
+  content: "Местообитания и биотопи";
+}
+.iti-box.full.sd-bg .label:before {
+  content: "Разпределение на видовете";
+}
+.iti-box.full.er-bg .label:before {
+  content: "Енергийни източници";
+}
+.iti-box.full.mr-bg .label:before {
+  content: "Минерални ресурси";
+}
+.iti-box.full.au-bg .label:before {
+  content: "Административни единици";
+}
+.iti-box.full.ad-bg .label:before {
+  content: "Адреси";
+}
+.iti-box.full.cp-bg .label:before {
+  content: "Кадастрални парцели";
+}
+.iti-box.full.tn-bg .label:before {
+  content: "Транспортни мрежи";
+}
+.iti-box.full.hy-bg .label:before {
+  content: "Хидрография";
+}
+.iti-box.full.ps-bg .label:before {
+  content: "Защитени обекти";
+}
+.iti-box.full.rs-da .label:before {
+  content: "Koordinatsystemer";
+}
+.iti-box.full.el-da .label:before {
+  content: "Højde";
+}
+.iti-box.full.lc-da .label:before {
+  content: "Arealdække";
+}
+.iti-box.full.oi-da .label:before {
+  content: "Ortofoto";
+}
+.iti-box.full.ge-da .label:before {
+  content: "Geologi";
+}
+.iti-box.full.su-da .label:before {
+  content: "Statistiske enheder";
+}
+.iti-box.full.bu-da .label:before {
+  content: "Bygninger";
+}
+.iti-box.full.so-da .label:before {
+  content: "Jord";
+}
+.iti-box.full.lu-da .label:before {
+  content: "Arealanvendelse";
+}
+.iti-box.full.hh-da .label:before {
+  content: "Sikkerhed";
+}
+.iti-box.full.us-da .label:before {
+  content: "Offentlig forsyningsvirksomhed og offentlige tjenesteydelser";
+}
+.iti-box.full.gg-da .label:before {
+  content: "Geografiske kvadratnetsystemer";
+}
+.iti-box.full.ef-da .label:before {
+  content: "Miljøovervågningsfaciliteter";
+}
+.iti-box.full.pf-da .label:before {
+  content: "Produktions- og industrifaciliteter";
+}
+.iti-box.full.af-da .label:before {
+  content: "Landbrugs- og akvakulturanlæg";
+}
+.iti-box.full.pd-da .label:before {
+  content: "Befolkningsfordeling — demografi";
+}
+.iti-box.full.am-da .label:before {
+  content: "Forvaltede og regulerede områder samt områder med brugsbegrænsning og indberetningsenheder";
+}
+.iti-box.full.nz-da .label:before {
+  content: "Områder med naturlige risici";
+}
+.iti-box.full.ac-da .label:before {
+  content: "Atmosfæriske forhold";
+}
+.iti-box.full.mf-da .label:before {
+  content: "Meteorologisk-geografiske forhold";
+}
+.iti-box.full.of-da .label:before {
+  content: "Oceanografiske/geografiske forhold";
+}
+.iti-box.full.sr-da .label:before {
+  content: "Havområder";
+}
+.iti-box.full.gn-da .label:before {
+  content: "Stednavne";
+}
+.iti-box.full.br-da .label:before {
+  content: "Biogeografiske regioner";
+}
+.iti-box.full.hb-da .label:before {
+  content: "Levesteder og biotoper";
+}
+.iti-box.full.sd-da .label:before {
+  content: "Artsfordeling";
+}
+.iti-box.full.er-da .label:before {
+  content: "Energiressourcer";
+}
+.iti-box.full.mr-da .label:before {
+  content: "Mineralressourcer";
+}
+.iti-box.full.au-da .label:before {
+  content: "Administrative enheder";
+}
+.iti-box.full.ad-da .label:before {
+  content: "Adresser";
+}
+.iti-box.full.cp-da .label:before {
+  content: "Matrikulære parceller";
+}
+.iti-box.full.tn-da .label:before {
+  content: "Transportnet";
+}
+.iti-box.full.hy-da .label:before {
+  content: "Hydrograf";
+}
+.iti-box.full.ps-da .label:before {
+  content: "Beskyttede lokaliteter";
+}
+.iti-box.full.rs-cs .label:before {
+  content: "Souřadnicové referenční systémy";
+}
+.iti-box.full.el-cs .label:before {
+  content: "Nadmořská výška";
+}
+.iti-box.full.lc-cs .label:before {
+  content: "Krajinný pokryv";
+}
+.iti-box.full.oi-cs .label:before {
+  content: "Ortofotosnímky";
+}
+.iti-box.full.ge-cs .label:before {
+  content: "Geologie";
+}
+.iti-box.full.su-cs .label:before {
+  content: "Statistické jednotky";
+}
+.iti-box.full.bu-cs .label:before {
+  content: "Budovy";
+}
+.iti-box.full.so-cs .label:before {
+  content: "Půda";
+}
+.iti-box.full.lu-cs .label:before {
+  content: "Využití území";
+}
+.iti-box.full.hh-cs .label:before {
+  content: "Lidské zdraví a bezpečnost";
+}
+.iti-box.full.us-cs .label:before {
+  content: "Veřejné služby a služby veřejné správy";
+}
+.iti-box.full.gg-cs .label:before {
+  content: "Zeměpisné soustavy souřadnicových sítí";
+}
+.iti-box.full.ef-cs .label:before {
+  content: "Zařízení pro sledování životního prostředí";
+}
+.iti-box.full.pf-cs .label:before {
+  content: "Výrobní a průmyslová zařízení";
+}
+.iti-box.full.af-cs .label:before {
+  content: "Zemědělská a akvakulturní zařízení";
+}
+.iti-box.full.pd-cs .label:before {
+  content: "Rozložení obyvatelstva – demografie";
+}
+.iti-box.full.am-cs .label:before {
+  content: "Správní oblasti/chráněná pásma/regulovaná území a jednotky podávající hlášení";
+}
+.iti-box.full.nz-cs .label:before {
+  content: "Oblasti ohrožené přírodními riziky";
+}
+.iti-box.full.ac-cs .label:before {
+  content: "Stav ovzduší";
+}
+.iti-box.full.mf-cs .label:before {
+  content: "Zeměpisné meteorologické prvky";
+}
+.iti-box.full.of-cs .label:before {
+  content: "Zeměpisné oceánografické prvky";
+}
+.iti-box.full.sr-cs .label:before {
+  content: "Mořské oblasti";
+}
+.iti-box.full.gn-cs .label:before {
+  content: "Zeměpisné názvy";
+}
+.iti-box.full.br-cs .label:before {
+  content: "Bioregiony";
+}
+.iti-box.full.hb-cs .label:before {
+  content: "Stanoviště a biotopy";
+}
+.iti-box.full.sd-cs .label:before {
+  content: "Rozložení druhů";
+}
+.iti-box.full.er-cs .label:before {
+  content: "Energetické zdroje";
+}
+.iti-box.full.mr-cs .label:before {
+  content: "Nerostné suroviny";
+}
+.iti-box.full.au-cs .label:before {
+  content: "Správní jednotky";
+}
+.iti-box.full.ad-cs .label:before {
+  content: "Adresy";
+}
+.iti-box.full.cp-cs .label:before {
+  content: "Katastrální parcely";
+}
+.iti-box.full.tn-cs .label:before {
+  content: "Dopravní sítě";
+}
+.iti-box.full.hy-cs .label:before {
+  content: "Vodopis";
+}
+.iti-box.full.ps-cs .label:before {
+  content: "Chráněná území";
+}

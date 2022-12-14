@@ -31,15 +31,14 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.records.model.related.*;
 import org.fao.geonet.api.records.model.related.FCRelatedMetadataItem.FeatureType.AttributeTable;
-import org.fao.geonet.api.records.model.related.FeatureResponse;
-import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -68,6 +67,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -406,30 +407,29 @@ public class MetadataApi {
             );
             response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
         } else {
-            Set<String> tmpUuid = new HashSet<String>();
-            tmpUuid.add(metadataUuid);
+            Set<String> uuidsToExport = new HashSet<String>();
+            uuidsToExport.add(metadataUuid);
             // MEF version 2 support multiple metadata record by file.
             if (withRelated) {
                 // Adding children in MEF file
 
-                // Get children to export - It could be better to use GetRelated service TODO
-                Set<String> childs = MetadataUtils.getUuidsToExport(
-                    String.format("+%s:%s", Geonet.IndexFieldNames.PARENTUUID, metadataUuid));
-                if (childs.size() != 0) {
-                    tmpUuid.addAll(childs);
-                }
-
-                // Get linked services for export
-                Set<String> services = MetadataUtils.getUuidsToExport(
-                    String.format("+%s:%s", Geonet.IndexFieldNames.RECORDOPERATESON, metadataUuid));
-                if (services.size() != 0) {
-                    tmpUuid.addAll(services);
-                }
+                RelatedResponse related = getAssociatedResources(
+                    metadataUuid, null, 0, 100, request);
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getServices()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getSiblings()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getRelated()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getAssociated()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getFcats()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHasfeaturecats()));
+                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHassources()));
             }
-            Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
+            Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+            file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
 
             response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
         }
@@ -439,6 +439,13 @@ public class MetadataApi {
         ));
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
         FileUtils.copyFile(file.toFile(), response.getOutputStream());
+    }
+
+    private List<String> getUuidsOfAssociatedRecords(IListOnlyClassToArray associatedRecords) {
+        return Optional.ofNullable(associatedRecords)
+            .map(r -> ((List< RelatedMetadataItem >)r.getItem()).stream())
+            .orElseGet(Stream::empty)
+            .map(i -> i.getId()).collect(Collectors.toList());
     }
 
 
@@ -526,10 +533,16 @@ public class MetadataApi {
         }
 
         String language = languageUtils.getIso3langCode(request.getLocales());
+        final ServiceContext context = ApiUtils.createServiceContext(request);
 
+        return getAssociatedResources(language, context, md, type, start, rows);
+    }
+
+    public static RelatedResponse getAssociatedResources(
+        String language, ServiceContext context,
+        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language),
@@ -537,7 +550,9 @@ public class MetadataApi {
             )),
             MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+        Path relatedXsl = ApplicationContextHolder.get()
+            .getBean(GeonetworkDataDirectory.class).getWebappDir()
+            .resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
@@ -546,9 +561,7 @@ public class MetadataApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
-        description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
-            "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+        description = "")
     @RequestMapping(value = "/{metadataUuid}/featureCatalog",
         method = RequestMethod.GET,
         produces = {
@@ -580,6 +593,7 @@ public class MetadataApi {
                 metadataUuid, type, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
+                // TODO: Make consistent with document in index? and add codelists
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
                     if (StringUtils.isNotBlank(element.getCode())) {
                         if (!decodeMap.containsKey(element.getCode())) {

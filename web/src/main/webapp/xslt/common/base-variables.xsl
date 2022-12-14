@@ -40,8 +40,6 @@
   <xsl:variable name="buildNumber"
                 select="util:getBuildNumber()"/>
 
-  <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
-
   <!-- The current service name -->
   <xsl:variable name="service" select="/root/gui/reqService"/>
 
@@ -61,7 +59,13 @@
   <xsl:variable name="withD3" select="$service = 'admin.console'"/>
 
   <xsl:variable name="searchView"
-                select="if (/root/request/view) then /root/request/view else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
+                select="if (/root/request/view) then util:encodeForJavaScript(/root/request/view) else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
+
+  <xsl:variable name="uiResourcesPath"
+                select="if ($searchView = 'sextant')
+                        then '../../sextant/'
+                        else '../../catalog/'"/>
+
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
 
@@ -172,4 +176,7 @@
                 select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
   <xsl:variable name="layerMatchingPattern"
                 select="'^OGC:WMS.*'"/>
+
+
+  <xsl:variable name="metadataUserFeedbackEnabled" select="$envSystem/localrating/enable = 'advanced'" />
 </xsl:stylesheet>

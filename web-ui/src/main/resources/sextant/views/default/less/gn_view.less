@@ -1,0 +1,133 @@
+/* Define any custom style here for the view that should be applied to all apps
+   (ie. admin, search, login, editor). */
+
+/* If you wish to change the default font size of the whole application, this is the place to do so */
+@font-size-base:          16px;
+
+/* These are all relative sizes to the base font size that affect how big titles, small text and large text will be */
+@font-size-large:         ceil((@font-size-base * 1.125)); // ~18px
+@font-size-small:         ceil((@font-size-base * 0.85)); // ~14px
+//@font-size-x-small:       ceil((@font-size-base * 0.65)); // ~10px
+
+@font-size-h1:            floor((@font-size-base * 2)); // ~32px
+@font-size-h2:            floor((@font-size-base * 1.6)); // ~25px
+@font-size-h3:            ceil((@font-size-base * 1.3)); // ~21px
+@font-size-h4:            ceil((@font-size-base * 1.125)); // ~18px
+@font-size-h5:            @font-size-base;
+@font-size-h6:            ceil((@font-size-base * 0.85)); // ~14px
+
+//** Unit-less `line-height` for use in components like buttons.
+@line-height-base:        1.428571429; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~23px
+
+/* Defined here any custom style for the view
+   which has to be applied for all apps
+   (ie. admin, search, login, editor). */
+
+@gn-spacing: 10px;
+
+//  padding
+.gn-padding-top {
+  padding-top: @gn-spacing !important;
+}
+.gn-padding-right {
+  padding-right: @gn-spacing !important;
+}
+.gn-padding-bottom {
+  padding-bottom: @gn-spacing !important;
+}
+.gn-padding-left {
+  padding-left: @gn-spacing !important;
+}
+// no padding
+.gn-nopadding-top {
+  padding-top: 0 !important;
+}
+.gn-nopadding-right {
+  padding-right: 0 !important;
+}
+.gn-nopadding-bottom {
+  padding-bottom: 0 !important;
+}
+.gn-nopadding-left {
+  padding-left: 0 !important;
+}
+// margin
+.gn-margin-top {
+  margin-top: @gn-spacing !important;
+}
+.gn-margin-right {
+  margin-right: @gn-spacing !important;
+}
+.gn-margin-bottom {
+  margin-bottom: @gn-spacing !important;
+}
+.gn-margin-left {
+  margin-left: @gn-spacing !important;
+}
+// no margin
+.gn-nomargin-top {
+  margin-top: 0 !important;
+}
+.gn-nomargin-right {
+  margin-right: 0 !important;
+}
+.gn-nomargin-bottom {
+  margin-bottom: 0 !important;
+}
+.gn-nomargin-left {
+  margin-left: 0 !important;
+}
+//border
+.gn-noborder-top {
+  border-top-width: 0 !important;
+}
+.gn-noborder-right {
+  border-right-width: 0 !important;
+}
+.gn-noborder-bottom {
+  border-bottom-width: 0 !important;
+}
+.gn-noborder-left {
+  border-left-width: 0 !important;
+}
+
+.btn-round {
+  border-radius: 50%;
+  padding: 11px 15px;
+}
+.btn-truncate {
+  span {
+    display: inline-block;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 150px;
+  }
+}
+.btn, .dropdown-toggle {
+  &:focus {
+    outline: 2px auto -webkit-focus-ring-color;
+    outline-offset: 0;
+  }
+}
+// line-clamp
+.clamp-2 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-3 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-6 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

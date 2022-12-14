@@ -31,7 +31,9 @@
 #main-tabset > ul:nth-child(1) {
   display: none;
 }
-
+a {
+  color: #0a69f6;
+}
 .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
   outline-offset: 0px;
 }
@@ -72,6 +74,12 @@
 .gn-source-logo {
   max-width: 100%;
   max-height: 60px;
+}
+.dropdown-menu {
+  .gn-source-logo {
+    max-height: 40px;
+    margin-right: 10px;
+  }
 }
 
 
@@ -198,7 +206,7 @@
 // advanced search
 .gn-search-filter {
   position: absolute;
-  z-index: 10;
+  z-index: 110;
   padding: 15px;
   background-color: @panel-default-heading-bg;
   width: calc(~"100% - 30px");
@@ -209,11 +217,6 @@
   }
   .col-md-2 {
     padding-left: 0;
-  }
-  .search-options {
-    label {
-      font-weight: normal;
-    }
   }
   .btn-link {
     padding-left: 0;

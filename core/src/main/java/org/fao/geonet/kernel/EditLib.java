@@ -289,7 +289,7 @@ public class EditLib {
 
     public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception {
         // Loop over each XML fragments to insert or replace
-        HashMap<String, Element> nodeRefToElem = new HashMap<>();
+        Map<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
             String[] nodeConfig = entry.getKey().split("_");
             String nodeRef = nodeConfig[0];
@@ -396,7 +396,7 @@ public class EditLib {
 
             if (isReplaceAllMode) {
                 // Remove all
-                AddElemValue propertyValueToProcess = new AddElemValue("<gn_delete></gn_delete>");
+                AddElemValue propertyValueToProcess = new AddElemValue(new Element("gn_delete"));
 
                 addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
                     createXpathNodeIfNotExist);
@@ -500,13 +500,6 @@ public class EditLib {
                 value.getNodeValue().getName()
                     .equals(SpecialUpdateTags.CREATE);
 
-            if (isValueXml &&
-                xpathProperty.matches(".*@[^/\\]]+")) {
-                throw new AssertionError(String.format(
-                    "Cannot set Xml on an attribute. Xpath:'%s' value: '%s'.",
-                    xpathProperty, Xml.getString(value.getNodeValue())
-                ));
-            }
             LOGGER_ADD_ELEMENT.debug("Inserting at location {} the snippet or value {}", xpathProperty, value);
 
             xpathProperty = cleanRootFromXPath(xpathProperty, metadataRecord);
@@ -516,7 +509,8 @@ public class EditLib {
 
             // If a property is not found in metadata,
             // or in create mode, create it...
-            if ( (nodeList.isEmpty() && createXpathNodeIfNotExist) || isCreateMode) {
+            if (((nodeList.isEmpty() && createXpathNodeIfNotExist) || isCreateMode)
+                && !isDeleteMode) {
                 int indexOfRequiredPortion = -1;
                 // Extract the XPath for the element to match. For:
                 //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
@@ -662,7 +656,20 @@ public class EditLib {
                             ));
                         } else {
                             int index = parent.indexOf(propEl);
-                            parent.addContent(index, child);
+
+                            // Non existing element already created
+                            // eg. Insert xpath
+                            // mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor
+                            // with snippet <mrd:distributor
+                            // and record does not contain mrd:distributor.
+                            // It was created on xpath analysis step above.
+                            // In this case, insert the fragment at the target
+                            // Check on children size may not be strict enough
+                            if (propEl.getChildren().size() == 0) {
+                                parent.setContent(index, child);
+                            } else {
+                                parent.addContent(index, child);
+                            }
                         }
                     } else {
                         // Add an element of same type in the target node

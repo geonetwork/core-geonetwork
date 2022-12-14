@@ -21,26 +21,25 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
+(function () {
+  goog.provide("gn_search_default_directive");
 
-  goog.provide('gn_search_default_directive');
+  var module = angular.module("gn_search_default_directive", []);
 
-  var module = angular.module('gn_search_default_directive', []);
-
-  module.directive('gnInfoList', ['gnMdView',
-    function(gnMdView) {
+  module.directive("gnInfoList", [
+    "gnMdView",
+    function (gnMdView) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-            'partials/infolist.html',
+        templateUrl: "../../catalog/views/default/directives/" + "partials/infolist.html",
         link: function linkFn(scope, element, attr) {
-          scope.showMore = function(isDisplay) {
-            var div = $('#gn-info-list' + this.md.uuid);
-            $(div.children()[isDisplay ? 0 : 1]).addClass('hidden');
-            $(div.children()[isDisplay ? 1 : 0]).removeClass('hidden');
+          scope.showMore = function (isDisplay) {
+            var div = $("#gn-info-list" + this.md.uuid);
+            $(div.children()[isDisplay ? 0 : 1]).addClass("hidden");
+            $(div.children()[isDisplay ? 1 : 0]).removeClass("hidden");
           };
-          scope.go = function(uuid) {
+          scope.go = function (uuid) {
             gnMdView(index, md, records);
             gnMdView.setLocationUuid(uuid);
           };
@@ -49,24 +48,27 @@
     }
   ]);
 
-  module.directive('gnAttributeTableRenderer', ['gnMdView',
-    function(gnMdView) {
+  module.directive("gnAttributeTableRenderer", [
+    "gnMdView",
+    function (gnMdView) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-        'partials/attributetable.html',
+        templateUrl:
+          "../../catalog/views/default/directives/" + "partials/attributetable.html",
         scope: {
-          attributeTable: '=gnAttributeTableRenderer'
+          attributeTable: "=gnAttributeTableRenderer"
         },
         link: function linkFn(scope, element, attrs) {
-          if (angular.isDefined(scope.attributeTable) &&
-            !angular.isArray(scope.attributeTable)) {
+          if (
+            angular.isDefined(scope.attributeTable) &&
+            !angular.isArray(scope.attributeTable)
+          ) {
             scope.attributeTable = [scope.attributeTable];
           }
           scope.showCodeColumn = false;
-          angular.forEach(scope.attributeTable, function(elem) {
-            if(elem.code > '') {
+          angular.forEach(scope.attributeTable, function (elem) {
+            if (elem.code > "") {
               scope.showCodeColumn = true;
             }
           });
@@ -75,236 +77,11 @@
     }
   ]);
 
-  module.directive('gnDataQualityMeasureRenderer', ['$http', '$q',
-    function($http, $q) {
+  module.directive("gnLinksBtn", [
+    "gnTplResultlistLinksbtn",
+    function (gnTplResultlistLinksbtn) {
       return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-        'partials/measures.html',
-        scope: {
-          recordId: '=gnDataQualityMeasureRenderer',
-          cptId: '@'
-        },
-        link: function linkFn(scope, element, attrs) {
-          scope.components = {};
-
-          if (angular.isDefined(scope.recordId)) {
-            loadValues();
-          }
-
-          function getQe(cptId, qm) {
-            return getDerivatedValues(cptId, qm, 'APE');
-          };
-          function getFu(cptId, qm) {
-            return getDerivatedValues(cptId, qm, 'FU');
-          };
-          function getDerivatedValues(cptId, qm, codePrefix) {
-              var qmId = qm.replace('AP', '');
-
-            for (var i = 0; i < scope.qm.length; i++) {
-              if (scope.qm[i][0].replace('#QE', '') === cptId &&
-                scope.qm[i][2].indexOf(codePrefix + qmId) !== -1) {
-                return {
-                  name: scope.qm[i][3] + ' (' + scope.qm[i][2] + ')',
-                  value: isNumeric(scope.qm[i][5]) ?
-                    Math.round(scope.qm[i][5]*100)/100 + ' ' + scope.qm[i][6] :
-                    scope.qm[i][5]
-                };
-              }
-            }
-            return {
-              name: null,
-              value: null
-            };
-          };
-
-
-          function getDpsOrTdpValues(cptId, mId, qm) {
-            var tokens = cptId.split('/');
-            var dpsKey = tokens[0];
-            var q1 = $q.defer();
-
-            if (scope.isUd || scope.isTdp) {
-              $http.post('../api/search/records/_search', {"query": {
-                  "bool" : {
-                    "must": [
-                      {"multi_match": {
-                          "query": dpsKey,
-                          "fields": ['id', 'uuid']}},
-                      {"terms": {"isTemplate": ["n", "y"]}},
-                      {"terms": {"draft": ["n", "y", "e"]}}
-                    ]
-                  }},
-                  "_source": ["dq*"]
-                }, {cache: true}).then(function (r) {
-                if (r.data.hits.hits[0]._source && r.data.hits.hits[0]._source.dqValues) {
-                  var values = r.data.hits.hits[0]._source.dqValues;
-                  for(var i = 0; i < values.length; i ++) {
-                    var v = values[i];
-                    if (v.indexOf(tokens[0] + '/' + tokens[1]) === 0 &&
-                        v.indexOf(mId) !== -1) {
-                      var t = v.split('|');
-                      qm.dps = isNumeric(t[5]) ? t[5] + ' ' + t[6] : t[5];
-                      q1.resolve(qm);
-                      break;
-                    }
-                  }
-                }
-                q1.resolve(qm);
-              });
-
-              if (scope.isUd) {
-                if (tokens.length >= 3) {
-                  var tdpKey = tokens[2];
-                  var q2 = $q.defer();
-                  $http.post('../api/search/records/_search', {"query": {
-                      "bool" : {
-                        "must": [
-                          {"multi_match": {
-                              "query": tdpKey,
-                              "fields": ['id', 'uuid']}},
-                          {"terms": {"isTemplate": ["n", "y"]}},
-                          {"terms": {"draft": ["n", "y", "e"]}}
-                        ]
-                      }},
-                      "_source": ["dq*"]
-                    }, {cache: true}).then(function (r) {
-                    if (r.data.hits.hits[0]._source && r.data.hits.hits[0]._source.dqValues) {
-                      var values = r.data.hits.hits[0]._source.dqValues;
-                      for(var i = 0; i < values.length; i ++) {
-                        var v = values[i];
-                        if (v.indexOf(tokens[0] + '/' + tokens[1] + '/' + tokens[2]) === 0 &&
-                            v.indexOf(mId) !== -1) {
-                          var t = v.split('|');
-                          qm.tdp = isNumeric(t[5]) ? t[5] + ' ' + t[6] : t[5];
-                          q2.resolve(qm);
-                          break;
-                        }
-                      }
-                    }
-                    q2.resolve(qm);
-                  });
-                  return $q.all([q1.promise, q2.promise]);
-                } else {
-                  // Should not happen
-                  return q1.promise;
-                }
-              } else {
-                // TDP return DPS data collection only
-                return q1.promise;
-              }
-            } else {
-              // DPS: nothing else to load
-              q1.resolve(qm);
-              return q1.promise;
-            }
-          };
-
-          scope.getClass = function (q) {
-            if(q.fu === null || q.fu === '') {
-              return '';
-            }
-
-            if (q.checkpoint === 'MEDSEA') {
-              if (q.fu > 10) {
-                return 'gn-class-green';
-              } else if (q.fu < -10) {
-                return 'gn-class-red';
-              } else {
-                return 'gn-class-yellow';
-              }
-            } else {
-              if (q.fu >= -10) {
-                return 'gn-class-green';
-              } else {
-                return 'gn-class-red';
-              }
-            }
-          };
-          function isNumeric(n) {
-            return !isNaN(parseFloat(n)) && isFinite(n);
-          };
-          function loadValues() {
-            scope.isUd = false;
-            scope.isTdp = false;
-            $http.post('../api/search/records/_search', {"query": {
-                "bool" : {
-                  "must": [
-                    {"multi_match": {
-                        "query": scope.recordId,
-                        "fields": ['id', 'uuid']}},
-                    {"terms": {"isTemplate": ["n", "y"]}},
-                    {"terms": {"draft": ["n", "y", "e"]}}
-                  ]
-                }},
-                "_source": ["dq*", "standardNameObject.default"]
-              }, {cache: true}).then(
-              function (r) {
-                scope.isUd = r.data.hits.hits[0]._source.standardNameObject.default
-                              .indexOf('Upstream Data') !== -1;
-                scope.isTdp = r.data.hits.hits[0]._source.standardNameObject.default
-                              .indexOf('Targeted Data Product') !== -1;
-                scope.qm = r.data.hits.hits[0]._source.dqValues;
-                angular.forEach(scope.qm, function (value, idx) {
-                  scope.qm[idx] = value.split('|');
-                });
-
-                scope.components = {};
-                // Group by component
-                // Group by QM+QE+FU
-                angular.forEach(scope.qm, function (value, idx) {
-                  var isQeOrFu = value[0].indexOf('#QE') !== -1,
-                      cptId = value[0];
-
-                  if (cptId.indexOf(scope.cptId) === 0) {
-                    if (!isQeOrFu) {
-                      if (!scope.components[cptId]) {
-                        scope.components[cptId] = {
-                          id: cptId,
-                          name: value[1],
-                          measures: []
-                        };
-                      }
-
-                      // Do not compute indicator for
-                      // measure 3.4
-                      var qe, fu;
-                      if (value[2] === 'AP.3.4') {
-                        qe = {value: null};
-                        fu = {value: null};
-                      } else {
-                        qe = getQe(cptId, value[2]);
-                        fu = getFu(cptId, value[2]);
-                      }
-                      getDpsOrTdpValues(cptId, value[2], {
-                        checkpoint: value[1].split('_')[0],
-                        qmName: value[3] + ' (' + value[2] + ')',
-                        qmDefinition: value[7],
-                        qmStatement: value[8],
-                        qm: isNumeric(value[5]) ? Math.round(value[5]*100)/100 + ' ' + value[6] : value[5],
-                        qeName: qe.name,
-                        qe: qe.value,
-                        fuName: fu.name,
-                        fu: fu.value != null ? fu.value.trim() : null
-                      }).then(function (values) {
-                        scope.components[cptId].measures.push(angular.isArray(values) ? values[0] : values);
-                      });
-                    }
-                  }
-                });
-              }
-            )
-          }
-        }
-      };
-    }
-  ]);
-
-  module.directive('gnLinksBtn', [ 'gnTplResultlistLinksbtn',
-    function(gnTplResultlistLinksbtn) {
-      return {
-        restrict: 'E',
+        restrict: "E",
         replace: true,
         scope: true,
         templateUrl: gnTplResultlistLinksbtn
@@ -312,14 +89,26 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings', 'gnConfig',
-    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
+  module.directive("gnMdActionsMenu", [
+    "gnMetadataActions",
+    "$http",
+    "gnConfig",
+    "gnConfigService",
+    "gnGlobalSettings",
+    "gnLangs",
+    function (
+      gnMetadataActions,
+      $http,
+      gnConfig,
+      gnConfigService,
+      gnGlobalSettings,
+      gnLangs
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-            'partials/mdactionmenu.html',
+        templateUrl:
+          "../../catalog/views/default/directives/" + "partials/mdactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
@@ -328,178 +117,221 @@
           scope.tasks = [];
           scope.hasVisibletasks = false;
 
-          gnConfigService.load().then(function(c) {
-            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+          gnConfigService.load().then(function (c) {
+            scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+
+            scope.isMdWorkflowAssistEnable =
+              gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
+            scope.workFlowApps =
+              gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
+            scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
           });
 
-          function loadTasks() {
-            return $http.get('../api/status/task', {cache: true}).
-            success(function(data) {
-              scope.tasks = data;
-              scope.getVisibleTasks();
-            });
+          scope.buildFormatter = function (url, uuid, isDraft) {
+            if (url.indexOf("${uuid}") !== -1) {
+              return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
+            } else {
+              return (
+                "../api/records/" +
+                uuid +
+                url.replace("${lang}", scope.lang) +
+                (url.indexOf("?") !== -1 ? "&" : "?") +
+                "approved=" +
+                (isDraft != "y")
+              );
+            }
           };
 
-          scope.getVisibleTasks = function() {
-            $.each(scope.tasks, function(i,t) {
-              scope.hasVisibletasks = scope.taskConfiguration[t.name] &&
+          function loadTasks() {
+            return $http
+              .get("../api/status/task", { cache: true })
+              .success(function (data) {
+                scope.tasks = data;
+                scope.getVisibleTasks();
+              });
+          }
+
+          scope.getVisibleTasks = function () {
+            $.each(scope.tasks, function (i, t) {
+              scope.hasVisibletasks =
+                scope.taskConfiguration[t.name] &&
                 scope.taskConfiguration[t.name].isVisible &&
                 scope.taskConfiguration[t.name].isVisible();
             });
-          }
+          };
 
           scope.taskConfiguration = {
             doiCreationTask: {
-              isVisible: function(md) {
-                return gnConfig['system.publication.doi.doienabled'];
+              isVisible: function (md) {
+                return gnConfig["system.publication.doi.doienabled"];
               },
-              isApplicable: function(md) {
+              isApplicable: function (md) {
                 // TODO: Would be good to return why a task is not applicable as tooltip
                 // TODO: Add has DOI already
-                return md && md.isPublished()
-                  && md.isTemplate === 'n'
-                  && JSON.parse(md.isHarvested) === false;
+                return (
+                  md &&
+                  md.isPublished() &&
+                  md.isTemplate === "n" &&
+                  JSON.parse(md.isHarvested) === false
+                );
               }
             }
           };
 
           loadTasks();
 
-          scope.$watch(attrs.gnMdActionsMenu, function(a) {
+          scope.$watch(attrs.gnMdActionsMenu, function (a) {
             scope.md = a;
           });
 
-          scope.getScope = function() {
+          scope.getScope = function () {
             return scope;
-          }
-        }
-      };
-    }
-  ]);
-
-  module.directive('gnPeriodChooser', [
-    function() {
-      return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-            'partials/periodchooser.html',
-        scope: {
-          label: '@gnPeriodChooser',
-          dateFrom: '=',
-          dateTo: '='
-        },
-        link: function linkFn(scope, element, attr) {
-          var today = moment();
-          scope.format = 'YYYY-MM-DD';
-          scope.options = ['today', 'yesterday', 'thisWeek', 'thisMonth',
-            'last3Months', 'last6Months', 'thisYear'];
-          scope.setPeriod = function(option) {
-            if (option === 'today') {
-              var date = today.format(scope.format);
-              scope.dateFrom = date;
-            } else if (option === 'yesterday') {
-              var date = today.clone().subtract(1, 'day')
-                .format(scope.format);
-              scope.dateFrom = date;
-              scope.dateTo = today.format(scope.format);
-              return;
-            } else if (option === 'thisWeek') {
-              scope.dateFrom = today.clone().startOf('week')
-                .format(scope.format);
-            } else if (option === 'thisMonth') {
-              scope.dateFrom = today.clone().startOf('month')
-                .format(scope.format);
-            } else if (option === 'last3Months') {
-              scope.dateFrom = today.clone().startOf('month').
-                  subtract(3, 'month').format(scope.format);
-            } else if (option === 'last6Months') {
-              scope.dateFrom = today.clone().startOf('month').
-                  subtract(6, 'month').format(scope.format);
-            } else if (option === 'thisYear') {
-              scope.dateFrom = today.clone().startOf('year')
-                .format(scope.format);
-            }
-            scope.dateTo = today.clone().add(1, 'day').format(scope.format);
           };
         }
       };
     }
   ]);
 
+  module.directive("gnPeriodChooser", [
+    function () {
+      return {
+        restrict: "A",
+        replace: true,
+        templateUrl:
+          "../../catalog/views/default/directives/" + "partials/periodchooser.html",
+        scope: {
+          label: "@gnPeriodChooser",
+          dateFrom: "=",
+          dateTo: "="
+        },
+        link: function linkFn(scope, element, attr) {
+          var today = moment();
+          scope.format = "YYYY-MM-DD";
+          scope.options = [
+            "today",
+            "yesterday",
+            "thisWeek",
+            "thisMonth",
+            "last3Months",
+            "last6Months",
+            "thisYear"
+          ];
+          scope.setPeriod = function (option) {
+            if (option === "today") {
+              var date = today.format(scope.format);
+              scope.dateFrom = date;
+            } else if (option === "yesterday") {
+              var date = today.clone().subtract(1, "day").format(scope.format);
+              scope.dateFrom = date;
+              scope.dateTo = today.format(scope.format);
+              return;
+            } else if (option === "thisWeek") {
+              scope.dateFrom = today.clone().startOf("week").format(scope.format);
+            } else if (option === "thisMonth") {
+              scope.dateFrom = today.clone().startOf("month").format(scope.format);
+            } else if (option === "last3Months") {
+              scope.dateFrom = today
+                .clone()
+                .startOf("month")
+                .subtract(3, "month")
+                .format(scope.format);
+            } else if (option === "last6Months") {
+              scope.dateFrom = today
+                .clone()
+                .startOf("month")
+                .subtract(6, "month")
+                .format(scope.format);
+            } else if (option === "thisYear") {
+              scope.dateFrom = today.clone().startOf("year").format(scope.format);
+            }
+            scope.dateTo = today.clone().add(1, "day").format(scope.format);
+          };
+        }
+      };
+    }
+  ]);
 
   /**
    * https://www.elastic.co/guide/en/elasticsearch/reference/current/range.html
    */
-  module.directive('gnDateRangeFilter', [
-    function() {
+  module.directive("gnDateRangeFilter", [
+    function () {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/views/default/directives/' +
-          'partials/dateRangeFilter.html',
+        templateUrl:
+          "../../catalog/views/default/directives/" + "partials/dateRangeFilter.html",
         scope: {
-          label: '@gnDateRangeFilter',
-          field: '='
+          label: "@gnDateRangeFilter",
+          field: "="
         },
         link: function linkFn(scope, element, attr) {
           var today = moment();
           scope.relations = ["intersects", "within", "contains"];
           scope.relation = scope.relations[0];
           scope.field = {
-            "range" : {
-              "resourceTemporalDateRange" : {
-                "gte" : null,
-                "lte" : null,
-                "relation" : scope.relation
+            range: {
+              resourceTemporalDateRange: {
+                gte: null,
+                lte: null,
+                relation: scope.relation
               }
             }
           };
 
-          scope.setRange = function() {
+          scope.setRange = function () {
             scope.field.range.resourceTemporalDateRange.gte = scope.dateFrom;
             scope.field.range.resourceTemporalDateRange.lte = scope.dateTo;
             scope.field.range.resourceTemporalDateRange.relation = scope.relation;
           };
 
-          scope.format = 'YYYY-MM-DD';
-          scope.options = ['today', 'yesterday', 'thisWeek', 'thisMonth',
-            'last3Months', 'last6Months', 'thisYear'];
-          scope.setPeriod = function(option) {
-            if (option === 'today') {
+          scope.format = "YYYY-MM-DD";
+          scope.options = [
+            "today",
+            "yesterday",
+            "thisWeek",
+            "thisMonth",
+            "last3Months",
+            "last6Months",
+            "thisYear"
+          ];
+          scope.setPeriod = function (option) {
+            if (option === "today") {
               var date = today.format(scope.format);
               scope.dateFrom = date;
-            } else if (option === 'yesterday') {
-              var date = today.clone().subtract(1, 'day')
-                .format(scope.format);
+            } else if (option === "yesterday") {
+              var date = today.clone().subtract(1, "day").format(scope.format);
               scope.dateFrom = date;
               scope.dateTo = today.format(scope.format);
               return;
-            } else if (option === 'thisWeek') {
-              scope.dateFrom = today.clone().startOf('week')
+            } else if (option === "thisWeek") {
+              scope.dateFrom = today.clone().startOf("week").format(scope.format);
+            } else if (option === "thisMonth") {
+              scope.dateFrom = today.clone().startOf("month").format(scope.format);
+            } else if (option === "last3Months") {
+              scope.dateFrom = today
+                .clone()
+                .startOf("month")
+                .subtract(3, "month")
                 .format(scope.format);
-            } else if (option === 'thisMonth') {
-              scope.dateFrom = today.clone().startOf('month')
+            } else if (option === "last6Months") {
+              scope.dateFrom = today
+                .clone()
+                .startOf("month")
+                .subtract(6, "month")
                 .format(scope.format);
-            } else if (option === 'last3Months') {
-              scope.dateFrom = today.clone().startOf('month').
-              subtract(3, 'month').format(scope.format);
-            } else if (option === 'last6Months') {
-              scope.dateFrom = today.clone().startOf('month').
-              subtract(6, 'month').format(scope.format);
-            } else if (option === 'thisYear') {
-              scope.dateFrom = today.clone().startOf('year')
-                .format(scope.format);
+            } else if (option === "thisYear") {
+              scope.dateFrom = today.clone().startOf("year").format(scope.format);
             }
-            scope.dateTo = today.clone().add(1, 'day').format(scope.format);
+            scope.dateTo = today.clone().add(1, "day").format(scope.format);
             scope.setRange();
           };
-          scope.$watch('dateFrom', function(n, o) {
+          scope.$watch("dateFrom", function (n, o) {
             if (n !== o) {
               scope.setRange();
             }
           });
-          scope.$watch('dateTo', function(n, o) {
+          scope.$watch("dateTo", function (n, o) {
             if (n !== o) {
               scope.setRange();
             }

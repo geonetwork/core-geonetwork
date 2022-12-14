@@ -1,0 +1,67 @@
+@import "../../../style/gn_search.less";
+@import "gn_layout_default.less";
+@import "gn_navbar_default.less";
+@import "gn_footer_default.less";
+@import "gn_card_default.less";
+@import "gn_variables_default.less"; // must be last
+
+.gn-portal {
+  div.gn-full > div.container {
+    width: 100%;
+    padding: 0px;
+    margin: 0;
+    background-color: #9e9e9e;
+
+    // portal logo
+    .gn-portal-main-logo {
+      min-width: auto;
+      min-height: auto;
+    }
+    .gn-background {
+      padding: 2em 0 4em;
+      h1 {
+        font-weight: 400;
+        margin-top: 30px;
+      }
+    }
+    // blocks
+    .gn-info-list {
+      li {
+        text-align: center;
+        .gn-md-thumbnail {
+          border: none;
+          .gn-img-thumbnail {
+            background-size: contain;
+            filter: none;
+          }
+        }
+        .title {
+          background: none;
+          border: none;
+          &:hover {
+            background: none;
+          }
+          h1 {
+            font-size: 24px;
+            font-weight: 400;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 10px 0;
+          }
+          p {
+            display: block;
+            line-height: 1.6em;
+            font-size: 16px;
+          }
+        }
+        .resultcard.hasThumbnail:hover {
+          .title {
+            background: none;
+          }
+        }
+      }
+    }
+
+  }
+}

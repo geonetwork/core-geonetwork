@@ -1,0 +1,99 @@
+<form>
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
+  <div data-ng-show="layersWithWhiteSpaces" class="alert alert-warning">
+    <span data-translate="">layersWithWhiteSpaces</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label" data-translate="">mapTitle</label>
+    <div class="">
+      <input
+        class="form-control"
+        type="text"
+        aria-label="{{'mapTitle'|translate}}"
+        data-ng-model="mapTitle"
+      />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" data-translate="">print_layout</label>
+    <div class="">
+      <select
+        class="form-control"
+        data-ng-model="config.layout"
+        aria-label="{{'print_layout'|translate}}"
+        data-ng-options="l.name | translate for l in config.layouts"
+      ></select>
+    </div>
+  </div>
+
+  <div class="form-group hidden">
+    <label class="control-label" data-translate="">print_scale</label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" aria-label="{{'print_scale'|translate}}" ng-model="auto" />
+        {{'Auto'|translate}}
+      </label>
+    </div>
+
+    <div class="" ng-hide="auto">
+      <select
+        class="form-control"
+        data-ng-model="config.scale"
+        data-ng-change="refreshComp()"
+        aria-label="{{'print_scale'|translate}}"
+        data-ng-options="l.name for l in config.scales"
+      ></select>
+    </div>
+  </div>
+
+  <div class="form-group hidden">
+    <label class="control-label" data-translate="">print_legend</label>
+    <div class="checkbox">
+      <label>
+        <input
+          type="checkbox"
+          aria-label="{{'print_legend'|translate}}"
+          ng-model="enableLegends"
+        />
+        {{'print_legend_field'|translate}}
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group hidden">
+    <label class="control-label" data-translate="">mapComment</label>
+    <div class="">
+      <textarea
+        class="form-control"
+        aria-label="{{'mapComment'|translate}}"
+        data-ng-model="mapComment"
+      ></textarea>
+    </div>
+  </div>
+
+  <div
+    class="alert alert-warning flex-row flex-align-center small"
+    role="alert"
+    ng-if="unsupportedLayers.length > 0"
+  >
+    <span class="fa fa-warning"></span>
+    <div class="flex-spacer"></div>
+    <div>
+      <span translate>printUnsupportedLayerTypes</span>:
+      <strong>{{unsupportedLayers.join(', ')}}</strong>
+    </div>
+  </div>
+
+  <button
+    class="btn btn-default btn-block"
+    ng-class="{'disabled': printing}"
+    data-ng-click="submit()"
+  >
+    <i class="fa fa-print" ng-if="!printing"></i>
+    <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
+    &nbsp;
+    <span ng-if="!printing">{{'Print'|translate}}</span>
+    <span ng-if="printing">{{'Printing'|translate}}</span>
+  </button>
+</form>

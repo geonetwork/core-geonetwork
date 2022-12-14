@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -42,7 +42,6 @@ public class Settings {
     public static final String SYSTEM_SITE_LABEL_PREFIX = "system/site/labels/";
     public static final String SYSTEM_SERVER_HOST = "system/server/host";
     public static final String SYSTEM_SERVER_PORT = "system/server/port";
-    public static final String SYSTEM_SERVER_SECURE_PORT = "system/server/securePort";
     public static final String SYSTEM_SERVER_PROTOCOL = "system/server/protocol";
     public static final String SYSTEM_PLATFORM_VERSION = "system/platform/version";
     public static final String SYSTEM_PLATFORM_SUBVERSION = "system/platform/subVersion";
@@ -95,6 +94,7 @@ public class Settings {
     public static final String SYSTEM_USER_LASTNOTIFICATIONDATE = "system/userFeedback/lastNotificationDate";
     public static final String SYSTEM_LOCALRATING_ENABLE = "system/localrating/enable";
     public static final String SYSTEM_LOCALRATING_NOTIFICATIONLEVEL = "system/localrating/notificationLevel";
+    public static final String SYSTEM_LOCALRATING_NOTIFICATIONGROUPS = "system/localrating/notificationGroups";
     public static final String SYSTEM_XLINK_RESOLVER_IGNORE = "system/xlinkResolver/ignore";
     public static final String SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING = "system/hidewithheldelements/enableLogging";
     public static final String SYSTEM_AUTOFIXING_ENABLE = "system/autofixing/enable";
@@ -107,6 +107,9 @@ public class Settings {
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";
     public static final String SYSTEM_INSPIRE_ATOM_PROTOCOL = "system/inspire/atomProtocol";
     public static final String SYSTEM_HARVESTING_MAIL_RECIPIENT = "system/harvesting/mail/recipient";
     public static final String SYSTEM_HARVESTING_MAIL_LEVEL3 = "system/harvesting/mail/level3";
@@ -122,6 +125,8 @@ public class Settings {
     public static final String SYSTEM_INDEX_INDEXINGTIMERECORDLINK = "system/index/indexingTimeRecordLink";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL = "system/inspire/remotevalidation/url";
+    public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY = "system/inspire/remotevalidation/urlquery";
+    public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY = "system/inspire/remotevalidation/apikey";
     public static final String REGION_GETMAP_BACKGROUND = "region/getmap/background";
     public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
     public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
@@ -131,8 +136,10 @@ public class Settings {
     public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
-
+    public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
+    public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
+    public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
@@ -144,6 +151,8 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_MAXLENGH = "system/security/passwordEnforcement/maxLength";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_USEPATTERN = "system/security/passwordEnforcement/usePattern";
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
+    public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
+
 
     public static class GNSetting {
         private String name;

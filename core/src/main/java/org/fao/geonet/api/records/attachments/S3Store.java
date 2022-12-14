@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
+
 
 public class S3Store extends AbstractStore {
     @Autowired
@@ -113,13 +113,15 @@ public class S3Store extends AbstractStore {
                                                                             object.getObjectMetadata().getLastModified(), metadataId, approved));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
     }
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("S3Store does not support getResourceInternal.");
+        throw new UnsupportedOperationException("S3Store does not support getResourceInternal.");
     }
 
     private String getKey(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws Exception {

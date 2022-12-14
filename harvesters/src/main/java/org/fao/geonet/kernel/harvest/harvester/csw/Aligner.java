@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -308,6 +309,7 @@ public class Aligner extends BaseAligner<CswParams> {
         String mdUuid = ri.uuid;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
+            schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
             mdUuid = metadataUtils.extractUUID(schema, md);
             if (mdUuid == null) {
@@ -344,13 +346,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true);
+        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -414,7 +416,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, true);
+                    metadataIndexer.indexMetadata(id, true, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }
@@ -441,27 +443,32 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
+        boolean updateSchema = false;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
+            String newSchema = dataMan.autodetectSchema(md);
+            updateSchema = !newSchema.equals(schema);
+            schema = newSchema;
         }
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
-        //
-        // update metadata
-        //
+
+
         boolean validate = false;
         boolean ufo = false;
-        boolean index = false;
         String language = context.getLanguage();
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate, true, IndexingMode.none);
 
-        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
-
-        if (force) {
-            //change ownership of metadata to new harvester
-            metadata.getHarvestInfo().setUuid(params.getUuid());
-            metadata.getSourceInfo().setSourceId(params.getUuid());
-
+        if (force || updateSchema) {
+            if (force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+            }
+            if (updateSchema) {
+                metadata.getDataInfo().setSchemaId(schema);
+            }
             metadataManager.save(metadata);
         }
 
@@ -625,7 +632,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 log.debug("     metadata filtered.");
                 md = processedMetadata;
             } catch (Exception e) {
-                log.warning("     processing error " + processName + "}): " + e.getMessage());
+                log.warning("     processing error " + processName + ": " + e.getMessage());
             }
         }
         return md;

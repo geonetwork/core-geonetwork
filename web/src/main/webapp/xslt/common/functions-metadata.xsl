@@ -478,6 +478,14 @@
     <xsl:param name="configuration" as="node()?"/>
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="parent" as="xs:string?" />
+    <xsl:value-of select="gn-fn-metadata:isFieldFlatModeException($configuration, $name, $parent, '')"/>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-metadata:isFieldFlatModeException" as="xs:boolean">
+    <xsl:param name="configuration" as="node()?"/>
+    <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="parent" as="xs:string?" />
+    <xsl:param name="xpath" as="xs:string?" />
 
     <xsl:choose>
       <xsl:when test="not($configuration)">
@@ -485,11 +493,19 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="exception"
-                      select="if (string($parent))
-                  then count($configuration/flatModeExceptions/for[@name = $name and (not(@excludeFrom) or (@excludeFrom and not(contains(@excludeFrom, $parent))))])
-                  else count($configuration/flatModeExceptions/for[@name = $name])"/>
+                      select="($configuration/flatModeExceptions/for[@name = $name
+                                      and @includeFrom
+                                      and tokenize(@includeFrom, ',')[. = ($xpath, $parent)]
+                                      ]
+                              |$configuration/flatModeExceptions/for[@name = $name
+                                       and @excludeFrom
+                                       and not(tokenize(@excludeFrom, ',')[. = ($xpath, $parent)])
+                                       ]
+                              |$configuration/flatModeExceptions/for[@name = $name
+                                        and not(@includeFrom)
+                                        and not(@excludeFrom)])[1]"/>
 
-        <xsl:value-of select="if ($exception > 0)
+        <xsl:value-of select="if (count($exception) = 1)
                       then true()
                       else false()"/>
       </xsl:otherwise>

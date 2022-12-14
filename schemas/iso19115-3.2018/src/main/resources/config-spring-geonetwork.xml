@@ -45,7 +45,6 @@
                       cit:name/gco:CharacterString = '{{name}}']
                     /cit:applicationProfile/gco:CharacterString/text())"/>
         </bean>
-
         <bean class="org.fao.geonet.kernel.schema.SavedQuery">
           <property name="id" value="doi-get"/>
           <property name="xpath"

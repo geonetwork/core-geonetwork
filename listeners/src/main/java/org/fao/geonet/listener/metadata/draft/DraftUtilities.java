@@ -1,6 +1,5 @@
 package org.fao.geonet.listener.metadata.draft;
 
-import java.util.List;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -10,12 +9,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
@@ -23,6 +18,8 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DraftUtilities {
@@ -155,8 +152,8 @@ public class DraftUtilities {
             // Copy contents
             Log.trace(Geonet.DATA_MANAGER, "Update record with id " + md.getId());
             md = metadataManager.updateMetadata(context, String.valueOf(md.getId()),
-                xmlData, false, false, true,
-                context.getLanguage(), changeDate, true);
+                xmlData, false, false,
+                context.getLanguage(), changeDate, true, IndexingMode.full);
 
             Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
 

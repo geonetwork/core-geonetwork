@@ -101,12 +101,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
               popUpEl.attr('template-url', attrs.typeaheadTemplateUrl);
             }
 
-            // SEXTANT SPECIFIC: backport from https://github.com/angular-ui/bootstrap/blob/baf0a567f9f4641848a9a4699695f9cde5f28f70/src/typeahead/typeahead.js
-            if (angular.isDefined(attrs.typeaheadPopupTemplateUrl)) {
-              popUpEl.attr('popup-template-url', attrs.typeaheadPopupTemplateUrl);
-            }
-            // END SEXTANT SPECIFIC
-
             var resetMatches = function() {
               scope.matches = [];
               scope.activeIdx = -1;
@@ -351,11 +345,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           select:'&'
         },
         replace:true,
-        // SEXTANT SPECIFIC: backport from https://github.com/angular-ui/bootstrap/blob/baf0a567f9f4641848a9a4699695f9cde5f28f70/src/typeahead/typeahead.js
-        templateUrl: function(element, attrs) {
-          return attrs.popupTemplateUrl || '../../catalog/lib/angular.ext/template/typeahead-popup.html';
-        },
-        // END SEXTANT SPECIFIC
+        templateUrl:'../../catalog/lib/angular.ext/template/typeahead-popup.html',
         link:function (scope, element, attrs) {
 
           scope.templateUrl = attrs.templateUrl;

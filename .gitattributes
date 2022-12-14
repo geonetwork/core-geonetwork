@@ -1,5 +1,5 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
 
 # Standard to msysgit
 *.doc	 diff=astextplain
@@ -33,4 +33,3 @@
 *.eot binary
 *.woff binary
 
-*.xsd text eol=lf

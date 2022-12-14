@@ -5,7 +5,10 @@
     ul {
       margin-left: 20px;
       li {
-        padding: 0px;
+        &:not(.dropdown-header ) {
+          padding: 0px;
+        }
+
         list-style: none;
       }
     }
@@ -24,6 +27,14 @@
       .btn-link {
         color: #000;
       }
+      &.btn-group-xs {
+        margin-bottom: 3px;
+        .btn {
+          padding: 4px 6px;
+          font-size: 90%;
+          line-height: unset;
+        }
+      }
     }
   }
 
@@ -31,7 +42,7 @@
     color: #444;
     font-weight: normal;
     display: block;
-    padding: 2px 0 2px 0px;
+    padding: 10px 0 10px 0px;
     margin-bottom: 0;
     &:hover {
       color: #000;
@@ -56,34 +67,10 @@
       }
     }
   }
-  .list-group {
-    background-color: #fff;
-    margin-bottom: 10px;
-  }
-  .list-group-item {
-    padding-left: 2px;
-  }
-  .dropdown-menu {
-    width: 100%;
-    font-size: 12px;
-    li {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 95%;
-    }
-  }
   .truncate {
     width: 16em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .popover {
-    max-width: 250px;
-    width: 250px;
-    li {
-      padding: 2px 0px;
-    }
   }
 }

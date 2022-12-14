@@ -1,0 +1,200 @@
+<form role="form" class="form-horizontal">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
+
+  <!--Point-->
+  <div data-ng-if="getType() == 'point'">
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-radius-input">
+        {{'drawRadius'|translate}}
+      </label>
+      <div class="col-xs-4">
+        <input
+          type="number"
+          id="gn-draw-radius-input"
+          class="form-control input-sm"
+          data-ng-model="style.image.radius"
+          placeholder="{{'drawRadius'|translate}}"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4"> {{'drawColor'|translate}} </label>
+      <div class="col-xs-6">
+        <color-picker
+          ng-model="style.image.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-radius-input">
+        {{'textInput'|translate}}
+      </label>
+      <div class="col-xs-7">
+        <textarea
+          type="text"
+          id="gn-draw-text-point-input"
+          class="form-control input-sm"
+          data-ng-model="style.text.text"
+          placeholder="{{'textInput'|translate}}"
+        >
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <!--Linestring-->
+  <div data-ng-if="getType().indexOf('line') == 0">
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-width-input">
+        {{'drawWidth'|translate}}
+      </label>
+      <div class="col-xs-4">
+        <input
+          type="number"
+          id="gn-draw-width-input"
+          class="form-control input-sm"
+          data-ng-model="style.stroke.width"
+          placeholder="{{'drawWidth'|translate}}"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-width-input">
+        {{'drawColor'|translate}}
+      </label>
+      <div class="col-xs-6">
+        <color-picker
+          ng-model="style.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4" id="gn-draw-text-value-line" for="gn-draw-radius-input">
+        {{'textInput'|translate}}
+      </label>
+      <div class="col-xs-7">
+        <textarea
+          id="gn-draw-text-line-input"
+          class="form-control input-sm"
+          data-ng-model="style.text.text"
+          placeholder="{{'textInput'|translate}}"
+        >
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <!--Polygon-->
+  <div data-ng-if="getType() == 'polygon'">
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-width-input-polygon">
+        {{'drawWidth'|translate}}
+      </label>
+      <div class="col-xs-6">
+        <input
+          type="number"
+          id="gn-draw-width-input-polygon"
+          class="form-control input-sm"
+          data-ng-model="style.stroke.width"
+          placeholder="{{'drawWidth'|translate}}"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4"> {{'drawStrokeColor'|translate}} </label>
+      <div class="col-xs-5">
+        <color-picker
+          ng-model="style.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4"> {{'drawFillColor'|translate}} </label>
+      <div class="col-xs-6">
+        <color-picker
+          ng-model="style.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="true"
+        ></color-picker>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4" id="gn-draw-text-value-ply" for="gn-draw-radius-input">
+        {{'textInput'|translate}}
+      </label>
+      <div class="col-xs-7">
+        <textarea
+          type="text"
+          id="gn-draw-text-ply-input"
+          class="form-control input-sm"
+          data-ng-model="style.text.text"
+          placeholder="{{'textInput'|translate}}"
+        >
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <!--Text-->
+  <div data-ng-if="getType() == 'text'">
+    <div class="form-group">
+      <div class="col-xs-12">
+        <label
+          >{{'annotation'|translate}}
+          <input
+            class="form-control"
+            ng-model="style.text.text"
+            placeholder="{{'annotation'|translate}}"
+            title="{{'tipDrawText'|translate}}"
+          />
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4" for="gn-draw-text-width"> {{'textWidth'|translate}} </label>
+      <div class="col-xs-4">
+        <input
+          type="number"
+          id="gn-draw-text-width"
+          class="form-control input-sm"
+          data-ng-model="style.text.width"
+          placeholder="{{'textWidth'|translate}}"
+        />
+      </div>
+    </div>
+    <div class="form-group gn-draw-text-fill">
+      <label class="col-xs-4"> {{'textFillColor'|translate}} </label>
+      <div class="col-xs-6">
+        <color-picker
+          ng-model="style.text.fill.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
+      </div>
+    </div>
+    <div class="form-group gn-draw-text-stroke">
+      <label class="col-xs-4"> {{'textStrokeColor'|translate}} </label>
+      <div class="col-xs-6">
+        <color-picker
+          ng-model="style.text.stroke.color"
+          color-picker-format="'rgb'"
+          color-picker-alpha="false"
+        ></color-picker>
+      </div>
+    </div>
+    <!--
+    <div class="form-group">
+      <label>{{'textStrokeWidth'|translate}}
+        <input type="number" class="form-control input-sm" data-ng-model="style.text.stroke.width"
+               placeholder="{{'textWidth'|translate}}">
+      </label>
+    </div>
+-->
+  </div>
+</form>

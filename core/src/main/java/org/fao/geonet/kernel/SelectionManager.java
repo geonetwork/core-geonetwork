@@ -23,18 +23,7 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import javax.annotation.Nonnull;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +37,12 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 /**
  * Manage objects selection for a user session.
@@ -71,6 +66,14 @@ public class SelectionManager {
         Set<String> MDSelection = Collections
             .synchronizedSet(new HashSet<String>(0));
         selections.put(SELECTION_METADATA, MDSelection);
+    }
+
+
+    public Map<String, Integer> getSelectionsAndSize() {
+        return selections.entrySet().stream().collect(Collectors.toMap(
+            e -> e.getKey(),
+            e -> e.getValue().size()
+        ));
     }
 
     /**

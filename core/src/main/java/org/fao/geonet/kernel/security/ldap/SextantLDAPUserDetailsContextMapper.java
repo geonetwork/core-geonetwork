@@ -1,26 +1,10 @@
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.fao.geonet.ApplicationContextHolder;
+import com.google.common.collect.Multimap;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.LDAPUser;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +12,10 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.google.common.collect.Multimap;
-
 import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SextantLDAPUserDetailsContextMapper extends
 		AbstractLDAPUserDetailsContextMapper {

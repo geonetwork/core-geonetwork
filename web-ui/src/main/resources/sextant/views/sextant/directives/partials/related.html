@@ -1,0 +1,22 @@
+<div class="gn-related-resources" data-ng-if="relationFound">
+  <ul
+    class="container-list"
+    data-ng-repeat="(type, items) in relations track by $index"
+    data-ng-if="items"
+  >
+    <li
+      class="gn-related-item"
+      data-ng-repeat="r in items track by $index"
+      data-ng-init="mainType = config.getType(r, type);"
+    >
+      <a
+        href=""
+        data-ng-click="config.doAction(mainType, r, md)"
+        title="{{(config.getLabel(mainType, type)) | translate}}"
+      >
+        <span class="fa fa-fw" data-ng-class="config.getClassIcon(mainType)">&nbsp;</span>
+        {{(r.title | gnLocalized: lang) || r.url}}
+      </a>
+    </li>
+  </ul>
+</div>

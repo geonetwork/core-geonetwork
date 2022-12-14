@@ -2719,6 +2719,7 @@ goog.tagUnsealableClass = function(ctr) {
   }
 };
 
+
 /**
  * Name for unsealable tag property.
  * @const @private {string}
@@ -3551,6 +3552,83 @@ goog.events.wrapListener = function(listener) {
 
 /**
  * Adds an event listener for a specific event on a native event
+ * target. A listener can only be added once to an object and if it
+ * is added again the key for the listener is returned.
+ *
+ * Note that a one-off listener will not change an existing listener,
+ * if any. On the other hand a normal listener will change existing
+ * one-off listener to become a normal listener.
+ *
+ * @param {EventTarget} src The node to listen to events on.
+ * @param {string|?goog.events.EventId<EVENTOBJ>} type Event type.
+ * @param {!Function} listener Callback function.
+ * @param {boolean} callOnce Whether the listener is a one-off
+ *     listener or otherwise.
+ * @param {(boolean|!AddEventListenerOptions)=} opt_options
+ * @param {Object=} opt_handler Element in whose scope to call the listener.
+ * @return {goog.events.ListenableKey} Unique key for the listener.
+ * @template EVENTOBJ
+ * @private
+ */
+goog.events.listen_ = function(
+  src, type, listener, callOnce, opt_capt, opt_handler) {
+  if (!type) {
+    throw Error('Invalid event type');
+  }
+
+  var capture = !!opt_capt;
+  if (capture && !goog.events.BrowserFeature.HAS_W3C_EVENT_SUPPORT) {
+    if (goog.events.CAPTURE_SIMULATION_MODE ==
+      goog.events.CaptureSimulationMode.OFF_AND_FAIL) {
+      goog.asserts.fail('Can not register capture listener in IE8-.');
+      return null;
+    } else if (
+      goog.events.CAPTURE_SIMULATION_MODE ==
+      goog.events.CaptureSimulationMode.OFF_AND_SILENT) {
+      return null;
+    }
+  }
+
+  var listenerMap = goog.events.getListenerMap_(src);
+  if (!listenerMap) {
+    src[goog.events.LISTENER_MAP_PROP_] = listenerMap =
+      new goog.events.ListenerMap(src);
+  }
+
+  var listenerObj =
+    listenerMap.add(type, listener, callOnce, opt_capt, opt_handler);
+
+  // If the listenerObj already has a proxy, it has been set up
+  // previously. We simply return.
+  if (listenerObj.proxy) {
+    return listenerObj;
+  }
+
+  var proxy = goog.events.getProxy();
+  listenerObj.proxy = proxy;
+
+  proxy.src = src;
+  proxy.listener = listenerObj;
+
+  // Attach the proxy through the browser's API
+  if (src.addEventListener) {
+    src.addEventListener(type.toString(), proxy, capture);
+  } else if (src.attachEvent) {
+    // The else if above used to be an unconditional else. It would call
+    // exception on IE11, spoiling the day of some callers. The previous
+    // incarnation of this code, from 2007, indicates that it replaced an
+    // earlier still version that caused excess allocations on IE6.
+    src.attachEvent(goog.events.getOnString_(type.toString()), proxy);
+  } else {
+    throw Error('addEventListener and attachEvent are unavailable.');
+  }
+
+  goog.events.listenerCountEstimate_++;
+  return listenerObj;
+};
+
+/**
+ * Adds an event listener for a specific event on a native event
  * target (such as a DOM element) or an object that has implemented
  * {@link goog.events.Listenable}. A listener can only be added once
  * to an object and if it is added again the key for the listener is
@@ -3591,10 +3669,9 @@ goog.events.listen = function(src, type, listener, opt_options, opt_handler) {
       /** @type {string|!goog.events.EventId} */ (type), listener, capture,
       opt_handler);
   } else {
-    // DISABLE: UNUSED
-    // return goog.events.listen_(
-    //   /** @type {!EventTarget} */ (src), type, listener,
-    //   /* callOnce */ false, opt_options, opt_handler);
+    return goog.events.listen_(
+      /** @type {!EventTarget} */ (src), type, listener,
+      /* callOnce */ false, opt_options, opt_handler);
   }
 };
 

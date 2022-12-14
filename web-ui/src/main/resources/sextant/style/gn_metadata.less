@@ -1,0 +1,781 @@
+@import "gn_search.less";
+
+/*.panel-body .gn-metadata-view {
+  width: 100%;
+}*/
+
+blockquote {
+  padding: 0px;
+  margin: 20px 0px 0px 0px;
+  font-size: 100%;
+  border: none;
+  div.row {
+    margin-right: 0px !important;
+  }
+  h2 {
+    font-size: 16px !important;
+    margin: 0px !important;
+  }
+  div.col-md-1 i {
+    color: #ebecec;
+    font-size: 45px;
+  }
+  div.col-md-11 {
+    padding: 20px 20px;
+    background-color: #ebecec;
+    div,
+    pre {
+      margin: 20px 0px 0px 0px;
+      bloquote {
+        margin: 0px;
+      }
+    }
+  }
+}
+
+[data-gn-more-like-this] {
+  span {
+    word-break: break-word;
+  }
+}
+
+header div.gn-abstract {
+  border: solid 1px #ebecec;
+  border-radius: 2px;
+  background-color: mix(white, #ebecec, 50%);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+[data-gn-more-like-this] {
+  span {
+    word-break: break-word;
+  }
+}
+
+/* Angular view */
+.gn-md-view {
+  table {
+    @media (max-width: @screen-xs-max) {
+      border-top: 1px solid @table-border-color;
+    }
+    tr {
+      @media (max-width: @screen-xs-max) {
+        border-bottom: 1px solid @table-border-color;
+      }
+      th {
+        //width: 35%;
+      }
+      @media (max-width: @screen-xs-max) {
+        th,
+        td {
+          width: 100%;
+          float: left;
+          border: 0;
+          padding: 8px;
+        }
+        td {
+          padding-left: 8px !important;
+          ul {
+            padding-left: 20px !important;
+          }
+          .gn-contact {
+            margin-left: 0;
+            ul {
+              padding-left: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  dl.gn-table {
+    dt,
+    dd {
+      .table {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .badge {
+    word-break: break-all;
+    white-space: normal;
+  }
+
+  .iti-box[data-ng-click] {
+    cursor: pointer;
+  }
+  .gn-iti {
+    border-color: @text-muted;
+    color: @text-muted;
+    padding-left: 2px;
+    cursor: pointer;
+    .label {
+      color: @text-muted !important;
+      text-align: left;
+      width: 194px !important;
+    }
+    .icon {
+      border-radius: 4px;
+      border: 1px solid #ffffff;
+      padding-left: 4px;
+      width: 34px !important;
+      height: 34px !important;
+      span {
+        display: table-cell;
+        font-size: 28px;
+      }
+    }
+  }
+}
+
+.topic-color {
+  color: #428bca;
+}
+.resource-color {
+  color: #5cb85c;
+}
+
+.gn-metadata-view {
+  a.disabled {
+    color: lightgrey;
+    cursor: not-allowed;
+  }
+  .nav li:hover {
+    cursor: pointer;
+  }
+
+  // CSSGN
+  //h1 {
+  //  font-size: 18px;
+  //}
+
+  .property {
+    @media (min-width: @screen-sm-min) {
+      text-align: right;
+    }
+    font-style: italic;
+    color: #666;
+  }
+
+  input[readonly] {
+    background: #fff;
+  }
+
+  .extent {
+    display: inline-block;
+    position: relative;
+    /*  margin: 2em 0 25px 90px;
+    border: 1px solid #ccc;*/
+  }
+  .gn-md-side-extent > .extent {
+    margin: 0 0 0 0;
+    .coord {
+      display: none;
+    }
+  }
+
+  .gn-md-side {
+    hr {
+      margin-top: 8px;
+      margin-bottom: 2px;
+    }
+  }
+  [data-gn-field-duration-div] {
+    input {
+      min-width: 45px;
+    }
+  }
+
+  .coord {
+    @coord-half-width: 52px;
+    @coord-half-height: 1.25em;
+    position: absolute;
+    width: (@coord-half-width * 2);
+    &-north {
+      top: -@coord-half-height;
+    }
+    &-south {
+      bottom: -@coord-half-height;
+    }
+    &-east {
+      right: -@coord-half-width;
+    }
+    &-west {
+      left: -@coord-half-width;
+    }
+    &-north,
+    &-south {
+      left: 50%;
+      margin-left: -@coord-half-width;
+    }
+    &-east,
+    &-west {
+      top: 50%;
+      margin-top: -@coord-half-height;
+    }
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    // CSSGN
+    //color: darken(@btn-primary-bg, 10%);
+    //position: relative;
+    //border-bottom: 2px dotted lightgrey;
+    //font-size: 15px;
+    //margin: .6em 0 .3em;
+    button {
+      position: absolute;
+      right: -0.5em;
+      padding: 2px 3px;
+      line-height: 1em;
+      top: -0.15em;
+      border-radius: 1em;
+      color: rgba(0, 0, 0, 0.6);
+      border-color: white;
+      &:hover {
+        border-color: @panel-default-border;
+      }
+      @media (min-width: @screen-sm-min) {
+        left: -0.85em;
+        right: auto;
+      }
+    }
+    i {
+      display: inline-block;
+      width: 14px;
+      transition: transform 0.4s;
+      transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+    }
+    .closed i {
+      transform: rotate(90deg);
+      -ms-transform: rotate(270deg);
+    }
+  }
+
+  div.md-text {
+    display: table;
+    width: 100%;
+    border-spacing: 10px 0;
+    dd,
+    dt {
+      display: table-cell;
+    }
+  }
+
+  dl {
+    margin-bottom: 0;
+    display: flex;
+  }
+  .gn-record-view_tablecell_aerate dl {
+    padding-bottom: 10px;
+  }
+
+  dt {
+    font-weight: bold;
+    white-space: normal !important;
+    flex-grow: 1;
+  }
+
+  // has a fixed predetermined width to give a consistent column appearance
+  dd {
+    width: 40vw;
+    flex-shrink: 0;
+    @media (min-width: @screen-sm-min) {
+      width: @container-sm * 0.4;
+    }
+    @media (min-width: @screen-md-min) {
+      width: @container-md * 0.33;
+    }
+    @media (min-width: @screen-lg-min) {
+      width: @container-lg * 0.33;
+    }
+  }
+
+  /* Table mode as no label. Consider the section header is the label
+  like in the editor */
+  dl.gn-table {
+    dt {
+      display: none !important;
+    }
+    dd {
+      width: 100%;
+    }
+  }
+
+  /* In sextant view turn off 2 columns layout */
+  .gn-sextant-view-table {
+    dl {
+      display: block;
+    }
+    dd {
+      width: 100% !important;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0px !important;
+  }
+
+  /* .dl-horizontal .dl-horizontal dt { */
+  .dl-horizontal dt {
+    font-weight: normal;
+    font-style: italic;
+    color: @gray;
+    clear: none;
+    float: none;
+    padding-left: 0.5em;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .target {
+    .clearfix;
+  }
+  .entry {
+    border-left: 2px solid @gray-lighter;
+    padding-left: 1em;
+    .btn-default:focus {
+      border: none;
+    }
+  }
+  .entry .entry {
+    margin-left: 1em;
+  }
+
+  .gn-field-template div.target {
+    margin-bottom: 2em;
+    dl:not(:first-child) {
+      dt:before {
+        border: none;
+      }
+    }
+  }
+
+  .img-thumbnail {
+    margin-bottom: 1em;
+    max-width: 450px;
+  }
+
+  @media (min-width: @grid-float-breakpoint) {
+    @large-offset: 250px;
+    h3 {
+      // CSSGN
+      //border: none;
+      //padding-left: .65em;
+      i {
+        transform: rotate(0deg);
+      }
+      .closed i {
+        transform: rotate(-90deg);
+      }
+    }
+    .offseted {
+      margin-left: @large-offset;
+      padding-bottom: 1.5em;
+      padding-left: 1em;
+    }
+    dd,
+    .offseted {
+      dd {
+        border: none;
+        padding-left: 0;
+      }
+    }
+    /* FIXME: needs `md-text` wrapping to removed
+    dd:first-of-type {
+      border-radius: 0 .5em 0 0;
+    }
+    dd:last-of-type {
+      border-radius: 0 0 .5em 0;
+    }
+    */
+    .dl-horizontal {
+      dt {
+        width: (@component-offset-horizontal - 20);
+      }
+      dd {
+        margin-left: @component-offset-horizontal;
+      }
+    }
+  }
+
+  .md-actions .dropdown-menu .fa {
+    margin-right: 0.4em;
+  }
+  .pad-right {
+    margin-right: 0.4em;
+  }
+  .pad-left {
+    margin-left: 0.4em;
+  }
+  .dropdown-menu {
+    font-size: 90%;
+  }
+}
+
+.gn-metadata-view-groovy {
+  font-family: Arial @font-family-sans-serif;
+  font-size: 13px;
+  dd,
+  .offseted {
+    border-left: 1px solid @gray-light;
+    background: @gray-lighter;
+    padding-left: 0.6em;
+  }
+}
+
+.overview .gn-metadata-display {
+  margin-top: 2em;
+  .dl-horizontal dt {
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+  }
+  .dl-horizontal dd {
+    background: inherit;
+    border: none;
+  }
+  ul.container-list {
+    background: inherit;
+    border-width: 0;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  ul.md-value-list {
+    display: inline;
+    padding-left: 0;
+    &:not(.nocolon):before {
+      content: ": ";
+    }
+    li {
+      border: none;
+      background: inherit;
+      display: inline;
+      padding-left: 0;
+      &:before {
+        content: ", ";
+      }
+      &:first-child:before {
+        content: "";
+      }
+    }
+  }
+}
+
+.gn-related-resources {
+  .gn-related-item {
+    h4 {
+      word-break: break-word;
+    }
+    .col-xs-12.col-sm-3 {
+      padding-right: 0;
+    }
+    @media (max-width: @screen-xs-max) {
+      border-left: 0;
+      border-right: 0;
+      padding: 10px 8px !important;
+      .col-xs-1.col-sm-1,
+      .col-xs-12.col-sm-3 {
+        padding-left: 0;
+      }
+      .col-xs-8.col-sm-8 {
+        width: 90%;
+      }
+    }
+  }
+  .gn-related-title {
+    display: block;
+  }
+  p {
+    word-wrap: break-word;
+  }
+}
+
+img.graphic-overview:not(.large):not(.thumbnail) {
+  max-height: 200px;
+  min-height: 200px;
+}
+img.graphic-overview.large {
+  min-height: 200px;
+}
+
+img.graphic-overview:not(.large):hover {
+  cursor: pointer;
+  cursor: hand;
+}
+
+img.graphic-overview.large.dropdown-menu {
+  margin-top: -200px;
+}
+
+.container img.logo {
+  max-width: 128px;
+  float: left;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+.container img.small-logo {
+  max-width: 64px;
+}
+
+.overview img:not(.graphic-overview):not(.icon) {
+  max-width: 500px;
+  max-height: 500px;
+  padding-left: 1em;
+  border: 0;
+  //    margin-left: auto;
+  //    margin-right: auto
+}
+.container span.title {
+  margin-left: 1em;
+}
+
+.overview div.abstract > dd {
+  margin-left: 1em;
+}
+
+.summary-links div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.summary-links .link-block-title {
+  background-color: #f7eee1;
+}
+ul.view-outline {
+  padding-top: 2em;
+}
+
+ul.view-outline a[disabled] {
+  pointer-events: none;
+  cursor: default;
+  color: #c0c0c0;
+}
+
+a {
+  word-wrap: break-word;
+}
+
+ul.md-value-list > li {
+  list-style-type: none;
+  border-left: 1px solid #999999;
+  padding-left: 1em;
+  background: #eeeeee;
+}
+
+ul.md-value-list > li:hover,
+ul.container-list > li:hover {
+  cursor: default;
+  background: #eeeeee;
+  background-color: #eeeeee;
+}
+
+ul.container-list {
+  list-style-type: none;
+  background: #eeeeee;
+  border-left: 1px solid #999999;
+  padding-left: 1em;
+  margin-left: 1em;
+}
+
+.dropdown-submenu > .dropdown-menu.pull-left {
+  left: -100%;
+  margin-left: 10px;
+}
+// CSSGN
+//.gn-metadata-display {
+//  h1 {
+//    font-size: 20px;
+//    margin: 30px 0;
+//  }
+//  h2 {
+//    font-size: 18px;
+//    margin-bottom: 20px;
+//  }
+//  h3 {
+//    font-size: 16px;
+//  }
+//  h4 {
+//    font-size: 15px;
+//  }
+//  .table-striped {
+//    .btn-sm {
+//      margin-right: .5em;
+//      margin-bottom: .5em;
+//    }
+//    td {
+//      padding-left: 40px;
+//      ul {
+//        padding-left: 0;
+//      }
+//      &.gn-table-attribute {
+//        padding-left: 8px;
+//        table {
+//          th {
+//            border-top: 0;
+//            border-bottom: 2px solid @table-border-color;
+//          }
+//          td {
+//            padding-left: 8px;
+//            table {
+//              th {
+//                background-color: @table-bg-accent;
+//              }
+//            }
+//          }
+//        }
+//
+//      }
+//    }
+//  }
+//
+//  .gn-contact img {
+//    max-width: 100%;
+//    max-height: 150px;
+//  }
+//
+//  /* Override CMS styles in metadata view
+//
+//  eg. #content h1 {
+//      border-bottom: solid 2px #afd687;
+//      font: 2.8em Verdana, Geneva, sans-serif;
+//      letter-spacing: 0.05em;
+//      color: #008798;
+//      text-shadow: -1px -1px 1px #cccccc;
+//      }
+//
+//  A better approach would be to reset all styles from the parent
+//  and then let GN styles apply.
+//  */
+//  h1 {
+//    border-bottom: none !important;
+//    font: 20px "Helvetica Neue", sans-serif !important;
+//    color: #1b75bc !important;
+//    text-shadow: none !important;
+//  }
+//  h4 {
+//    border-bottom: none;
+//  }
+//
+//}
+/* Fix keyword layout */
+.gn-metadata-view dd > ul {
+  padding-top: 0px !important;
+}
+
+.gn-view-earthObservation {
+  .gn-metadata-view dl.gn-table dd {
+    width: auto;
+  }
+  .gn-md-view .entry {
+    border: none;
+    padding-left: 6px;
+    margin-left: 0px;
+    div.target {
+      margin-top: 10px;
+    }
+  }
+  .gn-md-view .entry dl dt:before {
+    display: none;
+  }
+  .gn-tab-content h2 {
+    border-bottom: none !important;
+    padding-top: 10px;
+  }
+  #gn-tab-eo-tab-description > div.gn-tab-content > dl:nth-of-type(1) {
+    display: none;
+  }
+  #gn-tab-eo-history > div.gn-tab-content > div {
+    > h2 {
+      display: none;
+    }
+    > div.target {
+      padding-bottom: 10px;
+    }
+    td {
+      padding-left: 40px;
+      word-break: break-word;
+      ul {
+        padding-left: 0;
+      }
+      &.gn-table-attribute {
+        padding-left: 8px;
+        table {
+          th {
+            border-top: 0;
+            border-bottom: 2px solid @table-border-color;
+          }
+          td {
+            padding-left: 8px;
+            table {
+              th {
+                background-color: @table-bg-accent;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #gn-tab-eo-history,
+  #gn-tab-eo-access-and-usage {
+    .gn-specificUsage,
+    .gn-level {
+      display: none;
+    }
+  }
+}
+
+[data-gn-metadata-contacts],
+[gn-metadata-contacts] {
+  .gn-contact {
+    address {
+      line-height: 1.7em;
+    }
+  }
+}
+
+.gn-view-sextant {
+  .gn-abstract p:last-of-type {
+    margin-bottom: 0px;
+  }
+
+  &.gn-metadata-view dl > dt {
+    width: auto !important;
+    margin-right: 6px;
+  }
+}
+
+.gn-view-checkpoint-dps,
+.gn-view-checkpoint-tdp,
+.gn-view-checkpoint-ud,
+.gn-view-medsea,
+.gn-view-sextant {
+  .gn-related-resources {
+    .gn-related-description {
+      display: none;
+    }
+    .list-group-item {
+      border: none;
+    }
+    .col-xs-2.col-sm-2 {
+      width: 30%;
+    }
+    .col-xs-7.col-sm-7 {
+      width: 70%;
+    }
+    .col-xs-12.col-sm-3 {
+      display: none;
+    }
+  }
+}

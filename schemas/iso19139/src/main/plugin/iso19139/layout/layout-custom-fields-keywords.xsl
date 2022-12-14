@@ -65,12 +65,12 @@
     </xsl:if>
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
-        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
+        <xsl:when test="normalize-space($thesaurusTitleEl/(gco:CharacterString|gmx:Anchor)) != ''">
           <xsl:value-of select="if ($overrideLabel != '')
               then $overrideLabel
               else concat(
                       $iso19139strings/keywordFrom,
-                      normalize-space($thesaurusTitleEl/gco:CharacterString))"/>
+                      normalize-space($thesaurusTitleEl/(gco:CharacterString|gmx:Anchor)))"/>
         </xsl:when>
         <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/
                           gmd:textGroup/gmd:LocalisedCharacterString[
@@ -193,7 +193,7 @@
 
         <xsl:variable name="thesaurusTitleTranslated" select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]/multilingualTitles/multilingualTitle[lang=$uiLang2code]/title" />
         <xsl:variable name="thesaurusTitleForEditor" select="if (string($thesaurusTitleTranslated)) then $thesaurusTitleTranslated else $thesaurusTitle" />
-        
+
         <!-- The thesaurus key may be contained in the MD_Identifier field or
           get it from the list of thesaurus based on its title.
           -->
@@ -219,8 +219,8 @@
         -->
         <xsl:variable name="keywords" select="string-join(
                   if ($guiLangId and gmd:keyword//*[@locale = concat('#', $guiLangId)]) then
-                    gmd:keyword//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
-                  else gmd:keyword/*[1]/replace(text(), ',', ',,'), ',')"/>
+                    gmd:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
+                  else gmd:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
@@ -290,8 +290,14 @@
                       select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
         <xsl:if test="$isTypePlace">
           <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-extent-from-geokeywords'"/>
             <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
-            <xsl:with-param name="process-params">{"replace": true}</xsl:with-param>
+            <xsl:with-param name="process-params">{"replace": "true"}</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-one-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-params">{"replace": "true", "boundingAll": "true"}</xsl:with-param>
           </xsl:call-template>
         </xsl:if>
       </xsl:when>

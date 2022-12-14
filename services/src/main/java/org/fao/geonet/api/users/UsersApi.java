@@ -38,11 +38,11 @@ import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
@@ -73,9 +73,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserIdAndProfile;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
@@ -97,6 +99,9 @@ public class UsersApi {
 
     @Autowired
     UserGroupRepository userGroupRepository;
+
+    @Autowired
+    BaseMetadataStatus baseMetadataStatus;
 
     @Autowired
     UserSavedSelectionRepository userSavedSelectionRepository;
@@ -135,27 +140,26 @@ public class UsersApi {
         Profile profile = session.getProfile();
 
         if (profile == Profile.Administrator) {
+            // Get all users
             return userRepository.findAll(SortUtils.createSort(User_.name));
         } else if (profile != Profile.UserAdmin) {
+            // Return only the current user
             return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
         } else if (profile == Profile.UserAdmin) {
+            // Return all the users belonging to a group where the current user is UserAdmin
             int userId = session.getUserIdAsInt();
-            final List<Integer> userGroupIds =
-                getGroupIds(userId);
+            final List<Integer> userGroupIds = getGroupIdsWhereUserIsUserAdmin(userId);
 
             List<User> allUsers = userRepository.findAll(SortUtils.createSort(User_.name));
 
-            // Filter users which are not in current user admin groups
-            allUsers.removeIf(u -> {
-                List<Integer> groupIdsForUser = getGroupIds(u.getId());
+            // Filter users that are not in current userAdmin groups or are administrators
+            allUsers.removeIf(u ->
+                    userGroupIds.stream().noneMatch(getGroupIds(u.getId())::contains) ||
+                    u.getProfile().equals(Profile.Administrator));
 
-                return groupIdsForUser.isEmpty() ||
-                    !userGroupIds.containsAll(groupIdsForUser) ||
-                    u.getProfile().equals(Profile.Administrator);
-            });
-//              TODO-API: Check why there was this check on profiles ?
-//                    if (!profileSet.contains(profile))
-//                        alToRemove.add(elRec);
+            // TODO-API: Check why there was this check on profiles ?
+            //  if (!profileSet.contains(profile))
+            //  alToRemove.add(elRec);
 
             return allUsers;
         }
@@ -326,8 +330,14 @@ public class UsersApi {
         }
 
         if (dataManager.isUserMetadataStatus(userIdentifier)) {
-            throw new IllegalArgumentException(
-                "Cannot delete a user that has set a metadata status");
+            Optional<User> nobody = userRepository.findById(0);
+            if (nobody.isPresent()) {
+                baseMetadataStatus.transferMetadataStatusOwnership(userIdentifier,
+                    nobody.get().getId());
+            } else {
+              throw new IllegalArgumentException(
+                "Cannot delete a user that has set a metadata status. Check in database to transfer those status to another user or create a user nobody with id = 0.");
+            }
         }
 
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
@@ -577,6 +587,11 @@ public class UsersApi {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    private boolean isUserAllowedToResetWithoutOldPassword(Profile myProfile) {
+        boolean isAdminAllowed = settingManager.getValueAsBool(SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET, false);
+        return isAdminAllowed && myProfile == Profile.Administrator;
+    }
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Resets user password",
         description = "Resets the user password.")
@@ -621,7 +636,9 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(Integer.toString(userIdentifier))) {
+        if (myProfile != Profile.Administrator
+            && myProfile != Profile.UserAdmin
+            && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
@@ -632,8 +649,12 @@ public class UsersApi {
 
         PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
 
-        if (!encoder.matches(passwordResetDto.getPasswordOld(), user.get().getPassword())) {
-            throw new IllegalArgumentException("The old password is not valid");
+        if (isUserAllowedToResetWithoutOldPassword(myProfile) == false
+            && (passwordResetDto.getPasswordOld() == null
+            || !encoder.matches(
+            passwordResetDto.getPasswordOld(),
+            user.get().getPassword()))) {
+            throw new IllegalArgumentException("The old password is not valid.");
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
@@ -728,6 +749,11 @@ public class UsersApi {
     private List<Integer> getGroupIds(int userId) {
         return userGroupRepository.findGroupIds(hasUserId(userId));
     }
+
+    private List<Integer> getGroupIdsWhereUserIsUserAdmin(int userId) {
+        return userGroupRepository.findGroupIds(hasUserIdAndProfile(userId, Profile.UserAdmin));
+    }
+
 
     private void setUserGroups(final User user, List<GroupElem> userGroups)
         throws Exception {

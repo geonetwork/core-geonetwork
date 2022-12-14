@@ -1,0 +1,2992 @@
+
+.inspire-ac-en .inspire-label:before {
+  content: "Atmospheric conditions";
+}
+
+.inspire-ad-en .inspire-label:before {
+  content: "Addresses";
+}
+
+.inspire-af-en .inspire-label:before {
+  content: "Agricultural and\A aquaculture facilities";
+}
+
+.inspire-am-en .inspire-label:before {
+  content: "Area management/restriction/\A regulation zones and reporting units";
+}
+
+.inspire-au-en .inspire-label:before {
+  content: "Administrative units";
+}
+
+.inspire-br-en .inspire-label:before {
+  content: "Bio-geographical regions";
+}
+
+.inspire-bu-en .inspire-label:before {
+  content: "Buildings";
+}
+
+.inspire-cp-en .inspire-label:before {
+  content: "Cadastral parcels";
+}
+
+.inspire-ef-en .inspire-label:before {
+  content: "Environmental monitoring facilities";
+}
+
+.inspire-el-en .inspire-label:before {
+  content: "Elevation";
+}
+
+.inspire-er-en .inspire-label:before {
+  content: "Energy resources";
+}
+
+.inspire-ge-en .inspire-label:before {
+  content: "Geology";
+}
+
+.inspire-gg-en .inspire-label:before {
+  content: "Geographical grid systems";
+}
+
+.inspire-gn-en .inspire-label:before {
+  content: "Geographical names";
+}
+
+.inspire-hb-en .inspire-label:before {
+  content: "Habitats and biotopes";
+}
+
+.inspire-hh-en .inspire-label:before {
+  content: "Human health and safety";
+}
+
+.inspire-hy-en .inspire-label:before {
+  content: "Hydrography";
+}
+
+.inspire-lc-en .inspire-label:before {
+  content: "Land cover";
+}
+
+.inspire-lu-en .inspire-label:before {
+  content: "Land use";
+}
+
+.inspire-mf-en .inspire-label:before {
+  content: "Meteorological\A geographical features";
+}
+
+.inspire-mr-en .inspire-label:before {
+  content: "Mineral resources";
+}
+
+.inspire-nz-en .inspire-label:before {
+  content: "Natural risk zones";
+}
+
+.inspire-of-en .inspire-label:before {
+  content: "Oceanographic\A geographical features";
+}
+
+.inspire-oi-en .inspire-label:before {
+  content: "Orthoimagery";
+}
+
+.inspire-pd-en .inspire-label:before {
+  content: "Population distribution –\A demography";
+}
+
+.inspire-pf-en .inspire-label:before {
+  content: "Production and industrial facilities";
+}
+
+.inspire-ps-en .inspire-label:before {
+  content: "Protected sites";
+}
+
+.inspire-rs-en .inspire-label:before {
+  content: "Coordinate reference systems";
+}
+
+.inspire-sd-en .inspire-label:before {
+  content: "Species distribution";
+}
+
+.inspire-so-en .inspire-label:before {
+  content: "Soil";
+}
+
+.inspire-sr-en .inspire-label:before {
+  content: "Sea regions";
+}
+
+.inspire-su-en .inspire-label:before {
+  content: "Statistical units";
+}
+
+.inspire-tn-en .inspire-label:before {
+  content: "Transport networks";
+}
+
+.inspire-us-en .inspire-label:before {
+  content: "Utility and governmental services";
+}
+
+.inspire-rs-sv .inspire-label:before {
+  content: "Referenskoordinatsystem";
+}
+
+.inspire-el-sv .inspire-label:before {
+  content: "Höjd";
+}
+
+.inspire-lc-sv .inspire-label:before {
+  content: "Landtäcke";
+}
+
+.inspire-oi-sv .inspire-label:before {
+  content: "Ortofoto";
+}
+
+.inspire-ge-sv .inspire-label:before {
+  content: "Geologi";
+}
+
+.inspire-su-sv .inspire-label:before {
+  content: "Statistiska enheter";
+}
+
+.inspire-bu-sv .inspire-label:before {
+  content: "Byggnader";
+}
+
+.inspire-so-sv .inspire-label:before {
+  content: "Mark";
+}
+
+.inspire-lu-sv .inspire-label:before {
+  content: "Markanvändning";
+}
+
+.inspire-hh-sv .inspire-label:before {
+  content: "Människors hälsa och säkerhet";
+}
+
+.inspire-us-sv .inspire-label:before {
+  content: "Allmännyttiga och offentliga tjänster";
+}
+
+.inspire-gg-sv .inspire-label:before {
+  content: "Geografiska rutnätssystem";
+}
+
+.inspire-ef-sv .inspire-label:before {
+  content: "Anläggningar för miljöövervakning";
+}
+
+.inspire-pf-sv .inspire-label:before {
+  content: "Produktions- och industrianläggningar";
+}
+
+.inspire-af-sv .inspire-label:before {
+  content: "Jordbruks- och vattenbruksanläggningar";
+}
+
+.inspire-pd-sv .inspire-label:before {
+  content: "Befolkningsfördelning – demografi";
+}
+
+.inspire-am-sv .inspire-label:before {
+  content: "Områden med särskild förvaltning/begränsningar/reglering samt enheter för rapportering";
+}
+
+.inspire-nz-sv .inspire-label:before {
+  content: "Naturliga riskområden";
+}
+
+.inspire-ac-sv .inspire-label:before {
+  content: "Atmosfäriska förhållanden";
+}
+
+.inspire-mf-sv .inspire-label:before {
+  content: "Geografiska meteorologiska förhållanden";
+}
+
+.inspire-of-sv .inspire-label:before {
+  content: "Geografiska oceanografiska förhållanden";
+}
+
+.inspire-sr-sv .inspire-label:before {
+  content: "Havsområden";
+}
+
+.inspire-gn-sv .inspire-label:before {
+  content: "Geografiska namn";
+}
+
+.inspire-br-sv .inspire-label:before {
+  content: "Biogeografiska regioner";
+}
+
+.inspire-hb-sv .inspire-label:before {
+  content: "Naturtyper och biotoper";
+}
+
+.inspire-sd-sv .inspire-label:before {
+  content: "Arters utbredning";
+}
+
+.inspire-er-sv .inspire-label:before {
+  content: "Energiresurser";
+}
+
+.inspire-mr-sv .inspire-label:before {
+  content: "Mineralfyndigheter";
+}
+
+.inspire-au-sv .inspire-label:before {
+  content: "Administrativa enheter";
+}
+
+.inspire-ad-sv .inspire-label:before {
+  content: "Adresser";
+}
+
+.inspire-cp-sv .inspire-label:before {
+  content: "Fastighetsområden";
+}
+
+.inspire-tn-sv .inspire-label:before {
+  content: "Transportnät";
+}
+
+.inspire-hy-sv .inspire-label:before {
+  content: "Hydrografi";
+}
+
+.inspire-ps-sv .inspire-label:before {
+  content: "Skyddade områden";
+}
+
+.inspire-rs-sl .inspire-label:before {
+  content: "Referenčni koordinatni sistemi";
+}
+
+.inspire-el-sl .inspire-label:before {
+  content: "Digitalni model višin";
+}
+
+.inspire-lc-sl .inspire-label:before {
+  content: "Pokrovnost tal";
+}
+
+.inspire-oi-sl .inspire-label:before {
+  content: "Ortofoto";
+}
+
+.inspire-ge-sl .inspire-label:before {
+  content: "Geologija";
+}
+
+.inspire-su-sl .inspire-label:before {
+  content: "Statistični okoliši";
+}
+
+.inspire-bu-sl .inspire-label:before {
+  content: "Stavbe";
+}
+
+.inspire-so-sl .inspire-label:before {
+  content: "Tla";
+}
+
+.inspire-lu-sl .inspire-label:before {
+  content: "Namenska raba tal";
+}
+
+.inspire-hh-sl .inspire-label:before {
+  content: "Zdravje in varnost prebivalstva";
+}
+
+.inspire-us-sl .inspire-label:before {
+  content: "Komunalne in javne storitve";
+}
+
+.inspire-gg-sl .inspire-label:before {
+  content: "Geografska koordinatna mreža";
+}
+
+.inspire-ef-sl .inspire-label:before {
+  content: "Naprave in objekti za monitoring okolja";
+}
+
+.inspire-pf-sl .inspire-label:before {
+  content: "Proizvodni in industrijski objekti in naprave";
+}
+
+.inspire-af-sl .inspire-label:before {
+  content: "Objekti in naprave za kmetijstvo in ribogojstvo";
+}
+
+.inspire-pd-sl .inspire-label:before {
+  content: "Porazdelitev prebivalstva – demografski podatki";
+}
+
+.inspire-am-sl .inspire-label:before {
+  content: "Območja upravljanja/zaprta območja/regulirana območja in poročevalske enote";
+}
+
+.inspire-nz-sl .inspire-label:before {
+  content: "Območja nevarnosti naravnih nesreč";
+}
+
+.inspire-ac-sl .inspire-label:before {
+  content: "Ozračje";
+}
+
+.inspire-mf-sl .inspire-label:before {
+  content: "Meteorološke značilnosti";
+}
+
+.inspire-of-sl .inspire-label:before {
+  content: "Oceanogeografske značilnosti";
+}
+
+.inspire-sr-sl .inspire-label:before {
+  content: "Morske regije";
+}
+
+.inspire-gn-sl .inspire-label:before {
+  content: "Zemljepisna imena";
+}
+
+.inspire-br-sl .inspire-label:before {
+  content: "Biogeografske regije";
+}
+
+.inspire-hb-sl .inspire-label:before {
+  content: "Habitati in biotopi";
+}
+
+.inspire-sd-sl .inspire-label:before {
+  content: "Porazdelitev vrst";
+}
+
+.inspire-er-sl .inspire-label:before {
+  content: "Energetski viri";
+}
+
+.inspire-mr-sl .inspire-label:before {
+  content: "Mineralni viri";
+}
+
+.inspire-au-sl .inspire-label:before {
+  content: "Upravne enote";
+}
+
+.inspire-ad-sl .inspire-label:before {
+  content: "Naslovi";
+}
+
+.inspire-cp-sl .inspire-label:before {
+  content: "Katastrske parcele";
+}
+
+.inspire-tn-sl .inspire-label:before {
+  content: "Prometna omrežja";
+}
+
+.inspire-hy-sl .inspire-label:before {
+  content: "Hidrografija";
+}
+
+.inspire-ps-sl .inspire-label:before {
+  content: "Zavarovana območja";
+}
+
+.inspire-rs-sk .inspire-label:before {
+  content: "Súradnicové referenčné systémy";
+}
+
+.inspire-el-sk .inspire-label:before {
+  content: "Výška";
+}
+
+.inspire-lc-sk .inspire-label:before {
+  content: "Krajinná pokrývka (land cover)";
+}
+
+.inspire-oi-sk .inspire-label:before {
+  content: "Ortometria";
+}
+
+.inspire-ge-sk .inspire-label:before {
+  content: "Geológia";
+}
+
+.inspire-su-sk .inspire-label:before {
+  content: "Štatistické jednotky";
+}
+
+.inspire-bu-sk .inspire-label:before {
+  content: "Stavby";
+}
+
+.inspire-so-sk .inspire-label:before {
+  content: "Pôda";
+}
+
+.inspire-lu-sk .inspire-label:before {
+  content: "Využitie územia";
+}
+
+.inspire-hh-sk .inspire-label:before {
+  content: "Ľudské zdravie a bezpečnosť";
+}
+
+.inspire-us-sk .inspire-label:before {
+  content: "Verejné a štátne služby";
+}
+
+.inspire-gg-sk .inspire-label:before {
+  content: "Geografické systémy sietí";
+}
+
+.inspire-ef-sk .inspire-label:before {
+  content: "Zariadenia na monitorovanie životného prostredia";
+}
+
+.inspire-pf-sk .inspire-label:before {
+  content: "Výrobné a priemyselné zariadenia";
+}
+
+.inspire-af-sk .inspire-label:before {
+  content: "Poľnohospodárske zariadenia a zariadenia akvakultúry";
+}
+
+.inspire-pd-sk .inspire-label:before {
+  content: "Rozmiestnenie obyvateľstva – demografia";
+}
+
+.inspire-am-sk .inspire-label:before {
+  content: "Spravované/obmedzené/regulované zóny a jednotky podávajúce správy";
+}
+
+.inspire-nz-sk .inspire-label:before {
+  content: "Zóny prírodného rizika";
+}
+
+.inspire-ac-sk .inspire-label:before {
+  content: "Atmosférické podmienky";
+}
+
+.inspire-mf-sk .inspire-label:before {
+  content: "Meteorologické geografické prvky";
+}
+
+.inspire-of-sk .inspire-label:before {
+  content: "Oceánografické geografické prvky";
+}
+
+.inspire-sr-sk .inspire-label:before {
+  content: "Morské regióny";
+}
+
+.inspire-gn-sk .inspire-label:before {
+  content: "Zemepisné názvy";
+}
+
+.inspire-br-sk .inspire-label:before {
+  content: "Biogeografické regióny";
+}
+
+.inspire-hb-sk .inspire-label:before {
+  content: "Habitaty a biotopy";
+}
+
+.inspire-sd-sk .inspire-label:before {
+  content: "Výskyt druhov";
+}
+
+.inspire-er-sk .inspire-label:before {
+  content: "Zdroje energie";
+}
+
+.inspire-mr-sk .inspire-label:before {
+  content: "Zdroje nerastných surovín";
+}
+
+.inspire-au-sk .inspire-label:before {
+  content: "Správne jednotky";
+}
+
+.inspire-ad-sk .inspire-label:before {
+  content: "Adresy";
+}
+
+.inspire-cp-sk .inspire-label:before {
+  content: "Katastrálne parcely";
+}
+
+.inspire-tn-sk .inspire-label:before {
+  content: "Dopravné siete";
+}
+
+.inspire-hy-sk .inspire-label:before {
+  content: "Hydrografia";
+}
+
+.inspire-ps-sk .inspire-label:before {
+  content: "Chránené územia";
+}
+
+.inspire-rs-ro .inspire-label:before {
+  content: "Sisteme de coordonate de referinţă";
+}
+
+.inspire-el-ro .inspire-label:before {
+  content: "Elevaţie";
+}
+
+.inspire-lc-ro .inspire-label:before {
+  content: "Acoperire terestră";
+}
+
+.inspire-oi-ro .inspire-label:before {
+  content: "Ortoimagini";
+}
+
+.inspire-ge-ro .inspire-label:before {
+  content: "Geologie";
+}
+
+.inspire-su-ro .inspire-label:before {
+  content: "Unităţi statistice";
+}
+
+.inspire-bu-ro .inspire-label:before {
+  content: "Clădiri";
+}
+
+.inspire-so-ro .inspire-label:before {
+  content: "Soluri";
+}
+
+.inspire-lu-ro .inspire-label:before {
+  content: "Utilizarea terenului";
+}
+
+.inspire-hh-ro .inspire-label:before {
+  content: "Sănătate şi siguranţă umană";
+}
+
+.inspire-us-ro .inspire-label:before {
+  content: "Servicii de utilitate publică şi servicii publice";
+}
+
+.inspire-gg-ro .inspire-label:before {
+  content: "Sisteme de caroiaj geografic";
+}
+
+.inspire-ef-ro .inspire-label:before {
+  content: "Instalaţii de supraveghere a mediului";
+}
+
+.inspire-pf-ro .inspire-label:before {
+  content: "Instalaţii de producţie şi industriale";
+}
+
+.inspire-af-ro .inspire-label:before {
+  content: "Instalaţii agricole şi pentru acvacultură";
+}
+
+.inspire-pd-ro .inspire-label:before {
+  content: "Repartizarea populaţiei – demografie";
+}
+
+.inspire-am-ro .inspire-label:before {
+  content: "Zone de administrare/restricţie/reglementare şi unităţi de raportare";
+}
+
+.inspire-nz-ro .inspire-label:before {
+  content: "Zone de risc natural";
+}
+
+.inspire-ac-ro .inspire-label:before {
+  content: "Condiţii atmosferice";
+}
+
+.inspire-mf-ro .inspire-label:before {
+  content: "Caracteristici geografice meteorologice";
+}
+
+.inspire-of-ro .inspire-label:before {
+  content: "Caracteristici geografice oceanografice";
+}
+
+.inspire-sr-ro .inspire-label:before {
+  content: "Regiuni maritime";
+}
+
+.inspire-gn-ro .inspire-label:before {
+  content: "Denumiri geografice";
+}
+
+.inspire-br-ro .inspire-label:before {
+  content: "Regiuni biogeografice";
+}
+
+.inspire-hb-ro .inspire-label:before {
+  content: "Habitate şi biotopuri";
+}
+
+.inspire-sd-ro .inspire-label:before {
+  content: "Repartizarea speciilor";
+}
+
+.inspire-er-ro .inspire-label:before {
+  content: "Resurse energetice";
+}
+
+.inspire-mr-ro .inspire-label:before {
+  content: "Resurse minerale";
+}
+
+.inspire-au-ro .inspire-label:before {
+  content: "Unităţi administrative";
+}
+
+.inspire-ad-ro .inspire-label:before {
+  content: "Adrese";
+}
+
+.inspire-cp-ro .inspire-label:before {
+  content: "Parcele cadastrale";
+}
+
+.inspire-tn-ro .inspire-label:before {
+  content: "Reţele de transport";
+}
+
+.inspire-hy-ro .inspire-label:before {
+  content: "Hidrografie";
+}
+
+.inspire-ps-ro .inspire-label:before {
+  content: "Zone protejate";
+}
+
+.inspire-rs-pl .inspire-label:before {
+  content: "Systemy odniesienia za pomocą współrzędnych";
+}
+
+.inspire-el-pl .inspire-label:before {
+  content: "Ukształtowanie terenu";
+}
+
+.inspire-lc-pl .inspire-label:before {
+  content: "Użytkowanie terenu";
+}
+
+.inspire-oi-pl .inspire-label:before {
+  content: "Sporządzanie ortoobrazów";
+}
+
+.inspire-ge-pl .inspire-label:before {
+  content: "Geologia";
+}
+
+.inspire-su-pl .inspire-label:before {
+  content: "Jednostki statystyczne";
+}
+
+.inspire-bu-pl .inspire-label:before {
+  content: "Budynki";
+}
+
+.inspire-so-pl .inspire-label:before {
+  content: "Gleba";
+}
+
+.inspire-lu-pl .inspire-label:before {
+  content: "Zagospodarowanie przestrzenne";
+}
+
+.inspire-hh-pl .inspire-label:before {
+  content: "Zdrowie i bezpieczeństwo ludzi";
+}
+
+.inspire-us-pl .inspire-label:before {
+  content: "Usługi użyteczności publicznej i służby państwowe";
+}
+
+.inspire-gg-pl .inspire-label:before {
+  content: "Systemy siatek geograficznych";
+}
+
+.inspire-ef-pl .inspire-label:before {
+  content: "Urządzenia do monitorowania środowiska";
+}
+
+.inspire-pf-pl .inspire-label:before {
+  content: "Obiekty produkcyjne i przemysłowe";
+}
+
+.inspire-af-pl .inspire-label:before {
+  content: "Obiekty rolnicze oraz akwakultury";
+}
+
+.inspire-pd-pl .inspire-label:before {
+  content: "Rozmieszczenie ludności – demografia";
+}
+
+.inspire-am-pl .inspire-label:before {
+  content: "Gospodarowanie obszarem/strefy ograniczone/regulacyjne oraz jednostki sprawozdawcze";
+}
+
+.inspire-nz-pl .inspire-label:before {
+  content: "Strefy zagrożenia naturalnego";
+}
+
+.inspire-ac-pl .inspire-label:before {
+  content: "Warunki atmosferyczne";
+}
+
+.inspire-mf-pl .inspire-label:before {
+  content: "Warunki meteorologiczno-geograficzne";
+}
+
+.inspire-of-pl .inspire-label:before {
+  content: "Warunki oceanograficzno-geograficzne";
+}
+
+.inspire-sr-pl .inspire-label:before {
+  content: "Regiony morskie";
+}
+
+.inspire-gn-pl .inspire-label:before {
+  content: "Nazwy geograficzne";
+}
+
+.inspire-br-pl .inspire-label:before {
+  content: "Regiony biogeograficzne";
+}
+
+.inspire-hb-pl .inspire-label:before {
+  content: "Siedliska i obszary przyrodniczo jednorodne";
+}
+
+.inspire-sd-pl .inspire-label:before {
+  content: "Rozmieszczenie gatunków";
+}
+
+.inspire-er-pl .inspire-label:before {
+  content: "Zasoby energetyczne";
+}
+
+.inspire-mr-pl .inspire-label:before {
+  content: "Zasoby mineralne";
+}
+
+.inspire-au-pl .inspire-label:before {
+  content: "Jednostki administracyjne";
+}
+
+.inspire-ad-pl .inspire-label:before {
+  content: "Adresy";
+}
+
+.inspire-cp-pl .inspire-label:before {
+  content: "Działki katastralne";
+}
+
+.inspire-tn-pl .inspire-label:before {
+  content: "Sieci transportowe";
+}
+
+.inspire-hy-pl .inspire-label:before {
+  content: "Hydrografia";
+}
+
+.inspire-ps-pl .inspire-label:before {
+  content: "Obszary chronione";
+}
+
+.inspire-rs-pt .inspire-label:before {
+  content: "Sistemas de referencia";
+}
+
+.inspire-el-pt .inspire-label:before {
+  content: "Altitude";
+}
+
+.inspire-lc-pt .inspire-label:before {
+  content: "Ocupação do solo";
+}
+
+.inspire-oi-pt .inspire-label:before {
+  content: "Ortoimagens";
+}
+
+.inspire-ge-pt .inspire-label:before {
+  content: "Geologia";
+}
+
+.inspire-su-pt .inspire-label:before {
+  content: "Unidades estatísticas";
+}
+
+.inspire-bu-pt .inspire-label:before {
+  content: "Edifícios";
+}
+
+.inspire-so-pt .inspire-label:before {
+  content: "Solo";
+}
+
+.inspire-lu-pt .inspire-label:before {
+  content: "Uso do solo";
+}
+
+.inspire-hh-pt .inspire-label:before {
+  content: "Saúde humana e segurança";
+}
+
+.inspire-us-pt .inspire-label:before {
+  content: "Serviços de utilidade pública e do Estado";
+}
+
+.inspire-gg-pt .inspire-label:before {
+  content: "Sistemas de quadrículas geográficas";
+}
+
+.inspire-ef-pt .inspire-label:before {
+  content: "Instalações de monitorização do ambiente";
+}
+
+.inspire-pf-pt .inspire-label:before {
+  content: "Instalações industriais e de produção";
+}
+
+.inspire-af-pt .inspire-label:before {
+  content: "Instalações agrícolas e aquícolas";
+}
+
+.inspire-pd-pt .inspire-label:before {
+  content: "Distribuição da população — demografia";
+}
+
+.inspire-am-pt .inspire-label:before {
+  content: "Zonas de gestão/restrição/regulamentação e unidades de referência";
+}
+
+.inspire-nz-pt .inspire-label:before {
+  content: "Zonas de risco natural";
+}
+
+.inspire-ac-pt .inspire-label:before {
+  content: "Condições atmosféricas";
+}
+
+.inspire-mf-pt .inspire-label:before {
+  content: "Características geometeorológicas";
+}
+
+.inspire-of-pt .inspire-label:before {
+  content: "Características oceanográficas";
+}
+
+.inspire-sr-pt .inspire-label:before {
+  content: "Regiões marinhas";
+}
+
+.inspire-gn-pt .inspire-label:before {
+  content: "Toponímia";
+}
+
+.inspire-br-pt .inspire-label:before {
+  content: "Regiões biogeográficas";
+}
+
+.inspire-hb-pt .inspire-label:before {
+  content: "Habitats e biótopos";
+}
+
+.inspire-sd-pt .inspire-label:before {
+  content: "Distribuição das espécies";
+}
+
+.inspire-er-pt .inspire-label:before {
+  content: "Recursos energéticos";
+}
+
+.inspire-mr-pt .inspire-label:before {
+  content: "Recursos minerais";
+}
+
+.inspire-au-pt .inspire-label:before {
+  content: "Unidades administrativas";
+}
+
+.inspire-ad-pt .inspire-label:before {
+  content: "Endereços";
+}
+
+.inspire-cp-pt .inspire-label:before {
+  content: "Parcelas cadastrais";
+}
+
+.inspire-tn-pt .inspire-label:before {
+  content: "Redes de transporte";
+}
+
+.inspire-hy-pt .inspire-label:before {
+  content: "Hidrografia";
+}
+
+.inspire-ps-pt .inspire-label:before {
+  content: "Sítios protegidos";
+}
+
+.inspire-rs-du .inspire-label:before {
+  content: "Systemen voor verwijzing door middel van coördinaten";
+}
+
+.inspire-el-du .inspire-label:before {
+  content: "Hoogte";
+}
+
+.inspire-lc-du .inspire-label:before {
+  content: "Bodemgebruik";
+}
+
+.inspire-oi-du .inspire-label:before {
+  content: "Orthobeeldvorming";
+}
+
+.inspire-ge-du .inspire-label:before {
+  content: "Geologie";
+}
+
+.inspire-su-du .inspire-label:before {
+  content: "Statistische eenheden";
+}
+
+.inspire-bu-du .inspire-label:before {
+  content: "Gebouwen";
+}
+
+.inspire-so-du .inspire-label:before {
+  content: "Bodem";
+}
+
+.inspire-lu-du .inspire-label:before {
+  content: "Landgebruik";
+}
+
+.inspire-hh-du .inspire-label:before {
+  content: "Menselijke gezondheid en veiligheid";
+}
+
+.inspire-us-du .inspire-label:before {
+  content: "Nutsdiensten en overheidsdiensten";
+}
+
+.inspire-gg-du .inspire-label:before {
+  content: "Geografisch rastersysteem";
+}
+
+.inspire-ef-du .inspire-label:before {
+  content: "Milieubewakingsvoorzieningen";
+}
+
+.inspire-pf-du .inspire-label:before {
+  content: "Faciliteiten voor productie en industrie";
+}
+
+.inspire-af-du .inspire-label:before {
+  content: "Faciliteiten voor landbouw en aquacultuur";
+}
+
+.inspire-pd-du .inspire-label:before {
+  content: "Spreiding van de bevolking — demografie";
+}
+
+.inspire-am-du .inspire-label:before {
+  content: "Gebiedsbeheer, gebieden waar beperkingen gelden, gereguleerde gebieden en rapportage-eenheden";
+}
+
+.inspire-nz-du .inspire-label:before {
+  content: "Gebieden met natuurrisico'es";
+}
+
+.inspire-ac-du .inspire-label:before {
+  content: "Atmosferische omstandigheden";
+}
+
+.inspire-mf-du .inspire-label:before {
+  content: "Meteorologische geografische kenmerken";
+}
+
+.inspire-of-du .inspire-label:before {
+  content: "Oceanografische geografische kenmerken";
+}
+
+.inspire-sr-du .inspire-label:before {
+  content: "Zeegebieden";
+}
+
+.inspire-gn-du .inspire-label:before {
+  content: "Geografische namen";
+}
+
+.inspire-br-du .inspire-label:before {
+  content: "Biogeografische gebieden";
+}
+
+.inspire-hb-du .inspire-label:before {
+  content: "Habitats en biotopen";
+}
+
+.inspire-sd-du .inspire-label:before {
+  content: "Spreiding van soorten";
+}
+
+.inspire-er-du .inspire-label:before {
+  content: "Energiebronnen";
+}
+
+.inspire-mr-du .inspire-label:before {
+  content: "Minerale bronnen";
+}
+
+.inspire-au-du .inspire-label:before {
+  content: "Administratieve eenheden";
+}
+
+.inspire-ad-du .inspire-label:before {
+  content: "Adressen";
+}
+
+.inspire-cp-du .inspire-label:before {
+  content: "Kadastrale percelen";
+}
+
+.inspire-tn-du .inspire-label:before {
+  content: "Vervoersnetwerken";
+}
+
+.inspire-hy-du .inspire-label:before {
+  content: "Hydrografie";
+}
+
+.inspire-ps-du .inspire-label:before {
+  content: "Beschermde gebieden";
+}
+
+.inspire-rs-mt .inspire-label:before {
+  content: "Sistemi ta' referenza ta' koordinati";
+}
+
+.inspire-el-mt .inspire-label:before {
+  content: "Elevazzjoni";
+}
+
+.inspire-lc-mt .inspire-label:before {
+  content: "Kopertura ta' l-art";
+}
+
+.inspire-oi-mt .inspire-label:before {
+  content: "Orthoimagery";
+}
+
+.inspire-ge-mt .inspire-label:before {
+  content: "Ġeologija";
+}
+
+.inspire-su-mt .inspire-label:before {
+  content: "Unitajiet statistiċi";
+}
+
+.inspire-bu-mt .inspire-label:before {
+  content: "Bini";
+}
+
+.inspire-so-mt .inspire-label:before {
+  content: "Ħamrija";
+}
+
+.inspire-lu-mt .inspire-label:before {
+  content: "Użu ta' l-art";
+}
+
+.inspire-hh-mt .inspire-label:before {
+  content: "Is-saħħa u s-siġurtà tal-bniedem";
+}
+
+.inspire-us-mt .inspire-label:before {
+  content: "Servizzi ta' utilità u tal-gvern";
+}
+
+.inspire-gg-mt .inspire-label:before {
+  content: "Sistemi ta' grilji ġeografiċi";
+}
+
+.inspire-ef-mt .inspire-label:before {
+  content: "Faċilitajiet ta' monitoraġġ ambjentali";
+}
+
+.inspire-pf-mt .inspire-label:before {
+  content: "Faċilitajiet ta' produzzjoni u industrijali";
+}
+
+.inspire-af-mt .inspire-label:before {
+  content: "Faċilitajiet agrikoli u ta' l-akwakultura";
+}
+
+.inspire-pd-mt .inspire-label:before {
+  content: "Distribuzzjoni tal-popolazzjoni – demografija";
+}
+
+.inspire-am-mt .inspire-label:before {
+  content: "Amministrazzjoni ta' żoni/restrizzjoni/żoni regolati u unitajiet ta' rapportar";
+}
+
+.inspire-nz-mt .inspire-label:before {
+  content: "Żoni ta' riskju naturali";
+}
+
+.inspire-ac-mt .inspire-label:before {
+  content: "Kondizzjonijiet atmosferiċi";
+}
+
+.inspire-mf-mt .inspire-label:before {
+  content: "Karatteristiċi ġeografiċi meteoroloġiċi";
+}
+
+.inspire-of-mt .inspire-label:before {
+  content: "Karatteristiċi ġeografiċi oċeanografiċi";
+}
+
+.inspire-sr-mt .inspire-label:before {
+  content: "Reġjuni tal-baħar";
+}
+
+.inspire-gn-mt .inspire-label:before {
+  content: "Ismijiet ġeografiċi";
+}
+
+.inspire-br-mt .inspire-label:before {
+  content: "Reġjuni bijo-ġeografiċi";
+}
+
+.inspire-hb-mt .inspire-label:before {
+  content: "L-abitati naturali u l-bijotopi";
+}
+
+.inspire-sd-mt .inspire-label:before {
+  content: "Distribuzzjoni ta' l-ispeċi";
+}
+
+.inspire-er-mt .inspire-label:before {
+  content: "Riżorsi ta' enerġija";
+}
+
+.inspire-mr-mt .inspire-label:before {
+  content: "Riżorsi minerali";
+}
+
+.inspire-au-mt .inspire-label:before {
+  content: "Unitajiet amministrattivi";
+}
+
+.inspire-ad-mt .inspire-label:before {
+  content: "Indirizzi";
+}
+
+.inspire-cp-mt .inspire-label:before {
+  content: "Pakketti katastali";
+}
+
+.inspire-tn-mt .inspire-label:before {
+  content: "Networks tat-trasport";
+}
+
+.inspire-hy-mt .inspire-label:before {
+  content: "Idrografija";
+}
+
+.inspire-ps-mt .inspire-label:before {
+  content: "Siti protetti";
+}
+
+.inspire-rs-lv .inspire-label:before {
+  content: "Koordinātu atskaites sistēmas";
+}
+
+.inspire-el-lv .inspire-label:before {
+  content: "Augstums";
+}
+
+.inspire-lc-lv .inspire-label:before {
+  content: "Zemes virsma";
+}
+
+.inspire-oi-lv .inspire-label:before {
+  content: "Ortofotogrāfija";
+}
+
+.inspire-ge-lv .inspire-label:before {
+  content: "Ģeoloģija";
+}
+
+.inspire-su-lv .inspire-label:before {
+  content: "Statistikas vienības";
+}
+
+.inspire-bu-lv .inspire-label:before {
+  content: "Ēkas";
+}
+
+.inspire-so-lv .inspire-label:before {
+  content: "Augsne";
+}
+
+.inspire-lu-lv .inspire-label:before {
+  content: "Zemes izmantošana";
+}
+
+.inspire-hh-lv .inspire-label:before {
+  content: "Cilvēku veselība un drošība";
+}
+
+.inspire-us-lv .inspire-label:before {
+  content: "Komunālie un valsts dienesti";
+}
+
+.inspire-gg-lv .inspire-label:before {
+  content: "Ģeogrāfisko koordinātu tīklu sistēmas";
+}
+
+.inspire-ef-lv .inspire-label:before {
+  content: "Vides monitoringa iekārtas";
+}
+
+.inspire-pf-lv .inspire-label:before {
+  content: "Ražošanas un rūpniecības iekārtas";
+}
+
+.inspire-af-lv .inspire-label:before {
+  content: "Lauksaimniecības un akvakultūras iekārtas";
+}
+
+.inspire-pd-lv .inspire-label:before {
+  content: "Iedzīvotāju sadalījums – demogrāfija";
+}
+
+.inspire-am-lv .inspire-label:before {
+  content: "Apgabala pārvaldības/ierobežojumu/reglamentētas zonas un ziņošanas vienības";
+}
+
+.inspire-nz-lv .inspire-label:before {
+  content: "Dabas apdraudējuma zonas";
+}
+
+.inspire-ac-lv .inspire-label:before {
+  content: "Atmosfēras apstākļi";
+}
+
+.inspire-mf-lv .inspire-label:before {
+  content: "Meteoroloģiski ģeogrāfiskie raksturlielumi";
+}
+
+.inspire-of-lv .inspire-label:before {
+  content: "Okeanogrāfiski ģeogrāfiskie raksturlielumi";
+}
+
+.inspire-sr-lv .inspire-label:before {
+  content: "Jūru reģioni";
+}
+
+.inspire-gn-lv .inspire-label:before {
+  content: "Toponīmi";
+}
+
+.inspire-br-lv .inspire-label:before {
+  content: "Bioģeogrāfiskie reģioni";
+}
+
+.inspire-hb-lv .inspire-label:before {
+  content: "Dzīvotnes un biotopi";
+}
+
+.inspire-sd-lv .inspire-label:before {
+  content: "Sugu izplatība";
+}
+
+.inspire-er-lv .inspire-label:before {
+  content: "Enerģijas resursi";
+}
+
+.inspire-mr-lv .inspire-label:before {
+  content: "Derīgo izrakteņu resursi";
+}
+
+.inspire-au-lv .inspire-label:before {
+  content: "Administratīvas vienības";
+}
+
+.inspire-ad-lv .inspire-label:before {
+  content: "Adreses";
+}
+
+.inspire-cp-lv .inspire-label:before {
+  content: "Kadastrāli zemes gabali";
+}
+
+.inspire-tn-lv .inspire-label:before {
+  content: "Transporta tīkli";
+}
+
+.inspire-hy-lv .inspire-label:before {
+  content: "Hidrogrāfija";
+}
+
+.inspire-ps-lv .inspire-label:before {
+  content: "Aizsargājamas teritorijas";
+}
+
+.inspire-rs-it .inspire-label:before {
+  content: "Sistemi di coordinate";
+}
+
+.inspire-el-it .inspire-label:before {
+  content: "Elevazione";
+}
+
+.inspire-lc-it .inspire-label:before {
+  content: "Copertura del suolo";
+}
+
+.inspire-oi-it .inspire-label:before {
+  content: "Orto immagini";
+}
+
+.inspire-ge-it .inspire-label:before {
+  content: "Geologia";
+}
+
+.inspire-su-it .inspire-label:before {
+  content: "Unità statistiche";
+}
+
+.inspire-bu-it .inspire-label:before {
+  content: "Edifici";
+}
+
+.inspire-so-it .inspire-label:before {
+  content: "Suolo";
+}
+
+.inspire-lu-it .inspire-label:before {
+  content: "Utilizzo del territorio";
+}
+
+.inspire-hh-it .inspire-label:before {
+  content: "Salute umana e sicurezza";
+}
+
+.inspire-us-it .inspire-label:before {
+  content: "Servizi di pubblica utilità e servizi amministrativi";
+}
+
+.inspire-gg-it .inspire-label:before {
+  content: "Sistemi di griglie geografiche";
+}
+
+.inspire-ef-it .inspire-label:before {
+  content: "Impianti di monitoraggio ambientale";
+}
+
+.inspire-pf-it .inspire-label:before {
+  content: "Produzione e impianti industriali";
+}
+
+.inspire-af-it .inspire-label:before {
+  content: "Impianti agricoli e di acquacoltura";
+}
+
+.inspire-pd-it .inspire-label:before {
+  content: "Distribuzione della popolazione — demografia";
+}
+
+.inspire-am-it .inspire-label:before {
+  content: "Zone sottoposte a gestione/limitazioni/regolamentazione e unità con obbligo di comunicare dati";
+}
+
+.inspire-nz-it .inspire-label:before {
+  content: "Zone a rischio naturale";
+}
+
+.inspire-ac-it .inspire-label:before {
+  content: "Condizioni atmosferiche";
+}
+
+.inspire-mf-it .inspire-label:before {
+  content: "Elementi geografici meteorologici";
+}
+
+.inspire-of-it .inspire-label:before {
+  content: "Elementi geografici oceanografici";
+}
+
+.inspire-sr-it .inspire-label:before {
+  content: "Regioni marine";
+}
+
+.inspire-gn-it .inspire-label:before {
+  content: "Nomi geografici";
+}
+
+.inspire-br-it .inspire-label:before {
+  content: "Regioni biogeografiche";
+}
+
+.inspire-hb-it .inspire-label:before {
+  content: "Habitat e biotopi";
+}
+
+.inspire-sd-it .inspire-label:before {
+  content: "Distribuzione delle specie";
+}
+
+.inspire-er-it .inspire-label:before {
+  content: "Risorse energetiche";
+}
+
+.inspire-mr-it .inspire-label:before {
+  content: "Risorse minerarie";
+}
+
+.inspire-au-it .inspire-label:before {
+  content: "Unità amministrative";
+}
+
+.inspire-ad-it .inspire-label:before {
+  content: "Indirizzi";
+}
+
+.inspire-cp-it .inspire-label:before {
+  content: "Parcelle catastali";
+}
+
+.inspire-tn-it .inspire-label:before {
+  content: "Reti di trasporto";
+}
+
+.inspire-hy-it .inspire-label:before {
+  content: "Idrografia";
+}
+
+.inspire-ps-it .inspire-label:before {
+  content: "Siti protetti";
+}
+
+.inspire-rs-lt .inspire-label:before {
+  content: "Koordinačių atskaitos sistemos";
+}
+
+.inspire-el-lt .inspire-label:before {
+  content: "Aukštis";
+}
+
+.inspire-lc-lt .inspire-label:before {
+  content: "Žemės danga";
+}
+
+.inspire-oi-lt .inspire-label:before {
+  content: "Ortofotografinis vaizdavimas";
+}
+
+.inspire-ge-lt .inspire-label:before {
+  content: "Geologija";
+}
+
+.inspire-su-lt .inspire-label:before {
+  content: "Statistiniai vienetai";
+}
+
+.inspire-bu-lt .inspire-label:before {
+  content: "Pastatai";
+}
+
+.inspire-so-lt .inspire-label:before {
+  content: "Dirvožemis";
+}
+
+.inspire-lu-lt .inspire-label:before {
+  content: "Žemės naudojimas";
+}
+
+.inspire-hh-lt .inspire-label:before {
+  content: "Žmonių sveikata ir sauga";
+}
+
+.inspire-us-lt .inspire-label:before {
+  content: "Komunalinės įmonės ir valstybės tarnybos";
+}
+
+.inspire-gg-lt .inspire-label:before {
+  content: "Geografinio tinklelio sistemos";
+}
+
+.inspire-ef-lt .inspire-label:before {
+  content: "Aplinkos stebėsenos priemonės";
+}
+
+.inspire-pf-lt .inspire-label:before {
+  content: "Gamybos ir pramonės įrenginiai";
+}
+
+.inspire-af-lt .inspire-label:before {
+  content: "Žemės ūkio ir akvakultūros infrastruktūra";
+}
+
+.inspire-pd-lt .inspire-label:before {
+  content: "Gyventojų pasiskirstymas – demografija";
+}
+
+.inspire-am-lt .inspire-label:before {
+  content: "Tvarkomos teritorijos, ribojamos ir reglamentuojamos zonos bei vienetai, už kuriuos atsiskaitoma";
+}
+
+.inspire-nz-lt .inspire-label:before {
+  content: "Gamtinių pavojų zonos";
+}
+
+.inspire-ac-lt .inspire-label:before {
+  content: "Atmosferos sąlygos";
+}
+
+.inspire-mf-lt .inspire-label:before {
+  content: "Meteorologinės geografinės sąlygos";
+}
+
+.inspire-of-lt .inspire-label:before {
+  content: "Okeanografinės geografinės sąlygos";
+}
+
+.inspire-sr-lt .inspire-label:before {
+  content: "Jūrų regionai";
+}
+
+.inspire-gn-lt .inspire-label:before {
+  content: "Geografiniai pavadinimai";
+}
+
+.inspire-br-lt .inspire-label:before {
+  content: "Biogeografiniai regionai";
+}
+
+.inspire-hb-lt .inspire-label:before {
+  content: "Buveinės ir biotopai";
+}
+
+.inspire-sd-lt .inspire-label:before {
+  content: "Rūšių pasiskirstymas";
+}
+
+.inspire-er-lt .inspire-label:before {
+  content: "Energijos ištekliai";
+}
+
+.inspire-mr-lt .inspire-label:before {
+  content: "Naudingosios iškasenos";
+}
+
+.inspire-au-lt .inspire-label:before {
+  content: "Administraciniai vienetai";
+}
+
+.inspire-ad-lt .inspire-label:before {
+  content: "Adresai";
+}
+
+.inspire-cp-lt .inspire-label:before {
+  content: "Kadastro sklypai";
+}
+
+.inspire-tn-lt .inspire-label:before {
+  content: "Transporto tinklai";
+}
+
+.inspire-hy-lt .inspire-label:before {
+  content: "Hidrografija";
+}
+
+.inspire-ps-lt .inspire-label:before {
+  content: "Saugomos teritorijos";
+}
+
+.inspire-rs-hu .inspire-label:before {
+  content: "Koordinátarendszerek";
+}
+
+.inspire-el-hu .inspire-label:before {
+  content: "Domborzat";
+}
+
+.inspire-lc-hu .inspire-label:before {
+  content: "A felszín borítása";
+}
+
+.inspire-oi-hu .inspire-label:before {
+  content: "Ortofotók";
+}
+
+.inspire-ge-hu .inspire-label:before {
+  content: "Földtan";
+}
+
+.inspire-su-hu .inspire-label:before {
+  content: "Statisztikai egységek";
+}
+
+.inspire-bu-hu .inspire-label:before {
+  content: "Épületek";
+}
+
+.inspire-so-hu .inspire-label:before {
+  content: "Talaj";
+}
+
+.inspire-lu-hu .inspire-label:before {
+  content: "Földhasználat";
+}
+
+.inspire-hh-hu .inspire-label:before {
+  content: "Emberi egészség és biztonság";
+}
+
+.inspire-us-hu .inspire-label:before {
+  content: "Közüzemi és közszolgáltatások";
+}
+
+.inspire-gg-hu .inspire-label:before {
+  content: "Földrajzi rácsrendszerek";
+}
+
+.inspire-ef-hu .inspire-label:before {
+  content: "Környezetvédelmi monitoringlétesítmények";
+}
+
+.inspire-pf-hu .inspire-label:before {
+  content: "Termelő és ipari létesítmények";
+}
+
+.inspire-af-hu .inspire-label:before {
+  content: "Mezőgazdasági és akvakultúra-ágazati létesítmények";
+}
+
+.inspire-pd-hu .inspire-label:before {
+  content: "A népesség eloszlása – demográfia";
+}
+
+.inspire-am-hu .inspire-label:before {
+  content: "Területgazdálkodási/-korlátozási/-szabályozási övezetek és adatszolgáltató egységek";
+}
+
+.inspire-nz-hu .inspire-label:before {
+  content: "Természeti kockázati zónák";
+}
+
+.inspire-ac-hu .inspire-label:before {
+  content: "Légköri viszonyok";
+}
+
+.inspire-mf-hu .inspire-label:before {
+  content: "Meteorológiai földrajzi jellemzők";
+}
+
+.inspire-of-hu .inspire-label:before {
+  content: "Oceanográfiai földrajzi jellemzők";
+}
+
+.inspire-sr-hu .inspire-label:before {
+  content: "Tengeri régiók";
+}
+
+.inspire-gn-hu .inspire-label:before {
+  content: "Földrajzi nevek";
+}
+
+.inspire-br-hu .inspire-label:before {
+  content: "Biogeográfiai régiók";
+}
+
+.inspire-hb-hu .inspire-label:before {
+  content: "Élőhelyek és biotópok";
+}
+
+.inspire-sd-hu .inspire-label:before {
+  content: "A fajok megoszlása";
+}
+
+.inspire-er-hu .inspire-label:before {
+  content: "Energiaforrások";
+}
+
+.inspire-mr-hu .inspire-label:before {
+  content: "Ásványi nyersanyagok";
+}
+
+.inspire-au-hu .inspire-label:before {
+  content: "Közigazgatási egységek";
+}
+
+.inspire-ad-hu .inspire-label:before {
+  content: "Címek";
+}
+
+.inspire-cp-hu .inspire-label:before {
+  content: "Kataszteri parcellák";
+}
+
+.inspire-tn-hu .inspire-label:before {
+  content: "Közlekedési hálózatok";
+}
+
+.inspire-hy-hu .inspire-label:before {
+  content: "Vízrajz";
+}
+
+.inspire-ps-hu .inspire-label:before {
+  content: "Védett helyek";
+}
+
+.inspire-rs-fr .inspire-label:before {
+  content: "Référentiels de coordonnées";
+}
+
+.inspire-el-fr .inspire-label:before {
+  content: "Altitude";
+}
+
+.inspire-lc-fr .inspire-label:before {
+  content: "Occupation des terres";
+}
+
+.inspire-oi-fr .inspire-label:before {
+  content: "Ortho-imagerie";
+}
+
+.inspire-ge-fr .inspire-label:before {
+  content: "Géologie";
+}
+
+.inspire-su-fr .inspire-label:before {
+  content: "Unités statistiques";
+}
+
+.inspire-bu-fr .inspire-label:before {
+  content: "Bâtiments";
+}
+
+.inspire-so-fr .inspire-label:before {
+  content: "Sols";
+}
+
+.inspire-lu-fr .inspire-label:before {
+  content: "Usage des sols";
+}
+
+.inspire-hh-fr .inspire-label:before {
+  content: "Santé et sécurité des personnes";
+}
+
+.inspire-us-fr .inspire-label:before {
+  content: "Services d'utilité publique et services publics";
+}
+
+.inspire-gg-fr .inspire-label:before {
+  content: "Systèmes de maillage géographique";
+}
+
+.inspire-ef-fr .inspire-label:before {
+  content: "Installations de suivi environnemental";
+}
+
+.inspire-pf-fr .inspire-label:before {
+  content: "Lieux de production et sites industriels";
+}
+
+.inspire-af-fr .inspire-label:before {
+  content: "Installations agricoles et aquacoles";
+}
+
+.inspire-pd-fr .inspire-label:before {
+  content: "Répartition de la population — démographie";
+}
+
+.inspire-am-fr .inspire-label:before {
+  content: "Zones de gestion, de restriction ou\A de réglementation et unités de déclaration";
+}
+
+.inspire-nz-fr .inspire-label:before {
+  content: "Zones à risque naturel";
+}
+
+.inspire-ac-fr .inspire-label:before {
+  content: "Conditions atmosphériques";
+}
+
+.inspire-mf-fr .inspire-label:before {
+  content: "Caractéristiques géographiques météorologiques";
+}
+
+.inspire-of-fr .inspire-label:before {
+  content: "Caractéristiques géographiques océanographiques";
+}
+
+.inspire-sr-fr .inspire-label:before {
+  content: "Régions maritimes";
+}
+
+.inspire-gn-fr .inspire-label:before {
+  content: "Dénominations géographiques";
+}
+
+.inspire-br-fr .inspire-label:before {
+  content: "Régions biogéographiques";
+}
+
+.inspire-hb-fr .inspire-label:before {
+  content: "Habitats et biotopes";
+}
+
+.inspire-sd-fr .inspire-label:before {
+  content: "Répartition des espèces";
+}
+
+.inspire-er-fr .inspire-label:before {
+  content: "Sources d'énergie";
+}
+
+.inspire-mr-fr .inspire-label:before {
+  content: "Ressources minérales";
+}
+
+.inspire-au-fr .inspire-label:before {
+  content: "Unités administratives";
+}
+
+.inspire-ad-fr .inspire-label:before {
+  content: "Adresses";
+}
+
+.inspire-cp-fr .inspire-label:before {
+  content: "Parcelles cadastrales";
+}
+
+.inspire-tn-fr .inspire-label:before {
+  content: "Réseaux de transport";
+}
+
+.inspire-hy-fr .inspire-label:before {
+  content: "Hydrographie";
+}
+
+.inspire-ps-fr .inspire-label:before {
+  content: "Sites protégés";
+}
+
+.inspire-rs-fi .inspire-label:before {
+  content: "Koordinaattijärjestelmät";
+}
+
+.inspire-el-fi .inspire-label:before {
+  content: "Korkeus";
+}
+
+.inspire-lc-fi .inspire-label:before {
+  content: "Maanpeite";
+}
+
+.inspire-oi-fi .inspire-label:before {
+  content: "Ortoilmakuvat";
+}
+
+.inspire-ge-fi .inspire-label:before {
+  content: "Geologia";
+}
+
+.inspire-su-fi .inspire-label:before {
+  content: "Tilastoyksiköt";
+}
+
+.inspire-bu-fi .inspire-label:before {
+  content: "Rakennukset";
+}
+
+.inspire-so-fi .inspire-label:before {
+  content: "Maaperä";
+}
+
+.inspire-lu-fi .inspire-label:before {
+  content: "Maankäyttö";
+}
+
+.inspire-hh-fi .inspire-label:before {
+  content: "Väestön terveys ja turvallisuus";
+}
+
+.inspire-us-fi .inspire-label:before {
+  content: "Yleishyödylliset ja muut julkiset palvelut";
+}
+
+.inspire-gg-fi .inspire-label:before {
+  content: "Paikannusruudustot";
+}
+
+.inspire-ef-fi .inspire-label:before {
+  content: "Ympäristön tilan seurantalaitteet";
+}
+
+.inspire-pf-fi .inspire-label:before {
+  content: "Tuotanto- ja teollisuuslaitokset";
+}
+
+.inspire-af-fi .inspire-label:before {
+  content: "Maatalous- ja vesiviljelylaitokset";
+}
+
+.inspire-pd-fi .inspire-label:before {
+  content: "Väestöjakauma – demografia";
+}
+
+.inspire-am-fi .inspire-label:before {
+  content: "Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt";
+}
+
+.inspire-nz-fi .inspire-label:before {
+  content: "Luonnonriskialueet";
+}
+
+.inspire-ac-fi .inspire-label:before {
+  content: "Ilmakehän tila";
+}
+
+.inspire-mf-fi .inspire-label:before {
+  content: "Ilmaston maantieteelliset ominaispiirteet";
+}
+
+.inspire-of-fi .inspire-label:before {
+  content: "Merentutkimuksen maantieteelliset ominaispiirteet";
+}
+
+.inspire-sr-fi .inspire-label:before {
+  content: "Merialueet";
+}
+
+.inspire-gn-fi .inspire-label:before {
+  content: "Paikannimet";
+}
+
+.inspire-br-fi .inspire-label:before {
+  content: "Biomaantieteelliset alueet";
+}
+
+.inspire-hb-fi .inspire-label:before {
+  content: "Elinympäristöt ja biotoopit";
+}
+
+.inspire-sd-fi .inspire-label:before {
+  content: "Lajien levinneisyys";
+}
+
+.inspire-er-fi .inspire-label:before {
+  content: "Energiavarat";
+}
+
+.inspire-mr-fi .inspire-label:before {
+  content: "Mineraalivarat";
+}
+
+.inspire-au-fi .inspire-label:before {
+  content: "Hallinnolliset yksiköt";
+}
+
+.inspire-ad-fi .inspire-label:before {
+  content: "Osoitteet";
+}
+
+.inspire-cp-fi .inspire-label:before {
+  content: "Kiinteistöt";
+}
+
+.inspire-tn-fi .inspire-label:before {
+  content: "Liikenneverkot";
+}
+
+.inspire-hy-fi .inspire-label:before {
+  content: "Hydrografia";
+}
+
+.inspire-ps-fi .inspire-label:before {
+  content: "Suojellut alueet";
+}
+
+.inspire-rs-et .inspire-label:before {
+  content: "Koordinaatsüsteemid";
+}
+
+.inspire-el-et .inspire-label:before {
+  content: "Kõrgused";
+}
+
+.inspire-lc-et .inspire-label:before {
+  content: "Maakate";
+}
+
+.inspire-oi-et .inspire-label:before {
+  content: "Ortokujutised";
+}
+
+.inspire-ge-et .inspire-label:before {
+  content: "Geoloogia";
+}
+
+.inspire-su-et .inspire-label:before {
+  content: "Statistilised üksused";
+}
+
+.inspire-bu-et .inspire-label:before {
+  content: "Ehitised";
+}
+
+.inspire-so-et .inspire-label:before {
+  content: "Pinnas";
+}
+
+.inspire-lu-et .inspire-label:before {
+  content: "Maakasutus";
+}
+
+.inspire-hh-et .inspire-label:before {
+  content: "Inimeste tervis ja ohutus";
+}
+
+.inspire-us-et .inspire-label:before {
+  content: "Kommunaal- ja riiklikud teenused";
+}
+
+.inspire-gg-et .inspire-label:before {
+  content: "Geograafilised ruutvõrgud";
+}
+
+.inspire-ef-et .inspire-label:before {
+  content: "Keskkonnaseirerajatised";
+}
+
+.inspire-pf-et .inspire-label:before {
+  content: "Tootmis- ja tööstusrajatised";
+}
+
+.inspire-af-et .inspire-label:before {
+  content: "Põllumajandus- ja vesiviljelusrajatised";
+}
+
+.inspire-pd-et .inspire-label:before {
+  content: "Elanikkonna jaotumine – demograafia";
+}
+
+.inspire-am-et .inspire-label:before {
+  content: "Üldplaneering/piirangu-/reguleeritud tsoonid ja aruandlusüksused";
+}
+
+.inspire-nz-et .inspire-label:before {
+  content: "Looduslikud ohutsoonid";
+}
+
+.inspire-ac-et .inspire-label:before {
+  content: "Atmosfääritingimused";
+}
+
+.inspire-mf-et .inspire-label:before {
+  content: "Meteoroloogilis-geograafilised tunnusjooned";
+}
+
+.inspire-of-et .inspire-label:before {
+  content: "Okeanograafilis-geograafilised tunnusjooned";
+}
+
+.inspire-sr-et .inspire-label:before {
+  content: "Merepiirkonnad";
+}
+
+.inspire-gn-et .inspire-label:before {
+  content: "Geograafilised nimed";
+}
+
+.inspire-br-et .inspire-label:before {
+  content: "Bio-geograafilised piirkonnad";
+}
+
+.inspire-hb-et .inspire-label:before {
+  content: "Elupaigad ja biotoobid";
+}
+
+.inspire-sd-et .inspire-label:before {
+  content: "Liikide jaotumine";
+}
+
+.inspire-er-et .inspire-label:before {
+  content: "Energiaressursid";
+}
+
+.inspire-mr-et .inspire-label:before {
+  content: "Maavarad";
+}
+
+.inspire-au-et .inspire-label:before {
+  content: "Haldusüksused";
+}
+
+.inspire-ad-et .inspire-label:before {
+  content: "Aadressid";
+}
+
+.inspire-cp-et .inspire-label:before {
+  content: "Katastriüksused";
+}
+
+.inspire-tn-et .inspire-label:before {
+  content: "Transpordivõrgud";
+}
+
+.inspire-hy-et .inspire-label:before {
+  content: "Hüdrograafia";
+}
+
+.inspire-ps-et .inspire-label:before {
+  content: "Kaitsealused kohad";
+}
+
+.inspire-rs-es .inspire-label:before {
+  content: "Sistemas de coordenadas de referencia";
+}
+
+.inspire-el-es .inspire-label:before {
+  content: "Elevaciones";
+}
+
+.inspire-lc-es .inspire-label:before {
+  content: "Cubierta terrestre";
+}
+
+.inspire-oi-es .inspire-label:before {
+  content: "Ortoimágenes";
+}
+
+.inspire-ge-es .inspire-label:before {
+  content: "Geología";
+}
+
+.inspire-su-es .inspire-label:before {
+  content: "Unidades estadísticas";
+}
+
+.inspire-bu-es .inspire-label:before {
+  content: "Edificios";
+}
+
+.inspire-so-es .inspire-label:before {
+  content: "Suelo";
+}
+
+.inspire-lu-es .inspire-label:before {
+  content: "Uso del suelo";
+}
+
+.inspire-hh-es .inspire-label:before {
+  content: "Salud y seguridad humanas";
+}
+
+.inspire-us-es .inspire-label:before {
+  content: "Servicios de utilidad pública y estatales";
+}
+
+.inspire-gg-es .inspire-label:before {
+  content: "Sistema de cuadrículas geográficas";
+}
+
+.inspire-ef-es .inspire-label:before {
+  content: "Instalaciones de observación del medio ambiente";
+}
+
+.inspire-pf-es .inspire-label:before {
+  content: "Instalaciones de producción e industriales";
+}
+
+.inspire-af-es .inspire-label:before {
+  content: "Instalaciones agrícolas y de acuicultura";
+}
+
+.inspire-pd-es .inspire-label:before {
+  content: "Distribución de la población — demografía";
+}
+
+.inspire-am-es .inspire-label:before {
+  content: "Zonas sujetas a ordenación, a restricciones o reglamentaciones y unidades de notificación";
+}
+
+.inspire-nz-es .inspire-label:before {
+  content: "Zonas de riesgos naturales";
+}
+
+.inspire-ac-es .inspire-label:before {
+  content: "Condiciones atmosféricas";
+}
+
+.inspire-mf-es .inspire-label:before {
+  content: "Aspectos geográficos de carácter meteorológico";
+}
+
+.inspire-of-es .inspire-label:before {
+  content: "Rasgos geográficos oceanográficos";
+}
+
+.inspire-sr-es .inspire-label:before {
+  content: "Regiones marinas";
+}
+
+.inspire-gn-es .inspire-label:before {
+  content: "Nombres geográficos";
+}
+
+.inspire-br-es .inspire-label:before {
+  content: "Regiones biogeográficas";
+}
+
+.inspire-hb-es .inspire-label:before {
+  content: "Hábitats y biotopos";
+}
+
+.inspire-sd-es .inspire-label:before {
+  content: "Distribución de las especies";
+}
+
+.inspire-er-es .inspire-label:before {
+  content: "Recursos energéticos";
+}
+
+.inspire-mr-es .inspire-label:before {
+  content: "Recursos minerales";
+}
+
+.inspire-au-es .inspire-label:before {
+  content: "Unidades administrativas";
+}
+
+.inspire-ad-es .inspire-label:before {
+  content: "Direcciones";
+}
+
+.inspire-cp-es .inspire-label:before {
+  content: "Parcelas catastrales";
+}
+
+.inspire-tn-es .inspire-label:before {
+  content: "Redes de transporte";
+}
+
+.inspire-hy-es .inspire-label:before {
+  content: "Hidrografía";
+}
+
+.inspire-ps-es .inspire-label:before {
+  content: "Lugares protegidos";
+}
+
+.inspire-rs-el .inspire-label:before {
+  content: "Συστήματα συντεταγμένων";
+}
+
+.inspire-el-el .inspire-label:before {
+  content: "Υψομετρία";
+}
+
+.inspire-lc-el .inspire-label:before {
+  content: "Κάλυψη γης";
+}
+
+.inspire-oi-el .inspire-label:before {
+  content: "Ορθοφωτογραφία";
+}
+
+.inspire-ge-el .inspire-label:before {
+  content: "Γεωλογία";
+}
+
+.inspire-su-el .inspire-label:before {
+  content: "Στατιστικές μονάδες";
+}
+
+.inspire-bu-el .inspire-label:before {
+  content: "Κτίρια";
+}
+
+.inspire-so-el .inspire-label:before {
+  content: "Έδαφος";
+}
+
+.inspire-lu-el .inspire-label:before {
+  content: "Χρήσεις γης";
+}
+
+.inspire-hh-el .inspire-label:before {
+  content: "Ανθρώπινη υγεία και ασφάλεια";
+}
+
+.inspire-us-el .inspire-label:before {
+  content: "Επιχειρήσεις κοινής ωφελείας και κρατικές υπηρεσίες";
+}
+
+.inspire-gg-el .inspire-label:before {
+  content: "Συστήματα γεωγραφικού καννάβου";
+}
+
+.inspire-ef-el .inspire-label:before {
+  content: "Εγκαταστάσεις παρακολούθησης του περιβάλλοντος";
+}
+
+.inspire-pf-el .inspire-label:before {
+  content: "Εγκαταστάσεις παραγωγής και βιομηχανικές εγκαταστάσεις";
+}
+
+.inspire-af-el .inspire-label:before {
+  content: "Γεωργικές εγκαταστάσεις και εγκαταστάσεις υδατοκαλλιέργειας";
+}
+
+.inspire-pd-el .inspire-label:before {
+  content: "Κατανομή πληθυσμού — δημογραφία";
+}
+
+.inspire-am-el .inspire-label:before {
+  content: "Ζώνες διαχείρισης/περιορισμού/ρύθμισης εκτάσεων και μονάδες αναφοράς";
+}
+
+.inspire-nz-el .inspire-label:before {
+  content: "Ζώνες φυσικών κινδύνων";
+}
+
+.inspire-ac-el .inspire-label:before {
+  content: "Ατμοσφαιρικές συνθήκες";
+}
+
+.inspire-mf-el .inspire-label:before {
+  content: "Μετεωρολογικά γεωγραφικά χαρακτηριστικά";
+}
+
+.inspire-of-el .inspire-label:before {
+  content: "Ωκεανογραφικά γεωγραφικά χαρακτηριστικά";
+}
+
+.inspire-sr-el .inspire-label:before {
+  content: "Θαλάσσιες περιοχές";
+}
+
+.inspire-gn-el .inspire-label:before {
+  content: "Τοπωνύμια";
+}
+
+.inspire-br-el .inspire-label:before {
+  content: "Βιογεωγραφικές περιοχές";
+}
+
+.inspire-hb-el .inspire-label:before {
+  content: "Ενδιαιτήματα και βιότοποι";
+}
+
+.inspire-sd-el .inspire-label:before {
+  content: "Κατανομή ειδών";
+}
+
+.inspire-er-el .inspire-label:before {
+  content: "Ενεργειακοί πόροι";
+}
+
+.inspire-mr-el .inspire-label:before {
+  content: "Ορυκτοί πόροι";
+}
+
+.inspire-au-el .inspire-label:before {
+  content: "Διοικητικές ενότητες";
+}
+
+.inspire-ad-el .inspire-label:before {
+  content: "Διευθύνσεις";
+}
+
+.inspire-cp-el .inspire-label:before {
+  content: "Γεωτεμάχια κτηματολογίου";
+}
+
+.inspire-tn-el .inspire-label:before {
+  content: "Δίκτυα μεταφορών";
+}
+
+.inspire-hy-el .inspire-label:before {
+  content: "Υδρογραφία";
+}
+
+.inspire-ps-el .inspire-label:before {
+  content: "Προστατευόμενες τοποθεσίες";
+}
+
+.inspire-rs-de .inspire-label:before {
+  content: "Koordinatenreferenzsysteme";
+}
+
+.inspire-el-de .inspire-label:before {
+  content: "Höhe";
+}
+
+.inspire-lc-de .inspire-label:before {
+  content: "Bodenbedeckung";
+}
+
+.inspire-oi-de .inspire-label:before {
+  content: "Orthofotografie";
+}
+
+.inspire-ge-de .inspire-label:before {
+  content: "Geologie";
+}
+
+.inspire-su-de .inspire-label:before {
+  content: "Statistische Einheiten";
+}
+
+.inspire-bu-de .inspire-label:before {
+  content: "Gebäude";
+}
+
+.inspire-so-de .inspire-label:before {
+  content: "Boden";
+}
+
+.inspire-lu-de .inspire-label:before {
+  content: "Bodennutzung";
+}
+
+.inspire-hh-de .inspire-label:before {
+  content: "Gesundheit und Sicherheit";
+}
+
+.inspire-us-de .inspire-label:before {
+  content: "Versorgungswirtschaft und staatliche Dienste";
+}
+
+.inspire-gg-de .inspire-label:before {
+  content: "Geografische Gittersysteme";
+}
+
+.inspire-ef-de .inspire-label:before {
+  content: "Umweltüberwachung";
+}
+
+.inspire-pf-de .inspire-label:before {
+  content: "Produktions- und Industrieanlagen";
+}
+
+.inspire-af-de .inspire-label:before {
+  content: "Landwirtschaftliche Anlagen und Aquakulturanlagen";
+}
+
+.inspire-pd-de .inspire-label:before {
+  content: "Verteilung der Bevölkerung — Demografie";
+}
+
+.inspire-am-de .inspire-label:before {
+  content: "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten";
+}
+
+.inspire-nz-de .inspire-label:before {
+  content: "Gebiete mit naturbedingten Risiken";
+}
+
+.inspire-ac-de .inspire-label:before {
+  content: "Atmosphärische Bedingungen";
+}
+
+.inspire-mf-de .inspire-label:before {
+  content: "Meteorologisch-geografische Kennwerte";
+}
+
+.inspire-of-de .inspire-label:before {
+  content: "Ozeanografisch-geografische Kennwerte";
+}
+
+.inspire-sr-de .inspire-label:before {
+  content: "Meeresregionen";
+}
+
+.inspire-gn-de .inspire-label:before {
+  content: "Geografische Bezeichnungen";
+}
+
+.inspire-br-de .inspire-label:before {
+  content: "Biogeografische Regionen";
+}
+
+.inspire-hb-de .inspire-label:before {
+  content: "Lebensräume und Biotope";
+}
+
+.inspire-sd-de .inspire-label:before {
+  content: "Verteilung der Arten";
+}
+
+.inspire-er-de .inspire-label:before {
+  content: "Energiequellen";
+}
+
+.inspire-mr-de .inspire-label:before {
+  content: "Mineralische Bodenschätze";
+}
+
+.inspire-au-de .inspire-label:before {
+  content: "Verwaltungseinheiten";
+}
+
+.inspire-ad-de .inspire-label:before {
+  content: "Adressen";
+}
+
+.inspire-cp-de .inspire-label:before {
+  content: "Flurstücke/Grundstücke (Katasterparzellen)";
+}
+
+.inspire-tn-de .inspire-label:before {
+  content: "Verkehrsnetze";
+}
+
+.inspire-hy-de .inspire-label:before {
+  content: "Gewässernetz";
+}
+
+.inspire-ps-de .inspire-label:before {
+  content: "Schutzgebiete";
+}
+
+.inspire-rs-bg .inspire-label:before {
+  content: "Координатни справочни системи";
+}
+
+.inspire-el-bg .inspire-label:before {
+  content: "Релеф";
+}
+
+.inspire-lc-bg .inspire-label:before {
+  content: "Земна покривка";
+}
+
+.inspire-oi-bg .inspire-label:before {
+  content: "Ортоизображение";
+}
+
+.inspire-ge-bg .inspire-label:before {
+  content: "Геология";
+}
+
+.inspire-su-bg .inspire-label:before {
+  content: "Статистически единици";
+}
+
+.inspire-bu-bg .inspire-label:before {
+  content: "Сгради";
+}
+
+.inspire-so-bg .inspire-label:before {
+  content: "Почва";
+}
+
+.inspire-lu-bg .inspire-label:before {
+  content: "Ползване на земята";
+}
+
+.inspire-hh-bg .inspire-label:before {
+  content: "Здраве и безопасност на човека";
+}
+
+.inspire-us-bg .inspire-label:before {
+  content: "Комунално-битови и обществени услуги";
+}
+
+.inspire-gg-bg .inspire-label:before {
+  content: "Географски координатни системи";
+}
+
+.inspire-ef-bg .inspire-label:before {
+  content: "Съоръжения за управление на околната среда";
+}
+
+.inspire-pf-bg .inspire-label:before {
+  content: "Производствени и промишлени съоръжения";
+}
+
+.inspire-af-bg .inspire-label:before {
+  content: "Селскостопански и водностопански съоръжения";
+}
+
+.inspire-pd-bg .inspire-label:before {
+  content: "Разпределение на населението — демография";
+}
+
+.inspire-am-bg .inspire-label:before {
+  content: "Управление на територията/ограничени/регулирани зони и отчетни единици";
+}
+
+.inspire-nz-bg .inspire-label:before {
+  content: "Природни рискови зони";
+}
+
+.inspire-ac-bg .inspire-label:before {
+  content: "Атмосферни условия";
+}
+
+.inspire-mf-bg .inspire-label:before {
+  content: "Метеорологични географски характеристики";
+}
+
+.inspire-of-bg .inspire-label:before {
+  content: "Океанографски географски характеристики";
+}
+
+.inspire-sr-bg .inspire-label:before {
+  content: "Морски региони";
+}
+
+.inspire-gn-bg .inspire-label:before {
+  content: "Географски наименования";
+}
+
+.inspire-br-bg .inspire-label:before {
+  content: "Биогеографски региони";
+}
+
+.inspire-hb-bg .inspire-label:before {
+  content: "Местообитания и биотопи";
+}
+
+.inspire-sd-bg .inspire-label:before {
+  content: "Разпределение на видовете";
+}
+
+.inspire-er-bg .inspire-label:before {
+  content: "Енергийни източници";
+}
+
+.inspire-mr-bg .inspire-label:before {
+  content: "Минерални ресурси";
+}
+
+.inspire-au-bg .inspire-label:before {
+  content: "Административни единици";
+}
+
+.inspire-ad-bg .inspire-label:before {
+  content: "Адреси";
+}
+
+.inspire-cp-bg .inspire-label:before {
+  content: "Кадастрални парцели";
+}
+
+.inspire-tn-bg .inspire-label:before {
+  content: "Транспортни мрежи";
+}
+
+.inspire-hy-bg .inspire-label:before {
+  content: "Хидрография";
+}
+
+.inspire-ps-bg .inspire-label:before {
+  content: "Защитени обекти";
+}
+
+.inspire-rs-da .inspire-label:before {
+  content: "Koordinatsystemer";
+}
+
+.inspire-el-da .inspire-label:before {
+  content: "Højde";
+}
+
+.inspire-lc-da .inspire-label:before {
+  content: "Arealdække";
+}
+
+.inspire-oi-da .inspire-label:before {
+  content: "Ortofoto";
+}
+
+.inspire-ge-da .inspire-label:before {
+  content: "Geologi";
+}
+
+.inspire-su-da .inspire-label:before {
+  content: "Statistiske enheder";
+}
+
+.inspire-bu-da .inspire-label:before {
+  content: "Bygninger";
+}
+
+.inspire-so-da .inspire-label:before {
+  content: "Jord";
+}
+
+.inspire-lu-da .inspire-label:before {
+  content: "Arealanvendelse";
+}
+
+.inspire-hh-da .inspire-label:before {
+  content: "Sikkerhed";
+}
+
+.inspire-us-da .inspire-label:before {
+  content: "Offentlig forsyningsvirksomhed og offentlige tjenesteydelser";
+}
+
+.inspire-gg-da .inspire-label:before {
+  content: "Geografiske kvadratnetsystemer";
+}
+
+.inspire-ef-da .inspire-label:before {
+  content: "Miljøovervågningsfaciliteter";
+}
+
+.inspire-pf-da .inspire-label:before {
+  content: "Produktions- og industrifaciliteter";
+}
+
+.inspire-af-da .inspire-label:before {
+  content: "Landbrugs- og akvakulturanlæg";
+}
+
+.inspire-pd-da .inspire-label:before {
+  content: "Befolkningsfordeling — demografi";
+}
+
+.inspire-am-da .inspire-label:before {
+  content: "Forvaltede og regulerede områder samt områder med brugsbegrænsning og indberetningsenheder";
+}
+
+.inspire-nz-da .inspire-label:before {
+  content: "Områder med naturlige risici";
+}
+
+.inspire-ac-da .inspire-label:before {
+  content: "Atmosfæriske forhold";
+}
+
+.inspire-mf-da .inspire-label:before {
+  content: "Meteorologisk-geografiske forhold";
+}
+
+.inspire-of-da .inspire-label:before {
+  content: "Oceanografiske/geografiske forhold";
+}
+
+.inspire-sr-da .inspire-label:before {
+  content: "Havområder";
+}
+
+.inspire-gn-da .inspire-label:before {
+  content: "Stednavne";
+}
+
+.inspire-br-da .inspire-label:before {
+  content: "Biogeografiske regioner";
+}
+
+.inspire-hb-da .inspire-label:before {
+  content: "Levesteder og biotoper";
+}
+
+.inspire-sd-da .inspire-label:before {
+  content: "Artsfordeling";
+}
+
+.inspire-er-da .inspire-label:before {
+  content: "Energiressourcer";
+}
+
+.inspire-mr-da .inspire-label:before {
+  content: "Mineralressourcer";
+}
+
+.inspire-au-da .inspire-label:before {
+  content: "Administrative enheder";
+}
+
+.inspire-ad-da .inspire-label:before {
+  content: "Adresser";
+}
+
+.inspire-cp-da .inspire-label:before {
+  content: "Matrikulære parceller";
+}
+
+.inspire-tn-da .inspire-label:before {
+  content: "Transportnet";
+}
+
+.inspire-hy-da .inspire-label:before {
+  content: "Hydrograf";
+}
+
+.inspire-ps-da .inspire-label:before {
+  content: "Beskyttede lokaliteter";
+}
+
+.inspire-rs-cs .inspire-label:before {
+  content: "Souřadnicové referenční systémy";
+}
+
+.inspire-el-cs .inspire-label:before {
+  content: "Nadmořská výška";
+}
+
+.inspire-lc-cs .inspire-label:before {
+  content: "Krajinný pokryv";
+}
+
+.inspire-oi-cs .inspire-label:before {
+  content: "Ortofotosnímky";
+}
+
+.inspire-ge-cs .inspire-label:before {
+  content: "Geologie";
+}
+
+.inspire-su-cs .inspire-label:before {
+  content: "Statistické jednotky";
+}
+
+.inspire-bu-cs .inspire-label:before {
+  content: "Budovy";
+}
+
+.inspire-so-cs .inspire-label:before {
+  content: "Půda";
+}
+
+.inspire-lu-cs .inspire-label:before {
+  content: "Využití území";
+}
+
+.inspire-hh-cs .inspire-label:before {
+  content: "Lidské zdraví a bezpečnost";
+}
+
+.inspire-us-cs .inspire-label:before {
+  content: "Veřejné služby a služby veřejné správy";
+}
+
+.inspire-gg-cs .inspire-label:before {
+  content: "Zeměpisné soustavy souřadnicových sítí";
+}
+
+.inspire-ef-cs .inspire-label:before {
+  content: "Zařízení pro sledování životního prostředí";
+}
+
+.inspire-pf-cs .inspire-label:before {
+  content: "Výrobní a průmyslová zařízení";
+}
+
+.inspire-af-cs .inspire-label:before {
+  content: "Zemědělská a akvakulturní zařízení";
+}
+
+.inspire-pd-cs .inspire-label:before {
+  content: "Rozložení obyvatelstva – demografie";
+}
+
+.inspire-am-cs .inspire-label:before {
+  content: "Správní oblasti/chráněná pásma/regulovaná území a jednotky podávající hlášení";
+}
+
+.inspire-nz-cs .inspire-label:before {
+  content: "Oblasti ohrožené přírodními riziky";
+}
+
+.inspire-ac-cs .inspire-label:before {
+  content: "Stav ovzduší";
+}
+
+.inspire-mf-cs .inspire-label:before {
+  content: "Zeměpisné meteorologické prvky";
+}
+
+.inspire-of-cs .inspire-label:before {
+  content: "Zeměpisné oceánografické prvky";
+}
+
+.inspire-sr-cs .inspire-label:before {
+  content: "Mořské oblasti";
+}
+
+.inspire-gn-cs .inspire-label:before {
+  content: "Zeměpisné názvy";
+}
+
+.inspire-br-cs .inspire-label:before {
+  content: "Bioregiony";
+}
+
+.inspire-hb-cs .inspire-label:before {
+  content: "Stanoviště a biotopy";
+}
+
+.inspire-sd-cs .inspire-label:before {
+  content: "Rozložení druhů";
+}
+
+.inspire-er-cs .inspire-label:before {
+  content: "Energetické zdroje";
+}
+
+.inspire-mr-cs .inspire-label:before {
+  content: "Nerostné suroviny";
+}
+
+.inspire-au-cs .inspire-label:before {
+  content: "Správní jednotky";
+}
+
+.inspire-ad-cs .inspire-label:before {
+  content: "Adresy";
+}
+
+.inspire-cp-cs .inspire-label:before {
+  content: "Katastrální parcely";
+}
+
+.inspire-tn-cs .inspire-label:before {
+  content: "Dopravní sítě";
+}
+
+.inspire-hy-cs .inspire-label:before {
+  content: "Vodopis";
+}
+
+.inspire-ps-cs .inspire-label:before {
+  content: "Chráněná území";
+}

@@ -1,0 +1,25 @@
+@import "../../../style/gn_bootstrap.less"; // must be first
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+.gn-bottom-bar {
+  height: @gn-bottombar-height;
+  color: @gn-bottombar-color !important;
+  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 0;
+  border-width: 1px 0 0 0;
+  background: @gn-bottombar-background;
+  border-color: @gn-bottombar-border-color;
+  z-index: 98;
+  a {
+    color: @gn-bottombar-color !important;
+    &:hover {
+      color: @gn-bottombar-color-hover !important;
+      background-color: @gn-bottombar-background-hover !important;
+    }
+  }
+}

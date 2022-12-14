@@ -83,11 +83,14 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             msgProducerRepository
                 .findAll()
                 .stream()
+                .filter(messageProducerEntity -> {
+                    return StringUtils.isNotEmpty(messageProducerEntity.getCronExpression());
+                })
                 .forEach(messageProducerEntity -> {
                     try {
                         messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
                     } catch (Exception e) {
-                        LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
+                        LOGGER.error("Failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
                     }
                 });
             isConfigured = true;
@@ -118,7 +121,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
         wfsHarvesterParam.setStrategy("investigator");
 
         try {
-            HashMap<String, Object> applicationProfile = getApplicationProfile(metadataUuid, typeName);
+            Map<String, Object> applicationProfile = getApplicationProfile(metadataUuid, typeName);
             if(applicationProfile != null) {
                 wfsHarvesterParam.setTreeFields(getTreeField(applicationProfile)); //optional
                 wfsHarvesterParam.setTokenizedFields(getTokenizedField(applicationProfile)); //optional
@@ -135,19 +138,19 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     }
 
 
-    public List<String> getTreeField(HashMap<String, Object> map) {
+    public List<String> getTreeField(Map<String, Object> map) {
         return (List<String>) map.get("treeFields");
     }
 
-    public Map<String, String> getTokenizedField(HashMap<String, Object> map) {
+    public Map<String, String> getTokenizedField(Map<String, Object> map) {
         return (Map<String, String>) map.get("tokenizedFields");
     }
 
-    private HashMap<String, Object> getApplicationProfile(String metadataUuid, String typeName) {
+    private Map<String, Object> getApplicationProfile(String metadataUuid, String typeName) {
         try {
             Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
             if(metadata != null) {
-                HashMap<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<>();
                 params.put("protocol", "WFS");
                 params.put("name", typeName);
                 Map<String, String> wfsConfig = savedQueryApi.query(metadata,

@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.0.6-SNAPSHOT</version>
+    <version>4.2.3-SNAPSHOT</version>
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
@@ -81,35 +81,34 @@
     </resources>
     <plugins>
       <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.0</version>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>prettier-maven-plugin</artifactId>
+        <version>0.16</version>
+        <configuration>
+          <prettierJavaVersion>1.5.0</prettierJavaVersion>
+          <printWidth>90</printWidth>
+          <tabWidth>2</tabWidth>
+          <useTabs>false</useTabs>
+          <ignoreConfigFile>false</ignoreConfigFile>
+          <ignoreEditorConfig>true</ignoreEditorConfig>
+          <inputGlobs>
+            <inputGlob>src/main/resources/catalog/style/**/*.less</inputGlob>
+            <inputGlob>src/main/resources/catalog/components/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/components/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/catalog/js/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/templates/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/catalog/views/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/views/**/*.html</inputGlob>
+          </inputGlobs>
+        </configuration>
         <executions>
           <execution>
-            <id>install-node-and-npm</id>
+            <phase>validate</phase>
             <goals>
-              <goal>install-node-and-npm</goal>
+              <goal>write</goal>
             </goals>
-            <phase>generate-resources</phase>
-          </execution>
-          <execution>
-            <id>npm install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <phase>generate-resources</phase>
-            <configuration>
-              <arguments>install --unsafe-perm</arguments>
-              <installDirectory>${project.basedir}</installDirectory>
-            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <nodeVersion>v4.6.0</nodeVersion>
-          <npmVersion>2.15.11</npmVersion>
-          <installDirectory>${project.basedir}</installDirectory>
-          <workingDirectory>${project.basedir}/src/main/resources/catalog</workingDirectory>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -119,62 +118,6 @@
     <closure.compile.level/>
   </properties>
   <profiles>
-    <profile>
-      <id>jslint</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <!-- Fix JS style based on fixjsstyle.
-          See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-              <execution>
-                <id>fixjsstyle</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>fixjsstyle</executable>
-                  <arguments>
-                    <argument>--strict</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/js</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/components</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <!-- Check JS style based on gjslint.
-          See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-              <execution>
-                <id>gjslint</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>gjslint</executable>
-                  <arguments>
-                    <argument>--strict</argument>
-                    <argument>--custom_jsdoc_tags</argument>
-                    <argument>
-                      attribute,ngdoc,methodOf,deprecated,directiveInfo,restrict,requires,kind,name,function,description,example,abstract
-                    </argument>
-                    <argument>-r</argument>
-                    <!-- Each source file in this directory will be checked. -->
-                    <argument>src/main/resources/catalog/js</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/components</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>tests-and-static-analysis</id>
       <activation>
@@ -206,38 +149,6 @@
               <debug>true</debug>
             </configuration>
           </plugin>
-          <!--<plugin>-->
-          <!--<groupId>org.codehaus.mojo</groupId>-->
-          <!--<artifactId>jslint-maven-plugin</artifactId>-->
-          <!--<executions>-->
-          <!--<execution>-->
-          <!--<goals>-->
-          <!--<goal>jslint</goal>-->
-          <!--</goals>-->
-          <!--<configuration>-->
-          <!--<excludes>-->
-          <!--<exclude>**/catalog/lib/**</exclude>-->
-          <!--<exclude>**/catalog/components/admin/dbtranslation/DbTranslationDirective.js</exclude>-->
-          <!--</excludes>-->
-          <!--<assumeABrowser>true</assumeABrowser>-->
-          <!--<failOnIssues>true</failOnIssues>-->
-          <!--<sourceJsFolder>${project.basedir}/src/main/resources</sourceJsFolder>-->
-          <!--<encoding>UTF-8</encoding>-->
-          <!--<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>-->
-          <!--<disallowBitwiseOperators>false</disallowBitwiseOperators>-->
-          <!--<disallowDanglingUnderbarInIdentifiers>false</disallowDanglingUnderbarInIdentifiers>-->
-          <!--<predefinedVars>goog,angular,loadLogo,$,loadLogoError</predefinedVars>-->
-          <!--<assumeConsoleAlertEtc>true</assumeConsoleAlertEtc>-->
-          <!--<disallowUndefinedVariables>false</disallowUndefinedVariables>-->
-          <!--<assumeABrowser>true</assumeABrowser>-->
-          <!--<disallowInsecureCharsInRegExp>true</disallowInsecureCharsInRegExp>-->
-          <!--</configuration>-->
-          <!--</execution>-->
-          <!--</executions>-->
-          <!--<configuration>-->
-
-          <!--</configuration>-->
-          <!--</plugin>-->
         </plugins>
       </build>
     </profile>

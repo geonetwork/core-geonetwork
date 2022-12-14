@@ -1,25 +1,22 @@
 package org.fao.geonet.kernel.security.ldap;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Multimap;
-import com.itextpdf.text.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 
 public class SextantLDAPUserDetailsContextMapperTest {
 
 	private SextantLDAPUserDetailsContextMapper sxtldapMapper;
 
     private Map<String, String[]> mapping;
-    
+
 	@Before
 	public void setUp() {
 		mapping = new  HashMap<String, String[]>();
@@ -71,27 +68,27 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		ArrayList<String> uidLst = new ArrayList<String>();
 		uidLst.add(uid);
 		userInfo.put("uid", uidLst);
-		
+
 		ArrayList<String> mailLst = new ArrayList<String>();
 		mailLst.add(mail);
 		userInfo.put("mail", mailLst);
-		
+
 		ArrayList<String> snLst = new ArrayList<String>();
 		snLst.add(sn);
 		userInfo.put("sn", snLst);
-		
+
 		ArrayList<String> cnLst = new ArrayList<String>();
 		cnLst.add(cn);
 		userInfo.put("cn", cnLst);
-		
+
 		ArrayList<String> givenNameLst = new ArrayList<String>();
 		givenNameLst.add(givenName);
 		userInfo.put("givenName", givenNameLst);
-		
+
 		ArrayList<String> listesitewebLst = new ArrayList<String>();
 		listesitewebLst.add(listesiteweb);
 		userInfo.put("listesiteweb", listesitewebLst);
-		
+
 		return userInfo;
 	}
 
@@ -122,7 +119,7 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		org.add("IFREMER");
 		userInfo.put("o", org);
 
-		
+
 		sxtldapMapper.setProfilesAndPrivileges(Profile.RegisteredUser,"sample", userInfo, fakeUser);
 
 		// if All_administrator, no group membership should be present
@@ -130,24 +127,24 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		// The user is of profile  Administrator
 		assertTrue(fakeUser.getProfile() == Profile.Administrator);
 	}
-	
-	
+
+
 	@Test
 	public void testSextantLdapUserDetailsAsReviewer() {
 		LDAPUser fakeUser = new LDAPUser("reviewer");
 		Map<String, ArrayList<String>> userInfo;
 
 		userInfo = getUserInfo("reviewer", "reviewer@sextant.org", "reviewer", "reviewer", "reviewer", "SXT5_ANOTHERGRP_Reviewer");
-		
+
 		ArrayList<String> org = new ArrayList<String>();
 		org.add("IFREMER");
 		userInfo.put("o", org);
-		
+
 		sxtldapMapper.setProfilesAndPrivileges(Profile.RegisteredUser,"sample", userInfo, fakeUser);
-		
+
 		// ANOTHERGRP => Reviewer
 		assertTrue(fakeUser.getPrivileges().get("ANOTHERGRP").contains(Profile.Reviewer));
-		
+
 		// The user is Reviewer
 		assertTrue(fakeUser.getProfile() == Profile.Reviewer);
 	}
@@ -167,7 +164,7 @@ public class SextantLDAPUserDetailsContextMapperTest {
 	}
 
 	@Test
-	public void testSextantLdapUserDetailsAsRegisteredUser() {	
+	public void testSextantLdapUserDetailsAsRegisteredUser() {
 		LDAPUser fakeUser = new LDAPUser("registereduser");
 		Map<String, ArrayList<String>> userInfo;
 		userInfo = getUserInfo("registereduser", "registered@sextant.org", "registereduser", "registereduser", "registereduser", "SXT5_ANOTHERGRP_RegisteredUser");
@@ -179,9 +176,9 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		// The user is RegisteredUser
 		assertTrue(fakeUser.getProfile() == Profile.RegisteredUser);
 	}
-	
+
 	@Test
-	public void testSextantLdapUserDetailsAsUnknownProfile() {	
+	public void testSextantLdapUserDetailsAsUnknownProfile() {
 		LDAPUser fakeUser = new LDAPUser("unknown");
 		Map<String, ArrayList<String>> userInfo;
 		userInfo = getUserInfo("unknown", "unknown@sextant.org", "unknown", "unknown", "unknown", "SXT5_ANOTHERGRP_UnknownProfile");

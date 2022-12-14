@@ -1,0 +1,34 @@
+<div class="gn-facet" data-ng-if="::facet.tree">
+  <h5 gn-collapsible="contentCollapsed">
+    <span
+      class="fa fa-arrow-circle-right"
+      ng-class="{'fa-rotate-90': !contentCollapsed, 'gn-field-empty': isFacetsCollapse(indexKey)}"
+    ></span>
+    {{(title || facetKey) | translate}}
+  </h5>
+  <div
+    class="row filter-input sxt-layertree-filter"
+    data-ng-show="!contentCollapsed"
+    data-ng-if="::facet.filter"
+  >
+    <span
+      class="fa fa-times-circle clear"
+      ng-click="ctrl.activeFilter = ''"
+      ng-show="ctrl.activeFilter"
+      title="{{'clear'|translate}}"
+    ></span>
+    <input
+      type="text"
+      class="form-control input-sm layerfilter"
+      placeholder="{{'filter'|translate}}"
+      data-ng-model="ctrl.activeFilter"
+      data-ng-model-options="{debounce: 300}"
+    />
+  </div>
+
+  <div
+    sxt-category-tree="{{name}}"
+    class="sxt-categorytree"
+    ng-class="{'collapse': contentCollapsed}"
+  ></div>
+</div>

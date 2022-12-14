@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,7 +60,7 @@ import java.util.Map;
  */
 public abstract class Localized extends GeonetEntity {
 
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
+    private Map<String, String> _labelTranslations = new HashMap<>();
 
     public static Map<String, String> translationXmlToLangMap(List<Element> translations) {
         Map<String, String> labelTranslations = Maps.newHashMap();

@@ -1,0 +1,41 @@
+<!--filter input-->
+<div class="sxt-layertree-filter" ng-if="displayFilter">
+  <span
+    class="fa fa-times-circle clear"
+    ng-click="filterClear()"
+    ng-hide="layerFilter.q==''"
+    title="{{'clear'|translate}}"
+  ></span>
+  <input
+    type="text"
+    ng-model="layerFilter.q"
+    ng-model-options="{ debounce: 300 }"
+    ng-change="filterLayers()"
+    class="layerfilter form-control input-sm"
+    placeholder="{{'filter'|translate}}"
+  />
+</div>
+
+<!--Layer tree-->
+<sxt-layertree-col collection="layerTree.nodes" map="map"> </sxt-layertree-col>
+
+<span data-gnv-layer-indicator="" />
+
+<!--Errors list-->
+<div
+  data-ng-repeat="l in failedLayers"
+  title="{{::l.msg | translate}}"
+  class="flex-col text-danger"
+>
+  <div class="flex-row width-100">
+    <div class="flex-spacer"></div>
+    <i class="fa fa-warning"></i>
+    &nbsp;
+    <span>{{::l.name}}</span>
+    <div class="flex-spacer flex-grow"></div>
+    <a href class="text-danger" ng-click="removeFailed(l)">
+      <i class="fa fa-times"></i>
+    </a>
+  </div>
+  <div class="flex-spacer"></div>
+</div>

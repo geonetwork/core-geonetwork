@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
+  <head>
+    <title>Sextant API</title>
+  </head>
+
+  <body>
+    <div
+      ng-app="gn_search_sextant"
+      ng-controller="GnCatController"
+      class="gn sxt-max-md"
+      sxt-size="auto"
+      ng-include="'../../catalog/views/sextant/templates/index.html'"
+    ></div>
+
+    <script type="text/javascript">
+      var sxtSettings = {
+        langDetector: {
+          //fromHtmlTag: true,
+          //regexp: '^\/([a-z]+)\/',
+          lang: "fr"
+        },
+        tabOverflow: {
+          search: true,
+          panier: true,
+          map: false
+        },
+        theme: "datarmor",
+        olView: {
+          extent: [-9.62, 41.18, 10.3, 51.54],
+          maxResolution: 2445.98490512564
+        },
+        servicesUrl: {
+          wms: [
+            {
+              name: "Ifremer - Biologie",
+              url: "ttp://www.ifremer.fr/services/wms/biologie?"
+            }
+          ],
+          wmts: [
+            {
+              name: "Ifremer - maps.ngdc.noaa.gov",
+              url: "http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+            }
+          ]
+        },
+        localisations: [],
+        panier: {
+          projs: [
+            {
+              value: "4326",
+              label: "Geographique - Datum WGS84"
+            }
+          ],
+          formats: {
+            vector: [
+              {
+                value: "ESRI Shapefile",
+                label: "ESRI Shapefile"
+              },
+              {
+                value: "GeoJSON",
+                label: "GeoJSON"
+              }
+            ],
+            raster: [
+              {
+                value: "GeoTiff",
+                label: "GeoTiff"
+              }
+            ]
+          }
+        },
+        facetConfig: [
+          {
+            key: "publishedForGroup",
+            index: "_groupPublished"
+          },
+          {
+            key: "category"
+          },
+          {
+            langs: {
+              eng: "inspireTheme_en",
+              fre: "inspireTheme_fr"
+            }
+          }
+        ],
+        allowLogin: true
+      };
+    </script>
+
+    <script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+    <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+  </body>
+</html>

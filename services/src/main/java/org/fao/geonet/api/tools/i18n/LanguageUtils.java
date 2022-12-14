@@ -25,11 +25,15 @@ package org.fao.geonet.api.tools.i18n;
 
 import java.util.*;
 
+import org.fao.geonet.languages.IsoLanguagesMapper;
+
 /**
  * Created by francois on 05/02/16.
  */
 public class LanguageUtils {
+    /* The languages in the UI */
     private final Set<String> iso3code;
+    /* The default application language */
     private final String defaultLanguage;
     Collection<Locale> locales = new ArrayList<>();
 
@@ -52,20 +56,10 @@ public class LanguageUtils {
 //        }
 //    }
 
-    static public String locale2gnCode(String code) {
-        if (code.equals("fra")) {
-            return "fre";
-        } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
-            return "slo";
-        } else {
-            return code;
-        }
-    }
-
     public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
             Locale l = listOfLocales.nextElement();
-            if (iso3code.contains(locale2gnCode(l.getISO3Language()))) {
+            if (iso3code.contains(IsoLanguagesMapper.iso639_2T_to_iso639_2B(l.getISO3Language()))) {
                 return l;
             }
         }
@@ -74,13 +68,31 @@ public class LanguageUtils {
 
     public String getIso3langCode(Enumeration<Locale> locales) {
         Locale l = parseAcceptLanguage(locales);
-        return locale2gnCode(l.getISO3Language());
+        return IsoLanguagesMapper.iso639_2T_to_iso639_2B(l.getISO3Language());
     }
 
     public Locale parseAcceptLanguage(final Locale locale) {
-        Vector<Locale> locales = new Vector<>();
-        locales.add(locale);
+        List<Locale> localesToParse = Collections.singletonList(locale);
 
-        return parseAcceptLanguage(locales.elements());
+        return parseAcceptLanguage(Collections.enumeration(localesToParse));
+    }
+
+
+    /**
+     * Get the default application iso3 code language.
+     *
+     * @return
+     */
+    public String getDefaultUiLanguage() {
+        return defaultLanguage;
+    }
+
+    /**
+     * Get the UI iso3 code languages.
+     *
+     * @return
+     */
+    public Set<String> getUiLanguages() {
+        return iso3code;
     }
 }

@@ -242,6 +242,7 @@ public class EsWFSFeatureIndexer {
         String typeName = state.getParameters().getTypeName();
         String resolvedTypeName = state.getResolvedTypeName();
         String strategyId = state.strategyId;
+
         Map<String, String> tokenizedFields = state.getParameters().getTokenizedFields();
         WFSDataStore wfs = state.getWfsDatastore();
         Map<String, String> featureAttributes = state.getFields();

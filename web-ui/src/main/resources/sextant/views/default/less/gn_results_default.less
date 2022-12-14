@@ -1,0 +1,79 @@
+@import "../../../style/gn_search.less";
+// card lists
+@import "gn_card_default.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+.gn-row-results {
+  padding-top: 15px;
+  background-color: @gn-results-background-color;
+
+  .gn-record-selected {
+    background-color: darken(@panel-default-heading-bg, 15%);
+  }
+  .gn-md-select {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0px 5px;
+    background: none;
+    border-right: 1px solid @panel-default-border;
+    input {
+      margin: 0px;
+    }
+  }
+  .list-group {
+    margin-bottom: 0px;
+  }
+
+  .gn-md-category {
+    display: block;
+    margin-left: 12px;
+    font-size: 22px;
+    i {
+      margin-right: 5px;
+    }
+  }
+}
+
+.gn-row-tools {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+
+  .btn-default {
+    border: 0;
+    border-radius: 0;
+    &:hover, &:focus, &:active {
+      background: 0;
+      box-shadow: none;
+      border-color: #ddd;
+    }
+    &:focus {
+      outline: @gn-outline;
+    }
+  }
+  .pagination {
+    > li > a, .pagination > li > span {
+      border: 0;
+      color: @btn-default-color;
+      &:hover {
+        color: @brand-primary;
+        background: none;
+      }
+      &:focus {
+        box-shadow: none;
+        background: none;
+        outline: @gn-outline;
+      }
+    }
+  }
+}
+
+ul.gn-resultview, [data-gn-user-searches-list] {
+  .gn-source-logo {
+    margin-left: 5px;
+    z-index: 10;
+    height: 20px;
+    float: right;
+  }
+}
+

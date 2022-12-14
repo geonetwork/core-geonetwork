@@ -479,7 +479,6 @@
 
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="sextant-identification" mode="flat" default="true">
@@ -964,7 +963,8 @@
         <for name="gmd:referenceSystemInfo"/>
       </flatModeExceptions>
     </view>
-    <view name="default" disabled="true">
+    <view name="default" disabled="true"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <!-- General online source manager
         <directive data-gn-onlinesrc-list=""/>
@@ -1049,7 +1049,8 @@
       </thesaurusList>
 
     </view>
-    <view name="advanced">
+    <view name="advanced"
+          class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-onlinesrc-list=""/>
         <directive data-gn-validation-report=""/>
@@ -3848,7 +3849,6 @@
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
-
         </section>
       </tab>
     </view>
@@ -3856,10 +3856,11 @@
 
     <view name="xml">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
+        <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="xml" default="true"/>

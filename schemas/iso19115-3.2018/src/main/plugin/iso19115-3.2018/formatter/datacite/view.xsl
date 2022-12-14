@@ -111,11 +111,10 @@
               indent="yes"/>
 
   <!-- Before attribution of a DOI the ISO19139 record does not contain yet
-  the DOI value. It is built from the DOI prefix provided as parameter
-  and the UUID of the record.
+  the DOI value. It is built from the DOI id provided as parameter.
   If the DOI already exist in the record, this parameter is not set and the DOI
   is returned as datacite:identifier -->
-  <xsl:param name="doiPrefix"
+  <xsl:param name="doiId"
              select="''"/>
   <xsl:param name="defaultDoiPrefix"
              select="'https://doi.org/'"/>
@@ -163,14 +162,14 @@
     <datacite:identifier identifierType="DOI">
       <!-- Return existing one -->
       <xsl:choose>
-        <xsl:when test="$doiPrefix = ''">
+        <xsl:when test="$doiId = ''">
           <xsl:variable name="doiFromMetadataLinkage"
                         select="normalize-space(ancestor::mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/gco:CharacterString[starts-with(., $defaultDoiPrefix) or ../../cit:function/*/@codeListValue = 'doi'])"/>
           <xsl:value-of select="$doiFromMetadataLinkage"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
-          <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -353,6 +352,7 @@
    -->
   <xsl:variable name="creatorRoles"
                 select="if ($isCersat) then 'principalInvestigator' else 'author'"/>
+
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:identificationInfo/*/
                           mri:pointOfContact[1]">
@@ -370,7 +370,7 @@
             </xsl:when>
             <xsl:otherwise>
               <datacite:creatorName nameType="Organizational">
-                <xsl:value-of select="cit:party/*/cit:name"/>
+                <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
               </datacite:creatorName>
             </xsl:otherwise>
           </xsl:choose>

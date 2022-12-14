@@ -110,18 +110,12 @@
               <xsl:with-param name="contact" select="authorsNameAndOrgList"/>
             </xsl:call-template>
 
-            <xsl:choose>
-              <xsl:when test="lastPublicationDate != ''">
-                (<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>).
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:if test="$hasAuthor">
-                  <xsl:text>. </xsl:text>
-                </xsl:if>
-              </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select="if (lastPublicationDate != '')
+                      then concat('(', substring(lastPublicationDate, 1, 4), ').')
+                      else if ($hasAuthor) then '.'
+                      else ''"/>
 
-            <strong><xsl:copy-of select="translatedTitle/(text()|*)"/>.</strong>
+            <div><xsl:copy-of select="translatedTitle/(text()|*)"/>.</div>
 
             <xsl:call-template name="citation-contact">
               <xsl:with-param name="contact" select="publishersNameAndOrgList"/>
@@ -160,5 +154,4 @@
       <xsl:if test="position() != last()">, </xsl:if>
     </xsl:for-each>
   </xsl:template>
-
 </xsl:stylesheet>

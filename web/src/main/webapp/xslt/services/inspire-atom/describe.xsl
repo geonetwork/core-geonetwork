@@ -21,15 +21,43 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:atom="http://www.w3.org/2005/Atom"
                 xmlns:georss="http://www.georss.org/georss"
                 xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
-                exclude-result-prefixes="#all" version="1.0">
+                exclude-result-prefixes="#all" version="2.0">
 
   <xsl:template match="/root">
-    <xsl:copy-of select="atom:feed" />
+    <xsl:apply-templates select="atom:feed|@*"/>
+  </xsl:template>
+
+
+  <xsl:template match="atom:*|georss:*|geo:*|inspire_dls:*">
+    <xsl:call-template name="correct_ns_prefix">
+      <xsl:with-param name="element" select="."/>
+      <xsl:with-param name="prefix" select="''"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="correct_ns_prefix">
+    <xsl:param name="element"/>
+    <xsl:param name="prefix"/>
+    <xsl:choose>
+      <xsl:when test="local-name($element) = name($element) and $prefix != ''">
+        <xsl:element name="{$prefix}:{local-name($element)}">
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@*">
+    <xsl:copy-of select="."></xsl:copy-of>
   </xsl:template>
 </xsl:stylesheet>

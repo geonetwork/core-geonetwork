@@ -1,0 +1,243 @@
+@import "gn.less";
+
+.gn-chart {
+  height: 500px;
+}
+
+.gn-chart-small {
+  height: 50%;
+}
+
+.gn-btn-admin {
+  width: 31% !important;
+  height: 150px;
+  float: left;
+  margin: 5px;
+  padding-top: 25px;
+}
+.gn-btn-admin p {
+  white-space: normal;
+}
+
+[data-ng-controller="GnLogoSettingsController"] {
+  .progress {
+    height: 10px;
+    margin-bottom: 0;
+  }
+  .gn-logo-list {
+    .panel-body {
+      .list-group {
+        @media (min-width: @screen-lg-min) {
+          column-count: 2;
+          column-fill: balance;
+        }
+        .list-group-item {
+          break-inside: avoid;
+          img {
+            margin-right: 10px;
+          }
+          label {
+            margin: 0;
+          }
+          &:hover {
+            background-color: @list-group-hover-bg;
+          }
+        }
+        &.gn-logo-height-small {
+          .list-group-item {
+            img {
+              max-height: 40px;
+            }
+          }
+        }
+        &.gn-logo-height-medium {
+          .list-group-item {
+            img {
+              max-height: 100px;
+            }
+          }
+        }
+        &.gn-logo-height-large {
+          .list-group-item {
+            img {
+              max-height: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.bootstrap-table {
+  a {
+    word-break: break-all;
+  }
+}
+
+.harvester-logo {
+  height: 20px;
+}
+
+.gn-action:not([disabled]) {
+  cursor: pointer;
+}
+.gn-action[disabled] {
+  cursor: not-allowed;
+  text-decoration: none;
+  color: grey;
+}
+
+.ng-invalid {
+  outline-color: #ff0000;
+}
+
+fieldset.cswCriteriaInfo,
+ul.list-group {
+  padding-right: 1em;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 40em;
+  margin-bottom: 51px;
+}
+#gn-upload-thesaurus {
+  ul.list-group {
+    max-height: none;
+    column-count: 3;
+    margin-bottom: 0;
+    margin-top: 10px;
+    li {
+      padding: 6px 15px;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+}
+
+fieldset.cswCriteriaInfo,
+ul.criteria-list-group {
+  padding-right: 1em;
+  overflow-x: hidden;
+}
+
+.gn-virtual-csw .radio-inline {
+  width: 24%;
+}
+
+.badge-warning {
+  background-color: @alert-warning-text;
+}
+
+.badge-danger {
+  background-color: @alert-danger-text;
+}
+
+.health-check.alert-warning a {
+  background-color: @alert-warning-bg;
+  color: @alert-warning-text;
+}
+.health-check.alert-danger a {
+  background-color: @alert-danger-bg;
+  color: @alert-danger-text;
+}
+ul.error-message {
+  .left-offset {
+    left: -2em;
+  }
+
+  overflow-x: auto;
+  z-index: 9999999;
+  dl,
+  pre {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    dd > span {
+      padding-left: 10px;
+    }
+  }
+}
+
+.input-group-addon.highlight:hover {
+  color: @label-primary-bg;
+  cursor: pointer;
+}
+
+.thread-state-NEW {
+  background-color: white;
+}
+.thread-state-RUNNABLE {
+  background-color: LIGHTGREEN;
+}
+.thread-state-BLOCKED {
+  background-color: RED;
+}
+.thread-state-WAITING {
+  background-color: ORANGE;
+}
+.thread-state-TIMED_WAITING {
+  background-color: YELLOW;
+}
+.thread-state-TERMINATED {
+  background-color: LIGHTGRAY;
+}
+
+#admin-console-link {
+  cursor: pointer;
+}
+
+// remove bottom margin from pager
+// (this breaks layout because the component may or may not be there)
+ul.pager {
+  margin-bottom: 0px;
+}
+
+#gn-thesaurus-container,
+#gn-categories-container {
+  // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
+
+  .thesaurus-header .panel-body {
+    padding-bottom: 0px;
+  }
+
+  .panel-heading input.filter-text {
+    width: 20%;
+    min-width: 13em;
+    height: 2em;
+  }
+
+  .list-group-item.keyword-item {
+    padding: 8px;
+    line-height: 1em;
+  }
+}
+// harvester privileges
+
+.list-group-interne {
+  background-color: #d9edf7;
+}
+ul > li > a.privilege-check-order {
+  margin-right: 20px;
+}
+ul > li.list-group-item > input {
+  margin-right: 40px;
+  margin-left: 30px;
+}
+
+.gn-required > label:after,
+.gn-mandatory > label:after {
+  content: " *";
+  color: #a94442;
+  font-weight: normal;
+}

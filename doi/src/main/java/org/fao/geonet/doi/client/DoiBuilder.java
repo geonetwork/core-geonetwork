@@ -22,18 +22,36 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.repository.GroupRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
+
 /**
  * Class to generate a DOI.
  *
  * @author Jose García
  */
 public class DoiBuilder {
+    @Autowired
+    GroupRepository groupRepository;
+
     /**
      * Creates a DOI value.
      *
      * @return
      */
-    public static String create(String prefix, String metadataUuid) {
-        return prefix + "/" + metadataUuid;
+    public String create(String doiPattern, String prefix, AbstractMetadata record) {
+        java.util.Optional<Group> groupOwner =
+            record.getSourceInfo().getGroupOwner() != null
+                ? groupRepository.findById(record.getSourceInfo().getGroupOwner())
+                : Optional.empty();
+
+        return prefix + "/" + doiPattern
+                .replace("{{groupOwner}}", groupOwner.isPresent() ? groupOwner.get().getName() : "")
+                .replace("{{id}}", record.getId() + "")
+                .replace("{{uuid}}", record.getUuid());
     }
 }

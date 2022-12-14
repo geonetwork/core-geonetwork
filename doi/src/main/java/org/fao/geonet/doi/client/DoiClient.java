@@ -283,11 +283,13 @@ public class DoiClient {
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
             if (status != HttpStatus.SC_CREATED) {
+                String responseBody = httpResponse.getBody() != null
+                    ? CharStreams.toString(new InputStreamReader(httpResponse.getBody()))
+                    :  "";
                 String message = String.format(
-                    "Failed to create '%s' with '%s'. Status is %d. Error is %s.",
+                    "Failed to create '%s' with '%s'. Status is %d. Error is %s. Response body: %s",
                     url, body, status,
-                    httpResponse.getStatusText());
-
+                    httpResponse.getStatusText(), responseBody);
                 Log.info(LOGGER_NAME, message);
                 throw new DoiClientException(message);
             } else {

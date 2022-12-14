@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,38 +21,42 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_multiselect_directive');
+(function () {
+  goog.provide("gn_multiselect_directive");
+  goog.require("gn_utility_service");
 
-  var module = angular.module('gn_multiselect_directive', []);
+  var module = angular.module("gn_multiselect_directive", [
+    "gn_utility_service",
+    "pascalprecht.translate"
+  ]);
 
   /**
-     * Provide 2 multiple select list and allow
-     * selection of element by double click or
-     * move to left/right button.
-     *
-     *
-     * Only support array of object with id and label props.
-     *
-     * TODO: Add drag&drop
-     */
-  module.directive('gnMultiselect', [
-    function() {
-
+   * Provide 2 multiple select list and allow
+   * selection of element by double click or
+   * move to left/right button.
+   *
+   *
+   * Only support array of object with id and label props.
+   *
+   * TODO: Add drag&drop
+   */
+  module.directive("gnMultiselect", [
+    "gnUtilityService",
+    "$translate",
+    function (gnUtilityService, $translate) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          'selected': '=gnMultiselect',
-          'choices': '=',
-          'readonlyMode': '='
+          selected: "=gnMultiselect",
+          choices: "=",
+          readonlyMode: "=?"
         },
-        templateUrl: '../../catalog/components/common/multiselect/partials/' +
-            'multiselect.html',
-        link: function(scope, element, attrs) {
-
+        templateUrl:
+          "../../catalog/components/common/multiselect/partials/" + "multiselect.html",
+        link: function (scope, element, attrs) {
           var sortOnSelection = true;
 
-          scope.readonlyMode = scope.readonlyMode || false;
+          scope.readonlyMode = scope.readonlyMode || false;
 
           //
           scope.currentSelectionLeft = [];
@@ -60,7 +64,7 @@
 
           // When selection list is updated, filter selected one
           // from the list of choices
-          scope.$watch('selected', function(n, o) {
+          scope.$watch("selected", function (n, o) {
             if (n !== o) {
               scope.options = [];
               for (var i = 0; i < scope.choices.length; i++) {
@@ -84,22 +88,24 @@
           scope.selected = scope.selected || [];
 
           /**
-          * Select a single element or the list of currently
-          * selected element.
-          */
-          scope.select = function(k) {
+           * Select a single element or the list of currently
+           * selected element.
+           */
+          scope.select = function (k) {
             var elementsToAdd = [];
             if (!k) {
-              angular.forEach(scope.currentSelectionLeft, function(value) {
-                elementsToAdd.push($.grep(scope.choices, function(n) {
-                  return n.id == value;
-                })[0]);
+              angular.forEach(scope.currentSelectionLeft, function (value) {
+                elementsToAdd.push(
+                  $.grep(scope.choices, function (n) {
+                    return n.id == value;
+                  })[0]
+                );
               });
             } else {
               elementsToAdd.push(k);
             }
 
-            angular.forEach(elementsToAdd, function(e) {
+            angular.forEach(elementsToAdd, function (e) {
               scope.selected.push(e);
               var idx = null;
               for (var i = 0; i < scope.options.length; i++) {
@@ -120,7 +126,7 @@
             scope.currentSelectionRight = [];
           };
 
-          scope.sortFn = function(a, b) {
+          scope.sortFn = function (a, b) {
             if (a.langlabel && b.langlabel) {
               return a.langlabel.toLowerCase() > b.langlabel.toLowerCase();
             } else {
@@ -128,16 +134,28 @@
             }
           };
 
-          scope.unselect = function(k) {
-            var elementsToRemove = k ?
-                [k.id] : scope.currentSelectionRight;
-            scope.selected = $.grep(scope.selected, function(n) {
+          scope.unselect = function (k) {
+            var elementsToRemove = k ? [k.id] : scope.currentSelectionRight;
+            var notAllowedChoices = [];
+
+            scope.selected = $.grep(scope.selected, function (n) {
               var unselect = false;
+
               for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
-                  unselect = true;
-                  scope.options.push(n);
-                  break;
+                  // Check if the option to remove is in the choices,
+                  // otherwise don't allow to remove it
+                  for (var j = 0; j < scope.choices.length; j++) {
+                    if (elementsToRemove[i] == scope.choices[j].id) {
+                      unselect = true;
+                      break;
+                    }
+                  }
+                  if (unselect) {
+                    scope.options.push(n);
+                  } else {
+                    notAllowedChoices.push(n.langlabel || n.name);
+                  }
                 }
               }
 
@@ -147,6 +165,24 @@
               return !unselect;
             });
 
+            if (notAllowedChoices.length > 0) {
+              var choiceNames = notAllowedChoices.join(", ");
+
+              gnUtilityService.openModal(
+                {
+                  title: $translate.instant("unselectChoiceNotAllowedTitle"),
+                  content:
+                    '<span data-translate="unselectChoiceNotAllowed"' +
+                    "            data-translate-values=\"{'notAllowedChoices': '" +
+                    choiceNames +
+                    "'}\"></span>",
+                  className: "gn-choice-popup"
+                },
+                scope,
+                "UnselectChoice"
+              );
+            }
+
             if (sortOnSelection) {
               scope.selected.sort(scope.sortFn);
               scope.options.sort(scope.sortFn);
@@ -154,5 +190,6 @@
           };
         }
       };
-    }]);
+    }
+  ]);
 })();

@@ -1,0 +1,27 @@
+<div data-ng-show="!fullScreen" class="sxt-main-tabs ng-scope"></div>
+<div
+  class="container formatter-container"
+  data-ng-class="{'container-fluid': fullScreen, 'container': !fullScreen}"
+>
+  <!--  <div class="btn-toolbar pull-right">
+    <div class="gn-md-actions-btn pull-right btn-group md-actions"
+         data-gn-md-actions-menu="md"/>
+    <a class="btn btn-primary gn-md-edit-btn"
+       data-ng-show="user.canEditRecord(md)"
+       data-ng-href="catalog.edit#/metadata/{{md.getId()}}"
+       title="{{'edit' | translate}}">
+      <i class="fa fa-fw fa-pencil"></i>
+    </a>
+    <a class="btn btn-danger gn-md-delete-btn"
+       data-ng-show="user.canEditRecord(md)"
+       data-gn-click-and-spin="deleteRecord(md)"
+       data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
+       title="{{'delete' | translate}}">
+
+      <i class="fa fa-fw fa-times"></i>
+    </a>
+  </div>-->
+  <div data-ng-if="loading" class="gn-spinner">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+  </div>
+</div>

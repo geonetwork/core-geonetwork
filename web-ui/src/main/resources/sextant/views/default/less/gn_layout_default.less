@@ -1,0 +1,111 @@
+@import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+.gn-full {
+  min-height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+html, body {
+  height:100%;
+}
+// header
+.gn-header {
+  background-color: @gn-header-background;
+}
+
+// background image and color
+[ng-app^="gn_search_"] body, [ng-app="gn_login"] body, .gn-background {
+  background-color: @gn-background-color;
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  //background-attachment: fixed;
+  &.gn-header-fixed {
+    padding-top: @gn-menubar-height;
+    &.gn-logo-in-header {
+      padding-top: calc(~"@{gn-header-height} + @{gn-menubar-height}");
+      .gn-header {
+        position: fixed;
+        right: 0;
+        left: 0;
+        top: 0;
+        z-index: 1030;
+        height: @gn-header-height;
+      }
+    }
+  }
+}
+// check if the variable is a not an empty string, if not, then set the background image
+//
+// if the background image is an empty string it will be substitued with the name of the css file,
+// see: https://stackoverflow.com/questions/20727262/css-file-considered-as-being-an-image-resource
+[ng-app^="gn_search_"] body when (isstring(@gn-background-image)) {
+  background-image: url(@gn-background-image);
+}
+.gn-background when (isstring(@gn-background-image)) {
+  background-image: url(@gn-background-image);
+}
+[ng-app^="gn_login"] body when (isstring(@gn-background-image)) {
+  background-image: url(@gn-background-image);
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.gn-row-main {
+  padding: 2em 0 4em;
+  background-color: @gn-search-background-color;
+  .gn-form-any {
+    .input-lg {
+      &:focus {
+        border-color: @gn-search-outline-color;
+        box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, rgba(@gn-search-outline-color-red, @gn-search-outline-color-green, @gn-search-outline-color-blue, 0.6) 0px 0px 8px;
+      }
+    }
+    .btn {
+      background-color: @gn-search-button-background-color;
+      border-color: @gn-search-button-border-color;
+      color: @gn-search-button-color;
+      &:hover {
+        background-color: darken(@gn-search-button-background-color, 10%);
+        border-color: darken(@gn-search-button-background-color, 15%);
+      }
+    }
+    .dropdown-menu {
+      margin: 0;
+      border-radius: 0;
+    }
+    .dropdown-menu > li > a {
+      padding: 6px 16px;
+    }
+    .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
+    }
+  }
+}
+
+.gn-row-info {
+  padding-top: 20px;
+  background-color: @gn-info-background-color;
+}
+
+.cookie-warning {
+  .alert;
+  .alert-info;
+  position: absolute;
+  z-index: 100;
+}
+
+// no padding for containers on small screens
+@media (max-width: @screen-xs-max) {
+  .container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

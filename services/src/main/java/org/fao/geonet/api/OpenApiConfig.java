@@ -55,7 +55,7 @@ public class OpenApiConfig  {
 
     @Bean(name = "cacheManager")
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("translations");
+        return new ConcurrentMapCacheManager("translations", "thesaurusSearches");
     }
 
     @Bean

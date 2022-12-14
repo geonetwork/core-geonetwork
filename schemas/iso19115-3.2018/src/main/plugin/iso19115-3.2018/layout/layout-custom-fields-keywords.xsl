@@ -174,8 +174,8 @@
         -->
         <xsl:variable name="keywords" select="string-join(
                   if ($guiLangId and mri:keyword//*[@locale = concat('#', $guiLangId)])
-                  then mri:keyword//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
-                  else mri:keyword/*[1]/replace(text(), ',', ',,'), ',')"/>
+                  then mri:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
+                  else mri:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
@@ -245,8 +245,14 @@
         <xsl:variable name="isTypePlace" select="count(mri:type/mri:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
         <xsl:if test="$isTypePlace">
           <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-extent-from-geokeywords'"/>
             <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
-            <xsl:with-param name="process-params">{"replace": true}</xsl:with-param>
+            <xsl:with-param name="process-params">{"replace": "true"}</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-one-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-params">{"replace": "true", "boundingAll": "true"}</xsl:with-param>
           </xsl:call-template>
         </xsl:if>
       </xsl:when>

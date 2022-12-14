@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <accept>Accepter</accept>
-  <atom>
-    <results>
-      <header>Atom feeds</header>
-      <noresults>No atom feed available</noresults>
-      <title>Title</title>
-      <content>Content</content>
-      <id>Identifier</id>
-      <rights>Rights</rights>
-      <describedby>Described by</describedby>
-      <author>Author</author>
-      <updated>Updated</updated>
-    </results>
-  </atom>
   <bookmarkDelicious>Favori pour Delicious</bookmarkDelicious>
   <bookmarkDigg>Favori pour Digg</bookmarkDigg>
   <bookmarkEmail>Envoie par email d'une référence pour cet enregistrement</bookmarkEmail>
@@ -43,7 +30,7 @@
   <mainpage2>
     GeoNetwork opensource permet de partager des informations géographiques thématiques entre
     organisations.
-    Pour plus d'information, contacter
+    Pour plus d'information, contactez
   </mainpage2>
   <opensearch>Service de recherche OpenSearch de GeoNetwork permettant la recherche de métadonnées
     dans le catalogue.

@@ -1,0 +1,190 @@
+<div class="sxt-layer-menu flex-col flex-align-stretch">
+  <div class="flex-row sxt-layer-menu-button-bar">
+    <button
+      type="button"
+      class="btn"
+      ng-click="ctrl.togglePanel()"
+      ng-class="{'active': ctrl.panelOpened()}"
+    >
+      <span translate>layerMenu</span>
+    </button>
+    <div class="flex-spacer flex-grow"></div>
+    <button
+      type="button"
+      class="btn"
+      ng-if="ctrl.panelSize !== 'collapsed'"
+      ng-click="ctrl.panelSize = 'collapsed'"
+      title="{{'collapseLayerMenu' | translate}}"
+    >
+      <span class="fa fa-fw fa-window-minimize"></span>
+    </button>
+    <button
+      type="button"
+      class="btn"
+      ng-if="ctrl.panelSize !== 'middle'"
+      ng-click="ctrl.panelSize = 'middle'"
+      title="{{'expandLayerMenu' | translate}}"
+    >
+      <span class="fa fa-fw fa-window-restore"></span>
+    </button>
+    <button
+      type="button"
+      class="btn"
+      ng-if="ctrl.panelSize !== 'full'"
+      ng-click="ctrl.panelSize = 'full'"
+      title="{{'expandLayerMenuFull' | translate}}"
+    >
+      <span class="fa fa-fw fa-window-maximize"></span>
+    </button>
+  </div>
+
+  <div
+    class="sxt-layer-menu-body flex-grow flex-col flex-align-stretch"
+    ng-if="ctrl.panelOpened()"
+  >
+    <div class="flex-row flex-align-start">
+      <div>
+        <span style="word-break: break-word">{{layer.name || layer.get('label')}}</span>
+        <span class="text-muted small" ng-if="layer.get('attribution')">
+          <br />
+          &copy;
+          <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
+          <span ng-if="layer.get('attributionUrl')">
+            <a href="{{layer.get('attributionUrl')}}" target="_blank"
+              >{{layer.get('attribution')}}</a
+            >
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
+      <button
+        type="button"
+        class="flex-grow btn btn-secondary btn-sm"
+        ng-disabled="!layer.get('md') && !layer.get('metadataUrl')"
+        ng-click="ctrl.showMetadata()"
+        title="{{ 'showMetadataTooltip' | translate }}"
+      >
+        <span class="fa fa-file-text"></span>&nbsp;<span translate>showMetadata</span>
+      </button>
+
+      <button
+        type="button"
+        class="flex-grow btn btn-secondary btn-sm"
+        ng-disabled="!download"
+        ng-click="ctrl.addToPanier()"
+        title="{{ 'downloadTooltip' | translate }}"
+      >
+        <span class="fa fa-download"></span>&nbsp;<span translate>download</span>
+      </button>
+
+      <button
+        type="button"
+        class="flex-grow btn btn-secondary btn-sm"
+        ng-disabled="!layer.get('cextent')"
+        ng-click="ctrl.zoomToExtent()"
+        title="{{ 'layerExtentZoomTooltip' | translate }}"
+      >
+        <span class="fa fa-search"></span>&nbsp;<span translate>layerExtentZoom</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-danger btn-sm"
+        ng-click="ctrl.deleteLayer()"
+        title="{{'deleteLayer' | translate}}"
+        translate
+      >
+        <span class="fa fa-fw fa-trash"></span>
+      </button>
+    </div>
+
+    <tabset class="sxt-layer-menu-tabs flex-grow flex-shrink flex-col flex-align-stretch">
+      <tab
+        ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))"
+        active="true"
+      >
+        <tab-heading translate>filter</tab-heading>
+
+        <div
+          class="sxt-wfsfilter-panel"
+          gn-wfs-filter-facets
+          layer="layer"
+          wfs-url="wfsLink.url"
+          feature-type-name="wfsLink.featureTypeName"
+          mode="group"
+        ></div>
+      </tab>
+
+      <tab>
+        <tab-heading translate>mapLegend</tab-heading>
+        <div>
+          <img
+            ng-src="{{legendUrl}}"
+            alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+            aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"
+          />
+        </div>
+      </tab>
+
+      <tab
+        ng-if="processes.length >= 1"
+        select="wpsOpened = true"
+        deselect="wpsOpened = false"
+      >
+        <tab-heading translate>wpsProcess</tab-heading>
+        <div
+          class="btn-group wps-list"
+          role="group"
+          sxt-popover-dropdown
+          placement="bottom"
+          className="sxt-popover-grid wps-list-dropdown"
+          ng-if="processes.length > 1"
+        >
+          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-cogs"></span>
+            <span role="tooltip" class="left" data-translate>wpsAvailableProcesses</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right text-left">
+            <li data-ng-repeat="p in processes">
+              <a ng-click="ctrl.selectProcess(p, this)">
+                <span class="fa fa-cog"></span>
+                {{p.description}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="flex-spacer"></div>
+        <div ng-if="wpsOpened">
+          <gn-wps-process-form map="map" wps-link="selectedProcess" wfs-link="wfsLink" />
+        </div>
+      </tab>
+
+      <tab>
+        <tab-heading translate>settings</tab-heading>
+        <div class="flex-col flex-align-stretch">
+          <div class="flex-row flex-align-center" style="margin: 1em">
+            <span translate>opacity</span>
+            <div class="flex-spacer"></div>
+            <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+          </div>
+          <div
+            ng-if="layer.get('advanced')"
+            gn-ncwms-transect
+            map="map"
+            layer="layer"
+          ></div>
+        </div>
+      </tab>
+
+      <tab ng-if="layer.get('annotationsUuid')">
+        <tab-heading translate>annotations</tab-heading>
+        <div>
+          <sxt-annotations-editor map="map" layer="layer" />
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

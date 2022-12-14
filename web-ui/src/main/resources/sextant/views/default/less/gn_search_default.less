@@ -1,0 +1,285 @@
+@import "../../../style/gn_search.less";
+@import "../../../style/gn_metadata.less";
+@import "gn_facets_default.less";
+@import "gn_pagination_default.less";
+@import "gn_feedback_default.less";
+// page layout
+@import "gn_layout_default.less";
+// topics, categories and Inspire
+@import "gn_topics_default.less";
+// navigation
+@import "gn_navbar_default.less";
+// styling for a single result: metadata view
+@import "gn_result_default.less";
+// styling for all search results
+@import "gn_results_default.less";
+// main map and minimap
+@import "gn_map_default.less";
+// footer and bottombar
+@import "gn_footer_default.less";
+// infolists on the homepage
+@import "gn_infolist_default.less";
+// card lists
+@import "gn_card_default.less";
+// alert messages
+@import "gn_alerts_default.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+/* Hide the tabset selector because tab
+   switch is available in the top tool bar */
+#main-tabset > ul:nth-child(1) {
+  display: none;
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline-offset: 0px;
+}
+.popover {
+  max-width: 350px;
+}
+.jumbotron {
+  h1 {
+    font-size: 36px;
+  }
+}
+
+.gn-search-page {
+  clear: both;
+  flex-grow: 1;
+  position: relative;
+  padding-bottom: calc(~"@{gn-bottombar-height} + 10px");
+  .badge {
+      margin-right: 5px;
+      background-color: #333;
+      font-weight: normal;
+    }
+  .nav-pills {
+    margin-bottom: 1em;
+    text-align: center;
+    li {
+      display: inline-block;
+      float: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .badge {
+      margin-right: 5px;
+    }
+  }
+}
+.gn-source-logo {
+  max-width: 100%;
+  max-height: 60px;
+}
+
+
+.gn-top-records {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  h1 {
+    font-size: 16px;
+    margin-left: 15px;
+  }
+  .list-group {
+    margin: 0 5px;
+  }
+}
+
+[data-ng-search-form] {
+  .gn-top-search {
+    position: relative;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    background-color: @gn-search-background-color;
+    [typeahead] {
+      vertical-align: middle;
+      display: inline-block;
+    }
+    [typeahead-popup] {
+      text-align: left;
+    }
+    .inner-spinner {
+      position: absolute;
+      top: 1.75em;
+      left: 50%;
+      margin-left: 64px;
+    }
+    .gn-form-any {
+      input[type="text"], button {
+        height: 36px;
+      }
+      button.btn-lg, input[type="text"].input-lg {
+        height: 46px;
+      }
+      input[type="text"].input-lg {
+        box-shadow: none;
+        &:focus {
+          border-color: @gn-search-outline-color;
+          box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, rgba(@gn-search-outline-color-red, @gn-search-outline-color-green, @gn-search-outline-color-blue, 0.6) 0px 0px 8px;
+        }
+      }
+      .btn-search {
+        background-color: @gn-search-button-background-color;
+        border-color: @gn-search-button-border-color;
+        color: @gn-search-button-color;
+        &:hover {
+          background-color: darken(@gn-search-button-background-color, 10%);
+          border-color: darken(@gn-search-button-background-color, 15%);
+        }
+      }
+      .dropdown-menu {
+        margin: 0;
+        border-radius: 0;
+      }
+      .dropdown-menu > li > a {
+        padding: 6px 16px;
+      }
+      .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+        color: @dropdown-link-hover-color;
+        background-color: @dropdown-link-hover-bg;
+      }
+      .btn-reset {
+        border-left-color: #fff;
+        &:hover {
+          background: transparent;
+        }
+      }
+      .btn-favorites {
+        .btn {
+          border-right-color: #fff;
+        }
+        .text-warning {
+          color: #ffc107;
+        }
+      }
+      .btn-advanced {
+        &.active {
+          box-shadow: none;
+          background-color: @panel-default-heading-bg;
+          border-color: @input-border;
+          border-bottom-color: @panel-default-heading-bg;
+        }
+      }
+    }
+  }
+  .loading {
+    position: absolute;
+    top: 1.8em;
+    font-size: 40px;
+    left: 46%;
+    text-shadow: 0 0 1px white;
+    z-index: 200;
+    background: rgba(255,255,255,.7);
+    border-radius: 1em;
+    padding: .2em;
+  }
+}
+// user search panel
+.gn-search-user {
+  .panel-body {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  .list-group {
+    margin-bottom: 2px;
+    max-height: 80px;
+    overflow: auto;
+    .list-group-item {
+      margin-top: 1px;
+      padding: 0;
+      border-radius: 0;
+      border: 0;
+    }
+  }
+}
+
+// advanced search
+.gn-search-filter {
+  position: absolute;
+  z-index: 10;
+  padding: 15px;
+  background-color: @panel-default-heading-bg;
+  width: calc(~"100% - 30px");
+  border: 1px solid @input-border;
+  border-top: 0;
+  [class*=col-md] {
+    padding-right: 0;
+  }
+  .col-md-2 {
+    padding-left: 0;
+  }
+  .search-options {
+    label {
+      font-weight: normal;
+    }
+  }
+  .btn-link {
+    padding-left: 0;
+    font-size: 14px;
+  }
+  .gn-search-filter-datepicker {
+    margin-bottom: 10px;
+    .col-md-6 {
+      padding-left: 0;
+      @media (min-width: 400px) and (max-width: @screen-sm-max) {
+        width: 50%;
+        float: left;
+      }
+      @media (max-width: 400px) {
+        padding-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+@import "gn_view.less";
+
+gn-wps-process-form {
+  .panel-body {
+    padding: 0px;
+  }
+}
+
+// draft
+.see-draft-pill {
+  border: 1px solid @btn-default-border;
+  margin-top: 5px;
+  border-radius: 20px;
+  padding: 2px 0  4px 0;
+  display: block;
+  cursor: pointer;
+  color: @gray-dark;
+  &:hover {
+    color: @gray-darker;
+    text-decoration: none;
+  }
+  small small {
+    padding: 7px 2px 8px 8px;
+  }
+  label {
+    margin: 0 15px 0 10px;
+    font-weight: 400;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  @media (max-width: @screen-md-min) {
+    margin-bottom: 5px;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-top-search {
+    padding: 30px 0;
+    margin-bottom: 30px;
+    .gn-form-any input.input-lg {
+      height: 46px;
+    }
+    .btn-lg {
+      padding: 13px 16px;
+    }
+  }
+}

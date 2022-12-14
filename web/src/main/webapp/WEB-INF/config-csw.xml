@@ -34,7 +34,9 @@
       <!-- Defines the number of records that will be processed for any propertyname  -->
       <maxNumberOfRecordsForPropertyNames>1000</maxNumberOfRecordsForPropertyNames>
     </operation>
-    <operation name="GetRecords">
+    <operation name="GetRecords"
+               defaultSortField="_score"
+               defaultSortOrder="DESC">
       <parameters>
         <!-- - - - - - - - - - - - - - -->
         <!-- Core queryable properties -->
@@ -289,7 +291,7 @@
         <!-- Other additional queryable properties   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - -->
 
-        <parameter name="OnlineResourceType" field="protocol" type="AdditionalQueryables"/>
+        <parameter name="OnlineResourceType" field="linkProtocol" type="AdditionalQueryables"/>
         <parameter name="OnlineResourceMimeType" field="mimetype" type="AdditionalQueryables"/>
 
         <parameter name="Date" field="createDate" type="AdditionalQueryables"/>

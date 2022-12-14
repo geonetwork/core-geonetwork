@@ -31,6 +31,7 @@
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -325,7 +326,11 @@
     <xsl:if test="$displayCitation">
       <xsl:variable name="forcedCitation"
                     select="gmd:identificationInfo/*/gmd:citation/*/gmd:otherCitationDetails"/>
-
+      <!--
+      Some catalogue want to be able to override default generated citation
+      using a metadata field.
+      select="gmd:identificationInfo/*/gmd:citation/*/gmd:otherCitationDetails"/>
+      -->
       <xsl:choose>
         <!-- Landing page case -->
         <xsl:when test="$language = 'all'">
@@ -385,6 +390,7 @@
         <xsl:otherwise>
           <div data-ng-if="showCitation"
                data-gn-metadata-citation="md">
+            <xsl:comment>citation</xsl:comment>
           </div>
         </xsl:otherwise>
       </xsl:choose>
@@ -466,7 +472,11 @@
   </xsl:template>-->
 
   <xsl:template mode="render-field"
-                match="*[gmx:Anchor]|*[normalize-space(gco:CharacterString) != '']|gml:beginPosition[. != '']|gml:endPosition[. != '']|gml320:beginPosition[. != '']|gml320:endPosition[. != '']"
+                match="*[gmx:Anchor]|*[normalize-space(gco:CharacterString) != '']|
+                       gml:beginPosition[. != '']|gml:endPosition[. != '']|
+                       gml320:beginPosition[. != '']|gml320:endPosition[. != '']|
+                       gml:begin[. != '']|gml320:begin[. != '']|
+                       gml:end[. != '']|gml320:end[. != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
     <xsl:param name="link" select="''" as="xs:string?"/>
@@ -502,12 +512,16 @@
 
     <xsl:variable name="name"
                   select="name()"/>
+
+    <xsl:variable name="context"
+                  select="name(..)"/>
+
     <xsl:choose>
       <!-- eg. for codelist, display label in all record languages -->
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -528,7 +542,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, null)"/>
+            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -536,7 +550,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, null)"/>
+                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -606,6 +620,8 @@
     <br/>
     <br/>
   </xsl:template>
+
+
 
   <xsl:template mode="render-field"
                 match="gmd:EX_BoundingPolygon/gmd:polygon">
@@ -766,7 +782,7 @@
         <div class="gn-contact">
           <strong>
             <xsl:comment select="'email'"/>
-            <xsl:apply-templates mode="render-value-no-breaklines"
+            <xsl:apply-templates mode="render-value"
                                  select="*/gmd:role/*/@codeListValue"/>
           </strong>
           <address>
@@ -1113,7 +1129,7 @@
 
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="*[@uuidref]"
+                match="srv:operatesOn[@uuidref]|gmd:featureCatalogueCitation[@uuidref]|gmd:source[@uuidref]|gmd:aggregateDataSetIdentifier/*/gmd:code[@uuidref]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 
@@ -1149,6 +1165,7 @@
 
  <!-- Elements to avoid render -->
   <xsl:template mode="render-field" match="gmd:PT_Locale" priority="100"/>
+
 
   <!-- Traverse the tree -->
   <xsl:template mode="render-field"
@@ -1230,9 +1247,12 @@
 
   <xsl:template mode="render-value"
                 match="gco:Integer|gco:Decimal|
-       gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
-       gco:LocalName|gml:beginPosition|gml:endPosition|gml320:beginPosition|gml320:endPosition">
+                       gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
+                       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
+                       gco:LocalName|
+                       gml:beginPosition|gml:endPosition|gml:being|gml:end|
+                       gml320:beginPosition|gml320:endPosition|gml320:being|gml320:end">
+
     <xsl:choose>
       <xsl:when test="contains(., 'http')">
         <!-- Replace hyperlink in text by an hyperlink-->
@@ -1347,7 +1367,9 @@
   <xsl:template mode="render-value"
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
-                      |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
+                      |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:begin[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
+                      |gml:end[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
     <span data-gn-humanize-time="{.}"><xsl:comment select="name()"/>
       <xsl:value-of select="."/>
     </span>

@@ -1,0 +1,1418 @@
+@import "gn_bootstrap.less";
+
+@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
+// import the css files as less files so they are included in the final output of wro4j
+@import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
+@import "gn.less";
+
+@import "../lib/style/bootstrap/less/glyphicons.less";
+
+//url is wrong on original file
+// Import the fonts
+@font-face {
+  font-family: "Glyphicons Halflings";
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot')";
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot?#iefix') format('embedded-opentype')",
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.woff') format('woff')",
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.ttf') format('truetype')",
+    ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg')";
+}
+
+body {
+}
+
+.gn-line-height {
+  line-height: 1.8 !important;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  .form-control;
+}
+
+.gn-geopublisher-panel {
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+}
+.gn-thumbnail-maker-panel {
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+}
+
+[data-gn-metadata-category-updater] .dropdown-menu > .disabled > a:hover,
+[data-gn-metadata-group-updater] .dropdown-menu > .disabled > a:hover {
+  cursor: pointer !important;
+}
+
+.gn-editor-container {
+  padding: 20px 5px;
+}
+
+@media only screen and (max-width: @screen-xs-max) {
+  .gn-editor-container {
+    margin-top: 50px;
+  }
+}
+@media only screen and (max-width: 490px) {
+  .gn-editor-container {
+    margin-top: 100px;
+  }
+}
+
+#gn-directory-container {
+  .gn-facet-dropdown {
+    min-width: 300px;
+    padding: 0px 10px;
+    .badge {
+      background-color: #777777;
+    }
+  }
+
+  .panel-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & > .nav.nav-pills {
+      a {
+        padding: 6px;
+        line-height: 1em;
+      }
+    }
+
+    input.filter-text {
+      width: 20%;
+      min-width: 16em;
+      height: 2em;
+    }
+  }
+
+  .search-options-header.row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .directory-entries-list {
+    margin: 0.7em 0em;
+    padding: 0px;
+
+    & > li {
+      @padding: 6px;
+
+      & > *:not(:last-child) {
+        margin-bottom: @padding;
+      }
+
+      & > * > *:not(:last-child) {
+        margin-right: @padding;
+      }
+
+      .entry-info {
+        display: flex;
+        flex-direction: row;
+        small {
+          max-height: 2.5em;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  .entry-editor {
+    .panel-heading {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .entry-editor-controls {
+        flex-shrink: 0;
+        margin: -7px -12px -7px 6px;
+      }
+      .entry-editor-title {
+        min-width: 0px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+    .panel-body {
+      position: relative;
+    }
+  }
+
+  div[data-gn-toggle] {
+    top: 1em;
+    right: 1em;
+  }
+
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    max-width: 40em;
+  }
+}
+
+.gn-editor-board {
+  .table.gn-results-editor td {
+    padding: 6px 3px;
+    .btn-group {
+      margin-top: 3px;
+      .btn-single {
+        border-radius: 4px;
+      }
+    }
+    .col-lg-8,
+    .col-md-8,
+    .col-lg-4,
+    .col-md-4 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @media (min-width: @screen-md-min) {
+      .btn-group {
+        float: right;
+      }
+    }
+  }
+}
+
+form.gn-editor {
+  /* Move each sub fieldset to the left */
+  @editor-fieldset-padding-left: 5px;
+
+  /**
+   * Make space on the following element of a well
+   */
+  div.well + fieldset,
+  div.well + div {
+    padding-top: 10px;
+  }
+
+  div.well {
+    margin-bottom: 0px;
+  }
+
+  div[data-gn-toggle] {
+    position: absolute;
+    right: 3px;
+    top: 2px;
+    button {
+      padding: 5px;
+      background-color: @brand-primary;
+      color: white;
+      -webkit-border-radius: 15px;
+      border-width: 0px;
+      i {
+        padding-left: 3px;
+        padding-top: 4px;
+      }
+    }
+  }
+
+  /**
+   * Add bottom line
+   */
+  fieldset > div.form-group.gn-field,
+  fieldset > div.row.gn-field {
+    //    border-top: 1px solid #EEE;
+    //    padding-left:  (@grid-gutter-width / 2);
+    padding-top: 5px;
+  }
+  fieldset > div.form-group.gn-extra-field,
+  fieldset > div.row.gn-extra-field {
+    border-top: none;
+  }
+  /**
+   * Hide label in field which are not
+   * first and do not break line to not
+   * loose space.
+   */
+  div.gn-extra-field > label {
+    visibility: hidden;
+    //    white-space: nowrap;
+  }
+
+  .gn-associated-resource-btn {
+    .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+  }
+
+  fieldset fieldset {
+    padding-left: @editor-fieldset-padding-left;
+  }
+
+  .form-group {
+    margin-bottom: 0px;
+  }
+  div.well {
+    .form-group {
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .btn + .form-group {
+      margin-top: 10px;
+    }
+  }
+
+  legend {
+    margin-bottom: 10px;
+  }
+
+  .gn-textarea-xml {
+    font-family: courier;
+    font-size: 12px;
+    min-height: 700px;
+  }
+
+  .gn-debug {
+    display: none;
+  }
+
+  .control-label {
+    color: #6a6a6a;
+    font-weight: 200;
+    padding-top: 0px;
+    line-height: 22px;
+  }
+
+  .gn-required > label {
+    //   color: #333333;
+  }
+
+  .gn-move {
+    //    .pull-right();
+  }
+
+  legend > div.gn-move {
+    position: absolute;
+  }
+
+  /* text danger takes priority above colors
+   */
+  .text-danger label,
+  .text-danger legend {
+    .text-danger();
+  }
+
+  .gn-has-xlink {
+    label,
+    fieldset > legend {
+      //    opacity: .7;
+    }
+  }
+
+  /* Date picker is composed of a date and
+   * a time input. Align them on the same
+   * line instead of 100% width in input group.
+   */
+  .gn-date-picker {
+    > input.gn-date {
+      width: 50%;
+    }
+    > input.gn-time {
+      width: 35%;
+    }
+    > select.gn-timezone {
+      width: 15%;
+    }
+    > input.gn-timezone {
+      width: 15%;
+    }
+    > input.gn-date.gn-notime {
+      width: 100%;
+    }
+    > input.gn-time.hidden,
+    > select.gn-timezone.hidden,
+    > input.gn-timezone.hidden {
+      width: 0%;
+    }
+    .gn-indeterminate-position {
+      display: table-cell;
+      > select {
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
+      }
+    }
+    &.gn-time-with-ind-position {
+      > select.gn-indeterminate-position {
+        width: 20%;
+      }
+      > input[type="date"] {
+        width: 40%;
+      }
+      > input[type="time"] {
+        width: 39%;
+      }
+    }
+  }
+
+  /* Reset margin in helper for documentation
+   * to properly align radios
+   */
+  .helper .help-block {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  /* Avoid white on white when i:hover
+   */
+  .btn:hover {
+    color: #000;
+  }
+
+  /**
+   * Keyword selector directive
+   */
+  *[data-gn-keyword-selector] {
+    margin-bottom: 10px;
+  }
+
+  .bootstrap-tagsinput {
+    min-height: 34px;
+    .tag {
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: inline-flex;
+      margin-top: 2px;
+    }
+
+    .twitter-typeahead {
+      margin-top: 4px;
+    }
+    .tt-input {
+      border: none;
+      box-shadow: none;
+      background-color: #ffffff !important;
+    }
+  }
+  .gn-maxtags .bootstrap-tagsinput {
+    .twitter-typeahead,
+    .twitter-typeahead > input {
+      display: none !important;
+    }
+  }
+
+  /* Avoid to apply img logo css to fieldset in editor */
+  fieldset.gn-logo {
+    max-height: inherit;
+  }
+  fieldset {
+    padding: 5px;
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+  .gn-field {
+    border-radius: 3px;
+    margin: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  .field-bg {
+    background-color: #f7f7f7;
+  }
+  .gn-move {
+    border: none;
+  }
+  i.btn.fa-times.text-danger {
+    visibility: hidden;
+    padding: 5px;
+  }
+  .show {
+    visibility: visible;
+  }
+  .gn-value .col-xs-8 {
+    padding-left: 0px;
+  }
+  .gn-value .col-xs-4 {
+    padding-right: 0px;
+  }
+
+  div.th-inner {
+    font-size: 12px;
+  }
+
+  .gn-required > div.th-inner:after,
+  legend.gn-required:after,
+  label.gn-required:after,
+  .gn-required > label:after,
+  label.gn-mandatory:after,
+  .gn-mandatory > label:after {
+    content: "*";
+    font-size: 2.5em;
+    margin: 7px 0 0 7px;
+    position: absolute;
+    color: #a94442;
+    font-weight: normal;
+  }
+
+  .gn-required > div.th-inner:after {
+    font-size: 2em;
+    margin: -7px 0 0 7px;
+  }
+  legend.gn-required:after {
+    font-size: 24px;
+    margin: 0px;
+  }
+
+  .form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  /* Multilingual badge positionning when
+  having suggestion or not */
+  [data-gn-multilingual-field] {
+    span.label {
+      position: absolute;
+      right: 15px;
+      line-height: 12px;
+    }
+    .twitter-typeahead span.label {
+      right: 2px;
+      top: 2px;
+    }
+  }
+  .gn-validation-report {
+    .list-group-item {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.gn-autocomplete-list {
+  position: absolute;
+  margin-top: 35px;
+  width: inherit;
+  z-index: 999;
+  max-height: 25em;
+  overflow: auto;
+  background-color: #ffffff;
+  .tt-suggestion {
+    &:hover {
+      background-color: lightgrey;
+    }
+  }
+}
+
+form.gn-tab-inspire {
+  .control-label {
+    color: inherit;
+  }
+  .well {
+    display: none;
+  }
+}
+
+form.gn-tab-characteristics,
+form.gn-tab-datasources,
+form.gn-tab-overview,
+form.gn-tab-spatialCoverage,
+form.gn-tab-timeCoverage,
+form.gn-tab-accessibility,
+form.gn-tab-medsea-metadata {
+  /* Do not highlight ISO mandatory fields */
+  .control-label {
+    color: inherit;
+  }
+
+  #gn-tab-accessibility,
+  #gn-tab-checkpoint-ud-qm,
+  #gn-tab-checkpoint-tdp-qm,
+  #gn-tab-checkpoint-dps-qm {
+    margin-top: 50px;
+    border-top: 2px solid black;
+  }
+
+  /* Do not display remove control ... */
+  a.btn[data-gn-click-and-spin^="remove"] {
+    display: none !important;
+  }
+  /* ... but keep it for format and contact */
+  .gn-format a.btn[data-gn-click-and-spin^="remove"],
+  .gn-projectTitle a.btn[data-gn-click-and-spin^="remove"],
+  .gn-organisationName a.btn[data-gn-click-and-spin^="remove"] {
+    display: block !important;
+  }
+
+  .gn-required > label:after {
+    display: none;
+  }
+
+  /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector="tagsinput"] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  /* Hide legend label for extent */
+  legend.EX_GeographicBoundingBox {
+    display: none;
+  }
+
+  .control-label {
+    text-align: left !important;
+  }
+}
+
+form.gn-tab-checkpoint-dps-characteristics,
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-characteristics,
+form.gn-tab-checkpoint-tdp-qm {
+  .gn-required > label:after {
+    display: none;
+  }
+
+  /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector="tagsinput"] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .control-label {
+    text-align: left !important;
+  }
+
+  .gn-field.gn-beginPosition label {
+    font-weight: bold;
+    color: #333333;
+  }
+  /* Date */
+  .gn-date label::after,
+  legend.EX_TemporalExtent::after,
+  .gn-checkpoint-ve legend:after,
+  legend.EX_GeographicBoundingBox::after {
+    display: inline;
+    content: "*" !important;
+    color: #6a6a6a;
+    font-size: 14px;
+  }
+}
+
+/* Add mandatory flag to keyword selector */
+form.gn-tab-characteristics {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(2) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(3) > legend.descriptiveKeywords::after,
+  div.gn-keyword > label::after,
+  fieldset:nth-of-type(5) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(6) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(7) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+form.gn-tab-overview {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+
+form.gn-tab-accessibility {
+  fieldset:nth-of-type(3) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+/* ... except for EDMERP and EDMO fields */
+form.gn-tab-datasources {
+  div.gn-extra-field > label {
+    visibility: visible !important;
+  }
+
+  //input[id$=edmerpId][value=""],
+  //input[id$=edmoId][value=""] {
+  //  border-width: 3px;
+  //}
+  /* Display remove action for the third and fifth
+  form field in this tab. It should select EDMERP
+  and EDMO field if the record follow the guideline. */
+  .gn-field:nth-of-type(2) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
+    display: block;
+  }
+}
+
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-dq {
+  .gn-required > label:after {
+    display: none;
+  }
+}
+
+form.gn-tab-timeCoverage
+  div[data-tooltip="iso19115-3|msr:resolution|msr:MD_Dimension|/mdb:MD_Metadata/mdb:spatialRepresentationInfo/msr:MD_Georectified/msr:axisDimensionProperties/msr:MD_Dimension/msr:resolution"]
+  + .well,
+form.gn-tab-spatialCoverage
+  div[data-tooltip="iso19115-3|mri:distance||/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:spatialResolution/mri:MD_Resolution/mri:MD_Resolution_TypeCHOICE_ELEMENT0/mri:distance"]
+  + .well {
+  display: block !important;
+  visibility: visible !important;
+
+  button {
+    display: none;
+  }
+}
+
+form.gn-tab-accessibility {
+  /* Hide the last option of helper
+  which is the other for free text input. */
+  .helper > div > div.radio:last-of-type {
+    display: none;
+  }
+}
+
+/* Onlinesrc styles */
+.gn-onlinesrc-panel {
+  h2 {
+    font-size: 16px;
+  }
+  .list-group-item {
+    padding-left: 10px;
+    padding-right: 5px;
+    // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
+    .row > div {
+      padding-left: 1px;
+      padding-right: 1px;
+      .onlinesrc-remove {
+        padding: 1px;
+      }
+    }
+  }
+}
+.gn-validation-report {
+  h2 {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+  }
+  .row > div {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+  .panel {
+    border: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    box-shadow: none;
+    [data-gn-slide-toggle]:before {
+      margin-left: 0px;
+    }
+    .panel-heading {
+      background: none;
+      padding: 0;
+      border: 0;
+    }
+    .panel-body {
+      padding: 0;
+    }
+  }
+  .list-group {
+    margin-bottom: 10px;
+    .list-group-item {
+      border-left: 4px solid @brand-success;
+      padding-bottom: 5px;
+      .text-bold {
+        font-weight: 500;
+      }
+      p {
+        margin-top: 10px;
+        overflow: auto;
+        padding-bottom: 2px;
+        word-break: break-word;
+      }
+      &.text-danger {
+        border-left: 4px solid @brand-danger;
+        color: @gray-darker;
+      }
+      &.text-info {
+        border-left: 4px solid @brand-info;
+        color: @gray-darker;
+      }
+    }
+  }
+}
+// margin for a validation block in a date row
+.gn-date {
+  .gn-validation-report {
+    margin-top: 10px;
+  }
+}
+.onlinesrc-container,
+[gn-directory-entry-list-selector] {
+  .list-group {
+    max-height: 50%;
+    overflow: auto;
+  }
+  .list-group.fixed {
+    padding: 5px;
+    min-height: 100px;
+    /* Avoid the content of the div
+    to be higher than view port
+    as the modal does not have overflow. */
+    max-height: 50vh;
+  }
+
+  .gn-record {
+    &.active {
+      background-color: #428bca;
+    }
+  }
+}
+
+#gn-directory-container {
+  .gn-facet-dropdown {
+    min-width: 300px;
+  }
+}
+table.gn-data-store {
+  td {
+    word-break: break-all;
+    .btn {
+      padding: 1px 1px;
+    }
+  }
+}
+
+#gn-new-metadata-container {
+  /*
+   * Increase default panel heading size in order
+   * to preserve heading alignement if title is on
+   * one or two lines.
+   */
+  .panel-default > .panel-heading {
+    min-height: 60px;
+  }
+  /*
+   * Center icons and text for selecting type of
+   * record.
+   */
+  .gn-record-type > a.list-group-item {
+    text-align: center;
+  }
+}
+/* verical layout for the add metadata page */
+#gn-new-metadata-container.new-metadata-vertical {
+  .gn-record-type > a.list-group-item {
+    text-align: left;
+  }
+}
+
+.gn-schematron-title {
+  word-wrap: break-word;
+}
+.navbar-collapse {
+  padding-right: 0px;
+}
+
+.open > .dropdown-menu {
+  max-height: 30em;
+  overflow-y: auto;
+}
+
+.schematron-result-list-label-info .text-info {
+  color: @label-primary-bg;
+}
+
+.gn-multilingual-field {
+  .nav > li > a {
+    padding: 2px 5px;
+    margin-top: 2px;
+    //font-size: @font-size-x-small;
+  }
+  .label {
+    line-height: 2;
+    //font-size: @font-size-x-small;
+  }
+  .no-data a {
+    color: @gray-light;
+  }
+}
+
+.gn-batch-editor {
+  .gn-resultview li.list-group-item {
+    margin-bottom: 0px;
+    padding: 4px;
+  }
+  li.gn-batch-editor-info {
+    margin-top: 11px;
+  }
+  [data-ng-search-form] .gn-top-search .gn-form-any {
+    max-width: 80vw;
+  }
+}
+
+form.gn-tab-xml {
+  div[data-gn-toggle] {
+    display: none;
+  }
+}
+
+div.gn-individualName {
+  padding-top: 20px !important;
+}
+
+.gn-tab-sextant-contact,
+.gn-tab-sextant-metadata,
+.gn-tab-sextant-identification,
+.gn-tab-sextant-spatial {
+  /* Hide remove control for source field, topic cat */
+  .gn-credit .col-sm-1.gn-control,
+  .gn-MD_TopicCategoryCode .col-sm-1.gn-control {
+    display: none;
+  }
+  /* Add mandatory flag to spatial representation type */
+  .gn-spatialRepresentationType label:after,
+  .gn-MD_TopicCategoryCode label:after {
+    content: "*";
+    font-size: 2.5em;
+    margin: 7px 0 0 7px;
+    position: absolute;
+    color: #a94442;
+    font-weight: normal;
+  }
+  /* Hide remove control */
+  .gn-topicCategory {
+    legend a.btn {
+      display: none;
+      visibility: hidden !important;
+    }
+  }
+  /* Hide Add action on CRS */
+  [data-gn-crs-selector] .input-group {
+    width: 100%;
+    span.input-group-btn {
+      display: none;
+    }
+  }
+
+  div.gn-individualName.gn-extra-field > label {
+    visibility: visible;
+  }
+  [data-gn-keyword-selector] {
+    .btn-group.pull-right {
+      display: none;
+    }
+  }
+}
+.gn-tab-sextant-usage {
+  /* Hide remove option in usage view. */
+  .col-sm-1.gn-control {
+    display: none;
+  }
+}
+
+.gn-tab-eo-tab-description {
+  /* Hide negative period, hide bbox region selector */
+  [data-gn-field-duration-div] > div > input[type="checkbox"],
+  [data-gn-field-duration-div] > div > label,
+  fieldset.gn-MI_Instrument > div.gn-code,
+  fieldset.gn-MI_Platform > div.gn-description,
+  [data-gn-measure] div.col-xs-4,
+  [data-gn-keyword-selector] .col-sm-1,
+  .gn-edition .col-xs-1,
+  legend.MD_Identifier,
+  legend.party,
+  legend.individual,
+  .gn-description .col-xs-1,
+  .gn-alternateTitle .col-xs-1,
+  .gn-EX_GeographicBoundingBox legend a,
+  .gn-EX_TemporalExtent legend a,
+  .gn-drawmap-panel > div.row:first-of-type {
+    display: none;
+  }
+  fieldset.gn-MD_Identifier,
+  fieldset.gn-party,
+  fieldset.gn-individual {
+    border: none;
+  }
+
+  /* Allow removal of projection desc */
+  .gn-eo-spatial-coverage .gn-description .col-xs-1 {
+    display: block;
+  }
+
+  [ngeo-map] {
+    height: 200px;
+  }
+}
+.gn-tab-eo-access-and-usage {
+  legend.party,
+  legend.individual,
+  .gn-pointOfContact .gn-role {
+    display: none;
+  }
+  fieldset.gn-party,
+  fieldset.gn-individual {
+    border: none;
+  }
+
+  .gn-otherConstraints {
+    .control-label {
+      visibility: visible;
+    }
+  }
+}
+/*.gn-tab-eo-history {
+  legend.resourceSpecificUsage,
+  legend.processStep,
+  legend.identifiedIssues {
+    display: none;
+  }
+  fieldset.gn-resourceSpecificUsage,
+  fieldset.gn-processStep,
+  fieldset.gn-identifiedIssues {
+    border: none;
+  }
+}*/
+
+.gn-tab-eo-tab-description,
+.gn-tab-eo-history,
+.gn-tab-eo-access-and-usage {
+  .gn-processStep .gn-level,
+  .gn-resourceSpecificUsage .gn-specificUsage,
+  .gn-resourceSpecificUsage .gn-userDeterminedLimitations,
+    /* Hide convention in issues */
+  .gn-identifiedIssues .gn-add-field,
+  .gn-required > label:after {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.gn-tab-copernicus-marine {
+  /* Hide the date type selector */
+  div.gn-date,
+  div[data-gn-date-picker] {
+    div.col-sm-3 {
+      width: 0px;
+    }
+    div.col-sm-6 {
+      width: 70%;
+    }
+    div.gn-date-picker {
+      width: 100%;
+    }
+  }
+  /* Hide link to store concept URI */
+  div.gn-featureTypes div.gn-keyword-picker-concept-id {
+    display: none;
+  }
+  /* Hide gazetteer search */
+  div.gn-drawmap-panel {
+    div.row > div.gn-field,
+    div.col-md-9 {
+      display: none;
+    }
+    div.col-md-3 {
+      button.btn {
+        .btn-xs();
+      }
+    }
+  }
+}
+
+.gn-tab-emodnetHydrography-when,
+.gn-tab-checkpoint-tdp-characteristics,
+.gn-tab-checkpoint-dps-characteristics {
+  .gn-date-picker {
+    > input[type="date"] {
+      width: 75% !important;
+    }
+    > input[type="time"] {
+      width: 0% !important;
+      display: none;
+    }
+  }
+  .gn-date-picker.gn-time-with-ind-position > input[type="date"] {
+    width: 75% !important;
+  }
+}
+
+.gn-table {
+  /* Compact gn-fields displayed in table mode.
+  Label and remove control are hidden. */
+  :not(.gn-table-label) div.gn-field {
+    padding: 0px !important;
+    label,
+    .col-sm-1.gn-control {
+      display: none;
+    }
+    .col-sm-9 {
+      width: 100%;
+    }
+  }
+  .gn-table-label {
+    div.gn-field {
+      label,
+      .col-sm-1.gn-control {
+        display: block;
+      }
+      .col-sm-9 {
+        width: 75%;
+      }
+    }
+  }
+  .nopadding-in-table {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// search filter boxes
+// search terms
+.searchterm {
+  margin: 0 5px 5px 0;
+  max-width: 100%;
+  span {
+    max-width: 98%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+  }
+  i {
+    margin-top: -15px;
+    margin-left: 5px;
+  }
+}
+
+.skos-btn-icons {
+  text-decoration: none !important;
+  color: @gray;
+  &:hover {
+    color: @brand-success;
+  }
+}
+
+#xmleditor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 800px;
+}
+#gn-directory-container #xmleditor {
+  top: 0px;
+  position: relative;
+}
+
+.tt-menu {
+  border-radius: 0;
+}
+
+.tt-suggestion {
+  font-size: 13px;
+}
+
+.input-group {
+  .tt-menu {
+    top: 31px !important;
+    left: 8px !important;
+  }
+  .tt-hint {
+    color: transparent;
+  }
+}
+
+.gn-editor.gn-tab-sdn-spatial {
+  .gn-codeSpace {
+    display: none;
+  }
+}
+
+.gn-editor.gn-tab-emodnetHydrography-what {
+  #gn-el-hierarchyLevelName,
+  .gn-useLimitation,
+  .gn-language,
+  .gn-date {
+    display: none;
+  }
+}
+
+[gn-directory-entry-list-selector] {
+  .gn-form-any {
+    margin-bottom: 30px;
+  }
+
+  .gn-record {
+    border-radius: 0;
+    border: none;
+    margin: 8px;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+    &.active {
+      background-color: #5384e6;
+    }
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0px 2px 3px rgba(66, 139, 202, 0.4);
+    }
+    strong {
+      font-weight: normal;
+    }
+  }
+
+  ng-pluralize {
+    color: #aaa;
+  }
+
+  .middle-row {
+    height: 60vh;
+    overflow: hidden;
+
+    .facet-col {
+      height: 100%;
+      overflow: auto;
+      padding-top: 6px;
+    }
+  }
+}
+
+[data-gn-directory-entry-selector] {
+  .gn-autocomplete-list {
+    top: 0 !important;
+    width: 100%;
+  }
+}
+
+gn-directory-associated-md {
+  // add margin if we're in a dropdown menu
+  ul.dropdown-menu & {
+    margin: 8px 12px;
+    width: 30em;
+    display: block;
+  }
+
+  .form-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    & > * {
+      flex-shrink: 0;
+    }
+    input.filter-text {
+      flex-shrink: 1;
+      margin-right: 12px;
+    }
+  }
+
+  .associated-md {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    padding-top: 6px;
+    &:not(:last-child) {
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 6px;
+    }
+  }
+}
+
+// md type widget (used only in editor for now)
+gn-md-type-widget,
+gn-md-type-inspire-validation-widget {
+  display: inline-block;
+  & > div {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1,
+    &.valid-inspire-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0,
+    &.valid-inspire-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1,
+    &.valid-inspire-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
+    &::after {
+      content: "";
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
+// md type widget (used only in editor for now)
+gn-draft-validation-widget {
+  display: inline-block;
+  small small {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: "";
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
+.gn-editor-board {
+  .table.gn-results-editor td {
+    gn-md-type-widget,
+    gn-md-type-inspire-validation-widget {
+      margin-top: 5px;
+    }
+  }
+}
+
+.gn-editor-sidebar {
+  margin-top: 15px;
+  padding-bottom: 150px;
+}
+@media (min-width: @screen-md-min) {
+  .gn-editor-sidebar {
+    margin-top: 0;
+    position: fixed;
+    right: 0;
+    overflow: auto;
+    max-height: 100%;
+    padding-bottom: 110px;
+  }
+}
+
+gn-bounding-polygon {
+  label {
+    font-size: 0.9em;
+    line-height: 0.8em;
+    margin-bottom: 0px;
+  }
+
+  textarea {
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
+  }
+}
+
+.gn-table-min-width {
+  width: 200px;
+}
+
+/**
+Choose vector or grid action.
+Align on same line and move to the center of the form
+ */
+.gn-process-add-vector-info,
+.gn-process-add-grid-info {
+  width: 50%;
+  float: left;
+}
+.gn-process-add-vector-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 60%;
+  }
+}
+.gn-process-add-grid-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 0px;
+  }
+}
+.gn-process-change-to-vector-info,
+.gn-process-change-to-grid-info {
+  width: 100%;
+  .btn-default {
+    color: @btn-danger-color;
+    background-color: @btn-danger-bg;
+    border-color: @btn-danger-border;
+  }
+}
+
+.gn-access-manager-group  {
+  height: 200px;
+  overflow: auto;
+}
+// scrollspy
+.gn-scroll-spy {
+  .btn.btn-round {
+    border-radius: 50% !important;
+  }
+}

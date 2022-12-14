@@ -1,0 +1,89 @@
+.layerTree {
+  .gn-layer-tree {
+    padding: 0;
+    list-style: none;
+    ul {
+      margin-left: 20px;
+      li {
+        padding: 0px;
+        list-style: none;
+      }
+    }
+    a {
+      line-height: 22px;
+      padding: 3px 0;
+      &:active, &:focus {
+        text-decoration: none;
+      }
+    }
+    .gn-layer-actions {
+      white-space: nowrap;
+    }
+    .gn-layer-toolbar {
+      float: right;
+      .btn-link {
+        color: #000;
+      }
+    }
+  }
+
+  label {
+    color: #444;
+    font-weight: normal;
+    display: block;
+    padding: 2px 0 2px 0px;
+    margin-bottom: 0;
+    &:hover {
+      color: #000;
+      text-shadow: 0 0 2px #FFF;
+    }
+    .fa {
+      margin-right: .1em;
+      font-size: 1.15em;
+      vertical-align: middle;
+    }
+  }
+  .leaf label {
+    .fa {
+      opacity: 0;
+      transition: opacity @transition-params;
+    }
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      .fa {
+        opacity: 1;
+      }
+    }
+  }
+  .list-group {
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
+  .list-group-item {
+    padding-left: 2px;
+  }
+  .dropdown-menu {
+    width: 100%;
+    font-size: 12px;
+    li {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 95%;
+    }
+  }
+  .truncate {
+    width: 16em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .popover {
+    max-width: 250px;
+    width: 250px;
+    li {
+      padding: 2px 0px;
+    }
+  }
+}

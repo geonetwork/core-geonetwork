@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_searchlayerformap_directive');
+(function () {
+  goog.provide("gn_searchlayerformap_directive");
 
-  var module = angular.module('gn_searchlayerformap_directive', [
-  ]);
+  var module = angular.module("gn_searchlayerformap_directive", []);
 
   /**
    * @ngdoc directive
@@ -34,79 +33,89 @@
    * @description
    * Panel to search for WMS layer describe in the catalog
    */
-  module.directive('gnSearchLayerForMap', [
-    'gnOwsCapabilities',
-    'gnMap',
-    '$translate',
-    'Metadata',
-    'gnRelatedResources',
-    'gnSearchSettings',
-    'gnGlobalSettings',
-    function(gnOwsCapabilities, gnMap, $translate, Metadata,
-             gnRelatedResources, gnSearchSettings, gnGlobalSettings) {
+  module.directive("gnSearchLayerForMap", [
+    "gnOwsCapabilities",
+    "gnMap",
+    "$translate",
+    "Metadata",
+    "gnRelatedResources",
+    "gnSearchSettings",
+    "gnGlobalSettings",
+    function (
+      gnOwsCapabilities,
+      gnMap,
+      $translate,
+      Metadata,
+      gnRelatedResources,
+      gnSearchSettings,
+      gnGlobalSettings
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: '../../catalog/components/viewer/searchlayerformap/' +
-            'partials/searchlayerformap.html',
+        templateUrl:
+          "../../catalog/components/viewer/searchlayerformap/" +
+          "partials/searchlayerformap.html",
         scope: {
-          map: '=gnSearchLayerForMap',
-          mode: '@'
+          map: "=gnSearchLayerForMap",
+          mode: "@"
         },
-        controller: ['$scope',
-          function($scope) {
-            var sortConfig = gnSearchSettings.sortBy.split('#');
+        controller: [
+          "$scope",
+          function ($scope) {
+            var sortConfig = gnSearchSettings.sortBy.split("#");
             $scope.searchObj = {
               permalink: false,
               hitsperpageValues: gnSearchSettings.hitsperpageValues,
               sortbyValues: gnSearchSettings.sortbyValues,
               filters: gnSearchSettings.filters,
               params: {
-                sortBy: sortConfig[0] || 'relevance',
-                sortOrder: sortConfig[1] || ''
+                sortBy: sortConfig[0] || "relevance",
+                sortOrder: sortConfig[1] || ""
               }
             };
-            if ($scope.mode === 'map') {
-              $scope.searchObj.params.type = 'map/interactive';
+            if ($scope.mode === "map") {
+              $scope.searchObj.params.type = "map/interactive";
             } else {
-              $scope.searchObj.params.linkProtocol = 'OGC:WMS*';
+              $scope.searchObj.params.linkProtocol = "OGC:WMS*";
             }
             $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
             $scope.paginationInfo = {
               hitsPerPage: gnSearchSettings.hitsperpageValues[0]
             };
-
-          }],
-        link: function(scope, element, attrs) {
-          scope.filterTopic = function(topic) {
+          }
+        ],
+        link: function (scope, element, attrs) {
+          scope.filterTopic = function (topic) {
             delete scope.searchObj.params.topicCat;
             scope.searchObj.params.topicCat = topic;
           };
-          scope.loadMap = function(map, md) {
-            gnRelatedResources.getAction('MAP')(map, md);
+          scope.loadMap = function (map, md) {
+            gnRelatedResources.getAction("MAP")(map, md);
           };
-          scope.addToMap = function(link) {
-            gnRelatedResources.getAction('WMS')(link);
+          scope.addToMap = function (link, md) {
+            gnRelatedResources.getAction("WMS")(link, md);
           };
-          scope.zoomToLayer = function(md) {
+          scope.zoomToLayer = function (md) {
             var proj = scope.map.getView().getProjection();
             var feat = gnMap.getBboxFeatureFromMd(md, proj);
             var extent = feat.getGeometry().getExtent();
             if (extent) {
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
-                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
-                  proj.getExtent();
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent)
+                ? ol.proj.transformExtent(extent, "EPSG:4326", proj)
+                : proj.getExtent();
               scope.map.getView().fit(extent, scope.map.getSize());
             }
           };
-          scope.getMetadata = function(md) {
+          scope.getMetadata = function (md) {
             var m = new Metadata(md);
-            m.relevantLinks = m.getLinksByType('WMS');
-            m.relevantMapLinks = m.getLinksByType('OGC:OWS-C');
+            m.relevantLinks = m.getLinksByType("WMS");
+            m.relevantMapLinks = m.getLinksByType("OGC:OWS-C");
             return m;
           };
         }
       };
-    }]);
+    }
+  ]);
 })();

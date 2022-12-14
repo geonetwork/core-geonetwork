@@ -21,45 +21,47 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_wfsfilter_service');
+(function () {
+  goog.provide("gn_wfsfilter_service");
 
-  var module = angular.module('gn_wfsfilter_service', [
-  ]);
+  var module = angular.module("gn_wfsfilter_service", []);
 
+  module.service("wfsFilterService", [
+    "gnIndexRequestManager",
+    "gnHttp",
+    "gnUrlUtils",
+    "gnGlobalSettings",
+    "$http",
+    "$q",
+    "$translate",
+    function (
+      gnIndexRequestManager,
+      gnHttp,
+      gnUrlUtils,
+      gnGlobalSettings,
+      $http,
+      $q,
+      $translate
+    ) {
+      var indexProxyUrl = gnHttp.getService("featureindexproxy");
 
-  module.service('wfsFilterService', [
-    'gnIndexRequestManager',
-    'gnHttp',
-    'gnUrlUtils',
-    'gnGlobalSettings',
-    '$http',
-    '$q',
-    '$timeout',
-    function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
-             $http, $q, $timeout) {
+      var indexObject = gnIndexRequestManager.register("WfsFilter", "facets");
 
-      var indexProxyUrl = gnHttp.getService('featureindexproxy');
-
-      var indexObject = gnIndexRequestManager.register('WfsFilter', 'facets');
-
-      var buildIndexUrl = function(params) {
-        return gnUrlUtils.append(indexProxyUrl + '/query',
-          gnUrlUtils.toKeyValue(params));
+      var buildIndexUrl = function (params) {
+        return gnUrlUtils.append(indexProxyUrl + "/query", gnUrlUtils.toKeyValue(params));
       };
 
       // transform date from dd-MM-YYYY to ISO (YYYY-MM-dd)
       function transformDate(d) {
-        return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+        return d.substr(6) + "-" + d.substr(3, 2) + "-" + d.substr(0, 2);
       }
 
-      this.registerEsObject = function(url, ftName) {
-        return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
+      this.registerEsObject = function (url, ftName) {
+        return gnIndexRequestManager.register("WfsFilter", url + "#" + ftName);
       };
-      this.getEsObject = function(url, ftName) {
-        return gnIndexRequestManager.get('WfsFilter', url + '#' + ftName);
+      this.getEsObject = function (url, ftName) {
+        return gnIndexRequestManager.get("WfsFilter", url + "#" + ftName);
       };
-
 
       /**
        * Retrieve the index field object from the array given from feature type
@@ -71,10 +73,9 @@
        * @param {object} idxFields
        * @return {*}
        */
-      var getIdxNameObj = function(name, idxFields) {
+      var getIdxNameObj = function (name, idxFields) {
         for (var i = 0; i < idxFields.length; i++) {
-          if (idxFields[i].label == name ||
-            idxFields[i].idxName == name) {
+          if (idxFields[i].label == name || idxFields[i].idxName == name) {
             return idxFields[i];
           }
         }
@@ -88,107 +89,120 @@
        * @param {string} name of the facet field
        * @param {*} value of the active filter
        * @param {string} type of the facet field (range, field etc..)
-       * @param {Object} appFieldObj field info taken from the application profile
+       * @param {Object} fieldInfo field info taken from the application profile
        * @param {string} tokenSeparator separator for tokenized fields; if defined, the field
        * is considered tokenized & the output filter will be `like '*value*'` instead of `= 'value'`
-       * @param {Object} valueTree value tree for hierarchical facets
        * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(name, value, type, appFieldObj, tokenSeparator, valueTree) {
+      var buildSldFilter = function (name, value, type, fieldInfo, tokenSeparator) {
         var filterFields = [];
 
         // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
         function transformDate(d) {
-          return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+          return d.substr(6) + "-" + d.substr(3, 2) + "-" + d.substr(0, 2);
         }
 
         // date range
-        if (type == 'rangeDate' && appFieldObj.minField && appFieldObj.maxField) {
-          filterFields.push({
-            field_name: appFieldObj.maxField,
-            filter: [{
-              filter_type: 'PropertyIsGreaterThanOrEqualTo',
-              params: [transformDate(value.from)]
-            }]
-          }, {
-            field_name: appFieldObj.minField,
-            filter: [{
-              filter_type: 'PropertyIsLessThanOrEqualTo',
-              params: [transformDate(value.to)]
-            }]
-          });
+        if (type == "rangeDate" && fieldInfo.minField && fieldInfo.maxField) {
+          filterFields.push(
+            {
+              field_name: fieldInfo.maxField,
+              filter: [
+                {
+                  filter_type: "PropertyIsGreaterThanOrEqualTo",
+                  params: [transformDate(value.from)]
+                }
+              ]
+            },
+            {
+              field_name: fieldInfo.minField,
+              filter: [
+                {
+                  filter_type: "PropertyIsLessThanOrEqualTo",
+                  params: [transformDate(value.to)]
+                }
+              ]
+            }
+          );
         }
 
         // date
-        else if (type == 'date') {
-          filterFields.push({
-            field_name: name,
-            filter: [{
-              filter_type: 'PropertyIsGreaterThanOrEqualTo',
-              params: [transformDate(value.from)]
-            }]
-          }, {
-            field_name: name,
-            filter: [{
-              filter_type: 'PropertyIsLessThanOrEqualTo',
-              params: [transformDate(value.to)]
-            }]
-          });
+        else if (type == "date") {
+          filterFields.push(
+            {
+              field_name: name,
+              filter: [
+                {
+                  filter_type: "PropertyIsGreaterThanOrEqualTo",
+                  params: [transformDate(value.from)]
+                }
+              ]
+            },
+            {
+              field_name: name,
+              filter: [
+                {
+                  filter_type: "PropertyIsLessThanOrEqualTo",
+                  params: [transformDate(value.to)]
+                }
+              ]
+            }
+          );
         }
 
         // numeric range
-        else if (type == 'range') {
-          filterFields.push({
-            field_name: name,
-            filter: [{
-              filter_type: 'PropertyIsGreaterThanOrEqualTo',
-              params: [value.from]
-            }]
-          }, {
-            field_name: name,
-            filter: [{
-              filter_type: 'PropertyIsLessThanOrEqualTo',
-              params: [value.to]
-            }]
-          });
+        else if (type == "range") {
+          filterFields.push(
+            {
+              field_name: name,
+              filter: [
+                {
+                  filter_type: "PropertyIsGreaterThanOrEqualTo",
+                  params: [value.from]
+                }
+              ]
+            },
+            {
+              field_name: name,
+              filter: [
+                {
+                  filter_type: "PropertyIsLessThanOrEqualTo",
+                  params: [value.to]
+                }
+              ]
+            }
+          );
         }
 
-        // hierarchical facet values
-        else if (type == 'terms' && valueTree) {
-          filterFields.push({
-            field_name: name,
-            filter: buildHierarchicalFacetSldFilters(value, valueTree, tokenSeparator)
-          });
-        }
-
-        // flat facet values
-        else if (type == 'terms') {
+        // strings
+        else if (type == "terms") {
           var filters = [];
 
-          angular.forEach(value, function(v, k) {
+          angular.forEach(value, function (v, k) {
             if (tokenSeparator !== undefined) {
               // handle 3 cases for a tokenized field: value is first, last or between both
-              filters.push({
-                  filter_type: 'PropertyIsLike',
-                  params: [k + tokenSeparator + '*']
-                }, {
-                  filter_type: 'PropertyIsLike',
-                  params: ['*' + tokenSeparator + k]
-                }, {
-                  filter_type: 'PropertyIsLike',
-                  params: ['*' + tokenSeparator + k + tokenSeparator + '*']
-                }, {
+              filters.push(
+                {
+                  filter_type: "PropertyIsLike",
+                  params: [k + tokenSeparator + "*"]
+                },
+                {
+                  filter_type: "PropertyIsLike",
+                  params: ["*" + tokenSeparator + k]
+                },
+                {
+                  filter_type: "PropertyIsLike",
+                  params: ["*" + tokenSeparator + k + tokenSeparator + "*"]
+                },
+                {
                   // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
-                  filter_type: 'PropertyIsLike',
+                  filter_type: "PropertyIsLike",
                   params: [k]
                 }
-
-
               );
-            }
-            else {
+            } else {
               filters.push({
-                filter_type: 'PropertyIsEqualTo',
+                filter_type: "PropertyIsEqualTo",
                 params: [k]
               });
             }
@@ -201,31 +215,34 @@
         }
 
         // histogram
-        else if (type == 'histogram') {
+        else if (type == "histogram") {
           var filter = [];
 
-          angular.forEach(value, function(v, k) {
-            if (k.substring(0, 3) === '>= ') {
+          angular.forEach(value, function (v, k) {
+            if (k.substring(0, 3) === ">= ") {
               var greaterThan = k.substring(3);
               filter.push({
-                filter_type: 'PropertyIsGreaterThanOrEqualTo',
+                filter_type: "PropertyIsGreaterThanOrEqualTo",
                 params: [greaterThan]
               });
-            } else if (k.substring(0, 2) === '< ') {
+            } else if (k.substring(0, 2) === "< ") {
               var lowerThan = k.substring(2);
               filter.push({
-                filter_type: 'PropertyIsLessThan',
+                filter_type: "PropertyIsLessThan",
                 params: [lowerThan]
               });
             } else {
-              var parts = k.split(' - ');
-              filter.push({
-                filter_type: 'PropertyIsBetweenExclusive',
-                params: parts
-              }, {
-                filter_type: 'PropertyIsEqualTo',
-                params: [parts[0]]
-              });
+              var parts = k.split(" - ");
+              filter.push(
+                {
+                  filter_type: "PropertyIsBetweenExclusive",
+                  params: parts
+                },
+                {
+                  filter_type: "PropertyIsEqualTo",
+                  params: [parts[0]]
+                }
+              );
             }
           });
 
@@ -239,122 +256,42 @@
       };
 
       /**
-       * Generates an array of SLD filters for the value
-       * @param {string} value
-       * @param {string} tokenSeparator
-       * @return {[]}
-       */
-      var generateValueFilter = function(value, tokenSeparator) {
-        var filters = [];
-        if (tokenSeparator !== undefined) {
-          // handle 3 cases for a tokenized field: value is first, last or between both
-          filters.push({
-              filter_type: 'PropertyIsLike',
-              params: ['*' + tokenSeparator + value]
-            }, {
-              // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
-              filter_type: 'PropertyIsLike',
-              params: [value]
-            }
-          );
-          if (value.substr(-1, 1) !== '*') {
-            filters.push({
-                filter_type: 'PropertyIsLike',
-                params: [value + tokenSeparator + '*']
-              }, {
-                filter_type: 'PropertyIsLike',
-                params: ['*' + tokenSeparator + value + tokenSeparator + '*']
-              }
-            );
-          }
-        }
-        else {
-          filters.push({
-            filter_type: 'PropertyIsEqualTo',
-            params: [value]
-          });
-        }
-        return filters;
-      };
-
-      /**
-       * generates an array of filters for a hierarchical facet
-       */
-      var buildHierarchicalFacetSldFilters = function(value, valueTree, tokenSeparator) {
-        var checkedValues = Object.keys(value);
-        var filters = [];
-
-        function someChildrenChecked(node) {
-          return checkedValues.some(function (v) { return v.indexOf(node.key) === 0; });
-        }
-
-        function allChildrenChecked(node) {
-          if (!Array.isArray(node.nodes)) {
-            return checkedValues.indexOf(node.key) > -1;
-          }
-          return node.nodes.every(allChildrenChecked);
-        }
-
-        function generateFiltersForNode(node) {
-          if (!node.nodes) {
-            return checkedValues.indexOf(node.key) > -1 ? generateValueFilter(node.key, tokenSeparator) : [];
-          }
-
-          if (!someChildrenChecked(node)) {
-            return [];
-          }
-
-          if (allChildrenChecked(node)) {
-            return generateValueFilter(node.key + '/*', tokenSeparator);
-          }
-
-          var result = [];
-          for (var i = 0; i < node.nodes.length; i++) {
-            Array.prototype.push.apply(result, generateFiltersForNode(node.nodes[i]));
-          }
-          return result;
-        }
-
-        for (var i = 0; i < valueTree.nodes.length; i++) {
-          Array.prototype.push.apply(filters, generateFiltersForNode(valueTree.nodes[i]));
-        }
-
-        return filters;
-      };
-
-      /**
        * Create the generateSLD service config from the facet ui state.
        * @param {object} facetState represents the choices from the facet ui
        * @param {object} appProfile optional, application profile holding field
        * data
-       * @param {object} fields facet fields
        * @return {object} the sld config object
        */
-      this.createSLDConfig = function(facetState, appProfile, fields) {
+      this.createSLDConfig = function (facetState, appProfile) {
         var sldConfig = {
           filters: []
         };
 
-        angular.forEach(facetState, function(attrValue, attrName) {
+        angular.forEach(facetState, function (attrValue, attrName) {
           // fetch field info from attr name (expects 'ft_xxx_yy_zz')
           var fieldInfo = attrName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
-          var type = attrValue.type || 'terms';
-          var appProfileField = appProfile && appProfile.fields &&
-            appProfile.fields.filter(function(field) {
+          var type = attrValue.type || "terms";
+          var appProfileField =
+            appProfile &&
+            appProfile.fields &&
+            appProfile.fields.filter(function (field) {
               return field.name === fieldName;
             })[0];
-          var fieldObj = fields && fields.filter(function(field) {
-            return field.name.indexOf(fieldName) === 3;
-          })[0];
-          var tokenSeparator = (appProfile && appProfile.tokenizedFields &&
-            appProfile.tokenizedFields[fieldName]) || '';
+          var tokenSeparator =
+            (appProfile &&
+              appProfile.tokenizedFields &&
+              appProfile.tokenizedFields[fieldName]) ||
+            "";
 
-          var values = attrValue.values && Object.keys(attrValue.values).length ?
-            attrValue.values : attrValue.value;
+          var values =
+            attrValue.values && Object.keys(attrValue.values).length
+              ? attrValue.values
+              : attrValue.value;
 
-          Array.prototype.push.apply(sldConfig.filters,
-            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator, fieldObj && fieldObj.tree)
+          Array.prototype.push.apply(
+            sldConfig.filters,
+            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator)
           );
         });
 
@@ -369,35 +306,37 @@
        * @param {string} ftName featuretype name
        * @param {string} wfsUrl url of the wfs service
        */
-      this.getApplicationProfile = function(md, uuid, ftName, wfsUrl, protocol) {
+      this.getApplicationProfile = function (md, uuid, ftName, wfsUrl, protocol) {
         // Metadata is set (it will not on map reload)
         // and has a linksTree field
         if (md && md.linksTree) {
           var deferred = $q.defer();
-          var applicationProfile = md.linksTree.map(function (d) {
+          var applicationProfile = md.linksTree
+            .map(function (d) {
               return d.filter(function (e) {
-                return e.protocol === 'OGC:WFS';
+                return e.protocol === "OGC:WFS";
               });
-            }).filter(function (f) {
+            })
+            .filter(function (f) {
               return f[0] ? f[0].name : undefined;
-            }).find(function (s) {
+            })
+            .find(function (s) {
               return s[0].name === ftName;
             })[0].applicationProfile;
 
           try {
             JSON.parse(applicationProfile);
             deferred.resolve({
-              '0': applicationProfile
+              0: applicationProfile
             });
           } catch (e) {
             deferred.resolve({
-              '0': '{}'
+              0: "{}"
             }); // no ApplicationProfile for current md
           }
           return deferred.promise;
         } else {
-          return $http.post('../api/records/' + uuid +
-            '/query/wfs-indexing-config', {
+          return $http.post("../api/records/" + uuid + "/query/wfs-indexing-config", {
             url: wfsUrl,
             name: ftName,
             protocol: protocol
@@ -413,13 +352,13 @@
        * @param {Array} fields index fields definition
        * @param {Object} appProfile Config object.
        */
-      this.indexMergeApplicationProfile = function(fields, appProfile) {
-
-        var toRemoveIdx = [], mergedF = [];
+      this.indexMergeApplicationProfile = function (fields, appProfile) {
+        var toRemoveIdx = [],
+          mergedF = [];
         var newFields = appProfile.fields;
         var tokenizedFields = appProfile.tokenizedFields || [];
 
-        var getNewFieldIdx = function(field) {
+        var getNewFieldIdx = function (field) {
           for (var i = 0; i < newFields.length; i++) {
             if (field.name == newFields[i].name) {
               return i;
@@ -429,7 +368,7 @@
         };
 
         // Merge field objects and detect if we need to remove some
-        fields.forEach(function(field, idx) {
+        fields.forEach(function (field, idx) {
           var keep;
 
           var newFieldIdx = getNewFieldIdx(field);
@@ -440,30 +379,30 @@
             if (newField.label) {
               field.label = newField.label[gnGlobalSettings.lang];
             }
+            field.definition = newField.definition;
             field.aggs = newField.aggs;
             field.display = newField.display;
             // add a flag for tokenized fields
             field.isTokenized = tokenizedFields[field.name] != null;
             field.tokenSeparator = tokenizedFields[field.name];
-            field.suffix = newField.suffix
-            field.hidden = newField.hidden
+            field.suffix = newField.suffix;
+            field.hidden = newField.hidden;
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
           }
         });
 
-
         var allFields = angular.copy(fields);
 
         if (!appProfile.extendOnly) {
-          toRemoveIdx.forEach(function(i) {
+          toRemoveIdx.forEach(function (i) {
             fields.splice(i, 1);
           });
         }
 
         // Add appProfile extra fields
-        newFields.forEach(function(f) {
+        newFields.forEach(function (f) {
           if (mergedF.indexOf(f.name) < 0) {
             f.label = f.label[gnGlobalSettings.lang] || f.name;
             fields.push(f);
@@ -471,11 +410,10 @@
         });
 
         if (!appProfile.extendOnly) {
-          fields.sort(function(a, b) {
+          fields.sort(function (a, b) {
             return getNewFieldIdx(a) - getNewFieldIdx(b);
           });
         }
-
 
         return allFields;
       };
@@ -496,65 +434,12 @@
         };
 
         return $http({
-          method: 'POST',
-          url: '../api/tools/ogc/sld',
+          method: "POST",
+          url: "../api/tools/ogc/sld",
           data: $.param(params),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function(response) {
-          var url = response.data;
-          return this.pollSldUrl(url);
-        }.bind(this));
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
       };
-
-      this.pollSldUrl = function(url) {
-        var defer = $q.defer();
-        var pollingTimeout = 100;
-        var pollingAttempts = 0;
-        var pollingMaxAttemps = 25;
-
-        var poller = function() {
-          pollingAttempts ++;
-          $http({
-            method: 'GET',
-            url: url
-          }).then(function() {
-            defer.resolve(url);
-          }, function(error) {
-            if(pollingAttempts < pollingMaxAttemps) {
-              $timeout(poller, pollingTimeout);
-            } else {
-              defer.reject(error);
-            }
-          });
-        }
-        poller();
-        return defer.promise;
-      };
-
-      this.pollSldUrl = function (url) {
-        var defer = $q.defer();
-        var pollingTimeout = 100;
-        var pollingAttempts = 0;
-        var pollingMaxAttemps = 25;
-
-        var poller = function () {
-          pollingAttempts++
-          $http({
-            method: 'GET',
-            url: url
-          }).then(function () {
-            defer.resolve(url);
-          }, function (error) {
-            if (pollingAttempts < pollingMaxAttemps) {
-              $timeout(poller, pollingTimeout);
-            } else {
-              defer.reject(error);
-            }
-          })
-        }
-        poller()
-        return defer.promise
-      }
 
       /**
        * Run the indexation of the feature
@@ -563,36 +448,45 @@
        * @param {string} featuretype name
        * @return {httpPromise} when indexing is done
        */
-      this.indexWFSFeatures = function(
-        url, type, idxConfig, treeFields, uuid, version, strategy) {
-        return $http.put('../api/workers/data/wfs/actions/start', {
+      this.indexWFSFeatures = function (
+        url,
+        type,
+        idxConfig,
+        treeFields,
+        uuid,
+        version,
+        strategy
+      ) {
+        return $http
+          .put("../api/workers/data/wfs/actions/start", {
             url: url,
             strategy: strategy, // means that the targetNs of GFI is used to define strategy.
             typeName: type,
-            version: version || '1.1.0',
+            version: version || "1.1.0",
             tokenizedFields: idxConfig,
             treeFields: treeFields,
             metadataUuid: uuid
-          }
-        ).then(function(data) {
-        }, function(response) {
-        });
+          })
+          .then(
+            function (data) {},
+            function (response) {}
+          );
       };
 
       // formats current filter state as a CQL request
       // if useActualParamName is true, param names will be stripped of their
       // prefixes & suffixes (used only for the index)
-      this.toCQL = function(esObj, useActualParamName) {
+      this.toCQL = function (esObj, useActualParamName) {
         var state = esObj.getState();
         var where;
 
         if (!state) {
-          console.warn('WFS filter state could not be fetched');
-          return '';
+          console.warn("WFS filter state could not be fetched");
+          return "";
         }
 
         where = [];
-        angular.forEach(state.qParams, function(fObj, fName) {
+        angular.forEach(state.qParams, function (fObj, fName) {
           var config = esObj.getIdxNameObj_(fName);
           var clause = [];
           var values = fObj.values;
@@ -606,45 +500,55 @@
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + config.maxField + ' >= \'' + transformDate(values.from) + '\')',
-                '(' + config.minField + ' <= \'' + transformDate(values.to) + '\')'
+                "(" + config.maxField + " >= '" + transformDate(values.from) + "')",
+                "(" + config.minField + " <= '" + transformDate(values.to) + "')"
               ]);
             }
             return;
           }
 
-          angular.forEach(values, function(v, k) {
+          angular.forEach(values, function (v, k) {
             if (config.isRange) {
-              if (k.substring(0, 3) === '>= ') {
+              if (k.substring(0, 3) === ">= ") {
                 var greaterThan = k.substring(3);
-                clause.push('(' + paramName + ' >= ' + greaterThan + ')');
-              } else if (k.substring(0, 2) === '< ') {
+                clause.push("(" + paramName + " >= " + greaterThan + ")");
+              } else if (k.substring(0, 2) === "< ") {
                 var lowerThan = k.substring(2);
-                clause.push('(' + paramName + ' < ' + lowerThan + ')');
+                clause.push("(" + paramName + " < " + lowerThan + ")");
               } else {
-                var parts = k.split(' - ');
-                clause.push('(' + paramName + ' >= ' + parts[0] + ' AND ' + paramName + ' < ' + parts[1] + ')');
+                var parts = k.split(" - ");
+                clause.push(
+                  "(" +
+                    paramName +
+                    " >= " +
+                    parts[0] +
+                    " AND " +
+                    paramName +
+                    " < " +
+                    parts[1] +
+                    ")"
+                );
               }
               return;
             }
 
-            var escaped = k.replace(/'/g, '\\\'');
+            var escaped = k.replace(/'/g, "\\'");
             if (config.isTokenized) {
               var sep = config.tokenSeparator;
               clause.push(
-                '(' + paramName + " LIKE '" + escaped + "')",
-                '(' + paramName + " LIKE '%" + sep + escaped + sep + "%')",
-                '(' + paramName + " LIKE '%" + sep + escaped + "')",
-                '(' + paramName + " LIKE '" + escaped + sep + "%')"
+                "(" + paramName + " LIKE '" + escaped + "')",
+                "(" + paramName + " LIKE '%" + sep + escaped + sep + "%')",
+                "(" + paramName + " LIKE '%" + sep + escaped + "')",
+                "(" + paramName + " LIKE '" + escaped + sep + "%')"
               );
             } else {
-              clause.push('(' + paramName + " = '" + escaped + "')");
+              clause.push("(" + paramName + " = '" + escaped + "')");
             }
           });
           if (clause.length == 0) return;
-          where.push('(' + clause.join(' OR ') + ')');
+          where.push("(" + clause.join(" OR ") + ")");
         });
-        return where.join(' AND ');
+        return where.join(" AND ");
       };
 
       /**
@@ -656,13 +560,13 @@
        *
        * @param {Object} elasticSearchObject
        */
-      this.toObjectProperties = function(esObject) {
+      this.toObjectProperties = function (esObject) {
         var state = esObject.getState();
         var result = {};
 
         if (state) {
           // add query params (qParams)
-          angular.forEach(state.qParams, function(fObj, fName) {
+          angular.forEach(state.qParams, function (fObj, fName) {
             var config = esObject.getIdxNameObj_(fName);
 
             // init array
@@ -680,7 +584,7 @@
             }
 
             // adding all values to the array
-            angular.forEach(fObj.values, function(value, key) {
+            angular.forEach(fObj.values, function (value, key) {
               result[fName].push(key);
             });
           });
@@ -688,10 +592,13 @@
           // add geometry (array with only one value)
           if (state.geometry) {
             result.geometry = [
-              state.geometry[0][0] + ',' +
-              state.geometry[1][1] + ',' +
-              state.geometry[1][0] + ',' +
-              state.geometry[0][1]
+              state.geometry[0][0] +
+                "," +
+                state.geometry[1][1] +
+                "," +
+                state.geometry[1][0] +
+                "," +
+                state.geometry[0][1]
             ];
           }
         }
@@ -706,22 +613,22 @@
        *
        * @param {Object} elasticSearchObject
        */
-      this.toReadableObject = function(esObject) {
+      this.toReadableObject = function (esObject) {
         var state = esObject.getState();
         var result = {};
 
         if (state) {
           // add query params (qParams)
-          angular.forEach(state.qParams, function(fObj, fName) {
+          angular.forEach(state.qParams, function (fObj, fName) {
             var config = esObject.getIdxNameObj_(fName);
             var paramName = config.label || config.name;
 
             // special case: date time, use 'from' property
             if (config.isDateTime) {
-              if (fObj.values.from != '' && fObj.values.to) {
+              if (fObj.values.from != "" && fObj.values.to) {
                 result[fName] = {
                   name: paramName,
-                  value: fObj.values.from + ', ' + fObj.values.to
+                  value: fObj.values.from + ", " + fObj.values.to
                 };
               }
               return;
@@ -730,10 +637,10 @@
             // values separated by comma
             result[fName] = {
               name: paramName,
-              value: ''
+              value: ""
             };
-            angular.forEach(fObj.values, function(value, key) {
-              result[fName].value += ', ' + key;
+            angular.forEach(fObj.values, function (value, key) {
+              result[fName].value += ", " + key;
             });
             result[fName].value = result[fName].value.substring(2);
           });
@@ -741,7 +648,6 @@
 
         return result;
       };
-
-
-    }]);
+    }
+  ]);
 })();

@@ -1,0 +1,204 @@
+<div>
+  <button
+    class="btn btn-link btn-xs"
+    data-toggle="modal"
+    title="{{'GUFplusAddRating' | translate}}"
+    data-target="#gn-userfeedback-addcomment"
+    data-ng-click="initPopup()"
+  >
+    <i class="fa fa-plus"></i>&nbsp;
+  </button>
+  <!-- Add comment Modal -->
+  <div
+    class="modal gn-userfeedback-modal"
+    id="gn-userfeedback-addcomment"
+    tabindex="-1"
+    role="dialog"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h1 class="modal-title">
+            <i class="fa fa-comments"></i>&nbsp;
+            <span data-translate="">GUFaddRating</span>
+            <strong>{{metadataTitle}}</strong>
+          </h1>
+        </div>
+        <div class="modal-body row">
+          <div class="row">
+            <div class="col-md-12">
+              <h2 data-translate="">GUFgiveYourOpinionOnDifferentCategories</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-7">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="gn-userfeedback-title">
+                    <h2 data-translate="">GUFcategories</h2>
+                  </div>
+
+                  <div data-ng-repeat="c in ratingCategories">
+                    <h2 title="{{c.label[lang].description}}">{{c.label[lang].label}}</h2>
+                    <div
+                      data-rating=""
+                      data-ng-model="uf.rating[c.id]"
+                      data-max="5"
+                      data-state-on="'fa fa-fw fa-star'"
+                      data-state-off="'fa fa-fw fa-star-o'"
+                      data-on-hover="hoveringOver(value)"
+                      data-on-leave="overStar = null"
+                      data-ng-click="updateRate()"
+                      class="text-muted"
+                      title="{{readonly ? '' : ('clickToRate' | translate)}}"
+                    ></div>
+                  </div>
+                </div>
+                <!-- /.panel-body -->
+              </div>
+              <!-- /.panel -->
+
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="gn-userfeedback-title gn-margintop">
+                    <h2 data-translate="">GUFaddYourReview</h2>
+                  </div>
+                  <p class="text-muted" data-translate="">GUFaddYourReviewInfo</p>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    data-ng-model="uf.comment"
+                    required
+                  ></textarea>
+                  <!-- TODO: Add check on text length-->
+                </div>
+                <!-- /.panel-body -->
+              </div>
+              <!-- /.panel -->
+            </div>
+            <div class="col-md-5">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="gn-userfeedback-title">
+                    <h2 data-translate="">GUFcurrentScore</h2>
+                  </div>
+                  <div
+                    data-ng-show="uf.ratingAVG > 0"
+                    class="gn-userfeedback-score gn-userfeedback-score-{{uf.ratingAVG}}"
+                  >
+                    {{uf.ratingAVG}} / 5
+                    <span class="fa fa-fw fa-star">&nbsp;</span>
+                  </div>
+                  <div class="gn-userfeedback-title">
+                    <h2 data-translate="">GUFuserInformation</h2>
+                  </div>
+                  <div class="gn-userfeedback-loggedin" data-ng-show="loggedIn">
+                    <p
+                      data-translate=""
+                      data-translate-values="{authorNameValue:'{{authorNameValue}}'}"
+                    >
+                      GUFyouAreLoggedInAs
+                    </p>
+                  </div>
+                  <div class="gn-userfeedback-loggedout" data-ng-hide="loggedIn">
+                    <div id="GUFcredentials" class="anonymous">
+                      <p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
+                      <input
+                        type="text"
+                        name="authorName"
+                        class="form-control"
+                        placeholder="{{'GUFname' | translate}}"
+                        aria-label="{{'GUFname' | translate}}"
+                        data-ng-model="uf.authorName"
+                        data-ng-maxlength="64"
+                        required
+                      />
+                      <div data-ng-show="authorNameError" class="help-block">
+                        {{authorNameError}}
+                      </div>
+
+                      <input
+                        type="email"
+                        name="authorEmail"
+                        class="form-control"
+                        placeholder="{{'GUFemail' | translate}}"
+                        aria-label="{{'GUFemail' | translate}}"
+                        data-ng-model="uf.authorEmail"
+                        data-ng-maxlength="64"
+                        required
+                      />
+                      <p data-ng-show="authorEmailError" class="help-block">
+                        {{authorEmailError}}
+                      </p>
+
+                      <input
+                        type="text"
+                        name="authorOrganization"
+                        class="form-control"
+                        placeholder="{{'GUForganization' | translate}}"
+                        aria-label="{{'GUForganization' | translate}}"
+                        data-ng-model="uf.authorOrganization"
+                        data-ng-maxlength="64"
+                      />
+                      <div data-ng-show="authorOrganizationError" class="help-block">
+                        {{authorOrganizationError}}
+                      </div>
+                    </div>
+                    <div class="checkbox anonymous">
+                      <label>
+                        <input
+                          type="checkbox"
+                          data-ng-model="uf.optionPrivacy"
+                          aria-label="{{'GUFshowUserNameInComments' | translate}}"
+                          value="1"
+                        />
+                        <span data-translate="">GUFshowUserNameInComments</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.panel-body -->
+              </div>
+              <!-- /.panel -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="form-group" data-ng-if="recaptchaEnabled">
+            <div vc-recaptcha class="col-lg-8" theme="'light'" key="recaptchaKey"></div>
+
+            <span
+              class="col-lg-8"
+              style="color: red"
+              data-ng-show="resolveRecaptcha"
+              data-translate=""
+            >
+              resolveCaptcha
+            </span>
+          </div>
+
+          <input type="hidden" data-ng-model="uf.ratingAVG" />
+          <button
+            type="button"
+            class="btn btn-default"
+            data-dismiss="modal"
+            data-translate=""
+          >
+            GUFclose
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            data-ng-click="submitForm(uf, modal)"
+            data-translate=""
+          >
+            GUFsave
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

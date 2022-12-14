@@ -42,12 +42,12 @@ Stylesheet used to remove a reference to a online resource.
 
   <!-- Remove geonet:* elements. -->
   <xsl:template
-    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = $name]"
+    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)]"
     priority="2"/>
   <xsl:template
     match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0]"
     priority="2"/>
   <xsl:template
-    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) = 'WWW:DOWNLOAD-1.0-http--download']"
+    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download']"
     priority="2"/>
 </xsl:stylesheet>

@@ -29,13 +29,8 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasO
 import static org.springframework.data.jpa.domain.Specification.where;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -354,7 +349,8 @@ public class AccessManager {
      */
     public Element getContentReviewers(ServiceContext context, final Set<Integer> metadataIds) throws Exception {
         List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(metadataIds,
-            Profile.Reviewer, SortUtils.createSort(User_.name));
+            Profile.Reviewer);
+        Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
 
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {
@@ -453,10 +449,9 @@ public class AccessManager {
     }
 
     private String GROUPOWNERONLY_STRATEGY =
-        "You need to be administrator, or reviewer of the metadata group.";
+        "api.metadata.share.strategy.groupOwnerOnly";
     private String REVIEWERINGROUP_STRATEGY =
-        "You need to be administrator, or reviewer of the metadata group " +
-            "or reviewer with edit privilege on the metadata.";
+        "api.metadata.share.strategy.reviewerInGroup";
 
     public String getReviewerRule() {
         return settingManager.getValueAsBool(

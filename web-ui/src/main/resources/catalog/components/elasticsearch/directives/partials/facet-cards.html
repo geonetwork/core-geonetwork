@@ -1,0 +1,44 @@
+<div
+  data-ng-repeat="(k, facet) in searchInfo.aggregations[key].buckets"
+  data-ng-show="facet.key"
+  data-ng-class="isInspire ? ('bg-iti-' + (facet.key | facetCssClassCode: isInspire)) : ''"
+  class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic"
+>
+  <div
+    class="panel panel-default gn-facet-{{facet.key}} gn-facet-type-{{decorator.type}}"
+    style="background-image:url('{{facet.key | facetBgUrlBuilder:decorator}}')"
+  >
+    <div class="panel-body">
+      <a
+        class="clearfix"
+        title="{{facet.key}}"
+        role="link"
+        data-ng-init="aggResponse = searchInfo.aggregations[key];
+                       decorator = (aggResponse.meta && aggResponse.meta.decorator) || undefined;
+                       field = (aggResponse.meta && aggResponse.meta.field)
+                              || key;
+                       value = aggResponse.meta && aggResponse.meta.wildcard
+                              ? (facet.key + '*') : facet.key"
+        data-ng-href='#/search?query_string={"{{field}}": {"{{value === missingValue ? "%23MISSING%23" : value}}": true} }'
+      >
+        <span
+          data-ng-if="decorator"
+          data-es-facet-decorator="decorator"
+          data-key="facet.key"
+        />
+        <h2
+          data-ng-show="isInspire"
+          class="inspire-{{(facet.key | facetCssClassCode: isInspire)}}-{{iso2lang}}"
+        >
+          <span class="inspire-label clamp-2"></span>
+        </h2>
+        <h2 data-ng-hide="isInspire">
+          <span class="clamp-2">{{facet.key | facetTranslator: key | capitalize}}</span>
+        </h2>
+      </a>
+    </div>
+    <div class="panel-footer">
+      <i class="fa fa-fw fa-file-text-o"></i>{{facet.doc_count}}
+    </div>
+  </div>
+</div>

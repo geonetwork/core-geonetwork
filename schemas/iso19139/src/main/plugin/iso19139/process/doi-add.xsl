@@ -17,6 +17,8 @@
 
   <xsl:param name="doi"
              select="''"/>
+  <xsl:param name="doiProxy"
+             select="'https://www.doi.org/'"/>
   <xsl:param name="doiProtocolRegex"
              select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
 
@@ -51,7 +53,7 @@
       <gmd:identifier>
         <gmd:MD_Identifier>
           <gmd:code>
-            <gmx:Anchor xlink:href="{$doi}">
+            <gmx:Anchor xlink:href="{concat($doiProxy, $doi)}">
               <xsl:value-of select="$doi"/>
             </gmx:Anchor>
 &lt;!&ndash;            <gco:CharacterString><xsl:value-of select="$doi"/></gco:CharacterString>&ndash;&gt;
@@ -91,7 +93,7 @@
             <gmd:onLine>
               <gmd:CI_OnlineResource>
                 <gmd:linkage>
-                  <gmd:URL><xsl:value-of select="$doi"/></gmd:URL>
+                  <gmd:URL><xsl:value-of select="concat($doiProxy, $doi)"/></gmd:URL>
                 </gmd:linkage>
                 <gmd:protocol>
                   <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>

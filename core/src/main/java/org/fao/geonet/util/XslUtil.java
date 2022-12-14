@@ -29,12 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
-
-import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
-import org.fao.geonet.api.records.attachments.Store;
-import org.fao.geonet.domain.MetadataResourceContainer;
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.MultiPolygon;
+import com.neovisionaries.i18n.LanguageCode;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -62,16 +57,12 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.*;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
@@ -95,8 +86,9 @@ import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.operation.valid.IsValidOp;
@@ -115,8 +107,6 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -148,8 +138,6 @@ import static org.fao.geonet.utils.Xml.getXmlFromJSON;
  * @author jesse
  */
 public final class XslUtil {
-
-
     public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
         ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
@@ -273,18 +261,6 @@ public final class XslUtil {
     private static final char CS_DEFAULT = ',';
     private static final char TS_WKT = ',';
     private static final char CS_WKT = ' ';
-    private static final Whitelist WHITE_LIST;
-
-    static {
-        WHITE_LIST = Whitelist.relaxed();
-        // add tags to allow in output html as we find the ones we require
-        WHITE_LIST.addTags("span", "font");
-        // add attributes to allow in output html as we find the ones we require
-        WHITE_LIST.addAttributes(":all", "color", "style", "align");
-        WHITE_LIST.addAttributes("font", "size", "face");
-        WHITE_LIST.addAttributes("a", "target", "href", "title");
-        WHITE_LIST.addAttributes("a", "target", "href", "title");
-    }
 
     /**
      * clean the src of ' and <>
@@ -512,7 +488,7 @@ public final class XslUtil {
                 }
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue '" + key + "' error: " + e.getMessage(), e);
         }
         return "";
     }
@@ -684,6 +660,27 @@ public final class XslUtil {
     }
 
     /**
+     * Try to preserve some HTML layout to text layout.
+     *
+     * Replace br tag by new line, li by new line with leading *.
+     */
+    public static String htmlElement2textReplacer(String html) {
+        return html
+            .replaceAll("<br */?>", System.getProperty("line.separator"))
+            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    }
+    public static String html2text(String html) {
+        return Jsoup.parse(html).wholeText();
+    }
+    public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
+        return html2text(
+            substituteHtmlToTextLayoutElement ? htmlElement2textReplacer(html) : html);
+    }
+    public static String html2textNormalized(String html) {
+        return Jsoup.parse(html).text();
+    }
+
+    /**
      * Converts the seperators of the coords to the WKT from ts and cs
      *
      * @param coords the coords string to convert
@@ -794,7 +791,7 @@ public final class XslUtil {
             return values.get(fieldname);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
     }
@@ -844,6 +841,30 @@ public final class XslUtil {
     }
 
     /**
+     * Convert the iso639_2B to iso639_2T
+     *
+     * @param iso639_2B The 3 iso lang code B
+     * @return The iso639_2T lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2B_to_iso639_2T(String iso639_2B) {
+        return IsoLanguagesMapper.iso639_2B_to_iso639_2T(iso639_2B);
+    }
+
+    /**
+     * Convert the iso639_2T to iso639_2B
+     *
+     * @param iso639_2T The 3 iso lang code T
+     * @return The iso639_2B lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2T_to_iso639_2B(String iso639_2T) {
+        return IsoLanguagesMapper.iso639_2T_to_iso639_2B(iso639_2T);
+    }
+
+    /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *
      * @param iso3LangCode The 2 iso lang code
@@ -856,7 +877,7 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 char iso lang code from a 3 iso lang code.
      *
      * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
@@ -868,44 +889,29 @@ public final class XslUtil {
             if (defaultValue != null) {
                 return defaultValue;
             } else {
-                return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+                iso3LangCode = Geonet.DEFAULT_LANGUAGE;
             }
+        }
+        String iso2LangCode = null;
+
+        // Catch language entries longer than 3 characters with a semicolon
+        if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
+            //This will extract text similar to the following "fr;CAN", "fra;CAN", "fr ;CAN"
+            //In the case of "fr;CAN",  fr would be extracted even though it is not a 3 char code - but that is ok because LanguageCode.getByCode supports 2 and 3 char codes.
+            iso3LangCode = iso3LangCode.split(";")[0].trim();
+        }
+
+        LanguageCode languageCode = LanguageCode.getByCode(iso3LangCode.toLowerCase());
+        if (languageCode != null) {
+            iso2LangCode = languageCode.name();
+        }
+
+        // Triggers when the language can't be matched to a code
+        if (iso2LangCode == null) {
+            Log.info(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
+            return iso3LangCode.substring(0, 2);
         } else {
-            if (iso3LangCode.equalsIgnoreCase("FRA")) {
-                return "FR";
-            }
-
-            if (iso3LangCode.equalsIgnoreCase("DEU")) {
-                return "DE";
-            }
-            String iso2LangCode = null;
-
-            try {
-                final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
-                /*if the language  is 2 characters long...*/
-                if (iso3LangCode.length() == 2) {
-                    iso2LangCode = iso3LangCode;
-                    /*Catch language entries longer than 3 characters with a semicolon*/
-                } else if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode.substring(0, 3));
-                    /** This final else works properly for languages with exactly three characters, so
-                     * an exception will occur if gmd:language has more than 3 characters but
-                     * does not have a semicolon.
-                     */
-                } else {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
-                }
-            } catch (Exception ex) {
-                Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
-
-            }
-            /* Triggers when the language can't be matched to a code */
-            if (iso2LangCode == null) {
-                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
-                return iso3LangCode.substring(0, 2);
-            } else {
-                return iso2LangCode;
-            }
+            return iso2LangCode;
         }
     }
 
@@ -1115,18 +1121,36 @@ public final class XslUtil {
      * does not make any security checks.
      */
     public static Node getRecord(String uuid) {
+        return getRecord(uuid, null);
+    }
+    public static Node getRecord(String uuid, String schema) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         try {
             String id = dataManager.getMetadataId(uuid);
             if (id != null) {
                 Element metadata = dataManager.getMetadata(id);
+                String metadataSchema = dataManager.getMetadataSchema(id);
 
+                if (StringUtils.isNotEmpty(schema)
+                    && !metadataSchema.equals(schema)) {
+                    final Path styleSheet = dataManager
+                        .getSchemaDir(metadataSchema)
+                        .resolve(String.format( "formatter/%s/view.xsl", schema));
+                    final boolean exists = java.nio.file.Files.exists(styleSheet);
+                    if (!exists) {
+                        Log.warning(Geonet.GEONETWORK,String.format(
+                            "XslUtil getRecord warning: Can't retrieve record %s (schema %s) in schema %s. A formatter is required for this conversion.",
+                            uuid, metadataSchema, schema));
+
+                    };
+                    metadata = Xml.transform(metadata, styleSheet);
+                }
                 DOMOutputter outputter = new DOMOutputter();
                 return outputter.output(new Document(metadata));
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getRecord error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getRecord '" + uuid + "' error: " + e.getMessage(), e);
         }
         return null;
     }
@@ -1155,7 +1179,7 @@ public final class XslUtil {
 
             return e.evaluate();
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil evaluate error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil evaluate '" + formula + "' error: " + e.getMessage(), e);
             return null;
         }
     }
@@ -1169,11 +1193,15 @@ public final class XslUtil {
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
-    public static String getNodeId() {
-        ServiceContext context = ServiceContext.get();
-        String nodeId = "";
-        if (context != null) nodeId = context.getNodeId();
-        return nodeId;
+    /**
+     * Return default iso lang code.
+     *
+     * @return The default 3 char iso lang code
+     */
+    public static
+    @Nonnull
+    String getDefaultLangCode() {
+        return Geonet.DEFAULT_LANGUAGE;
     }
 
     public static String getLanguage() {
@@ -1181,7 +1209,7 @@ public final class XslUtil {
         if (context != null) {
             return context.getLanguage();
         } else {
-            return "eng";
+            return Geonet.DEFAULT_LANGUAGE;
         }
     }
 
@@ -1192,11 +1220,12 @@ public final class XslUtil {
         StringBuilder sb = new StringBuilder("data:");
         String supportedExtension = "jpg|jpeg|png|gif|tif|tiff";
 
-        String extension = Files.getFileExtension(url);
+        String extension = Files.getFileExtension(url).toLowerCase();
         if (extension.matches(supportedExtension)) {
 
             try {
-                Matcher m = Pattern.compile(".*/api/records/(.*)/attachments/(.*)$").matcher(url);
+                SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+                Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
                 BufferedImage image;
                 if (m.find()) {
                     Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
@@ -1255,7 +1284,7 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -1278,11 +1307,13 @@ public final class XslUtil {
             URL url = new URL(surl);
             URLConnection conn = Lib.net.setupProxy(context, url);
 
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
             is = conn.getInputStream();
-            res = db.parse(is);
+
+            SAXBuilder builder = Xml.getSAXBuilder(false);
+            Document jdoc = builder.build(is);
+
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(jdoc);
 
         } catch (Throwable e) {
             Log.error(Geonet.GEONETWORK, "Failed fetching url: " + surl, e);
@@ -1297,7 +1328,7 @@ public final class XslUtil {
         try {
             return java.net.URLDecoder.decode(str, "UTF-8");
         } catch (Exception ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -1377,6 +1408,14 @@ public final class XslUtil {
         return thesaurusManager.getThesauriDirectory().toString();
     }
 
+    public static String getThesaurusIdByTitle(String title) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByTitle(title);
+
+        return thesaurus == null ? "" : "geonetwork.thesaurus." + thesaurus.getKey();
+    }
+
 
     /**
      * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
@@ -1408,6 +1447,7 @@ public final class XslUtil {
 
         return languageLabel;
     }
+
 
     public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
         List<String> res = new ArrayList<String>();
@@ -1590,7 +1630,7 @@ public final class XslUtil {
             }
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK,
-                    "Get related document error: " + e.getMessage(), e);
+                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
         }
         return recordLinks;
     }
@@ -1603,7 +1643,7 @@ public final class XslUtil {
                             getTargetAssociatedResources(uuid, parentUuid)));
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK,
-                    "Get related document error: " + e.getMessage(), e);
+                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
         }
         return null;
     }

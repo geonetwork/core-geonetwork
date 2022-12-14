@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2022 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+  <datacite.mandatory>Pflichtfelder</datacite.mandatory>
+
+  <datacite.identifier.missing>Die Identifizierungsnummer ist nicht angegeben. Die Identifizierungsnummer 
+    ist eine Zeichenfolge welche die Ressource eindeutig bestimmt. Dieses Feld muss ausgefüllt sein.
+  </datacite.identifier.missing>
+  <datacite.identifier.present>Die Identifizierungsnummer ist: </datacite.identifier.present>
+
+  <datacite.type.missing>Die Ressourcenart ist nicht angegeben. Überprüfen Sie die Metadaten und geben Sie 
+    die Hierarchiestufe an. Dieses Feld muss ausgefüllt sein.
+  </datacite.type.missing>
+  <datacite.type.present>Die Ressourcenart ist: </datacite.type.present>
+
+  <datacite.title.missing>Der Titel ist nicht angegeben. Dies ist ein Name oder eine Bezeichnung unter 
+    welchem die Ressource gefunden werden kann. Dieses Feld muss ausgefüllt sein.
+  </datacite.title.missing>
+  <datacite.title.present>Der Titel ist: </datacite.title.present>
+
+  <datacite.publicationDate.missing>Das Jahr der Veröffentlichung ist nicht angegeben. Dieses Feld muss
+    ausgefüllt sein.
+  </datacite.publicationDate.missing>
+  <datacite.publicationDate.present>Das Datum der Veröffentlichung ist: </datacite.publicationDate.present>
+
+  <datacite.creator.missing>Der Urheber ist nicht angegeben. Die wichtigsten Organisationen für die 
+    Datenproduktion oder der Author der Veröffentlichung, in Prioritätsreihenfolge. Dieses Feld muss ausgefüllt sein.
+  </datacite.creator.missing>
+  <datacite.creator.found> creator(s) found.</datacite.creator.found>
+
+  <datacite.publisher.missing>Der Herausgeber ist nicht angegeben. Der Name der Einheit welche die Daten produziert, 
+    archiviert, veröffentlicht, herausgibt oder druckt. Überprüfen Sie den Abschnitt "distributionInfo"; 
+    der Herausgeber ist der erste genannte Kontakt. Dieses Feld muss ausgefüllt sein.
+  </datacite.publisher.missing>
+  <datacite.publisher.present>Der Herausgeber ist: </datacite.publisher.present>
+</strings>

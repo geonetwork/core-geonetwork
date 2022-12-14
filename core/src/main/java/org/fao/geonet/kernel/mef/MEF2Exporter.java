@@ -230,9 +230,6 @@ class MEF2Exporter {
         String id = "" + record.getId();
         String isTemp = record.getDataInfo().getType().codeString;
 
-        if (!"y".equals(isTemp) && !"n".equals(isTemp))
-            throw new Exception("Cannot export sub template");
-
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 

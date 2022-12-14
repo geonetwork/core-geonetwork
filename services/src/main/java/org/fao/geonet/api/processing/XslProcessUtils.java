@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -121,6 +122,8 @@ public class XslProcessUtils {
             Element processedMetadata = null;
             try {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+                Lib.resource.checkEditPrivilege(context, id);
+
                 Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
                 Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
@@ -153,8 +156,6 @@ public class XslProcessUtils {
 
                 // --- save metadata and return status
                 if (save) {
-                    Lib.resource.checkEditPrivilege(context, id);
-
                     boolean validate = false;
                     boolean ufo = true;
                     String language = context.getLanguage();
@@ -175,7 +176,7 @@ public class XslProcessUtils {
                         }
                     }
 
-                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, language, new ISODate().toString(), updateDateStamp, IndexingMode.none);
                     if (index) {
                         dataMan.indexMetadata(id, true);
                     }

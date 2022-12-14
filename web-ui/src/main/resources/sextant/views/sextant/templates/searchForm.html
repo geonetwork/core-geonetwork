@@ -1,0 +1,60 @@
+<div data-ng-controller="gnsSextantSearchForm" class="form-horizontal" role="form">
+  <!--any field-->
+  <div class="input-group gn-search-input">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="{{'anyPlaceHolder' | translate}}"
+      id="anySearchField"
+      autocomplete="off"
+      ng-model="searchInput.model"
+      data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+      typeahead-focus-first="false"
+      typeahead-loading="anyLoading"
+      typeahead-min-length="1"
+      typeahead-wait-ms="300"
+      typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html"
+    />
+    <span class="input-group-btn">
+      <button
+        type="submit"
+        data-ng-click="triggerSearch()"
+        class="btn btn-default search-btn"
+      >
+        <i class="fa fa-search"></i>
+      </button>
+    </span>
+  </div>
+
+  <!--Map field-->
+  <div
+    gn-map-field="searchObj.searchMap"
+    gn-map-field-geom="searchObj.params.geometry"
+    gn-map-field-opt="mapfieldOpt"
+    template="../../catalog/views/sextant/templates/map/mapfield.html"
+  ></div>
+
+  <div class="sxt-searchform-content">
+    <div
+      data-search-filter-tags
+      data-dimensions="searchResults.facets"
+      data-use-location-parameters="true"
+      ng-if="isFilterTagsDisplayedInSearch && searchResults.facets"
+    ></div>
+
+    <div
+      data-ng-show="searchResults.records.length > 0"
+      data-es-facets="searchResults.facets"
+    ></div>
+  </div>
+</div>
+
+<button
+  type="submit"
+  data-ng-click="resetSearch()"
+  class="btn btn-default sxt-reset-btn"
+  data-ng-disabled="!searchObj.canReset"
+  translate
+>
+  resetFilter
+</button>

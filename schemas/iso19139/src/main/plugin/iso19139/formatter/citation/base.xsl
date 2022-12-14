@@ -49,14 +49,27 @@
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <!--<xsl:if test="normalize-space($name) != ''">(</xsl:if>
+        </author>
+
+        <!-- Instead of GeoNetwork providing name and org name
+        <author>
+          <xsl:variable name="name"
+                        select=".//gmd:individualName[1]"/>
+
+          <xsl:for-each select="$name">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select=".//gmd:organisationName">
             <xsl:call-template name="localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:if test="normalize-space($name) != ''">)</xsl:if>-->
+          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
         </author>
+        -->
       </xsl:for-each>
     </xsl:variable>
 
@@ -130,6 +143,9 @@
                                 or contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]/*/(@xlink:href|text()))[1]"/>
 
+    <xsl:variable name="doiProtocolRegex"
+               select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
+
     <xsl:variable name="doiInOnline"
                   select="//gmd:distributionInfo//gmd:onLine/*[
                               matches(gmd:protocol/gco:CharacterString,
@@ -161,12 +177,13 @@
 
 
     <xsl:variable name="additionalCitation">
-      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = ('WWW:LINK-1.0-http--publication-URL')]/gmd:description">
+      <xsl:for-each select=".//gmd:onLine/*[gmd:protocol/* = 'WWW:LINK-1.0-http--publication-URL']/gmd:description">
         <xsl:call-template name="localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
       </xsl:for-each>
     </xsl:variable>
+
     <citation>
       <uuid><xsl:value-of
         select="$metadata/gmd:fileIdentifier/gco:CharacterString[. != '']"/></uuid>

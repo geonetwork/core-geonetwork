@@ -87,11 +87,10 @@
               indent="yes"/>
 
   <!-- Before attribution of a DOI the ISO19139 record does not contain yet
-  the DOI value. It is built from the DOI prefix provided as parameter
-  and the UUID of the record.
+  the DOI value. It is built from the DOI id provided as parameter.
   If the DOI already exist in the record, this parameter is not set and the DOI
   is returned as datacite:identifier -->
-  <xsl:param name="doiPrefix"
+  <xsl:param name="doiId"
              select="''"/>
   <xsl:param name="defaultDoiPrefix"
              select="'https://doi.org/'"/>
@@ -137,7 +136,7 @@
     <datacite:identifier identifierType="DOI">
       <!-- Return existing one -->
       <xsl:choose>
-        <xsl:when test="$doiPrefix = ''">
+        <xsl:when test="$doiId = ''">
           <!-- DOI can be located in different places depending on user practice.
           At least we know two:
           * citation identifier
@@ -156,8 +155,7 @@
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
-          <!-- Build a new one -->
-          <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -341,11 +339,11 @@
    -->
   <xsl:variable name="creatorRoles"
                 select="('author')"/>
+
   <xsl:template mode="toDatacite"
                 match="gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:pointOfContact[1]">
     <datacite:creators>
-      <!-- [gmd:role/*/@codeListValue = $roles] TODO: Restrict on roles ?-->
       <xsl:for-each select="../gmd:pointOfContact/*[gmd:role/*/@codeListValue = $creatorRoles]">
         <datacite:creator>
           <!-- The full name of the creator. -->
@@ -361,7 +359,6 @@
               </datacite:creatorName>
             </xsl:otherwise>
           </xsl:choose>
-
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
           <datacite:familyName>Miller</datacite:familyName>

@@ -22,65 +22,69 @@
  */
 
 (function () {
-  goog.provide('gn_facet_directive')
+  goog.provide("gn_facet_directive");
 
-  goog.require('gn_facets');
+  goog.require("gn_facets");
 
-  var module = angular.module('gn_facet_directive', ['gn_facets']);
-
+  var module = angular.module("gn_facet_directive", ["gn_facets"]);
 
   /**
    * All facet panel
    * @constructor
    */
   var FacetsController = function ($scope, $filter) {
-    this.fLvlCollapse = {}
-    this.currentFacet
-    this.$scope = $scope
-    this.$filter = $filter
+    this.fLvlCollapse = {};
+    this.currentFacet;
+    this.$scope = $scope;
+    this.$filter = $filter;
 
     $scope.$watch(
       function () {
-        return this.list
+        return this.list;
       }.bind(this),
       function (newValue) {
-        if (!newValue) return
+        if (!newValue) return;
 
         for (var i = 0; i < this.list.length; i++) {
-          this.fLvlCollapse[this.list[i].key] =
-            angular.isDefined(this.fLvlCollapse[this.list[i].key]) ?
-              this.fLvlCollapse[this.list[i].key] :
-              this.list[i].collapsed === true;
+          this.fLvlCollapse[this.list[i].key] = angular.isDefined(
+            this.fLvlCollapse[this.list[i].key]
+          )
+            ? this.fLvlCollapse[this.list[i].key]
+            : this.list[i].collapsed === true;
         }
 
-        var lastFacet = this.lastUpdatedFacet
+        var lastFacet = this.lastUpdatedFacet;
 
-        if (this._isNotNestedFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
-          this.list.forEach(function (f) {
-            if (f.key === lastFacet.key) {
-              f.items = lastFacet.items
-            }
-          }.bind(this))
-          this.lastUpdatedFacet = null
+        if (
+          this._isNotNestedFacet(lastFacet) &&
+          this.searchCtrl.hasFiltersForKey(lastFacet.path[0])
+        ) {
+          this.list.forEach(
+            function (f) {
+              if (f.key === lastFacet.key) {
+                f.items = lastFacet.items;
+              }
+            }.bind(this)
+          );
+          this.lastUpdatedFacet = null;
         }
       }.bind(this)
-    )
-  }
+    );
+  };
 
-  FacetsController.prototype.$onInit = function () {
-  }
+  FacetsController.prototype.$onInit = function () {};
 
   FacetsController.prototype.collapseAll = function () {
     for (var i = 0; i < this.list.length; i++) {
       this.fLvlCollapse[this.list[i].key] = true;
     }
-  }
+  };
 
   FacetsController.prototype.expandAll = function () {
     for (var i = 0; i < this.list.length; i++) {
       this.fLvlCollapse[this.list[i].key] = false;
     }
-  }
+  };
 
   FacetsController.prototype.isVisibleForUser = function (facet) {
     var user = this.$scope.$parent.user;
@@ -89,13 +93,13 @@
     } else {
       return facet.userHasRole ? false : true;
     }
-  }
+  };
 
   FacetsController.prototype.loadMoreTerms = function (facet) {
     this.searchCtrl.loadMoreTerms(facet).then(function (terms) {
       angular.merge(facet, terms);
     });
-  }
+  };
 
   FacetsController.prototype.filterTerms = function (facet) {
     if (facet.meta && facet.meta.filterByTranslation) {
@@ -103,14 +107,14 @@
       if (!facet.originalItems) {
         facet.originalItems = facet.items;
       }
-      if (facet.include === '') {
+      if (facet.include === "") {
         facet.items = facet.originalItems;
         return;
       }
-      for (var i = 0; i < facet.originalItems.length; i ++) {
+      for (var i = 0; i < facet.originalItems.length; i++) {
         var bucket = facet.originalItems[i],
-            t = this.$filter('facetTranslator')(bucket.value, facet.key);
-        if (t.match(new RegExp(facet.include, 'i')) != null) {
+          t = this.$filter("facetTranslator")(bucket.value, facet.key);
+        if (t.match(new RegExp(facet.include, "i")) != null) {
           match.push(bucket);
         }
       }
@@ -121,139 +125,142 @@
         facet.items = terms.items;
       });
     }
-  }
+  };
 
   FacetsController.prototype.filter = function (facet, item) {
     var value = !item.inverted;
-    if (facet.type === 'terms') {
-      facet.include = '';
-    } else if (facet.type === 'filters' || facet.type === 'histogram') {
+    if (facet.type === "terms") {
+      facet.include = "";
+    } else if (facet.type === "filters" || facet.type === "histogram") {
       value = item.query_string.query_string.query;
-      if(item.inverted) {
-        value = '-('+value+')';
+      if (item.inverted) {
+        value = "-(" + value + ")";
       }
-    } else if (facet.type === 'tree') {
+    } else if (facet.type === "tree") {
     }
     this.searchCtrl.updateState(item.path, value);
-  }
+  };
 
   FacetsController.prototype.onUpdateDateRange = function (facet, from, to) {
-    var query_string =  (from === null && to === null)
-      ? '' :
-      '+' + facet.key + ':[' +
-      (from || '*') + ' TO ' +
-      (to  || '*') + ']';
+    var query_string =
+      from === null && to === null
+        ? ""
+        : "+" + facet.key + ":[" + (from || "*") + " TO " + (to || "*") + "]";
     // this.$scope.$digest();
     this.searchCtrl.updateState(facet.path, query_string, true);
   };
 
-
   FacetsController.prototype._isNotNestedFacet = function (facet) {
-    return facet && (facet.type === 'terms' || facet.type === 'tree') && !facet.aggs
+    return facet && (facet.type === "terms" || facet.type === "tree") && !facet.aggs;
   };
 
-  FacetsController.prototype.getFilteredItems = function (facet) {
-    if (!facet.meta || !facet.meta.filterValues) {
-      return facet.items;
-    }
-    return facet.items.filter(function (item) {
-      return facet.meta.filterValues.indexOf(item.value) > -1;
-    });
-  };
-
-  FacetsController.$inject = [
-    '$scope', '$filter'
-  ]
+  FacetsController.$inject = ["$scope", "$filter"];
 
   // Define the translation group key matching the facet key
   var facetKeyToTranslationGroupMap = new Map([
-    ['isTemplate', 'recordType'],
-    ['groupOwner', 'group'],
-    ['sourceCatalogue', 'source']
+    ["isTemplate", "recordType"],
+    ["groupOwner", "group"],
+    ["groupPublishedId", "group"],
+    ["sourceCatalogue", "source"]
   ]);
 
-  module.service('gnFacetSorter', ['$filter', function($filter) {
-    this.sortByTranslation = function(agg, bucket) {
-      if (agg && agg.meta && agg.meta.orderByTranslation) {
-        return function(facet) {
-          return $filter('facetTranslator')(facet.value || facet.key, bucket);
+  module.service("gnFacetSorter", [
+    "$filter",
+    function ($filter) {
+      this.sortByTranslation = function (agg, bucket) {
+        if (agg && agg.meta && agg.meta.orderByTranslation) {
+          return function (facet) {
+            return $filter("facetTranslator")(facet.value || facet.key, bucket);
+          };
+        } else {
+          return function (facet) {
+            return facet.key;
+          };
         }
-      } else {
-        return function(facet) {return facet.key};
-      }
+      };
     }
-  }]);
+  ]);
 
-
-  module.filter('facetTranslator', ['$translate', function($translate) {
-
-    return function(input, facetKey) {
-      if (!input || angular.isObject(input)) {
-        return input;
-      }
-
-      // Tree aggregation
-      if (input.indexOf && input.indexOf('^') !== -1) {
-        return input.split('\^')
-                    .map(function(t) {return $translate.instant(t)})
-                    .join(' / ');
-      }
-
-      // A specific facet key eg. "isHarvested-true"
-      var translationId = (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + '-' + input,
-        translation = $translate.instant(translationId);
-      if (translation !== translationId) {
-        return translation;
-      } else {
-        // A common translations ?
-        translation = $translate.instant(input);
-        if (translation != input) {
-          return translation;
+  module.filter("facetTranslator", [
+    "$translate",
+    function ($translate) {
+      return function (input, facetKey) {
+        if (!input || angular.isObject(input)) {
+          return input;
         }
-      }
-      return input;
-    };
-  }]);
+
+        // Tree aggregation
+        if (input.indexOf && input.indexOf("^") !== -1) {
+          return input
+            .split("^")
+            .map(function (t) {
+              return $translate.instant(t);
+            })
+            .join(" / ");
+        }
+
+        // A specific facet key eg. "isHarvested-true"
+        var translationId =
+            (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + "-" + input,
+          translation = $translate.instant(translationId);
+        if (translation !== translationId) {
+          return translation;
+        } else {
+          // A common translations ?
+          translation = $translate.instant(input);
+          if (translation != input) {
+            return translation;
+          }
+        }
+        return input;
+      };
+    }
+  ]);
 
   /**
    * Ignore object field suffix
    */
-  module.filter('facetKeyTranslator', ['$translate', function($translate) {
-    return function(input) {
-      return $translate.instant(input.replace(/(.key|.default|.lang{3}[a-z])$/, ''));
-    };
-  }]);
+  module.filter("facetKeyTranslator", [
+    "$translate",
+    function ($translate) {
+      return function (input) {
+        return $translate.instant(input.replace(/(.key|.default|.lang{3}[a-z])$/, ""));
+      };
+    }
+  ]);
 
-  module.directive('esFacets', [
-    'gnFacetSorter',
-    '$translate',
-    function (gnFacetSorter, $translate) {
+  module.directive("esFacets", [
+    "gnFacetSorter",
+    "gnSearchSettings",
+    function (gnFacetSorter, gnSearchSettings) {
       return {
-        restrict: 'A',
-        controllerAs: 'ctrl',
+        restrict: "A",
+        controllerAs: "ctrl",
         controller: FacetsController,
         bindToController: true,
         scope: {
-          list: '<esFacets'
+          list: "<esFacets",
+          tabField: "="
         },
         require: {
-          searchCtrl: '^^ngSearchForm'
+          searchCtrl: "^^ngSearchForm"
         },
         templateUrl: function (elem, attrs) {
-          return attrs.template || '../../catalog/components/elasticsearch/directives/' +
-            'partials/facets.html'
+          return (
+            attrs.template ||
+            "../../catalog/components/elasticsearch/directives/" + "partials/facets.html"
+          );
         },
-        link: function (scope) {
+        link: function (scope, element, attrs) {
+          // Applicaton tab field configured
+          scope.appTabField = gnSearchSettings.facetTabField;
+          // Directive tab field property
+          scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
-          scope.getFacetLabel = function(facet) {
-            if (!facet.meta || !facet.meta.labels) { return null; }
-            var currentLang = $translate.use();
-            return facet.meta.labels[currentLang];
-          }
         }
-      }
-    }])
-
+      };
+    }
+  ]);
 
   /**
    * One facet block
@@ -261,121 +268,193 @@
    * @constructor
    */
   var FacetController = function ($scope) {
-    this.$scope = $scope
-  }
+    this.$scope = $scope;
+  };
 
   FacetController.prototype.$onInit = function () {
     this.item.collapsed = true;
-    if (this.facet.type === 'tree') {
+    if (this.facet.type === "tree") {
       this.item.path = [this.facet.key, this.item.key];
       this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
-    } else if (this.facet.type === 'filters'|| this.facet.type === 'histogram') {
+    } else if (this.facet.type === "filters" || this.facet.type === "histogram") {
       this.item.inverted = this.searchCtrl.isNegativeSearch(this.item.path);
     }
-  }
+  };
 
   FacetController.prototype.filter = function (facet, item) {
     var value = !item.inverted;
-    if (facet.type === 'terms') {
-      facet.include = '';
+    if (facet.type === "terms") {
+      facet.include = "";
       if (!item.isNested) {
         this.facetsCtrl.lastUpdatedFacet = facet;
       }
-    } else if (facet.type === 'filters' || facet.type === 'histogram') {
+    } else if (facet.type === "filters" || facet.type === "histogram") {
       value = item.query_string.query_string.query;
-      if(item.inverted) {
-        value = '-('+value+')';
+      if (item.inverted) {
+        value = "-(" + value + ")";
       }
-    } else if (facet.type === 'tree') {
+    } else if (facet.type === "tree") {
       this.facetsCtrl.lastUpdatedFacet = facet;
     }
+
     this.searchCtrl.updateState(item.path, value);
-  }
+  };
 
   FacetController.prototype.isInSearch = function (facet, item) {
     return this.searchCtrl.isInSearch(item.path);
-  }
+  };
 
   FacetController.prototype.toggleCollapse = function () {
     this.item.collapsed = !this.item.collapsed;
-  }
+  };
 
   FacetController.prototype.toggleInvert = function () {
     var item = this.item;
     item.inverted = !item.inverted;
     this.filter(this.facet, item);
-  }
+  };
 
-  FacetController.$inject = [
-    '$scope'
-  ]
+  FacetController.$inject = ["$scope"];
 
-  module.directive('esFacet', [
-    'gnLangs', '$filter', 'SEXTANT_LEGACY_FACET_MAPPING',
-    function (gnLangs, $filter, SEXTANT_LEGACY_FACET_MAPPING) {
+  module.directive("esFacet", [
+    "gnLangs",
+    function (gnLangs) {
       return {
-        restrict: 'A',
-        controllerAs: 'ctrl',
+        restrict: "A",
+        replace: true,
+        controllerAs: "ctrl",
         controller: FacetController,
         bindToController: true,
         scope: {
-          facet: '<esFacet',
-          item: '<esFacetItem'
+          facet: "<esFacet",
+          item: "<esFacetItem"
         },
         require: {
-          facetsCtrl: '^^esFacets',
-          facetCtrl: '?^^esFacet',
-          searchCtrl: '^^ngSearchForm'
+          facetsCtrl: "^^esFacets",
+          facetCtrl: "?^^esFacet",
+          searchCtrl: "^^ngSearchForm"
         },
         templateUrl: function (elem, attrs) {
-          return attrs.template || '../../catalog/components/elasticsearch/directives/' +
-            'partials/facet.html'
+          return (
+            attrs.template ||
+            "../../catalog/components/elasticsearch/directives/" + "partials/facet.html"
+          );
+        },
+        link: function (scope, element, attrs) {}
+      };
+    }
+  ]);
+
+  module.directive("esFacetDecorator", [
+    function () {
+      return {
+        restrict: "A",
+        replace: false,
+        scope: {
+          decorator: "=esFacetDecorator",
+          key: "="
+        },
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/elasticsearch/directives/" +
+              "partials/facetDecorator.html"
+          );
         },
         link: function (scope, element, attrs) {
-          var sextantThesaurusWithHierarchyInLabel = Object.keys(SEXTANT_LEGACY_FACET_MAPPING)
-            .filter(function(k) {
-              return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0].indexOf('_tree.key') !== -1;
-            }).map(function(k) {
-              return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0];
-            }).filter(function(v, i, array) {
-              return array.indexOf(v) === i;
-            });
-          function buildLabel() {
-            if (scope.ctrl
-              && sextantThesaurusWithHierarchyInLabel.indexOf(
-                scope.ctrl.facet.key) !== -1) {
-              // In sextant, the label contains all the hierarchy to the root
-              // Removing parent part of the label to only have current node label
-              var parentLabel = scope.$parent.ctrl.item && scope.$parent.ctrl.item.value
-                ? $filter('facetTranslator')(scope.$parent.ctrl.item.value) + '/'
-                : '/';
-              scope.ctrl.item.label =
-                $filter('facetTranslator')(scope.ctrl.item.value)
-                  .replace(parentLabel, '');
+          if (scope.decorator) {
+            var key = scope.decorator.expression
+              ? scope.key.replace(new RegExp(scope.decorator.expression), "$1")
+              : scope.key;
 
-              if (scope.ctrl.item.items && scope.ctrl.item.items.length > 0) {
-                scope.ctrl.item.items.forEach(function(facet) {
-                  var treePathTranslated = $filter('facetTranslator')(facet.value),
-                    endNodeLabel = treePathTranslated.substr(
-                      treePathTranslated.lastIndexOf('/') + 1, treePathTranslated.length)
-                  facet.label = endNodeLabel;
-                })
+            if (scope.decorator.map) {
+              key = scope.decorator.map[key] || "";
+            }
+
+            if (scope.decorator.type == "img") {
+              scope.ext =
+                "image/" + (key.substr(key.lastIndexOf(".") + 1, key.length) || "png");
+              if (scope.decorator.path) {
+                key = scope.decorator.path.replace("{key}", key);
               }
             }
+
+            scope.class = scope.decorator.prefix ? scope.decorator.prefix + key : key;
+          }
+        }
+      };
+    }
+  ]);
+
+  module.filter("facetBgUrlBuilder", [
+    function () {
+      return function (key, decorator) {
+        return decorator.path ? decorator.path.replace("{key}", key) : decorator.map[key];
+      };
+    }
+  ]);
+
+  module.filter("facetCssClassCode", [
+    function () {
+      return function (key, isInspire) {
+        return isInspire
+          ? key.slice(key.lastIndexOf("/") + 1)
+          : key.replace("/", "").replace(" ", "");
+      };
+    }
+  ]);
+
+  module.directive("esFacetCards", [
+    "gnLangs",
+    function (gnLangs) {
+      return {
+        restrict: "A",
+        scope: {
+          key: "=esFacetCards",
+          homeFacet: "=homeFacet",
+          searchInfo: "=searchInfo",
+          aggResponse: "=aggResponse",
+          aggConfig: "=aggConfig"
+        },
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/elasticsearch/directives/" +
+              "partials/facet-cards.html"
+          );
+        },
+        link: function (scope, element, attrs) {
+          scope.iso2lang = gnLangs.getIso2Lang();
+
+          function init() {
+            scope.missingValue =
+              scope.homeFacet.config[scope.key].terms &&
+              scope.homeFacet.config[scope.key].terms.missing;
+            scope.isInspire = scope.key.indexOf("th_httpinspireeceuropaeutheme") === 0;
           }
 
-          buildLabel();
-        }
-      }
-    }])
+          init();
 
-  module.service('gnFacetVegaService', function() {
+          scope.$watch("key", function (n, o) {
+            if (n && n !== o) {
+              init();
+            }
+          });
+        }
+      };
+    }
+  ]);
+
+  module.service("gnFacetVegaService", function () {
     return {
       check: function () {
         try {
-          vegaEmbed
+          vegaEmbed;
         } catch (e) {
-          console.warn("Interactive graphic for facet not available. Vega is not available.", e);
+          console.warn(
+            "Interactive graphic for facet not available. Vega is not available.",
+            e
+          );
           return false;
         }
         return true;
@@ -383,317 +462,344 @@
     };
   });
 
-  module.directive('gnFacetTemporalrange', [
-    '$timeout', '$translate', 'gnFacetVegaService',
-    function($timeout, $translate, gnFacetVegaService) {
-    return {
-      restrict: 'A',
-      replace: true,
-      templateUrl: function(elem, attrs) {
-        return '../../catalog/components/elasticsearch/directives/' +
-          'partials/facet-temporalrange.html';
-      },
-      scope: {
-        facet: '<gnFacetTemporalrange',
-        updateCallback: '&callback'
-      },
-      link: function(scope, element, attrs, controller) {
-        if(!gnFacetVegaService.check()) {
-          return;
-        }
+  module.directive("gnFacetTemporalrange", [
+    "$timeout",
+    "$translate",
+    "gnFacetVegaService",
+    function ($timeout, $translate, gnFacetVegaService) {
+      return {
+        restrict: "A",
+        replace: true,
+        templateUrl: function (elem, attrs) {
+          return (
+            "../../catalog/components/elasticsearch/directives/" +
+            "partials/facet-temporalrange.html"
+          );
+        },
+        scope: {
+          facet: "<gnFacetTemporalrange",
+          updateCallback: "&callback"
+        },
+        link: function (scope, element, attrs, controller) {
+          if (!gnFacetVegaService.check()) {
+            return;
+          }
 
-        scope.range = {
-          from: null,
-          to: null
-        };
-        scope.signal = null;
+          scope.range = {
+            from: null,
+            to: null
+          };
+          scope.signal = null;
 
-        scope.vl = null;
-        scope.dateFormat = scope.facet.meta && scope.facet.meta.dateFormat || 'DD-MM-YYYY';
-        scope.vegaDateFormat = scope.facet.meta && scope.facet.meta.vegaDateFormat || '%d-%m-%Y';
+          scope.vl = null;
+          scope.dateFormat =
+            (scope.facet.meta && scope.facet.meta.dateFormat) || "DD-MM-YYYY";
+          scope.vegaDateFormat =
+            (scope.facet.meta && scope.facet.meta.vegaDateFormat) || "%d-%m-%Y";
 
-        function moment2datePickerFormat(format) {
-          // M > m, D > d, Y > y
-          // https://momentjs.com/docs/#/displaying/
-          // https://bootstrap-datepicker.readthedocs.io/en/latest/options.html#format
-          return format.toLowerCase();
-        }
+          function moment2datePickerFormat(format) {
+            // M > m, D > d, Y > y
+            // https://momentjs.com/docs/#/displaying/
+            // https://bootstrap-datepicker.readthedocs.io/en/latest/options.html#format
+            return format.toLowerCase();
+          }
 
-        scope.dateRangeConfig = {
-          maxViewMode: scope.facet.meta && scope.facet.meta.dateSelectMode || 'days',
-          minViewMode: scope.facet.meta && scope.facet.meta.dateSelectMode || 'days',
-          format: moment2datePickerFormat(scope.dateFormat)
-        };
-        scope.initialRange = angular.copy(scope.facet.items);
+          scope.dateRangeConfig = {
+            maxViewMode: (scope.facet.meta && scope.facet.meta.dateSelectMode) || "days",
+            minViewMode: (scope.facet.meta && scope.facet.meta.dateSelectMode) || "days",
+            format: moment2datePickerFormat(scope.dateFormat)
+          };
+          scope.initialRange = angular.copy(scope.facet.items);
 
-        function buildData() {
-
-          angular.forEach(scope.initialRange, function(d) {
-            d.type = 'all';
-            return d;
-          });
-          angular.forEach(scope.facet.items, function(d) {
-            d.type = 'current';
-            return d;
-          });
-          var items = [].concat(scope.initialRange, scope.facet.items);
-          return items;
-        }
-        // Assign the specification to a local variable vlSpec.
-        var vlSpec = {
-          $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-          datasets: {
-            facetValues: buildData()
-          },
-          data: {
-            name: 'facetValues'
-          },
-          config: {
-            axis: {
-              domainColor: "#ddd",
-              tickColor: "#ddd"
-            }
-          },
-          vconcat: [{
-            mark: {
-              type: scope.facet.meta && scope.facet.meta.mark || 'bar',
-              cornerRadiusEnd: 2
+          function buildData() {
+            angular.forEach(scope.initialRange, function (d) {
+              d.type = "all";
+              return d;
+            });
+            angular.forEach(scope.facet.items, function (d) {
+              d.type = "current";
+              return d;
+            });
+            var items = [].concat(scope.initialRange, scope.facet.items);
+            return items;
+          }
+          // Assign the specification to a local variable vlSpec.
+          var vlSpec = {
+            $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+            datasets: {
+              facetValues: buildData()
             },
-            height: 100,
-            // selection: {
-            //   pts: {type: "single"}
-            // },
-            encoding: {
-              x: {
-                field: 'key',
-                type: 'temporal',
-                timeunit: 'milliseconds',
-                bin: {
-                  maxbins: 30,
-                  extent: {
-                    selection: "brush"
+            data: {
+              name: "facetValues"
+            },
+            config: {
+              axis: {
+                domainColor: "#ddd",
+                tickColor: "#ddd"
+              }
+            },
+            vconcat: [
+              {
+                mark: {
+                  type: (scope.facet.meta && scope.facet.meta.mark) || "bar",
+                  cornerRadiusEnd: 2
+                },
+                height: 100,
+                // selection: {
+                //   pts: {type: "single"}
+                // },
+                encoding: {
+                  x: {
+                    field: "key",
+                    type: "temporal",
+                    timeunit: "milliseconds",
+                    bin: {
+                      maxbins: 30,
+                      extent: {
+                        selection: "brush"
+                      }
+                    },
+                    axis: {
+                      title: "",
+                      labelExpr:
+                        "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
+                    }
+                  },
+                  y: {
+                    field: "doc_count",
+                    type: "quantitative",
+                    stack: null,
+                    axis: {
+                      title: ""
+                    }
+                  },
+                  color: {
+                    scale: {
+                      domain: ["all", "current"],
+                      range: ["#ddd", "#3277B3"]
+                    },
+                    field: "type",
+                    type: "nominal",
+                    // condition: {
+                    //   selection: "pts"
+                    // },
+                    // value: "grey",
+                    legend: null
+                  }
+                }
+              },
+              {
+                mark: "bar",
+                height: 20,
+                selection: {
+                  brush: {
+                    type: "interval",
+                    encodings: ["x"]
                   }
                 },
-                axis: {
-                  title: '',
-                  labelExpr: "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
-                }
-              },
-              y: {
-                field: 'doc_count',
-                type: 'quantitative',
-                stack: null,
-                axis: {
-                  title: ''
-                }
-              },
-              color: {
-                scale: {
-                  domain: ['all', 'current'],
-                  range: ['#ddd', '#3277B3']
-                },
-                field: "type",
-                type: "nominal",
-                // condition: {
-                //   selection: "pts"
-                // },
-                // value: "grey",
-                legend: null
-              }
-            }
-          }, {
-            mark: 'bar',
-            height: 20,
-            selection: {
-              brush: {
-                type: 'interval',
-                encodings: ['x']
-              }
-            },
-            encoding: {
-              color: {
-                scale: {
-                  domain: ['all', 'current'],
-                  range: ['#ddd', '#3277B3']
-                },
-                field: "type",
-                type: "nominal",
-                legend: null
-              },
-              x: {
-                field: 'key',
-                type: 'temporal',
-                timeunit: 'milliseconds',
-                axis: {
-                  title: $translate.instant('facets.temporalRange.seriesLegend'),
-                  titleFontWeight: 'normal',
-                  titleFontSize: '8'
-                }
-              },
-              y: {
-                field: 'doc_count',
-                type: 'quantitative',
-                stack: null,
-                axis: {
-                  title: ''
+                encoding: {
+                  color: {
+                    scale: {
+                      domain: ["all", "current"],
+                      range: ["#ddd", "#3277B3"]
+                    },
+                    field: "type",
+                    type: "nominal",
+                    legend: null
+                  },
+                  x: {
+                    field: "key",
+                    type: "temporal",
+                    timeunit: "milliseconds",
+                    axis: {
+                      title: $translate.instant("facets.temporalRange.seriesLegend"),
+                      titleFontWeight: "normal",
+                      titleFontSize: "8"
+                    }
+                  },
+                  y: {
+                    field: "doc_count",
+                    type: "quantitative",
+                    stack: null,
+                    axis: {
+                      title: ""
+                    }
+                  }
                 }
               }
-            }
-          }]
-        };
+            ]
+          };
 
-        vegaEmbed('#' + scope.facet.key, vlSpec, {
-          actions: false
-        }).then(function (result) {
-          scope.vl = result;
+          vegaEmbed("#" + scope.facet.key, vlSpec, {
+            actions: false
+          })
+            .then(function (result) {
+              scope.vl = result;
 
-          scope.vl.view.addEventListener('click',
-            function(event, item) {
-            if (item && item.datum && item.datum.$$hashKey) { // Avoid brush click
-              var vlId = item.datum.$$hashKey,
-                rangeItems = scope.vl.view.data('facetValues').filter(
-                function(e, i, a) {
-                  return e.type === 'current' && (e.$$hashKey === vlId ||
-                    (a[i - 1] && a[i - 1].$$hashKey === vlId));
-                }, []),
-                selected = item.datum,
-                next = rangeItems[1];
+              scope.vl.view.addEventListener("click", function (event, item) {
+                if (item && item.datum && item.datum.$$hashKey) {
+                  // Avoid brush click
+                  var vlId = item.datum.$$hashKey,
+                    rangeItems = scope.vl.view
+                      .data("facetValues")
+                      .filter(function (e, i, a) {
+                        return (
+                          e.type === "current" &&
+                          (e.$$hashKey === vlId ||
+                            (a[i - 1] && a[i - 1].$$hashKey === vlId))
+                        );
+                      }, []),
+                    selected = item.datum,
+                    next = rangeItems[1];
 
-              var from = selected.key ? moment(selected.key).format(scope.dateFormat) : '*',
-                  to = next && next.key ? moment(next.key).format(scope.dateFormat) : '*';
-              $timeout(function() {
-                scope.range = {
-                  from: from,
-                  to: to
-                };
-              }, 10);
-            }
-          });
+                  var from = selected.key
+                      ? moment(selected.key).format(scope.dateFormat)
+                      : "*",
+                    to =
+                      next && next.key ? moment(next.key).format(scope.dateFormat) : "*";
+                  $timeout(function () {
+                    scope.range = {
+                      from: from,
+                      to: to
+                    };
+                  }, 10);
+                }
+              });
 
-          scope.vl.view.addSignalListener('brush',
-            function(signal, range) {
-            if (scope.signal !== null) {
-              range.key = scope.signal.key;
-              scope.signal = null;
-              scope.vl.view.runAsync();
-              return;
-            } else {
-              var from = range.key ? moment(range.key[0]).format(scope.dateFormat) : '*',
-                  to = range.key ? moment(range.key[1]).format(scope.dateFormat) : '*';
+              scope.vl.view.addSignalListener("brush", function (signal, range) {
+                if (scope.signal !== null) {
+                  range.key = scope.signal.key;
+                  scope.signal = null;
+                  scope.vl.view.runAsync();
+                  return;
+                } else {
+                  var from = range.key
+                      ? moment(range.key[0]).format(scope.dateFormat)
+                      : "*",
+                    to = range.key ? moment(range.key[1]).format(scope.dateFormat) : "*";
 
-              if ((scope.range.from != from
-                || scope.range.to != to)) {
-                $timeout(function() {
-                  scope.range = {
-                    from: range.key ? from : null,
-                    to: range.key ? to : null
-                  };
-                }, 10);
-              }
-            }
-          });
+                  if (scope.range.from != from || scope.range.to != to) {
+                    $timeout(function () {
+                      scope.range = {
+                        from: range.key ? from : null,
+                        to: range.key ? to : null
+                      };
+                    }, 10);
+                  }
+                }
+              });
 
+              scope.$watchCollection("facet.items", function (n, o) {
+                scope.vl.view.data("facetValues", buildData()).run();
+              });
+            })
+            .catch(console.error);
 
-          scope.$watchCollection('facet.items', function(n, o) {
-            scope.vl.view.data('facetValues', buildData()).run();
-          });
-        }).catch(console.error);
-
-        scope.filter = function() {
-          scope.updateCallback({
+          scope.filter = function () {
+            scope.updateCallback({
               facet: scope.facet,
               from: moment(scope.range.from, scope.dateFormat).toISOString(),
               to: moment(scope.range.to, scope.dateFormat).toISOString()
             });
-        }
+          };
 
-        scope.reset = function() {
-          scope.range.from = undefined;
-          scope.range.to = undefined;
-        }
+          scope.reset = function () {
+            scope.range.from = undefined;
+            scope.range.to = undefined;
+          };
 
-        scope.setRange = function() {
-          scope.signal = (
-            (scope.range.from === undefined && scope.range.to === undefined)
-            || (scope.range.from === '' && scope.range.to === '')
-            ) ? {}
-            : { key: [
-              moment(scope.range.from, scope.dateFormat).valueOf(),
-              moment(scope.range.to, scope.dateFormat).valueOf()
-            ], update: false};
-          if (scope.vl) {
-            scope.vl.view.signal('brush', scope.signal);
-          }
-        }
+          scope.setRange = function () {
+            scope.signal =
+              (scope.range.from === undefined && scope.range.to === undefined) ||
+              (scope.range.from === "" && scope.range.to === "")
+                ? {}
+                : {
+                    key: [
+                      moment(scope.range.from, scope.dateFormat).valueOf(),
+                      moment(scope.range.to, scope.dateFormat).valueOf()
+                    ],
+                    update: false
+                  };
+            if (scope.vl) {
+              scope.vl.view.signal("brush", scope.signal);
+            }
+          };
 
-        scope.$watch('range.from', scope.setRange);
-        scope.$watch('range.to', scope.setRange);
-        scope.$on('resetSelection', scope.reset);
-      }
+          scope.$watch("range.from", scope.setRange);
+          scope.$watch("range.to", scope.setRange);
+          scope.$on("resetSelection", scope.reset);
+        }
+      };
     }
-  }])
+  ]);
 
-
-
-  module.directive('gnFacetVega', [
-    '$timeout', '$filter', 'gnFacetVegaService',
-    function($timeout, $filter, gnFacetVegaService) {
+  module.directive("gnFacetVega", [
+    "$timeout",
+    "$filter",
+    "gnFacetVegaService",
+    function ($timeout, $filter, gnFacetVegaService) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
-        templateUrl: function(elem, attrs) {
-          return '../../catalog/components/elasticsearch/directives/' +
-            'partials/facet-vega.html';
+        templateUrl: function (elem, attrs) {
+          return (
+            "../../catalog/components/elasticsearch/directives/" +
+            "partials/facet-vega.html"
+          );
         },
         scope: {
-          facet: '<gnFacetVega',
-          updateCallback: '&callback'
+          facet: "<gnFacetVega",
+          updateCallback: "&callback"
         },
-        link: function(scope, element, attrs, controller) {
-          if(!gnFacetVegaService.check()) {
+        link: function (scope, element, attrs, controller) {
+          if (!gnFacetVegaService.check()) {
             return;
           }
 
           scope.signal = null;
           scope.vl = null;
-          scope.id = scope.facet.key.replace('.', '');
+          scope.id = scope.facet.key.replace(".", "");
 
           function buildLabel() {
-            scope.facet.items.map(function(f) {
-              f.label = $filter('facetTranslator')(f.value) + ' (' + f.count + ')';
+            scope.facet.items.map(function (f) {
+              f.label = $filter("facetTranslator")(f.value) + " (" + f.count + ")";
             });
           }
 
           buildLabel();
 
-          var mark = {type: "arc", innerRadius: 50};
+          var mark = { type: "arc", innerRadius: 50 };
           var encoding = {
-            theta: {field: "count", type: "quantitative"},
-            color: {field: "label", type: "nominal",
-              legend: {title: ''}
+            theta: { field: "count", type: "quantitative" },
+            color: {
+              field: "label",
+              type: "nominal",
+              legend: { title: "" }
               // scale: {scheme: 'category20b'}
             }
           };
-          if ((scope.facet.meta) && (scope.facet.meta.vega === 'bar')) {
-            mark = 'bar';
+          if (scope.facet.meta && scope.facet.meta.vega === "bar") {
+            mark = "bar";
             encoding = {
               y: {
-                field: "label", type: "nominal",
-                axis: {labelAngle: 0, title: ''}},
-              x: {field: "count", type: "quantitative", axis: {title: ''}}
-            }
+                field: "label",
+                type: "nominal",
+                axis: { labelAngle: 0, title: "" }
+              },
+              x: { field: "count", type: "quantitative", axis: { title: "" } }
+            };
           }
 
           var vlSpec = {
-            $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+            $schema: "https://vega.github.io/schema/vega-lite/v4.json",
             datasets: {
               facetValues: scope.facet.items
             },
             data: {
-              name: 'facetValues'
+              name: "facetValues"
             },
             selection: {
-              pts: {type: "single"}
+              pts: { type: "single" }
             },
             config: {
               axis: {
@@ -703,30 +809,31 @@
             },
             mark: mark,
             encoding: encoding,
-            view: {"stroke": null}
+            view: { stroke: null }
           };
 
-          vegaEmbed('#' + scope.id, vlSpec, {
+          vegaEmbed("#" + scope.id, vlSpec, {
             actions: false
-          }).then(function (result) {
-            scope.vl = result;
+          })
+            .then(function (result) {
+              scope.vl = result;
 
-            scope.vl.view.addEventListener('click',
-              function (event, item) {
+              scope.vl.view.addEventListener("click", function (event, item) {
                 if (item.datum && item.datum.$$hashKey) {
-                  $timeout(function() {
-                    scope.updateCallback({facet: scope.facet, item: item.datum});
+                  $timeout(function () {
+                    scope.updateCallback({ facet: scope.facet, item: item.datum });
                   }, 10);
                 }
               });
 
-            scope.$watchCollection('facet.items', function (n, o) {
-              buildLabel();
-              scope.vl.view.data('facetValues', scope.facet.items).run();
-            });
-          }).catch(console.error);
+              scope.$watchCollection("facet.items", function (n, o) {
+                buildLabel();
+                scope.vl.view.data("facetValues", scope.facet.items).run();
+              });
+            })
+            .catch(console.error);
         }
-      }
-    }])
-
-})()
+      };
+    }
+  ]);
+})();

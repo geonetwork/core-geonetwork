@@ -1,75 +1,111 @@
-<div class="row" data-ng-controller="GnMapServerController">
+<div class="row" data-ng-controller="GnMapServerController" id="gn-mapservers-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">mapservers</div>
       <div class="panel-body">
-        <input class="form-control" data-ng-model="mapserversSearch.$" autofocus=""
-               placeholder="{{'filter' | translate}}"/>
-        <input type="hidden" data-ng-model="mapserverSelected.id"/>
+        <input
+          class="form-control"
+          data-ng-model="mapserversSearch.$"
+          autofocus=""
+          placeholder="{{'filter' | translate}}"
+        />
+        <input type="hidden" data-ng-model="mapserverSelected.id" />
 
         <div class="list-group">
-          <a href="" class="list-group-item"
-             data-ng-repeat="v in mapservers | filter:mapserversSearch | orderBy:'name'"
-             data-ng-click="selectMapServer(v)" title="{{v.description}}"> {{v.name}} </a>
+          <a
+            href=""
+            class="list-group-item"
+            data-ng-repeat="v in mapservers | filter:mapserversSearch | orderBy:'name'"
+            data-ng-click="selectMapServer(v)"
+            title="{{v.description}}"
+          >
+            {{v.name}}
+          </a>
         </div>
 
-        <button type="button" class="btn btn-primary btn-block"
-                data-ng-click="addMapServer()">
-          <i class="fa fa-plus"/>
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          data-ng-click="addMapServer()"
+        >
+          <i class="fa fa-plus" />
           <span data-translate="">newMapServer</span>
         </button>
       </div>
     </div>
 
-    <div data-gn-need-help="administrator-guide/configuring-the-catalog/map-server-configuration.html"></div>
+    <div data-gn-need-help="map-server-configuration"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="mapserverSelected == null">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span data-ng-hide="mapserverSelected.id == ''"
-              data-translate="">updateMapServer</span>
-        <span data-ng-hide="mapserverSelected.id != ''"
-              data-translate="">newMapServer</span>
+        <span data-ng-hide="mapserverSelected.id == ''" data-translate=""
+          >updateMapServer</span
+        >
+        <span data-ng-hide="mapserverSelected.id != ''" data-translate=""
+          >newMapServer</span
+        >
         <strong>{{mapserverSelected.name}}</strong>
         <div class="btn-toolbar pull-right">
-          <button type="button" class="btn btn-default"
-                  data-ng-click="resetMapServerPassword(mapserverSelected.id)">
+          <button
+            type="button"
+            class="btn btn-default"
+            data-ng-click="resetMapServerPassword(mapserverSelected.id)"
+          >
             <i class="fa fa-lock"></i>&nbsp;
             <span data-translate="">resetPassword</span>
           </button>
-          <button type="button" class="btn btn-primary"
-                  data-ng-disabled="!mapserverUpdated"
-                  data-ng-click="saveMapServer('#gn-mapserver-edit')">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-ng-disabled="!mapserverUpdated"
+            data-ng-click="saveMapServer('#gn-mapserver-edit')"
+          >
             <i class="fa fa-save"></i>&nbsp;
-            <span data-translate="">saveVirtualCSW</span>
+            <span data-translate="">save</span>
           </button>
-          <button type="button" class="btn btn-primary btn-danger"
-                  data-ng-hide="mapserverSelected.id == ''"
-                  data-ng-click="deleteMapServer(mapserverSelected.id)">
+          <button
+            type="button"
+            class="btn btn-primary btn-danger"
+            data-ng-hide="mapserverSelected.id == ''"
+            data-ng-click="deleteMapserverConfig()"
+          >
             <i class="fa fa-times"></i>&nbsp;
-            <span data-translate="">deleteVirtualCSW</span>
+            <span data-translate="">delete</span>
           </button>
         </div>
       </div>
       <div class="panel-body">
-        <form id="gn-mapserver-edit" name="gnMapServerEdit"
-              class="form-horizontal"
-              data-ng-keypress="updatingMapServer()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <form
+          id="gn-mapserver-edit"
+          name="gnMapServerEdit"
+          class="form-horizontal"
+          data-ng-keypress="updatingMapServer()"
+        >
+          <input type="hidden" name="_csrf" value="{{csrf}}" />
           <fieldset>
             <legend data-translate="">mapserverDescription</legend>
-            <input type="hidden" name="id"
-                   data-ng-model="mapserverSelected.id"
-                   value="{{mapserverSelected.id}}"/>
+            <input
+              type="hidden"
+              name="id"
+              data-ng-model="mapserverSelected.id"
+              value="{{mapserverSelected.id}}"
+            />
 
             <div class="form-group">
-              <label class="control-label col-sm-3" data-translate="">mapserverName</label>
+              <label class="control-label col-sm-3" data-translate=""
+                >mapserverName</label
+              >
 
               <div class="col-sm-9">
-                <input type="text" name="name" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.name"/>
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.name"
+                />
               </div>
             </div>
 
@@ -77,25 +113,31 @@
               <label class="control-label col-sm-3" data-translate="">description</label>
 
               <div class="col-sm-9">
-                <textarea name="description" class="form-control"
-                          data-ng-model="mapserverSelected.description"/>
+                <textarea
+                  name="description"
+                  class="form-control"
+                  data-ng-model="mapserverSelected.description"
+                />
               </div>
             </div>
           </fieldset>
           <fieldset>
             <legend data-translate="">mapserverConfiguration</legend>
 
-
             <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">configurl</label>
 
               <div class="col-sm-9">
-                <input type="url" name="configurl" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.configurl" placeholder="http://"/>
+                <input
+                  type="url"
+                  name="configurl"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.configurl"
+                  placeholder="http://"
+                />
               </div>
             </div>
-
 
             <fieldset data-ng-show="operation === 'ADD_NODE'">
               <legend data-translate="">useAccount</legend>
@@ -104,21 +146,26 @@
                 <label class="control-label col-sm-3" data-translate="">username</label>
 
                 <div class="col-sm-9">
-                  <input type="text" class="form-control"
-                         required=""
-                         data-ng-model="mapserverSelected.username"/>
+                  <input
+                    type="text"
+                    class="form-control"
+                    required=""
+                    data-ng-model="mapserverSelected.username"
+                  />
                 </div>
               </div>
-
 
               <div class="form-group">
                 <label class="control-label col-sm-3" data-translate="">password</label>
 
                 <div class="col-sm-9">
-                  <input type="password" class="form-control"
-                         required="required"
-                         autocomplete="off"
-                         data-ng-model="mapserverSelected.password"/>
+                  <input
+                    type="password"
+                    class="form-control"
+                    required="required"
+                    autocomplete="new-password"
+                    data-ng-model="mapserverSelected.password"
+                  />
                 </div>
               </div>
             </fieldset>
@@ -128,14 +175,23 @@
 
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input type="text" name="namespaceprefix" class="form-control"
-                        required=""
-                        data-ng-model="mapserverSelected.namespacePrefix"
-                        placeholder=""/>
+                  <input
+                    type="text"
+                    name="namespaceprefix"
+                    class="form-control"
+                    required=""
+                    data-ng-model="mapserverSelected.namespacePrefix"
+                    placeholder=""
+                  />
                   <span class="input-group-addon">:</span>
-                  <input type="url" name="namespace" class="form-control"
-                        required=""
-                        data-ng-model="mapserverSelected.namespace" placeholder="http://"/>
+                  <input
+                    type="url"
+                    name="namespace"
+                    class="form-control"
+                    required=""
+                    data-ng-model="mapserverSelected.namespace"
+                    placeholder="http://"
+                  />
                 </div>
               </div>
               <div class="col-sm-9 col-sm-offset-3">
@@ -144,21 +200,30 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label col-sm-3" data-translate="">pushStyleInWorkspace</label>
+              <label class="control-label col-sm-3" data-translate=""
+                >pushStyleInWorkspace</label
+              >
               <div class="col-sm-9">
-                <input type="checkbox" name="pushstyleinworkspace"
-                       data-ng-checked="mapserverSelected.pushStyleInWorkspace == 'true'"/>
+                <input
+                  type="checkbox"
+                  name="pushstyleinworkspace"
+                  data-ng-checked="mapserverSelected.pushStyleInWorkspace == 'true'"
+                />
               </div>
             </div>
-
 
             <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">wmsurl</label>
 
               <div class="col-sm-9">
-                <input type="url" name="wmsurl" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.wmsurl" placeholder="http://"/>
+                <input
+                  type="url"
+                  name="wmsurl"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.wmsurl"
+                  placeholder="http://"
+                />
               </div>
             </div>
 
@@ -166,9 +231,14 @@
               <label class="control-label col-sm-3" data-translate="">wfsurl</label>
 
               <div class="col-sm-9">
-                <input type="url" name="wfsurl" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.wfsurl" placeholder="http://"/>
+                <input
+                  type="url"
+                  name="wfsurl"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.wfsurl"
+                  placeholder="http://"
+                />
               </div>
             </div>
 
@@ -176,9 +246,14 @@
               <label class="control-label col-sm-3" data-translate="">wcsurl</label>
 
               <div class="col-sm-9">
-                <input type="url" name="wcsurl" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.wcsurl" placeholder="http://"/>
+                <input
+                  type="url"
+                  name="wcsurl"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.wcsurl"
+                  placeholder="http://"
+                />
               </div>
             </div>
 
@@ -186,9 +261,14 @@
               <label class="control-label col-sm-3" data-translate="">stylerurl</label>
 
               <div class="col-sm-9">
-                <input type="url" name="stylerurl" class="form-control"
-                       required=""
-                       data-ng-model="mapserverSelected.stylerurl" placeholder="http://"/>
+                <input
+                  type="url"
+                  name="stylerurl"
+                  class="form-control"
+                  required=""
+                  data-ng-model="mapserverSelected.stylerurl"
+                  placeholder="http://"
+                />
               </div>
             </div>
           </fieldset>
@@ -197,51 +277,64 @@
     </div>
   </div>
 
-
-  <div class="modal fade" id="passwordResetModal" tabindex="-1" role="dialog"
-       aria-labelledby="{{'passwordReset' | translate}}" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="passwordResetModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="{{'passwordReset' | translate}}"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          >&times;</button>
-          <h4 class="modal-title" data-translate=""
-              data-translate-values="{ user: '{{mapserverSelected.name}}'}">
-            resetPasswordTitle</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4
+            class="modal-title"
+            data-translate=""
+            data-translate-values="{ user: '{{mapserverSelected.name}}'}"
+          >
+            resetPasswordTitle
+          </h4>
         </div>
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <div class="form-group">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+              <input type="hidden" name="_csrf" value="{{csrf}}" />
               <label class="control-label col-sm-3" data-translate="">username</label>
 
               <div class="col-sm-9">
-                <input type="text" class="form-control"
-                       required=""
-                       data-ng-model="resetUsername"/>
+                <input
+                  type="text"
+                  class="form-control"
+                  required=""
+                  data-ng-model="resetUsername"
+                />
               </div>
             </div>
-
 
             <div class="form-group">
               <label class="control-label col-sm-3" data-translate="">password</label>
 
               <div class="col-sm-9">
-                <input type="password" class="form-control"
-                       required="required"
-                       autocomplete="off"
-                       data-ng-model="resetPassword"/>
+                <input
+                  type="password"
+                  class="form-control"
+                  required="required"
+                  autocomplete="off"
+                  data-ng-model="resetPassword"
+                />
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn" data-dismiss="modal">
-            <i class="fa fa-ban-circle"></i>&nbsp;
-            <span data-translate=""
-            >cancel</span></button>
-          <button type="button" class="btn btn-primary"
-                  data-ng-click="saveNewPassword()">
+            <i class="fa fa-ban-circle"></i>&nbsp; <span data-translate="">cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" data-ng-click="saveNewPassword()">
             <i class="fa fa-lock"></i>&nbsp;
             <span data-translate="">resetPassword</span>
           </button>
@@ -250,4 +343,12 @@
     </div>
   </div>
 
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteMapserverConfig}"
+    id="gn-confirm-remove-mapserver"
+  >
+    <p translate>confirmMapserverDelete</p>
+  </div>
 </div>

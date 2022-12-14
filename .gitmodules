@@ -10,3 +10,15 @@
 [submodule "docs/manuals"]
 	path = docs/manuals
 	url = https://github.com/geonetwork/doc.git
+[submodule "web-ui/src/main/resources/sextant/lib/style/bootstrap"]
+	path = web-ui/src/main/resources/sextant/lib/style/bootstrap
+	url = https://github.com/twbs/bootstrap.git
+	branch = v2.3.1-8268-g0b9c4a400
+[submodule "web-ui/src/main/resources/sextant/lib/style/font-awesome"]
+	path = web-ui/src/main/resources/sextant/lib/style/font-awesome
+	url = https://github.com/FortAwesome/Font-Awesome.git
+	branch = v4.7.0
+[submodule "web-ui/src/main/resources/sextant/lib/bootstrap-table"]
+	path = web-ui/src/main/resources/sextant/lib/bootstrap-table
+	url = https://github.com/wenzhixin/bootstrap-table.git
+	branch = 1.11.1

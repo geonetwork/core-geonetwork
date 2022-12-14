@@ -1,0 +1,30 @@
+<div class="form-group">
+  <select
+    id="mdIdentifierTemplates"
+    name="mdIdentifierTemplates"
+    title="{{selectedTemplate ? selectedTemplate.template
+            : ('chooseIdentifierTemplate' | translate)}}"
+    data-ng-model="selectedTemplate"
+    data-ng-options="o.name for o in mdIdentifierTemplates"
+  ></select>
+</div>
+
+<div
+  class="form-group input-group"
+  ng-repeat="(key, val) in mdIdentifierTemplateTokens"
+  data-ng-show="selectedTemplate"
+>
+  <span class="input-group-addon">{{ val.label }}</span>
+  <input
+    type="text"
+    class="form-control"
+    data-ng-readonly="val.readonly"
+    name="{{ val.label }}"
+    data-ng-model="val.value"
+    data-ng-model-options="{debounce: 200}"
+    data-ng-change="buildIdentifier()"
+  />
+</div>
+<div class="form-group">
+  <strong title="{{'finalUuid' | translate}}">{{mdIdSelectedTemplateForLabel}}</strong>
+</div>

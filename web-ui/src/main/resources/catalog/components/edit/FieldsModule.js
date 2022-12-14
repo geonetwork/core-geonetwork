@@ -21,47 +21,48 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_fields');
+(function () {
+  goog.provide("gn_fields");
 
-  goog.require('gn_batch_process_button');
-  goog.require('gn_bounding');
-  goog.require('gn_checkbox_with_nilreason');
-  goog.require('gn_crs_selector');
-  goog.require('gn_date_picker_directive');
-  goog.require('gn_directory_entry_selector');
-  goog.require('gn_editor_helper');
-  goog.require('gn_field_duration_directive');
-  goog.require('gn_fields_directive');
-  goog.require('gn_logo_selector_directive');
-  goog.require('gn_md_validation_tools_directive');
-  goog.require('gn_multilingual_field_directive');
-  goog.require('gn_organisation_entry_selector');
-  goog.require('gn_record_fragment_selector');
-  goog.require('gn_template_field_directive');
-  goog.require('gn_anchor_switcher_directive')
-  goog.require('gn_field_upload_directive');
-  goog.require('gn_multientry_combiner');
+  goog.require("gn_batch_process_button");
+  goog.require("gn_bounding");
+  goog.require("gn_checkbox_with_nilreason");
+  goog.require("gn_crs_selector");
+  goog.require("gn_date_picker_directive");
+  goog.require("gn_directory_entry_selector");
+  goog.require("gn_editor_helper");
+  goog.require("gn_field_duration_directive");
+  goog.require("gn_fields_directive");
+  goog.require("gn_logo_selector_directive");
+  goog.require("gn_md_validation_tools_directive");
+  goog.require("gn_multilingual_field_directive");
+  goog.require("gn_organisation_entry_selector");
+  goog.require("gn_record_fragment_selector");
+  goog.require("gn_template_field_directive");
+  goog.require("gn_anchor_switcher_directive");
+  goog.require("gn_field_upload_directive");
+  goog.require("gn_multientry_combiner");
+  goog.require("gn_multientry_combiner_onlineresourcesdescription");
 
-
-  angular.module('gn_fields', [
-    'gn_fields_directive',
-    'gn_crs_selector',
-    'gn_field_duration_directive',
-    'gn_editor_helper',
-    'gn_template_field_directive',
-    'gn_directory_entry_selector',
-    'gn_organisation_entry_selector',
-    'gn_batch_process_button',
-    'gn_multilingual_field_directive',
-    'gn_logo_selector_directive',
-    'gn_date_picker_directive',
-    'gn_record_fragment_selector',
-    'gn_checkbox_with_nilreason',
-    'gn_md_validation_tools_directive',
-    'gn_bounding',
-    'gn_anchor_switcher_directive',
-    'gn_field_upload_directive',
-    'gn_multientry_combiner'
+  angular.module("gn_fields", [
+    "gn_fields_directive",
+    "gn_crs_selector",
+    "gn_field_duration_directive",
+    "gn_editor_helper",
+    "gn_template_field_directive",
+    "gn_directory_entry_selector",
+    "gn_organisation_entry_selector",
+    "gn_batch_process_button",
+    "gn_multilingual_field_directive",
+    "gn_logo_selector_directive",
+    "gn_date_picker_directive",
+    "gn_record_fragment_selector",
+    "gn_checkbox_with_nilreason",
+    "gn_md_validation_tools_directive",
+    "gn_bounding",
+    "gn_anchor_switcher_directive",
+    "gn_field_upload_directive",
+    "gn_multientry_combiner",
+    "gn_multientry_combiner_onlineresourcesdescription"
   ]);
 })();

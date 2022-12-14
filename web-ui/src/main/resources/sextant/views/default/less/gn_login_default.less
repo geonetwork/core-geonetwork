@@ -1,0 +1,100 @@
+@import "../../../style/gn_login";
+@import "gn_view.less";
+// alert messages
+@import "gn_alerts_default.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
+
+[ng-app="gn_login"] {
+  .form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  label {
+    font-weight: 500;
+  }
+  fieldset.pull-left, fieldset.pull-right {
+    width: 48%;
+    @media (max-width: @screen-xs-max) {
+      width: 100%;
+    }
+  }
+  legend {
+    font-size: 18px;
+  }
+  form {
+    margin-top: 10px;
+  }
+  .input-group-addon {
+    background-color: #fff;
+  }
+  p.text-danger {
+    margin-top: 10px;
+  }
+  .help-block {
+    margin-top: 0;
+    margin-bottom: 0;
+    .error {
+      display: block;
+      margin-top: 5px;
+    }
+  }
+  input.ng-invalid, .has-error .form-control {
+    border-color: #f98258;
+    &:focus {
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 4px rgb(250, 140, 99);
+  }
+  }
+}
+
+.navbar-default {
+  background-color: @gn-menubar-background;
+  border-color: @gn-menubar-border-color;
+  .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+    height: @gn-menubar-height;
+    color: @gn-menubar-color;
+    &:hover, &:focus {
+      color: @gn-menubar-color-hover;
+    }
+  }
+  .gn-name.gn-truncate {
+    @media (min-width: @screen-lg-min) {
+      max-width: 230px;
+      display: inline-block;
+      .text-overflow();
+    }
+  }
+  // also add `display:none`, this doesn't take whitespace on the navbar
+  .badge.invisible {
+    display: none
+  }
+
+}
+
+@media (max-width: @grid-float-breakpoint) {
+  .navbar-nav {
+    margin: 0;
+  }
+}
+
+.panel-default {
+  border: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+  .panel-heading {
+    background: 0;
+    border: 0;
+    padding-left: 0;
+    padding-right: 0;
+    h1 {
+      padding: 0;
+      margin: 0;
+      font-weight: 300;
+      font-size: 32px;
+    }
+  }
+  .panel-body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

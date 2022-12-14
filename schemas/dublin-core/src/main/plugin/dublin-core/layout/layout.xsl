@@ -136,18 +136,43 @@
       <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
       <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
-      <xsl:with-param name="editInfo"
-                      select="gn:element"/>
-      <xsl:with-param name="parentEditInfo"
-                      select="if ($added) then $container/gn:element else element()"/>
+      <xsl:with-param name="editInfo" as="node()">
+        <xsl:choose>
+          <xsl:when test="$isFlatMode">
+            <xsl:copy-of select="gn:element"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- When not flat eg. advanced view, all elements can be removed in DC. -->
+            <gn:element ref="{gn:element/@ref}"
+                        parent="{gn:element/@parent}"
+                        uuid="{gn:element/@uuid}"
+                        del="true"
+                        min="0"
+                        max="{gn:element/@max}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
+      <xsl:with-param name="parentEditInfo" as="node()">
+        <xsl:choose>
+          <xsl:when test="$added"><xsl:copy-of select="$container/gn:element"/></xsl:when>
+          <xsl:when test="$isFlatMode">
+            <xsl:copy-of select="gn:element"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <gn:element ref="{gn:element/@ref}"
+                        parent="{gn:element/@parent}"
+                        uuid="{gn:element/@uuid}"
+                        del="true"
+                        min="0"
+                        max="{gn:element/@max}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
       <xsl:with-param name="listOfValues" select="$helper"/>
       <!-- When adding an element, the element container contains
       information about cardinality. -->
       <xsl:with-param name="isFirst"
-                      select="if ($added) then
-                      (($container/gn:element/@down = 'true' and not($container/gn:element/@up)) or
-                      (not($container/gn:element/@down) and not($container/gn:element/@up)))
-                      else
+                      select="if ($added) then true() else
                       ((gn:element/@down = 'true' and not(gn:element/@up)) or
                       (not(gn:element/@down) and not(gn:element/@up)))"/>
     </xsl:call-template>

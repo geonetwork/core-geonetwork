@@ -1,0 +1,29 @@
+<div>
+  <div data-ng-repeat="c in components">
+    <!--<h3>{{c.name}}</h3>-->
+    <br />
+    <table class="table table-striped">
+      <tr>
+        <th data-translate="">Measure</th>
+        <th data-translate="">Value</th>
+        <th data-translate="" data-ng-show="isTdp || isUd">Quality error (%)</th>
+        <th data-translate="" data-ng-show="isTdp || isUd">Indicator</th>
+        <th data-translate="" data-ng-show="isTdp || isUd">DPS value</th>
+        <th data-translate="" data-ng-show="isUd">TDP value</th>
+      </tr>
+      <tr data-ng-repeat="q in c.measures track by $index">
+        <td title="{{q.qmDefinition}}">{{q.qmName}}</td>
+        <td>
+          <span data-ng-show="q.qm">{{q.qm}}<br /></span>
+          <i data-ng-show="q.qmStatement">{{q.qmStatement}}</i>
+        </td>
+        <td title="{{q.qeName}}" data-ng-show="isTdp || isUd">{{q.qe}}</td>
+        <td title="{{q.fuName}}" data-ng-show="isTdp || isUd" class="{{getClass(q)}}">
+          {{q.fu}}
+        </td>
+        <td data-ng-show="isTdp || isUd">{{q.dps}}</td>
+        <td data-ng-show="isUd">{{q.tdp}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

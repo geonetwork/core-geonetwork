@@ -9,6 +9,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.AnnotationRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.hamcrest.BaseMatcher;
@@ -33,17 +34,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static java.util.UUID.randomUUID;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @PrepareForTest({AnnotationRepository.class})
 public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
@@ -441,6 +438,6 @@ public class AnnotationsApiTest extends AbstractServiceIntegrationTest {
                 new ISODate().getDateAndTime(),
                 new ISODate().getDateAndTime(),
                 false,
-                false);
+                IndexingMode.none);
     }
 }

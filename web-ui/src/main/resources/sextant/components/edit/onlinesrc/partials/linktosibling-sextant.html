@@ -1,0 +1,141 @@
+<div>
+  <form class="form-horizontal" role="form" data-ng-search-form="">
+    <div class="onlinesrc-container">
+      <!-- Choose a component when linking UD -->
+      <div class="form-group" data-ng-if="config.initiativeType == 'upstreamData'">
+        <label class="col-sm-3 control-label">
+          <span data-translate="">Component</span>
+        </label>
+        <div class="col-sm-5">
+          <select
+            name="cpt"
+            data-ng-options="value as key for (key, value) in fragments"
+            data-ng-model="$parent.$parent.cpt"
+          />
+
+          <div
+            class="alert alert-warning"
+            data-ng-if="fragments.length === 0"
+            data-translate=""
+          >
+            noComponentDefined
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" data-ng-hide="config.associationTypeForced">
+        <label class="col-sm-3 control-label">
+          <span data-translate="">associationType</span>
+        </label>
+        <div class="col-sm-5">
+          <div
+            data-schema-info-combo="codelist"
+            data-init-on-load="true"
+            data-selected-info="config.associationType"
+            data-gn-schema-info="associationType"
+            lang="lang"
+          ></div>
+        </div>
+      </div>
+      <div class="form-group" data-ng-hide="config.initiativeTypeForced">
+        <label class="col-sm-3 control-label">
+          <span data-translate="">initiativeType</span>
+        </label>
+        <div class="col-sm-5">
+          <div
+            data-schema-info-combo="codelist"
+            data-init-on-load="true"
+            data-selected-info="config.initiativeType"
+            data-gn-schema-info="initiativeType"
+            lang="lang"
+            data-allow-blank=""
+          ></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <div class="input-group" id="siblingdd">
+            <span class="input-group-addon">
+              <i class="fa fa-search" />
+            </span>
+            <input
+              class="form-control"
+              data-ng-change="updateParams();triggerSearch();"
+              type="text"
+              data-toggle="dropdown"
+              data-ng-model="searchObj.any"
+              data-ng-model-options="modelOptions"
+              placeholder="{{'search' | translate}}"
+            />
+            <!--<ul class="dropdown-menu" role="menu">
+              <li data-ng-repeat="md in searchResults.records">
+                <a href=""
+                   data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
+                  {{md.title || md.defaultTitle}}
+                </a>
+              </li>
+            </ul>-->
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <span data-translate="">filter</span>
+          <div
+            data-ng-show="searchResults.records.length > 0"
+            data-gn-facet-dimension-list="searchResults.dimension"
+            data-params="searchObj.params"
+            data-facet-type="'checkpoint'"
+            data-current-facets="currentFacets"
+          ></div>
+        </div>
+        <div class="col-md-5">
+          <div
+            data-gn-search-form-results=""
+            data-gn-search-form-results-mode="title"
+            data-gn-search-form-results-selection-mode="local multiple"
+            data-on-md-click="selectRecord"
+            data-search-results="searchResults"
+            data-select-records="stateObj.selectRecords"
+            data-pagination-info="paginationInfo"
+          ></div>
+        </div>
+        <div class="col-md-5">
+          <ul class="list-group">
+            <li class="list-group-item gn-record" data-ng-repeat="obj in selection">
+              {{obj.md.title || obj.md.defaultTitle}}
+              <span
+                ><i
+                  >({{obj.associationType}}
+                  <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
+                </i></span
+              >
+              <a data-ng-click="removeFromSelection(obj)" href="">
+                <i class="btn fa fa-times text-danger pull-right"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="">
+        <button
+          type="button"
+          class="btn navbar-btn btn-success"
+          data-gn-click-and-spin="linkToResource()"
+          data-ng-class="{'disabled':
+                (selection.length < 1) ||
+                (selection.length > 0 && config.initiativeType == 'upstreamData' && $parent.cpt == null)}"
+        >
+          <i class="fa gn-icon-sibling" />&nbsp;
+          <span data-translate="">closeEditor</span>
+        </button>
+        <div
+          data-gn-need-help="user-guide/associating-resources/linking-others.html"
+          class="pull-right"
+        ></div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:wicket="http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git;a=blob_plain;f=wicket-core/src/main/resources/META-INF/wicket-1.5.xsd;hb=master"
+>
+  <head>
+    <meta charset="utf-8" />
+    <title>Catalogue service | Emodnet Chemistry</title>
+    <meta content="Catalogue service" name="description" />
+    <meta
+      content="oceanography,chemistry,contaminants,litter,eutrophication,acidification,msfd,marine data,data management,data products"
+      name="keywords"
+    />
+    <meta content="OGS/NODC - MARIS" name="author" />
+    <meta
+      content="Apache Wicket Application - http://wicket.apache.org"
+      name="generator"
+    />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://www.emodnet-chemistry.eu/icons/favicon.png"
+      rel="icon"
+      type="image/png"
+    />
+    <link
+      href="https://www.emodnet-chemistry.eu/icons/favicon.png"
+      rel="shortcut icon"
+      type="image/png"
+    />
+    <link href="https://www.emodnet-chemistry.eu/css/style.css" rel="stylesheet" />
+    <link
+      href="https://www.emodnet-chemistry.eu/css/custom.css?version=1.2"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css"
+      media="screen"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script
+      defer=""
+      src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"
+    ></script>
+    <!-- data-cfasync="false" -->
+    <script defer="" src="https://www.emodnet-chemistry.eu/js/cookieconsent.js"></script>
+    <script defer="" src="https://www.emodnet-chemistry.eu/js/sextant-embed.js"></script>
+    <script defer="" src="https://sextant.ifremer.fr/geonetwork/static/lib.js"></script>
+    <script
+      defer=""
+      src="https://sextant.ifremer.fr/geonetwork/static/gn_search_sextant.js"
+    ></script>
+    <meta name="wicket.header.items" />
+  </head>
+  <body id="top">
+    <header>
+      <div id="topbar">
+        <div class="wrapper clearfix">
+          <div class="branding">
+            <div id="logo">
+              <a href="https://www.emodnet-chemistry.eu/" title="Homepage">
+                EMODnet Chemistry Portal
+              </a>
+            </div>
+            <div id="payoff">
+              <h1>Chemistry</h1>
+              <p>Data &amp; products on marine water quality</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <!-- <wicket:container wicket:id="searchPanel"/>-->
+            <ul id="topnav">
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/help/contact"> Contact us </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/submitdata"> Submit data </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <nav id="nav">
+      <a href="#nav" title="Show navigation"> Show navigation </a>
+      <a href="#" title="Hide navigation"> Hide navigation </a>
+      <div class="wrapper clearfix">
+        <ul class="clearfix">
+          <li>
+            <a href="https://www.emodnet-chemistry.eu/about"> About </a>
+          </li>
+          <li>
+            <a href="https://www.emodnet-chemistry.eu/data"> Data Access </a>
+          </li>
+          <li class="active">
+            <a href="https://www.emodnet-chemistry.eu/products"> Data Products </a>
+          </li>
+          <li>
+            <a href="https://www.emodnet-chemistry.eu/promotion"> Promotion </a>
+          </li>
+          <li>
+            <a href="https://www.emodnet-chemistry.eu/help"> Helpdesk </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="photobar">
+      <div class="wrapper">
+        <div id="chemicals">
+          <ul>
+            <li class="ch1">
+              <a href="https://www.emodnet-chemistry.eu/acidification">
+                Ocean Acidification
+              </a>
+            </li>
+            <li class="ch2">
+              <a href="https://www.emodnet-chemistry.eu/eutrophication">
+                Eutrophication
+              </a>
+            </li>
+            <li class="ch3">
+              <a href="https://www.emodnet-chemistry.eu/marinelitter"> Marine Litter </a>
+            </li>
+            <li class="ch4">
+              <a href="https://www.emodnet-chemistry.eu/contaminants"> Contaminants </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <main>
+      <div class="wrapper clearfix">
+        <div id="breadcrumb">
+          <ul>
+            <li>
+              <a href="https://www.emodnet-chemistry.eu/"> Home </a>
+            </li>
+            <li>
+              <a href="https://www.emodnet-chemistry.eu/products"> Data Products </a>
+            </li>
+            <li>Data Products Catalogue</li>
+          </ul>
+        </div>
+        <div id="content" style="width: 100%">
+          <h1>Catalogue service</h1>
+          <div
+            class="gn sxt-max-md nodc-fullContent"
+            data-ng-app="gn_search_sextant"
+            data-ng-controller="GnCatController"
+            data-ng-include="'../../catalog/views/sextant/templates/index.html'"
+            data-sxt-size="auto"
+          ></div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="clearfix" id="footer">
+        <div class="wrapper clearfix">
+          <div class="column footer-logo">
+            <a href="https://emodnet.ec.europa.eu/" target="_blank"> EMODnet </a>
+          </div>
+          <div class="column footer-menu clearfix">
+            <ul>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/extranet/doc"> Extranet </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/sitemap"> Sitemap </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/help/contact"> Contact Us </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/submitdata"> Submit data </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/policy">
+                  Data Protection Notice
+                </a>
+              </li>
+              <!--<li><a wicket:id="footerDataProtectionPage" href="#">Data Protection Notice</a></li>-->
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/cookies"> Cookies Notice </a>
+              </li>
+              <li>
+                <a href="https://www.emodnet-chemistry.eu/terms"> Terms of use </a>
+              </li>
+            </ul>
+          </div>
+          <div class="column social-media">
+            <h4>FOLLOW US</h4>
+            <ul>
+              <li>
+                <a href="https://twitter.com/EMODnet" target="_blank">
+                  <i aria-hidden="true" class="fa fa-twitter-square fa-3x"> </i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/emodnet" target="_blank">
+                  <i aria-hidden="true" class="fa fa-linkedin-square fa-3x"> </i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.slideshare.net/emodnet" target="_blank">
+                  <i aria-hidden="true" class="fa fa-slideshare"> </i>
+                </a>
+              </li>
+            </ul>
+            <p class="hostedby">
+              Website hosted and developed by
+              <br />
+              OGS and MARIS
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <div class="wrapper">
+          © Copyright 2017 - EMODnet - THE EUROPEAN MARINE OBSERVATION AND DATA NETWORK
+        </div>
+      </div>
+      <div class="copyright copyright-eu">
+        <div class="wrapper">
+          <dl class="clearfix">
+            <dt></dt>
+            <dd>
+              <p>
+                The European Marine Observation and Data Network (EMODnet) is financed by
+                the European Union under Regulation (EU) No 508/2014 of the European
+                Parliament and of the Council of 15 May 2014 on the European Maritime and
+                Fisheries Fund.
+              </p>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -21,11 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_legendpanel_directive');
+(function () {
+  goog.provide("gn_legendpanel_directive");
 
-  var module = angular.module('gn_legendpanel_directive', [
-  ]);
+  var module = angular.module("gn_legendpanel_directive", []);
 
   /**
    * @ngdoc directive
@@ -35,26 +34,25 @@
    * This directive `gnLegendPanel` is a panel containing all legends of all
    * active layers in the map.
    */
-  module.directive('gnLegendPanel', [
-    '$filter',
-    'gnLayerFilters',
+  module.directive("gnLegendPanel", [
+    "$filter",
+    "gnLayerFilters",
 
-    function($filter, gnLayerFilters) {
-
+    function ($filter, gnLayerFilters) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          map: '=gnLegendPanel'
+          map: "=gnLegendPanel"
         },
-        templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
-            'legendpanel.html',
-        link: function(scope, element, attrs) {
-
+        templateUrl:
+          "../../catalog/components/viewer/legendpanel/partials/" + "legendpanel.html",
+        link: function (scope, element, attrs) {
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.visible;
         }
       };
-    }]);
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -64,22 +62,20 @@
    * This directive `gnLayerorderPanel` is a panel which offers tools to change
    * active layers order in the map.
    */
-  module.directive('gnLayerorderPanel', [
-    '$filter',
-    'gnLayerFilters',
+  module.directive("gnLayerorderPanel", [
+    "$filter",
+    "gnLayerFilters",
 
-    function($filter, gnLayerFilters) {
-
+    function ($filter, gnLayerFilters) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          map: '=gnLayerorderPanel'
+          map: "=gnLayerorderPanel"
         },
-        templateUrl: '../../catalog/components/' +
-            'viewer/legendpanel/partials/' +
-            'layerorderpanel.html',
-        link: function(scope, element, attrs) {
-
+        templateUrl:
+          "../../catalog/components/viewer/legendpanel/partials/" +
+          "layerorderpanel.html",
+        link: function (scope, element, attrs) {
           var map = scope.map;
           scope.layers = map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.visible;
@@ -90,33 +86,16 @@
            * @param {ol.layer} layer
            * @param {float} delta
            */
-          scope.moveLayer = function(layer, delta, dont) {
-            if (dont) return;
+          scope.moveLayer = function (layer, delta) {
             var layersCollection = map.getLayers();
             var index = layersCollection.getArray().indexOf(layer);
-            var group = layersCollection.item(index + delta).get('group') ?
-                layersCollection.item(index + delta)
-                    .get('group').split('/')[1] :
-                undefined;
-            var groupcombo =
-                layersCollection.item(index + delta).get('groupcombo');
-            var i = index + delta;
-            while (
-                layersCollection.item(i) &&
-                layersCollection.item(i).get('group') &&
-                group == layersCollection.item(i).get('group').split('/')[1] &&
-                groupcombo &&
-                groupcombo == layersCollection.item(i).get('groupcombo')
-            ) {
-              i += delta;
-            }
             layersCollection.removeAt(index);
-            layersCollection.insertAt(
-                (group && groupcombo) ? i - delta : i, layer);
+            layersCollection.insertAt(index + delta, layer);
           };
         }
       };
-    }]);
+    }
+  ]);
 
   /**
    * @ngdoc directive
@@ -126,26 +105,24 @@
    * This directive `gnLayersourcesPanel` is a panel that displays a list of
    * all layers and their sources.
    */
-  module.directive('gnLayersourcesPanel', [
-    '$filter',
-    'gnLayerFilters',
+  module.directive("gnLayersourcesPanel", [
+    "$filter",
+    "gnLayerFilters",
 
-    function($filter, gnLayerFilters) {
-
+    function ($filter, gnLayerFilters) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          map: '=gnLayersourcesPanel'
+          map: "=gnLayersourcesPanel"
         },
-        templateUrl: '../../catalog/components/viewer/legendpanel/partials/' +
-            'layersources.html',
-        link: function(scope, element, attrs) {
-
+        templateUrl:
+          "../../catalog/components/viewer/legendpanel/partials/" + "layersources.html",
+        link: function (scope, element, attrs) {
           var map = scope.map;
           scope.layers = map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.visible;
         }
       };
-    }]);
-
+    }
+  ]);
 })();

@@ -13,12 +13,7 @@
           <span class="sr-only" data-translate="">previous</span>
         </a>
       </li>
-      <li class="btn-group">
-    <!-- A dropdown button to select the number of page
-    and indicating the current page info -->
-      <a href class="dropdown-toggle"
-        data-toggle="dropdown"
-        aria-expanded="false">
+      <li data-ng-if="values.length === 0">
         <span ng-show="config.pages > 1">
           {{config.from}} - {{config.to}}
           <span translate>resultXonY</span>
@@ -28,19 +23,35 @@
           {{config.to}}
           <span translate>results</span>
         </span>
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-        <li role="presentation"
-            class="dropdown-header" data-translate="">hitsPerPage
-        </li>
-        <li data-ng-repeat="nb in values"
+      </li>
+      <li class="btn-group" data-ng-if="values.length > 0">
+        <!-- A dropdown button to select the number of page
+    and indicating the current page info -->
+        <a href class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span ng-show="config.pages > 1">
+            {{config.from}} - {{config.to}}
+            <span translate>resultXonY</span>
+            {{config.resultsCount}}
+          </span>
+          <span ng-show="config.pages <= 1">
+            {{config.to}}
+            <span translate>results</span>
+          </span>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li role="presentation" class="dropdown-header" data-translate="">
+            hitsPerPage
+          </li>
+          <li
+            data-ng-repeat="nb in values"
             role="menuitem"
-            data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''">
-          <a href="" data-ng-click="updateSearch(nb)">{{nb}}</a>
-        </li>
-      </ul>
-    </li>
+            data-ng-class="nb === config.hitsPerPage ? 'disabled' : ''"
+          >
+            <a href="" data-ng-click="updateSearch(nb)">{{nb}}</a>
+          </li>
+        </ul>
+      </li>
       <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
         <a href="" data-ng-click="next()">
           <i class="fa fa-angle-right"></i>

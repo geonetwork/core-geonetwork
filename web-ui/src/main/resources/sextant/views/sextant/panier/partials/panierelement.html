@@ -1,0 +1,172 @@
+<li class="list-group-item clearfix panier-element">
+  <button
+    type="button"
+    class="btn btn-default sxt-panier-remove"
+    ng-click="del(element, form)"
+  >
+    <i class="fa fa-trash-o"></i>
+  </button>
+
+  <!--Map Draw Extent-->
+  <div data-ng-if="!isCopyfile" class="col-md-5">
+    <div
+      gn-map-field="map"
+      class="pos-relative"
+      gn-map-field-geom="prop.extent"
+      gn-map-field-extent="extentCoords"
+      template="../../catalog/views/sextant/templates/map/mapfield-panier.html"
+    ></div>
+    <div>
+      <div
+        style="width: 12px; height: 12px; border: 2px solid orange; display: inline-block"
+      ></div>
+      <span translate>panierDataExtent</span>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h4>{{::(element.md.resourceTitle)}}</h4>
+    <em>{{::(element.link.desc || element.link.name)}}</em>
+    <!--Panier Form-->
+    <div class="form-group" data-ng-if="!isCopyfile">
+      <label for="projectionPF" class="control-label" translate>Projection</label
+      >&nbsp;:&nbsp;
+      <select
+        class="form-control input-sm"
+        id="projectionPF"
+        data-ng-model="form.output.epsg"
+        sxt-select
+      >
+        <option
+          data-ng-repeat="p in settings.projs"
+          value="{{p.value}}"
+          data-ng-selected="p.value == form.output.epsg"
+        >
+          {{p.label}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group" data-ng-if="!isCopyfile">
+      <label for="formatPF" class="control-label" translate>format</label>&nbsp;:&nbsp;
+      <select
+        class="form-control input-sm"
+        id="formatPF"
+        data-ng-model="form.output.format"
+        sxt-select
+      >
+        <option
+          data-ng-repeat="f in formats"
+          value="{{f.value}}"
+          data-ng-selected="f.value == form.output.format"
+        >
+          {{f.label}}
+        </option>
+      </select>
+    </div>
+
+    <div
+      class="form-group sxt-active-filters dropdown"
+      ng-if="element.filter.params || element.filter.any"
+    >
+      <label ng-click="form.useFilters = !form.useFilters">
+        <i
+          class="fa fa-fw sxt-layer-visibility text-primary"
+          ng-class="form.useFilters ? 'fa-check-square-o' : 'fa-square-o'"
+        />
+        <span translate>activeFilters</span>
+      </label>
+      <button
+        type="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        class="btn btn-default dropdown-toggle"
+      >
+        <span translate class="ng-scope">activeFiltersDetails</span>&nbsp;
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li ng-repeat="filter in element.filter.params">
+          <a
+            ><i
+              class="fa fa-search"
+            />&nbsp;{{filter.name}}&nbsp;=&nbsp;{{filter.value}}</a
+          >
+        </li>
+        <li ng-if="element.filter.any">
+          <a
+            ><i class="fa fa-search" />&nbsp;<span translate>fullTextSearch</span
+            >&nbsp;=&nbsp;{{element.filter.any}}</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div
+      class="form-group sxt-processes-list"
+      ng-show="element.processes && element.processes.length > 0"
+    >
+      <label class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
+      <div ng-repeat="p in element.processes" class="sxt-process">
+        <label ng-click="p.included = p.described && !p.included">
+          <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner" />
+          <i
+            ng-if="p.described"
+            class="fa fa-fw sxt-layer-visibility text-primary"
+            ng-class="p.included ? 'fa-check-square-o' : 'fa-square-o'"
+          />
+          <span class="wps-label">{{ p.description || p.name }}</span>
+        </label>
+        <button
+          type="button"
+          data-ng-disabled="!p.included"
+          class="btn btn-default"
+          ng-click="openWpsModal($event)"
+        >
+          <i class="fa fa-cogs"></i>&nbsp;
+          <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
+        </button>
+        <div class="modal fade" ng-if="isVisible()">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" translate>{{p.desc || 'editWpsForm'}}</h4>
+              </div>
+              <div class="modal-body">
+                <gn-wps-process-form
+                  wps-link="p"
+                  wfs-link="getWfsLink()"
+                  map="map"
+                  execute-callback="saveExecuteMessage(msg, p)"
+                  hide-execute-button="true"
+                  hide-title="true"
+                  cancel-previous="false"
+                >
+                </gn-wps-process-form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-dismiss="modal"
+                  ng-click="submitProcess($event)"
+                  translate
+                >
+                  wpsSaveForm
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
