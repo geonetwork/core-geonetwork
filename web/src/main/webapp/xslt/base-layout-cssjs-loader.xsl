@@ -155,7 +155,7 @@
         </xsl:choose>
 
         <xsl:choose>
-          <xsl:when test="$searchView = 'sextant'">
+          <xsl:when test="$uiResourcesPath = '../../sextant/'">
             <script src="{$uiResourcesPath}lib/bootstrap-select/bootstrap-select.min.js?v={$buildNumber}"></script>
             <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/angular/bootstrap-table-angular.js?v={$buildNumber}"></script>
           </xsl:when>

@@ -58,11 +58,17 @@
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
   <xsl:variable name="withD3" select="$service = 'admin.console'"/>
 
+  <!-- Sextant client app is only loaded for the search module.
+  Editor and admin client app are the one from GeoNetwork. -->
   <xsl:variable name="searchView"
-                select="if (/root/request/view) then util:encodeForJavaScript(/root/request/view) else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
+                select="if ($angularApp = 'gn_search' and /root/request/view)
+                        then util:encodeForJavaScript(/root/request/view)
+                        else if($angularApp = 'gn_search' and util:getSettingValue('system/ui/defaultView'))
+                        then util:getSettingValue('system/ui/defaultView')
+                        else 'default'"></xsl:variable>
 
   <xsl:variable name="uiResourcesPath"
-                select="if ($searchView = 'sextant')
+                select="if ($angularApp = 'gn_search' and $searchView = 'sextant')
                         then '../../sextant/'
                         else '../../catalog/'"/>
 
