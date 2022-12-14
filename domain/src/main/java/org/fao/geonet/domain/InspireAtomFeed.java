@@ -23,6 +23,7 @@
 package org.fao.geonet.domain;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.Namespace;
