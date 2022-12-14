@@ -107,9 +107,8 @@
 
       function loadHarvester(id) {
         $scope.isLoadingOneHarvester = true;
-        return $http
-          .get("admin.harvester.list?_content_type=json&id=" + id)
-          .then(function (response) {
+        return $http.get("admin.harvester.list?_content_type=json&id=" + id).then(
+          function (response) {
             var data = response.data;
 
             if (data && data[0]) {
@@ -165,11 +164,12 @@
                 };
               }
             }
-          })
-          .error(function (data) {
+          },
+          function (response) {
             // TODO
             $scope.isLoadingOneHarvester = false;
-          });
+          }
+        );
       }
 
       function loadHistory(backgroundLoad) {
@@ -195,7 +195,7 @@
               size +
               "&_content_type=json"
           )
-          .data(
+          .then(
             function (response) {
               var data = response.data;
 
@@ -388,7 +388,7 @@
             }
           )
           .then(
-            function (data) {
+            function (response) {
               var data = response.data;
 
               if (!$scope.harvesterSelected["@id"]) {

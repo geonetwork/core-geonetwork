@@ -44,8 +44,11 @@ var geonetwork = {};
   var module = angular.module("gn", ["gn_locale", "gn_config", "cfp.hotkeys"]);
 
   // See https://docs.angularjs.org/guide/migration#commit-aa077e8
-  module.config(['$locationProvider', function($locationProvider) {
-    // Configure existing providers
-    $locationProvider.hashPrefix('');
-  }]);
+  module.config([
+    "$locationProvider",
+    function ($locationProvider) {
+      // Configure existing providers
+      $locationProvider.hashPrefix("");
+    }
+  ]);
 })();

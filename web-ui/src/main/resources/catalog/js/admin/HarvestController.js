@@ -93,8 +93,10 @@
         $scope.harvesters = null;
         return $http.get("admin.harvester.list?_content_type=json&id=-1").then(
           function (response) {
+            var data = response.data;
+
             if (data != "null") {
-              $scope.harvesters = response.data;
+              $scope.harvesters = data;
               gnUtilityService.parseBoolean($scope.harvesters);
               pollHarvesterStatus();
             }
