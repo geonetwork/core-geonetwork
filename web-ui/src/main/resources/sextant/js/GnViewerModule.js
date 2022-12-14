@@ -35,7 +35,7 @@
     function ($translateProvider, $LOCALES, $LOCALE_MAP) {
       $translateProvider.useLoader("localeLoader", {
         locales: $LOCALES,
-        prefix: "../../catalog/locales/",
+        prefix: "../../sextant/locales/",
         suffix: ".json"
       });
 

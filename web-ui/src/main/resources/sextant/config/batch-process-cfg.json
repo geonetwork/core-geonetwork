@@ -30,8 +30,8 @@
   }, {
     "key": "massive-content-update",
     "type": "template",
-    "template": "../../catalog/templates/admin/tools/batch-replacer.html",
-    "reportTemplate": "../../catalog/templates/admin/tools/batch-replacer-report.html",
+    "template": "../../sextant/templates/admin/tools/batch-replacer.html",
+    "reportTemplate": "../../sextant/templates/admin/tools/batch-replacer-report.html",
     "config": {
       "metadata": {
         "elements": [
@@ -206,8 +206,8 @@
   }, {
     "key": "massive-search-and-replace",
     "type": "template",
-    "template": "../../catalog/templates/admin/tools/batch-replacer.html",
-    "reportTemplate": "../../catalog/templates/admin/tools/batch-replacer-report.html",
+    "template": "../../sextant/templates/admin/tools/batch-replacer.html",
+    "reportTemplate": "../../sextant/templates/admin/tools/batch-replacer-report.html",
     "params": [
       {"name": "removeEmptyElement", "value": "", "type": "checkbox"}
     ],
@@ -225,7 +225,7 @@
           "iso19139\\..*\\.voice",
           "iso19139\\..*\\.facsimile"
         ]
-      }, 
+      },
       "dublin-core": {
         "elements": [
           "dublin-core.simpledc.creator",

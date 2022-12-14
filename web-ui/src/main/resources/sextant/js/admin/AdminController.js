@@ -47,7 +47,7 @@
     "gn_admin_menu"
   ]);
 
-  var tplFolder = "../../catalog/templates/admin/";
+  var tplFolder = "../../sextant/templates/admin/";
 
   module.provider("authorizationService", [
     function () {

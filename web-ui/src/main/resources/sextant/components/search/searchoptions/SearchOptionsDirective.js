@@ -36,7 +36,7 @@
         require: "^ngSearchForm",
         scope: {},
         templateUrl:
-          "../../catalog/components/search/searchoptions/partials/" +
+          "../../sextant/components/search/searchoptions/partials/" +
           "searchoptions.html",
         link: function (scope, element, attrs, controller) {
           scope.user = $rootScope.user;

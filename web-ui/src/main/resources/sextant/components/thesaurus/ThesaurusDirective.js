@@ -79,7 +79,7 @@
           include: "@"
         },
         templateUrl:
-          "../../catalog/components/thesaurus/" + "partials/thesaurusselector.html",
+          "../../sextant/components/thesaurus/" + "partials/thesaurusselector.html",
         link: function (scope, element, attrs) {
           scope.thesaurus = null;
           scope.thesaurusKey = null;
@@ -258,7 +258,7 @@
           thesaurusTitle: "@"
         },
         templateUrl:
-          "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
+          "../../sextant/components/thesaurus/" + "partials/keywordselector.html",
         link: function (scope, element, attrs) {
           $compile(element.contents())(scope);
           // pick up skos browser directive with compiler

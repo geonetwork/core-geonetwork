@@ -59,7 +59,7 @@
           nameType: "@"
         },
         templateUrl:
-          "../../catalog/components/viewer/geometry/" + "partials/geometrytool.html",
+          "../../sextant/components/viewer/geometry/" + "partials/geometrytool.html",
         controllerAs: "ctrl",
         bindToController: true,
         controller: [

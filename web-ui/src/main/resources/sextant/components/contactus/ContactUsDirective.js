@@ -38,7 +38,7 @@
         scope: {
           user: "="
         },
-        templateUrl: "../../catalog/components/share/" + "partials/contactusform.html",
+        templateUrl: "../../sextant/components/share/" + "partials/contactusform.html",
         link: function (scope, element, attrs) {
           scope.send = function (formId) {
             $http({

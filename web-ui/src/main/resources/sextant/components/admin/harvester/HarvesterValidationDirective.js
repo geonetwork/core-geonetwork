@@ -41,7 +41,7 @@
           element: "=gnHarvesterValidation"
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" +
+          "../../sextant/components/admin/harvester/partials/" +
           "harvestervalidation.html",
         link: function (scope, element, attrs) {
           $http

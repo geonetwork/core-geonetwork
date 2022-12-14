@@ -54,7 +54,7 @@
         replace: true,
         templateUrl: function (elem, attrs) {
           return (
-            "../../catalog/components/usersearches/partials/featuredusersearches" +
+            "../../sextant/components/usersearches/partials/featuredusersearches" +
             (attrs["mode"] || "cards") +
             ".html"
           );
@@ -126,7 +126,7 @@
           user: "=gnUserSearchesPanel"
         },
         templateUrl:
-          "../../catalog/components/usersearches/partials/usersearchespanel.html",
+          "../../sextant/components/usersearches/partials/usersearchespanel.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           // Configure the base url to launch the user search selected (search or board page)
@@ -292,7 +292,7 @@
           userSearch: "=gnSaveUserSearch",
           user: "="
         },
-        templateUrl: "../../catalog/components/usersearches/partials/saveusersearch.html",
+        templateUrl: "../../sextant/components/usersearches/partials/saveusersearch.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.updateSearchUrl = false;
@@ -497,7 +497,7 @@
           user: "=gnUserSearchManager"
         },
         templateUrl:
-          "../../catalog/components/usersearches/partials/usersearchesmanager.html",
+          "../../sextant/components/usersearches/partials/usersearchesmanager.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.userSearches = [];

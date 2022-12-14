@@ -42,7 +42,7 @@
         scope: {
           md: "=gnRecordHistory"
         },
-        templateUrl: "../../catalog/components/history/partials/recordHistory.html",
+        templateUrl: "../../sextant/components/history/partials/recordHistory.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = scope.$parent.lang;
           scope.user = scope.$parent.user;
@@ -130,7 +130,7 @@
           noRecoverOption: "@noTitle",
           allowRemoval: "=allowRemoval"
         },
-        templateUrl: "../../catalog/components/history/partials/historyStep.html",
+        templateUrl: "../../sextant/components/history/partials/historyStep.html",
         link: function postLink(scope, element, attrs) {
           scope.removeStep = function (s) {
             gnRecordHistoryService.delete(s).then(function (r) {
@@ -209,7 +209,7 @@
         restrict: "A",
         replace: true,
         scope: {},
-        templateUrl: "../../catalog/components/history/partials/history.html",
+        templateUrl: "../../sextant/components/history/partials/history.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = scope.$parent.lang;
           scope.user = scope.$parent.user;

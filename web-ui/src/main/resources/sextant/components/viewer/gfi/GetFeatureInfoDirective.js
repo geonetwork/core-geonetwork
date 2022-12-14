@@ -26,7 +26,7 @@
 
   var module = angular.module("gn_gfi_directive", ["angular.filter"]);
 
-  var gfiTemplateURL = "../../catalog/components/viewer/gfi/partials/" + "gfi-popup.html";
+  var gfiTemplateURL = "../../sextant/components/viewer/gfi/partials/" + "gfi-popup.html";
 
   module.value("gfiTemplateURL", gfiTemplateURL);
 

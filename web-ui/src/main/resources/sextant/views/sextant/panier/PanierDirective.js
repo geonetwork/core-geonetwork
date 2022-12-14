@@ -19,7 +19,7 @@
         restrict: "A",
         replace: true,
         scope: true,
-        templateUrl: "../../catalog/views/sextant/panier/" + "partials/panier.html",
+        templateUrl: "../../sextant/views/sextant/panier/" + "partials/panier.html",
         controller: [
           "$scope",
           function ($scope) {
@@ -152,7 +152,7 @@
           formObj: "=sxtPanierEltForm"
         },
         templateUrl:
-          "../../catalog/views/sextant/panier/" + "partials/panierelement.html",
+          "../../sextant/views/sextant/panier/" + "partials/panierelement.html",
         compile: function compile(tElement, tAttrs, transclude) {
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {

@@ -46,7 +46,7 @@
           element: "=gnDbTranslation"
         },
         templateUrl:
-          "../../catalog/components/admin/dbtranslation/partials/" + "dbtranslation.html",
+          "../../sextant/components/admin/dbtranslation/partials/" + "dbtranslation.html",
         link: function (scope, element, attrs) {}
       };
     }

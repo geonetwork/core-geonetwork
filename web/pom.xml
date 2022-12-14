@@ -21,7 +21,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -846,6 +847,30 @@
             </configuration>
           </execution>
           <execution>
+            <id>copy-filter-sextant</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${build.webapp.resources}/../geonetwork</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../web-ui/src/main/resources</directory>
+                  <include>sextant/views/sextant/settings.js</include>
+                  <filtering>true</filtering>
+                  <targetPath>${build.webapp.resources}/../geonetwork</targetPath>
+                </resource>
+              </resources>
+              <filters>
+                <filter>${basedir}/src/main/filters/deployment/config_${sxt.properties}.properties</filter>
+              </filters>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
             <id>copy-documentation</id>
             <phase>process-resources</phase>
             <goals>
@@ -967,6 +992,29 @@
             catalog/lib/bootstrap-table/*.txt,
             catalog/lib/bootstrap-table/*.md,
             catalog/lib/bootstrap-table/docs/**
+            sextant/lib/style/bootstrap/docs/**,
+            sextant/lib/style/bootstrap/fonts/**,
+            sextant/lib/style/bootstrap/grunt/**,
+            sextant/lib/style/bootstrap/test-infra/**,
+            sextant/lib/style/font-awesome/css/**,
+            sextant/lib/style/font-awesome/src/**,
+            sextant/lib/style/font-awesome/scss/**,
+            sextant/lib/style/font-awesome/*.json,
+            sextant/lib/style/font-awesome/Gemfile*,
+            sextant/lib/style/font-awesome/.*,
+            sextant/lib/style/font-awesome/*.txt,
+            sextant/lib/style/font-awesome/*.md,
+            sextant/lib/style/bootstrap/*.json,
+            sextant/lib/style/bootstrap/Gemfile*,
+            sextant/lib/style/bootstrap/.*,
+            sextant/lib/style/bootstrap/*.txt,
+            sextant/lib/style/bootstrap/*.md,
+            sextant/lib/bootstrap-table/*.json,
+            sextant/lib/bootstrap-table/Gemfile*,
+            sextant/lib/bootstrap-table/.*,
+            sextant/lib/bootstrap-table/*.txt,
+            sextant/lib/bootstrap-table/*.md,
+            sextant/lib/bootstrap-table/docs/**
           </packagingExcludes>
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>

@@ -70,7 +70,7 @@
           parentRef: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/fieldupload/partials/" + "fieldupload.html",
+          "../../sextant/components/edit/fieldupload/partials/" + "fieldupload.html",
         link: function (scope, element, attrs) {
           // Has a reference to a file in the metadata store?
           scope.fileAvailable = false;

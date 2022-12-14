@@ -27,7 +27,7 @@
   var module = angular.module("gn_baselayerswitcher", []);
 
   var baselayerTemplateURL =
-    "../../catalog/components/viewer/baselayerswitcher/" +
+    "../../sextant/components/viewer/baselayerswitcher/" +
     "partials/baselayerswitcher.html";
 
   module.value("baselayerTemplateURL", baselayerTemplateURL);

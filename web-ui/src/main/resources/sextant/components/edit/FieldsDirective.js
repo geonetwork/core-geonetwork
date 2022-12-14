@@ -39,7 +39,7 @@
   module.directive("gnSlidingWindowDiv", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "sliding-window.html",
+      templateUrl: "../../sextant/components/edit/partials/" + "sliding-window.html",
       scope: {
         value: "@gnSlidingWindowDiv",
         label: "@label",
@@ -106,7 +106,7 @@
     return {
       restrict: "A",
       templateUrl:
-        "../../catalog/components/edit/partials/" + "checkpoint-cpt-not-covered.html",
+        "../../sextant/components/edit/partials/" + "checkpoint-cpt-not-covered.html",
       scope: {
         id: "@id",
         titleId: "@",
@@ -164,7 +164,7 @@
   module.directive("gnCheckpointLineage", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "checkpoint-lineage.html",
+      templateUrl: "../../sextant/components/edit/partials/" + "checkpoint-lineage.html",
       transclude: true,
       scope: {
         ref: "@"
@@ -333,7 +333,7 @@
   module.directive("gnMeasure", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "measure.html",
+      templateUrl: "../../sextant/components/edit/partials/" + "measure.html",
       scope: {
         uom: "@",
         ref: "@"

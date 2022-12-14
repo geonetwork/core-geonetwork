@@ -45,7 +45,7 @@
           entryUuid: "="
         },
         templateUrl:
-          "../../catalog/components/edit/directoryassociatedmd/" +
+          "../../sextant/components/edit/directoryassociatedmd/" +
           "partials/associated-results.html",
         controller: [
           "$scope",

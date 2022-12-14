@@ -57,7 +57,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/layermanager/" + "partials/layermanager.html",
+          "../../sextant/components/viewer/layermanager/" + "partials/layermanager.html",
         scope: {
           map: "=gnLayermanagerMap"
         },
@@ -141,7 +141,7 @@
         require: "^gnLayermanager",
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/layermanager/" +
+          "../../sextant/components/viewer/layermanager/" +
           "partials/layermanageritem.html",
         scope: true,
         link: function (scope, element, attrs, ctrl) {

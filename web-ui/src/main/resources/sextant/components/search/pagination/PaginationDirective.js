@@ -41,7 +41,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/search/pagination/partials/" + "pagination.html"
+            "../../sextant/components/search/pagination/partials/" + "pagination.html"
           );
         },
 

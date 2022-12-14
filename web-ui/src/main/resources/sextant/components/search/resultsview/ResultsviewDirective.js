@@ -46,7 +46,7 @@
   module.directive("gnResultsTplSwitcher", function () {
     return {
       templateUrl:
-        "../../catalog/components/search/resultsview/partials/" + "templateswitcher.html",
+        "../../sextant/components/search/resultsview/partials/" + "templateswitcher.html",
       restrict: "A",
       link: function ($scope) {
         $scope.setResultTemplate = function (t) {

@@ -49,7 +49,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "statusupdater.html",
+          "../../sextant/components/metadataactions/partials/" + "statusupdater.html",
         scope: {
           md: "=gnMetadataStatusUpdater",
           statusType: "@",
@@ -171,7 +171,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" +
+          "../../sextant/components/metadataactions/partials/" +
           "metadatacategoryupdater.html",
         scope: {
           currentCategories: "=gnMetadataCategoryUpdater",
@@ -374,7 +374,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" +
+          "../../sextant/components/metadataactions/partials/" +
           "metadatagroupupdater.html",
         scope: {
           groupOwner: "=gnMetadataGroupUpdater",
@@ -424,7 +424,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "permalinkinput.html",
+          "../../sextant/components/metadataactions/partials/" + "permalinkinput.html",
         link: function (scope, element, attrs) {
           scope.url = attrs["gnPermalinkInput"];
           scope.copied = false;
@@ -445,7 +445,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "citation.html",
+          "../../sextant/components/metadataactions/partials/" + "citation.html",
         scope: {
           md: "=gnMetadataCitation",
           format: "@",
@@ -553,7 +553,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "transferownership.html",
+          "../../sextant/components/metadataactions/partials/" + "transferownership.html",
         link: function (scope, element, attrs) {
           var ownerId = parseInt(attrs["gnTransferMdOwner"]);
           var groupOwner = parseInt(attrs["gnTransferMdGroupOwner"]);

@@ -45,7 +45,7 @@
         templateUrl: function ($element, $attrs) {
           return (
             $attrs.templateUrl ||
-            "../../catalog/components/common/languageswitcher/partials/" +
+            "../../sextant/components/common/languageswitcher/partials/" +
               "language-switcher.html"
           );
         },

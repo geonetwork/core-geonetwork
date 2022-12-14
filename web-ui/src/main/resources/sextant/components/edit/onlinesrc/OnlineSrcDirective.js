@@ -57,7 +57,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" +
+            "../../sextant/components/edit/onlinesrc/" +
             "partials/remote-record-selector.html",
           link: function (scope, element, attrs) {
             scope.allowRemoteRecordLink = false;
@@ -239,7 +239,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/overview-manager.html",
+            "../../sextant/components/edit/onlinesrc/" + "partials/overview-manager.html",
           scope: {},
           link: function (scope, element, attrs) {
             scope.relations = {};
@@ -386,7 +386,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/onlinesrcList.html",
+            "../../sextant/components/edit/onlinesrc/" + "partials/onlinesrcList.html",
           scope: {
             types: "@"
           },
@@ -565,7 +565,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/addOnlinesrc.html",
+            "../../sextant/components/edit/onlinesrc/" + "partials/addOnlinesrc.html",
           link: {
             pre: function preLink(scope) {
               scope.searchObj = {
@@ -1509,7 +1509,7 @@
           restrict: "A",
           scope: {},
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" +
+            "../../sextant/components/edit/onlinesrc/" +
             "partials/linkServiceToDataset.html",
           compile: function compile(tElement, tAttrs, transclude) {
             return {
@@ -1764,7 +1764,7 @@
           restrict: "A",
           scope: {},
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/linkToMd.html",
+            "../../sextant/components/edit/onlinesrc/" + "partials/linkToMd.html",
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
@@ -1857,7 +1857,7 @@
           restrict: "A",
           scope: {},
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/linktosibling.html",
+            "../../sextant/components/edit/onlinesrc/" + "partials/linktosibling.html",
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {

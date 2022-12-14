@@ -31,7 +31,7 @@
     "gnRelatedResources",
     function ($scope, gnRelatedResources) {
       $scope.resultTemplate =
-        "../../catalog/components/" +
+        "../../sextant/components/" +
         "search/resultsview/partials/viewtemplates/grid4maps.html";
 
       $scope.loadMap = function (map, md) {
@@ -106,7 +106,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/viewer/owscontext/" + "partials/owscontext.html"
+            "../../sextant/components/viewer/owscontext/" + "partials/owscontext.html"
           );
         },
         scope: {

@@ -46,7 +46,7 @@
         scope: {
           taskInfo: "<"
         },
-        templateUrl: "../../catalog/components/admin/index/partials/indexingstatus.html",
+        templateUrl: "../../sextant/components/admin/index/partials/indexingstatus.html",
         link: function (scope, element, attrs) {
           scope.getStatusCode = function () {
             if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
@@ -140,7 +140,7 @@
         restrict: "E",
         scope: {},
         templateUrl:
-          "../../catalog/components/admin/index/partials/indexingstatuscontainer.html",
+          "../../sextant/components/admin/index/partials/indexingstatuscontainer.html",
         link: function (scope, element, attrs) {},
         controllerAs: "ctrl",
         controller: [

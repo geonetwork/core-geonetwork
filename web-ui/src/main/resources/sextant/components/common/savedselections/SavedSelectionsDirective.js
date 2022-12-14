@@ -474,7 +474,7 @@
         restrict: "A",
         require: "^gnSavedSelections",
         templateUrl:
-          "../../catalog/components/" + "common/savedselections/partials/" + "panel.html",
+          "../../sextant/components/" + "common/savedselections/partials/" + "panel.html",
         link: link,
         scope: {
           user: "=gnSavedSelectionsPanel"
@@ -591,7 +591,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/common/" + "savedselections/partials/action.html",
+          "../../sextant/components/common/" + "savedselections/partials/action.html",
         require: "^gnSavedSelections",
         link: link,
         scope: {

@@ -66,7 +66,7 @@
         replace: false,
         // specific sextant
         templateUrl:
-          "../../catalog/components/common/share/partials/" + "panel-sextant.html",
+          "../../sextant/components/common/share/partials/" + "panel-sextant.html",
         scope: {
           id: "=gnShare",
           batch: "@gnShareBatch",

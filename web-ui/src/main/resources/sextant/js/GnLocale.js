@@ -86,7 +86,7 @@
                separated by a |:
 
              module.config(['$LOCALES', function($LOCALES) {
-              $LOCALES.push('../../catalog/views/sdi/locales/|search');
+              $LOCALES.push('../../sextant/views/sdi/locales/|search');
              }]);
 
              */
@@ -105,14 +105,14 @@
                   Configured with:
 
                   module.config(['$LOCALES', function($LOCALES) {
-                    $LOCALES.push('../../catalog/locales/en-data.json');
+                    $LOCALES.push('../../sextant/locales/en-data.json');
                   }]);
 
               2) Relative url with locate type (usually loaded from a custom view):
                   use buildUrl to create the url. Configured with:
 
                   module.config(['$LOCALES', function($LOCALES) {
-                    $LOCALES.push('../../catalog/views/myview/locales/|core'');
+                    $LOCALES.push('../../sextant/views/myview/locales/|core'');
                   }]);
 
               3) Non relative url, usually for language packs:

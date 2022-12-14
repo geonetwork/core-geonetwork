@@ -152,7 +152,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/edit/multientrycombiner/partials/multientrycombiner.html",
+          "../../sextant/components/edit/multientrycombiner/partials/multientrycombiner.html",
         scope: {
           configuration: "@gnMultientryCombiner"
         },

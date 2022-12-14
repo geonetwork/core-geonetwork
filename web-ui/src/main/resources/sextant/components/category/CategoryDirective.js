@@ -44,7 +44,7 @@
           lang: "@lang",
           label: "@label"
         },
-        templateUrl: "../../catalog/components/category/partials/" + "category.html",
+        templateUrl: "../../sextant/components/category/partials/" + "category.html",
         link: function (scope, element, attrs) {
           $http.get("../api/tags", { cache: true }).success(function (data) {
             scope.categories = data;
@@ -68,7 +68,7 @@
         restrict: "A",
         replace: true,
         transclude: true,
-        templateUrl: "../../catalog/components/category/partials/" + "batchcategory.html",
+        templateUrl: "../../sextant/components/category/partials/" + "batchcategory.html",
         link: function (scope, element, attrs) {
           scope.report = null;
           scope.categoryIsSelected = false;

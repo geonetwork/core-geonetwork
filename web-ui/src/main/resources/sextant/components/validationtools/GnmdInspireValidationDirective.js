@@ -55,7 +55,7 @@
         restrict: "AEC",
         replace: true,
         templateUrl:
-          "../../catalog/components/validationtools/partials/mdValidationTools.html",
+          "../../sextant/components/validationtools/partials/mdValidationTools.html",
         link: function postLink(scope, element, attrs) {
           scope.isDownloadingRecord = false;
           scope.isDownloadedRecord = false;

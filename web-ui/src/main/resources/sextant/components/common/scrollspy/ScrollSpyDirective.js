@@ -57,7 +57,7 @@
           collapse: "@"
         },
         templateUrl:
-          "../../catalog/components/common/scrollspy/partials/" + "scrollspy.html",
+          "../../sextant/components/common/scrollspy/partials/" + "scrollspy.html",
         link: function (scope, element, attrs) {
           var counter = 0,
             depth = scope.depth || 2,

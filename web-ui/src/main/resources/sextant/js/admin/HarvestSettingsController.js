@@ -241,7 +241,7 @@
                 $scope.harvesterTypes[value].text = translated;
               });
 
-              $.getScript("../../catalog/templates/admin/harvest/type/" + value + ".js")
+              $.getScript("../../sextant/templates/admin/harvest/type/" + value + ".js")
                 .done(function (script, textStatus) {
                   $scope.$apply(function () {
                     $scope.harvesterTypes[value].loaded = true;
@@ -271,7 +271,7 @@
             $scope.metadataTemplateType = $translate.instant("layer");
           }
           return (
-            "../../catalog/templates/admin/" +
+            "../../sextant/templates/admin/" +
             $scope.pageMenu.folder +
             "type/" +
             $scope.harvesterSelected["@type"] +

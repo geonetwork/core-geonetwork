@@ -68,7 +68,7 @@
         restrict: "A",
         replace: true,
         scope: true,
-        templateUrl: "../../catalog/components/viewer/" + "partials/mainviewer.html",
+        templateUrl: "../../sextant/components/viewer/" + "partials/mainviewer.html",
         compile: function compile(tElement, tAttrs, transclude) {
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {
@@ -476,7 +476,7 @@
     return {
       restrict: "A",
       replace: true,
-      templateUrl: "../../catalog/components/viewer/partials/mouseposition.html",
+      templateUrl: "../../sextant/components/viewer/partials/mouseposition.html",
       controller: [
         "gnViewerSettings",
         "hotkeys",
@@ -651,7 +651,7 @@
     function (gnWmsQueue) {
       return {
         restrict: "A",
-        templateUrl: "../../catalog/components/viewer/" + "partials/layerindicator.html",
+        templateUrl: "../../sextant/components/viewer/" + "partials/layerindicator.html",
         link: function (scope, element, attrs) {
           scope.layerQueue = gnWmsQueue;
         }

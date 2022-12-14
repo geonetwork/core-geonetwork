@@ -94,7 +94,7 @@
           layer: "="
         },
         templateUrl:
-          "../../catalog/views/sextant/annotations/partials/annotationsEditor.html",
+          "../../sextant/views/sextant/annotations/partials/annotationsEditor.html",
         link: function (scope) {
           var sourceListenerKey;
           var visibilityListenerKey;

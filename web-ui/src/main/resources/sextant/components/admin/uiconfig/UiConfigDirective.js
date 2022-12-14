@@ -41,9 +41,9 @@
           id: "="
         },
         templateUrl:
-          "../../catalog/components/admin/uiconfig/partials/" + "uiconfig.html",
+          "../../sextant/components/admin/uiconfig/partials/" + "uiconfig.html",
         link: function (scope, element, attrs) {
-          var testAppUrl = "../../catalog/views/api/?config=";
+          var testAppUrl = "../../sextant/views/api/?config=";
 
           function init() {
             // merge on top of default config

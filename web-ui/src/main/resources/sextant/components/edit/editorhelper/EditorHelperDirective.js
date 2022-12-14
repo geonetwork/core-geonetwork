@@ -40,7 +40,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "editorhelper/partials/fieldsuggestions.html",
         scope: {
           ref: "@",
@@ -116,7 +116,7 @@
           multilingualField: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/editorhelper/partials/" + "editorhelper.html",
+          "../../sextant/components/edit/editorhelper/partials/" + "editorhelper.html",
         link: function (scope, element, attrs) {
           // Retrieve the target field by name (general case)
           // or by id (template mode field).

@@ -42,7 +42,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/viewer/graticule/partials/" + "graticule.html",
+          "../../sextant/components/viewer/graticule/partials/" + "graticule.html",
         scope: true,
         link: function (scope, element, attrs) {
           var graticuleOgcService = scope.$eval(attrs["graticuleOgcService"]);

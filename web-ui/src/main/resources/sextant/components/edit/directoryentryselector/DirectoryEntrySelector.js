@@ -118,7 +118,7 @@
           maxTags: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "directoryentryselector/partials/" +
           "directoryentryselector.html",
         compile: function compile(tElement, tAttrs, transclude) {
@@ -624,7 +624,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "directoryentryselector/partials/" +
           "directoryentrylistselector.html",
 

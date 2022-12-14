@@ -38,7 +38,7 @@
         restrict: "A",
         transclude: true,
         templateUrl:
-          "../../catalog/components/edit/" + "logoselector/partials/logoselector.html",
+          "../../sextant/components/edit/" + "logoselector/partials/logoselector.html",
         link: function (scope, element, attrs) {
           // TODO: Get path to image based
           scope.path =

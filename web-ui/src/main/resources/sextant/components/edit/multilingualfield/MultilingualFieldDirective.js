@@ -52,7 +52,7 @@
         restrict: "A",
         transclude: true,
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "multilingualfield/partials/multilingualfield.html",
         scope: {
           mainLanguage: "@",

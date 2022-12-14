@@ -102,7 +102,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/search/mdview/partials/" + "morelikethis.html"
+            "../../sextant/components/search/mdview/partials/" + "morelikethis.html"
           );
         },
         link: function (scope, element, attrs, controller) {
@@ -174,7 +174,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/search/mdview/partials/" + "mdpanel.html"
+            "../../sextant/components/search/mdview/partials/" + "mdpanel.html"
           );
         },
         link: function (scope, element, attrs, controller) {
@@ -246,7 +246,7 @@
     "gnConfigService",
     function ($http, gnConfig, gnConfigService) {
       return {
-        templateUrl: "../../catalog/components/search/mdview/partials/" + "rate.html",
+        templateUrl: "../../sextant/components/search/mdview/partials/" + "rate.html",
         restrict: "A",
         scope: {
           md: "=gnMetadataRate",
@@ -320,7 +320,7 @@
     "$filter",
     function ($http, $filter) {
       return {
-        templateUrl: "../../catalog/components/search/mdview/partials/" + "contact.html",
+        templateUrl: "../../sextant/components/search/mdview/partials/" + "contact.html",
         restrict: "A",
         scope: {
           mdContacts: "=gnMetadataContacts",

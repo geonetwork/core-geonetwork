@@ -262,7 +262,7 @@
         restrict: "E",
         scope: {},
         templateUrl:
-          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocesscontainer.html",
+          "../../sextant/components/admin/recordlink/partials/recordlinksanalyseprocesscontainer.html",
         link: function (scope, element, attrs) {},
         controllerAs: "ctrl",
         controller: [
@@ -365,7 +365,7 @@
         restrict: "E",
         scope: { taskInfo: "<" },
         templateUrl:
-          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html",
+          "../../sextant/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html",
         link: function (scope, element, attrs) {}
       };
     }

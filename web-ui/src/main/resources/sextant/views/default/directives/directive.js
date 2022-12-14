@@ -32,7 +32,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl: "../../catalog/views/default/directives/" + "partials/infolist.html",
+        templateUrl: "../../sextant/views/default/directives/" + "partials/infolist.html",
         link: function linkFn(scope, element, attr) {
           scope.showMore = function (isDisplay) {
             var div = $("#gn-info-list" + this.md.uuid);
@@ -55,7 +55,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/default/directives/" + "partials/attributetable.html",
+          "../../sextant/views/default/directives/" + "partials/attributetable.html",
         scope: {
           attributeTable: "=gnAttributeTableRenderer"
         },
@@ -84,7 +84,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl: "../../catalog/views/default/directives/" + "partials/measures.html",
+        templateUrl: "../../sextant/views/default/directives/" + "partials/measures.html",
         scope: {
           recordId: "=gnDataQualityMeasureRenderer",
           cptId: "@"
@@ -379,7 +379,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/default/directives/" + "partials/mdactionmenu.html",
+          "../../sextant/views/default/directives/" + "partials/mdactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
@@ -448,7 +448,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/default/directives/" + "partials/periodchooser.html",
+          "../../sextant/views/default/directives/" + "partials/periodchooser.html",
         scope: {
           label: "@gnPeriodChooser",
           dateFrom: "=",
@@ -510,7 +510,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/default/directives/" + "partials/dateRangeFilter.html",
+          "../../sextant/views/default/directives/" + "partials/dateRangeFilter.html",
         scope: {
           label: "@gnDateRangeFilter",
           field: "="

@@ -46,7 +46,7 @@
       ) {
         return {
           restrict: "A",
-          templateUrl: "../../catalog/components/filestore/" + "partials/filestore.html",
+          templateUrl: "../../sextant/components/filestore/" + "partials/filestore.html",
           scope: {
             uuid: "=gnFileStore",
             selectCallback: "&",

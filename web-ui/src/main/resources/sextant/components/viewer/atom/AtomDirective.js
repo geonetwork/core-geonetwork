@@ -123,7 +123,7 @@
           md: "="
         },
         templateUrl:
-          "../../catalog/components/" + "viewer/atom/partials/atomDownload.html",
+          "../../sextant/components/" + "viewer/atom/partials/atomDownload.html",
         link: function (scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.atomLinks = null; // file links from dataset feed

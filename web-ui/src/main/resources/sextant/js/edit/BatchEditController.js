@@ -236,7 +236,7 @@
       gnSearchSettings.resultViewTpls = [
         {
           tplUrl:
-            "../../catalog/components/search/resultsview/" +
+            "../../sextant/components/search/resultsview/" +
             "partials/viewtemplates/titlewithselection.html",
           tooltip: "List",
           icon: "fa-list"

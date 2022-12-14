@@ -39,7 +39,7 @@ customElements.define("gn-app",
         app.setAttribute("data-ng-controller", "GnCatController");
 
         var div = document.createElement("div");
-        div.setAttribute("data-ng-include", "'" + baseUrl + "/catalog/views/sextant/templates/index.html'");
+        div.setAttribute("data-ng-include", "'" + baseUrl + "/sextant/views/sextant/templates/index.html'");
         div.setAttribute("class", "gn-full");
         app.appendChild(div);
 

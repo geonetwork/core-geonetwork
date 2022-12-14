@@ -111,8 +111,8 @@
 
       <div class="gn-multilingual-field">
         <ul class="nav nav-pills">
-          <script src="{$nodeUrl}../catalog/views/sextant/sextant-formatter-utils.js?v={$buildNumber}">&amp;nbsp;</script>
-          <script src="{$nodeUrl}../catalog/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
+          <script src="{$nodeUrl}../sextant/views/sextant/sextant-formatter-utils.js?v={$buildNumber}">&amp;nbsp;</script>
+          <script src="{$nodeUrl}../sextant/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
           <script type="text/javascript">
             window.onload = function() {
               document.getElementById('gn-default-lang-link').click();
@@ -290,13 +290,13 @@
 
     <xsl:if test="$portalLink != ''">
       <link rel="stylesheet" type="text/css"
-            href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
+            href="{$nodeUrl}../sextant/views/sextant/landing-pages/default/styles.css"/>
       <link rel="stylesheet" type="text/css"
-            href="{$nodeUrl}../catalog/views/sextant/landing-pages/{$groupOwner}/styles.css"/>
+            href="{$nodeUrl}../sextant/views/sextant/landing-pages/{$groupOwner}/styles.css"/>
       <!-- Default head -->
       <div class="gn-landing-page-header gn-landing-page-header-default">
         <div class="col-md-1">
-          <img src="{$nodeUrl}../catalog/views/sextant/landing-pages/default/Logo-Sextant.png"/>
+          <img src="{$nodeUrl}../sextant/views/sextant/landing-pages/default/Logo-Sextant.png"/>
         </div>
         <div class="col-md-10">
           <h1>Sextant</h1>
@@ -304,7 +304,7 @@
           <div class="subtitle" xml:lang="eng">Spatial Data Infrastructure for Marine Environments</div>
         </div>
         <div class="col-md-1">
-          <img src="{$nodeUrl}../catalog/views/sextant/landing-pages/default/logo.png"/>
+          <img src="{$nodeUrl}../sextant/views/sextant/landing-pages/default/logo.png"/>
         </div>
       </div>
 

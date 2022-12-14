@@ -48,7 +48,7 @@
         restrict: "EA",
         require: "^ngSearchForm",
         templateUrl:
-          "../../catalog/components/search/searchfiltertag/" +
+          "../../sextant/components/search/searchfiltertag/" +
           "partials/searchFilterTagsTemplate.html",
         scope: {
           dimensions: "=",

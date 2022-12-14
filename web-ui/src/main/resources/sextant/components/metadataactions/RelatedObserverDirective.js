@@ -81,7 +81,7 @@
         restrict: "A",
         transclude: true,
         templateUrl:
-          "../../catalog/components/" +
+          "../../sextant/components/" +
           "metadataactions/partials/relatedObserverTemplate.html",
         scope: {},
         controller: ["$scope", "$rootScope", GnRelatedObserverController],

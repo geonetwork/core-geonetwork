@@ -43,7 +43,7 @@
           gnFieldTooltip: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/anchorswitcher/partials/" +
+          "../../sextant/components/edit/anchorswitcher/partials/" +
           "anchorswitcher.html",
         link: function (scope, element, attrs) {
           var attributeHtmlTemplate = _.template(

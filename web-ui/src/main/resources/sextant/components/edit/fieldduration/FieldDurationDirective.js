@@ -56,7 +56,7 @@
           required: "@required"
         },
         templateUrl:
-          "../../catalog/components/edit/fieldduration/partials/" + "fieldduration.html",
+          "../../sextant/components/edit/fieldduration/partials/" + "fieldduration.html",
         link: function (scope, element, attrs) {
           var buildDuration = function () {
             var duration = [

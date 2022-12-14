@@ -53,7 +53,7 @@
             });
         },
         templateUrl:
-          "../../catalog/components/utility/" + "partials/draftvalidationwidget.html"
+          "../../sextant/components/utility/" + "partials/draftvalidationwidget.html"
       };
     }
   ]);

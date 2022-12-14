@@ -52,7 +52,7 @@
           map: "="
         },
         templateUrl:
-          "../../catalog/components/viewer/ncwms/" + "partials/ncwmstools.html",
+          "../../sextant/components/viewer/ncwms/" + "partials/ncwmstools.html",
         link: function (scope, element, attrs) {
           var drawInteraction, featureOverlay;
           var map = scope.map;

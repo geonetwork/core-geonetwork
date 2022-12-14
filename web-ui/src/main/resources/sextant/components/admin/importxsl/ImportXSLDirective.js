@@ -41,7 +41,7 @@
           element: "=gnImportXsl"
         },
         templateUrl:
-          "../../catalog/components/admin/importxsl/partials/" + "importxsl.html",
+          "../../sextant/components/admin/importxsl/partials/" + "importxsl.html",
         link: function (scope, element, attrs) {
           $http.get("../api/site/info/transforms").success(function (data) {
             scope.stylesheets = data;

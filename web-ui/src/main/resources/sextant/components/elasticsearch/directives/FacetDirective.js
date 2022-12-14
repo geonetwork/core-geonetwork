@@ -255,7 +255,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/elasticsearch/directives/" + "partials/facets.html"
+            "../../sextant/components/elasticsearch/directives/" + "partials/facets.html"
           );
         },
         link: function (scope) {
@@ -347,7 +347,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/elasticsearch/directives/" + "partials/facet.html"
+            "../../sextant/components/elasticsearch/directives/" + "partials/facet.html"
           );
         },
         link: function (scope, element, attrs) {
@@ -427,7 +427,7 @@
         replace: true,
         templateUrl: function (elem, attrs) {
           return (
-            "../../catalog/components/elasticsearch/directives/" +
+            "../../sextant/components/elasticsearch/directives/" +
             "partials/facet-temporalrange.html"
           );
         },
@@ -698,7 +698,7 @@
         replace: true,
         templateUrl: function (elem, attrs) {
           return (
-            "../../catalog/components/elasticsearch/directives/" +
+            "../../sextant/components/elasticsearch/directives/" +
             "partials/facet-vega.html"
           );
         },

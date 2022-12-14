@@ -67,7 +67,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/viewer/profile/partials/profile.html"
+            "../../sextant/components/viewer/profile/partials/profile.html"
           );
         },
         controllerAs: "ctrl",

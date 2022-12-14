@@ -91,7 +91,7 @@
             };
 
             var templateUrl =
-              "../../catalog/views/sextant/services/emodnetdownloadform.html";
+              "../../sextant/views/sextant/services/emodnetdownloadform.html";
             modal = gnPopup.createModal(
               {
                 title: "emodnetDownloadForm",

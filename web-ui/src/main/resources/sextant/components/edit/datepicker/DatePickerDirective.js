@@ -70,7 +70,7 @@
           hideTime: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/datepicker/partials/" + "datepicker.html",
+          "../../sextant/components/edit/datepicker/partials/" + "datepicker.html",
         link: function (scope, element, attrs) {
           // Check if browser support date type or not to
           // HTML date and time input types.

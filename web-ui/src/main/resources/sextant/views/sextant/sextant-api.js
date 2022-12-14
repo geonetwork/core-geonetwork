@@ -91,7 +91,7 @@
           templateInclude.style.position = "relative";
           templateInclude.setAttribute(
             "ng-include",
-            "'../../catalog/views/sextant/templates/index.html'"
+            "'../../sextant/views/sextant/templates/index.html'"
           );
           templateInclude.setAttribute("ng-controller", "GnCatController");
           templateInclude.setAttribute("sxt-size", sxtSize !== null ? sxtSize : "auto");

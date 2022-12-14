@@ -93,7 +93,7 @@
           addConceptToList: "=skosAddConcept",
           topConcept: "=skosTopConcept"
         },
-        templateUrl: "../../catalog/components/ng-skos/" + "templates/skos-concept.html",
+        templateUrl: "../../sextant/components/ng-skos/" + "templates/skos-concept.html",
         link: function link(scope, element, attr) {
           scope.mainLanguage = scope.language.split(",")[0];
           scope.isEmptyObject = function (object) {

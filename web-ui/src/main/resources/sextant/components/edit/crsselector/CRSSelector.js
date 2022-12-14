@@ -58,7 +58,7 @@
           domId: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/" + "crsselector/partials/" + "crsselector.html",
+          "../../sextant/components/edit/" + "crsselector/partials/" + "crsselector.html",
         link: function (scope, element, attrs) {
           scope.snippet = null;
           scope.crsResults = [];

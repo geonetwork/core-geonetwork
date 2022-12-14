@@ -136,7 +136,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/viewer/wfsfilter/" + "partials/wfsfilterfacet.html",
+          "../../sextant/components/viewer/wfsfilter/" + "partials/wfsfilterfacet.html",
         scope: {
           featureTypeName: "=?",
           wfsUrl: "=",
@@ -1395,7 +1395,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/wfsfilter/" +
+          "../../sextant/components/viewer/wfsfilter/" +
           "partials/wfsfilterfacetTreeItem.html",
         scope: {
           node: "<gnWfsFilterFacetsTreeItem"

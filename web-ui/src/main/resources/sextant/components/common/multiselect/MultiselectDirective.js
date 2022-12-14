@@ -46,7 +46,7 @@
           readonlyMode: "="
         },
         templateUrl:
-          "../../catalog/components/common/multiselect/partials/" + "multiselect.html",
+          "../../sextant/components/common/multiselect/partials/" + "multiselect.html",
         link: function (scope, element, attrs) {
           var sortOnSelection = true;
 

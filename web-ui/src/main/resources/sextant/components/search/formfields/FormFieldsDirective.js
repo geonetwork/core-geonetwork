@@ -258,7 +258,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/search/formfields/" + "partials/usersCombo.html",
+            "../../sextant/components/search/formfields/" + "partials/usersCombo.html",
           scope: {
             ownerUser: "=",
             users: "="
@@ -290,7 +290,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/search/formfields/" + "partials/groupsCombo.html",
+            "../../sextant/components/search/formfields/" + "partials/groupsCombo.html",
           scope: {
             ownerGroup: "=",
             lang: "=",
@@ -356,7 +356,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/search/formfields/" +
+            "../../sextant/components/search/formfields/" +
             "partials/protocolsCombo.html",
           scope: {
             protocol: "=",
@@ -386,7 +386,7 @@
           templateUrl: function (elem, attrs) {
             return (
               attrs.template ||
-              "../../catalog/components/search/formfields/" + "partials/sortByCombo.html"
+              "../../sextant/components/search/formfields/" + "partials/sortByCombo.html"
             );
           },
           scope: {
@@ -422,7 +422,7 @@
           restrict: "A",
           require: "^ngSearchForm",
           templateUrl:
-            "../../catalog/components/search/formfields/" +
+            "../../sextant/components/search/formfields/" +
             "partials/hitsperpageCombo.html",
           scope: {
             pagination: "=paginationCfg",
@@ -630,7 +630,7 @@
           restrict: "A",
           replace: true,
           templateUrl:
-            "../../catalog/components/search/formfields/" +
+            "../../sextant/components/search/formfields/" +
             "partials/schemainfocombo.html",
           scope: {
             selectedInfo: "=",
@@ -788,7 +788,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/search/formfields/" +
+            "../../sextant/components/search/formfields/" +
             "partials/recordTypesCombo.html",
           scope: {
             template: "=gnRecordtypesCombo"
@@ -843,7 +843,7 @@
             readOnly: "<"
           },
           templateUrl:
-            "../../catalog/components/search/formfields/" + "partials/bboxInput.html",
+            "../../sextant/components/search/formfields/" + "partials/bboxInput.html",
 
           link: function (scope, element, attrs) {
             var crs = scope.crs || "EPSG:4326";

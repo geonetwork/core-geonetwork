@@ -38,7 +38,7 @@
           doiUrl: "=?",
           xsMode: "@?"
         },
-        templateUrl: "../../catalog/components/doi/partials/doiwidget.html",
+        templateUrl: "../../sextant/components/doi/partials/doiwidget.html",
         link: function (scope, element, attrs) {
           scope.gnDoiService = gnDoiService;
           scope.response = {};

@@ -1,0 +1,333 @@
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../../../../../../web/src/main/webapp/WEB-INF/wro-sources.xsd">
+  <require pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/sextant/js/"/>
+    <jsSource webappPath="/sextant/views/"/>
+    <jsSource webappPath="/sextant/components/"/>
+    <jsSource webappPath="/sextant/templates/"/>
+    <cssSource webappPath="/sextant/views/"/>
+    <cssSource webappPath="/sextant/style/"/>
+    <!-- the bs-table css is imported in a less file in Sextant so it should not be included in Wro4j build
+    <cssSource webappPath="/sextant/lib/bootstrap-table/dist"/> -->
+  </require>
+  <declarative name="sextantlib" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/angular/angular.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-filter.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-resource.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-route.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-sanitize.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-gettext.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-translate.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-md5.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/bindHtml.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/buttons.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/modal.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/position.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/slider.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/rating.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/tabs.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/date.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/angular-floatThead.js"/>
+    <jsSource webappPath="/sextant/lib/tinycolor.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.js"/>
+    <jsSource webappPath="/sextant/lib/franc-min/franc-min.js"/>
+    <jsSource webappPath="/sextant/lib/proj4js-compressed.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/d3.v3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/nv.d3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/jsonix/jsonix/Jsonix-min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.ui.widget.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.iframe-transport.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-process.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-select/bootstrap-select.min.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
+    <jsSource webappPath="/sextant/lib/FileSaver/FileSaver.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/tableExport/tableExport.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/export/bootstrap-table-export.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js" />
+    <jsSource webappPath="/sextant/lib/zip/zip.js"/>
+    <jsSource webappPath="/sextant/lib/zip/include.js"/>
+    <jsSource webappPath="/sextant/lib/base64.js"/>
+    <jsSource webappPath="/sextant/lib/timeline/timeline-zoomable.js"/>
+    <jsSource webappPath="/sextant/lib/d3_timeseries/d3.min.js"/>
+    <jsSource webappPath="/sextant/views/sextant/settings.js"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerypluginsnoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/geohash.js"/>
+    <jsSource webappPath="/sextant/lib/xml2json/xml2json.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
+  </declarative>
+  <!-- Same as previous + olcesium -->
+  <declarative name="sextantlib3d" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/angular/angular.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-filter.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-resource.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-route.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-sanitize.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-gettext.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/angular-floatThead.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/date.js"/>
+    <jsSource webappPath="/sextant/lib/angular-translate.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-md5.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/bindHtml.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/buttons.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/modal.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/position.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/slider.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/rating.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/tabs.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
+    <jsSource webappPath="/sextant/lib/tinycolor.js"/>
+    <jsSource webappPath="/sextant/lib/franc-min/franc-min.js"/>
+    <jsSource webappPath="/sextant/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/proj4js-compressed.js" minimize="false"/>
+    <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.
+         No errors, only block tile loading-->
+    <jsSource webappPath="/sextant/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/olcesium/olcesium.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/d3.v3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/nv.d3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/jsonix/jsonix/Jsonix-min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.ui.widget.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.iframe-transport.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-process.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-select/bootstrap-select.min.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table.min.js"
+              minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
+    <jsSource webappPath="/sextant/lib/FileSaver/FileSaver.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/tableExport/tableExport.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/export/bootstrap-table-export.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js" />
+    <jsSource webappPath="/sextant/lib/zip/zip.js"/>
+    <jsSource webappPath="/sextant/lib/zip/include.js"/>
+    <jsSource webappPath="/sextant/lib/base64.js"/>
+    <jsSource webappPath="/sextant/views/sextant/settings.js"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerypluginsnoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/timeline/timeline-zoomable.js"/>
+    <jsSource webappPath="/sextant/lib/d3_timeseries/d3.min.js"/>
+    <jsSource webappPath="/sextant/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/geohash.js"/>
+  </declarative>
+
+  <!--
+    SEXTANT SPECIFIC
+    Same as lib.js but without bootstrap.js, as to avoid conflicts on some
+    Sextant integrations
+  -->
+  <declarative name="sextantlib_nobs" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/angular/angular.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-filter.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-resource.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-route.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-sanitize.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-gettext.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-translate.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-md5.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/bindHtml.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/buttons.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/modal.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/position.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/slider.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/rating.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/tabs.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/date.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/angular-floatThead.js"/>
+    <jsSource webappPath="/sextant/lib/tinycolor.js"/>
+    <jsSource webappPath="/sextant/lib/franc-min/franc-min.js"/>
+    <!-- <jsSource webappPath="/sextant/lib/bootstrap.js"/> -->
+    <jsSource webappPath="/sextant/lib/proj4js-compressed.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/d3.v3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/nv.d3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/jsonix/jsonix/Jsonix-min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.ui.widget.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.iframe-transport.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-process.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-select/bootstrap-select.min.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
+    <jsSource webappPath="/sextant/lib/FileSaver/FileSaver.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/tableExport/tableExport.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/export/bootstrap-table-export.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js" />
+    <jsSource webappPath="/sextant/lib/zip/zip.js"/>
+    <jsSource webappPath="/sextant/lib/zip/include.js"/>
+    <jsSource webappPath="/sextant/lib/base64.js"/>
+    <jsSource webappPath="/sextant/lib/timeline/timeline-zoomable.js"/>
+    <jsSource webappPath="/sextant/lib/d3_timeseries/d3.min.js"/>
+    <jsSource webappPath="/sextant/views/sextant/settings.js"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerypluginsnoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/geohash.js"/>
+    <jsSource webappPath="/sextant/lib/xml2json/xml2json.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
+  </declarative>
+  <declarative name="sextantlib_nojquery" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
+    <!-- <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/jquery-2.2.4.min.js" minimize="false"/> -->
+    <jsSource webappPath="/sextant/lib/moment+langs.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/angular/angular.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-filter.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-resource.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-route.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-sanitize.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-gettext.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-translate.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular-md5.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/bindHtml.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/buttons.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/modal.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/position.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/slider.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/rating.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/tabs.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/date.js"/>
+    <jsSource webappPath="/sextant/lib/angular.ext/angular-floatThead.js"/>
+    <jsSource webappPath="/sextant/lib/tinycolor.js"/>
+    <jsSource webappPath="/sextant/lib/franc-min/franc-min.js"/>
+    <!-- <jsSource webappPath="/sextant/lib/bootstrap.js"/> -->
+    <jsSource webappPath="/sextant/lib/proj4js-compressed.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/d3.v3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/nv.d3.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/jsonix/jsonix/Jsonix-min.js" minimize="false" />
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.ui.widget.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.iframe-transport.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-process.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
+    <jsSource webappPath="/sextant/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-select/bootstrap-select.min.js"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
+    <jsSource webappPath="/sextant/lib/FileSaver/FileSaver.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/tableExport/tableExport.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/export/bootstrap-table-export.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js" />
+    <jsSource webappPath="/sextant/lib/zip/zip.js"/>
+    <jsSource webappPath="/sextant/lib/zip/include.js"/>
+    <jsSource webappPath="/sextant/lib/base64.js"/>
+    <jsSource webappPath="/sextant/lib/timeline/timeline-zoomable.js"/>
+    <jsSource webappPath="/sextant/lib/d3_timeseries/d3.min.js"/>
+    <jsSource webappPath="/sextant/views/sextant/settings.js"/>
+    <jsSource webappPath="/sextant/views/sextant/jquerypluginsnoconflict.js"/>
+    <jsSource webappPath="/sextant/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/geohash.js"/>
+    <jsSource webappPath="/sextant/lib/xml2json/xml2json.min.js" minimize="false"/>
+    <jsSource webappPath="/sextant/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
+  </declarative>
+  <!-- END SEXTANT SPECIFIC -->
+</sources>

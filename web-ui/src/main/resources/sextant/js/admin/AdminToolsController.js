@@ -182,7 +182,7 @@
       gnSearchSettings.resultViewTpls = [
         {
           tplUrl:
-            "../../catalog/components/search/resultsview/" +
+            "../../sextant/components/search/resultsview/" +
             "partials/viewtemplates/titlewithselection.html",
           tooltip: "List",
           icon: "fa-list"
@@ -280,7 +280,7 @@
 
       function loadProcessConfig() {
         $http
-          .get(gnGlobalSettings.gnUrl + "../../catalog/config/batch-process-cfg.json")
+          .get(gnGlobalSettings.gnUrl + "../../sextant/config/batch-process-cfg.json")
           .success(function (data) {
             $scope.batchProcesses = data.config;
 

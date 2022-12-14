@@ -109,7 +109,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/viewer/wps/partials/processform.html"
+            "../../sextant/components/viewer/wps/partials/processform.html"
           );
         },
         link: function (scope, element, attrs) {
@@ -1100,7 +1100,7 @@
       return {
         restrict: "E",
         templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/urldiscovery.html",
+          "../../sextant/components/viewer/wps/" + "partials/urldiscovery.html",
         scope: {
           wpsLink: "="
         },
@@ -1182,7 +1182,7 @@
         restrict: "E",
         replace: true,
         templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/recentprocesses.html",
+          "../../sextant/components/viewer/wps/" + "partials/recentprocesses.html",
         scope: {
           wpsLink: "="
         },

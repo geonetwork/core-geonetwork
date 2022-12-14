@@ -66,20 +66,55 @@
       -->
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/web-ui-wro-sources.xml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
         <filtering>false</filtering>
         <excludes>
           <exclude>**/web-ui-wro-sources.xml</exclude>
+          <exclude>**/web-ui-wro-sources-sextant.xml</exclude>
         </excludes>
       </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/web-ui-wro-sources.xml</include>
+          <include>**/web-ui-wro-sources-sextant.xml</include>
+        </includes>
+      </resource>
     </resources>
+
     <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>install-node-and-npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install --unsafe-perm</arguments>
+              <installDirectory>${project.basedir}</installDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <nodeVersion>v4.6.0</nodeVersion>
+          <npmVersion>2.15.11</npmVersion>
+          <installDirectory>${project.basedir}</installDirectory>
+          <workingDirectory>${project.basedir}/src/main/resources/sextant</workingDirectory>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>com.hubspot.maven.plugins</groupId>
         <artifactId>prettier-maven-plugin</artifactId>
@@ -99,6 +134,13 @@
             <inputGlob>src/main/resources/catalog/templates/**/*.html</inputGlob>
             <inputGlob>src/main/resources/catalog/views/**/*.js</inputGlob>
             <inputGlob>src/main/resources/catalog/views/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/sextant/style/**/*.less</inputGlob>
+            <inputGlob>src/main/resources/sextant/components/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/sextant/components/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/sextant/js/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/sextant/templates/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/sextant/views/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/sextant/views/**/*.html</inputGlob>
           </inputGlobs>
         </configuration>
         <executions>

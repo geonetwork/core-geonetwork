@@ -45,7 +45,7 @@
           map: "=gnLegendPanel"
         },
         templateUrl:
-          "../../catalog/components/viewer/legendpanel/partials/" + "legendpanel.html",
+          "../../sextant/components/viewer/legendpanel/partials/" + "legendpanel.html",
         link: function (scope, element, attrs) {
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.visible;
@@ -73,7 +73,7 @@
           map: "=gnLayerorderPanel"
         },
         templateUrl:
-          "../../catalog/components/" +
+          "../../sextant/components/" +
           "viewer/legendpanel/partials/" +
           "layerorderpanel.html",
         link: function (scope, element, attrs) {
@@ -135,7 +135,7 @@
           map: "=gnLayersourcesPanel"
         },
         templateUrl:
-          "../../catalog/components/viewer/legendpanel/partials/" + "layersources.html",
+          "../../sextant/components/viewer/legendpanel/partials/" + "layersources.html",
         link: function (scope, element, attrs) {
           var map = scope.map;
           scope.layers = map.getLayers().getArray();

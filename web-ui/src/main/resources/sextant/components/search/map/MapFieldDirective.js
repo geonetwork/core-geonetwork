@@ -37,7 +37,7 @@
           templateUrl: function (elem, attrs) {
             return (
               attrs.template ||
-              "../../catalog/components/search/map/" + "partials/mapfield.html"
+              "../../sextant/components/search/map/" + "partials/mapfield.html"
             );
           },
           compile: function compile(tElement, tAttrs, transclude) {

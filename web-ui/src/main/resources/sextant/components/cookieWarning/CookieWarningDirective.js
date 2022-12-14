@@ -35,7 +35,7 @@
         restrict: "AE",
         replace: true,
         scope: {},
-        templateUrl: "../../catalog/components/cookieWarning/partials/cookieWarning.html",
+        templateUrl: "../../sextant/components/cookieWarning/partials/cookieWarning.html",
         link: function (scope, element, attrs, ctrl) {
           scope.cookieWarningEnabledInSettings =
             gnGlobalSettings.gnCfg.mods.cookieWarning.enabled;

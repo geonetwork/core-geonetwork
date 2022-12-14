@@ -353,7 +353,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         replace:true,
         // SEXTANT SPECIFIC: backport from https://github.com/angular-ui/bootstrap/blob/baf0a567f9f4641848a9a4699695f9cde5f28f70/src/typeahead/typeahead.js
         templateUrl: function(element, attrs) {
-          return attrs.popupTemplateUrl || '../../catalog/lib/angular.ext/template/typeahead-popup.html';
+          return attrs.popupTemplateUrl || '../../sextant/lib/angular.ext/template/typeahead-popup.html';
         },
         // END SEXTANT SPECIFIC
         link:function (scope, element, attrs) {
@@ -388,7 +388,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           query:'='
         },
         link:function (scope, element, attrs) {
-          var tplUrl = $parse(attrs.templateUrl)(scope.$parent) || '../../catalog/lib/angular.ext/template/typeahead-match.html';
+          var tplUrl = $parse(attrs.templateUrl)(scope.$parent) || '../../sextant/lib/angular.ext/template/typeahead-match.html';
           $http.get(tplUrl, {cache: $templateCache}).success(function(tplContent){
             element.replaceWith($compile(tplContent.trim())(scope));
           });

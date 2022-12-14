@@ -47,7 +47,7 @@
           taskInfo: "<",
           taskStatusLbl: "="
         },
-        templateUrl: "../../catalog/components/admin/batch/partials/batchstatus.html",
+        templateUrl: "../../sextant/components/admin/batch/partials/batchstatus.html",
         link: function (scope, element, attrs) {
           scope.getStatusCode = function () {
             if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
@@ -145,7 +145,7 @@
           taskStatusLbl: "="
         },
         templateUrl:
-          "../../catalog/components/admin/batch/partials/batchstatuscontainer.html",
+          "../../sextant/components/admin/batch/partials/batchstatuscontainer.html",
         link: function (scope, element, attrs) {},
         controllerAs: "ctrl",
         controller: [

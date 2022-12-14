@@ -18,7 +18,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/layertree.html",
+          "../../sextant/views/sextant/directives/" + "partials/layertree.html",
         controller: [
           "$scope",
           "$compile",
@@ -419,7 +419,7 @@
           map: "="
         },
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/layertreeitem.html",
+          "../../sextant/views/sextant/directives/" + "partials/layertreeitem.html",
         link: function (scope, element, attrs, controller) {
           var el = element;
           scope.toggleNode = function (evt) {

@@ -54,7 +54,7 @@
           geomwrapper: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/bounding/" + "partials/boundingpolygon.html",
+          "../../sextant/components/edit/bounding/" + "partials/boundingpolygon.html",
         controllerAs: "ctrl",
         bindToController: true,
         controller: [

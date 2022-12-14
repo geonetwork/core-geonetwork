@@ -56,7 +56,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/common/needhelp/partials/" + "needhelp.html",
+          "../../sextant/components/common/needhelp/partials/" + "needhelp.html",
         link: function (scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === "true";
           var helpBaseUrl =

@@ -399,7 +399,7 @@
         restrict: "A",
         require: "gnMapprint",
         templateUrl:
-          "../../catalog/components/common/map/" + "print/partials/printmap.html",
+          "../../sextant/components/common/map/" + "print/partials/printmap.html",
         controller: mapPrintController,
         scope: {
           printActive: "=",

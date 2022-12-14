@@ -52,7 +52,7 @@
         },
 
         templateUrl:
-          "../../catalog/components/admin/schematron/" + "partials/criteria-viewer.html",
+          "../../sextant/components/admin/schematron/" + "partials/criteria-viewer.html",
         link: function (scope, element) {
           var findValueInput, criteriaTypeToValueMap, i, type;
           findValueInput = function () {

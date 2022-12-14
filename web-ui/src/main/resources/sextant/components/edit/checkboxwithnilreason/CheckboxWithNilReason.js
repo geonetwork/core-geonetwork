@@ -57,7 +57,7 @@
           labels: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/checkboxwithnilreason/" +
+          "../../sextant/components/edit/checkboxwithnilreason/" +
           "partials/checkboxwithnilreason.html",
         link: function (scope, element, attrs) {
           scope.status = scope.nilreason || scope.value;

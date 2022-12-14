@@ -663,7 +663,7 @@
           {{('ui-' + key + '-help') | translate}}
         </p>
         <div
-          ng-include="'../../catalog/components/admin/uiconfig/partials/projectionSwitcher.html'"
+          ng-include="'../../sextant/components/admin/uiconfig/partials/projectionSwitcher.html'"
         ></div>
       </div>
 
@@ -1052,7 +1052,7 @@
           {{('ui-' + key + '-help') | translate}}
         </p>
         <div
-          ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
+          ng-include="'../../sextant/components/admin/uiconfig/partials/mapconfig.html'"
         ></div>
       </div>
       <div data-ng-switch-when="map-search">
@@ -1064,7 +1064,7 @@
           {{('ui-' + key + '-help') | translate}}
         </p>
         <div
-          ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
+          ng-include="'../../sextant/components/admin/uiconfig/partials/mapconfig.html'"
         ></div>
       </div>
       <div data-ng-switch-when="map-editor">
@@ -1076,7 +1076,7 @@
           {{('ui-' + key + '-help') | translate}}
         </p>
         <div
-          ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
+          ng-include="'../../sextant/components/admin/uiconfig/partials/mapconfig.html'"
         ></div>
       </div>
 
@@ -1088,7 +1088,7 @@
             <input
               type="radio"
               data-ng-model="mCfg[key]"
-              value="../../catalog/templates/editor/new-metadata-horizontal.html"
+              value="../../sextant/templates/editor/new-metadata-horizontal.html"
             />
             <i class="fa fa-align-center fa-rotate-90"></i>&nbsp;
             <span data-translate="">ui-createPageTpl-horizontal</span>
@@ -1099,7 +1099,7 @@
             <input
               type="radio"
               data-ng-model="mCfg[key]"
-              value="../../catalog/templates/editor/new-metadata-vertical.html"
+              value="../../sextant/templates/editor/new-metadata-vertical.html"
             />
             <i class="fa fa-align-center"></i>&nbsp;
             <span data-translate="">ui-createPageTpl-vertical</span>

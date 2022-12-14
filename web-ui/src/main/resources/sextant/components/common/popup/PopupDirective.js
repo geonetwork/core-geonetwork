@@ -34,7 +34,7 @@
         toggle: "=gnPopup",
         optionsFunc: "&gnPopupOptions" // Options from directive
       },
-      templateUrl: "../../catalog/components/common/popup/" + "partials/popup.html",
+      templateUrl: "../../sextant/components/common/popup/" + "partials/popup.html",
 
       link: function (scope, element, attrs) {
         // Get the popup options

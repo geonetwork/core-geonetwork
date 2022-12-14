@@ -39,7 +39,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/terrainswitcher/" +
+          "../../sextant/components/viewer/terrainswitcher/" +
           "partials/terrainswitcher.html",
         scope: {
           ol3d: "=gnTerrainSwitcher"

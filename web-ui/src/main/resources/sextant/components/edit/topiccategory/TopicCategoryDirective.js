@@ -64,7 +64,7 @@
           required: "@required"
         },
         templateUrl:
-          "../../catalog/components/edit/topiccategory/partials/" + "topiccategory.html",
+          "../../sextant/components/edit/topiccategory/partials/" + "topiccategory.html",
         link: function (scope) {
           scope.snippet = null;
           scope.selected = [];

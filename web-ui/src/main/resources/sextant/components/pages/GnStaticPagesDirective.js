@@ -37,7 +37,7 @@
         scope: {
           language: "@language"
         },
-        templateUrl: "../../catalog/components/pages/partials/content.html",
+        templateUrl: "../../sextant/components/pages/partials/content.html",
         link: function ($scope) {
           $scope.loadPageContent = function () {
             var page = $location.search().page;
@@ -80,7 +80,7 @@
           section: "@section"
         },
         templateUrl: function (elem, attr) {
-          return "../../catalog/components/pages/partials/" + attr.section + ".html";
+          return "../../sextant/components/pages/partials/" + attr.section + ".html";
         },
         link: function ($scope) {
           $scope.loadPages = function () {

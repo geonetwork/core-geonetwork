@@ -38,7 +38,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/validationreport/" +
+            "../../sextant/components/edit/validationreport/" +
             "partials/validationreport.html",
           scope: {},
           link: function (scope, element, attrs) {

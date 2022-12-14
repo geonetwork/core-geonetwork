@@ -778,7 +778,7 @@
     function (gnCurrentEdit) {
       return {
         restrict: "A",
-        templateUrl: "../../catalog/components/common/map/" + "print/partials/print.html",
+        templateUrl: "../../sextant/components/common/map/" + "print/partials/print.html",
         controller: "GaPrintDirectiveController",
         link: function (scope, elt, attrs, controller) {
           scope.defaultLayout = attrs.layout;

@@ -137,7 +137,7 @@
           nbOfComments: "@nbOfComments"
         },
         templateUrl:
-          "../../catalog/components/" + "userfeedback/partials/userfeedback.html",
+          "../../sextant/components/" + "userfeedback/partials/userfeedback.html",
         link: function (scope) {
           var defaultNbOfComments = 3;
 
@@ -226,7 +226,7 @@
           userName: "@gnUser"
         },
         templateUrl:
-          "../../catalog/components/userfeedback/" + "partials/userfeedbackfull.html",
+          "../../sextant/components/userfeedback/" + "partials/userfeedbackfull.html",
         link: function (scope) {
           scope.userName = null;
 
@@ -320,7 +320,7 @@
           record: "=gnUserfeedbacknew"
         },
         templateUrl:
-          "../../catalog/components/" + "userfeedback/partials/userfeedbacknew.html",
+          "../../sextant/components/" + "userfeedback/partials/userfeedbacknew.html",
         link: function (scope, element) {
           scope.recaptchaEnabled =
             gnConfig["system.userSelfRegistration.recaptcha.enable"];
@@ -488,7 +488,7 @@
           nbOfComments: "@nbOfComments"
         },
         templateUrl:
-          "../../catalog/components/userfeedback/partials/userfeedbacklasthome.html",
+          "../../sextant/components/userfeedback/partials/userfeedbacklasthome.html",
         link: function (scope, element, attrs) {
           var defaultSize = 6,
             increment = 6;

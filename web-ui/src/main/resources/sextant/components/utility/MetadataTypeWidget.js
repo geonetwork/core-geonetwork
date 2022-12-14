@@ -33,7 +33,7 @@
         scope: {
           metadata: "="
         },
-        templateUrl: "../../catalog/components/utility/" + "partials/typewidget.html"
+        templateUrl: "../../sextant/components/utility/" + "partials/typewidget.html"
       };
     }
   ]);

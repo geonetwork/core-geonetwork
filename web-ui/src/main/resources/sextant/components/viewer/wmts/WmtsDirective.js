@@ -51,7 +51,7 @@
           md: "="
         },
         templateUrl:
-          "../../catalog/components/" + "viewer/wmts/partials/wmtsDownload.html",
+          "../../sextant/components/" + "viewer/wmts/partials/wmtsDownload.html",
         link: function (scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;

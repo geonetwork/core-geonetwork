@@ -8,7 +8,7 @@
       return {
         restrict: "E",
         scope: false,
-        templateUrl: "../../catalog/views/sextant/directives/" + "partials/social.html"
+        templateUrl: "../../sextant/views/sextant/directives/" + "partials/social.html"
       };
     }
   ]);

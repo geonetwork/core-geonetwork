@@ -50,7 +50,7 @@
           map: "=",
           md: "="
         },
-        templateUrl: "../../catalog/components/" + "viewer/wms/partials/wmsDownload.html",
+        templateUrl: "../../sextant/components/" + "viewer/wms/partials/wmsDownload.html",
         link: function (scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;

@@ -45,7 +45,7 @@
         require: "gnLocalisationInput",
         replace: true,
         templateUrl:
-          "../../catalog/components/viewer/localisation/" + "partials/localisation.html",
+          "../../sextant/components/viewer/localisation/" + "partials/localisation.html",
         scope: {
           map: "="
         },

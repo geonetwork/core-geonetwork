@@ -46,7 +46,7 @@
           icon: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "batchprocessbutton/partials/" +
           "batchprocessbutton.html",
         link: function (scope, element, attrs) {

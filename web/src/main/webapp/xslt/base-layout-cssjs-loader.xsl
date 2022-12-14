@@ -110,8 +110,8 @@
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
+        <script src="{replace($uiResourcesPath, 'sextant', 'catalog')}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
+        <script src="{replace($uiResourcesPath, 'sextant', 'catalog')}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/franc-min/franc-min.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
@@ -210,7 +210,7 @@
 
         <!--</xsl:if>-->
 
-        <script src="{$uiResourcesPath}lib/lodash/lodash.min.js?v={$buildNumber}"></script>
+        <script src="{replace($uiResourcesPath, 'sextant', 'catalog')}lib/lodash/lodash.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/geohash.js?v={$buildNumber}"></script>
 
@@ -233,6 +233,13 @@
       <xsl:otherwise>
 
         <xsl:choose>
+          <xsl:when test="$uiResourcesPath = '../../sextant/'">
+            <script src="{/root/gui/url}/static/sextantlib.js?v={$buildNumber}"></script>
+          </xsl:when>
+          <xsl:when test="$uiResourcesPath = '../../sextant/' and $is3DModeAllowed">
+            <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
+            <script src="{/root/gui/url}/static/sextantlib3d.js?v={$buildNumber}"></script>
+          </xsl:when>
           <xsl:when test="$is3DModeAllowed">
             <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
             <script src="{/root/gui/url}/static/lib3d.js?v={$buildNumber}"></script>
@@ -248,11 +255,6 @@
     <xsl:if test="$isVegaEnabled or $angularApp = ('gn_editor', 'gn_admin')">
       <script src="{$uiResourcesPath}lib/vega/vega.js"></script>
     </xsl:if>
-
-<!-- SEXTANT / Check if still needed?   <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
-    <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
-    <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
-    <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>-->
 
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>

@@ -33,7 +33,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/common/ows/" + "partials/layersGrid.html",
+            "../../sextant/components/common/ows/" + "partials/layersGrid.html",
           scope: {
             selection: "=",
             layers: "=",

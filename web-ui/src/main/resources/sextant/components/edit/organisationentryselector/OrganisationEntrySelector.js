@@ -109,13 +109,13 @@
           scope.getTemplateUrl = function () {
             if (scope.elementChoice == "true") {
               return (
-                "../../catalog/components/edit/" +
+                "../../sextant/components/edit/" +
                 "organisationentryselector/partials/" +
                 "organisationentryselectorchoice.html"
               );
             } else {
               return (
-                "../../catalog/components/edit/" +
+                "../../sextant/components/edit/" +
                 "organisationentryselector/partials/" +
                 "organisationentryselector.html"
               );

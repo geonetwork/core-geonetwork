@@ -78,7 +78,7 @@
       function (gnGlobalSettings, gnLangs) {
         if (typeof sxtSettings != "undefined") {
           gnGlobalSettings.gnCfg.mods.search.resultTemplate =
-            "../../catalog/views/sextant/templates/mdview/grid.html";
+            "../../sextant/views/sextant/templates/mdview/grid.html";
           gnGlobalSettings.gnCfg.langDetector = sxtSettings.langDetector;
         }
       }

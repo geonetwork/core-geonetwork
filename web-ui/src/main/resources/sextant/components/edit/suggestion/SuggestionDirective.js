@@ -41,7 +41,7 @@
       function (gnSuggestion, gnCurrentEdit, $rootScope, $translate, $interpolate) {
         return {
           restrict: "A",
-          templateUrl: "../../catalog/components/edit/suggestion/" + "partials/list.html",
+          templateUrl: "../../sextant/components/edit/suggestion/" + "partials/list.html",
           scope: {},
           link: function (scope, element, attrs) {
             scope.gnSuggestion = gnSuggestion;
@@ -110,7 +110,7 @@
             icon: "@"
           },
           templateUrl:
-            "../../catalog/components/edit/" +
+            "../../sextant/components/edit/" +
             "suggestion/partials/" +
             "suggestbutton.html",
           link: function (scope, element, attrs) {
@@ -138,7 +138,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/suggestion/" + "partials/runprocess.html",
+            "../../sextant/components/edit/suggestion/" + "partials/runprocess.html",
           link: function (scope, element, attrs) {
             scope.gnSuggestion = gnSuggestion;
             // Indicate if processing is running

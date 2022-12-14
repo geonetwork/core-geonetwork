@@ -894,8 +894,8 @@ to a common CSS class?
 }
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');
-  src: url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('../catalog/lib/style/font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
+  src: url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');
+  src: url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('../sextant/lib/style/font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -4745,7 +4745,7 @@ to a common CSS class?
   top: 4px;
   float: right;
   z-index: 9999;
-  opacity: .6;
+  opacity: 0.6;
 }
 .gn .gn-portal .navbar,
 .g .gn-portal .navbar {
@@ -5385,13 +5385,13 @@ to a common CSS class?
   right: 0;
   margin: 0;
   opacity: 0;
-  -ms-filter: 'alpha(opacity=0)';
+  -ms-filter: "alpha(opacity=0)";
   font-size: 200px;
   direction: ltr;
   cursor: pointer;
 }
-.gn input[type=file],
-.g input[type=file] {
+.gn input[type="file"],
+.g input[type="file"] {
   display: block;
 }
 .gn .gn-alerts,
@@ -5622,20 +5622,20 @@ to a common CSS class?
   border-color: #fff;
   border-radius: 5px;
 }
-.gn html[lang=eng] .gn-scale:before,
-.g html[lang=eng] .gn-scale:before,
-.gn html[lang=eng] [data-facet=denominators] span.gn-facet-label:before,
-.g html[lang=eng] [data-facet=denominators] span.gn-facet-label:before,
-.gn html[lang=eng] .gn-facet-denominators span.gn-facet-label:before,
-.g html[lang=eng] .gn-facet-denominators span.gn-facet-label:before {
+.gn html[lang="eng"] .gn-scale:before,
+.g html[lang="eng"] .gn-scale:before,
+.gn html[lang="eng"] [data-facet="denominators"] span.gn-facet-label:before,
+.g html[lang="eng"] [data-facet="denominators"] span.gn-facet-label:before,
+.gn html[lang="eng"] .gn-facet-denominators span.gn-facet-label:before,
+.g html[lang="eng"] .gn-facet-denominators span.gn-facet-label:before {
   content: "1/";
 }
-.gn html[lang=fre] .gn-scale:before,
-.g html[lang=fre] .gn-scale:before,
-.gn html[lang=fre] [data-facet=denominators] span.gn-facet-label:before,
-.g html[lang=fre] [data-facet=denominators] span.gn-facet-label:before,
-.gn html[lang=fre] .gn-facet-denominators span.gn-facet-label:before,
-.g html[lang=fre] .gn-facet-denominators span.gn-facet-label:before {
+.gn html[lang="fre"] .gn-scale:before,
+.g html[lang="fre"] .gn-scale:before,
+.gn html[lang="fre"] [data-facet="denominators"] span.gn-facet-label:before,
+.g html[lang="fre"] [data-facet="denominators"] span.gn-facet-label:before,
+.gn html[lang="fre"] .gn-facet-denominators span.gn-facet-label:before,
+.g html[lang="fre"] .gn-facet-denominators span.gn-facet-label:before {
   content: "1:";
 }
 .gn .checkbox.disabled label,
@@ -5675,8 +5675,8 @@ to a common CSS class?
   width: 6em;
   display: inline-block;
 }
-.gn .gn-bbox-input [class^='col-'],
-.g .gn-bbox-input [class^='col-'] {
+.gn .gn-bbox-input [class^="col-"],
+.g .gn-bbox-input [class^="col-"] {
   text-align: center;
 }
 .gn .gn-bbox-input [gn-btn-group],
@@ -5778,8 +5778,8 @@ to a common CSS class?
 .g .gn-copy-clipboard.gn-hide-input {
   display: inline-block;
 }
-.gn .gn-copy-clipboard.gn-hide-input input[type=text],
-.g .gn-copy-clipboard.gn-hide-input input[type=text] {
+.gn .gn-copy-clipboard.gn-hide-input input[type="text"],
+.g .gn-copy-clipboard.gn-hide-input input[type="text"] {
   position: absolute;
   left: -99999px;
 }
@@ -5949,7 +5949,7 @@ to a common CSS class?
 .g gn-md-type-widget > div::after,
 .gn gn-md-type-inspire-validation-widget > div::after,
 .g gn-md-type-inspire-validation-widget > div::after {
-  content: '';
+  content: "";
   background-color: rgba(255, 255, 255, 0.25);
   position: absolute;
   top: 0px;
@@ -6179,8 +6179,8 @@ to a common CSS class?
 .g .gn-drawmap-panel [gn-region-picker] .fa.fa-times-circle {
   cursor: pointer;
 }
-.gn .gn-drawmap-panel input[type=number],
-.g .gn-drawmap-panel input[type=number] {
+.gn .gn-drawmap-panel input[type="number"],
+.g .gn-drawmap-panel input[type="number"] {
   text-align: center;
 }
 .gn .gn-drawmap-panel .dropdown-menu,
@@ -6234,6 +6234,10 @@ to a common CSS class?
 .gn .pos-relative,
 .g .pos-relative {
   position: relative;
+}
+.gn .pos-relative.ng-scope,
+.g .pos-relative.ng-scope {
+  z-index: 0;
 }
 .gn .pos-absolute,
 .g .pos-absolute {
@@ -15058,10 +15062,10 @@ to a common CSS class?
   /* jquery-ui slider */
   /* Measures */
 }
-.gn [gn-main-viewer] [role=tooltip],
-.g [gn-main-viewer] [role=tooltip],
-.gn .gn-main-viewer [role=tooltip],
-.g .gn-main-viewer [role=tooltip] {
+.gn [gn-main-viewer] [role="tooltip"],
+.g [gn-main-viewer] [role="tooltip"],
+.gn .gn-main-viewer [role="tooltip"],
+.g .gn-main-viewer [role="tooltip"] {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
   right: 0;
@@ -15072,14 +15076,14 @@ to a common CSS class?
 .g .gn-main-viewer button:focus {
   outline: 0;
 }
-.gn [gn-main-viewer] button:focus [role=tooltip],
-.g [gn-main-viewer] button:focus [role=tooltip],
-.gn .gn-main-viewer button:focus [role=tooltip],
-.g .gn-main-viewer button:focus [role=tooltip],
-.gn [gn-main-viewer] button:hover [role=tooltip],
-.g [gn-main-viewer] button:hover [role=tooltip],
-.gn .gn-main-viewer button:hover [role=tooltip],
-.g .gn-main-viewer button:hover [role=tooltip] {
+.gn [gn-main-viewer] button:focus [role="tooltip"],
+.g [gn-main-viewer] button:focus [role="tooltip"],
+.gn .gn-main-viewer button:focus [role="tooltip"],
+.g .gn-main-viewer button:focus [role="tooltip"],
+.gn [gn-main-viewer] button:hover [role="tooltip"],
+.g [gn-main-viewer] button:hover [role="tooltip"],
+.gn .gn-main-viewer button:hover [role="tooltip"],
+.g .gn-main-viewer button:hover [role="tooltip"] {
   clip: auto;
   right: 3.5em;
   background: #5cb85c;
@@ -15091,29 +15095,29 @@ to a common CSS class?
   text-shadow: none;
   z-index: 9000;
 }
-.gn [gn-main-viewer] .search-container button:hover [role=tooltip],
-.g [gn-main-viewer] .search-container button:hover [role=tooltip],
-.gn .gn-main-viewer .search-container button:hover [role=tooltip],
-.g .gn-main-viewer .search-container button:hover [role=tooltip] {
+.gn [gn-main-viewer] .search-container button:hover [role="tooltip"],
+.g [gn-main-viewer] .search-container button:hover [role="tooltip"],
+.gn .gn-main-viewer .search-container button:hover [role="tooltip"],
+.g .gn-main-viewer .search-container button:hover [role="tooltip"] {
   right: auto;
   margin-left: 1.5em;
   margin-top: -7px;
   padding-top: 9px;
 }
 @media screen and (max-height: 768px) {
-  .gn [gn-main-viewer] .control-tools button:hover [role=tooltip],
-  .g [gn-main-viewer] .control-tools button:hover [role=tooltip],
-  .gn .gn-main-viewer .control-tools button:hover [role=tooltip],
-  .g .gn-main-viewer .control-tools button:hover [role=tooltip] {
+  .gn [gn-main-viewer] .control-tools button:hover [role="tooltip"],
+  .g [gn-main-viewer] .control-tools button:hover [role="tooltip"],
+  .gn .gn-main-viewer .control-tools button:hover [role="tooltip"],
+  .g .gn-main-viewer .control-tools button:hover [role="tooltip"] {
     right: auto;
     margin-left: 1.5em;
     margin-top: -7px;
     padding-top: 9px;
   }
-  .gn [gn-main-viewer] .control-tools .btn-3d:hover [role=tooltip],
-  .g [gn-main-viewer] .control-tools .btn-3d:hover [role=tooltip],
-  .gn .gn-main-viewer .control-tools .btn-3d:hover [role=tooltip],
-  .g .gn-main-viewer .control-tools .btn-3d:hover [role=tooltip] {
+  .gn [gn-main-viewer] .control-tools .btn-3d:hover [role="tooltip"],
+  .g [gn-main-viewer] .control-tools .btn-3d:hover [role="tooltip"],
+  .gn .gn-main-viewer .control-tools .btn-3d:hover [role="tooltip"],
+  .g .gn-main-viewer .control-tools .btn-3d:hover [role="tooltip"] {
     margin-left: -1.7em;
   }
 }
@@ -15171,8 +15175,8 @@ to a common CSS class?
 .gn .gn-main-viewer .clear,
 .g .gn-main-viewer .clear {
   position: absolute;
-  top: .75em;
-  right: .75em;
+  top: 0.75em;
+  right: 0.75em;
   color: #666;
 }
 .gn [gn-main-viewer] .clear:hover,
@@ -15267,7 +15271,7 @@ to a common CSS class?
 .g [gn-main-viewer] .search-container .dropdown-menu a,
 .gn .gn-main-viewer .search-container .dropdown-menu a,
 .g .gn-main-viewer .search-container .dropdown-menu a {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   display: block;
 }
 .gn [gn-main-viewer] .search-container .dropdown-menu a em,
@@ -15282,7 +15286,7 @@ to a common CSS class?
 .gn .gn-main-viewer .search-container .clear,
 .g .gn-main-viewer .search-container .clear {
   position: absolute;
-  top: .75em;
+  top: 0.75em;
   right: 3.5em;
   color: #666;
   z-index: 99;
@@ -15313,7 +15317,7 @@ to a common CSS class?
   right: 1em;
   width: 2.8em;
   border-top: 1px solid #ccc;
-  z-index: 85;
+  z-index: 0;
 }
 .gn [gn-main-viewer] .tools button,
 .g [gn-main-viewer] .tools button,
@@ -15360,6 +15364,7 @@ to a common CSS class?
 .g [gn-main-viewer] .control-tools,
 .gn .gn-main-viewer .control-tools,
 .g .gn-main-viewer .control-tools {
+  z-index: 0;
   top: auto;
   bottom: calc(50px + 1em);
   position: fixed;
@@ -15641,7 +15646,7 @@ to a common CSS class?
 .g [gn-main-viewer] .panel-tools .context,
 .gn .gn-main-viewer .panel-tools .context,
 .g .gn-main-viewer .panel-tools .context {
-  margin: .2em;
+  margin: 0.2em;
 }
 .gn [gn-main-viewer] .panel-tools .baselayer .dropdown-menu,
 .g [gn-main-viewer] .panel-tools .baselayer .dropdown-menu,
@@ -15675,7 +15680,7 @@ to a common CSS class?
 .gn .gn-main-viewer .panel-tools .close,
 .g .gn-main-viewer .panel-tools .close {
   margin-top: -0.4em;
-  margin-right: .2em;
+  margin-right: 0.2em;
   opacity: 1;
 }
 .gn [gn-main-viewer] .panel-tools .unfold:hover,
@@ -15703,7 +15708,7 @@ to a common CSS class?
 .gn .gn-main-viewer .panel-tools .details,
 .g .gn-main-viewer .panel-tools .details {
   font-size: 90%;
-  margin: 0 0 .5em 0;
+  margin: 0 0 0.5em 0;
 }
 .gn [gn-main-viewer] .panel-tools .details p,
 .g [gn-main-viewer] .panel-tools .details p,
@@ -15734,7 +15739,7 @@ to a common CSS class?
 .g [gn-main-viewer] .panel-tools h5,
 .gn .gn-main-viewer .panel-tools h5,
 .g .gn-main-viewer .panel-tools h5 {
-  margin: .2em 0;
+  margin: 0.2em 0;
 }
 .gn [gn-main-viewer] .panel-tools [gn-layermanager],
 .g [gn-main-viewer] .panel-tools [gn-layermanager],
@@ -16137,10 +16142,10 @@ to a common CSS class?
 .g .gn-main-viewer .fu {
   position: relative;
 }
-.gn [gn-main-viewer] .fu input[type=file],
-.g [gn-main-viewer] .fu input[type=file],
-.gn .gn-main-viewer .fu input[type=file],
-.g .gn-main-viewer .fu input[type=file] {
+.gn [gn-main-viewer] .fu input[type="file"],
+.g [gn-main-viewer] .fu input[type="file"],
+.gn .gn-main-viewer .fu input[type="file"],
+.g .gn-main-viewer .fu input[type="file"] {
   position: absolute;
   top: 0;
   left: 0;
@@ -16180,7 +16185,7 @@ to a common CSS class?
 .g [gn-main-viewer] .overlay:after,
 .gn .gn-main-viewer .overlay:after,
 .g .gn-main-viewer .overlay:after {
-  content: ' ';
+  content: " ";
   position: absolute;
   bottom: -10px;
   left: 2em;
@@ -16229,7 +16234,7 @@ to a common CSS class?
   position: relative;
   text-align: left;
   border: 1px solid #ddd;
-  height: .7em;
+  height: 0.7em;
   margin: 0.8em 0;
 }
 .gn [gn-main-viewer] .ui-slider .ui-slider-range,
@@ -16238,7 +16243,7 @@ to a common CSS class?
 .g .gn-main-viewer .ui-slider .ui-slider-range {
   position: absolute;
   z-index: 1;
-  font-size: .7em;
+  font-size: 0.7em;
   display: block;
   border: 0;
   background-position: 0 0;
@@ -16365,16 +16370,16 @@ to a common CSS class?
   margin-top: 10px;
   min-height: 9em;
 }
-.gn [gn-main-viewer] .gn-draw-styleform form input[type='text'],
-.g [gn-main-viewer] .gn-draw-styleform form input[type='text'],
-.gn .gn-main-viewer .gn-draw-styleform form input[type='text'],
-.g .gn-main-viewer .gn-draw-styleform form input[type='text'] {
+.gn [gn-main-viewer] .gn-draw-styleform form input[type="text"],
+.g [gn-main-viewer] .gn-draw-styleform form input[type="text"],
+.gn .gn-main-viewer .gn-draw-styleform form input[type="text"],
+.g .gn-main-viewer .gn-draw-styleform form input[type="text"] {
   width: 146px;
 }
-.gn [gn-main-viewer] .gn-draw-styleform form input[type='number'],
-.g [gn-main-viewer] .gn-draw-styleform form input[type='number'],
-.gn .gn-main-viewer .gn-draw-styleform form input[type='number'],
-.g .gn-main-viewer .gn-draw-styleform form input[type='number'] {
+.gn [gn-main-viewer] .gn-draw-styleform form input[type="number"],
+.g [gn-main-viewer] .gn-draw-styleform form input[type="number"],
+.gn .gn-main-viewer .gn-draw-styleform form input[type="number"],
+.g .gn-main-viewer .gn-draw-styleform form input[type="number"] {
   width: 55px;
 }
 .gn [gn-main-viewer] .gn-draw-styleform form .form-group,
@@ -16522,7 +16527,7 @@ to a common CSS class?
 .g [data-gn-wfs-filter-facets] .gn-facet .fa,
 .gn [gn-wfs-filter-facets] .gn-facet .fa,
 .g [gn-wfs-filter-facets] .gn-facet .fa {
-  margin-right: .3em;
+  margin-right: 0.3em;
   font-size: 14px;
 }
 .gn [data-gn-wfs-filter-facets] .gn-facet .fa-fw:not(.fa-square-o):not(.fa-check-square-o),
@@ -16631,7 +16636,7 @@ to a common CSS class?
 .g gn-features-tables .gn-features-table,
 .gn .gn-viewer-info-pane .gn-features-table,
 .g .gn-viewer-info-pane .gn-features-table {
-  padding: .25em;
+  padding: 0.25em;
   box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
 }
 .gn gn-features-tables .layername,
@@ -16650,7 +16655,7 @@ to a common CSS class?
 .gn .gn-viewer-info-pane .close,
 .g .gn-viewer-info-pane .close {
   font-size: 24px;
-  margin: .25em .4em 0 0;
+  margin: 0.25em 0.4em 0 0;
 }
 .gn gn-features-tables .profile,
 .g gn-features-tables .profile,
@@ -17038,18 +17043,18 @@ to a common CSS class?
 }
 .gn .gn-icon-bg .badge,
 .g .gn-icon-bg .badge {
-  background-color: #428BCA;
+  background-color: #428bca;
 }
 .gn .gn-icon-bg :hover,
 .g .gn-icon-bg :hover {
   color: #fff;
-  background-color: #428BCA;
+  background-color: #428bca;
   text-decoration: none;
 }
 .gn .gn-icon-bg :hover .badge,
 .g .gn-icon-bg :hover .badge {
   background-color: #ffffff;
-  color: #428BCA;
+  color: #428bca;
 }
 .gn span.gn-facet-label,
 .g span.gn-facet-label {
@@ -17195,7 +17200,7 @@ to a common CSS class?
 }
 .gn .tagsinput-trigger,
 .g .tagsinput-trigger {
-  top: .575em;
+  top: 0.575em;
   right: 20px;
   font-size: 16px;
   font-weight: normal;
@@ -17233,8 +17238,8 @@ to a common CSS class?
 .g .gn-searchform label {
   font-weight: normal;
 }
-.gn .gn-searchform input[type='text'],
-.g .gn-searchform input[type='text'],
+.gn .gn-searchform input[type="text"],
+.g .gn-searchform input[type="text"],
 .gn .gn-searchform select,
 .g .gn-searchform select {
   height: 30px;
@@ -17243,19 +17248,19 @@ to a common CSS class?
   line-height: 1.5;
   border-radius: 3px;
 }
-.gn select.gn-searchform input[type='text'],
-.g select.gn-searchform input[type='text'],
+.gn select.gn-searchform input[type="text"],
+.g select.gn-searchform input[type="text"],
 .gn select.gn-searchform select,
 .g select.gn-searchform select {
   height: 30px;
   line-height: 30px;
 }
-.gn textarea.gn-searchform input[type='text'],
-.g textarea.gn-searchform input[type='text'],
+.gn textarea.gn-searchform input[type="text"],
+.g textarea.gn-searchform input[type="text"],
 .gn textarea.gn-searchform select,
 .g textarea.gn-searchform select,
-.gn select[multiple].gn-searchform input[type='text'],
-.g select[multiple].gn-searchform input[type='text'],
+.gn select[multiple].gn-searchform input[type="text"],
+.g select[multiple].gn-searchform input[type="text"],
 .gn select[multiple].gn-searchform select,
 .g select[multiple].gn-searchform select {
   height: auto;
@@ -17281,7 +17286,7 @@ to a common CSS class?
 .g .gn-searchform legend {
   font-size: 1em;
   font-style: italic;
-  padding-top: .4em;
+  padding-top: 0.4em;
   margin-bottom: 12px;
 }
 .gn .gn-searchform .bootstrap-tagsinput .label,
@@ -17309,8 +17314,8 @@ to a common CSS class?
   top: 0.7em;
   left: 0.9em;
 }
-.gn [gn-selection-widget] .btn-group [type=checkbox],
-.g [gn-selection-widget] .btn-group [type=checkbox] {
+.gn [gn-selection-widget] .btn-group [type="checkbox"],
+.g [gn-selection-widget] .btn-group [type="checkbox"] {
   visibility: hidden;
   pointer-events: none;
 }
@@ -17417,7 +17422,7 @@ to a common CSS class?
 .g .gn-resultview .gn-md-no-thumbnail {
   width: 140px;
   background-size: 140px 140px;
-  background-image: url(../catalog/views/default/images/no-thumbnail.png);
+  background-image: url(../sextant/views/default/images/no-thumbnail.png);
   height: 140px;
 }
 .gn .gn-top-records,
@@ -17447,13 +17452,13 @@ to a common CSS class?
 .g [ng-search-form] .whidden,
 .gn .gn-search-page .whidden,
 .g .gn-search-page .whidden,
-.gn [data-ng-search-form] [class*=col-md],
-.g [data-ng-search-form] [class*=col-md],
-.gn [ng-search-form] [class*=col-md],
-.g [ng-search-form] [class*=col-md],
-.gn .gn-search-page [class*=col-md],
-.g .gn-search-page [class*=col-md] {
-  transition: width ease .25s;
+.gn [data-ng-search-form] [class*="col-md"],
+.g [data-ng-search-form] [class*="col-md"],
+.gn [ng-search-form] [class*="col-md"],
+.g [ng-search-form] [class*="col-md"],
+.gn .gn-search-page [class*="col-md"],
+.g .gn-search-page [class*="col-md"] {
+  transition: width ease 0.25s;
   transition-property: width, margin;
 }
 .gn [data-ng-search-form] .whidden,
@@ -17553,6 +17558,7 @@ to a common CSS class?
 .g [ng-search-form] [data-gn-map-field] .gn-draw-btn,
 .gn .gn-search-page [data-gn-map-field] .gn-draw-btn,
 .g .gn-search-page [data-gn-map-field] .gn-draw-btn {
+  z-index: 1;
   left: 4px;
 }
 .gn .dropdown-submenu,
@@ -17620,22 +17626,22 @@ to a common CSS class?
   font-color: #428bca;
   cursor: pointer;
 }
-.gn button:focus [role=tooltip],
-.g button:focus [role=tooltip],
-.gn button:hover [role=tooltip],
-.g button:hover [role=tooltip] {
+.gn button:focus [role="tooltip"],
+.g button:focus [role="tooltip"],
+.gn button:hover [role="tooltip"],
+.g button:hover [role="tooltip"] {
   clip: auto;
   right: 2.8em;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  padding: .2em .5em;
+  padding: 0.2em 0.5em;
   margin-top: -0.2em;
-  border-radius: .2em 0 0 .2em;
+  border-radius: 0.2em 0 0 0.2em;
   text-shadow: 0 0 1px #000;
   z-index: 9000;
 }
-.gn button.active [role=tooltip],
-.g button.active [role=tooltip] {
+.gn button.active [role="tooltip"],
+.g button.active [role="tooltip"] {
   display: none;
 }
 .gn .gn-close-btn,
@@ -17827,8 +17833,8 @@ to a common CSS class?
 .g .gn-view-emodnetHydrography .gn-md-view {
   padding: 0px;
 }
-.gn .gn-nojs [role=main],
-.g .gn-nojs [role=main] {
+.gn .gn-nojs [role="main"],
+.g .gn-nojs [role="main"] {
   background-color: white;
   padding-top: 15px;
 }
@@ -18217,6 +18223,7 @@ to a common CSS class?
 .gn [sxt-main-viewer] .sx-toolbar,
 .g [sxt-main-viewer] .sx-toolbar {
   position: absolute;
+  z-index: 0;
   top: 1.5em;
   width: auto;
   right: 1.8em;
@@ -19992,7 +19999,7 @@ to a common CSS class?
   border: solid 1px #ebecec;
   border-radius: 2px;
   background-color: #f5f6f6;
-  padding: .5em;
+  padding: 0.5em;
   margin-bottom: 1em;
 }
 .gn [data-gn-more-like-this] span,
@@ -20081,11 +20088,11 @@ to a common CSS class?
 }
 .gn .topic-color,
 .g .topic-color {
-  color: #428BCA;
+  color: #428bca;
 }
 .gn .resource-color,
 .g .resource-color {
-  color: #5CB85C;
+  color: #5cb85c;
 }
 .gn .gn-metadata-view,
 .g .gn-metadata-view {
@@ -20207,7 +20214,7 @@ to a common CSS class?
 .g .gn-metadata-view h3 i {
   display: inline-block;
   width: 14px;
-  transition: transform .4s;
+  transition: transform 0.4s;
   transform: rotate(0deg);
   -ms-transform: rotate(0deg);
 }
@@ -20390,15 +20397,15 @@ to a common CSS class?
 }
 .gn .gn-metadata-view .md-actions .dropdown-menu .fa,
 .g .gn-metadata-view .md-actions .dropdown-menu .fa {
-  margin-right: .4em;
+  margin-right: 0.4em;
 }
 .gn .gn-metadata-view .pad-right,
 .g .gn-metadata-view .pad-right {
-  margin-right: .4em;
+  margin-right: 0.4em;
 }
 .gn .gn-metadata-view .pad-left,
 .g .gn-metadata-view .pad-left {
-  margin-left: .4em;
+  margin-left: 0.4em;
 }
 .gn .gn-metadata-view .dropdown-menu,
 .g .gn-metadata-view .dropdown-menu {
@@ -20446,7 +20453,7 @@ to a common CSS class?
 }
 .gn .overview .gn-metadata-display ul.md-value-list:not(.nocolon):before,
 .g .overview .gn-metadata-display ul.md-value-list:not(.nocolon):before {
-  content: ': ';
+  content: ": ";
 }
 .gn .overview .gn-metadata-display ul.md-value-list li,
 .g .overview .gn-metadata-display ul.md-value-list li {
@@ -20457,11 +20464,11 @@ to a common CSS class?
 }
 .gn .overview .gn-metadata-display ul.md-value-list li:before,
 .g .overview .gn-metadata-display ul.md-value-list li:before {
-  content: ', ';
+  content: ", ";
 }
 .gn .overview .gn-metadata-display ul.md-value-list li:first-child:before,
 .g .overview .gn-metadata-display ul.md-value-list li:first-child:before {
-  content: '';
+  content: "";
 }
 .gn .gn-related-resources .gn-related-item h4,
 .g .gn-related-resources .gn-related-item h4 {
@@ -20543,12 +20550,12 @@ to a common CSS class?
 }
 .gn .summary-links div,
 .g .summary-links div {
-  margin-left: .5em;
-  margin-right: .5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 .gn .summary-links .link-block-title,
 .g .summary-links .link-block-title {
-  background-color: #F7EEE1;
+  background-color: #f7eee1;
 }
 .gn ul.view-outline,
 .g ul.view-outline {
@@ -20558,7 +20565,7 @@ to a common CSS class?
 .g ul.view-outline a[disabled] {
   pointer-events: none;
   cursor: default;
-  color: #C0C0C0;
+  color: #c0c0c0;
 }
 .gn a,
 .g a {
@@ -23791,7 +23798,7 @@ to a common CSS class?
   overflow: hidden;
   height: 124px;
   line-height: 18px;
-  margin: 0 0 .5em;
+  margin: 0 0 0.5em;
 }
 .gn .ellipsis:before,
 .g .ellipsis:before {
@@ -23834,7 +23841,7 @@ to a common CSS class?
 }
 @font-face {
   font-family: 'Sextant';
-  src: url('../catalog/views/sextant/less/fonts/sextant-large.ttf') format('truetype'), url('../catalog/views/sextant/less/fonts/sextant-large.eot') format('eot');
+  src: url('../sextant/views/sextant/less/fonts/sextant-large.ttf') format('truetype'), url('../sextant/views/sextant/less/fonts/sextant-large.eot') format('eot');
 }
 .gn .bootstrap-table .export > .dropdown-menu > li > a,
 .g .bootstrap-table .export > .dropdown-menu > li > a {
@@ -23886,6 +23893,7 @@ to a common CSS class?
 @media (min-width: 992px) {
   .gn .sxt-search-main-container,
   .g .sxt-search-main-container {
+    z-index: 0;
     height: calc(100% -  4em);
   }
   .gn .sxt-search-main-container .noresult,
@@ -24000,7 +24008,7 @@ to a common CSS class?
 .g div.g::-webkit-scrollbar-button,
 .gn *::-webkit-scrollbar-button,
 .g *::-webkit-scrollbar-button {
-  background-image: url(../catalog/style/scrollbar-icons.png);
+  background-image: url(../sextant/style/scrollbar-icons.png);
   opacity: 0.7;
 }
 .gn div.gn::-webkit-scrollbar-button:hover,
@@ -24228,6 +24236,7 @@ to a common CSS class?
   display: flex;
   flex-direction: row;
   top: 0;
+  margin: 0.3em;
   left: 29.7em;
 }
 .gn #sxt-tabswitcher > *:not(:last-of-type),
@@ -25973,7 +25982,6 @@ to a common CSS class?
 .gn [gn-metadata-display].sxt-scroll,
 .g [gn-metadata-display].sxt-scroll {
   position: relative;
-  margin-top: -3em;
   top: 0;
   right: 0;
   left: 0;

@@ -34,7 +34,7 @@
           metadata: "="
         },
         templateUrl:
-          "../../catalog/components/utility/" +
+          "../../sextant/components/utility/" +
           "partials/typeinspirevalidationwidget.html"
       };
     }

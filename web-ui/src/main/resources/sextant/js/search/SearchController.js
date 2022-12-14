@@ -107,7 +107,7 @@
       /* Default advanced search form template */
       $scope.advancedSearchTemplate =
         gnSearchSettings.advancedSearchTemplate ||
-        "../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html";
+        "../../sextant/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html";
 
       $scope.getAnySuggestions = function (val, searchObj) {
         return suggestService.getAnySuggestions(val, searchObj);

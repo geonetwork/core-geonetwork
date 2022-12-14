@@ -7,22 +7,22 @@
 
   module.constant("gnPanierSettings", {});
 
-  var gfiTemplateURL = "../../catalog/views/sextant/templates/gfi.html";
+  var gfiTemplateURL = "../../sextant/views/sextant/templates/gfi.html";
 
   module.value("gfiTemplateURL", gfiTemplateURL);
 
   module.value(
     "baselayerTemplateURL",
-    "../../catalog/views/sextant/templates/baselayer.html"
+    "../../sextant/views/sextant/templates/baselayer.html"
   );
   module.value(
     "kmlimportTemplateURL",
-    "../../catalog/views/sextant/templates/kmlimport.html"
+    "../../sextant/views/sextant/templates/kmlimport.html"
   );
 
   module.value(
     "gnTplResultlistLinksbtn",
-    "../../catalog/views/default/directives/partials/linksbtn.html"
+    "../../sextant/views/default/directives/partials/linksbtn.html"
   );
 
   module.run([
@@ -84,7 +84,7 @@
       });
 
       viewerSettings.defaultContext =
-        "../../catalog/views/sextant/data/" + "defaultContext.xml";
+        "../../sextant/views/sextant/data/" + "defaultContext.xml";
 
       // WMS settings
       // If 3D mode is activated, single tile WMS mode is

@@ -43,7 +43,7 @@
           initOnDemand: "@",
           mode: "@"
         },
-        templateUrl: "../../catalog/components/" + "viewer/wfs/partials/download.html",
+        templateUrl: "../../sextant/components/" + "viewer/wfs/partials/download.html",
         link: function (scope, element, attrs, ctrls) {
           scope.initOnDemand = attrs["initOnDemand"] == "true" || false;
           scope.isWfsAvailable = scope.initOnDemand ? true : false;
@@ -171,7 +171,7 @@
       return {
         restrict: "A",
         scope: {},
-        templateUrl: "../../catalog/components/" + "viewer/wfs/partials/download.html",
+        templateUrl: "../../sextant/components/" + "viewer/wfs/partials/download.html",
         link: function (scope, element, attrs, ctrls) {
           scope.initOnDemand = attrs["initOnDemand"] == "true" || false;
           scope.isWfsAvailable = false;
@@ -293,7 +293,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/viewer/wps/partials/processform.html"
+            "../../sextant/components/viewer/wps/partials/processform.html"
           );
         },
 

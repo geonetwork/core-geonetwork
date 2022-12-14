@@ -99,6 +99,7 @@
 
   <!-- Static resources -->
   <mvc:resources mapping="/catalog/**" location="/catalog/,classpath:/META-INF/catalog/" order="0"/>
+  <mvc:resources mapping="/sextant/**" location="/sextant/,classpath:/META-INF/sextant/" order="0"/>
   <mvc:resources mapping="/images/**" location="/images/" order="0"/>
   <mvc:resources mapping="/map/**" location="/map/" order="0"/>
   <mvc:resources mapping="/xml/**" location="/xml/" order="0"/>

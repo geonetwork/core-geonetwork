@@ -54,7 +54,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/viewer/searchlayerformap/" +
+          "../../sextant/components/viewer/searchlayerformap/" +
           "partials/searchlayerformap.html",
         scope: {
           map: "=gnSearchLayerForMap",

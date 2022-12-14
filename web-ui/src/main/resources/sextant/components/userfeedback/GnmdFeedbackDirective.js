@@ -42,7 +42,7 @@
         scope: {
           md: "=gnMdFeedback"
         },
-        templateUrl: "../../catalog/components/userfeedback/partials/mdFeedback.html",
+        templateUrl: "../../sextant/components/userfeedback/partials/mdFeedback.html",
         link: function postLink(scope, element, attrs) {
           scope.showLabel = attrs.showLabel;
 

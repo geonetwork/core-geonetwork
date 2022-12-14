@@ -33,7 +33,7 @@
         scope: {
           map: "=gnDataFilterView"
         },
-        templateUrl: "../../catalog/components/index/" + "partials/datafilterview.html",
+        templateUrl: "../../sextant/components/index/" + "partials/datafilterview.html",
         link: function (scope, element, attrs) {
           scope.currentLayer = null;
           scope.layers = scope.map.getLayers().getArray();
@@ -82,7 +82,7 @@
           q: "=gnDataTable",
           excludeCols: "="
         },
-        templateUrl: "../../catalog/components/index/" + "partials/datatable.html",
+        templateUrl: "../../sextant/components/index/" + "partials/datatable.html",
         link: function (scope, element, attrs) {
           var pageList = [5, 10, 50, 100];
           var table = element.find("table");

@@ -43,7 +43,7 @@
           //               lang: '@lang'
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "identification.html",
+          "../../sextant/components/admin/harvester/partials/" + "identification.html",
         link: function (scope, element, attrs) {
           scope.lang = "eng"; // FIXME
           scope.hideIconPicker = true; // hide or show the icon picker
@@ -89,7 +89,7 @@
           harvester: "=gnHarvesterAccount"
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "account.html",
+          "../../sextant/components/admin/harvester/partials/" + "account.html",
         link: function (scope, element, attrs) {}
       };
     }
@@ -109,7 +109,7 @@
           harvester: "=gnHarvesterSchedule"
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "schedule.html",
+          "../../sextant/components/admin/harvester/partials/" + "schedule.html",
         link: function (scope, element, attrs) {
           scope.cronExp = [
             "0 0 12 * * ?",
@@ -158,7 +158,7 @@
           lang: "@"
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "privileges.html",
+          "../../sextant/components/admin/harvester/partials/" + "privileges.html",
         link: function (scope, element, attrs) {
           scope.selectedPrivileges = {};
 
@@ -259,7 +259,7 @@
           logo: "=gnLogoPicker"
         },
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "logopicker.html",
+          "../../sextant/components/admin/harvester/partials/" + "logopicker.html",
 
         link: function (scope, element, attrs) {
           $http
@@ -287,7 +287,7 @@
       return {
         restrict: "A",
         replace: false,
-        templateUrl: "../../catalog/components/admin/harvester/partials/" + "extras.html",
+        templateUrl: "../../sextant/components/admin/harvester/partials/" + "extras.html",
 
         link: function (scope, element, attrs) {
           $http.get("../api/languages", { cache: true }).success(function (data) {
@@ -310,7 +310,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "csw-filter.html",
+          "../../sextant/components/admin/harvester/partials/" + "csw-filter.html",
         scope: {
           harvester: "=gnCswHarvesterFilter",
           cswCriteria: "=cswCriteria"

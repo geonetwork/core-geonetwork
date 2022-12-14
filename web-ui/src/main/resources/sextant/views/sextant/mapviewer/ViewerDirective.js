@@ -54,7 +54,7 @@
         restrict: "A",
         replace: true,
         scope: true,
-        templateUrl: "../../catalog/views/sextant/mapviewer/mainviewer.html",
+        templateUrl: "../../sextant/views/sextant/mapviewer/mainviewer.html",
         compile: function compile(tElement, tAttrs, transclude) {
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {
@@ -284,7 +284,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/views/sextant/templates/mouseposition/mouseposition.html",
+          "../../sextant/views/sextant/templates/mouseposition/mouseposition.html",
         link: function (scope, element) {
           scope.projection = "EPSG:4326";
 

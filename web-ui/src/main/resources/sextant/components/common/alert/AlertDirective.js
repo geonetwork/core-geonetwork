@@ -78,7 +78,7 @@
       return {
         replace: true,
         restrict: "A",
-        templateUrl: "../../catalog/components/common/alert/" + "partials/alert.html",
+        templateUrl: "../../sextant/components/common/alert/" + "partials/alert.html",
         link: function (scope, element, attrs) {
           scope.alerts = gnAlertValue;
 

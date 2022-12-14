@@ -45,7 +45,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/search/facets/" + "partials/facet-daterange.html"
+            "../../sextant/components/search/facets/" + "partials/facet-daterange.html"
           );
         },
         scope: {

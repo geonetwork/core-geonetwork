@@ -63,7 +63,7 @@
       return {
         restrict: "A",
         replace: false,
-        templateUrl: "../../catalog/components/viewer/draw/" + "partials/draw.html",
+        templateUrl: "../../sextant/components/viewer/draw/" + "partials/draw.html",
         scope: {
           map: "=",
           vector: "=",
@@ -630,7 +630,7 @@
       return {
         restrict: "A",
         replace: false,
-        templateUrl: "../../catalog/components/viewer/draw/" + "partials/styleform.html",
+        templateUrl: "../../sextant/components/viewer/draw/" + "partials/styleform.html",
         scope: {
           style: "=gnStyleForm",
           getType: "&gnStyleType"

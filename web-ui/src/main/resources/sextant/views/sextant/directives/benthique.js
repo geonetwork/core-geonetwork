@@ -10,12 +10,12 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/benthiquepanel.html",
+          "../../sextant/views/sextant/directives/" + "partials/benthiquepanel.html",
         scope: {
           map: "=sxtbPanel"
         },
         link: function (scope, element, attrs) {
-          var url = "../../catalog/views/sextant/" + "data/ATLASbenthos_ATL_SPECIES.csv";
+          var url = "../../sextant/views/sextant/" + "data/ATLASbenthos_ATL_SPECIES.csv";
           $http.get(url).then(function (response) {
             var csv = gnUtilityService.CSVToArray(response.data, ";");
             if (angular.isArray(csv)) {
@@ -91,7 +91,7 @@
           map: "="
         },
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/speciestreeitem.html",
+          "../../sextant/views/sextant/directives/" + "partials/speciestreeitem.html",
         link: function (scope, element, attrs, controller) {
           var el = element;
           if (angular.isArray(scope.member.nodes)) {

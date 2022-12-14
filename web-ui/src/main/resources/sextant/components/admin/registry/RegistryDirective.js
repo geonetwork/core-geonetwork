@@ -43,7 +43,7 @@
         replace: true,
         // scope: {},
         templateUrl:
-          "../../catalog/components/admin/registry/partials/" + "registrybrowser.html",
+          "../../sextant/components/admin/registry/partials/" + "registrybrowser.html",
         link: function (scope, element, attrs) {
           scope.itemClass = [];
           scope.languages = [];

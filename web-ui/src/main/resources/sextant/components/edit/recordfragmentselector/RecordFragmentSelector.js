@@ -48,7 +48,7 @@
           domId: "@"
         },
         templateUrl:
-          "../../catalog/components/edit/" +
+          "../../sextant/components/edit/" +
           "recordfragmentselector/partials/" +
           "rfselector.html",
         compile: function compile(tElement, tAttrs, transclude) {

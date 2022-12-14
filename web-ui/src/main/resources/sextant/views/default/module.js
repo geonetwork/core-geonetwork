@@ -84,7 +84,7 @@
     "gnRelatedResources",
     function ($scope, gnRelatedResources) {
       $scope.resultTemplate =
-        "../../catalog/components/" +
+        "../../sextant/components/" +
         "search/resultsview/partials/viewtemplates/grid4maps.html";
       $scope.searchObj = {
         permalink: false,
@@ -269,7 +269,7 @@
 
           return getMapRequest;
         } else {
-          return "../../catalog/views/default/images/no-thumbnail.png";
+          return "../../sextant/views/default/images/no-thumbnail.png";
         }
       };
 

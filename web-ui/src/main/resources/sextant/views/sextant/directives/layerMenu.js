@@ -13,7 +13,7 @@
       return {
         restrict: "E",
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/layermenu.html",
+          "../../sextant/views/sextant/directives/" + "partials/layermenu.html",
         scope: {
           layer: "<",
           map: "<",

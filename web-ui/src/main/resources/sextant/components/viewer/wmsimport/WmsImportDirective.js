@@ -27,7 +27,7 @@
   var module = angular.module("gn_wmsimport", []);
 
   var kmlimportTemplateURL =
-    "../../catalog/components/viewer/wmsimport/" + "partials/kmlimport.html";
+    "../../sextant/components/viewer/wmsimport/" + "partials/kmlimport.html";
   module.value("kmlimportTemplateURL", kmlimportTemplateURL);
 
   /**
@@ -65,7 +65,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/viewer/wmsimport/" + "partials/wmsimport.html",
+          "../../sextant/components/viewer/wmsimport/" + "partials/wmsimport.html",
         scope: {
           map: "=gnWmsImportMap",
           url: "=?gnWmsImportUrl"
@@ -512,7 +512,7 @@
           member: "="
         },
         templateUrl:
-          "../../catalog/components/viewer/wmsimport/" + "partials/layer-sextant.html",
+          "../../sextant/components/viewer/wmsimport/" + "partials/layer-sextant.html",
         link: function (scope, element, attrs, controller) {
           var el = element;
           var isFirst = angular.isDefined(scope.member.Abstract);
@@ -575,7 +575,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/wmsimport/" + "partials/styles.html",
+          "../../sextant/components/viewer/wmsimport/" + "partials/styles.html",
         scope: {
           styles: "=gnLayerStyles",
           onClick: "&gnLayerStylesOnClick",

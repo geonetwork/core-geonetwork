@@ -83,7 +83,7 @@
         templateUrl: function (elem, attrs) {
           return (
             attrs.template ||
-            "../../catalog/components/metadataactions/partials/related.html"
+            "../../sextant/components/metadataactions/partials/related.html"
           );
         },
         link: function (scope, element, attrs) {

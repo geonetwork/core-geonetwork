@@ -86,7 +86,7 @@ angular.module('ui.bootstrap.tabs', [])
           type: '@'
         },
         controller: 'TabsetController',
-        templateUrl: '../../catalog/lib/angular.ext/template/tabset.html',
+        templateUrl: '../../sextant/lib/angular.ext/template/tabset.html',
         link: function(scope, element, attrs) {
           scope.vertical = angular.isDefined(attrs.vertical) ? scope.$parent.$eval(attrs.vertical) : false;
           scope.justified = angular.isDefined(attrs.justified) ? scope.$parent.$eval(attrs.justified) : false;

@@ -15,7 +15,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/mdmanageactionmenu.html",
+          "../../sextant/views/sextant/directives/" + "partials/mdmanageactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.md = scope.$eval(attrs.sxtMdManageActionsMenu);
           scope.tasks = [];
@@ -76,7 +76,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/mdactionmenu.html",
+          "../../sextant/views/sextant/directives/" + "partials/mdactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.sxtMdActionsMenu);

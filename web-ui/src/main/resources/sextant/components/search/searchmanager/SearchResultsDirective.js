@@ -35,7 +35,7 @@
         restrict: "A",
         replace: true,
         templateUrl:
-          "../../catalog/components/search/searchmanager/partials/" +
+          "../../sextant/components/search/searchmanager/partials/" +
           "searchresults.html",
         scope: {
           searchResults: "=",

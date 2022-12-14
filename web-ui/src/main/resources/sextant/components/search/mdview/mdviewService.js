@@ -465,7 +465,7 @@
                 el.setAttribute("gn-metadata-display", "");
                 el.setAttribute(
                   "template",
-                  "../../catalog/views/sextant/templates/mdview/mdpanel.html"
+                  "../../sextant/views/sextant/templates/mdview/mdpanel.html"
                 );
                 if (gnSearchSettings.tabOverflow && gnSearchSettings.tabOverflow.search) {
                   el.setAttribute("class", "sxt-scroll");

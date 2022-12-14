@@ -258,7 +258,7 @@
         },
         require: ["^gnCategorytreeCol", "^sxtCategoryTree"],
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/categorytreeitem.html",
+          "../../sextant/views/sextant/directives/" + "partials/categorytreeitem.html",
         link: function (scope, element, attrs, controllers) {
           var el = element;
 
@@ -347,7 +347,7 @@
         restrict: "A",
         scope: true,
         templateUrl:
-          "../../catalog/views/sextant/directives/" + "partials/facettree.html",
+          "../../sextant/views/sextant/directives/" + "partials/facettree.html",
         link: function (scope, element, attr) {
           scope.ctrl = {};
           scope.title = attr["sxtFacetTreeTitle"];

@@ -8,7 +8,7 @@
       restrict: "E",
       replace: true,
       templateUrl:
-        "../../catalog/views/sextant/directives/" + "partials/tabswitcher.html",
+        "../../sextant/views/sextant/directives/" + "partials/tabswitcher.html",
       link: function linkFn(scope, attrs) {
         scope.isVisible = Object.keys(scope.mainTabs).length > 1;
       }

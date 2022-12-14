@@ -91,7 +91,7 @@
           global: {
             humanizeDates: true,
             dateFormat: "DD-MM-YYYY HH:mm",
-            timezone: "Europe/Paris" // Default to browser timezone
+            timezone: "Browser" // Default to browser timezone
           },
           footer: {
             enabled: true,
@@ -312,12 +312,6 @@
             // See https://github.com/geonetwork/core-geonetwork/pull/5349
             isVegaEnabled: true,
             facetConfig: {
-              "th_oh_ville_tree.key": {
-                terms: {
-                  field: "th_oh_ville_tree.key",
-                  size: 100
-                }
-              },
               group: {
                 terms: {
                   field: "groupPublishedId",
@@ -638,12 +632,12 @@
             sortBy: "relevance",
             resultViewTpls: [
               {
-                tplUrl: "../../catalog/views/" + "sextant/templates/mdview/grid.html",
+                tplUrl: "../../sextant/views/" + "sextant/templates/mdview/grid.html",
                 tooltip: "Grid",
                 icon: "fa-th"
               }
             ],
-            resultTemplate: "../../catalog/views/" + "sextant/templates/mdview/grid.html",
+            resultTemplate: "../../sextant/views/" + "sextant/templates/mdview/grid.html",
             formatter: {
               list: [
                 {
@@ -690,8 +684,7 @@
                     {
                       if: {
                         "standardNameObject.default": [
-                          "ISO 19115-3:2018 - Remote Sensing",
-                          "ISO 19115-3 - remote sensing"
+                          "ISO 19115-3:2018 - Remote Sensing"
                         ]
                       },
                       url: "/formatters/cersat?view=cersat&root=div&loadJS=false&template=cersat-summary-view&header=false&related="

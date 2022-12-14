@@ -39,7 +39,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl: "../../catalog/components/common/map/" + "partials/drawbbox.html",
+        templateUrl: "../../sextant/components/common/map/" + "partials/drawbbox.html",
         scope: {
           htopRef: "@",
           hbottomRef: "@",

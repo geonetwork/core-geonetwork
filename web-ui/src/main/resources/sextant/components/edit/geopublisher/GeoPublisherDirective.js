@@ -60,7 +60,7 @@
           restrict: "A",
           replace: true,
           templateUrl:
-            "../../catalog/components/edit/geopublisher/" + "partials/geopublisher.html",
+            "../../sextant/components/edit/geopublisher/" + "partials/geopublisher.html",
           scope: {
             config: "@"
           },

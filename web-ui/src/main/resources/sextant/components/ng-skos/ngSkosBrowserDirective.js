@@ -94,7 +94,7 @@
           language: "=",
           addConcept: "="
         },
-        templateUrl: "../../catalog/components/ng-skos/" + "templates/skos-browser.html",
+        templateUrl: "../../sextant/components/ng-skos/" + "templates/skos-browser.html",
         link: function link(scope, element, attr) {
           scope.previous = [];
           angular.forEach(["URI", "Notation", "Label"], function (value) {

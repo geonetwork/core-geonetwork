@@ -39,7 +39,7 @@
           md: "=gnRecordOriginLogo"
         },
         templateUrl:
-          "../../catalog/components/utility/" + "partials/recordOriginLogo.html",
+          "../../sextant/components/utility/" + "partials/recordOriginLogo.html",
         link: function (scope, element, attrs) {
           gnConfigService.load().then(function (c) {
             scope.recordGroup = null;
@@ -161,7 +161,7 @@
         restrict: "A",
         replace: true,
         scope: true,
-        templateUrl: "../../catalog/components/utility/" + "partials/regionpicker.html",
+        templateUrl: "../../sextant/components/utility/" + "partials/regionpicker.html",
         link: function (scope, element, attrs) {
           scope.gnRegionService = gnRegionService;
 
@@ -284,7 +284,7 @@
         scope: {
           processReport: "=gnBatchReport"
         },
-        templateUrl: "../../catalog/components/utility/" + "partials/batchreport.html",
+        templateUrl: "../../sextant/components/utility/" + "partials/batchreport.html",
         link: function (scope, element, attrs) {
           scope.$watch("processReport", function (n, o) {
             if (n && n != o) {
@@ -1417,7 +1417,7 @@
         priority: 0,
         restrict: "A",
         scope: { items: "&" },
-        templateUrl: "../../catalog/components/utility/" + "partials/paginationlist.html",
+        templateUrl: "../../sextant/components/utility/" + "partials/paginationlist.html",
         replace: false,
         compile: function compile(tElement, tAttrs) {
           var cacheId = tAttrs.cache ? tAttrs.cache + ".paginator" : "";

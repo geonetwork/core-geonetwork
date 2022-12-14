@@ -55,7 +55,7 @@
     "pascalprecht.translate"
   ]);
 
-  var tplFolder = "../../catalog/templates/editor/";
+  var tplFolder = "../../sextant/templates/editor/";
 
   module.config([
     "$routeProvider",

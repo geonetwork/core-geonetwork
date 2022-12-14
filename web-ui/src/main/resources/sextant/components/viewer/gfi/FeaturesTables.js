@@ -38,7 +38,7 @@
         bindToController: true,
         controller: "gnFeaturesTablesController",
         templateUrl:
-          "../../catalog/components/viewer/gfi/partials/" + "featurestables.html"
+          "../../sextant/components/viewer/gfi/partials/" + "featurestables.html"
         // link: function (scope, element, attrs, controller) {
         //   controller.tableElt = element.find('table');
         // }

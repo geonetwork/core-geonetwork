@@ -1,8 +1,8 @@
 setTimeout(function() {
 
-  var basePath = "../../catalog/lib/zip/";
+  var basePath = "../../sextant/lib/zip/";
   if (sxtGnUrl !== '') {
-    basePath = sxtGnUrl + "../catalog/lib/zip/";
+    basePath = sxtGnUrl + "../sextant/lib/zip/";
   }
 
   var buildBlob = function(response) {

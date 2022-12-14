@@ -39,7 +39,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/viewer/projectionSwitcher/" +
+          "../../sextant/components/viewer/projectionSwitcher/" +
           "partials/projectionSwitcher.html",
         scope: {
           map: "=gnProjectionSwitcher"

@@ -49,7 +49,7 @@
         restrict: "A",
         scope: true,
         templateUrl:
-          "../../catalog/components/search/resultsview/partials/" +
+          "../../sextant/components/search/resultsview/partials/" +
           "selection-widget.html",
         link: function (scope, element, attrs) {
           scope.customActions = gnSearchSettings.customSelectActions;
@@ -228,7 +228,7 @@
       return {
         restrict: "A",
         templateUrl:
-          "../../catalog/components/search/resultsview/partials/" +
+          "../../sextant/components/search/resultsview/partials/" +
           "contribute-widget.html"
       };
     }

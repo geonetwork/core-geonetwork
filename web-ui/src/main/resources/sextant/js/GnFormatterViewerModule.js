@@ -146,7 +146,7 @@
   module.config([
     "$routeProvider",
     function ($routeProvider) {
-      var tpls = "../../catalog/templates/";
+      var tpls = "../../sextant/templates/";
 
       $routeProvider
         .when("/metadata/:mdId/formatters/:formatter", {
