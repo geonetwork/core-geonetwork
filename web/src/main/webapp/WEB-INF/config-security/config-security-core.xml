@@ -48,6 +48,7 @@
         <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
         <sec:filter-chain pattern="/static/**" filters=""/>
         <sec:filter-chain pattern="/catalog/**" filters=""/>
+        <sec:filter-chain pattern="/sextant/**" filters=""/>
         <sec:filter-chain pattern="/" filters=""/>
         <sec:filter-chain pattern="/*.html" filters=""/>
         <sec:filter-chain pattern="/*.jsp" filters=""/>

@@ -20,28 +20,19 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
+
 <beans
+  xmlns:ctx="http://www.springframework.org/schema/context"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context.xsd"
-  xmlns="http://www.springframework.org/schema/beans"
-  xmlns:sec="http://www.springframework.org/schema/security"
-  xmlns:ctx="http://www.springframework.org/schema/context"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+  xmlns="http://www.springframework.org/schema/beans">
   <!-- <sec:debug/> -->
   <import resource="config-security-core.xml"/>
   <import resource="config-security-mapping.xml"/>
 
-  <!-- Sextant CAS -->
-  <import resource="config-security-ldap.xml"/>
-  <import resource="config-security-cas.xml"/>
-  <import resource="config-security-cas-ldap.xml"/>
-
-  <!-- Marine ID CAS
-  <import resource="config-security-cas-marineid.xml"/>
-  -->
   <!-- Security options
 
   geonetwork.security.type can be supplied
@@ -65,14 +56,17 @@
      shibboleth      - Shibboleth security (see config-security-shibboleth.xml for more details)
   -->
 
-  <!--<import resource="config-security-${geonetwork.security.type:default}.xml"/>-->
+  <import resource="config-security-${geonetwork.security.type:default}.xml"/>
   <!--<import resource="config-security-keycloak.xml"/> -->
   <!--<import resource="config-security-openidconnect.xml"/> -->
   <!--<import resource="config-security-ldap.xml"/>-->
   <!--<import resource="config-security-ldap-recursive.xml"/>-->
   <!-- <import resource="config-security-ecas.xml"/> -->
+  <!--<import resource="config-security-cas.xml"/>-->
+  <!--<import resource="config-security-cas-ldap.xml"/>-->
   <!-- <import resource="config-security-cas-database.xml"/> -->
   <!-- <import resource="config-security-shibboleth.xml"/>  -->
-  <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="100"/>
+  <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties"
+                            file-encoding="UTF-8" ignore-unresolvable="true" order="100"/>
 
 </beans>
