@@ -314,7 +314,9 @@
             metadataUuid,
             true
           )
-          .error(function (data) {
+          .catch(function (response) {
+            var data = response.data;
+
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("createMetadataError"),
               error: data.description ? data.description : data.error,
