@@ -1570,7 +1570,7 @@
     TODO: Probably better to switch to scroll API for full indexing. -->
     <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
 
-    <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.mapping.total_fields.limit>6000</es.index.mapping.total_fields.limit>
     <es.index.query.bool.max_clause_count>3000</es.index.query.bool.max_clause_count>
 
     <!-- A user with read/write privileges -->
