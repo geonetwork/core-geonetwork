@@ -1862,7 +1862,7 @@
       },
       "root": {
         "type": "keyword"
-      }
+      },
       "platforms": {
         "type": "keyword"
       },
