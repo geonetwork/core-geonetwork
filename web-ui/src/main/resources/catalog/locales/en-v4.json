@@ -18,6 +18,7 @@
   "openPagebrothersAndSisters": "Siblings",
   "openPagesources": "Source",
   "openPagehassource": "Is source dataset",
+  "chooseIdentifierTemplate": "Choose an identifier template",
   "languagesAndTranslations.manage": "Languages & translations",
   "languages.manage": "Registered languages in database",
   "languages.manage.help": "Language stored in database are used to store translations for database entity like group names, portal titles, ... Limiting the list of languages to the minimum simplify admin console entry forms.",
