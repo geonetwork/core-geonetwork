@@ -24,7 +24,6 @@
 (function () {
   goog.provide("gn_cat_controller");
 
-  goog.require("gn_admin_menu");
   goog.require("gn_external_viewer");
   goog.require("gn_history");
   goog.require("gn_saved_selections");
@@ -35,7 +34,6 @@
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",
     "gn_session_service",
-    "gn_admin_menu",
     "gn_saved_selections",
     "gn_external_viewer",
     "gn_history",
@@ -1246,7 +1244,6 @@
     "gnUtilityService",
     "gnSessionService",
     "gnLangs",
-    "gnAdminMenu",
     "gnViewerSettings",
     "gnSearchSettings",
     "$cookies",
@@ -1266,7 +1263,6 @@
       gnUtilityService,
       gnSessionService,
       gnLangs,
-      gnAdminMenu,
       gnViewerSettings,
       gnSearchSettings,
       $cookies,
@@ -1689,8 +1685,8 @@
           });
         });
       };
-      $scope.userAdminMenu = gnAdminMenu.UserAdmin;
-      $scope.adminMenu = gnAdminMenu.Administrator;
+      // $scope.userAdminMenu = gnAdminMenu.UserAdmin;
+      // $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on("loadCatalogInfo", function (event, status) {
         $scope.loadCatalogInfo();
       });

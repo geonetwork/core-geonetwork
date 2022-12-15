@@ -71,7 +71,7 @@
         return lang;
       }
 
-      var defaultStrategy = "";
+      var defaultStrategy = "investigator";
 
       $scope.wfsFilterValue = null;
       $scope.url = decodeURIComponent($location.search()["wfs-indexing"]);

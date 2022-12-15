@@ -457,6 +457,40 @@
         }
       };
 
+      $scope.hasKeywordWithSlash = false;
+      function hasKeywordWithSlash() {
+        if ($scope.thesaurusSelected) {
+          $scope.hasKeywordWithSlash = false;
+          $http
+            .get(
+              "../api/registries/vocabularies/search?type=STARTS_WITH" +
+                "&thesaurus=" +
+                $scope.thesaurusSelected.key +
+                "&rows=1" +
+                "&q=" +
+                (encodeURI("/") || "*") +
+                "&pLang=" +
+                getLangList().join(",")
+            )
+            .success(function (data) {
+              $scope.hasKeywordWithSlash = data.length > 0;
+            });
+        }
+      }
+
+      $scope.buildHierarchy = function (formId) {
+        return $http
+          .post(
+            "../api/registries/vocabularies/" +
+              // 'actions/sextantFormat')
+              $scope.thesaurusSelected.key +
+              "/actions/sextantFormat"
+          )
+          .then(function (r) {
+            searchThesaurusKeyword();
+          });
+      };
+
       /**
        * Ask for confirmation to delete the thesaurus
        */
@@ -705,7 +739,9 @@
             } else {
               $scope.keywordSelected = null;
               $("#keywordModal").modal("hide");
-              searchThesaurusKeyword();
+              $scope.buildHierarchy().then(function () {
+                searchThesaurusKeyword();
+              });
               creatingKeyword = false;
             }
           })
@@ -760,7 +796,9 @@
               encodeURIComponent(k.uri)
           )
           .success(function (data) {
-            searchThesaurusKeyword();
+            $scope.buildHierarchy().then(function () {
+              searchThesaurusKeyword();
+            });
           })
           .error(function (data) {
             $rootScope.$broadcast("StatusUpdated", {
