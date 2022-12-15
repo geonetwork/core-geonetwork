@@ -79,6 +79,8 @@
         <xsl:if test="/root/info/record/uuid">
           <xsl:choose>
             <xsl:when test="/root/info/record/harvestinfo/harvested = 'true'">
+              <xsl:variable name="metadata"
+                            select="/root/*[name(.)!='gui' and name(.) != 'request']"/>
               <xsl:variable name="canonicalUrl"
                             select="($metadata//*:onLine/*[*:protocol/* =
                               ('rel-canonical')
