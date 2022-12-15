@@ -188,6 +188,10 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
+    public boolean isRunning() {
+        return running;
+    }
+
     private String initializeLog() {
 
         // configure personalized logger
@@ -404,6 +408,15 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
      */
     public OperResult stop(final Status newStatus) throws SchedulerException {
+        log.warning("AbstractHarvester#stop called");
+        log.warning("org.fao.geonet.kernel.harvest.harvester.AbstractHarvester called from ip: "+context.getIpAddress());
+
+        try{
+            throw new Exception("AbstractHarvester#stop called for stack trace");
+        }
+        catch (Exception e){
+            log.error(e);
+        }
         this.cancelMonitor.set(true);
 
         JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
@@ -682,7 +695,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                         // todo check (was: processwithfastindexing)
                         h.process();
-                        logger.info("Ended harvesting from node : " + nodeName);
+                        if (!(this instanceof CswHarvester2)) {
+                            logger.info("Ended harvesting from node : " + nodeName);
+                        }
 
                         if (!(this instanceof CswHarvester2)) {
                             harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRunSuccess", lastRun);
@@ -692,6 +707,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         }
 
                         if (getParams().isOneRunOnly()) {
+                            log.warning("Harvester set to run once. Stopping to set it as INACTIVE");
                             stop(Status.INACTIVE);
                         }
                     } catch (InvalidParameterValueEx e) {

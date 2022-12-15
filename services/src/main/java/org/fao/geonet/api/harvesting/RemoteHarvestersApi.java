@@ -26,13 +26,17 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
@@ -40,9 +44,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @RequestMapping(value = {
@@ -57,6 +61,9 @@ public class RemoteHarvestersApi {
 
     @Autowired
     HarvestManager harvestManager;
+
+    @Autowired
+    HarvesterSettingsManager harvesterSettingsManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Retrieve the status progress of a list of harvesters",
@@ -86,7 +93,8 @@ public class RemoteHarvestersApi {
             description = "Request quick information"
         )
         @RequestParam(required = false, defaultValue = "true")
-            Boolean quick
+            Boolean quick,
+        HttpServletRequest request
     ) throws Exception {
         String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
         if (StringUtils.isEmpty(url)) {
@@ -96,6 +104,9 @@ public class RemoteHarvestersApi {
         List<RemoteHarvesterInfoStatus> statuses = new ArrayList<>();
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        Element harvesters = harvestManager.get(null, context, null);
 
         for(int i = 0; i < id.length; i++) {
             OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i], null, quick);
@@ -109,6 +120,14 @@ public class RemoteHarvestersApi {
             remoteHarvesterInfoStatus.runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
             remoteHarvesterInfoStatus.runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
             remoteHarvesterInfoStatus.harvesterStatus = harvesterProcessStatus;
+
+            //  Check if still indexing in the harvester process
+            if (state.equals(OrchestratedHarvestProcessState.COMPLETE)) {
+                if (isHarvesterRunning(harvesters, harvesterProcessStatus.getProcessID())) {
+                    remoteHarvesterInfoStatus.runningIngest = true;
+                    remoteHarvesterInfoStatus.running = true;
+                }
+            }
 
             //harvestManager.getHarvester()
             statuses.add(remoteHarvesterInfoStatus);
@@ -149,7 +168,8 @@ public class RemoteHarvestersApi {
             description = "Request quick information"
         )
         @RequestParam(required = false, defaultValue = "true")
-            Boolean quick
+            Boolean quick,
+        HttpServletRequest request
     ) throws Exception {
         String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
         if (StringUtils.isEmpty(url)) {
@@ -171,10 +191,34 @@ public class RemoteHarvestersApi {
         remoteHarvesterInfoStatus.runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
         remoteHarvesterInfoStatus.harvesterStatus = harvesterProcessStatus;
 
+        //  Check if still indexing in the harvester process
+        if (state.equals(OrchestratedHarvestProcessState.COMPLETE)) {
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            Element harvesters = harvestManager.get(null, context, null);
+
+            if (isHarvesterRunning(harvesters, harvesterProcessStatus.getProcessID())) {
+                remoteHarvesterInfoStatus.runningIngest = true;
+                remoteHarvesterInfoStatus.running = true;
+            }
+        }
+
         return new HttpEntity<>(remoteHarvesterInfoStatus);
     }
 
-    private AtomicInteger counter = new AtomicInteger();
+    private boolean isHarvesterRunning(Element harvesters, String processId) {
+        if ((harvesters != null) && (StringUtils.isNotEmpty(processId))) {
+            for (Element node : (List<Element>) harvesters.getChildren()) {
+                if (node.getAttribute("type").getValue().equals("csw2")) {
+                    if ((processId.equals(node.getChild("options").getChildText("processID")))
+                        && ("true".equals(node.getChild("info").getChildText("running")))) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     private class RemoteHarvesterInfoStatus {
         public String processID;
@@ -185,4 +229,5 @@ public class RemoteHarvestersApi {
 
         public OrchestratedHarvestProcessStatus harvesterStatus;
     }
+
 }

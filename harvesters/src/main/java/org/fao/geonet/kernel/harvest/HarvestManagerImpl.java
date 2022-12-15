@@ -480,6 +480,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
     @Override
     public OperResult stop(String id, Common.Status status) throws SQLException, SchedulerException {
+        Log.warning(Geonet.HARVESTER,"org.fao.geonet.kernel.harvest.HarvestManagerImpl called from ip: "+context.getIpAddress());
+
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : " + id);
         }

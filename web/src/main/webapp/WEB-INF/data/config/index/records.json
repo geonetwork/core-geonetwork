@@ -1215,13 +1215,59 @@
         }
       },
       {
+        "indicator_INDICATOR_VIEW_SERVICE_LINKED_RESOURCES": {
+          "match": "indicator_INDICATOR_VIEW_SERVICE_LINKED_RESOURCES",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "keyword"
+              },
+              "link": {
+                "type": "keyword"
+              },
+              "associatedServiceIds": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      {
+        "indicator_INDICATOR_DOWNLOAD_SERVICE_LINKED_RESOURCES": {
+          "match": "indicator_INDICATOR_DOWNLOAD_SERVICE_LINKED_RESOURCES",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "keyword"
+              },
+              "link": {
+                "type": "keyword"
+              },
+              "associatedServiceIds": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      {
         "indicator": {
           "match": "indicator_*",
           "mapping": {
             "type": "keyword"
           }
         }
+      }, {
+        "synonyms": {
+          "match": "synonyms*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
       }
+
     ],
     "properties": {
       "any": {
@@ -1521,6 +1567,9 @@
         "type": "keyword"
       },
       "isPublishedToAll": {
+        "type": "keyword"
+      },
+      "groupOwnerName": {
         "type": "keyword"
       },
       "groupOwner": {

@@ -167,6 +167,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
                                 check = false;
+                                log.warning("Harvester cancelled. Stopping to set it as INACTIVE.");
                                 thiz.stop(Common.Status.INACTIVE);
                                 thiz.running = false;
                             } else {
@@ -197,11 +198,25 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
 
+
+                                    if (!state.equals(OrchestratedHarvestProcessState.ERROR) &&
+                                        !state.equals(OrchestratedHarvestProcessState.USERABORT)) {
+                                        thiz.log.info("Indexing metadata for harvester uuid: " + thiz.getParams().getUuid());
+                                        thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
+                                    }
+
+                                    log.warning("Harvester finished with state" + state.toString() + ". Stopping to set it as INACTIVE.");
+
                                     thiz.stop(Common.Status.INACTIVE);
                                     thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
-                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/lastRunSuccess",
-                                        thiz.harvesterSettingsManager.getValue("harvesting/id:" + thiz.getID() + "/info/lastRun"));
+
+                                    // If finished successfully update lastRunSuccess
+                                    if (state.equals(OrchestratedHarvestProcessState.COMPLETE)) {
+                                        thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/lastRunSuccess",
+                                            thiz.harvesterSettingsManager.getValue("harvesting/id:" + thiz.getID() + "/info/lastRun"));
+                                    }
+
                                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/info/elapsedTime",
@@ -213,8 +228,6 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/skipHarvesting", false);
 
                                     check = false;
-
-                                    thiz.indexHarvestedMetadata(thiz.getParams().getUuid());
                                 }
                             }
 
@@ -229,6 +242,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                     final String lastRun = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME);
 
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+
+                    logger.info("Ended harvesting from node : " + nodeName);
 
                     thiz.logHarvest(log.getFileAppender(), logger, nodeName, lastRun, elapsedTime);
 
@@ -373,11 +388,14 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
     private void indexHarvestedMetadata(String harvesterUuid) throws Exception {
         EsSearchManager esSearchManager = context.getBean(EsSearchManager.class);
 
+        this.log.info("Deleting indexed records for harvester uuid: " +harvesterUuid);
+
         // Delete the harvested metadata from the index
         esSearchManager.delete(Geonet.IndexFieldNames.HARVESTUUID + ": \"" + harvesterUuid + "\"");
 
         // Index the harvested metadata
         List<Integer> metadataIds = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(harvesterUuid));
+        this.log.info("Total records to index for harvester uuid: " + harvesterUuid + ": " + metadataIds.size());
 
         List<String> metadataIdsToIndex = new ArrayList<>();
         int i = 1;
@@ -389,6 +407,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             i++;
 
             if ((i == 100) || (!it.hasNext())) {
+                this.log.info("Indexing " + i + " records ");
                 metadataIndexer.indexMetadata(metadataIdsToIndex);
 
                 i = 1;
