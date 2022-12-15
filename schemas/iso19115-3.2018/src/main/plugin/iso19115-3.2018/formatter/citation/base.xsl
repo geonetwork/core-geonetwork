@@ -35,34 +35,23 @@
       <xsl:for-each select="$authors">
         <author>
           <xsl:variable name="name"
-<<<<<<< HEAD
                         select="if (normalize-space(.//cit:individual/*/cit:name[1]) != '')
                                 then .//cit:individual/*/cit:name[1]
                                 else cit:party/*/cit:name"/>
-=======
-                        select=".//cit:individual/*/cit:name[1]"/>
->>>>>>> origin/main
 
           <xsl:for-each select="$name">
             <xsl:call-template name="get-iso19115-3.2018-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-<<<<<<< HEAD
-          <!--<xsl:if test="normalize-space($name) != ''">(</xsl:if>
-=======
+          <!--
           <xsl:if test="normalize-space($name) != ''">(</xsl:if>
->>>>>>> origin/main
           <xsl:for-each select="cit:party/*/cit:name">
             <xsl:call-template name="get-iso19115-3.2018-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
-<<<<<<< HEAD
           <xsl:if test="normalize-space($name) != ''">)</xsl:if>-->
-=======
-          <xsl:if test="normalize-space($name) != ''">)</xsl:if>
->>>>>>> origin/main
         </author>
       </xsl:for-each>
     </xsl:variable>
