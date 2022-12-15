@@ -24,12 +24,21 @@ docker build . -t proxy-apache-sextant
 ### Utilisation
 
 Déplacer le fichier de configuration dans le dossier input_output/
+Soit utiliser le script bash:
+
 ```bash 
-bash apache_proxy.sh input_output/sample_conf.yml
+bash yq_generate_command.sh input_output/sample_conf.yml
 ```
 
 `-c ` si besoin des headers
 
+soit directement lance la commande docker run
+
+```bash
+docker run -ti -v $(pwd)/input_output:/input_output
+-v /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/sextant/apache-proxy-ows/python/tests:/app/./tests
+proxy-apache-sextant python3 /app/apache_proxy.py /input_output/sample_conf.yml -c
+```
 
 Avec `sample_conf.yaml` la configuration.
 Le fichier de sortie se trouve dans le dossier input/output

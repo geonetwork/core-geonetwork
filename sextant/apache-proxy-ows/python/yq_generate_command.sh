@@ -39,5 +39,5 @@ done
 # ajout des volumes, et execution de la commande python dans l'image proxy-apache-sextant
 docker_command="${docker_command} proxy-apache-sextant python3 /app/apache_proxy.py /${conf_file} ${header}"
 
-# execution de la commande docker
-eval "$docker_command"
+# print de la commande docker
+echo "$docker_command"

@@ -13,17 +13,19 @@ def get_config_from_yaml(filename):
 
 
 class ApacheProxy:
-    def __init__(self, csv_file, input_conf_path, header=False):
+    def __init__(self, csv_file, conf_file, input_conf_path, header=False):
         self.config_file_path = ""
         self.filedir_path = ""  # /test/titi/(*).yaml
         self.full_path = ""  # /test/titi/
         self.publique_url = ""
         self.interne_url = ""
         self.input_conf_path = input_conf_path
-        self.f = open(csv_file, "w")
-        self.writer = csv.writer(self.f)
+        self.csv = open(csv_file, "w")
+        self.file = open(conf_file, "w")
+        self.csv_writer = csv.writer(self.csv)
+        self.conf_writer = csv.writer(self.csv)
         if header:
-            self.writer.writerow(["url_interne", "url_publique"])
+            self.csv_writer.writerow(["url_interne", "url_publique"])
         self.publique_urls = []
         self.interne_urls = []
 
@@ -43,15 +45,28 @@ class ApacheProxy:
         if self.publique_urls == []:
             print("Aucun fichier trouvé")
         else:
-            self.write_to_csv()
-        self.f.close()
+            self.write_to_csv_and_conf_file()
+        self.csv.close()
 
-    def write_to_csv(self):
-        ordered_interne_list, ordered_public_list = (
-            list(t) for t in zip(*sorted(zip(self.interne_urls, self.publique_urls)))
+    def write_to_csv_and_conf_file(self):
+        ordered_public_list, ordered_interne_list = (
+            list(t) for t in zip(*sorted(zip(self.publique_urls, self.interne_urls)))
         )
         for i, j in enumerate(ordered_interne_list):
-            self.writer.writerow([ordered_interne_list[i], ordered_public_list[i]])
+            self.csv_writer.writerow([ordered_interne_list[i], ordered_public_list[i]])
+            self.file.write(
+                "ProxyPass    {} {}".format(
+                    ordered_interne_list[i], ordered_public_list[i]
+                )
+            )
+            self.file.write("\n")
+            self.file.write(
+                "ProxyPassReverse    {} {}".format(
+                    ordered_interne_list[i], ordered_public_list[i]
+                )
+            )
+            self.file.write("\n")
+            self.file.write("\n")
 
     def update_conf(self, site_config):
         self.config_file_path = site_config
@@ -100,6 +115,11 @@ if len(sys.argv) == 3 and sys.argv[2] == "-c":
     print("Rajout des headers")
     add_header = True
 conf_file = sys.argv[1]
-a = ApacheProxy("/input_output/out.csv", conf_file, header=add_header)
+a = ApacheProxy(
+    "/input_output/out.csv",
+    "/input_output/sextant_services.conf",
+    conf_file,
+    header=add_header,
+)
 a.workflow()
 print("Fin")
