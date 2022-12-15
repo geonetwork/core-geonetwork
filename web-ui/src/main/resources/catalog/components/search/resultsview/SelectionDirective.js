@@ -132,7 +132,7 @@
             .selected(scope.searchResults.selectionBucket)
             .then(function (response) {
               if (angular.isArray(response.data)) {
-                scope.searchResults.selectedCount = response.length;
+                scope.searchResults.selectedCount = response.data.length;
               }
             });
 
