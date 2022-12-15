@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_needhelp_directive");
+  goog.provide("sx_needhelp_directive");
 
   var module = angular.module("gn_needhelp_directive", []);
 

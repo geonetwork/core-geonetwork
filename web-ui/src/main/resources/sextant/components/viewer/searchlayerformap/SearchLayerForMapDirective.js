@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_searchlayerformap_directive");
+  goog.provide("sx_searchlayerformap_directive");
 
   var module = angular.module("gn_searchlayerformap_directive", []);
 

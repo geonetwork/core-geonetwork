@@ -146,6 +146,10 @@
           </div>
         </div>
       </div>
+      <!-- In Sextant, when creating a new metadata record
+      privileges are assigned depending on the user profile for
+      the selected group. If Editor, edit privileges is not
+      set for the group. If Reviewer, user can choose. -->
       <div class="btn-group">
         <button
           type="button"
@@ -159,7 +163,7 @@
         <button
           type="button"
           class="btn btn-success dropdown-toggle"
-          data-ng-disabled="(!activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
+          data-ng-disabled="(restrictedToUserOnly || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())))"
           data-toggle="dropdown"
         >
           <span class="caret"></span>&nbsp;
@@ -167,13 +171,12 @@
         <ul class="dropdown-menu pull-right" role="menu">
           <li>
             <a
-              title="{{'createMetadataForGroup-help' | translate}}"
-              data-gn-click-and-spin="createNewMetadata(true)"
+              title="{{'createMetadataRestricted-help' | translate}}"
+              data-gn-click-and-spin="createNewMetadata(false)"
               href=""
               data-translate=""
-            >
-              createMetadataForGroup</a
-            >
+              >createMetadataRestricted
+            </a>
           </li>
         </ul>
       </div>

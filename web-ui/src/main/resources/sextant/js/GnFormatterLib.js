@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_formatter_lib");
+  goog.provide("sx_formatter_lib");
 
   gnFormatter = {};
   gnFormatter.formatterSectionTogglersEventHandler = function (e) {

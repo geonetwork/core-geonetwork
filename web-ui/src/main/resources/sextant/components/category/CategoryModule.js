@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_category");
+  goog.provide("sx_category");
 
-  goog.require("gn_category_directive");
+  goog.require("sx_category_directive");
 
   angular.module("gn_category", ["gn_category_directive"]);
 })();

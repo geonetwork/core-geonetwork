@@ -32,7 +32,7 @@
       $scope.groups = [];
       $scope.operations = [];
       $scope.params = { any: "", group: "" };
-      var defaultGroups = [1];
+      var defaultGroups = [1, 82];
       var defaultOperations = [0, 1, 2, 5];
       $scope.size = 100;
       $scope.nbOperations = 0;

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_search_location");
+  goog.provide("sx_search_location");
 
   var module = angular.module("gn_search_location", []);
 

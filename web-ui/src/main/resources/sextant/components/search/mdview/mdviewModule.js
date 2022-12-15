@@ -22,15 +22,15 @@
  */
 
 (function () {
-  goog.provide("gn_mdview");
+  goog.provide("sx_mdview");
 
-  goog.require("gn_mdview_directive");
-  goog.require("gn_mdview_service");
-  goog.require("gn_sxt_utils");
-  goog.require("gn_related_observer_directive");
-  goog.require("gn_userfeedback");
-  goog.require("gn_thesaurus");
-  goog.require("gn_catalog_service");
+  goog.require("sx_mdview_directive");
+  goog.require("sx_mdview_service");
+  goog.require("sx_sxt_utils");
+  goog.require("sx_related_observer_directive");
+  goog.require("sx_userfeedback");
+  goog.require("sx_thesaurus");
+  goog.require("sx_catalog_service");
 
   var module = angular.module("gn_mdview", [
     "gn_mdview_service",

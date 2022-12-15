@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_heatmap_directive");
+  goog.provide("sx_heatmap_directive");
 
   var module = angular.module("gn_heatmap_directive", []);
 

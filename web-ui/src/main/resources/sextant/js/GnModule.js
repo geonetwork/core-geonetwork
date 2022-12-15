@@ -22,27 +22,25 @@
  */
 
 (function () {
-  goog.provide("gn_module");
+  goog.provide("sx_module");
 
-  goog.require("gn");
-  goog.require("gn_alert");
-  goog.require("gn_cat_controller");
-  goog.require("gn_cors_interceptor");
-  goog.require("gn_formfields");
-  goog.require("gn_indexingtask");
-  goog.require("gn_batchtask");
-  goog.require("gn_language_switcher");
-  goog.require("gn_locale");
-  goog.require("gn_map");
-  goog.require("gn_metadata_manager");
-  goog.require("gn_needhelp");
-  goog.require("gn_pagination");
-  goog.require("gn_search_form_controller");
-  goog.require("gn_search_manager");
-  goog.require("gn_search_sextant_commonconfig");
-  goog.require("gn_utility");
-  goog.require("gn_openlayers");
-  goog.require("gn_searchoptions");
+  goog.require("sx");
+  goog.require("sx_alert");
+  goog.require("sx_cat_controller");
+  goog.require("sx_cors_interceptor");
+  goog.require("sx_formfields");
+  goog.require("sx_language_switcher");
+  goog.require("sx_locale");
+  goog.require("sx_map");
+  goog.require("sx_metadata_manager");
+  goog.require("sx_needhelp");
+  goog.require("sx_pagination");
+  goog.require("sx_search_form_controller");
+  goog.require("sx_search_manager");
+  goog.require("sx_search_sextant_commonconfig");
+  goog.require("sx_utility");
+  goog.require("sx_openlayers");
+  goog.require("sx_searchoptions");
 
   /**
    * GnModule just manage angular injection with
@@ -68,8 +66,6 @@
     "gn_alert",
     "gn_cors_interceptor",
     "gn_openlayers",
-    "gn_indexingtask",
-    "gn_batchtask",
     "gn_searchoptions"
   ]);
 })();

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_ncwms_directive");
+  goog.provide("sx_ncwms_directive");
 
   var module = angular.module("gn_ncwms_directive", []);
 

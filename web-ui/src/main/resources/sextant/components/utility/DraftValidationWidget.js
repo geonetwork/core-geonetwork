@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_draftvalidationwidget");
+  goog.provide("sx_draftvalidationwidget");
 
   var module = angular.module("gn_draftvalidationwidget", []);
 

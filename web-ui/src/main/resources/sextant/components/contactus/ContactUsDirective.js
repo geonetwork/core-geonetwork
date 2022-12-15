@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_contactus_directive");
+  goog.provide("sx_contactus_directive");
 
   var module = angular.module("gn_contactus_directive", []);
 

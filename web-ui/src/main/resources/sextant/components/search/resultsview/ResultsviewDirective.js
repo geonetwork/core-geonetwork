@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_resultsview");
+  goog.provide("sx_resultsview");
 
   var module = angular.module("gn_resultsview", []);
 

@@ -22,20 +22,20 @@
  */
 
 (function () {
-  goog.provide("gn_formatter_viewer");
+  goog.provide("sx_formatter_viewer");
 
-  goog.require("gn");
-  goog.require("gn_alert");
-  goog.require("gn_catalog_service");
-  goog.require("gn_formatter_lib");
-  goog.require("gn_mdactions_service");
-  goog.require("gn_mdview");
-  goog.require("gn_popup_directive");
-  goog.require("gn_popup_service");
-  goog.require("gn_related_directive");
-  goog.require("gn_search_default_directive");
-  goog.require("gn_utility");
-  goog.require("gn_viewer");
+  goog.require("sx");
+  goog.require("sx_alert");
+  goog.require("sx_catalog_service");
+  goog.require("sx_formatter_lib");
+  goog.require("sx_mdactions_service");
+  goog.require("sx_mdview");
+  goog.require("sx_popup_directive");
+  goog.require("sx_popup_service");
+  goog.require("sx_related_directive");
+  goog.require("sx_search_default_directive");
+  goog.require("sx_utility");
+  goog.require("sx_viewer");
   goog.require("sxt_directives");
 
   var module = angular.module("gn_formatter_viewer", [

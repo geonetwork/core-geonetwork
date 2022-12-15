@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_terrainswitcher_directive");
+  goog.provide("sx_terrainswitcher_directive");
 
   var module = angular.module("gn_terrainswitcher_directive", []);
 

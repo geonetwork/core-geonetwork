@@ -1,21 +1,21 @@
 (function () {
-  goog.provide("gn_search_sextant");
+  goog.provide("sx_search_sextant");
 
-  goog.require("gn_search");
-  goog.require("gn_search_sextant_config");
-  goog.require("gn_thesaurus");
-  goog.require("gn_related_directive");
-  goog.require("gn_search_default_directive");
-  goog.require("gn_legendpanel_directive");
-  goog.require("gn_wps");
-  goog.require("gn_userfeedback");
+  goog.require("sx_search");
+  goog.require("sx_search_sextant_config");
+  goog.require("sx_thesaurus");
+  goog.require("sx_related_directive");
+  goog.require("sx_search_default_directive");
+  goog.require("sx_legendpanel_directive");
+  goog.require("sx_wps");
+  goog.require("sx_userfeedback");
   goog.require("sxt_directives");
   goog.require("sxt_services");
   goog.require("sxt_panier");
   goog.require("sxt_mdactionmenu");
   goog.require("sxt_linksbtn");
-  goog.require("gn_sxt_utils");
-  goog.require("gn_gridrelated_directive");
+  goog.require("sx_sxt_utils");
+  goog.require("sx_gridrelated_directive");
   goog.require("sxt_annotations");
 
   var module = angular.module("gn_search_sextant", [

@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_utility_service");
+  goog.provide("sx_utility_service");
 
-  goog.require("gn_popup");
+  goog.require("sx_popup");
 
   var module = angular.module("gn_utility_service", ["gn_popup"]);
 

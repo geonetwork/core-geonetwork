@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_multiselect_directive");
+  goog.provide("sx_multiselect_directive");
 
   var module = angular.module("gn_multiselect_directive", []);
 

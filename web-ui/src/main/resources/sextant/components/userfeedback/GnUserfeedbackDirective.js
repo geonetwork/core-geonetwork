@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_userfeedback_directive");
+  goog.provide("sx_userfeedback_directive");
 
-  goog.require("gn_catalog_service");
-  goog.require("gn_search_location");
+  goog.require("sx_catalog_service");
+  goog.require("sx_search_location");
 
   var module = angular.module("gn_userfeedback_directive", ["vcRecaptcha"]);
 

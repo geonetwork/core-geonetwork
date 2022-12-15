@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_wmsimport");
+  goog.provide("sx_wmsimport");
 
   var module = angular.module("gn_wmsimport", []);
 

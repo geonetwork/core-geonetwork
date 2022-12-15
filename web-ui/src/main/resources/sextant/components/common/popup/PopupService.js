@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_popup_service");
+  goog.provide("sx_popup_service");
 
-  goog.require("gn_draggable_directive");
+  goog.require("sx_draggable_directive");
 
   var module = angular.module("gn_popup_service", ["gn_draggable_directive"]);
 

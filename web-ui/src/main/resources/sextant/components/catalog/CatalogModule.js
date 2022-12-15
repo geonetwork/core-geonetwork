@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_catalog");
+  goog.provide("sx_catalog");
 
-  goog.require("gn_catalog_service");
+  goog.require("sx_catalog_service");
 
   angular.module("gn_catalog", ["gn_catalog_service"]);
 })();

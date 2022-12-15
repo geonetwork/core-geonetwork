@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_ows_directive");
+  goog.provide("sx_ows_directive");
 
   angular
     .module("gn_ows_directive", [])

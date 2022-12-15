@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_saved_selections");
+  goog.provide("sx_saved_selections");
 
-  goog.require("gn_saved_selections_directive");
+  goog.require("sx_saved_selections_directive");
 
   angular.module("gn_saved_selections", ["gn_saved_selections_directive"]);
 })();

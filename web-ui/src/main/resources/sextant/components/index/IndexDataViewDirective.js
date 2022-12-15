@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_index_data_view_directive");
+  goog.provide("sx_index_data_view_directive");
 
   var module = angular.module("gn_index_data_view_directive", []);
 

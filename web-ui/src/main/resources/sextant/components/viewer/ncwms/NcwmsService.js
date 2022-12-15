@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_ncwms_service");
+  goog.provide("sx_ncwms_service");
 
   var module = angular.module("gn_ncwms_service", []);
 

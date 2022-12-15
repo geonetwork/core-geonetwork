@@ -22,14 +22,14 @@
  */
 
 (function () {
-  goog.provide("gn_related_directive");
+  goog.provide("sx_related_directive");
 
-  goog.require("gn_atom");
-  goog.require("gn_related_observer_directive");
-  goog.require("gn_relatedresources_service");
-  goog.require("gn_wms");
-  goog.require("gn_wmts");
-  goog.require("gn_external_viewer");
+  goog.require("sx_atom");
+  goog.require("sx_related_observer_directive");
+  goog.require("sx_relatedresources_service");
+  goog.require("sx_wms");
+  goog.require("sx_wmts");
+  goog.require("sx_external_viewer");
 
   var module = angular.module("gn_related_directive", [
     "gn_relatedresources_service",

@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.provide("gn_map_service");
+  goog.provide("sx_map_service");
 
-  goog.require("gn_ows");
-  goog.require("gn_wfs_service");
-  goog.require("gn_esri_service");
+  goog.require("sx_ows");
+  goog.require("sx_wfs_service");
+  goog.require("sx_esri_service");
 
   var module = angular.module("gn_map_service", [
     "gn_ows",

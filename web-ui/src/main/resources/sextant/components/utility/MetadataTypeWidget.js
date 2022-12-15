@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_mdtypewidget");
+  goog.provide("sx_mdtypewidget");
 
   var module = angular.module("gn_mdtypewidget", []);
 

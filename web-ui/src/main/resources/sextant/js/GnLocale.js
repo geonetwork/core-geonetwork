@@ -22,8 +22,8 @@
  */
 
 (function () {
-  goog.provide("gn_locale");
-  goog.require("gn_cat_controller");
+  goog.provide("sx_locale");
+  goog.require("sx_cat_controller");
 
   var module = angular.module("gn_locale", [
     "pascalprecht.translate",

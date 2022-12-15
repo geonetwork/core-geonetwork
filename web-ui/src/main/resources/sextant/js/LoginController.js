@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_login_controller");
+  goog.provide("sx_login_controller");
 
-  goog.require("gn_catalog_service");
-  goog.require("gn_utility");
+  goog.require("sx_catalog_service");
+  goog.require("sx_utility");
 
   var module = angular.module("gn_login_controller", [
     "gn_utility",

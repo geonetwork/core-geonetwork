@@ -22,8 +22,8 @@
  */
 
 (function () {
-  goog.provide("gn_doi_directive");
-  goog.require("gn_doi_service");
+  goog.provide("sx_doi_directive");
+  goog.require("sx_doi_service");
 
   var module = angular.module("gn_doi_directive", ["gn_doi_service"]);
 

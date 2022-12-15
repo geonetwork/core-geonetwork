@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_measure");
+  goog.provide("sx_measure");
 
   var module = angular.module("gn_measure", ["ui.bootstrap.buttons"]);
 

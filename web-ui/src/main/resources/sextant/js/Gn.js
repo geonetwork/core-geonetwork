@@ -25,11 +25,11 @@
 var geonetwork = {};
 
 (function () {
-  goog.provide("gn");
+  goog.provide("sx");
 
-  goog.require("gn_locale");
-  goog.require("gn_count_watchers");
-  goog.require("gn_polyfills");
+  goog.require("sx_locale");
+  goog.require("sx_count_watchers");
+  goog.require("sx_polyfills");
 
   /**
    * Main gn module.

@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_facets");
+  goog.provide("sx_facets");
 
-  goog.require("gn_facets_directive");
+  goog.require("sx_facets_directive");
 
   angular.module("gn_facets", ["gn_facets_directive"]);
 })();

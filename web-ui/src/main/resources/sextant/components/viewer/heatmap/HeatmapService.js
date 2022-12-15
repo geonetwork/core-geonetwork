@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_heatmap_service");
+  goog.provide("sx_heatmap_service");
 
   var module = angular.module("gn_heatmap_service", []);
 

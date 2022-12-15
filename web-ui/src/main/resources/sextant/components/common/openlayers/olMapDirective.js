@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_olMapDirective");
+  goog.provide("sx_olMapDirective");
 
   var module = angular.module("gn_olMapDirective", []);
 

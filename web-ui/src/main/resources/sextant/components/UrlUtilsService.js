@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_urlutils_service");
+  goog.provide("sx_urlutils_service");
 
   var module = angular.module("gn_urlutils_service", []);
 

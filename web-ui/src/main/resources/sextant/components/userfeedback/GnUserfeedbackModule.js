@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_userfeedback");
+  goog.provide("sx_userfeedback");
 
-  goog.require("gn_userfeedback_directive");
-  goog.require("gn_md_feedback_directive");
+  goog.require("sx_userfeedback_directive");
+  goog.require("sx_md_feedback_directive");
 
   var module = angular.module("gn_userfeedback", [
     "gn_userfeedback_directive",

@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_mdactions_directive");
+  goog.provide("sx_mdactions_directive");
 
-  goog.require("gn_mdactions_service");
+  goog.require("sx_mdactions_service");
 
   var module = angular.module("gn_mdactions_directive", []);
 

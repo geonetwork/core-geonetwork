@@ -23,9 +23,9 @@
 
 (function () {
   // SEXTANT SPECIFIC
-  goog.require("gn_sxt_formatter_utils");
+  goog.require("sx_sxt_formatter_utils");
 
-  goog.provide("gn_mdview_directive");
+  goog.provide("sx_mdview_directive");
 
   var module = angular.module("gn_mdview_directive", [
     "ui.bootstrap.tpls",

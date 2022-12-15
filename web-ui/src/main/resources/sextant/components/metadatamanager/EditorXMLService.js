@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_editor_xml_service");
+  goog.provide("sx_editor_xml_service");
 
-  goog.require("gn_schema_manager_service");
+  goog.require("sx_schema_manager_service");
 
   var module = angular.module("gn_editor_xml_service", ["gn_schema_manager_service"]);
 

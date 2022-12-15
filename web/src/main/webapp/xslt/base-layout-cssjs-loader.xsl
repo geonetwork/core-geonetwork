@@ -248,7 +248,15 @@
             <script src="{/root/gui/url}/static/lib.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
-        <script src="{/root/gui/url}/static/{$angularModule}.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
+
+        <xsl:choose>
+          <xsl:when test="$uiResourcesPath = '../../sextant/'">
+            <script src="{/root/gui/url}/static/sx_search_sextant.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
+          </xsl:when>
+          <xsl:otherwise>
+            <script src="{/root/gui/url}/static/{$angularModule}.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
 

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_searchsuggestion_service");
+  goog.provide("sx_searchsuggestion_service");
 
   angular
     .module("gn_searchsuggestion_service", [])

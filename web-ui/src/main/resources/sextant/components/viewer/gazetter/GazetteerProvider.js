@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_gazetteer_provider_service");
+  goog.provide("sx_gazetteer_provider_service");
 
   var module = angular.module("gn_gazetteer_provider_service", []);
 

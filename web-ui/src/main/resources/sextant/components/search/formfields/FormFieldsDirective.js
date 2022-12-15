@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_formfields_directive");
+  goog.provide("sx_formfields_directive");
 
   angular
     .module("gn_formfields_directive", [])

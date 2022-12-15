@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_saved_selections_directive");
+  goog.provide("sx_saved_selections_directive");
 
   var module = angular.module("gn_saved_selections_directive", []);
 

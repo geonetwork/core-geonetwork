@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_static_pages");
+  goog.provide("sx_static_pages");
 
-  goog.require("gn_static_pages_directive");
+  goog.require("sx_static_pages_directive");
 
   var module = angular.module("gn_static_pages", ["gn_static_pages_directive"]);
 })();

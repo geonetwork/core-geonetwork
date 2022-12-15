@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_search_default_config");
+  goog.provide("sx_search_default_config");
 
   var module = angular.module("gn_search_default_config", []);
 

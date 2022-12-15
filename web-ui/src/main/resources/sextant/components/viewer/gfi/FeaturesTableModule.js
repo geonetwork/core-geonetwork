@@ -22,13 +22,13 @@
  */
 
 (function () {
-  goog.provide("gn_featurestable");
+  goog.provide("sx_featurestable");
 
-  goog.require("gn_featurestable_directive");
-  goog.require("gn_featurestable_loader");
-  goog.require("gn_featurestable_service");
-  goog.require("gn_featurestables_directive");
-  goog.require("gn_gfi_directive");
+  goog.require("sx_featurestable_directive");
+  goog.require("sx_featurestable_loader");
+  goog.require("sx_featurestable_service");
+  goog.require("sx_featurestables_directive");
+  goog.require("sx_gfi_directive");
 
   var module = angular.module("gn_featurestable", [
     "gn_gfi_directive",

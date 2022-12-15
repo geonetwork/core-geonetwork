@@ -1,7 +1,7 @@
 (function () {
   goog.provide("sextant_api");
 
-  goog.require("gn_search_sextant");
+  goog.require("sx_search_sextant");
 
   var appRoot = document.currentScript.parentElement;
   var scriptEl = document.currentScript;

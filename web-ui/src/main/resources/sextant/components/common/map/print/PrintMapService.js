@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_printmap_service");
+  goog.provide("sx_printmap_service");
 
   var module = angular.module("gn_printmap_service", []);
 

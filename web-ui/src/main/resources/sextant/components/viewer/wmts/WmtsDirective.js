@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_wmts_directive");
+  goog.provide("sx_wmts_directive");
 
-  goog.require("gn_wmts_service");
+  goog.require("sx_wmts_service");
 
   var module = angular.module("gn_wmts_directive", ["gn_wmts_service"]);
 

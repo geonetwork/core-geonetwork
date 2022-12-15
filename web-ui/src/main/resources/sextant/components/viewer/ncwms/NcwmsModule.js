@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_ncwms");
+  goog.provide("sx_ncwms");
 
-  goog.require("gn_ncwms_directive");
-  goog.require("gn_ncwms_service");
+  goog.require("sx_ncwms_directive");
+  goog.require("sx_ncwms_service");
 
   var module = angular.module("gn_ncwms", [
     "gn_ncwms_service",

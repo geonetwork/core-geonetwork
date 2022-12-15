@@ -22,13 +22,13 @@
  */
 
 (function () {
-  goog.provide("gn_openlayers");
+  goog.provide("sx_openlayers");
 
-  goog.require("gn_olDecorateLayer");
-  goog.require("gn_olDecorateLayerLoading");
-  goog.require("gn_olMapDirective");
-  goog.require("gn_olProfileDirective");
-  goog.require("gn_olDecorateInteraction");
+  goog.require("sx_olDecorateLayer");
+  goog.require("sx_olDecorateLayerLoading");
+  goog.require("sx_olMapDirective");
+  goog.require("sx_olProfileDirective");
+  goog.require("sx_olDecorateInteraction");
 
   angular.module("gn_openlayers", [
     "gn_olDecorateLayer",

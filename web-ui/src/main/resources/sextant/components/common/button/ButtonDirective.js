@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_button_directive");
+  goog.provide("sx_button_directive");
 
   var module = angular.module("gn_button_directive", []);
 

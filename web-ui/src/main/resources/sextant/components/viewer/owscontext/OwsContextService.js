@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_owscontext_service");
+  goog.provide("sx_owscontext_service");
 
   goog.require("Filter_1_0_0");
   goog.require("GML_2_1_2");
@@ -30,7 +30,7 @@
   goog.require("OWS_1_0_0");
   goog.require("SLD_1_0_0");
   goog.require("XLink_1_0");
-  goog.require("gn_wfsfilter_service");
+  goog.require("sx_wfsfilter_service");
 
   var module = angular.module("gn_owscontext_service", []);
 

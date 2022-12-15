@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_baselayerswitcher");
+  goog.provide("sx_baselayerswitcher");
 
   var module = angular.module("gn_baselayerswitcher", []);
 

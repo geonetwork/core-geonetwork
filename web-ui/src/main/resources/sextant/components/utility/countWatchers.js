@@ -33,7 +33,7 @@
  * setInterval(function(){console.log(countWatchers())}, 5000);
  */
 (function () {
-  goog.provide("gn_count_watchers");
+  goog.provide("sx_count_watchers");
 
   var root = angular.element(document.getElementsByTagName("body"));
 

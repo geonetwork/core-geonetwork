@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_localisation_service");
+  goog.provide("sx_localisation_service");
 
   var module = angular.module("gn_localisation_service", []);
 

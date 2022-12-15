@@ -1,5 +1,5 @@
 (function () {
-  goog.provide("gn_search_sextant_commonconfig");
+  goog.provide("sx_search_sextant_commonconfig");
 
   var module = angular.module("gn");
 

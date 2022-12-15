@@ -1,7 +1,7 @@
 (function () {
   goog.provide("search_filter_tags_directive");
 
-  goog.require("gn_thesaurus_service");
+  goog.require("sx_thesaurus_service");
 
   var EXCLUDED_PARAMS = [
     "bboxes",

@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.provide("gn_wms_service");
+  goog.provide("sx_wms_service");
 
-  goog.require("gn_map_service");
-  goog.require("gn_ows_service");
-  goog.require("gn_urlutils_service");
+  goog.require("sx_map_service");
+  goog.require("sx_ows_service");
+  goog.require("sx_urlutils_service");
 
   var module = angular.module("gn_wms_service", [
     "gn_map_service",

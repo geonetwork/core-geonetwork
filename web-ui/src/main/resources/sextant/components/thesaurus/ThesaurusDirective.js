@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_thesaurus_directive");
+  goog.provide("sx_thesaurus_directive");
 
   var module = angular.module("gn_thesaurus_directive", ["pascalprecht.translate"]);
 

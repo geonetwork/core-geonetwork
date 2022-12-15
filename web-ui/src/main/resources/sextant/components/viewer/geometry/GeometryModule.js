@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_geometry");
+  goog.provide("sx_geometry");
 
-  goog.require("gn_geometry_directive");
-  goog.require("gn_geometry_service");
+  goog.require("sx_geometry_directive");
+  goog.require("sx_geometry_service");
 
   var module = angular.module("gn_geometry", [
     "gn_geometry_service",

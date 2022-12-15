@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_maps_manager");
+  goog.provide("sx_maps_manager");
 
-  goog.require("gn_ows");
+  goog.require("sx_ows");
 
   var module = angular.module("gn_maps_manager", ["gn_ows"]);
 

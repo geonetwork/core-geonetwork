@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_md_feedback_directive");
+  goog.provide("sx_md_feedback_directive");
 
   var module = angular.module("gn_md_feedback_directive", []);
 

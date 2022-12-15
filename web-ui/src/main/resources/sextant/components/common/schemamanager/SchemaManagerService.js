@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_schema_manager_service");
+  goog.provide("sx_schema_manager_service");
 
   var module = angular.module("gn_schema_manager_service", []);
 

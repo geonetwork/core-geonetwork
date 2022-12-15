@@ -38,6 +38,7 @@
     "$rootScope",
     "$translate",
     "$compile",
+    "$location",
     "gnSearchManagerService",
     "gnUtilityService",
     "gnMetadataManager",
@@ -51,6 +52,7 @@
       $rootScope,
       $translate,
       $compile,
+      $location,
       gnSearchManagerService,
       gnUtilityService,
       gnMetadataManager,
@@ -63,6 +65,33 @@
       $scope.filterField = undefined;
       $scope.mdList = null;
       $scope.ownerGroup = null;
+      $scope.restrictedToUserOnly = true;
+      $scope.userEditorGroups = {};
+
+      $scope.$watchCollection("user", function (n, o) {
+        if (n.id) {
+          $http
+            .get("../api/users/" + $scope.user.id + "/groups")
+            .success(function (data) {
+              $scope.userEditorGroups = {};
+              for (var i = 0; i < data.length; i++) {
+                if (
+                  $scope.userEditorGroups[data[i].id.groupId] === "Reviewer" &&
+                  data[i].id.profile === "Editor"
+                ) {
+                  // Keep highest profile
+                } else {
+                  $scope.userEditorGroups[data[i].id.groupId] = data[i].id.profile;
+                }
+              }
+            });
+        }
+      });
+      $scope.$watch("ownerGroup", function (n, o) {
+        if (n !== o) {
+          $scope.restrictedToUserOnly = $scope.userEditorGroups[n] === "Editor";
+        }
+      });
 
       // Used for the metadata identifier fields
       $scope.mdIdentifierTemplateTokens = {};
@@ -100,7 +129,8 @@
             $routeParams.template,
             false,
             $routeParams.tab,
-            true
+            true,
+            $location.search()["redirectUrl"]
           );
         } else {
           // Metadata creation could be on a template
@@ -307,7 +337,12 @@
           .create(
             $scope.activeTpl.id,
             $scope.ownerGroup,
-            isPublic || false,
+            // isPublic || false,
+            // IsPublic is defined if user can select the button
+            // in the dropdown ie. Reviewer only.
+            // Else, it depends on the type of profile for the
+            // group selected.
+            isPublic === false ? false : !$scope.restrictedToUserOnly,
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,

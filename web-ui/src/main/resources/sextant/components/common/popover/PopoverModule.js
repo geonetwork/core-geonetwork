@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_popover");
+  goog.provide("sx_popover");
 
-  goog.require("gn_popover_directive");
+  goog.require("sx_popover_directive");
 
   angular.module("gn_popover", ["gn_popover_directive"]);
 })();

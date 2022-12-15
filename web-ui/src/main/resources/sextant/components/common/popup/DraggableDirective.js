@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_draggable_directive");
+  goog.provide("sx_draggable_directive");
 
   var module = angular.module("gn_draggable_directive", []);
 

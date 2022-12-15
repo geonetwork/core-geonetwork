@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_map_wmsqueue");
+  goog.provide("sx_map_wmsqueue");
 
   var module = angular.module("gn_map_wmsqueue", []);
 

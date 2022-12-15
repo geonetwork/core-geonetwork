@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_wfsfilter");
+  goog.provide("sx_wfsfilter");
 
-  goog.require("gn_wfsfilter_directive");
-  goog.require("gn_wfsfilter_service");
+  goog.require("sx_wfsfilter_directive");
+  goog.require("sx_wfsfilter_service");
 
   var module = angular.module("gn_wfsfilter", [
     "gn_wfsfilter_directive",

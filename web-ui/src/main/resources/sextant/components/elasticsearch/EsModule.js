@@ -22,13 +22,13 @@
  */
 
 (function () {
-  goog.provide("gn_es");
+  goog.provide("sx_es");
 
-  goog.require("gn_es_client");
-  goog.require("gn_es_facet");
-  goog.require("gn_facet_directive");
-  goog.require("gn_es_service");
-  goog.require("gn_es_query_parser");
+  goog.require("sx_es_client");
+  goog.require("sx_es_facet");
+  goog.require("sx_facet_directive");
+  goog.require("sx_es_service");
+  goog.require("sx_es_query_parser");
 
   angular.module("gn_es", [
     "gn_es_client",

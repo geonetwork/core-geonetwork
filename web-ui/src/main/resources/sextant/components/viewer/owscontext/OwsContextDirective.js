@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_owscontext_directive");
+  goog.provide("sx_owscontext_directive");
 
   var module = angular.module("gn_owscontext_directive", []);
 

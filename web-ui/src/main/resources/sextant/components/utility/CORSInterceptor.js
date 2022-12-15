@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_cors_interceptor");
+  goog.provide("sx_cors_interceptor");
 
-  goog.require("gn_urlutils_service");
+  goog.require("sx_urlutils_service");
 
   var module = angular.module("gn_cors_interceptor", ["gn_urlutils_service"]);
 

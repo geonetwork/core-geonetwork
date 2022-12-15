@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_gazetteer");
+  goog.provide("sx_gazetteer");
 
-  goog.require("gn_gazetteer_provider_service");
-  goog.require("gn_default_gazetteer_default_factory");
+  goog.require("sx_gazetteer_provider_service");
+  goog.require("sx_default_gazetteer_default_factory");
 
   angular.module("gn_gazetteer", [
     "gn_gazetteer_provider_service",

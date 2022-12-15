@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_index_requestmanager");
+  goog.provide("sx_index_requestmanager");
 
-  goog.require("gn_index_request");
-  goog.require("gn_index_request_config");
+  goog.require("sx_index_request");
+  goog.require("sx_index_request_config");
 
   var module = angular.module("gn_index_requestmanager", [
     "gn_index_request",

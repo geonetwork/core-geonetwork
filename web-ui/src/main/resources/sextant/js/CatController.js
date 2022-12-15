@@ -22,14 +22,14 @@
  */
 
 (function () {
-  goog.provide("gn_cat_controller");
+  goog.provide("sx_cat_controller");
 
-  goog.require("gn_external_viewer");
-  goog.require("gn_history");
-  goog.require("gn_saved_selections");
-  goog.require("gn_search_manager");
-  goog.require("gn_session_service");
-  goog.require("gn_alert");
+  goog.require("sx_external_viewer");
+  goog.require("sx_history");
+  goog.require("sx_saved_selections");
+  goog.require("sx_search_manager");
+  goog.require("sx_session_service");
+  goog.require("sx_alert");
 
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",

@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.provide("gn_mdactions_service");
+  goog.provide("sx_mdactions_service");
 
-  goog.require("gn_category");
-  goog.require("gn_popup");
-  goog.require("gn_share");
+  goog.require("sx_category");
+  goog.require("sx_popup");
+  goog.require("sx_share");
 
   var module = angular.module("gn_mdactions_service", [
     "gn_share",

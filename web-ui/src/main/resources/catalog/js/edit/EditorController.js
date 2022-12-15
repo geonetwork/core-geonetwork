@@ -271,15 +271,60 @@
                   // types of ISO19139 record with different characteristics
                   // like standardName and would like to open the editor
                   // in custom view based on the standard.
+                  var firstTabDispatcher = function (md) {
+                    if (angular.isArray(md.standardName)) {
+                      md.standardName = md.standardName[0];
+                    }
+                    if (
+                      md.standardName &&
+                      md.standardName.match(/ISO 19139, MyOcean profile short/i)
+                    ) {
+                      return "copernicus-marine-short";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/ISO 19115-3:2018 - Remote Sensing/i)
+                    ) {
+                      return "eo-tab-description";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/ISO 19139, MyOcean profile/i)
+                    ) {
+                      return "copernicus-marine";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/targeted data product/i)
+                    ) {
+                      return "checkpoint-tdp-characteristics";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/data product specification/i)
+                    ) {
+                      return "checkpoint-dps-characteristics";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/emodnet checkpoint/i)
+                    ) {
+                      return "characteristics";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/emodnet - sdn/i)
+                    ) {
+                      return "sdn-identification";
+                    } else if (md.standardName && md.standardName.match(/emodnet -/i)) {
+                      return "emodnetHydrography-what";
+                    } else if (
+                      md.standardName &&
+                      md.standardName.match(/iso 19115:2003\/19139 - sextant/i)
+                    ) {
+                      return "sextant-identification";
+                    }
+                    return defaultTab;
+                  };
                   var schemaCustomConfig = {
                     // Example : open ISO19139 record having
                     // standardName containing medsea in advanced mode
-                    //'iso19139': function (md) {
-                    //  if (md.standardName && md.standardName.match(/medsea/i)) {
-                    //    return 'identificationInfo';
-                    //  }
-                    //  return defaultTab;
-                    //}
+                    iso19139: firstTabDispatcher,
+                    "iso19115-3.2018": firstTabDispatcher
                   };
                   if (schemaCustomConfig) {
                     var fn = schemaCustomConfig[$scope.mdSchema];
@@ -607,9 +652,9 @@
         window.onbeforeunload = null;
 
         // if there is no history, attempt to close tab
-        if ($scope.redirectUrl != null) {
+        if ($scope.redirectUrl != null && $scope.redirectUrl != "close") {
           window.location.replace($scope.redirectUrl);
-        } else if (window.history.length == 1) {
+        } else if (window.history.length == 1 || $scope.redirectUrl == "close") {
           window.close();
           // This last point may trigger
           // "Scripts may close only the windows that were opened by it."

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_es_query_parser");
+  goog.provide("sx_es_query_parser");
 
   var module = angular.module("gn_es_query_parser", []);
 

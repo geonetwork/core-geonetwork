@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_es_client");
+  goog.provide("sx_es_client");
 
   var module = angular.module("gn_es_client", []);
 

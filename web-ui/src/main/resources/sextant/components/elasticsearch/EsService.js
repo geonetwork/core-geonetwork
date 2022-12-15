@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_es_service");
+  goog.provide("sx_es_service");
 
   var module = angular.module("gn_es_service", []);
 

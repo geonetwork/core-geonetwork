@@ -1,4 +1,6 @@
 {
+  "createMetadataRestricted": "Créer (restreint)",
+  "createMetadataRestricted-help": "Créer dans le groupe, modification par l'auteur uniquement",
   "references": "Références",
   "dqReportCheckpoint": "Data quality report (Checkpoint)",
   "reindexWFSFeatures": "Vider et réindexer les données",

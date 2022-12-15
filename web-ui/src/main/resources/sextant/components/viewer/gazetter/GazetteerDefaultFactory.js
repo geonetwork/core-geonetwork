@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_default_gazetteer_default_factory");
+  goog.provide("sx_default_gazetteer_default_factory");
 
   var module = angular.module("gn_default_gazetteer_default_factory", []);
 

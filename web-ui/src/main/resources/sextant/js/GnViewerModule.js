@@ -1,28 +1,16 @@
 (function () {
-  goog.provide("gn_viewer_module");
+  goog.provide("sx_viewer_module");
 
-  goog.require("gn_batch_service");
-  goog.require("gn_draggable_directive");
-  goog.require("gn_editor_controller");
-  goog.require("gn_geopublisher");
-  goog.require("gn_module");
-  goog.require("gn_onlinesrc");
-  goog.require("gn_ows");
-  goog.require("gn_popup");
-  goog.require("gn_suggestion");
-  goog.require("gn_validation");
+  goog.require("sx_draggable_directive");
+  goog.require("sx_module");
+  goog.require("sx_ows");
+  goog.require("sx_popup");
 
   var module = angular.module("gn_viewer", [
     "gn_module",
     "gn_popup",
-    "gn_onlinesrc",
-    "gn_suggestion",
-    "gn_validation",
     "gn_draggable_directive",
-    "gn_editor_controller",
-    "gn_ows",
-    "gn_geopublisher",
-    "gn_batch_service"
+    "gn_ows"
   ]);
 
   // Define the translation files to load
@@ -35,7 +23,7 @@
     function ($translateProvider, $LOCALES, $LOCALE_MAP) {
       $translateProvider.useLoader("localeLoader", {
         locales: $LOCALES,
-        prefix: "../../sextant/locales/",
+        prefix: "../../catalog/locales/",
         suffix: ".json"
       });
 

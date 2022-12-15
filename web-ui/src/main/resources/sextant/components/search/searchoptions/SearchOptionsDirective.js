@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_searchoptions_directive");
+  goog.provide("sx_searchoptions_directive");
 
   var module = angular.module("gn_searchoptions_directive", []);
 

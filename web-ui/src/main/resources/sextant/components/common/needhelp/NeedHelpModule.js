@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_needhelp");
+  goog.provide("sx_needhelp");
 
-  goog.require("gn_needhelp_directive");
+  goog.require("sx_needhelp_directive");
 
   angular.module("gn_needhelp", ["gn_needhelp_directive"]);
 })();

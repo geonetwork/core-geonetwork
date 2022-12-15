@@ -22,19 +22,17 @@
  */
 
 (function () {
-  goog.provide("gn_search_controller");
+  goog.provide("sx_search_controller");
 
-  goog.require("gn_catalog_service");
-  goog.require("gn_searchsuggestion_service");
-  goog.require("gn_static_pages");
-  goog.require("gn_usersearches");
+  goog.require("sx_catalog_service");
+  goog.require("sx_searchsuggestion_service");
+  goog.require("sx_static_pages");
 
   var module = angular.module("gn_search_controller", [
     "ui.bootstrap.typeahead",
     "gn_searchsuggestion_service",
     "gn_catalog_service",
-    "gn_static_pages",
-    "gn_usersearches"
+    "gn_static_pages"
   ]);
 
   /**

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_gridrelated_directive");
+  goog.provide("sx_gridrelated_directive");
 
   var module = angular.module("gn_gridrelated_directive", []);
 

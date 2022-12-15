@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.provide("gn_history");
+  goog.provide("sx_history");
 
-  goog.require("gn_history_directive");
-  goog.require("gn_history_service");
-  goog.require("gn_doi");
+  goog.require("sx_history_directive");
+  goog.require("sx_history_service");
+  goog.require("sx_doi");
 
   var module = angular.module("gn_history", [
     "gn_history_directive",

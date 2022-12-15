@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_polyfills");
+  goog.provide("sx_polyfills");
 
   if (!Array.prototype.includes) {
     Object.defineProperty(Array.prototype, "includes", {

@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_wms");
+  goog.provide("sx_wms");
 
-  goog.require("gn_wms_directive");
-  goog.require("gn_wms_service");
+  goog.require("sx_wms_directive");
+  goog.require("sx_wms_service");
 
   var module = angular.module("gn_wms", ["gn_wms_service", "gn_wms_directive"]);
 })();

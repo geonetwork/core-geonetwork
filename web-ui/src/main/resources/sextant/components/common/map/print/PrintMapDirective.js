@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_printmap_directive");
+  goog.provide("sx_printmap_directive");
 
   var module = angular.module("gn_printmap_directive", []);
 

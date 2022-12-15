@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_wfsfilter_directive");
+  goog.provide("sx_wfsfilter_directive");
 
   // Custom feature and facet configuration example
   // var TMP_PROFILE =

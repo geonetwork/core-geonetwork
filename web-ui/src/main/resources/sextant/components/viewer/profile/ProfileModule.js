@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_profile");
+  goog.provide("sx_profile");
 
-  goog.require("gn_profile_directive");
-  goog.require("gn_profile_service");
+  goog.require("sx_profile_directive");
+  goog.require("sx_profile_service");
 
   var module = angular.module("gn_profile", [
     "gn_profile_service",

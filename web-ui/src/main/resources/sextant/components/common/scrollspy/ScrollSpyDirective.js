@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_scroll_spy_directive");
+  goog.provide("sx_scroll_spy_directive");
 
-  goog.require("gn_utility_service");
+  goog.require("sx_utility_service");
 
   var module = angular.module("gn_scroll_spy_directive", []);
 

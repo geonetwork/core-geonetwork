@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_featurestable_loader");
+  goog.provide("sx_featurestable_loader");
 
   var module = angular.module("gn_featurestable_loader", []);
 

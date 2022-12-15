@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_draw");
+  goog.provide("sx_draw");
 
   var module = angular.module("gn_draw", ["color.picker"]);
 

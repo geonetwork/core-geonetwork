@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_share_directive");
+  goog.provide("sx_share_directive");
 
-  goog.require("gn_popup");
-  goog.require("gn_share_service");
+  goog.require("sx_popup");
+  goog.require("sx_share_service");
 
   var module = angular.module("gn_share_directive", ["gn_share_service", "gn_popup"]);
 

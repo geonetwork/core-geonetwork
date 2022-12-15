@@ -22,8 +22,8 @@
  */
 
 (function () {
-  goog.provide("gn_atom_service");
-  goog.require("gn_urlutils_service");
+  goog.provide("sx_atom_service");
+  goog.require("sx_urlutils_service");
 
   var module = angular.module("gn_atom_service", ["gn_urlutils_service"]);
 

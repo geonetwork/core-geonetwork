@@ -22,37 +22,37 @@
  */
 
 (function () {
-  goog.provide("gn_viewer");
+  goog.provide("sx_viewer");
 
-  goog.require("gn_baselayerswitcher");
-  goog.require("gn_draw");
-  goog.require("gn_featurestable");
-  goog.require("gn_geometry");
-  goog.require("gn_graticule");
-  goog.require("gn_heatmap");
-  goog.require("gn_index");
-  goog.require("gn_layermanager");
-  goog.require("gn_projectionswitcher");
-  goog.require("gn_localisation");
-  goog.require("gn_measure");
-  goog.require("gn_module");
-  goog.require("gn_ncwms");
-  goog.require("gn_ows");
-  goog.require("gn_owscontext");
-  goog.require("gn_popup");
-  goog.require("gn_print");
-  goog.require("gn_profile");
-  goog.require("gn_searchlayerformap_directive");
-  goog.require("gn_terrainswitcher_directive");
-  goog.require("gn_viewer_directive");
-  goog.require("gn_viewer_service");
-  goog.require("gn_wfs");
-  goog.require("gn_wfsfilter");
-  goog.require("gn_wmsimport");
-  goog.require("gn_wps");
-  goog.require("gn_gazetteer");
-  goog.require("gn_legendpanel_directive");
-  goog.require("gn_popover");
+  goog.require("sx_baselayerswitcher");
+  goog.require("sx_draw");
+  goog.require("sx_featurestable");
+  goog.require("sx_geometry");
+  goog.require("sx_graticule");
+  goog.require("sx_heatmap");
+  goog.require("sx_index");
+  goog.require("sx_layermanager");
+  goog.require("sx_projectionswitcher");
+  goog.require("sx_localisation");
+  goog.require("sx_measure");
+  goog.require("sx_module");
+  goog.require("sx_ncwms");
+  goog.require("sx_ows");
+  goog.require("sx_owscontext");
+  goog.require("sx_popup");
+  goog.require("sx_print");
+  goog.require("sx_profile");
+  goog.require("sx_searchlayerformap_directive");
+  goog.require("sx_terrainswitcher_directive");
+  goog.require("sx_viewer_directive");
+  goog.require("sx_viewer_service");
+  goog.require("sx_wfs");
+  goog.require("sx_wfsfilter");
+  goog.require("sx_wmsimport");
+  goog.require("sx_wps");
+  goog.require("sx_gazetteer");
+  goog.require("sx_legendpanel_directive");
+  goog.require("sx_popover");
 
   /**
    * @ngdoc overview

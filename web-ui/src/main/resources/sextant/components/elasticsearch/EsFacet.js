@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_es_facet");
+  goog.provide("sx_es_facet");
 
   var module = angular.module("gn_es_facet", []);
 

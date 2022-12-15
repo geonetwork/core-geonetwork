@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_wfs_service");
+  goog.provide("sx_wfs_service");
 
   var module = angular.module("gn_wfs_service", []);
 

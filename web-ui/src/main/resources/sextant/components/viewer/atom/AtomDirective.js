@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.require("gn_atom_service");
+  goog.require("sx_atom_service");
 
   var module = angular.module("gn_atom_directive", ["gn_atom_service"]);
 
-  goog.provide("gn_atom_directive");
+  goog.provide("sx_atom_directive");
 
   /**
 

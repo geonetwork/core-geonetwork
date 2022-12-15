@@ -22,11 +22,11 @@
  */
 
 (function () {
-  goog.provide("gn_index");
+  goog.provide("sx_index");
 
-  goog.require("gn_index_data_view_directive");
-  goog.require("gn_index_requestmanager");
-  goog.require("gn_index_service");
+  goog.require("sx_index_data_view_directive");
+  goog.require("sx_index_requestmanager");
+  goog.require("sx_index_service");
 
   angular.module("gn_index", [
     "gn_index_data_view_directive",

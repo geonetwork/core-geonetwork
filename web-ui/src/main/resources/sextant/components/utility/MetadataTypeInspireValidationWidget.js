@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_mdtypeinspirevalidationwidget");
+  goog.provide("sx_mdtypeinspirevalidationwidget");
 
   var module = angular.module("gn_mdtypeinspirevalidationwidget", []);
 

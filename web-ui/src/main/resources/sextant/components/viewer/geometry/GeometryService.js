@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_geometry_service");
+  goog.provide("sx_geometry_service");
 
   var module = angular.module("gn_geometry_service", []);
 

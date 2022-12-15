@@ -1,7 +1,7 @@
 (function () {
   goog.provide("sxt_panier_directive");
 
-  goog.require("gn_popup");
+  goog.require("sx_popup");
 
   var module = angular.module("sxt_panier_directive", []);
 

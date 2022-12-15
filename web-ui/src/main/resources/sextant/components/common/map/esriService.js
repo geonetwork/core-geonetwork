@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_esri_service");
+  goog.provide("sx_esri_service");
 
   var module = angular.module("gn_esri_service", []);
 

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_viewer_directive");
+  goog.provide("sx_viewer_directive");
 
   var module = angular.module("gn_viewer_directive", []);
 

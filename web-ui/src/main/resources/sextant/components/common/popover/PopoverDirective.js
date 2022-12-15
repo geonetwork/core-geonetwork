@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_popover_directive");
+  goog.provide("sx_popover_directive");
 
   var module = angular.module("gn_popover_directive", []);
 

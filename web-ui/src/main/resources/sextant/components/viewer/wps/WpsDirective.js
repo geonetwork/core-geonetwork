@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_wps_directive");
+  goog.provide("sx_wps_directive");
 
-  goog.require("gn_wfsfilter_service");
+  goog.require("sx_wfsfilter_service");
 
   var module = angular.module("gn_wps_directive", []);
 

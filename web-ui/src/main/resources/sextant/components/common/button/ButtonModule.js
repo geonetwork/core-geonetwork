@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_button");
+  goog.provide("sx_button");
 
-  goog.require("gn_button_directive");
+  goog.require("sx_button_directive");
 
   angular.module("gn_button", ["gn_button_directive"]);
 })();

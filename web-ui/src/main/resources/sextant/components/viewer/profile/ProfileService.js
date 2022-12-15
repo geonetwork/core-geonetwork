@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_profile_service");
+  goog.provide("sx_profile_service");
 
   var module = angular.module("gn_profile_service", []);
 

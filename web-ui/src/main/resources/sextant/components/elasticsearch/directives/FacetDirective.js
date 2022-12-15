@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_facet_directive");
+  goog.provide("sx_facet_directive");
 
-  goog.require("gn_facets");
+  goog.require("sx_facets");
 
   var module = angular.module("gn_facet_directive", ["gn_facets"]);
 

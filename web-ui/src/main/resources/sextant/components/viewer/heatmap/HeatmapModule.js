@@ -22,10 +22,10 @@
  */
 
 (function () {
-  goog.provide("gn_heatmap");
+  goog.provide("sx_heatmap");
 
-  goog.require("gn_heatmap_directive");
-  goog.require("gn_heatmap_service");
+  goog.require("sx_heatmap_directive");
+  goog.require("sx_heatmap_service");
 
   var module = angular.module("gn_heatmap", [
     "gn_heatmap_directive",

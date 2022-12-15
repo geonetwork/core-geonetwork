@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_wfs_directive");
+  goog.provide("sx_wfs_directive");
 
   var module = angular.module("gn_wfs_directive", []);
 

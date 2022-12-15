@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_legendpanel_directive");
+  goog.provide("sx_legendpanel_directive");
 
   var module = angular.module("gn_legendpanel_directive", []);
 

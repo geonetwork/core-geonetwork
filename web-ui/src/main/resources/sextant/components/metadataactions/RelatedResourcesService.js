@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_relatedresources_service");
+  goog.provide("sx_relatedresources_service");
 
-  goog.require("gn_wfs_service");
+  goog.require("sx_wfs_service");
 
   var module = angular.module("gn_relatedresources_service", ["gn_wfs_service"]);
 

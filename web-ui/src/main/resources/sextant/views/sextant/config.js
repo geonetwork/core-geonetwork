@@ -1,7 +1,7 @@
 (function () {
-  goog.provide("gn_search_sextant_config");
+  goog.provide("sx_search_sextant_config");
 
-  goog.require("gn_sxt_utils");
+  goog.require("sx_sxt_utils");
 
   var module = angular.module("gn_search_sextant_config", ["gn_sxt_utils"]);
 

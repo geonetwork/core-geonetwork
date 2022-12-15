@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_localisation_directive");
+  goog.provide("sx_localisation_directive");
 
   var module = angular.module("gn_localisation_directive", []);
 

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_ows_service");
+  goog.provide("sx_ows_service");
 
   goog.require("Filter_1_0_0");
   goog.require("Filter_1_1_0");

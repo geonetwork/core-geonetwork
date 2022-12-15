@@ -1,7 +1,7 @@
 (function () {
   // this is an ugly hack to allow loading this script outside of the wro4j pipeline
   if (typeof goog !== "undefined") {
-    goog.provide("gn_sxt_formatter_utils");
+    goog.provide("sx_sxt_formatter_utils");
   }
 
   var MAX_HEIGHT_LINE = 5;

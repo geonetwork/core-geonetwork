@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_external_viewer");
+  goog.provide("sx_external_viewer");
 
-  goog.require("gn_ows");
+  goog.require("sx_ows");
 
   var module = angular.module("gn_external_viewer", ["gn_ows"]);
 

@@ -22,15 +22,15 @@
  */
 
 (function () {
-  goog.provide("gn_search_default");
+  goog.provide("sx_search_default");
 
   goog.require("cookie_warning");
-  goog.require("gn_mdactions_directive");
-  goog.require("gn_related_directive");
-  goog.require("gn_search");
-  goog.require("gn_gridrelated_directive");
-  goog.require("gn_search_default_config");
-  goog.require("gn_search_default_directive");
+  goog.require("sx_mdactions_directive");
+  goog.require("sx_related_directive");
+  goog.require("sx_search");
+  goog.require("sx_gridrelated_directive");
+  goog.require("sx_search_default_config");
+  goog.require("sx_search_default_directive");
 
   var module = angular.module("gn_search_default", [
     "gn_search",

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_index_request");
+  goog.provide("sx_index_request");
 
   var module = angular.module("gn_index_request", []);
 

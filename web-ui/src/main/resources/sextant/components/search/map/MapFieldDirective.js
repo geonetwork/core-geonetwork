@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_map_field_directive");
+  goog.provide("sx_map_field_directive");
 
-  goog.require("gn_geometry_service");
+  goog.require("sx_geometry_service");
 
   angular
     .module("gn_map_field_directive", ["gn_geometry_service"])

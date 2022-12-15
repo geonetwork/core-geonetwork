@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_graticule");
+  goog.provide("sx_graticule");
 
-  goog.require("gn_button");
+  goog.require("sx_button");
 
   var module = angular.module("gn_graticule", ["gn_button"]);
 

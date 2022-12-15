@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_projectionswitcher");
+  goog.provide("sx_projectionswitcher");
 
   var module = angular.module("gn_projectionswitcher", []);
 

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_profile_directive");
+  goog.provide("sx_profile_directive");
 
   var module = angular.module("gn_profile_directive", []);
 

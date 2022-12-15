@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_doi_service");
+  goog.provide("sx_doi_service");
 
   var module = angular.module("gn_doi_service", []);
 

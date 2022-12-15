@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_history_service");
+  goog.provide("sx_history_service");
 
   var module = angular.module("gn_history_service", []);
 

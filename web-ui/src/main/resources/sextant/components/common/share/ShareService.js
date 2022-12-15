@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_share_service");
+  goog.provide("sx_share_service");
 
   var module = angular.module("gn_share_service", []);
 

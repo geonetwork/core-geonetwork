@@ -22,12 +22,12 @@
  */
 
 (function () {
-  goog.provide("gn_formfields");
+  goog.provide("sx_formfields");
 
-  goog.require("gn_formfields_directive");
-  goog.require("gn_formfields_service");
+  goog.require("sx_formfields_directive");
+  goog.require("sx_formfields_service");
 
-  goog.require("gn_button");
+  goog.require("sx_button");
 
   angular.module("gn_formfields", [
     "gn_formfields_directive",

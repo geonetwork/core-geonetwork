@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_olProfileDirective");
+  goog.provide("sx_olProfileDirective");
 
-  goog.require("gn_olProfileService");
+  goog.require("sx_olProfileService");
 
   var module = angular.module("gn_olProfileDirective", ["gn_olProfileService"]);
 

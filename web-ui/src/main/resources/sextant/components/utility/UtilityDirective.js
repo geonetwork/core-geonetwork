@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_utility_directive");
+  goog.provide("sx_utility_directive");
 
   var module = angular.module("gn_utility_directive", []);
 

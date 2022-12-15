@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("gn_searchoptions");
+  goog.provide("sx_searchoptions");
 
-  goog.require("gn_searchoptions_directive");
+  goog.require("sx_searchoptions_directive");
 
   angular.module("gn_searchoptions", ["gn_searchoptions_directive"]);
 })();

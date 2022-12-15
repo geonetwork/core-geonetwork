@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_olDecorateInteraction");
+  goog.provide("sx_olDecorateInteraction");
 
   var module = angular.module("gn_olDecorateInteraction", []);
 

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_alert");
+  goog.provide("sx_alert");
 
   var module = angular.module("gn_alert", ["ngSanitize"]);
 

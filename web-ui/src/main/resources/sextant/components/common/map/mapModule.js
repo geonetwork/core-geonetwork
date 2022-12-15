@@ -22,12 +22,12 @@
  */
 
 (function () {
-  goog.provide("gn_map");
+  goog.provide("sx_map");
 
-  goog.require("gn_map_directive");
-  goog.require("gn_map_service");
-  goog.require("gn_map_wmsqueue");
-  goog.require("gn_maps_manager");
+  goog.require("sx_map_directive");
+  goog.require("sx_map_service");
+  goog.require("sx_map_wmsqueue");
+  goog.require("sx_maps_manager");
 
   angular.module("gn_map", [
     "gn_map_service",

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_layermanager");
+  goog.provide("sx_layermanager");
 
   var module = angular.module("gn_layermanager", []);
 

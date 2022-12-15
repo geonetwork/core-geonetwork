@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_olDecorateLayerLoading");
+  goog.provide("sx_olDecorateLayerLoading");
 
   var module = angular.module("gn_olDecorateLayerLoading", []);
 

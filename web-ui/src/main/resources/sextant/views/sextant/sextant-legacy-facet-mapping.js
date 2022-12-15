@@ -1,5 +1,5 @@
 (function () {
-  goog.provide("gn_sxt_legacy_facet_mapping");
+  goog.provide("sx_sxt_legacy_facet_mapping");
 
   var module = angular.module("gn_sxt_legacy_facet_mapping", []);
 

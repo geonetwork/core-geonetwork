@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_map_directive");
+  goog.provide("sx_map_directive");
 
   var METRIC_DECIMALS = 4;
   var DEGREE_DECIMALS = 8;

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_gfi_directive");
+  goog.provide("sx_gfi_directive");
 
   var module = angular.module("gn_gfi_directive", ["angular.filter"]);
 

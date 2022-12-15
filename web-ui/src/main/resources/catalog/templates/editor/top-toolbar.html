@@ -125,8 +125,23 @@
       </ul>
     </div>
     <!-- /.btn-group -->
+
+    <button
+      type="button"
+      data-ng-hide="::user.isReviewerOrMore()"
+      data-gn-click-and-spin="save(true, false)"
+      aria-label="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}"
+      class="btn btn-success navbar-btn"
+    >
+      <i class="fa fa-fw fa-save" />
+      <span class="visible-lg"
+        >{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span
+      >
+    </button>
+
     <div
       class="btn-group"
+      data-ng-show="::user.isReviewerOrMore()"
       title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}"
     >
       <button

@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_session_service");
+  goog.provide("sx_session_service");
 
   var module = angular.module("gn_session_service", ["ngCookies", "ngSanitize"]);
 

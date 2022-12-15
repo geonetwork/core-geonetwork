@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_featurestable_directive");
+  goog.provide("sx_featurestable_directive");
 
   var module = angular.module("gn_featurestable_directive", ["gn_utility_service"]);
 

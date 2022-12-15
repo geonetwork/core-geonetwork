@@ -1,4 +1,6 @@
 {
+  "createMetadataRestricted": "Create (restricted)",
+  "createMetadataRestricted-help": "Record will be published to all members but editable by the author only.",
   "dqReportCheckpoint": "Data quality report (Checkpoint)",
   "edmerp": "Program/Project name",
   "edmo": "Data provider",

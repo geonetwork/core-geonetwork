@@ -22,7 +22,7 @@
  */
 
 (function () {
-  goog.provide("gn_geometry_directive");
+  goog.provide("sx_geometry_directive");
 
   var module = angular.module("gn_geometry_directive", []);
 
