@@ -300,6 +300,8 @@
     "csw-category": "Category for harvested records",
     "csw-harvesterAddFilter": "Add Filter",
     "csw-harvesterBboxFilter": "BBOX filter",
+    "csw-harvesterRawFilter": "OGC Filter (text)",
+    "csw-harvesterRawFilterHelp": "Provide the OGC Filter in text format",
     "csw-harvesterConditionAnd": "AND",
     "csw-harvesterConditionOr": "OR",
     "csw-harvesterOperatorEqual": "EQUAL",

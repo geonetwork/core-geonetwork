@@ -2,6 +2,8 @@
       data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
+
+
   <div class="row">
     <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
     <!--<div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>-->
@@ -158,6 +160,15 @@
 
       <div data-gn-csw-harvester-filter="harvesterSelected"
            data-csw-criteria="cswCriteria" />
+
+      <div>
+        <label id="gn-harvest-settings-csw2-raw-csw-filter-label" class="control-label" data-translate="">csw-harvesterRawFilter</label>
+        <textarea id="gn-harvest-settings-csw2-raw-csw-filter-textarea"
+               type="text"
+               class="form-control"
+               data-ng-model="harvesterSelected.rawFilter"/>
+        <p class="help-block" data-translate="">csw-harvesterRawFilterHelp</p>
+      </div>
 
       <!--<div class="form-group" data-ng-repeat="c in cswCriteria track by $index">
         <label class="control-label col-lg-4">{{c.replace('__', ':') | translate}}</label>

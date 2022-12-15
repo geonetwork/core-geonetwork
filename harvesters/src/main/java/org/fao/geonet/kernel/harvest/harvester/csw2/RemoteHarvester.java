@@ -95,11 +95,16 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         remoteHarvesterConfiguration.setSkipHarvesting(params.skipHarvesting);
         remoteHarvesterConfiguration.setStoreAtMostNHistoricalRuns(5);
 
-        String filterConstraint = getFilterConstraint(params.eltFilters, params.bboxFilter);
+        String filterConstraint;
+
+        if (StringUtils.isNotEmpty(params.rawFilter)) {
+            filterConstraint = params.rawFilter;
+        } else {
+            filterConstraint = getFilterConstraint(params.eltFilters, params.bboxFilter);
+        }
+
         remoteHarvesterConfiguration.setFilter(filterConstraint);
-
         remoteHarvesterConfiguration.setExecuteLinkChecker(params.executeLinkChecker);
-
 
         RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
         result.processId = remoteHarvesterApiClient.startHarvest(remoteHarvesterConfiguration, log);

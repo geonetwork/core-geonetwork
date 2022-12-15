@@ -27,6 +27,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class CswParams2 extends AbstractParams {
     public boolean skipHarvesting = false;
 
     public List<Element> eltFilters = new ArrayList<Element>();
+
+    public String rawFilter = "";
 
     public Element bboxFilter;
 
@@ -114,8 +117,14 @@ public class CswParams2 extends AbstractParams {
             eltFilters = new ArrayList<Element>();
         }
 
-        bboxFilter = node.getChild("bboxFilter");
+        if ((node.getChild("rawFilter") != null) &&
+            (node.getChild("rawFilter").getChildren().size() > 0)) {
+            rawFilter = Xml.getString((Element) node.getChild("rawFilter").getChildren().get(0));
+        } else {
+            rawFilter = "";
+        }
 
+        bboxFilter = node.getChild("bboxFilter");
     }
 
     /**
@@ -157,6 +166,13 @@ public class CswParams2 extends AbstractParams {
             eltFilters = tmp;
         }
 
+        if ((node.getChild("rawFilter") != null) &&
+            (node.getChild("rawFilter").getChildren().size() > 0)) {
+            rawFilter = Xml.getString((Element) node.getChild("rawFilter").getChildren().get(0));
+        } else {
+            rawFilter = "";
+        }
+
         bboxFilter = node.getChild("bboxFilter");
     }
 
@@ -187,6 +203,7 @@ public class CswParams2 extends AbstractParams {
         copy.skipHarvesting = skipHarvesting;
 
         copy.eltFilters = eltFilters;
+        copy.rawFilter = rawFilter;
         copy.bboxFilter = bboxFilter;
 
         return copy;

@@ -105,6 +105,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             }
         }
 
+        harvesterSettingsManager.add(path, "rawFilter", params.rawFilter);
+
         if (params.bboxFilter != null) {
             String bboxFilterID = harvesterSettingsManager.add(path, "bboxFilter", "");
             for (Element value : (List<Element>) params.bboxFilter.getChildren()) {

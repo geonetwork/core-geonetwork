@@ -113,6 +113,7 @@ var gnHarvestercsw2 = {
       + '    <queryScope>' + h.site.queryScope + '</queryScope>'
       + '    <hopCount>' + h.site.hopCount + '</hopCount>'
       + '  </site>'
+      + '  <rawFilter>' + h.rawFilter + '</rawFilter>'
       + gnHarvestercsw.buildResponseCSWBBOXFilter($scope)
       + gnHarvestercsw.buildResponseCSWFilter($scope)
       + '  <options>'
@@ -134,6 +135,9 @@ var gnHarvestercsw2 = {
       + '    <executeLinkChecker>' + h.options.executeLinkChecker + '</executeLinkChecker>'
       + '  </options>'
       + $scope.buildResponseGroup(h) + '</node>';
+
+    console.log(body);
+
     return body;
   }
 };

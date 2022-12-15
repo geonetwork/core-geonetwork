@@ -123,6 +123,10 @@
     </bboxFilter>
   </xsl:template>
 
+  <xsl:template match="*" mode="rawFilter">
+    <rawFilter><xsl:value-of select="rawFilter/value"/></rawFilter>
+  </xsl:template>
+
   <xsl:template match="children">
     <xsl:copy-of select="search/children/child::*"/>
   </xsl:template>

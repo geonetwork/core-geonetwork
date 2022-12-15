@@ -88,6 +88,7 @@
       </options>
 
       <xsl:apply-templates select="." mode="searches"/>
+      <xsl:apply-templates select="children" mode="rawFilter"/>
       <xsl:apply-templates select="$filters" mode="filters"/>
       <xsl:apply-templates select="$bboxFilter" mode="bboxFilter"/>
 
@@ -163,6 +164,7 @@
   <xsl:template match="*" mode="options"/>
   <xsl:template match="*" mode="searches"/>
   <xsl:template match="*" mode="filters"/>
+  <xsl:template match="*" mode="rawFilter"/>
   <xsl:template match="*" mode="bboxFilter"/>
   <xsl:template match="*" mode="other"/>
   <xsl:template match="*" mode="info"/>
