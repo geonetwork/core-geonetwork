@@ -35,8 +35,8 @@
       <maxNumberOfRecordsForPropertyNames>1000</maxNumberOfRecordsForPropertyNames>
     </operation>
     <operation name="GetRecords"
-               defaultSortField="_score"
-               defaultSortOrder="DESC">
+               defaultSortField="resourceTitleObject.default.keyword"
+               defaultSortOrder="ASC">
       <parameters>
         <!-- - - - - - - - - - - - - - -->
         <!-- Core queryable properties -->
