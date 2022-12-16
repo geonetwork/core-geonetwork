@@ -33,17 +33,6 @@
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
-  <!-- This formatter render an ISO19115-3 record based on the
-  editor configuration file.
-
-  The layout is made in 2 modes:
-  * render-field taking care of elements (eg. sections, label)
-  * render-value taking care of element values (eg. characterString, URL)
-
-  3 levels of priority are defined: 100, 50, none
-  -->
-
-
   <xsl:variable name="dateFormatRegex"
                 select="'(\d{4}-[01]\d-[0-3]\d.*)'"/>
 
@@ -52,7 +41,7 @@
   <xsl:variable name="configuration"
                 select="document('../../layout/config-editor.xml')"/>
 
- <!-- Required for utility-fn.xsl -->
+  <!-- Required for utility-fn.xsl -->
   <xsl:variable name="editorConfig"
                 select="document('../../layout/config-editor.xml')"/>
 
@@ -111,7 +100,7 @@
   <xsl:template mode="getMetadataCitation" match="mdb:MD_Metadata"/>
 
   <xsl:template name="cersat-summary-view">
-<!--    <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>-->
+    <!--    <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>-->
 
     <div class="row">
       <div class="col-md-8">
@@ -262,13 +251,14 @@
             <div class="">
               <xsl:variable name="usagePolicy"
                             select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
-                                mco:MD_LegalConstraints/mco:otherConstraints[1]/*/text()"/>
+                                mco:MD_LegalConstraints/mco:otherConstraints[1]"/>
 
               <xsl:if test="$usagePolicy != ''">
                 <strong>
                   <xsl:value-of select="$schemaStrings/eo-usage-policy"/>
                 </strong>
-                <xsl:value-of select="$usagePolicy"/>
+                <xsl:apply-templates mode="render-value"
+                                     select="$usagePolicy"/>
               </xsl:if>&#160;
             </div>
 
@@ -315,7 +305,7 @@
         <div class="row">
           <div class="col-md-12">
             <xsl:variable name="resources"
-                        select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
+                          select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
 
             <xsl:call-template name="render-cersat-links">
               <xsl:with-param name="links"
@@ -447,8 +437,8 @@
                 </xsl:if>
 
 
-              <xsl:variable name="indeterminatePositionLabel"
-                            select="gml:endPosition/@indeterminatePosition"/>
+                <xsl:variable name="indeterminatePositionLabel"
+                              select="gml:endPosition/@indeterminatePosition"/>
 
                 <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
                   <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/cersat-view-temporal-to)[1], ' ')"/>
@@ -671,7 +661,7 @@
         <link key="WWW:LINKProduct notices" label="Product notices"/>
         <link key="WWW:LINKProcessing and validation" label="Processing and validation"/>
         <link key="WWW:LINKOther document" label="Other document"/>
-<!--        <link key="WWW:LINKTHREDDS" label="THREDDS"/>-->
+        <!--        <link key="WWW:LINKTHREDDS" label="THREDDS"/>-->
       </xsl:variable>
 
       <xsl:variable name="isInformation"
@@ -763,5 +753,40 @@
 
   <xsl:template mode="render-value"
                 match="@*"/>
+
+  <xsl:template mode="render-value"
+                match="*[gco:CharacterString]">
+    <xsl:apply-templates mode="localised" select=".">
+      <xsl:with-param name="langId" select="$langId"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="*[gcx:Anchor]">
+    <xsl:apply-templates mode="render-value"
+                         select="gcx:Anchor"/>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="gcx:Anchor">
+    <xsl:variable name="link"
+                  select="@xlink:href"/>
+    <xsl:variable name="txt">
+      <xsl:apply-templates mode="localised" select="..">
+        <xsl:with-param name="langId" select="$langId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$link != ''">
+        <a href="{$link}">
+          <xsl:value-of select="$txt"/>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$txt"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 </xsl:stylesheet>
