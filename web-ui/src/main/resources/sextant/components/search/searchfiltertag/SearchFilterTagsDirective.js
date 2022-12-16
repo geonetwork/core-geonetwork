@@ -1,5 +1,5 @@
 (function () {
-  goog.provide("search_filter_tags_directive");
+  goog.provide("sx_search_filter_tags_directive");
 
   goog.require("sx_thesaurus_service");
 

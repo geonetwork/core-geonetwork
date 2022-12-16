@@ -24,7 +24,7 @@
 (function () {
   goog.provide("sx_search_default");
 
-  goog.require("cookie_warning");
+  goog.require("sx_cookie_warning");
   goog.require("sx_mdactions_directive");
   goog.require("sx_related_directive");
   goog.require("sx_search");

@@ -27,7 +27,7 @@
   goog.require("sx_catalog_service");
   goog.require("sx_search_form_results_directive");
   goog.require("sx_selection_directive");
-  goog.require("search_filter_tags_directive");
+  goog.require("sx_search_filter_tags_directive");
 
   var module = angular.module("gn_search_form_controller", [
     "gn_catalog_service",

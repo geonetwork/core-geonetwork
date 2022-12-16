@@ -22,9 +22,9 @@
  */
 
 (function () {
-  goog.provide("cookie_warning_directive");
+  goog.provide("sx_cookie_warning_directive");
 
-  var module = angular.module("cookie_warning_directive", ["ngCookies"]);
+  var module = angular.module("sx_cookie_warning_directive", ["ngCookies"]);
 
   module.directive("cookiewarning", [
     "$window",
