@@ -961,7 +961,6 @@
                       name="referenceSystemInfo" or="referenceSystemInfo"
                       in="/mdb:MD_Metadata">
                 <template>
-                  <!-- TODO: Update list -->
                   <snippet label="addCrs4326cersat">
                     <mdb:referenceSystemInfo>
                       <mrs:MD_ReferenceSystem>
@@ -972,6 +971,22 @@
                             </mcc:code>
                             <mcc:description>
                               <gco:CharacterString>WGS 84 (EPSG:4326) - Equirectangular projection</gco:CharacterString>
+                            </mcc:description>
+                          </mcc:MD_Identifier>
+                        </mrs:referenceSystemIdentifier>
+                      </mrs:MD_ReferenceSystem>
+                    </mdb:referenceSystemInfo>
+                  </snippet>
+                  <snippet label="addCrs6933cersat">
+                    <mdb:referenceSystemInfo>
+                      <mrs:MD_ReferenceSystem>
+                        <mrs:referenceSystemIdentifier>
+                          <mcc:MD_Identifier>
+                            <mcc:code>
+                              <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/6933</gco:CharacterString>
+                            </mcc:code>
+                            <mcc:description>
+                              <gco:CharacterString>WGS 84 / NSIDC EASE-Grid 2.0 Global (EPSG:6933)</gco:CharacterString>
                             </mcc:description>
                           </mcc:MD_Identifier>
                         </mrs:referenceSystemIdentifier>

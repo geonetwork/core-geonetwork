@@ -145,6 +145,7 @@
   <addCrs4326cersat>WGS 84 (EPSG:4326) - Equirectangular projection</addCrs4326cersat>
   <addCrs4258cersat>ETRS89 (EPSG:4258) - Equirectangular projection</addCrs4258cersat>
   <addCrs3035cersat>ETRS89 / LAEA Europe (EPSG:3035) - Lambert azimuthal equal-area projection</addCrs3035cersat>
+  <addCrs6933cersat>WGS 84 / NSIDC EASE-Grid 2.0 Global (EPSG:6933)</addCrs6933cersat>
 
   <cersat-version>Version</cersat-version>
   <cersat-opdataset>Status</cersat-opdataset>
