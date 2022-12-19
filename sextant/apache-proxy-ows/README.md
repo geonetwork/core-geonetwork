@@ -35,9 +35,11 @@ bash yq_generate_command.sh input_output/sample_conf.yml
 soit directement lance la commande docker run
 
 ```bash
-docker run -ti -v $(pwd)/input_output:/input_output
--v /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/sextant/apache-proxy-ows/python/tests:/app/./tests
-proxy-apache-sextant python3 /app/apache_proxy.py /input_output/sample_conf.yml -c
+docker run -ti -v /full_path1:full_path1
+-v /full_path2:full_path2
+-v {full_path/conf_lol.yml}:/input/{conf_lol.yml} # a changer
+-v {full_path_sortie/sortie}:/output/ # a changer
+proxy-apache-sextant python3 -i /app/apache_proxy.py -o /input/{conf_lol.yml}/output/ -c true # a changer
 ```
 
 Avec `sample_conf.yaml` la configuration.

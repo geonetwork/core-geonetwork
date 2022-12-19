@@ -5,7 +5,7 @@ import os
 from yaml.loader import SafeLoader
 import sys
 from pathlib import Path
-
+import argparse
 
 def get_config_from_yaml(filename):
     with open(filename) as f:
@@ -109,17 +109,38 @@ class ApacheProxy:
                 )
 
 
-print("Début")
-add_header = False
-if len(sys.argv) == 3 and sys.argv[2] == "-c":
-    print("Rajout des headers")
-    add_header = True
-conf_file = sys.argv[1]
-a = ApacheProxy(
-    "/input_output/out.csv",
-    "/input_output/sextant_services.conf",
-    conf_file,
-    header=add_header,
-)
-a.workflow()
-print("Fin")
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--input", help="input configuration yaml file")
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="output dir containing the output html files; will be created if non existent; files will be replaced if needed",
+    )
+    parser.add_argument("-c", "--column_name", help="use header")
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.input):
+        print("{} does not exists. Exiting".format(args.input))
+        exit()
+
+    if not os.path.exists(args.output):
+        os.mkdir(args.output)
+
+    print("Début")
+    add_header = False
+    if args.column_name:
+        print("Rajout des headers")
+        add_header = True
+    conf_file = args.input
+    output_file_name = Path(conf_file).stem
+    a = ApacheProxy(
+        "/output/{}.csv".format(output_file_name),
+        "/output/{}.apache".format(output_file_name),
+        conf_file,
+        header=add_header,
+    )
+    a.workflow()
+    print("Fin")
