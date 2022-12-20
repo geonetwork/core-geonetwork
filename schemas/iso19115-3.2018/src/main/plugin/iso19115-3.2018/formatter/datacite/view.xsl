@@ -465,7 +465,7 @@ eg.
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--
