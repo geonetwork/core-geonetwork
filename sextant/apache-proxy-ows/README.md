@@ -39,7 +39,7 @@ docker run -ti -v /full_path1:full_path1
 -v /full_path2:full_path2
 -v {full_path/conf_lol.yml}:/input/{conf_lol.yml} # a changer
 -v {full_path_sortie/sortie}:/output/ # a changer
-proxy-apache-sextant python3 -i /app/apache_proxy.py -o /input/{conf_lol.yml}/output/ -c true # a changer
+proxy-apache-sextant python3 /app/apache_proxy.py  -i /input/{conf_lol.yml} -o /output/ -c true # a changer
 ```
 
 Avec `sample_conf.yaml` la configuration.
