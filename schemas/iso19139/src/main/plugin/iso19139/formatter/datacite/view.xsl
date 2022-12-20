@@ -450,7 +450,7 @@ eg.
   <xsl:template mode="toDatacite"
                 match="gmd:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/*/text()"/>
     </datacite:publisher>
 
     <!--
