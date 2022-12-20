@@ -135,10 +135,11 @@ if __name__ == "__main__":
         print("Rajout des headers")
         add_header = True
     conf_file = args.input
+    import pdb ; pdb.set_trace()
     output_file_name = Path(conf_file).stem
     a = ApacheProxy(
-        "/output/{}.csv".format(output_file_name),
-        "/output/{}.apache".format(output_file_name),
+        "{}/{}.csv".format(args.output, output_file_name),
+        "{}/{}.apache".format(args.output, output_file_name),
         conf_file,
         header=add_header,
     )
