@@ -5,7 +5,7 @@
     title="{{::ctrl.item.value}}"
     ng-click="ctrl.filter(ctrl.facet, ctrl.item)"
   >
-    {{::ctrl.item.count}} {{::ctrl.item.value | facetTranslator: ctrl.facet.key |
-    capitalize}}
+    {{::ctrl.item.count}} {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta &&
+    ctrl.facet.meta.field) || ctrl.facet.key | capitalize}}
   </a>
 </li>

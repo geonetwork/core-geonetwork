@@ -31,7 +31,8 @@
         </h2>
         <h2 data-ng-hide="isInspire">
           <span class="clamp-2"
-            >{{::facetValue | facetTranslator: key | capitalize}}</span
+            >{{::facetValue | facetTranslator: (response.meta && response.meta.field) ||
+            key | capitalize}}</span
           >
         </h2>
       </a>

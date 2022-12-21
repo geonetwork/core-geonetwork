@@ -31,7 +31,8 @@
         data-key="ctrl.item.value"
       />
       <span class="gn-facet-label flex-shrink text-ellipsis">
-        {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
+        {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta && ctrl.facet.meta.field)
+        || ctrl.facet.key | capitalize}}
       </span>
       <span
         ng-if="ctrl.item.count"
