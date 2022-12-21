@@ -133,11 +133,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         "            ]\n" +
         "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}, \"minimum_should_match\" : 1}";
 
-    private final String templateMatch = " {\n" +
-        "            \"match\": {\n" +
-        "             \"%s\": \"%s\"\n" +
-        "            }\n" +
-        "          }";
+    private final String templateMatch = "{\"query_string\": {\n" +
+        "        \"fields\": [\"%s\"],\n" +
+        "        \"query\": \"%s\"\n" +
+        "    }}";
 
     private final String templatePropertyIsNot = " {\"bool\": {\n" +
         "            \"must_not\": " + templateMatch +
@@ -160,13 +159,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         "        }\n" +
         "    }";
 
-    private final String templateIsLike = "{\n" +
-        "    \"wildcard\": {\n" +
-        "      \"%s\": {\n" +
-        "        \"value\": \"%s\"\n" +
-        "      }\n" +
-        "    }\n" +
-        "}";
+    private final String templateIsLike = "{\"query_string\": {\n" +
+        "        \"fields\": [\"%s\"],\n" +
+        "        \"query\": \"%s\"\n" +
+        "    }}";
 
     private final String templateSpatial = "{ \"geo_shape\": {\"geom\": {\n" +
         "                        \t\"shape\": {\n" +
