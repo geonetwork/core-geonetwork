@@ -28,6 +28,7 @@ class ApacheProxy:
             self.csv_writer.writerow(["url_interne", "url_publique"])
         self.publique_urls = []
         self.interne_urls = []
+        self.softwares = []
 
     def workflow(self):
         sites = get_config_from_yaml(self.input_conf_path)
@@ -47,6 +48,7 @@ class ApacheProxy:
                 if self.publique_url not in self.publique_urls:
                     self.publique_urls.append(self.publique_url)
                     self.interne_urls.append(self.interne_url)
+                    self.softwares.append(self.software)
                 else:
                     print(
                         "{} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
@@ -61,11 +63,16 @@ class ApacheProxy:
         self.csv.close()
 
     def write_to_csv_and_conf_file(self):
-        ordered_public_list, ordered_interne_list = (
-            list(t) for t in zip(*sorted(zip(self.publique_urls, self.interne_urls)))
+        ordered_public_list, ordered_interne_list, ordered_softwares = (
+            list(t)
+            for t in zip(
+                *sorted(zip(self.publique_urls, self.interne_urls, self.softwares))
+            )
         )
         for i, j in enumerate(ordered_interne_list):
-            self.csv_writer.writerow([ordered_interne_list[i], ordered_public_list[i]])
+            self.csv_writer.writerow(
+                [ordered_interne_list[i], ordered_public_list[i], ordered_softwares[i]]
+            )
             self.file.write(
                 "ProxyPass    {} {}".format(
                     ordered_interne_list[i], ordered_public_list[i]
@@ -90,6 +97,9 @@ class ApacheProxy:
         )  # /test/titi/
         self.publique_url = site_config["url_publique"]
         self.interne_url = site_config["url_interne"]
+        self.software = (
+            site_config["software"] if site_config["software"] else ""
+        )  # /test/titi/(*).yaml
 
     def get_file_extension(self):
         if self.filedir_path.endswith("(*)"):
@@ -117,6 +127,7 @@ class ApacheProxy:
             if publique_url not in self.publique_urls:
                 self.interne_urls.append(interne_url)
                 self.publique_urls.append(publique_url)
+                self.softwares.append(self.software)
             else:
                 print(
                     "{} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
