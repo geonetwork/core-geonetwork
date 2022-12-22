@@ -3,9 +3,9 @@ import yaml
 import csv
 import os
 from yaml.loader import SafeLoader
-import sys
 from pathlib import Path
 import argparse
+
 
 def get_config_from_yaml(filename):
     with open(filename) as f:
@@ -33,15 +33,26 @@ class ApacheProxy:
         sites = get_config_from_yaml(self.input_conf_path)
         for site_config in sites["sites"]:
             self.update_conf(site_config)
-            file_extension = str(self.get_file_extension())
-            print("Extension à rechercher: {}".format(file_extension))
-            matches_ = self.get_all_files_matching(file_extension)
-            print(
-                "{} Fichier(s) trouvé(s) dans le repertoire {}".format(
-                    len(matches_), self.full_path
+            if self.filedir_path is not None:
+                file_extension = str(self.get_file_extension())
+                matches_ = self.get_all_files_matching(file_extension)
+                print(
+                    "{} Fichier(s) trouvé(s) dans le repertoire {}".format(
+                        len(matches_), self.full_path
+                    )
                 )
-            )
-            self.build_lists(matches_)
+            else:
+                print("Une config manuelle ajoutée")
+                if self.interne_url not in self.interne_urls:
+                    self.publique_urls.append(self.publique_url)
+                    self.interne_urls.append(self.interne_url)
+                else:
+                    print(
+                        "{} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
+                            self.interne_url
+                        )
+                    )
+
         if self.publique_urls == []:
             print("Aucun fichier trouvé")
         else:
@@ -71,7 +82,11 @@ class ApacheProxy:
     def update_conf(self, site_config):
         self.config_file_path = site_config
         self.filedir_path = site_config["filename"]  # /test/titi/(*).yaml
-        self.full_path = str(pathlib.Path(self.filedir_path).parent)  # /test/titi/
+        self.full_path = (
+            str(pathlib.Path(self.filedir_path).parent)
+            if self.filedir_path is not None
+            else ""
+        )  # /test/titi/
         self.publique_url = site_config["url_publique"]
         self.interne_url = site_config["url_interne"]
 
@@ -128,11 +143,9 @@ if __name__ == "__main__":
 
     if not os.path.exists(args.output):
         os.mkdir(args.output)
-
     print("Début")
     add_header = False
     if args.column_name:
-        print("Rajout des headers")
         add_header = True
     conf_file = args.input
     output_file_name = Path(conf_file).stem
