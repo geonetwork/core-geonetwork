@@ -762,18 +762,26 @@
     </xsl:variable>
 
     <xsl:variable name="label">
+      <xsl:variable name="uuidAttrUrl"
+                    select="*/@uuid[starts-with(., 'http')]"/>
       <xsl:choose>
-        <xsl:when test="$email != ''">
-          <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
-          <a href="mailto:{normalize-space($email)}">
-            <sup class="fa fa-envelope">&#160;</sup>
+        <xsl:when test="$uuidAttrUrl != ''">
+          <a href="{$uuidAttrUrl}">
+            <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
           </a>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="$displayName"/><xsl:comment select="'name'"/>
         </xsl:otherwise>
       </xsl:choose>
+
+      <xsl:if test="$email != ''">
+        <a href="mailto:{normalize-space($email)}">
+          <sup class="fa fa-envelope">&#160;</sup>
+        </a>
+      </xsl:if>
     </xsl:variable>
+
     <xsl:choose>
       <xsl:when test="$layout = 'short'">
        <xsl:copy-of select="$label"/>
