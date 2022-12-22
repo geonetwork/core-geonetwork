@@ -25,7 +25,7 @@ class ApacheProxy:
         self.csv_writer = csv.writer(self.csv)
         self.conf_writer = csv.writer(self.csv)
         if header:
-            self.csv_writer.writerow(["url_interne", "url_publique"])
+            self.csv_writer.writerow(["url_interne", "url_publique", "software"])
         self.publique_urls = []
         self.interne_urls = []
         self.softwares = []
