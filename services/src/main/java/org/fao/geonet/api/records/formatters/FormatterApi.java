@@ -270,7 +270,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
 
         if (approved) {
-            metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+            metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadata.getUuid());
         }
 
 
