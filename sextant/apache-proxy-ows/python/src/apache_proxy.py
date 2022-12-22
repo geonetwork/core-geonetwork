@@ -41,9 +41,10 @@ class ApacheProxy:
                         len(matches_), self.full_path
                     )
                 )
+                self.build_lists(matches_)
             else:
                 print("Une config manuelle ajoutée")
-                if self.interne_url not in self.interne_urls:
+                if self.publique_url not in self.publique_urls:
                     self.publique_urls.append(self.publique_url)
                     self.interne_urls.append(self.interne_url)
                 else:
@@ -113,7 +114,7 @@ class ApacheProxy:
             )
             publique_url = self.publique_url.replace("$1", value_to_add)
             interne_url = self.interne_url.replace("$1", value_to_add)
-            if interne_url not in self.interne_urls:
+            if publique_url not in self.publique_urls:
                 self.interne_urls.append(interne_url)
                 self.publique_urls.append(publique_url)
             else:
