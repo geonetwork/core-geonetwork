@@ -246,13 +246,6 @@
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>
 
-    <xsl:if test="$angularApp = 'gn_search'">
-      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
-      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
-    </xsl:if>
-
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
     </script>
