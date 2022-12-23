@@ -51,7 +51,7 @@ class ApacheProxy:
                     self.softwares.append(self.software)
                 else:
                     print(
-                        "{} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
+                        "--> {} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
                             self.interne_url
                         )
                     )
@@ -130,7 +130,7 @@ class ApacheProxy:
                 self.softwares.append(self.software)
             else:
                 print(
-                    "⚠ {} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
+                    "--> {} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
                         interne_url
                     )
                 )
