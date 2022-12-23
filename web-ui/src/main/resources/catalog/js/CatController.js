@@ -1256,10 +1256,17 @@
         isShowLoginAsLink: false,
         isUserProfileUpdateEnabled: true,
         isUserGroupUpdateEnabled: true,
-        init: function (configOverlay, gnUrl, gnViewerSettings, gnSearchSettings) {
+        init: function (
+          configOverlay,
+          gnUrl,
+          nodeUrl,
+          gnViewerSettings,
+          gnSearchSettings
+        ) {
           this.applyConfig(configOverlay !== null ? configOverlay : {});
           this.setLegacyOption(gnViewerSettings, gnSearchSettings);
           this.gnUrl = gnUrl || "../";
+          this.nodeUrl = nodeUrl || "../";
           this.proxyUrl = this.gnUrl + "../proxy?url=";
         },
         setLegacyOption: function (gnViewerSettings, gnSearchSettings) {

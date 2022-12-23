@@ -42,6 +42,7 @@
     "gnMetadataManager",
     "gnAlertService",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
     "gnPopup",
@@ -58,6 +59,7 @@
       gnMetadataManager,
       gnAlertService,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       gnShareService,
       gnPopup,
@@ -579,11 +581,22 @@
 
       /**
        * Get html formatter link for the given md
+       * and open the permalink modal.
+       *
+       * TODO: At some point we may use the point of truth URL
+       * provided in the metadata record (eg. DOI) if set.
+       *
        * @param {Object} md
        */
       this.getPermalink = function (md) {
-        var url = $location.absUrl().split("#")[0] + "#/metadata/" + md.uuid;
-        gnUtilityService.getPermalink(md.resourceTitle, url);
+        var permalinkBaseUrl = gnConfig["system.server.sitemapLinkUrl"],
+          url = gnGlobalSettings.nodeUrl + "api/records/" + md.uuid + "?language=all";
+
+        if (permalinkBaseUrl && permalinkBaseUrl.toUpperCase().indexOf("{{UUID}}")) {
+          url = permalinkBaseUrl.replace(/\{\{UUID\}\}/i, md.uuid);
+        }
+
+        gnUtilityService.displayPermalink(md.resourceTitle, url);
       };
 
       /**
