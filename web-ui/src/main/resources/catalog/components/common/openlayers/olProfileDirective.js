@@ -76,7 +76,7 @@
             var profile, elevationData, poiData;
 
             scope.$watchCollection(optionsAttr, function (newVal) {
-              var options = JSON.parse(JSON.stringify(newVal));
+              var options = $.extend(true, {}, newVal);
 
               if (options !== undefined) {
                 // proxy the hoverCallback and outCallbackin order to be able to

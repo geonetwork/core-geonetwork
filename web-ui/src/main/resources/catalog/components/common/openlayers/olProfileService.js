@@ -99,13 +99,13 @@
      * @type {function(Object, number, string, Object.<string, number>, string)}
      */
     var hoverCallback =
-      options.hoverCallback !== undefined ? options.hoverCallback : undefined;
+      options.hoverCallback !== undefined ? options.hoverCallback : null;
 
     /**
      * Out callback function.
      * @type {function()}
      */
-    var outCallback = options.outCallback !== undefined ? options.outCallback : undefined;
+    var outCallback = options.outCallback !== undefined ? options.outCallback : null;
 
     /**
      * Distance data extractor used to get the dist values.
