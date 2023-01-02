@@ -442,9 +442,7 @@
            * @name gnMap#getBboxFromMd
            *
            * @description
-           * Get the extent of the md.
-           * It is stored in the object md.geoBox as an array of String
-           * '150|-12|160|12'.
+           * Get the extent of the first bounding box geometry of the record.
            * Returns it as an array of array of floats.
            *
            * @param {Object} md to extract bbox from
@@ -455,10 +453,10 @@
               c = md.geom[0].coordinates[0];
             if (angular.isArray(c) && c.length == 5) {
               bboxes.push([
-                parseFloat(c[0]),
-                parseFloat(c[1]),
-                parseFloat(c[2]),
-                parseFloat(c[3])
+                parseFloat(c[0][0]),
+                parseFloat(c[0][1]),
+                parseFloat(c[2][0]),
+                parseFloat(c[2][1])
               ]);
             }
             return bboxes;
