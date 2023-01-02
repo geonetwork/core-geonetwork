@@ -9,7 +9,7 @@
  * your option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * WITHWpsDectiveOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
@@ -488,12 +488,15 @@
                             }
 
                             // check if geom can be multi
+                            // check if geom can be multi
                             var isMulti = false;
-                            input.metadata.forEach(function (m) {
-                              if (m.title.contains("allowMultipart")) {
-                                isMulti = true;
-                              }
-                            });
+                            if (input.metadata !== undefined) {
+                              input.metadata.forEach(function(m) {
+                                if (m.title.contains('allowMultipart')){
+                                  isMulti = true;
+                                }
+                              });
+                            };
 
                             scope.getGeomType = function (geom) {
                               if (!geom) {
