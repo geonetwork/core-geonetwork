@@ -58,7 +58,9 @@
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
-  <xsl:include href="../../formatter/jsonld/iso19115-3.2018-to-jsonld.xsl"/>
+  <xsl:include href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
+  <xsl:include href="../citation/base.xsl"/>
+  <xsl:include href="../citation/common.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
