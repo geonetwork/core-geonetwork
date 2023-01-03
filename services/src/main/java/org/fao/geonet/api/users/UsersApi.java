@@ -470,6 +470,13 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
+        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
+        // Otherwise the password cannot be null.
+        if (userDto.getPassword() == null
+            && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
+            throw new IllegalArgumentException("Users password must be supplied");
+        }
+
        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
            throw new IllegalArgumentException(Params.USERNAME
                + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
@@ -491,9 +498,11 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
         User user = new User();
+        if (userDto.getPassword() != null) {
         user.getSecurity().setPassword(
             PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
                 userDto.getPassword()));
+        }
 
         fillUserFromParams(user, userDto);
 
