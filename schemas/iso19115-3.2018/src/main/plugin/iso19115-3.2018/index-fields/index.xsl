@@ -391,7 +391,7 @@
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
 
-        <xsl:for-each-group select="mri:defaultLocale/*/lan:characterEncoding/*[@codeListValue != '']" 
+        <xsl:for-each-group select="mri:defaultLocale/*/lan:characterEncoding/*[@codeListValue != '']"
                             group-by="@codeListValue">
           <xsl:copy-of select="gn-fn-index:add-codelist-field(
                                 'cl_resourceCharacterSet', ., $allLanguages)"/>
@@ -1128,8 +1128,7 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
         </xsl:for-each>
 
-        <xsl:for-each select="mrd:transferOptions/*/
-                                mrd:onLine/*[cit:linkage/gco:CharacterString != '']">
+        <xsl:for-each select=".//mrd:onLine/*[cit:linkage/gco:CharacterString != '']">
           <xsl:variable name="transferGroup"
                         select="count(ancestor::mrd:transferOptions/preceding-sibling::mrd:transferOptions)"/>
 
