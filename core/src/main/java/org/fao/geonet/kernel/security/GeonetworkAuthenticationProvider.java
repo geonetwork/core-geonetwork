@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
@@ -66,6 +67,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
         }
 
         if (authentication.getCredentials().toString().isEmpty() ||
+            StringUtils.isEmpty(gnDetails.getPassword()) ||
             !encoder.matches(authentication.getCredentials().toString(), gnDetails.getPassword())) {
             Log.warning(Log.JEEVES, "Authentication failed: wrong password provided");
             throw new BadCredentialsException("Authentication failed: wrong password provided");
