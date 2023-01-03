@@ -1,5 +1,6 @@
 {
   "creating-metadata": "user-guide/describing-information/creating-metadata.html",
+  "metadata-identifier-template": "administrator-guide/managing-metadata-standards/metadata-identifier.html",
   "implementing-a-schema-plugin": "customizing-application/implementing-a-schema-plugin.html",
   "quick-start-home": "user-guide/quick-start/index.html",
   "batchupdate": "guide/workflow/batchupdate.html",
