@@ -551,7 +551,8 @@
         $scope.importData.metadataType = asTemplate
           ? "TEMPLATE_OF_SUB_TEMPLATE"
           : "SUB_TEMPLATE";
-        $scope.importData.group = gnConfig["system.metadatacreate.preferredGroup"];
+        $scope.importData.group =
+          gnConfig["system.metadatacreate.preferredGroup"] || $scope.groups[0].id;
       };
 
       // begin edition of an entry
