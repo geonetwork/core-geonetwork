@@ -128,7 +128,7 @@ public class MapServersUtils {
             } catch (IllegalArgumentException e) {
                 throw new GeoPublisherException(String.format(
                     "Failed to publish vector file '%s'. Error is %s",
-                    f, gs.getErrorCode()
+                    f, e.getMessage()
                 ));
             }
 
@@ -154,7 +154,7 @@ public class MapServersUtils {
             } catch (IllegalArgumentException e) {
                 throw new GeoPublisherException(String.format(
                     "Failed to publish raster file '%s'. Error is %s",
-                    f, gs.getErrorCode()
+                    f, e.getMessage()
                 ));
             }
         }
@@ -189,14 +189,14 @@ public class MapServersUtils {
         String dsName = ds.substring(0, ds.lastIndexOf("."));
         try {
             if (action == ACTION.CREATE) {
-                g.createDatastore(dsName, f);
+                g.createDatastore(dsName, f, gf.getFormat());
                 if (gf.containsSld())
                     g.createStyle(g.getDefaultWorkspace(), dsName, gf.getSld());
                 else
                     g.createStyle(g.getDefaultWorkspace(), dsName);
                 g.createFeatureType(dsName, dsName, metadataUuid, metadataTitle, metadataAbstract);
             } else if (action == ACTION.UPDATE) {
-                g.createDatastore(dsName, f);
+                g.createDatastore(dsName, f, gf.getFormat());
                 g.createFeatureType(dsName, dsName, metadataUuid, metadataTitle, metadataAbstract);
             } else if (action == ACTION.DELETE) {
                 String report = "";
