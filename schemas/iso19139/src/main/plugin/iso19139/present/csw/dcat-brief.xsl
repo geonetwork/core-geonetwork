@@ -23,7 +23,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:dct="http://purl.org/dc/terms/"
@@ -34,7 +35,7 @@
                 xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
                 version="1.0">
 
-  <xsl:import href="../metadata-rdf.xsl"/>
+  <xsl:import href="../../layout/tpl-rdf.xsl"/>
 
   <xsl:variable name="url" select="xslUtils:getSiteUrl()"/>
   <xsl:variable name="language" select="xslUtils:getLanguage()"/>
@@ -49,12 +50,11 @@
              xmlns:void="http://www.w3.org/TR/void/"
              xmlns:dcat="http://www.w3.org/ns/dcat#">
       <xsl:apply-templates select="." mode="to-dcat"/>
+      <xsl:apply-templates select="." mode="references"/>
     </rdf:RDF>
   </xsl:template>
 
   <xsl:template name="catalogue">
-
-
     <!-- First, the local catalog description using dcat:Catalog.
       "Typically, a web-based data catalog is represented as a single instance of this class."
       ... also describe harvested catalogues if harvested records are in the current dump.
@@ -161,8 +161,6 @@
       </skos:ConceptScheme>
     </xsl:for-each>
   </xsl:template>
-
-  <!-- ============================================================================================ -->
 
   <xsl:template match="*">
     <xsl:apply-templates select="*"/>

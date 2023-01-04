@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.records;
 
+import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,12 +31,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -43,6 +44,7 @@ import org.fao.geonet.events.history.RecordCategoryChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +57,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
 
@@ -79,18 +79,26 @@ public class MetadataTagApi {
     DataManager dataManager;
 
     @Autowired
+    EsSearchManager searchManager;
+
+    @Autowired
     IMetadataManager metadataManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    AccessManager accessMan;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record tags",
         description = "Tags are used to classify information.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>")
-    @RequestMapping(
+    @GetMapping(
         value = "/{metadataUuid}/tags",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
-        },
-        method = RequestMethod.GET)
+        })
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record tags."),
@@ -113,9 +121,7 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add tags to a record",
         description = "")
-    @RequestMapping(
-        value = "/{metadataUuid}/tags",
-        method = RequestMethod.PUT)
+    @PutMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Record tags added."),
@@ -156,8 +162,8 @@ public class MetadataTagApi {
         }
 
         for (int c : id) {
-            final MetadataCategory category = categoryRepository.findById(c).get();
-            if (category != null) {
+            final Optional<MetadataCategory> category = categoryRepository.findById(c);
+            if (category.isPresent()) {
                 dataManager.setCategory(
                     ApiUtils.createServiceContext(request),
                     String.valueOf(metadata.getId()), String.valueOf(c));
@@ -168,7 +174,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        indexTags(metadata);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();
@@ -177,12 +183,23 @@ public class MetadataTagApi {
 
     }
 
+    private void indexTags(AbstractMetadata metadata) throws Exception {
+        Map<String, Object> fields = new HashMap<>();
+        if (!metadata.getCategories().isEmpty()) {
+            List<String> categories = new ArrayList<>();
+            for (MetadataCategory category : metadata.getCategories()) {
+                categories.add(category.getName());
+            }
+            fields.put(Geonet.IndexFieldNames.CAT, categories);
+        }
+        searchManager.updateFields(metadata.getUuid(), fields,
+            Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+    }
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Delete tags of a record",
         description = "")
-    @RequestMapping(
-        value = "/{metadataUuid}/tags",
-        method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Record tags removed."),
@@ -221,7 +238,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        indexTags(metadata);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();
@@ -234,12 +251,11 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add or remove tags to one or more records",
         description = "")
-    @RequestMapping(
+    @PutMapping(
         value = "/tags",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
-        },
-        method = RequestMethod.PUT)
+        })
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Report about updated records."),
@@ -291,9 +307,6 @@ public class MetadataTagApi {
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();
-            final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
@@ -311,9 +324,9 @@ public class MetadataTagApi {
 
                     if (id != null) {
                         for (int c : id) {
-                            final MetadataCategory category = categoryRepository.findById(c).get();
-                            if (category != null) {
-                                info.getCategories().add(category);
+                            final Optional<MetadataCategory> category = categoryRepository.findById(c);
+                            if (category.isPresent()) {
+                                info.getCategories().add(category.get());
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));
                             } else {
                                 report.addMetadataInfos(info, String.format(
@@ -325,9 +338,9 @@ public class MetadataTagApi {
                     }
                     if (removeId != null) {
                         for (int c : removeId) {
-                            final MetadataCategory category = categoryRepository.findById(c).get();
-                            if (category != null) {
-                                info.getCategories().remove(category);
+                            final Optional<MetadataCategory> category = categoryRepository.findById(c);
+                            if (category.isPresent()) {
+                                info.getCategories().remove(category.get());
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));
                             } else {
                                 report.addMetadataInfos(info, String.format(
@@ -343,13 +356,12 @@ public class MetadataTagApi {
 
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getCategories();
+                indexTags(info);
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
                 new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
 
             }
             dataManager.flush();
-            dataManager.indexMetadata(listOfUpdatedRecords);
-
         } catch (Exception exception) {
             report.addError(exception);
         } finally {
@@ -362,12 +374,11 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Delete tags to one or more records",
         description = "")
-    @RequestMapping(
+    @DeleteMapping(
         value = "/tags",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
-        },
-        method = RequestMethod.DELETE)
+        })
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Report about removed records."),
@@ -402,11 +413,6 @@ public class MetadataTagApi {
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();
-            final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
-
-            List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> before = info.getCategories();
@@ -423,12 +429,11 @@ public class MetadataTagApi {
 
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getCategories();
+                indexTags(info);
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
                 new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
             }
             dataManager.flush();
-            dataManager.indexMetadata(listOfUpdatedRecords);
-
         } catch (Exception exception) {
             report.addError(exception);
         } finally {

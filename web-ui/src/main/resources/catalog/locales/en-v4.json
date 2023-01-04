@@ -129,6 +129,7 @@
   "facet-valid_inspire": "INSPIRE validation status",
   "valid_inspire-1": "Valid",
   "valid_inspire-0": "Invalid",
+  "valid_inspire-3": "No rule applies",
   "valid_inspire--1": "Unknown",
   "facet-OrgForResource": "Organizations",
   "facet-sourceCatalogue": "Catalogues",
@@ -267,10 +268,12 @@
   "ui/chooseAnOption-help": "Current user configuration is empty. Choose one or more option above or create a full configuration.",
   "uiConfigForm": "Configuration form",
   "uiConfigJsonForm": "JSON form",
+  "uiCurrentConfig": "Current configuration",
   "uiBasicConfig": "Full configuration",
   "uiRemoveDefaultOptions": "Remove default options",
   "preferredOptions": "Preferred options",
-  "ui-full-configuration": "All options",
+  "ui-full-configuration": "All default options (reset all current options)",
+  "ui-full-current-configuration": "All current configuration",
   "ui-hitsPerPage": "Default number of records per page",
   "ui-queryTitle": "Query for title only search",
   "ui-related": "Results / Type of related records to search for",
@@ -365,5 +368,6 @@
   "mimeType": "Format",
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
   "switchPortals": "Switch to another Portal",
-  "dataPreview":  "Discover data"
+  "dataPreview":  "Discover data",
+  "tableOfContents": "Table of Contents"
 }

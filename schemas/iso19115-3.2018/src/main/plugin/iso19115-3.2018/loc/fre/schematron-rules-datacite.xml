@@ -23,42 +23,43 @@
   -->
 
 <strings>
-  <datacite.mandatory>Mandatory fields</datacite.mandatory>
+  <datacite.mandatory>Champs obligatoires</datacite.mandatory>
 
-  <datacite.identifier.missing>The identifier is missing. The Identifier is a unique
-    string that identifies a resource. This field is mandatory.
+  <datacite.identifier.missing>
+    L'identifiant est manquant. L'identifiant est un identifiant unique
+    chaîne qui identifie une ressource. Ce champ est obligatoire.
   </datacite.identifier.missing>
-  <datacite.identifier.present>The identifier is: </datacite.identifier.present>
+  <datacite.identifier.present>L'identifiant est: </datacite.identifier.present>
 
-  <datacite.type.missing>The type is missing. Check the metadata section and set the hierarchy level. This field is mandatory.
+  <datacite.type.missing>Le type est manquant. Vérifiez la section des métadonnées et définissez le niveau de hiérarchie. Ce champ est obligatoire.
   </datacite.type.missing>
-  <datacite.type.present>The resource type is: </datacite.type.present>
+  <datacite.type.present>Le type de ressource est : </datacite.type.present>
 
-  <datacite.title.missing>The title is missing. A name or title by which a
-    resource is known. May be
-    the title of a dataset or the
-    name of a piece of software. This field is mandatory.
+  <datacite.title.missing>Le titre manque. Nom ou titre par lequel un
+    ressource est connue. Peut-être
+    le titre d'un jeu de données ou le
+    nom d'un logiciel. Ce champ est obligatoire.
   </datacite.title.missing>
-  <datacite.title.present>The title is:</datacite.title.present>
+  <datacite.title.present>Le titre est:</datacite.title.present>
 
-  <datacite.publicationDate.missing>Publication year is missing. The year when the data was
-    or will be made publicly
-    available. Check publication date in resource identification. This field is mandatory.
+  <datacite.publicationDate.missing>L'année de publication est manquante. L'année où les données ont été
+    ou sera rendue publique
+    disponible. Vérifier la date de publication dans l'identification des ressources. Ce champ est obligatoire.
   </datacite.publicationDate.missing>
-  <datacite.publicationDate.present>The publication date is: </datacite.publicationDate.present>
+  <datacite.publicationDate.present>La date de parution est: </datacite.publicationDate.present>
 
-  <datacite.creator.missing>Creator is missing. The main researchers involved
-    in producing the data, or the authors of the publication, in
-    priority order. To supply multiple creators, repeat this
-    property. Check point of contact in resource identification with role 'pointOfContact' or 'custodian'. This field is mandatory.
+  <datacite.creator.missing>Le créateur est manquant. Les principaux chercheurs impliqués
+    dans la production des données, ou les auteurs de la publication, dans
+    ordre prioritaire. Pour fournir plusieurs créateurs, répétez cette opération
+    propriété. Vérifiez le point de contact dans l'identification de la ressource avec le rôle 'pointOfContact' ou 'custodian'. Ce champ est obligatoire.
   </datacite.creator.missing>
-  <datacite.creator.found> creator(s) found.</datacite.creator.found>
+  <datacite.creator.found> créateur(s) trouvé(s).</datacite.creator.found>
 
-  <datacite.publisher.missing>Publisher is missing. The name of the entity that
-    holds, archives, publishes
-    prints, distributes, releases,
-    issues, or produces the
-    resource. Check distribution section, the publisher is the first distributor contact. This field is mandatory.
+  <datacite.publisher.missing>L'éditeur est manquant. Le nom de l'entité qui
+    conserve, archive, publie
+    imprime, distribue, libère,
+    émet ou produit le
+    Ressource. Consultez la section distribution, l'éditeur est le premier contact distributeur. Ce champ est obligatoire.
   </datacite.publisher.missing>
-  <datacite.publisher.present>The publisher is: </datacite.publisher.present>
+  <datacite.publisher.present>L'éditeur est : </datacite.publisher.present>
 </strings>

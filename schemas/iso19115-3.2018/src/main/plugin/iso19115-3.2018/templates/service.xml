@@ -116,14 +116,16 @@
           </cit:title>
         </cit:CI_Citation>
       </mri:citation>
-      <mri:abstract></mri:abstract>
+      <mri:abstract>
+        <gco:CharacterString/>
+      </mri:abstract>
       <srv:serviceType>
         <gco:ScopedName>view</gco:ScopedName>
       </srv:serviceType>
       <srv:accessProperties>
         <mrd:MD_StandardOrderProcess>
          <mrd:fees>
-           <gco:CharacterString>aa</gco:CharacterString>
+           <gco:CharacterString></gco:CharacterString>
          </mrd:fees>
         </mrd:MD_StandardOrderProcess>
       </srv:accessProperties>

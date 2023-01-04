@@ -74,6 +74,8 @@
           vertical-align: middle;
           font-weight: normal;
           word-break: break-all;
+          border-top-left-radius: 4px;
+          border-top-right-radius: 4px;
         }
         &:hover {
           text-decoration: none;
@@ -95,6 +97,40 @@
       color: @gn-topic-text;
       i {
         margin-right: 5px;
+      }
+    }
+    &.gn-facet-type-img {
+      height: 180px;
+      border: 0;
+      background-color: rgba(255, 255, 255, 0) !important;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      .panel-body {
+        a {
+          padding: 0;
+          h2 {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.75);
+            span {
+              display: block !important;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+      .panel-footer {
+        position: absolute;
+        margin: 0 10px;
+        background-color: rgba(0, 0, 0, 0.85);
+        border: 0;
+        border-radius: 5px;
+        bottom: 30px;
+        padding: 8px 12px;
       }
     }
   }

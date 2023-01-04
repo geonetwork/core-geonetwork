@@ -21,194 +21,191 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_sources_controller');
+(function () {
+  goog.provide("gn_sources_controller");
 
+  var module = angular.module("gn_sources_controller", []);
 
-  var module = angular.module('gn_sources_controller',
-      []);
-
-
-  module.controller('GnSourcesController', [
-    '$scope', '$http', '$rootScope', '$translate', 'gnESClient', 'Metadata',
-    function($scope, $http, $rootScope, $translate, gnESClient, Metadata) {
+  module.controller("GnSourcesController", [
+    "$scope",
+    "$http",
+    "$rootScope",
+    "$translate",
+    "gnESClient",
+    "Metadata",
+    function ($scope, $http, $rootScope, $translate, gnESClient, Metadata) {
       $scope.sources = [];
       $scope.uiConfigurations = [];
       $scope.source = null;
       $scope.filteredSources = null;
       $scope.filter = {
-        types: {'portal': true, 'subportal': true, 'externalportal': true, 'harvester': true}
+        types: { portal: true, subportal: true, externalportal: true, harvester: true }
       };
 
       $scope.serviceRecordSearchObj = {
         internal: true,
-        any: '',
+        any: "",
         defaultParams: {
-          any: '',
+          any: "",
           from: 1,
           to: 50,
-          type: 'service',
-          sortBy: 'resourceTitleObject.default.keyword',
-          sortOrder: 'asc'
+          type: "service",
+          isTemplate: "n",
+          sortBy: "resourceTitleObject.default.keyword",
+          sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
-      $scope.selectSource = function(source) {
+      $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
+        $scope.isNew = false;
       };
 
       function filterSources() {
         $scope.filteredSources = [];
-        $scope.sources.forEach(function(s) {
+        $scope.sources.forEach(function (s) {
           if ($scope.filter.types[s.type] === true) {
             $scope.filteredSources.push(s);
           }
         });
       }
 
-      $scope.$watch('filter', function(n, o) {
-        if (n !== o) {
-          filterSources();
-        }
-      }, true);
+      $scope.$watch(
+        "filter",
+        function (n, o) {
+          if (n !== o) {
+            filterSources();
+          }
+        },
+        true
+      );
 
       function loadSources() {
-        var url = '../api/sources';
-        if ($scope.user.profile === 'UserAdmin') {
-          url += '?group=' + $scope.user.groupsWithUserAdmin.join('&group=');
+        var url = "../api/sources";
+        if ($scope.user.profile === "UserAdmin") {
+          url += "?group=" + $scope.user.groupsWithUserAdmin.join("&group=");
         }
-        $http.get(url)
-            .success(function(data) {
-              $scope.sources = data;
-              filterSources();
-              $scope.isNew = false;
-            });
+        $http.get(url).success(function (data) {
+          $scope.sources = data;
+          if ($scope.source && $scope.source.uuid !== null) {
+            var selectedSource = _.find($scope.sources, { uuid: $scope.source.uuid });
+            if (selectedSource) {
+              $scope.source = selectedSource;
+            }
+          }
+          filterSources();
+          $scope.isNew = false;
+        });
       }
 
       function loadUiConfigurations() {
         $scope.uiConfiguration = undefined;
-        $scope.uiConfigurationId = '';
-        $http.get('../api/ui')
-          .success(function(data) {
-            $scope.uiConfigurations = [{id: ''}];
-            for (var i = 0; i < data.length; i ++) {
-              $scope.uiConfigurations.push({
-                id: data[i].id
-              });
-            }
-          });
-      };
+        $scope.uiConfigurationId = "";
+        $http.get("../api/ui").success(function (data) {
+          $scope.uiConfigurations = [{ id: "" }];
+          for (var i = 0; i < data.length; i++) {
+            $scope.uiConfigurations.push({
+              id: data[i].id
+            });
+          }
+        });
+      }
 
       $scope.isNew = false;
-      $scope.addSubPortal = function() {
+      $scope.addSubPortal = function () {
         $scope.isNew = true;
         $scope.source = {
-          type: 'subportal',
-          uuid: '',
-          name: '',
-          logo: '',
-          uiConfig: '',
-          filter: '',
+          type: "subportal",
+          uuid: "",
+          name: "",
+          logo: "",
+          uiConfig: "",
+          filter: "",
           serviceRecord: null,
-          groupOwner: null
+          groupOwner: null,
+          listableInHeaderSelector: true
         };
         // TODO: init labels
       };
-      function loadServiceRecords() {
-        var id = $scope.source.serviceRecord;
 
-        if (angular.isDefined(id) && id != -1){
-          var query =
-            {"query": {
-                "term": {
-                  "uuid": {
-                    "value": id
-                  }
-                }
-            }, "from": 0, "size": 1};
+      $scope.updateSource = function () {
+        var url = "../api/sources" + ($scope.isNew ? "" : "/" + $scope.source.uuid);
+        $http
+          .put(url, $scope.source)
+          .success(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("sourceUpdated"),
+              timeout: 2,
+              type: "success"
+            });
 
-          gnESClient.search(query).then(function(data) {
-            angular.forEach(data.hits.hits, function(record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
+            loadSources();
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("sourceUpdateError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
             });
           });
-        }
-      }
-      $scope.$watchCollection('source.serviceRecord', function(n, o){
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
-
-      $scope.updateSource = function() {
-        var url = '../api/sources' + (
-          $scope.isNew ? '' : '/' + $scope.source.uuid);
-        $http.put(url,
-                  $scope.source)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('sourceUpdated'),
-                timeout: 2,
-                type: 'success'});
-
-              loadSources();
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('sourceUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
       };
 
-
-
-      $scope.removeSource = function() {
-        $http.delete('../api/sources/' + $scope.source.uuid)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('sourceRemoved'),
-                timeout: 2,
-                type: 'success'});
-
-              loadSources();
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('sourceRemovedError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
+      $scope.deleteSourceConfig = function () {
+        $("#gn-confirm-remove-source").modal("show");
       };
 
+      $scope.confirmDeleteSourceConfig = function () {
+        $http
+          .delete("../api/sources/" + $scope.source.uuid)
+          .success(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("sourceRemoved"),
+              timeout: 2,
+              type: "success"
+            });
 
+            loadSources();
+            $scope.source = null;
+          })
+          .error(function (data) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("sourceRemovedError"),
+              error: data,
+              timeout: 0,
+              type: "danger"
+            });
+          });
+      };
 
-      var uploadLogoDone = function(e, data) {
-        $scope.source.logo= data.files[0].name;
+      var uploadLogoDone = function (e, data) {
+        $scope.source.logo = data.files[0].name;
         $scope.clear(data.files[0]);
         createOrModifyGroup();
       };
-      var uploadLogoError = function(event, data) {
+      var uploadLogoError = function (event, data) {
         var req = data.response().jqXHR;
-        var contentType = req.getResponseHeader('Content-Type');
+        var contentType = req.getResponseHeader("Content-Type");
         var errorText = req.responseText;
         var errorCode = null;
-        if ('application/json' === contentType) {
+        if ("application/json" === contentType) {
           var parsedError = JSON.parse(req.responseText);
         }
-        $rootScope.$broadcast('StatusUpdated', {
-          title: $translate.instant('groupUpdateError'),
+        $rootScope.$broadcast("StatusUpdated", {
+          title: $translate.instant("groupUpdateError"),
           error: parsedError || errorText,
           timeout: 0,
-          type: 'danger'});
+          type: "danger"
+        });
       };
 
-      $scope.deleteSourceLogo = function() {
+      $scope.deleteSourceLogo = function () {
         $scope.source.logo = null;
         // $scope.updateSource();
       };
@@ -223,17 +220,15 @@
         fail: uploadLogoError
       };
 
-      $scope.$on('fileuploadchange', function(e, data) {
+      $scope.$on("fileuploadchange", function (e, data) {
         // limit fileupload to only one file.
-        angular.forEach($scope.queue, function(item) {
+        angular.forEach($scope.queue, function (item) {
           $scope.clear(item);
         });
       });
 
-
-
       loadSources();
       loadUiConfigurations();
-
-    }]);
+    }
+  ]);
 })();

@@ -34,7 +34,9 @@
       <!-- Defines the number of records that will be processed for any propertyname  -->
       <maxNumberOfRecordsForPropertyNames>1000</maxNumberOfRecordsForPropertyNames>
     </operation>
-    <operation name="GetRecords">
+    <operation name="GetRecords"
+               defaultSortField="_score"
+               defaultSortOrder="DESC">
       <parameters>
         <!-- - - - - - - - - - - - - - -->
         <!-- Core queryable properties -->

@@ -1,6 +1,4 @@
-<div class="container gn-batch-editor"
-     data-ng-controller="GnSearchController">
-
+<div class="container gn-batch-editor" data-ng-controller="GnSearchController">
   <div class="row">
     <div class="col-md-12 gn-margin-bottom">
       <h1 data-translate="">batchediting</h1>
@@ -9,95 +7,115 @@
 
   <div class="row">
     <div class="col-md-12">
-
-      <div data-ng-controller="GnBatchEditSearchController"
-          data-ng-search-form=""
-          data-runSearch="true"
-          data-wait-for-user="true">
-
-
+      <div
+        data-ng-controller="GnBatchEditSearchController"
+        data-ng-search-form=""
+        data-runSearch="true"
+        data-wait-for-user="true"
+      >
         <ul class="nav nav-tabs">
-          <li role="presentation"
-              data-ng-class="{'active' : selectedStep === 1}"
-              data-ng-click="setStep(1)">
-            <a href="" data-translate="">chooseASet</a></li>
-          <li role="presentation"
-              data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
-              data-ng-click="searchResults.selectedCount > 0 && setStep(2)">
-            <a href="" data-translate="">defineEdits</a></li>
-          <li role="presentation"
-              data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
-              data-ng-click="searchResults.selectedCount > 0 && setStep(3)">
-            <a href="" data-translate="">confirmAndSave</a></li>
-          <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span>
+          <li
+            role="presentation"
+            data-ng-class="{'active' : selectedStep === 1}"
+            data-ng-click="setStep(1)"
+          >
+            <a href="" data-translate="">chooseASet</a>
+          </li>
+          <li
+            role="presentation"
+            data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
+            data-ng-click="searchResults.selectedCount > 0 && setStep(2)"
+          >
+            <a href="" data-translate="">defineEdits</a>
+          </li>
+          <li
+            role="presentation"
+            data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
+            data-ng-click="searchResults.selectedCount > 0 && setStep(3)"
+          >
+            <a href="" data-translate="">confirmAndSave</a>
+          </li>
+          <li class="gn-batch-editor-info">
+            {{searchResults.selectedCount}}
+            <span data-translate="">recordsInSelection</span>
           </li>
           <li class="pull-right">
-            <div data-gn-need-help="user-guide/workflow/batchediting.html"></div>
+            <div data-gn-need-help="batchediting"></div>
           </li>
         </ul>
-        <br/>
+        <br />
 
         <div data-ng-class="{'hidden' : selectedStep !== 1}">
           <div class="panel-body">
-            <p class="alert alert-info"
-              data-translate="">chooseASetOfRecordHelp</p>
+            <p class="alert alert-info" data-translate="">chooseASetOfRecordHelp</p>
 
             <div class="row">
               <div class="col-sm-12">
-                <form class="form-horizontal"
-                      role="form">
-                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                <form class="form-horizontal" role="form">
+                  <input type="hidden" name="_csrf" value="{{csrf}}" />
 
                   <div class="row gn-top-search">
                     <div class="col-md-3 gn-search-facet">
-                      <div data-gn-user-searches-panel="user"
-                           data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
+                      <div
+                        data-gn-user-searches-panel="user"
+                        data-ng-if="isUserSearchesEnabled && user.isConnected()"
+                      ></div>
                     </div>
                     <div class="col-md-6">
                       <div class="input-group gn-form-any">
-                        <div data-gn-user-searches-list=""
-                             data-ng-cloak=""
-                             data-mode="button"
-                             class="input-group-btn btn-favorites">
-                        </div>
-                        <input type="text"
-                               class="form-control input-lg"
-                               id="gn-any-field"
-                               title="{{'anyFieldTitle' | translate}}"
-                               data-ng-model="searchObj.params.any"
-                               autocomplete="off"
-                               placeholder="{{'anyPlaceHolder' | translate}}"
-                               aria-label="{{'anyPlaceHolder' | translate}}"
-                               data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
-                               data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
-                               data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
-                               data-typeahead-loading="anyLoading" class="form-control"
-                               data-typeahead-min-length="1"
-                               data-typeahead-focus-first="false"
-                               data-typeahead-wait-ms="600">
+                        <div
+                          data-gn-user-searches-list=""
+                          data-ng-cloak=""
+                          data-mode="button"
+                          class="input-group-btn btn-favorites"
+                        ></div>
+                        <input
+                          type="text"
+                          class="form-control input-lg"
+                          id="gn-any-field"
+                          title="{{'anyFieldTitle' | translate}}"
+                          data-ng-model="searchObj.params.any"
+                          autocomplete="off"
+                          placeholder="{{'anyPlaceHolder' | translate}}"
+                          aria-label="{{'anyPlaceHolder' | translate}}"
+                          data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+                          data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
+                          data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
+                          data-typeahead-loading="anyLoading"
+                          class="form-control"
+                          data-typeahead-min-length="1"
+                          data-typeahead-focus-first="false"
+                          data-typeahead-wait-ms="600"
+                        />
 
                         <div class="input-group-btn">
-                          <button type="button"
-                                  data-ng-click="resetSearch(searchObj.defaultParams);"
-                                  title="{{'ClearTitle' | translate}}"
-                                  class="btn btn-default btn-lg btn-reset">
+                          <button
+                            type="button"
+                            data-ng-click="resetSearch(searchObj.defaultParams);"
+                            title="{{'ClearTitle' | translate}}"
+                            class="btn btn-default btn-lg btn-reset"
+                          >
                             <i class="fa fa-times"></i>
                             <span class="sr-only" data-translate="">ClearTitle</span>
                           </button>
-                          <button type="button"
-                                  data-ng-click="triggerSearch()"
-                                  title="{{'search' | translate}}"
-                                  class="btn btn-default btn-lg btn-search">
+                          <button
+                            type="button"
+                            data-ng-click="triggerSearch()"
+                            title="{{'search' | translate}}"
+                            class="btn btn-default btn-lg btn-search"
+                          >
                             <i class="fa fa-search"></i>
                             <span class="sr-only" data-translate="">search</span>
                           </button>
-                          <button type="button"
-                                  class="btn btn-default btn-lg btn-advanced"
-                                  title="{{'searchOptions' | translate}}"
-                                  data-ng-model="searchObj.advancedMode"
-                                  btn-checkbox=""
-                                  btn-checkbox-true="1"
-                                  btn-checkbox-false="0">
+                          <button
+                            type="button"
+                            class="btn btn-default btn-lg btn-advanced"
+                            title="{{'searchOptions' | translate}}"
+                            data-ng-model="searchObj.advancedMode"
+                            btn-checkbox=""
+                            btn-checkbox-true="1"
+                            btn-checkbox-false="0"
+                          >
                             <i class="fa fa-fw fa-sliders"></i>
                             <span class="sr-only" data-translate="">searchOptions</span>
                           </button>
@@ -109,56 +127,70 @@
                       </div>
                     </div>
                     <div class="col-md-3">
-                      <button type="button"
-                              data-ng-disabled="searchResults.selectedCount < 1"
-                              data-ng-class="{'disabled': searchResults.selectedCount < 1}"
-                              data-ng-click="searchSelection(defaultSearchObj.params);"
-                              title="{{'resetSearchToDisplayAll' | translate}}"
-                              class="btn btn-link">
+                      <button
+                        type="button"
+                        data-ng-disabled="searchResults.selectedCount < 1"
+                        data-ng-class="{'disabled': searchResults.selectedCount < 1}"
+                        data-ng-click="searchSelection(defaultSearchObj.params);"
+                        title="{{'resetSearchToDisplayAll' | translate}}"
+                        class="btn btn-link"
+                      >
                         <i class="fa fa-check-square"></i>
                         <span data-translate="">displaySelectionOnly</span>
                       </button>
                     </div>
                   </div>
                 </form>
-                <br/>
-                <div class="row"
-                    data-ng-show="searchResults.records.length > 0">
+                <br />
+                <div class="row" data-ng-show="searchResults.records.length > 0">
                   <div class="col-md-offset-3 col-md-4 relative">
-                    <div data-gn-selection-widget=""
-                        without-action-menu=""
-                        data-results="searchResults"></div>
+                    <div
+                      data-gn-selection-widget=""
+                      without-action-menu=""
+                      data-results="searchResults"
+                    ></div>
                   </div>
                   <div class="col-md-5">
-                    <div class="pull-right"
-                        data-gn-pagination="paginationInfo"
-                        data-hits-values="searchObj.hitsperpageValues"></div>
+                    <div
+                      class="pull-right"
+                      data-gn-pagination="paginationInfo"
+                      data-hits-values="searchObj.hitsperpageValues"
+                    ></div>
 
-                    <div class="pull-right"
-                        data-sortby-combo=""
-                        data-params="searchObj.params"
-                        data-gn-sortby-values="searchObj.sortbyValues"></div>
+                    <div
+                      class="pull-right"
+                      data-sortby-combo=""
+                      data-params="searchObj.params"
+                      data-gn-sortby-values="searchObj.sortbyValues"
+                    ></div>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="col-md-3 gn-search-facet">
-                    <div data-es-facets="searchResults.facets"/>
+                    <div data-es-facets="searchResults.facets" />
                   </div>
                   <div class="col-md-9">
-                <span class="loading fa fa-spinner fa-spin"
-                      data-ng-show="searching"></span>
+                    <span
+                      class="loading fa fa-spinner fa-spin"
+                      data-ng-show="searching"
+                    ></span>
 
-                    <div class="alert alert-warning" role="alert"
-                        ng-if="!searching && searchResults.count == 0">
+                    <div
+                      class="alert alert-warning"
+                      role="alert"
+                      ng-if="!searching && searchResults.count == 0"
+                    >
                       <i class="fa fa-frown-o"></i>
                       <span data-translate="">zarooResult</span>
                     </div>
 
-                    <div data-ng-show="searchResults.records.length > 0"
-                        data-gn-results-container=""
-                        data-search-results="searchResults"
-                        data-template-url="resultTemplate"></div>
+                    <div
+                      data-ng-show="searchResults.records.length > 0"
+                      data-gn-results-container=""
+                      data-search-results="searchResults"
+                      data-template-url="resultTemplate"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -166,17 +198,18 @@
           </div>
         </div>
 
-
         <div data-ng-class="{'hidden' : selectedStep !== 2}">
           <div class="panel-body">
             <div class="row">
               <div class="col-md-12">
-                <label class="radio-inline"
-                       data-ng-repeat="t in editTypes">
-                  <input type="radio"
-                         data-ng-model="$parent.editType"
-                         data-ng-click="setType(t.id)"
-                         value="{{t.id}}" name="editType"/>
+                <label class="radio-inline" data-ng-repeat="t in editTypes">
+                  <input
+                    type="radio"
+                    data-ng-model="$parent.editType"
+                    data-ng-click="setType(t.id)"
+                    value="{{t.id}}"
+                    name="editType"
+                  />
                   <strong>
                     <i class="fa fa-fw {{t.icon}}"></i>
                     {{t.id | translate}}
@@ -187,9 +220,9 @@
 
             <div class="row" data-ng-show="editType === 'searchAndReplace'">
               <div class="col-md-12">
-
-                <p class="alert alert-info"
-                   data-translate="">searchAndReplaceEditsHelp</p>
+                <p class="alert alert-info" data-translate="">
+                  searchAndReplaceEditsHelp
+                </p>
                 <div class="well">
                   <p class="help-block">
                     <span data-translate="">addSearchAndReplace-help</span>
@@ -197,34 +230,48 @@
                   <div class="form-group">
                     <label>
                       <span data-translate="">searchValue</span>
-                      <textarea class="form-control"
-                                name="search"
-                                data-ng-model="searchAndReplaceField.search"/>
+                      <textarea
+                        class="form-control"
+                        name="search"
+                        data-ng-model="searchAndReplaceField.search"
+                      />
                     </label>
-                    <br/>
+                    <br />
                     <label>
                       <span data-translate="">searchReplacement</span>
-                      <textarea class="form-control"
-                                name="search"
-                                data-ng-model="searchAndReplaceField.replacement"/>
+                      <textarea
+                        class="form-control"
+                        name="search"
+                        data-ng-model="searchAndReplaceField.replacement"
+                      />
                     </label>
-                    <br/>
+                    <br />
                     <label>
                       <span data-translate="">regexpFlags</span>
                       <div class="input-group">
-                        <input type="text"
-                               class="form-control"
-                               name="regexpFlags"
-                               data-ng-model="searchAndReplaceField.regexpFlags"/>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="regexpFlags"
+                          data-ng-model="searchAndReplaceField.regexpFlags"
+                        />
                         <div class="input-group-btn">
-                          <button type="button"
-                                  class="btn btn-default dropdown-toggle"
-                                  data-toggle="dropdown" aria-haspopup="true"
-                                  aria-expanded="false">
+                          <button
+                            type="button"
+                            class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu dropdown-menu-right">
-                            <li data-ng-repeat="f in regexpFlags"><a data-ng-click="searchAndReplaceField.regexpFlags = searchAndReplaceField.regexpFlags + f">{{f}} : {{('regexpFlags-' + f) | translate}}</a></li>
+                            <li data-ng-repeat="f in regexpFlags">
+                              <a
+                                data-ng-click="searchAndReplaceField.regexpFlags = searchAndReplaceField.regexpFlags + f"
+                                >{{f}} : {{('regexpFlags-' + f) | translate}}</a
+                              >
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -233,216 +280,272 @@
                 </div>
               </div>
             </div>
-            <div class="row" data-ng-show="editType === 'batchEdits' || editType === 'xpathEdits'">
+            <div
+              class="row"
+              data-ng-show="editType === 'batchEdits' || editType === 'xpathEdits'"
+            >
               <div class="col-md-12">
-                <p class="alert alert-info"
-                   data-ng-show="editType === 'batchEdits'"
-                   data-translate="">defineEditsHelp</p>
+                <p
+                  class="alert alert-info"
+                  data-ng-show="editType === 'batchEdits'"
+                  data-translate=""
+                >
+                  defineEditsHelp
+                </p>
 
-                <div class="alert alert-info"
-                     data-ng-show="editType === 'xpathEdits'">
+                <div class="alert alert-info" data-ng-show="editType === 'xpathEdits'">
                   <span data-translate="">addXpath-help</span>
                   <ul>
                     <li>
                       <span data-translate="">addXpathTitle</span>&nbsp;
-                      <i class="fa fa-check-circle text-success"
-                         data-ng-show="currentXpath.field != ''"></i>
+                      <i
+                        class="fa fa-check-circle text-success"
+                        data-ng-show="currentXpath.field != ''"
+                      ></i>
                     </li>
                     <li>
                       <span data-translate="">addXpathInsertMode</span>&nbsp;
-                      <i class="fa fa-check-circle text-success"
-                         data-ng-show="currentXpath.insertMode != ''"></i>
+                      <i
+                        class="fa fa-check-circle text-success"
+                        data-ng-show="currentXpath.insertMode != ''"
+                      ></i>
                     </li>
                     <li>
                       <span data-translate="">addXpathXpath</span>&nbsp;
-                      <i class="fa fa-check-circle text-success"
-                         data-ng-show="currentXpath.xpath != ''"></i>
+                      <i
+                        class="fa fa-check-circle text-success"
+                        data-ng-show="currentXpath.xpath != ''"
+                      ></i>
                     </li>
                     <li>
                       <span data-translate="">addXpathValue</span>&nbsp;
-                      <i class="fa fa-check-circle text-success"
-                         data-ng-show="currentXpath.value != ''"></i>
+                      <i
+                        class="fa fa-check-circle text-success"
+                        data-ng-show="currentXpath.value != ''"
+                      ></i>
                     </li>
                   </ul>
 
-                  <div gn-batch-edit-examples-selector="setExample"/>
+                  <div gn-batch-edit-examples-selector="setExample" />
                 </div>
 
                 <form class="form-horizontal" id="gn-batch-changes">
                   <div data-ng-show="editType === 'xpathEdits'">
-
-                    <form class="form-horizontal"
-                          name="xpathConfigForm"
-                          novalidate="">
-                      <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                    <form class="form-horizontal" name="xpathConfigForm" novalidate="">
+                      <input type="hidden" name="_csrf" value="{{csrf}}" />
 
                       <div class="well">
-                        <p class="help-block">
                         <div class="form-group">
-                          <input name="field"
-                                 type="text"
-                                 class="form-control"
-                                 data-ng-model="currentXpath.field"
-                                 placeholder="{{'addXpathTitle' | translate}}"/>
-                          <br/>
-                          <select name="insertMode"
-                                  data-ng-options="(option | translate) for option in insertModes"
-                                  data-ng-model="currentXpath.insertMode"
-                                  data-ng-required=""></select>
-                          <br/>
-                          <input name="xpath"
-                                 type="text"
-                                 class="form-control"
-                                 data-ng-model="currentXpath.xpath"
-                                 data-ng-class="xpathConfigForm.xpath.$error.required ? 'has-error' : ''"
-                                 data-ng-required=""
-                                 placeholder="{{'xpath' | translate}}"/>
-                          <br/>
+                          <input
+                            name="field"
+                            type="text"
+                            class="form-control"
+                            data-ng-model="currentXpath.field"
+                            placeholder="{{'addXpathTitle' | translate}}"
+                          />
+                          <br />
+                          <select
+                            name="insertMode"
+                            data-ng-options="(option | translate) for option in insertModes"
+                            data-ng-model="currentXpath.insertMode"
+                            data-ng-required=""
+                          ></select>
+                          <br />
+                          <input
+                            name="xpath"
+                            type="text"
+                            class="form-control"
+                            data-ng-model="currentXpath.xpath"
+                            data-ng-class="xpathConfigForm.xpath.$error.required ? 'has-error' : ''"
+                            data-ng-required=""
+                            placeholder="{{'xpath' | translate}}"
+                          />
+                          <br />
                           <textarea
                             name="xpath"
                             class="form-control"
                             data-ng-model="currentXpath.value"
                             data-ng-disabled="currentXpath.insertMode.indexOf('gn_delete') !== -1"
-                            placeholder="{{'xpathValue' | translate}}"></textarea>
-                          <br/>
-                          <button class="btn btn-default"
-                                  data-ng-disabled="currentXpath.xpath == ''"
-                                  data-ng-click="addOrUpdateXpathChange()"
-                                  type="submit">
+                            placeholder="{{'xpathValue' | translate}}"
+                          ></textarea>
+                          <br />
+                          <button
+                            class="btn btn-default"
+                            data-ng-disabled="currentXpath.xpath == ''"
+                            data-ng-click="addOrUpdateXpathChange()"
+                            type="submit"
+                          >
                             <i class="fa fa-plus"></i>
                           </button>
 
-                          <button class="btn btn-default"
-                                  data-ng-click="pasteFromClipboard()">
+                          <button
+                            class="btn btn-default"
+                            data-ng-click="pasteFromClipboard()"
+                          >
                             <i class="fa fa-paste"></i>
                           </button>
                         </div>
-                        </p>
                       </div>
                     </form>
 
-
-
                     <ul class="list-group">
-                      <li data-ng-repeat="c in changes | filter:isXpath"
-                          class="list-group-item">
+                      <li
+                        data-ng-repeat="c in changes | filter:isXpath"
+                        class="list-group-item"
+                      >
                         <h6>{{c.field}} ({{c.insertMode | translate}})</h6>
                         <pre>{{c.xpath}}</pre>
                         <pre data-ng-if="c.value">{{c.value}}</pre>
 
-
-                        <button class="btn btn-default"
-                                data-ng-click="editXpathChange(c)">
+                        <button
+                          class="btn btn-default"
+                          data-ng-click="editXpathChange(c)"
+                        >
                           <i class="fa fa-pencil"></i>
                         </button>
-                        <button class="btn btn-default"
-                                data-ng-click="removeXpathChange(c)">
+                        <button
+                          class="btn btn-default"
+                          data-ng-click="removeXpathChange(c)"
+                        >
                           <i class="fa fa-times text-danger"></i>
                         </button>
-                        <button gn-copy-to-clipboard-button=""
-                                data-btn-class="btn btn-default"
-                                data-text="{{c}}"/>
+                        <button
+                          gn-copy-to-clipboard-button=""
+                          data-btn-class="btn btn-default"
+                          data-text="{{c}}"
+                        />
                       </li>
                     </ul>
                   </div>
 
-                  <fieldset data-ng-show="editType === 'batchEdits'"
-                            data-ng-repeat="(key, standard) in fieldConfig"
-                            data-ng-if="standard.section && hasRecordsInStandard(key)">
+                  <fieldset
+                    data-ng-show="editType === 'batchEdits'"
+                    data-ng-repeat="(key, standard) in fieldConfig"
+                    data-ng-if="standard.section && hasRecordsInStandard(key)"
+                  >
                     <legend data-gn-slide-toggle="true">{{key | translate}}</legend>
 
                     <fieldset data-ng-repeat="section in standard.section">
-                      <legend data-gn-slide-toggle="true">{{section.name | translate}}</legend>
-                      <div class="form-group"
-                          data-ng-repeat="field in section.field"
-                          data-ng-init="field.value = ''">
-                        <label class="col-sm-2 control-label"
-                              data-ng-class="{'text-danger': field.isDeleted}">{{field.name |
-                          translate}}</label>
+                      <legend data-gn-slide-toggle="true">
+                        {{section.name | translate}}
+                      </legend>
+                      <div
+                        class="form-group"
+                        data-ng-repeat="field in section.field"
+                        data-ng-init="field.value = ''"
+                      >
+                        <label
+                          class="col-sm-2 control-label"
+                          data-ng-class="{'text-danger': field.isDeleted}"
+                          >{{field.name | translate}}</label
+                        >
                         <div class="col-sm-10">
-                          <div class="input-group" style="width:100%">
-                            <input type="text"
-                                  data-ng-if="field.use === null"
-                                  data-ng-blur="putChange(field, $event)"
-                                  data-ng-disabled="field.isDeleted"
-                                  class="form-control"/>
+                          <div class="input-group" style="width: 100%">
+                            <input
+                              type="text"
+                              data-ng-if="field.use === null"
+                              data-ng-blur="putChange(field, $event)"
+                              data-ng-disabled="field.isDeleted"
+                              class="form-control"
+                            />
                             <textarea
                               data-ng-if="field.use === 'textarea'"
                               data-ng-blur="putChange(field, $event)"
                               data-ng-disabled="field.isDeleted"
-                              class="form-control"/>
-                            <input type="text"
-                                  class="form-control"
-                                  data-ng-if="field.use === 'data-gn-language-picker'"
-                                  data-ng-disabled="field.isDeleted"
-                                  data-gn-language-picker=""
-                                  data-ng-blur="putChange(field, $event)"/>
-                            <div class="form-control"
-                                data-ng-if="field.use === 'data-gn-codelist-picker'"
-                                data-ng-disabled="field.isDeleted"
-                                data-schema-info-combo="codelist"
-                                data-schema="{{key}}"
-                                data-allow-blank="true"
-                                data-gn-schema-info="{{field.codelist}}"
-                                data-selected-info="field.value"
-                                data-ng-blur="putChange(field, $event)"
-                                lang="lang"/>
+                              class="form-control"
+                            />
+                            <input
+                              type="text"
+                              class="form-control"
+                              data-ng-if="field.use === 'data-gn-language-picker'"
+                              data-ng-disabled="field.isDeleted"
+                              data-gn-language-picker=""
+                              data-ng-blur="putChange(field, $event)"
+                            />
+                            <div
+                              class="form-control"
+                              data-ng-if="field.use === 'data-gn-codelist-picker'"
+                              data-ng-disabled="field.isDeleted"
+                              data-schema-info-combo="codelist"
+                              data-schema="{{key}}"
+                              data-allow-blank="true"
+                              data-gn-schema-info="{{field.codelist}}"
+                              data-selected-info="field.value"
+                              data-ng-blur="putChange(field, $event)"
+                              lang="lang"
+                            />
                             <div data-ng-if="field.use === 'data-gn-draw-bbox'">
-                              <div class=""
-                                  data-gn-draw-bbox=""
-                                  data-ng-disabled="field.isDeleted"
-                                  data-schema="{{key}}"
-                                  data-extent-xml="xmlExtents[field.xpath]"
-                                  lang="lang">
-                              </div>
-                              <input id="bboxField"
-                                    class="hidden"
-                                    data-ng-model="xmlExtents[field.xpath]"/>
+                              <div
+                                class=""
+                                data-gn-draw-bbox=""
+                                data-ng-disabled="field.isDeleted"
+                                data-schema="{{key}}"
+                                data-extent-xml="xmlExtents[field.xpath]"
+                                lang="lang"
+                              ></div>
+                              <input
+                                id="bboxField"
+                                class="hidden"
+                                data-ng-model="xmlExtents[field.xpath]"
+                              />
                             </div>
-                            <div data-ng-if="field.use === 'data-gn-directory-entry-selector'">
-                              <div class=""
-                                  data-ng-disabled="field.isDeleted"
-                                  data-gn-directory-entry-selector=""
-                                  data-template-add-action="false"
-                                  data-search-action="true"
-                                  data-template-type="contact"
-                                  data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-                                  data-element-name="{{field.xpath.substring(field.xpath.lastIndexOf('/') + 1, p.length)}}"
-                                  data-schema="iso19139"
-                                  data-select-entry-cb="addContactCb"
-                                  data-field="{{field}}"
-                                  lang="lang">
-                              </div>
+                            <div
+                              data-ng-if="field.use === 'data-gn-directory-entry-selector'"
+                            >
+                              <div
+                                class=""
+                                data-ng-disabled="field.isDeleted"
+                                data-gn-directory-entry-selector=""
+                                data-template-add-action="false"
+                                data-search-action="true"
+                                data-template-type="contact"
+                                data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+                                data-element-name="{{field.xpath.substring(field.xpath.lastIndexOf('/') + 1, p.length)}}"
+                                data-schema="iso19139"
+                                data-select-entry-cb="addContactCb"
+                                data-field="{{field}}"
+                                lang="lang"
+                              ></div>
                               <ul class="list-group">
-                                <li class="list-group-item"
-                                    data-ng-repeat="contacts in xmlContacts[field.name].values">
+                                <li
+                                  class="list-group-item"
+                                  data-ng-repeat="contacts in xmlContacts[field.name].values"
+                                >
                                   {{contacts.title}}
-                                  <button class="btn btn-link text-alert pull-right"
-                                          data-ng-click="removeContact(field, contacts.xml)">
+                                  <button
+                                    class="btn btn-link text-alert pull-right"
+                                    data-ng-click="removeContact(field, contacts.xml)"
+                                  >
                                     <i class="fa fa-times"></i>
                                   </button>
                                 </li>
                               </ul>
                             </div>
-                            <input type="text"
-                                  class="form-control"
-                                  data-ng-if="field.use === 'data-gn-metadata-picker'"
-                                  data-ng-disabled="field.isDeleted"
-                                  data-gn-metadata-picker=""
-                                  data-display-field="resourceTitle"
-                                  data-value-field="uuid"
-                                  data-ng-blur="putChange(field, $event)"/>
-                            <input type="text"
-                                  class="form-control"
-                                  data-ng-if="field.use === 'data-gn-contact-picker'"
-                                  data-ng-disabled="field.isDeleted"
-                                  data-ng-blur="addChange(field, $event)"/>
-                            <span class="btn btn-default input-group-addon"
-                                  data-toggle="button"
-                                  data-ng-if="field.removable"
-                                  data-ng-class="{'btn-danger': field.isDeleted}"
-                                  data-ng-click="markFieldAsDeleted(field)"
-                                  title="{{(field.isDeleted ? 'fieldIsRemoved' : 'removeField') | translate}}">
+                            <input
+                              type="text"
+                              class="form-control"
+                              data-ng-if="field.use === 'data-gn-metadata-picker'"
+                              data-ng-disabled="field.isDeleted"
+                              data-gn-metadata-picker=""
+                              data-display-field="resourceTitle"
+                              data-value-field="uuid"
+                              data-ng-blur="putChange(field, $event)"
+                            />
+                            <input
+                              type="text"
+                              class="form-control"
+                              data-ng-if="field.use === 'data-gn-contact-picker'"
+                              data-ng-disabled="field.isDeleted"
+                              data-ng-blur="addChange(field, $event)"
+                            />
+                            <span
+                              class="btn btn-default input-group-addon"
+                              data-toggle="button"
+                              data-ng-if="field.removable"
+                              data-ng-class="{'btn-danger': field.isDeleted}"
+                              data-ng-click="markFieldAsDeleted(field)"
+                              title="{{(field.isDeleted ? 'fieldIsRemoved' : 'removeField') | translate}}"
+                            >
                               <i class="fa fa-times text-danger"></i>&nbsp;
                             </span>
                           </div>
@@ -451,8 +554,11 @@
                     </fieldset>
                   </fieldset>
 
-                  <button type="reset" class="btn btn-default"
-                          data-ng-click="resetChanges()">
+                  <button
+                    type="reset"
+                    class="btn btn-default"
+                    data-ng-click="resetChanges()"
+                  >
                     <i class="fa fa-eraser"></i>&nbsp;
                     <span data-translate="">resetChanges</span>
                   </button>
@@ -463,98 +569,144 @@
         </div>
 
         <div data-ng-class="{'hidden' : selectedStep !== 3}">
-
           <div class="panel-body">
             <div class="container">
               <div class="row">
-                <div class="col-sm-6" data-ng-show="editType !== 'searchAndReplace' && changes.length === 0">
-                  <p class="alert alert-warning"
-                    data-translate="">noChangesToApply</p>
+                <div
+                  class="col-sm-6"
+                  data-ng-show="editType !== 'searchAndReplace' && changes.length === 0"
+                >
+                  <p class="alert alert-warning" data-translate="">noChangesToApply</p>
                 </div>
-                <div class="col-sm-6" data-ng-show="editType !== 'searchAndReplace' && changes.length > 0">
+                <div
+                  class="col-sm-6"
+                  data-ng-show="editType !== 'searchAndReplace' && changes.length > 0"
+                >
                   <h4 data-translate="">changesToApply</h4>
                   <ul>
-                    <li data-ng-repeat="change in changes"
-                        title="{{change.value}}"
-                        data-ng-class="">
+                    <li
+                      data-ng-repeat="change in changes"
+                      title="{{change.value}}"
+                      data-ng-class=""
+                    >
                       {{change.field | translate}}
                       <span data-ng-show="change.insertMode">
-                        ({{change.insertMode | translate}})
-                      </span>:
-                      {{change.value | limitTo:40}}
+                        ({{change.insertMode | translate}}) </span
+                      >: {{change.value | limitTo:40}}
                     </li>
                   </ul>
                 </div>
 
-
-                <div class="col-sm-6" data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search == ''">
-                  <p class="alert alert-warning"
-                     data-translate="">noSearchAndReplaceChangesToApply</p>
+                <div
+                  class="col-sm-6"
+                  data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search == ''"
+                >
+                  <p class="alert alert-warning" data-translate="">
+                    noSearchAndReplaceChangesToApply
+                  </p>
                 </div>
-                <div class="col-sm-6" data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search != ''">
+                <div
+                  class="col-sm-6"
+                  data-ng-show="editType === 'searchAndReplace' && searchAndReplaceChanges[0].search != ''"
+                >
                   <h4 data-translate="">changesToApply</h4>
                   <ul>
-                    <li data-ng-repeat="change in searchAndReplaceChanges track by $index"
-                        data-ng-class="">
+                    <li
+                      data-ng-repeat="change in searchAndReplaceChanges track by $index"
+                      data-ng-class=""
+                    >
                       {{change.search | limitTo:40}}
                       <i class="fa fa-fw fa-chevron-right"></i>
                       {{change.replacement | limitTo:40}}
-                      <span data-ng-if="changes.regexpFlags"> ({{changes.regexpFlags}})</span>
+                      <span data-ng-if="changes.regexpFlags">
+                        ({{changes.regexpFlags}})</span
+                      >
                     </li>
                   </ul>
                 </div>
-                <div class="col-sm-6"
-                     data-ng-hide="selectedRecords.total.value > 0">
-                  <p class="alert alert-warning"
+                <div class="col-sm-6" data-ng-hide="selectedRecords.total.value > 0">
+                  <p
+                    class="alert alert-warning"
                     data-ng-show="selectedRecordsCount == 0"
-                    data-translate="">selectRecordsToEdit</p>
-                  <p class="alert alert-warning"
+                    data-translate=""
+                  >
+                    selectRecordsToEdit
+                  </p>
+                  <p
+                    class="alert alert-warning"
                     data-ng-show="tooManyRecordInSelForSearch"
                     data-translate=""
-                    data-translate-values="{count: selectedRecordsCount}">tooManyRecordInSelForSearch</p>
+                    data-translate-values="{count: selectedRecordsCount}"
+                  >
+                    tooManyRecordInSelForSearch
+                  </p>
                 </div>
-                <div class="col-sm-6"
-                     data-ng-show="selectedRecords.total.value > 0">
+                <div class="col-sm-6" data-ng-show="selectedRecords.total.value > 0">
                   <h4 data-translate="">aboutToUpdateTheFollowing</h4>
                   <ul>
                     <li data-ng-repeat="record in selectedRecords.hits">
-                    <a data-ng-href="catalog.search#/metadata/{{record._id}}">{{record._source.resourceTitleObject.default}}</a>
+                      <a data-ng-href="catalog.search#/metadata/{{record._id}}"
+                        >{{record._source.resourceTitleObject.default}}</a
+                      >
 
-                    <div class="btn-group">
-                      <button class="btn btn-link btn-xs"
-                              data-ng-disabled="!canPreview"
-                              data-gn-click-and-spin="previewChanges(record._id)">
-                        <i class="fa fa-play"/>
-                        <span data-translate="">previewChangesAsXml</span>
-                      </button>
-                      <button type="button"
-                              class="btn btn-link btn-xs dropdown-toggle"
-                              data-ng-disabled="!canPreview"
-                              data-toggle="dropdown">
-                        <span class="caret"></span>&nbsp;
-                      </button>
-                      <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a
-                          data-gn-click-and-spin="previewChanges(record._id, 'diffhtml')"
-                          href="" data-translate="">
-                          previewChangesAsHtml</a></li>
-                        <li><a
-                          data-gn-click-and-spin="previewChanges(record._id, 'diff')"
-                          href="" data-translate="">
-                          previewChangesAsDiff</a></li>
-                        <li><a
-                          data-gn-click-and-spin="previewChanges(record._id, 'patch')"
-                          href="" data-translate="">
-                          previewChangesAsPatch</a></li>
-                      </ul>
-                    </div>
-                  </li>
+                      <div class="btn-group">
+                        <button
+                          class="btn btn-link btn-xs"
+                          data-ng-disabled="!canPreview"
+                          data-gn-click-and-spin="previewChanges(record._id)"
+                        >
+                          <i class="fa fa-play" />
+                          <span data-translate="">previewChangesAsXml</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-link btn-xs dropdown-toggle"
+                          data-ng-disabled="!canPreview"
+                          data-toggle="dropdown"
+                        >
+                          <span class="caret"></span>&nbsp;
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                          <li>
+                            <a
+                              data-gn-click-and-spin="previewChanges(record._id, 'diffhtml')"
+                              href=""
+                              data-translate=""
+                            >
+                              previewChangesAsHtml</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              data-gn-click-and-spin="previewChanges(record._id, 'diff')"
+                              href=""
+                              data-translate=""
+                            >
+                              previewChangesAsDiff</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              data-gn-click-and-spin="previewChanges(record._id, 'patch')"
+                              href=""
+                              data-translate=""
+                            >
+                              previewChangesAsPatch</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input type="checkbox" id="updateDateStamp" data-ng-model="extraParams.updateDateStamp" >
+                  <input
+                    type="checkbox"
+                    id="updateDateStamp"
+                    data-ng-model="extraParams.updateDateStamp"
+                  />
                   <label for="updateDateStamp" data-translate="">updateDateStamp</label>
                 </div>
               </div>
@@ -563,12 +715,16 @@
                 <div class="col-md-11">
                   <h4 data-translate="">processPreview</h4>
 
-                  <div data-ng-if="diffType == 'diffhtml'" data-ng-bind-html="preview"></div>
-                  <div data-ng-if="diffType != 'diffhtml'"
-                       style="height: 500px"
-                       ui-ace="{useWrapMode:true,showGutter:true,mode:'xml'}"
-                       data-ng-model="preview">
-                  </div>
+                  <div
+                    data-ng-if="diffType == 'diffhtml'"
+                    data-ng-bind-html="preview"
+                  ></div>
+                  <div
+                    data-ng-if="diffType != 'diffhtml'"
+                    style="height: 500px"
+                    ui-ace="{useWrapMode:true,showGutter:true,mode:'xml'}"
+                    data-ng-model="preview"
+                  ></div>
                 </div>
               </div>
               <div class="row" data-ng-show="previewError">
@@ -577,13 +733,15 @@
                 </div>
               </div>
 
-              <br/>
+              <br />
               <div class="row gn-margin-bottom">
                 <div class="col-md-12">
-                  <button class="btn btn-block btn-primary"
-                          data-ng-disabled="!canPreview"
-                          data-gn-click-and-spin="applyChanges()">
-                    <i class="fa fa-save"/>
+                  <button
+                    class="btn btn-block btn-primary"
+                    data-ng-disabled="!canPreview"
+                    data-gn-click-and-spin="applyChanges()"
+                  >
+                    <i class="fa fa-save" />
                     <span data-translate="">save</span>
                   </button>
                 </div>
@@ -598,8 +756,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 </div>

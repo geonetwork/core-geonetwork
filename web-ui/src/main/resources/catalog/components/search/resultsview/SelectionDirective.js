@@ -21,117 +21,145 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
+(function () {
+  goog.provide("gn_selection_directive");
 
-  goog.provide('gn_selection_directive');
+  var module = angular.module("gn_selection_directive", []);
 
-  var module = angular.module('gn_selection_directive', []);
-
-  module.directive('gnSelectionWidget', [
-    '$translate', '$http', 'hotkeys', 'gnAlertService',
-    'gnHttp', 'gnMetadataActions', 'gnConfig', 'gnConfigService',
-    'gnSearchSettings', 'gnSearchManagerService', 'gnCollectionService',
-    function($translate, $http, hotkeys, gnAlertService,
-             gnHttp, gnMetadataActions, gnConfig, gnConfigService,
-             gnSearchSettings, gnSearchManagerService, gnCollectionService) {
-
+  module.directive("gnSelectionWidget", [
+    "$translate",
+    "$http",
+    "hotkeys",
+    "gnAlertService",
+    "gnHttp",
+    "gnMetadataActions",
+    "gnConfig",
+    "gnConfigService",
+    "gnSearchSettings",
+    "gnSearchManagerService",
+    "gnCollectionService",
+    function (
+      $translate,
+      $http,
+      hotkeys,
+      gnAlertService,
+      gnHttp,
+      gnMetadataActions,
+      gnConfig,
+      gnConfigService,
+      gnSearchSettings,
+      gnSearchManagerService,
+      gnCollectionService
+    ) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: true,
-        templateUrl: '../../catalog/components/search/resultsview/partials/' +
-            'selection-widget.html',
-        link: function(scope, element, attrs) {
+        templateUrl:
+          "../../catalog/components/search/resultsview/partials/" +
+          "selection-widget.html",
+        link: function (scope, element, attrs) {
           scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
-          scope.excludePattern =
-              new RegExp(attrs.excludeActionsPattern || '^$');
-          scope.withoutActionMenu =
-              angular.isDefined(attrs.withoutActionMenu) ? true : false;
-
+          scope.excludePattern = new RegExp(attrs.excludeActionsPattern || "^$");
+          scope.withoutActionMenu = angular.isDefined(attrs.withoutActionMenu)
+            ? true
+            : false;
 
           scope.withCollectionMenu = undefined;
           scope.collectionQuery = "+resourceType:series";
           scope.collectionTemplates = undefined;
 
-          scope.$watchCollection('user', function(n, o) {
+          scope.$watchCollection("user", function (n, o) {
             if (scope.withCollectionMenu === undefined && n && n.isEditorOrMore) {
-              scope.withCollectionMenu = n.isEditorOrMore()
-                && !angular.isDefined(attrs.withoutCollectionMenu) ? true : false;
+              scope.withCollectionMenu =
+                n.isEditorOrMore() && !angular.isDefined(attrs.withoutCollectionMenu)
+                  ? true
+                  : false;
 
-              scope.withCollectionMenu
-              && gnCollectionService.getTemplates(scope.collectionQuery).then(function(templates) {
-                scope.collectionTemplates = templates;
-              });
+              scope.withCollectionMenu &&
+                gnCollectionService
+                  .getTemplates(scope.collectionQuery)
+                  .then(function (templates) {
+                    scope.collectionTemplates = templates;
+                  });
             }
           });
 
-          scope.createCollection = function(record) {
-            gnSearchManagerService.selected(
-              scope.searchResults.selectionBucket).then(function(r) {
-              gnCollectionService.createCollection(record.uuid, r.data).then(function(r) {
-                window.location.hash = '#/metadata/' + r.id;
-              }, function(r) {
-                gnAlertService.addAlert({
-                  msg: r.data.description,
-                  delay: 20000,
-                  type: 'danger'});
-                if (r.id) {
-                  window.location.hash = '#/metadata/' + r.id
-                }
+          scope.createCollection = function (record) {
+            gnSearchManagerService
+              .selected(scope.searchResults.selectionBucket)
+              .then(function (r) {
+                gnCollectionService.createCollection(record.uuid, r.data).then(
+                  function (r) {
+                    window.location.hash = "#/metadata/" + r.id;
+                  },
+                  function (r) {
+                    gnAlertService.addAlert({
+                      msg: r.data.description,
+                      delay: 20000,
+                      type: "danger"
+                    });
+                    if (r.id) {
+                      window.location.hash = "#/metadata/" + r.id;
+                    }
+                  }
+                );
               });
-            });
-          }
-
+          };
 
           scope.mdService = gnMetadataActions;
 
           scope.operationOnSelectionInProgress = false;
 
-          gnConfigService.load().then(function(c) {
+          gnConfigService.load().then(function (c) {
             scope.isInspireValidationEnabled =
               gnConfig[gnConfig.key.isInspireEnabled] &&
-              angular.isString(gnConfig['system.inspire.remotevalidation.url']);
-            scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'];
-            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+              angular.isString(gnConfig["system.inspire.remotevalidation.url"]);
+            scope.validationNode = gnConfig["system.inspire.remotevalidation.nodeid"];
+            scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
           });
 
-          scope.$on('operationOnSelectionStart', function() {
+          scope.$on("operationOnSelectionStart", function () {
             scope.operationOnSelectionInProgress = true;
           });
-          scope.$on('operationOnSelectionStop', function() {
+          scope.$on("operationOnSelectionStop", function () {
             scope.operationOnSelectionInProgress = false;
           });
 
           // initial state
-          gnSearchManagerService.selected(scope.searchResults.selectionBucket)
-              .success(function(res) {
-                if (angular.isArray(res)) {
-                  scope.searchResults.selectedCount = res.length;
-                }
-              });
+          gnSearchManagerService
+            .selected(scope.searchResults.selectionBucket)
+            .success(function (res) {
+              if (angular.isArray(res)) {
+                scope.searchResults.selectedCount = res.length;
+              }
+            });
 
-          var updateCkb = function(records) {
+          var updateCkb = function (records) {
             var checked = true;
-            records.forEach(function(md) {
+            records.forEach(function (md) {
               checked = checked && md.selected;
             });
           };
 
           // set checkbox state on page change
-          scope.$watchCollection('searchResults.records', function(records) {
+          scope.$watchCollection("searchResults.records", function (records) {
             var w;
-            while (w = watchers.pop()) { w(); }
+            while ((w = watchers.pop())) {
+              w();
+            }
             updateCkb(records);
-            records.forEach(function(record, i) {
-              watchers.push(scope.$watch(
-                  'searchResults.records[' + i + ']["geonet:info"].selected',
-                  function() { updateCkb(scope.searchResults.records); }
-                  ));
+            records.forEach(function (record, i) {
+              watchers.push(
+                scope.$watch("searchResults.records[" + i + "].selected", function () {
+                  updateCkb(scope.searchResults.records);
+                })
+              );
             });
           });
 
-          scope.select = function() {
+          scope.select = function () {
             scope.checkAll = !scope.checkAll;
             if (scope.checkAll) {
               scope.selectAll(scope.searchResults.selectionBucket);
@@ -140,119 +168,125 @@
             }
           };
 
-          scope.viewSelectionOnly = function() {
-            return gnSearchManagerService.selected(
-                scope.searchResults.selectionBucket)
-                .then(function(res) {
-                  if (angular.isArray(res.data)) {
-                    scope.resetSearch({
-                      uuid: res.data
-                    });
-                  }
-                });
+          scope.viewSelectionOnly = function () {
+            return gnSearchManagerService
+              .selected(scope.searchResults.selectionBucket)
+              .then(function (res) {
+                if (angular.isArray(res.data)) {
+                  scope.resetSearch({
+                    uuid: res.data
+                  });
+                }
+              });
           };
 
-          scope.getIcon = function() {
+          scope.getIcon = function () {
             if (scope.searchResults.selectedCount === 0) {
-              return 'fa-square-o';
-            } else if (scope.searchResults.selectedCount ==
-                scope.searchResults.count) {
-              return 'fa-check-square-o';
+              return "fa-square-o";
+            } else if (scope.searchResults.selectedCount == scope.searchResults.count) {
+              return "fa-check-square-o";
             } else {
-              return 'fa-minus-square-o';
+              return "fa-minus-square-o";
             }
           };
 
-          scope.selectAllInPage = function(selected) {
+          scope.selectAllInPage = function (selected) {
             var uuids = [];
-            scope.searchResults.records.forEach(function(record) {
+            scope.searchResults.records.forEach(function (record) {
               uuids.push(record.uuid);
               record.selected = selected;
             });
 
-            gnSearchManagerService.select(uuids,
-                scope.searchResults.selectionBucket)
-                .success(function(res) {
-                  scope.searchResults.selectedCount = parseInt(res, 10);
-                });
-          };
-
-          scope.selectAll = function() {
-            gnSearchManagerService.selectAll(
-                scope.searchResults.selectionBucket)
-                .success(function(res) {
-                  scope.searchResults.selectedCount = parseInt(res, 10);
-                  scope.searchResults.records.forEach(function(record) {
-                    record.selected = true;
-                  });
-                });
-          };
-
-          scope.unSelectAll = function() {
-            gnSearchManagerService.selectNone(
-                scope.searchResults.selectionBucket)
-                .success(function(res) {
-                  scope.searchResults.selectedCount = parseInt(res, 10);
-                  scope.searchResults.records.forEach(function(record) {
-                    record.selected = false;
-                  });
-                });
-          };
-          hotkeys.bindTo(scope)
-              .add({
-                combo: 'a',
-                description: $translate.instant('hotkeySelectAll'),
-                callback: scope.selectAll
-              }).add({
-                combo: 'p',
-                description: $translate.instant('hotkeySelectAllInPage'),
-                callback: function() {
-                  scope.selectAllInPage(true);
-                }
-              }).add({
-                combo: 'n',
-                description: $translate.instant('hotkeyUnSelectAll'),
-                callback: scope.unSelectAll
+            gnSearchManagerService
+              .select(uuids, scope.searchResults.selectionBucket)
+              .success(function (res) {
+                scope.searchResults.selectedCount = parseInt(res, 10);
               });
+          };
 
-          scope.$on('mdSelectAll', scope.selectAll);
-          scope.$on('mdSelectNone', scope.unSelectAll);
+          scope.selectAll = function () {
+            gnSearchManagerService
+              .selectAll(scope.searchResults.selectionBucket)
+              .success(function (res) {
+                scope.searchResults.selectedCount = parseInt(res, 10);
+                scope.searchResults.records.forEach(function (record) {
+                  record.selected = true;
+                });
+              });
+          };
 
+          scope.unSelectAll = function () {
+            gnSearchManagerService
+              .selectNone(scope.searchResults.selectionBucket)
+              .success(function (res) {
+                scope.searchResults.selectedCount = parseInt(res, 10);
+                scope.searchResults.records.forEach(function (record) {
+                  record.selected = false;
+                });
+              });
+          };
+          hotkeys
+            .bindTo(scope)
+            .add({
+              combo: "a",
+              description: $translate.instant("hotkeySelectAll"),
+              callback: scope.selectAll
+            })
+            .add({
+              combo: "p",
+              description: $translate.instant("hotkeySelectAllInPage"),
+              callback: function () {
+                scope.selectAllInPage(true);
+              }
+            })
+            .add({
+              combo: "n",
+              description: $translate.instant("hotkeyUnSelectAll"),
+              callback: scope.unSelectAll
+            });
+
+          scope.$on("mdSelectAll", scope.selectAll);
+          scope.$on("mdSelectNone", scope.unSelectAll);
         }
       };
+    }
+  ]);
 
-    }]);
-
-  module.directive('gnSelectionMd', ['gnSearchManagerService',
-    function(gnSearchManagerService) {
+  module.directive("gnSelectionMd", [
+    "gnSearchManagerService",
+    function (gnSearchManagerService) {
       return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-          'md': '=gnSelectionMd',
-          'bucket': '=bucket',
-          'results': '=results'
+          md: "=gnSelectionMd",
+          bucket: "=bucket",
+          results: "=results"
         },
-        link: function(scope, element, attrs) {
-          element[0] && element[0].addEventListener('click', function(e){
-            var method = element[0].checked ? 'select' : 'unselect';
-            gnSearchManagerService[method](
-                scope.md.uuid, scope.bucket).
-                success(function(res) {
+        link: function (scope, element, attrs) {
+          element[0] &&
+            element[0].addEventListener("click", function (e) {
+              var method = element[0].checked ? "select" : "unselect";
+              gnSearchManagerService[method](scope.md.uuid, scope.bucket).success(
+                function (res) {
                   scope.md.selected = element[0].checked;
                   scope.results.selectedCount = parseInt(res, 10);
-                });
-            e.stopPropagation();
-          });
-
+                }
+              );
+              e.stopPropagation();
+            });
         }
       };
-    }]);
+    }
+  ]);
 
-  module.directive('gnContributeWidget', [function() {
-    return {
-      restrict: 'A',
-      templateUrl: '../../catalog/components/search/resultsview/partials/' +
-          'contribute-widget.html'
-    };
-  }]);
+  module.directive("gnContributeWidget", [
+    function () {
+      return {
+        restrict: "A",
+        templateUrl:
+          "../../catalog/components/search/resultsview/partials/" +
+          "contribute-widget.html"
+      };
+    }
+  ]);
 })();

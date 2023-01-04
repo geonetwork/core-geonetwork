@@ -34,7 +34,7 @@ import java.util.Collection;
  * Created by francois on 23/06/16.
  */
 public class MapServersUtils {
-    public static final String MODULE = "geonetwork.GeoServerPublisher";
+    public static final String MODULE = "geonetwork.geoserver.publisher";
 
     /**
      * Register a database table in GeoServer

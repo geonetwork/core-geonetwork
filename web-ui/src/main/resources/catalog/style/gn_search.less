@@ -8,7 +8,6 @@
 
 @panel-heading-height: 2.8em;
 
-
 .gn-facet {
   @facet-hover: darken(@text-color, 50%);
 
@@ -45,7 +44,9 @@
   //  }
   //}
   .gn-facet-container {
-    margin-left: 15px;
+    .gn-facet-container {
+      margin-left: 20px;
+    }
     margin-top: 5px;
     margin-bottom: 5px;
     a {
@@ -53,9 +54,17 @@
       .fa {
         margin-right: 3px;
       }
+      div.gn-facet-image {
+        background-size: cover !important;
+        width: 20px;
+        height: 20px;
+        margin-right: 3px;
+      }
       * {
-        color: @gray-dark;
         transition: color 0.1s;
+      }
+      span {
+        color: @gray-dark;
       }
       &:hover * {
         color: @facet-hover;
@@ -120,7 +129,9 @@
   }
   .gn-facet-input-group {
     margin-left: 18px;
-    input, .input-group-addon, .btn {
+    input,
+    .input-group-addon,
+    .btn {
       background: none;
       border: none;
       border-bottom: 1px solid #d3d3d3;
@@ -207,15 +218,15 @@
     font-size: 70%;
   }
   .badge {
-    background-color: #428BCA;
+    background-color: #428bca;
   }
   :hover {
     color: #fff;
-    background-color: #428BCA;
-    text-decoration:none;
+    background-color: #428bca;
+    text-decoration: none;
     .badge {
       background-color: #ffffff;
-      color: #428BCA;
+      color: #428bca;
     }
   }
 }
@@ -226,13 +237,11 @@
   &:first-letter {
     text-transform: uppercase;
   }
-  span {
-    background-color: #fff;
-  }
 }
 
 /* TODO: Deprecate due to change in gn-pager and gn-sort-by */
-[sortby-combo], [hitsperpage-combo] {
+[sortby-combo],
+[hitsperpage-combo] {
   display: inline-block;
   vertical-align: top;
   select {
@@ -276,9 +285,9 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   max-height: 350px;
   overflow-y: auto;
   width: calc(~"100% + 14px");
@@ -288,12 +297,10 @@
   padding: 3px 10px;
 }
 
-
 .tt-suggestion p {
   margin: 0;
-  margin-top:2px;
+  margin-top: 2px;
   line-height: normal;
-
 }
 .tt-hint {
   color: #999;
@@ -322,7 +329,7 @@
   right: 26px;
 }
 .tagsinput-trigger {
-  top: .575em;
+  top: 0.575em;
   right: 20px;
   font-size: 16px;
   font-weight: normal;
@@ -336,12 +343,14 @@
 //removes some artifacts that prevent clicks on the datepicker
 .datepicker-dropdown.datepicker-orient-bottom,
 .datepicker-dropdown.datepicker-orient-top {
-  &:before, &:after {
-    display:none;
+  &:before,
+  &:after {
+    display: none;
   }
 }
 
-[gn-collapsible], [data-gn-collapsible] {
+[gn-collapsible],
+[data-gn-collapsible] {
   cursor: pointer;
 }
 .gn-searchform {
@@ -352,7 +361,8 @@
   label {
     font-weight: normal;
   }
-  input[type='text'], select {
+  input[type="text"],
+  select {
     .input-sm;
   }
   .form-group {
@@ -371,7 +381,7 @@
   legend {
     font-size: 1em;
     font-style: italic;
-    padding-top: .4em;
+    padding-top: 0.4em;
     margin-bottom: 12px;
   }
   .bootstrap-tagsinput {
@@ -393,7 +403,7 @@
     top: 0.7em;
     left: 0.9em;
   }
-  .btn-group [type=checkbox] {
+  .btn-group [type="checkbox"] {
     visibility: hidden;
     pointer-events: none;
   }
@@ -404,11 +414,9 @@
   height: 250px;
 }
 
-
 .collapse-text-toggle {
   color: grey;
 }
-
 
 [search-results] {
   h4 {
@@ -436,26 +444,26 @@
     .text-muted();
     font-style: italic;
   }
-  .gn-md-links, .gn-md-related {
+  .gn-md-links,
+  .gn-md-related {
     margin: 4px 0 0 0;
     .dropdown-menu {
       max-width: 500px;
       li a {
-        padding-top: 1px;
-        padding-bottom: 1px;
+        padding: 8px 20px;
         line-height: normal;
         min-width: unset;
         .text-overflow();
+        display: block;
       }
     }
-
   }
   h4 {
     font-size: 14px;
   }
   blockquote {
     padding: 6px 20px;
-    margin:0;
+    margin: 0;
     font-size: 90%;
     color: #666;
   }
@@ -468,7 +476,6 @@
     display: none;
   }
 }
-
 
 .gn-top-records {
   /* Make a wide div with an horizontal scroll */
@@ -492,8 +499,8 @@
 [ng-search-form],
 .gn-search-page {
   .whidden,
-  [class*=col-md] {
-    transition: width ease .25s;
+  [class*="col-md"] {
+    transition: width ease 0.25s;
     transition-property: width, margin;
   }
   .whidden {
@@ -503,7 +510,7 @@
 
   .filter {
     .pull-right();
-    margin: .8em -.3em 0 .8em;
+    margin: 0.8em -0.3em 0 0.8em;
   }
 
   .input-group.gn-form-any {
@@ -516,7 +523,8 @@
     padding: 0 15px;
     height: @panel-heading-height;
     line-height: @panel-heading-height;
-    [sortby-combo], [hitsperpage-combo] {
+    [sortby-combo],
+    [hitsperpage-combo] {
       vertical-align: middle;
     }
   }
@@ -540,51 +548,51 @@
 }
 
 .dropdown-submenu {
-  position:relative;
+  position: relative;
 }
-.dropdown-submenu>.dropdown-menu {
-  top:0;
-  left:100%;
-  margin-top:-6px;
-  margin-left:-1px;
-  -webkit-border-radius:0 6px 6px 6px;
-  -moz-border-radius:0 6px 6px 6px;
-  border-radius:0 6px 6px 6px;
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  -webkit-border-radius: 0 6px 6px 6px;
+  -moz-border-radius: 0 6px 6px 6px;
+  border-radius: 0 6px 6px 6px;
 }
-.dropdown-submenu:hover>.dropdown-menu {
-  display:block;
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
 }
-.dropdown-submenu>a:after {
-  display:block;
-  content:" ";
-  float:right;
-  width:0;
-  height:0;
-  border-color:transparent;
-  border-style:solid;
-  border-width:5px 0 5px 5px;
-  border-left-color:#cccccc;
-  margin-top:5px;
-  margin-right:-10px;
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.dropdown-submenu:hover>a:after {
-  border-left-color:#ffffff;
+.dropdown-submenu:hover > a:after {
+  border-left-color: #ffffff;
 }
 .dropdown-submenu.pull-left {
-  float:none;
+  float: none;
 }
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left:-100%;
-  margin-left:10px;
-  -webkit-border-radius:6px 0 6px 6px;
-  -moz-border-radius:6px 0 6px 6px;
-  border-radius:6px 0 6px 6px;
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  -webkit-border-radius: 6px 0 6px 6px;
+  -moz-border-radius: 6px 0 6px 6px;
+  border-radius: 6px 0 6px 6px;
 }
 
 .relatedMd {
   .relatedRecord {
-    float:left;
-    padding:8px;
+    float: left;
+    padding: 8px;
     cursor: pointer;
   }
 }
@@ -599,19 +607,19 @@
   }
 }
 
-button:focus [role=tooltip],
-button:hover [role=tooltip] {
+button:focus [role="tooltip"],
+button:hover [role="tooltip"] {
   clip: auto;
   right: 2.8em;
-  background: rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  padding: .2em .5em;
-  margin-top: -.2em;
-  border-radius: .2em 0 0 .2em;
+  padding: 0.2em 0.5em;
+  margin-top: -0.2em;
+  border-radius: 0.2em 0 0 0.2em;
   text-shadow: 0 0 1px #000;
   z-index: 9000;
 }
-button.active [role=tooltip] {
+button.active [role="tooltip"] {
   display: none;
 }
 
@@ -639,7 +647,8 @@ button.active [role=tooltip] {
       overflow-y: auto;
       overflow-x: hidden;
     }
-    td,th {
+    td,
+    th {
       text-align: center;
       width: 7em;
       &:first-child {
@@ -651,7 +660,6 @@ button.active [role=tooltip] {
         padding-bottom: 2px;
       }
     }
-
   }
 }
 .gn-privileges-popup {
@@ -715,22 +723,11 @@ button.active [role=tooltip] {
   }
 }
 
-.gn-baselayer-switcher-menu {
-  > li {
-    cursor: pointer !important;
-  }
-}
-
-.gn-baselayer-switcher-content {
-  overflow-y:auto;
-  max-height: 350px;
-}
-
 .hidden-nojs {
-  display:none !important;
+  display: none !important;
 }
 
-.gn-nojs [role=main] {
+.gn-nojs [role="main"] {
   background-color: white;
   padding-top: 15px;
 }
@@ -744,10 +741,12 @@ button.active [role=tooltip] {
     color: @brand-danger;
     text-decoration: line-through;
   }
-  a.filter-group, .remove-all-link > a {
+  a.filter-group,
+  .remove-all-link > a {
     font-weight: initial;
     word-break: break-word;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       text-decoration: underline;
       .fa {
         text-decoration: none;
@@ -764,7 +763,8 @@ button.active [role=tooltip] {
       line-height: 1em;
       opacity: 0;
     }
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       .delete-icon {
         opacity: 1;
       }

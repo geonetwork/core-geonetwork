@@ -21,36 +21,47 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_dashboard_wfs_indexing_controller');
+(function () {
+  goog.provide("gn_dashboard_wfs_indexing_controller");
 
-  var module = angular.module('gn_dashboard_wfs_indexing_controller',
-    ['bsTable']);
+  var module = angular.module("gn_dashboard_wfs_indexing_controller", ["bsTable"]);
 
-  module.controller('GnDashboardWfsIndexingController', [
-    '$q',
-    '$scope',
-    '$location',
-    '$http',
-    '$translate',
-    '$element',
-    '$timeout',
-    'gnHttp',
-    'gnAlertService',
-    'gnLangs',
-    'wfsFilterService',
-    'gnHumanizeTimeService',
-    'Metadata',
-    function($q, $scope, $location, $http, $translate,
-             $element, $timeout, gnHttp, gnAlertService, gnLangs,
-             wfsFilterService, gnHumanizeTimeService, Metadata) {
+  module.controller("GnDashboardWfsIndexingController", [
+    "$q",
+    "$scope",
+    "$location",
+    "$http",
+    "$translate",
+    "$element",
+    "$timeout",
+    "gnHttp",
+    "gnAlertService",
+    "gnLangs",
+    "wfsFilterService",
+    "gnHumanizeTimeService",
+    "Metadata",
+    function (
+      $q,
+      $scope,
+      $location,
+      $http,
+      $translate,
+      $element,
+      $timeout,
+      gnHttp,
+      gnAlertService,
+      gnLangs,
+      wfsFilterService,
+      gnHumanizeTimeService,
+      Metadata
+    ) {
       // this returns a valid xx_XX language code based on available locales in bootstrap-table
       // if none found, return 'en'
       // FIXME: use a global service
       function getBsTableLang() {
         var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
         var locales = Object.keys($.fn.bootstrapTable.locales);
-        var lang = 'en';
+        var lang = "en";
         locales.forEach(function (locale) {
           if (locale.startsWith(iso2)) {
             lang = locale;
@@ -60,27 +71,28 @@
         return lang;
       }
 
-      var defaultStrategy = '';
+      var defaultStrategy = "";
 
-      $scope.url = decodeURIComponent($location.search()['wfs-indexing']);
+      $scope.wfsFilterValue = null;
+      $scope.url = decodeURIComponent($location.search()["wfs-indexing"]);
 
       // sample CRON expressions
       $scope.cronExp = [
-        '0 0 12 * * ?',
-        '0 15 10 * * ?',
-        '0 0/5 14 * * ?',
-        '0 15 10 ? * MON-FRI',
-        '0 15 10 15 * ?'
+        "0 0 12 * * ?",
+        "0 15 10 * * ?",
+        "0 0/5 14 * * ?",
+        "0 15 10 ? * MON-FRI",
+        "0 15 10 15 * ?"
       ];
 
       // URL of the index service endpoint
-      $scope.indexUrl = gnHttp.getService('featureindexproxy') + '?_=_search';
+      $scope.indexUrl = gnHttp.getService("featureindexproxy") + "?_=_search";
 
       // URL of the message producer CRUD API endpoint
-      $scope.messageProducersApiUrl = '../api/msg_producers';
+      $scope.messageProducersApiUrl = "../api/msg_producers";
 
       // URL of the WFS indexing actions
-      $scope.wfsWorkersApiUrl = '../api/workers/data/wfs/actions';
+      $scope.wfsWorkersApiUrl = "../api/workers/data/wfs/actions";
 
       // dictionary of wfs indexing jobs received from the index
       // key is url#typename
@@ -104,11 +116,11 @@
 
       function updateMdTitle(containerDiv) {
         var div = $(containerDiv);
-        var mdUuid = div.attr('data-md-uuid');
-        var link = div.children('.md-title');
-        var title = link.children('span');
-        var spinner = div.children('.fa-spinner');
-        var alert = div.children('.alert');
+        var mdUuid = div.attr("data-md-uuid");
+        var link = div.children(".md-title");
+        var title = link.children("span");
+        var spinner = div.children(".fa-spinner");
+        var alert = div.children(".alert");
         var md = $scope.mdCache[mdUuid];
 
         if (!md) {
@@ -117,54 +129,54 @@
         spinner.remove();
         if (md.error) {
           alert.text($translate.instant(md.error));
-          alert.css({ display: 'block' });
+          alert.css({ display: "block" });
         } else if (md.resourceTitle) {
           title.text(md.resourceTitle);
-          link.css({ display: 'block' });
+          link.css({ display: "block" });
         }
       }
 
       // bind to table events to handle dynamic content
-      $element.on('post-body.bs.table', function() {
+      $element.on("post-body.bs.table", function () {
         // bind buttons
-        $element.find('a[data-job-key]').click(function(event) {
+        $element.find("a[data-job-key]").click(function (event) {
           var btn = $(event.currentTarget);
-          $scope.$apply(function() {
-            $scope.openScheduleSettings(btn.attr('data-job-key'));
+          $scope.$apply(function () {
+            $scope.openScheduleSettings(btn.attr("data-job-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
-        $element.find('a[data-trigger-job-key]').click(function(event) {
+        $element.find("a[data-trigger-job-key]").click(function (event) {
           var btn = $(event.currentTarget);
-          $scope.$apply(function() {
-            $scope.triggerIndexing(btn.attr('data-trigger-job-key'));
+          $scope.$apply(function () {
+            $scope.triggerIndexing(btn.attr("data-trigger-job-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
-        $element.find('a[data-delete-key]').click(function(event) {
+        $element.find("a[data-delete-key]").click(function (event) {
           var btn = $(event.currentTarget);
-          $scope.$apply(function() {
-            $scope.deleteWfsService(btn.attr('data-delete-key'));
+          $scope.$apply(function () {
+            $scope.deleteWfsService(btn.attr("data-delete-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
-        $element.find('div[data-md-uuid]').each(function() {
+        $element.find("div[data-md-uuid]").each(function () {
           updateMdTitle(this);
         });
       });
 
-      $scope.filterItemsinArray = function(stringValue, data) {
-        return data.filter(function(item) {
+      $scope.filterItemsinArray = function (stringValue, data) {
+        return data.filter(function (item) {
           if (item) {
-            return item
-              .toString()
-              .toLowerCase()
-              .indexOf(stringValue.toLowerCase()) >= 0;
+            return item.toString().toLowerCase().indexOf(stringValue.toLowerCase()) >= 0;
           }
           return false;
         });
       };
-      $scope.jobsArrayFiltered = function(job) {
+      $scope.jobsArrayFiltered = function (job) {
         var filteredJob = {};
         // properties are based on the columns displayed in the table
         if (job.md && job.md.title) {
@@ -180,218 +192,303 @@
         return filteredJob;
       };
 
-
-      $scope.filterWfsBsWithInput = function() {
+      $scope.filterWfsBsWithInput = function () {
+        if ($scope.wfsFilterValue == null) {
+          return;
+        }
         $scope.refreshBsTable(
           $scope.jobsArray.filter(function (job) {
-            return $scope.filterItemsinArray(
-              $scope.wfsFilterValue, Object.values($scope.jobsArrayFiltered(job))).length > 0;
-          }));
+            return (
+              $scope.filterItemsinArray(
+                $scope.wfsFilterValue,
+                Object.values($scope.jobsArrayFiltered(job))
+              ).length > 0
+            );
+          })
+        );
       };
 
       $scope.wfsFilterValue = null;
 
       // dummy promise to make sure translations are available
-      var langPromise = $translate('yes');
+      var langPromise = $translate("yes");
 
-      $scope.refreshJobList = function() {
+      $scope.refreshJobList = function () {
         $scope.jobs = {};
         $scope.uuids = {};
         $scope.error = null;
         $scope.loading = true;
 
         var indexQuery = $http.post($scope.indexUrl, {
-          'query': {
-            'query_string': {
-              'query': 'docType:harvesterReport'
+          query: {
+            query_string: {
+              query: "docType:harvesterReport"
             }
           },
-          'size': 10000
+          size: 10000
         });
         var apiQuery = $http.get($scope.messageProducersApiUrl);
 
-        $q.all([indexQuery, apiQuery, langPromise]).then(function(results) {
-          var indexResults = results[0];
-          var apiResults = results[1];
+        $q.all([indexQuery, apiQuery, langPromise]).then(
+          function (results) {
+            var indexResults = results[0];
+            var apiResults = results[1];
 
-          $scope.loading = false;
-          try {
-            apiResults.data.forEach(function(producer) {
-              var url = producer.wfsHarvesterParam.url;
-              var featureType = producer.wfsHarvesterParam.typeName;
-              var key = url + '#' + featureType;
+            $scope.loading = false;
+            try {
+              apiResults.data.forEach(function (producer) {
+                var url = producer.wfsHarvesterParam.url;
+                var featureType = producer.wfsHarvesterParam.typeName;
+                var key = url + "#" + featureType;
 
-              $scope.uuids[producer.wfsHarvesterParam.metadataUuid] = null;
+                $scope.uuids[producer.wfsHarvesterParam.metadataUuid] = null;
 
-              $scope.jobs[key] = {
-                url: url,
-                featureType: featureType,
-                status: 'not started',
-                mdUuid: producer.wfsHarvesterParam.metadataUuid,
-                strategy: producer.wfsHarvesterParam.strategy || defaultStrategy,
-                cronScheduleExpression: producer.cronExpression,
-                cronScheduleProducerId: producer.id
-              };
-            });
+                $scope.jobs[key] = {
+                  url: url,
+                  featureType: featureType,
+                  status: "not started",
+                  mdUuid: producer.wfsHarvesterParam.metadataUuid,
+                  strategy: producer.wfsHarvesterParam.strategy || defaultStrategy,
+                  cronScheduleExpression: producer.cronExpression,
+                  cronScheduleProducerId: producer.id
+                };
+              });
 
-            indexResults.data.hits.hits.forEach(function (hit) {
-              var source = hit._source;
+              indexResults.data.hits.hits.forEach(function (hit) {
+                var source = hit._source;
 
-              var infos = decodeURIComponent(source.id).split('#');
-              var key = infos[0] + '#' + infos[1];
+                var infos = decodeURIComponent(source.id).split("#");
+                var key = infos[0] + "#" + infos[1];
 
-              if ($scope.jobs[key]) {
-                $scope.jobs[key] = angular.merge($scope.jobs[key], {
-                  featureCount: source.totalRecords_i || 0,
-                  status: source.endDate_dt === undefined ? 'ongoing' : source.error_ss ? 'error' : source.status_s,
-                  error: source.error_ss,
-                  endDate: source.endDate_dt
-                });
-              }
-            });
-            $http.post('../api/search/records/_search', {"query": {
-                "bool" : {
-                  "must": [
-                    {"terms": {"uuid": Object.keys($scope.uuids)}}
-                  ]
-                }},
-              "size": Object.keys($scope.uuids).length,
-              "_source": ["resourceTitleObject"]
-            }, {cache: true}).then(
-              function (r) {
-                r.data.hits.hits.forEach(function (hit) {
-                  $scope.mdCache[hit._id] = new Metadata(hit);
-                  $element.find('div[data-md-uuid=' + hit._id + ']').each(function() {
-                    updateMdTitle(this);
+                if ($scope.jobs[key]) {
+                  $scope.jobs[key] = angular.merge($scope.jobs[key], {
+                    featureCount: source.totalRecords_i || 0,
+                    status:
+                      source.endDate_dt === undefined
+                        ? "ongoing"
+                        : source.error_ss
+                        ? "error"
+                        : source.status_s,
+                    error: source.error_ss,
+                    endDate: source.endDate_dt
                   });
-              })});
+                }
+              });
+              $http
+                .post(
+                  "../api/search/records/_search",
+                  {
+                    query: {
+                      bool: {
+                        must: [{ terms: { uuid: Object.keys($scope.uuids) } }]
+                      }
+                    },
+                    size: Object.keys($scope.uuids).length,
+                    _source: ["resourceTitleObject"]
+                  },
+                  { cache: true }
+                )
+                .then(function (r) {
+                  r.data.hits.hits.forEach(function (hit) {
+                    $scope.mdCache[hit._id] = new Metadata(hit);
+                    $element.find("div[data-md-uuid=" + hit._id + "]").each(function () {
+                      updateMdTitle(this);
+                    });
+                  });
+                  $scope.filterWfsBsWithInput();
+                });
 
-            $scope.jobsArray = Object.keys($scope.jobs).sort().map(function (key) {
-              return $scope.jobs[key];
-            });
-            $scope.refreshBsTable($scope.jobsArray);
-          } catch(e) {
-            $scope.error = e.message;
+              $scope.jobsArray = Object.keys($scope.jobs)
+                .sort()
+                .map(function (key) {
+                  return $scope.jobs[key];
+                });
+              $scope.refreshBsTable($scope.jobsArray);
+            } catch (e) {
+              $scope.error = e.message;
+            }
+          },
+          function (result) {
+            $scope.loading = false;
+            $scope.error = result.data.error
+              ? result.data.error.reason
+              : "Could not reach index";
           }
-        }, function(result) {
-          $scope.loading = false;
-          $scope.error = result.data.error ?
-            result.data.error.reason : 'Could not reach index';
-        });
+        );
       };
       $scope.refreshJobList();
 
       var pageSize = 10;
 
-      $scope.refreshBsTable = function(jobsArray) {
+      $scope.refreshBsTable = function (jobsArray) {
         $scope.bsTableControl = {
           options: {
             data: jobsArray,
-            sidePagination: 'client',
+            sidePagination: "client",
             pagination: true,
             pageSize: pageSize,
             paginationLoop: true,
-            paginationHAlign: 'right',
-            paginationVAlign: 'bottom',
-            paginationDetailHAlign: 'left',
-            paginationPreText: $translate.instant('previous'),
-            paginationNextText: $translate.instant('next'),
-            style: 'min-height:100',
-            classes: 'table table-responsive full-width',
-            sortName: 'endDate',
-            sortOrder: 'desc',
-            columns: [{
-              field: 'mdUuid',
-              title: $translate.instant('wfsIndexingMetadata'),
-              formatter: function(value, row) {
-                return row.mdUuid ?
-                  '<div data-md-uuid="' + row.mdUuid + '">' +
-                  '  <a class="md-title" style="display: none" href="catalog.search#/metadata/' + row.mdUuid + '">' +
-                  '    <span>' + $translate.instant('recordWithNoTitle') + '</span>' +
-                  '  </a>' +
-                  '  <div class="alert alert-danger small" style="display: none" role="alert"></div>' +
-                  '  <i class="fa fa-spinner fa-spin"/>' +
-                  '</div>' +
-                  '<code>' + row.mdUuid + '</code>' :
-                  // '<a href="catalog.search#/metadata/' + row.mdUuid + '">' + row.mdUuid + '</a>' :
-                  '<span class="text-muted">' + $translate.instant('noRecordFound') + '</span>';
+            paginationHAlign: "right",
+            paginationVAlign: "bottom",
+            paginationDetailHAlign: "left",
+            paginationPreText: $translate.instant("previous"),
+            paginationNextText: $translate.instant("next"),
+            style: "min-height:100",
+            classes: "table table-responsive full-width",
+            sortName: "endDate",
+            sortOrder: "desc",
+            columns: [
+              {
+                field: "mdUuid",
+                title: $translate.instant("wfsIndexingMetadata"),
+                formatter: function (value, row) {
+                  return row.mdUuid
+                    ? '<div data-md-uuid="' +
+                        row.mdUuid +
+                        '">' +
+                        '  <a class="md-title" style="display: none" href="catalog.search#/metadata/' +
+                        row.mdUuid +
+                        '">' +
+                        "    <span>" +
+                        $translate.instant("recordWithNoTitle") +
+                        "</span>" +
+                        "  </a>" +
+                        '  <div class="alert alert-danger small" style="display: none" role="alert"></div>' +
+                        '  <i class="fa fa-spinner fa-spin"/>' +
+                        "</div>" +
+                        "<code>" +
+                        row.mdUuid +
+                        "</code>"
+                    : // '<a href="catalog.search#/metadata/' + row.mdUuid + '">' + row.mdUuid + '</a>' :
+                      '<span class="text-muted">' +
+                        $translate.instant("noRecordFound") +
+                        "</span>";
+                },
+                sortable: true
               },
-              sortable: true
-            }, {
-              field: 'url',
-              title: $translate.instant('wfsurl'),
-              formatter: function(value, row) {
-                var wfsUrl = row.url; // TODO: transform to getcapabilities
-                var label = $translate.instant('wfsIndexingFeatureType');
-                return '<a href="' + row.url + '">' + row.url + '</a> - <a href="' + wfsUrl + '">GetCapabilities</a><br>' +
-                  '<span>' + label + '</span>: <code>' + row.featureType + '<code>';
+              {
+                field: "url",
+                title: $translate.instant("wfsurl"),
+                formatter: function (value, row) {
+                  var wfsUrl = row.url; // TODO: transform to getcapabilities
+                  var label = $translate.instant("wfsIndexingFeatureType");
+                  return (
+                    '<a href="' +
+                    row.url +
+                    '">' +
+                    row.url +
+                    '</a> - <a href="' +
+                    wfsUrl +
+                    '">GetCapabilities</a><br>' +
+                    "<span>" +
+                    label +
+                    "</span>: <code>" +
+                    row.featureType +
+                    "<code>"
+                  );
+                },
+                sortable: true
               },
-              sortable: true
-            }, {
-              field: 'featureCount',
-              title: $translate.instant('featureCount'),
-              sortable: true
-            }, {
-              field: 'endDate',
-              title: $translate.instant('wfsIndexingEndDate'),
-              sortable: true,
-              sorter: function(a, b) {
-                return a && a.localeCompare(b);
+              {
+                field: "featureCount",
+                title: $translate.instant("featureCount"),
+                sortable: true
               },
-              formatter: function(value, row) {
-                if (value) {
-                  var date = gnHumanizeTimeService(value, null, true);
-                  return '<div title="' + date.title + '">' + date.value + '</div>'
-                } else {
-                  return null;
+              {
+                field: "endDate",
+                title: $translate.instant("wfsIndexingEndDate"),
+                sortable: true,
+                sorter: function (a, b) {
+                  return a && a.localeCompare(b);
+                },
+                formatter: function (value, row) {
+                  if (value) {
+                    var date = gnHumanizeTimeService(value, null, true);
+                    return '<div title="' + date.title + '">' + date.value + "</div>";
+                  } else {
+                    return null;
+                  }
                 }
-              }
-            }, {
-              field: 'status',
-              title: $translate.instant('status'),
-              formatter: function(value, row) {
-                return '<span class="label label-' + $scope.getLabelClass(row.status) + '" ' +
-                  'title="' + (row.error || '') + '">' +
-                  row.status + '</span>';
               },
-              sortable: true
-            }, {
-              field: 'cronScheduleExpression',
-              title: $translate.instant('wfsIndexingScheduled'),
-              formatter: function(value) {
-                if (value !== null) {
-                  var cronLabel = $translate.instant('cron-' + value);
-                  return '<span title="' + (cronLabel || value) + '">' + $translate.instant('yes') + '</span>';
-                } else {
-                  return $translate.instant('no');
-                }
+              {
+                field: "status",
+                title: $translate.instant("status"),
+                formatter: function (value, row) {
+                  return (
+                    '<span class="label label-' +
+                    $scope.getLabelClass(row.status) +
+                    '" ' +
+                    'title="' +
+                    (row.error || "") +
+                    '">' +
+                    row.status +
+                    "</span>"
+                  );
+                },
+                sortable: true
               },
-              sortable: true
-            }, {
-              field: 'cronScheduleProducerId',
-              title: '',
-              formatter: function(value, row, index) {
-                var key = row.url + '#' + row.featureType;
-                var labelEdit = $translate.instant('wfsIndexingEditSchedule');
-                var labelNow = $translate.instant('wfsIndexingTrigger');
-                var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
+              {
+                field: "cronScheduleExpression",
+                title: $translate.instant("wfsIndexingScheduled"),
+                formatter: function (value) {
+                  if (value !== null) {
+                    var cronLabel = $translate.instant("cron-" + value);
+                    return (
+                      '<span title="' +
+                      (cronLabel || value) +
+                      '">' +
+                      $translate.instant("yes") +
+                      "</span>"
+                    );
+                  } else {
+                    return $translate.instant("no");
+                  }
+                },
+                sortable: true
+              },
+              {
+                field: "cronScheduleProducerId",
+                title: "",
+                formatter: function (value, row, index) {
+                  var key = row.url + "#" + row.featureType;
+                  var labelEdit = $translate.instant("wfsIndexingEditSchedule");
+                  var labelNow = $translate.instant("wfsIndexingTrigger");
+                  var labelDelete = $translate.instant("wfsDeleteWfsIndexing");
 
-                return '<a class="btn btn-xs btn-block btn-default" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a>' +
-                  '<a class="btn btn-xs btn-block btn-default" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play text-primary"/>' + labelNow + '</a>' +
-                  '<a class="btn btn-xs btn-block btn-default" ' +
-                  '   data-delete-key="' + key + '"><icon class="fa fa-fw fa-times text-danger"/>' + labelDelete + '</a>';
+                  return (
+                    '<a class="btn btn-xs btn-block btn-default" data-job-key="' +
+                    key +
+                    '"><icon class="fa fa-fw fa-calendar"/>' +
+                    labelEdit +
+                    "</a>" +
+                    '<a class="btn btn-xs btn-block btn-default" data-trigger-job-key="' +
+                    key +
+                    '"><icon class="fa fa-fw fa-play text-primary"/>' +
+                    labelNow +
+                    "</a>" +
+                    '<a class="btn btn-xs btn-block btn-default" ' +
+                    '   data-delete-key="' +
+                    key +
+                    '"><icon class="fa fa-fw fa-times text-danger"/>' +
+                    labelDelete +
+                    "</a>"
+                  );
+                }
               }
-            }],
+            ],
             locale: getBsTableLang()
           }
         };
-      }
+      };
 
-      $scope.getLabelClass = function(status) {
+      $scope.getLabelClass = function (status) {
         switch (status.toLowerCase()) {
-          case 'success': return 'success';
-          case 'error': return 'danger';
-          default: return 'default';
+          case "success":
+            return "success";
+          case "error":
+            return "danger";
+          default:
+            return "default";
         }
       };
 
@@ -399,14 +496,15 @@
       $scope.settingsLoading = false;
       $scope.settingsError = null;
 
-      var settingsModal = $('#gn-indexing-schedule');
+      var settingsModal = $("#gn-indexing-schedule");
 
-      $scope.openScheduleSettings = function(key) {
-        $scope.currentJob = key !== undefined ? angular.merge({}, $scope.jobs[key]) : { isNew: true };
+      $scope.openScheduleSettings = function (key) {
+        $scope.currentJob =
+          key !== undefined ? angular.merge({}, $scope.jobs[key]) : { isNew: true };
         settingsModal.modal();
       };
 
-      $scope.updateSchedule = function(job) {
+      $scope.updateSchedule = function (job) {
         $scope.settingsLoading = true;
         var wfsHarvesterParams = {
           url: job.url,
@@ -416,116 +514,132 @@
 
         var payload = {
           wfsHarvesterParam: wfsHarvesterParams,
-          cronExpression: job.cronScheduleExpression !== '' ? job.cronScheduleExpression : null
+          cronExpression:
+            job.cronScheduleExpression !== "" ? job.cronScheduleExpression : null
         };
 
-        var query = job.cronScheduleProducerId ?
-          $http.put($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId, payload) :
-          $http.post($scope.messageProducersApiUrl, payload);
+        var query = job.cronScheduleProducerId
+          ? $http.put(
+              $scope.messageProducersApiUrl + "/" + job.cronScheduleProducerId,
+              payload
+            )
+          : $http.post($scope.messageProducersApiUrl, payload);
 
-        query.then(function(response) {
-          var savedJob = response.data;
-          $scope.settingsLoading = false;
+        query.then(
+          function (response) {
+            var savedJob = response.data;
+            $scope.settingsLoading = false;
 
-          var key = savedJob.wfsHarvesterParam.url + '#' + savedJob.wfsHarvesterParam.typeName;
-          $scope.jobs[key] = $scope.jobs[key] || {};
-          angular.merge($scope.jobs[key], {
-            url: savedJob.wfsHarvesterParam.url,
-            featureType: savedJob.wfsHarvesterParam.typeName,
-            status: 'not started',
-            mdUuid: savedJob.wfsHarvesterParam.metadataUuid,
-            cronScheduleExpression: savedJob.cronExpression,
-            cronScheduleProducerId: savedJob.id
-          });
+            var key =
+              savedJob.wfsHarvesterParam.url + "#" + savedJob.wfsHarvesterParam.typeName;
+            $scope.jobs[key] = $scope.jobs[key] || {};
+            angular.merge($scope.jobs[key], {
+              url: savedJob.wfsHarvesterParam.url,
+              featureType: savedJob.wfsHarvesterParam.typeName,
+              status: "not started",
+              mdUuid: savedJob.wfsHarvesterParam.metadataUuid,
+              cronScheduleExpression: savedJob.cronExpression,
+              cronScheduleProducerId: savedJob.id
+            });
 
-          settingsModal.modal('hide');
+            settingsModal.modal("hide");
 
-          $scope.refreshJobList();
-        }, function(error) {
-          $scope.settingsLoading = false;
-          $scope.settingsError = error && error.data && error.data.message;
-        });
+            $scope.refreshJobList();
+          },
+          function (error) {
+            $scope.settingsLoading = false;
+            $scope.settingsError = error && error.data && error.data.message;
+          }
+        );
       };
 
-      settingsModal.on('hidden.bs.modal', function() {
+      settingsModal.on("hidden.bs.modal", function () {
         $scope.currentJob = null;
         $scope.settingsLoading = false;
         $scope.settingsError = null;
       });
 
-      $scope.updateParamsFromApplicationProfile = function(job) {
+      $scope.updateParamsFromApplicationProfile = function (job) {
         var params = {
           typeName: job.featureType,
           url: job.url,
           strategy: job.strategy || defaultStrategy,
           metadataUuid: job.mdUuid,
           tokenizedFields: null,
-          treeFields : null
+          treeFields: null
         };
 
-        return wfsFilterService.getApplicationProfile(null, job.mdUuid,
-          job.featureType,
-          job.url,
-          'WFS').then(
-          function(response) {
+        return wfsFilterService
+          .getApplicationProfile(null, job.mdUuid, job.featureType, job.url, "WFS")
+          .then(function (response) {
             if (response.status == 200) {
-              var appProfile = angular.fromJson(response.data['0']);
+              var appProfile = angular.fromJson(response.data["0"]);
               params.tokenizedFields = (appProfile && appProfile.tokenizedFields) || null;
               params.treeFields = (appProfile && appProfile.treeFields) || null;
-              return params
+              return params;
             }
-          }).catch(function() {
-          return params
-        });
+          })
+          .catch(function () {
+            return params;
+          });
       };
 
-      $scope.triggerIndexing = function(key) {
+      $scope.triggerIndexing = function (key) {
         var job = $scope.jobs[key];
-        $scope.updateParamsFromApplicationProfile(job).then(
-          function(params) {
-            $http.put($scope.wfsWorkersApiUrl + '/start',
-              params).then(function() {
+        $scope.updateParamsFromApplicationProfile(job).then(function (params) {
+          $http.put($scope.wfsWorkersApiUrl + "/start", params).then(
+            function () {
               gnAlertService.addAlert({
-                msg: $translate.instant('wfsIndexingTriggerSuccess'),
-                type: 'success'
+                msg: $translate.instant("wfsIndexingTriggerSuccess"),
+                type: "success"
               });
-            }, function() {
+            },
+            function () {
               gnAlertService.addAlert({
-                msg: $translate.instant('wfsIndexingTriggerError'),
-                type: 'danger'
+                msg: $translate.instant("wfsIndexingTriggerError"),
+                type: "danger"
               });
-            });
-          });
+            }
+          );
+        });
       };
 
       // this will delete both the message producer and the indexed data
-      $scope.deleteWfsService = function(key) {
+      $scope.deleteWfsService = function (key) {
         var job = $scope.jobs[key];
 
-        if (job.cronScheduleProducerId === null) { return }
+        if (job.cronScheduleProducerId === null) {
+          return;
+        }
 
-        var urlParams = '?serviceUrl=' + encodeURIComponent(job.url) +
-          '&typeName=' + encodeURIComponent(job.featureType);
+        var urlParams =
+          "?serviceUrl=" +
+          encodeURIComponent(job.url) +
+          "&typeName=" +
+          encodeURIComponent(job.featureType);
 
         $q.all([
           $http.delete($scope.wfsWorkersApiUrl + urlParams),
-          $http.delete($scope.messageProducersApiUrl + '/' + job.cronScheduleProducerId)
-        ]).then(function() {
-          gnAlertService.addAlert({
-            msg: $translate.instant('wfsDeleteWfsIndexingSuccess'),
-            type: 'success'
-          });
-          // slight delay to let ES update its response accordingly
-          $timeout(function() {
-            $scope.refreshJobList();
-          }, 750);
-        }, function() {
-          gnAlertService.addAlert({
-            msg: $translate.instant('wfsDeleteWfsIndexingError'),
-            type: 'danger'
-          });
-        });
+          $http.delete($scope.messageProducersApiUrl + "/" + job.cronScheduleProducerId)
+        ]).then(
+          function () {
+            gnAlertService.addAlert({
+              msg: $translate.instant("wfsDeleteWfsIndexingSuccess"),
+              type: "success"
+            });
+            // slight delay to let ES update its response accordingly
+            $timeout(function () {
+              $scope.refreshJobList();
+            }, 750);
+          },
+          function () {
+            gnAlertService.addAlert({
+              msg: $translate.instant("wfsDeleteWfsIndexingError"),
+              type: "danger"
+            });
+          }
+        );
       };
-    }]);
-
+    }
+  ]);
 })();

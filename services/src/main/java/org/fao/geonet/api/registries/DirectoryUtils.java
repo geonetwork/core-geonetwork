@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
@@ -41,7 +42,7 @@ public class DirectoryUtils {
         Iterator<String> entriesIterator =
             entries.rowKeySet().iterator();
         AbstractMetadata record = collectResults.getRecord();
-        boolean validate = false, index = false, ufo = false,
+        boolean validate = false, ufo = false,
             notify = false, publicForGroup = true, refreshReaders = false;
         Map<String, Exception> errors = new HashMap<>();
 
@@ -69,7 +70,7 @@ public class DirectoryUtils {
                         context,
                         subtemplate,
                         (Element) entry.clone(),
-                        index, ufo,
+                        IndexingMode.none, ufo,
                         UpdateDatestamp.NO,
                         publicForGroup, refreshReaders);
 
@@ -85,8 +86,8 @@ public class DirectoryUtils {
                     dataManager.updateMetadata(
                         context, "" + dbSubTemplate.getId(),
                         (Element) entry.clone(),
-                        validate, ufo, index, context.getLanguage(),
-                        new ISODate().toString(), false);
+                        validate, ufo, context.getLanguage(),
+                        new ISODate().toString(), false, IndexingMode.none);
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
@@ -99,8 +100,8 @@ public class DirectoryUtils {
             try {
                 dataManager.updateMetadata(
                     context, "" + record.getId(), record.getXmlData(validate),
-                    validate, ufo, index, context.getLanguage(),
-                    new ISODate().toString(), true);
+                    validate, ufo, context.getLanguage(),
+                    new ISODate().toString(), true, IndexingMode.none);
             } catch (Exception e) {
                 Log.error(LOGGER, e.getMessage(), e);
             }

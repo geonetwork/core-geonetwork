@@ -430,7 +430,7 @@
     "link-fcats": "Katalog prvků",
     "link-associated": "Přidružené zdroje",
     "indexAccessError": "Chyba při přístupu k indexům.",
-    "applyFilter": "Použít filtr",
+    "applyFilter": "Použít aktuální filtr na mapu (vytvořit SLD pro použití na vrstvu WMS).",
     "confirm": "OK",
     "confirmDialogTitle": "Potvrdit akci",
     "close": "Zavřít ",
@@ -574,8 +574,12 @@
     "copyToClipboard": "Zkopírovat text do schránky",
     "textCopied": "Text byl zkopírován do schránky.",
     "metadataApproved": "Metadata schválena.",
+    "metadataSubmitted": "Metadata odeslána.",
     "batchApproveTitle": "Dávkové schválení metadat",
     "batchApproveInfo": "Tato možnost schvaluje vybraná metadata vlastněná uživatelem. Ve výchozím nastavení jsou schválena pouze metadata v odeslaném stavu, výběrem níže uvedené možnosti schválíte přímo metadata, která nejsou ve odeslaném stavu.",
     "batchApproveDirect": "Schválit metadata, aniž byste museli být ve stavu odeslání",
-    "facet-mdStatus": "Vývoj v postupu prací"
+    "facet-mdStatus": "Vývoj v postupu prací",
+    "skipLink": "Přeskočte a přejděte k obsahu",
+    "batchSubmitTitle": "Dávkové odeslání metadat",
+    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem."
 }

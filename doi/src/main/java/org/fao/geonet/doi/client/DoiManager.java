@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -229,13 +230,18 @@ public class DoiManager {
             throw new DoiClientException(String.format(
                 "Failed to check if record '%s' is visible to all for DOI creation." +
                    " Error is %s.",
-                metadata.getUuid(), e.getMessage()));
+                metadata.getUuid(), e.getMessage()))
+                .withMessageKey("exception.doi.failedVisibilityCheck")
+                .withDescriptionKey("exception.doi.failedVisibilityCheck.description",
+                    new String[]{ metadata.getUuid(), e.getMessage() });
         }
 
         if (!visibleToAll) {
             throw new DoiClientException(String.format(
                 "Record '%s' is not public and we cannot request a DOI for such a record. Publish this record first.",
-                metadata.getUuid()));
+                metadata.getUuid()))
+                .withMessageKey("exception.doi.recordNotPublic")
+                .withDescriptionKey("exception.doi.recordNotPublic.description", new String[]{ metadata.getUuid() });
         }
 
         // Record MUST not contains a DOI
@@ -253,14 +259,19 @@ public class DoiManager {
                             "Maybe current DOI does not correspond to that record? " +
                             "This may happen when creating a copy of a record having " +
                             "an existing DOI.",
-                        metadata.getUuid(), currentDoi, currentDoi, newDoi));
+                        metadata.getUuid(), currentDoi, currentDoi, newDoi))
+                        .withMessageKey("exception.doi.resourcesContainsDoiNotEqual")
+                        .withDescriptionKey("exception.doi.resourcesContainsDoiNotEqual.description", new String[]{ metadata.getUuid(), currentDoi, currentDoi, newDoi });
                 }
 
                 throw new ResourceAlreadyExistException(String.format(
                     "Record '%s' already contains a DOI. The DOI is <a href='%s'>%s</a>. " +
                         "You've to update existing DOI. " +
                         "Remove the DOI reference if it does not apply to that record.",
-                    metadata.getUuid(), currentDoi, currentDoi));
+                    metadata.getUuid(), currentDoi, currentDoi))
+                    .withMessageKey("exception.doi.resourceContainsDoi")
+                    .withDescriptionKey("exception.doi.resourceContainsDoi.description",
+                        new String[]{ metadata.getUuid(), currentDoi, currentDoi });
             }
         } catch (ResourceNotFoundException e) {
             // Schema not supporting DOI extraction and needs to be configured
@@ -276,7 +287,12 @@ public class DoiManager {
                     "Check the schema %sSchemaPlugin and add the DOI get query.",
                 metadata.getUuid(), schema.getName(),
                 DOI_GET_SAVED_QUERY, e.getMessage(),
-                schema.getName()));
+                schema.getName()))
+                .withMessageKey("exception.doi.missingSavedquery")
+                .withDescriptionKey("exception.doi.missingSavedquery.description",
+                    new String[]{ metadata.getUuid(), schema.getName(),
+                    DOI_GET_SAVED_QUERY, e.getMessage(),
+                    schema.getName() });
         }
     }
 
@@ -323,7 +339,10 @@ public class DoiManager {
 
                 throw new DoiClientException(String.format(
                     "Record '%s' is not conform with DataCite format. %d mandatory field(s) missing. %s",
-                    metadata.getUuid(), failures.size(), message));
+                    metadata.getUuid(), failures.size(), message))
+                    .withMessageKey("exception.doi.recordNotConformantMissingInfo")
+                    .withDescriptionKey("exception.doi.recordNotConformantMissingInfo.description",
+                        new String[]{ metadata.getUuid(), String.valueOf(failures.size()), message.toString() });
             }
         } catch (IOException|JDOMException e) {
             throw new DoiClientException(String.format(
@@ -331,7 +350,10 @@ public class DoiManager {
                     "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. " +
                     "<a href='%sapi/records/%s/formatters/datacite?output=xml'>Check the DataCite format output</a> and " +
                     "adapt the record content to add missing information.",
-                metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()));
+                metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()))
+                .withMessageKey("exception.doi.recordNotConformantMissingMandatory")
+                .withDescriptionKey("exception.doi.recordNotConformantMissingMandatory.description",
+                    new String[]{ metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid() });
         }
 
         // XSD validation
@@ -343,7 +365,10 @@ public class DoiManager {
                     "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. " +
                     "<a href='%sapi/records/%s/formatters/datacite?output=xml'>Check the DataCite format output</a> and " +
                     "adapt the record content to add missing information.",
-                metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()));
+                metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()))
+                .withMessageKey("exception.doi.recordInvalid")
+                .withDescriptionKey("exception.doi.recordInvalid.description",
+                    new String[]{ metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid() });
         }
 
         // * MDS / DOI does not exist already
@@ -356,7 +381,12 @@ public class DoiManager {
                     "If the DOI is not correct, remove it from the record and ask for a new one.",
                 metadata.getUuid(),
                 client.createUrl("doi") + "/" + doi,
-                doi, doi, doiResponse));
+                doi, doi, doiResponse))
+                .withMessageKey("exception.doi.resourceAlreadyPublished")
+                .withDescriptionKey("exception.doi.resourceAlreadyPublished.description", new String[]{  metadata.getUuid(),
+                    client.createUrl("doi") + "/" + doi,
+                    doi, doi, doiResponse });
+
         }
         // TODO: Could be relevant at some point to return states (draft/findable)
 
@@ -399,8 +429,8 @@ public class DoiManager {
         //--- needed to detach md from the document
 //        md.detach();
 
-        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
-            context.getLanguage(), new ISODate().toString(), true);
+        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true,
+            context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
     }
 
 
@@ -439,8 +469,8 @@ public class DoiManager {
 
             Element recordWithoutDoi = removeDOIValue(doiUrl, metadata.getDataInfo().getSchemaId(), md);
 
-            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true, true,
-                context.getLanguage(), new ISODate().toString(), true);
+            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true,
+                context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
         } catch (Exception ex) {
             throw new DoiClientException(ex.getMessage());
         }

@@ -21,28 +21,39 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_collection_manager_service');
+(function () {
+  goog.provide("gn_collection_manager_service");
 
-  var module = angular.module('gn_collection_manager_service',
-      ['gn_collection_manager_service']);
+  var module = angular.module("gn_collection_manager_service", [
+    "gn_collection_manager_service"
+  ]);
 
-  module
-    .service(
-      'gnCollectionService', [
-        '$http', '$q', 'Metadata', 'gnMetadataManager',
-        function ($http, $q, Metadata, gnMetadataManager) {
-          return {
-            getTemplates: function (filter) {
-              var defer = $q.defer();
-              $http.post('../api/search/records/_search', {"query": {
-                  "bool" : {
-                    "must": [
-                      {"terms": {"isTemplate": ["y"]}},
-                      {"query_string": {"query": filter}}
+  module.service("gnCollectionService", [
+    "$http",
+    "$q",
+    "Metadata",
+    "gnMetadataManager",
+    function ($http, $q, Metadata, gnMetadataManager) {
+      return {
+        getTemplates: function (filter) {
+          var defer = $q.defer();
+          $http
+            .post(
+              "../api/search/records/_search",
+              {
+                query: {
+                  bool: {
+                    must: [
+                      { terms: { isTemplate: ["y"] } },
+                      { query_string: { query: filter } }
                     ]
                   }
-                }}, {cache: true}).then(function(r) {
+                }
+              },
+              { cache: true }
+            )
+            .then(
+              function (r) {
                 var collectionTemplates = [];
                 if (r.data.hits.total.value > 0) {
                   collectionTemplates = r.data.hits.hits.map(function (r) {
@@ -50,40 +61,55 @@
                   });
                 }
                 defer.resolve(collectionTemplates);
-              }, function(r) {
+              },
+              function (r) {
                 defer.reject();
-              })
-              return defer.promise;
-            },
-            createCollection: function (uuid, memberUuids) {
-              var defer = $q.defer();
-              var id = undefined;
-              $http.get('../api/groups?profile=Editor', {cache: true}).
-              success(function(data) {
-                var groups = data, ownerGroup = null;
-                if (ownerGroup === null && data) {
-                  ownerGroup = data[0]['id'];
-                }
-                gnMetadataManager.copy(uuid, ownerGroup,
-                  false,
-                  'METADATA'
-                ).then(function(r) {
+              }
+            );
+          return defer.promise;
+        },
+        createCollection: function (uuid, memberUuids) {
+          var defer = $q.defer();
+          var id = undefined;
+          $http
+            .get("../api/groups?profile=Editor", { cache: true })
+            .success(function (data) {
+              var groups = data,
+                ownerGroup = null;
+              if (ownerGroup === null && data) {
+                ownerGroup = data[0]["id"];
+              }
+              gnMetadataManager.copy(uuid, ownerGroup, false, "METADATA").then(
+                function (r) {
                   id = r.data;
-                  $http.post('../api/records/' + id + '/processes/collection-updater?'
-                    + 'newProductMemberUuids=' + memberUuids.join(',')).then(function() {
-                    r.id = id;
-                    defer.resolve(r);
-                  }, function(r) {
-                    r.id = id;
-                    defer.reject(r);
-                  });
-                }, function(r) {
+                  $http
+                    .post(
+                      "../api/records/" +
+                        id +
+                        "/processes/collection-updater?" +
+                        "newProductMemberUuids=" +
+                        memberUuids.join(",")
+                    )
+                    .then(
+                      function () {
+                        r.id = id;
+                        defer.resolve(r);
+                      },
+                      function (r) {
+                        r.id = id;
+                        defer.reject(r);
+                      }
+                    );
+                },
+                function (r) {
                   defer.reject(r);
-                });
-              });
+                }
+              );
+            });
 
-              return defer.promise;
-            }
-          };
-        }]);
+          return defer.promise;
+        }
+      };
+    }
+  ]);
 })();

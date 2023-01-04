@@ -5,6 +5,7 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
@@ -73,6 +74,11 @@
     <xsl:call-template name="get-iso19115-3.2018-other-languages"/>
   </xsl:variable>
 
+  <xsl:variable name="isOnlyFeatureCatalog"
+                select="not($metadata/mdb:identificationInfo)
+                            and exists($metadata/mdb:contentInfo/*/mrc:featureCatalogue)"
+                as="xs:boolean"/>
+
   <!-- Ignore some fields displayed in header or in right column -->
   <xsl:template mode="render-field"
                 match="mri:graphicOverview|mri:abstract|mdb:identificationInfo/*/mri:citation/*/cit:title"
@@ -81,7 +87,9 @@
 
   <!-- Specific schema rendering -->
   <xsl:template mode="getMetadataTitle" match="mdb:MD_Metadata">
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:title">
+    <xsl:for-each select="if ($isOnlyFeatureCatalog)
+                          then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:name
+                          else mdb:identificationInfo/*/mri:citation/*/cit:title">
       <xsl:call-template name="get-iso19115-3.2018-localised">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:call-template>
@@ -89,7 +97,9 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataAbstract" match="mdb:MD_Metadata">
-    <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
+    <xsl:for-each select="if ($isOnlyFeatureCatalog)
+                          then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:scope
+                          else mdb:identificationInfo/*/mri:abstract">
       <xsl:variable name="txt">
         <xsl:call-template name="get-iso19115-3.2018-localised">
           <xsl:with-param name="langId" select="$langId"/>
@@ -105,54 +115,75 @@
   <xsl:template mode="getTags" match="mdb:MD_Metadata">
     <xsl:param name="byThesaurus" select="false()"/>
 
-    <section class="gn-md-side-social">
-      <h2>
-        <i class="fa fa-fw fa-tag"><xsl:comment select="'image'"/></i>
-        <span><xsl:comment select="name()"/>
-          <xsl:value-of select="$schemaStrings/noThesaurusName"/>
-        </span>
-      </h2>
-      <xsl:variable name="tags">
-        <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/
+    <xsl:variable name="tags">
+      <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/
                                           *[
                                           mri:type/*/@codeListValue != 'place'
                                             and normalize-space(string-join(mri:keyword//text(), '')) != ''
                                             and (not(mri:thesaurusName/*/cit:identifier/*/mcc:code)
                                             or mri:thesaurusName/*/cit:identifier/*/mcc:code/*/
                                                 text() != '')]">
-          <xsl:variable name="thesaurusTitle">
-            <xsl:for-each select="mri:thesaurusName/*/cit:title">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:for-each>
-          </xsl:variable>
-          <xsl:for-each select="mri:keyword">
-            <xsl:variable name="keyword">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:if test="$keyword != ''">
-              <tag thesaurus="{$thesaurusTitle}">
-                <xsl:value-of select="$keyword"/>
-              </tag>
-            </xsl:if>
+        <xsl:variable name="thesaurusTitle">
+          <xsl:for-each select="mri:thesaurusName/*/cit:title">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
           </xsl:for-each>
+        </xsl:variable>
+        <xsl:for-each select="mri:keyword">
+          <xsl:variable name="keyword">
+            <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:if test="$keyword != ''">
+            <tag thesaurus="{$thesaurusTitle}">
+              <xsl:value-of select="$keyword"/>
+            </tag>
+          </xsl:if>
         </xsl:for-each>
-      </xsl:variable>
+      </xsl:for-each>
+    </xsl:variable>
 
+    <xsl:if test="count($tags/*) > 0">
+      <section class="gn-md-side-social">
+        <h2>
+          <i class="fa fa-fw fa-tag"><xsl:comment select="'image'"/></i>
+          <span><xsl:comment select="name()"/>
+            <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+          </span>
+        </h2>
 
-      <xsl:choose>
-        <xsl:when test="$byThesaurus">
-          <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
-            <xsl:sort select="@thesaurus"/>
-            <xsl:if test="current-grouping-key() != ''">
-              <xsl:value-of select="current-grouping-key()"/><br/>
-            </xsl:if>
+        <xsl:choose>
+          <xsl:when test="$byThesaurus">
+            <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
+              <xsl:sort select="@thesaurus"/>
+              <xsl:if test="current-grouping-key() != ''">
+                <xsl:value-of select="current-grouping-key()"/><br/>
+              </xsl:if>
 
-            <xsl:for-each select="current-group()">
+              <xsl:for-each select="current-group()">
+                <xsl:sort select="."/>
+                <xsl:choose>
+                  <xsl:when test="$portalLink != ''">
+                    <span class="badge"><xsl:copy-of select="."/></span>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                      <span class="badge"><xsl:copy-of select="."/></span>
+                    </a>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+              <xsl:if test="position() != last()">
+                <hr/>
+              </xsl:if>
+            </xsl:for-each-group>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$tags/tag">
               <xsl:sort select="."/>
+
               <xsl:choose>
                 <xsl:when test="$portalLink != ''">
                   <span class="badge"><xsl:copy-of select="."/></span>
@@ -164,30 +195,10 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:for-each>
-            <xsl:if test="position() != last()">
-              <hr/>
-            </xsl:if>
-          </xsl:for-each-group>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:for-each select="$tags/tag">
-            <xsl:sort select="."/>
-
-            <xsl:choose>
-              <xsl:when test="$portalLink != ''">
-                <span class="badge"><xsl:copy-of select="."/></span>
-              </xsl:when>
-              <xsl:otherwise>
-                <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-                  <span class="badge"><xsl:copy-of select="."/></span>
-                </a>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-        </xsl:otherwise>
-      </xsl:choose>
-
-    </section>
+          </xsl:otherwise>
+        </xsl:choose>
+      </section>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="getMetadataHierarchyLevel" match="mdb:MD_Metadata">
@@ -199,57 +210,63 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="mdb:MD_Metadata">
-    <section class="gn-md-side-extent">
-      <h2>
-        <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
-        <span><xsl:comment select="name()"/>
-          <xsl:value-of select="$schemaStrings/spatialExtent"/>
-        </span>
-      </h2>
+    <xsl:if test=".//mdb:identificationInfo/*/mri:extent">
+      <section class="gn-md-side-extent">
+        <h2>
+          <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
+          <span><xsl:comment select="name()"/>
+            <xsl:value-of select="$schemaStrings/spatialExtent"/>
+          </span>
+        </h2>
 
-      <xsl:choose>
-        <xsl:when test=".//mdb:identificationInfo/*/mri:extent//gex:EX_BoundingPolygon">
-          <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates mode="render-field"
-                               select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
-          </xsl:apply-templates>
-        </xsl:otherwise>
-      </xsl:choose>
-    </section>
+        <xsl:choose>
+          <xsl:when test=".//mdb:identificationInfo/*/mri:extent//gex:EX_BoundingPolygon">
+            <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="render-field"
+                                 select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+      </section>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="getOverviews" match="mdb:MD_Metadata">
-    <section class="gn-md-side-overview">
-      <h2>
-        <i class="fa fa-fw fa-image"><xsl:comment select="'.'"/></i><xsl:comment select="'.'"/>
-        <span>
-          <xsl:value-of select="$schemaStrings/overviews"/>
-        </span>
-      </h2>
+    <xsl:if test="mdb:identificationInfo/*/mri:graphicOverview">
+      <section class="gn-md-side-overview">
+        <h2>
+          <i class="fa fa-fw fa-image"><xsl:comment select="'.'"/></i><xsl:comment select="'.'"/>
+          <span>
+            <xsl:value-of select="$schemaStrings/overviews"/>
+          </span>
+        </h2>
 
-      <xsl:for-each select="mdb:identificationInfo/*/mri:graphicOverview/*">
-        <img data-gn-img-modal="md"
-             class="gn-img-thumbnail center-block"
-             alt="{$schemaStrings/overview}"
-             src="{mcc:fileName/*}"/>
+        <xsl:for-each select="mdb:identificationInfo/*/mri:graphicOverview/*">
+          <img data-gn-img-modal="md"
+               class="gn-img-thumbnail center-block"
+               alt="{$schemaStrings/overview}"
+               src="{mcc:fileName/*}"/>
 
-        <xsl:for-each select="mcc:fileDescription">
-          <div class="gn-img-thumbnail-caption">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
-              <xsl:with-param name="langId" select="$langId"/>
-            </xsl:call-template>
-          </div>
+          <xsl:for-each select="mcc:fileDescription">
+            <div class="gn-img-thumbnail-caption">
+              <xsl:call-template name="get-iso19115-3.2018-localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </div>
+          </xsl:for-each>
         </xsl:for-each>
-      </xsl:for-each>
-    </section>
+      </section>
+    </xsl:if>
   </xsl:template>
 
 
   <xsl:template mode="getMetadataHeader" match="mdb:MD_Metadata">
     <div class="gn-abstract">
-      <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
+      <xsl:for-each select="if ($isOnlyFeatureCatalog)
+                            then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:scope
+                            else mdb:identificationInfo/*/mri:abstract">
         <xsl:variable name="txt">
           <xsl:call-template name="get-iso19115-3.2018-localised">
             <xsl:with-param name="langId" select="$langId"/>
@@ -280,81 +297,73 @@
                   select="if ($doiUrl != '') then $doiUrl else concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
     <xsl:if test="$displayCitation">
-      <blockquote>
-        <div class="row">
-          <div class="col-md-3">
-            <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+      <xsl:variable name="forcedCitation" select="notexist"/>
+      <!--
+      Some catalogue want to be able to override default generated citation
+      using a metadata field.
+
+      select="mdb:identificationInfo/*/mri:citation/*/cit:otherCitationDetails"/>
+      -->
+      <xsl:choose>
+      <!-- Landing page case -->
+        <xsl:when test="$language = 'all'">
+
+          <xsl:variable name="citationInfo">
+            <xsl:call-template name="get-iso19115-3.2018-citation">
+              <xsl:with-param name="metadata" select="$metadata"/>
+              <xsl:with-param name="language" select="$language"/>
+            </xsl:call-template>
+          </xsl:variable>
+
+          <blockquote>
+            <div class="row">
+              <div class="col-md-1">
+                <i class="fa fa-quote-left"><xsl:comment>Cite</xsl:comment></i>
+              </div>
+              <div class="col-md-11">
+                <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
+                  <xsl:value-of select="$schemaStrings/citationProposal"/>
+                </h2>
+
+                <xsl:choose>
+                  <xsl:when test="count($forcedCitation) > 0">
+                    <xsl:for-each select="$forcedCitation">
+                      <xsl:apply-templates mode="localised" select=".">
+                        <xsl:with-param name="langId" select="$langId"/>
+                      </xsl:apply-templates>
+                    </xsl:for-each>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates mode="citation" select="$citationInfo"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </div>
+            </div>
+          </blockquote>
+        </xsl:when>
+        <xsl:when test="count($forcedCitation) > 0">
+          <xsl:variable name="txt">
+            <xsl:for-each select="$forcedCitation">
+              <xsl:call-template name="get-iso19115-3.2018-localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </xsl:for-each>
+          </xsl:variable>
+          <xsl:call-template name="addLineBreaksAndHyperlinks">
+            <xsl:with-param name="txt" select="$txt"/>
+          </xsl:call-template>
+
+          <div data-ng-if="showCitation"
+               data-gn-metadata-citation=""
+               data-text="{$citation}">
+            <xsl:comment>citation</xsl:comment>
           </div>
-          <div class="col-md-9">
-            <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-              <xsl:value-of select="$schemaStrings/citationProposal"/>
-            </h2>
-            <br/>
-            <p>
-              <!-- Custodians -->
-              <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/
-                                  *[cit:role/*/@codeListValue = ('custodian', 'author')]">
-
-                <xsl:variable name="name"
-                              select="normalize-space(.//cit:individual/*/cit:name[1])"/>
-
-                <xsl:value-of select="$name"/>
-                <xsl:if test="$name != ''"><xsl:comment select="'.'"/>(</xsl:if>
-                <xsl:for-each select="cit:party/*/cit:name">
-                  <xsl:call-template name="get-iso19115-3.2018-localised">
-                    <xsl:with-param name="langId" select="$langId"/>
-                  </xsl:call-template>
-                </xsl:for-each>
-                <xsl:if test="$name">)</xsl:if>
-                <xsl:if test="position() != last()"><xsl:comment select="'.'"/>-<xsl:comment select="'.'"/></xsl:if>
-              </xsl:for-each>
-
-              <!-- Publication year: use last publication or revision date -->
-              <xsl:variable name="publicationDate">
-                <xsl:perform-sort select="mdb:identificationInfo/*/mri:citation/*/cit:date/*[
-                                    cit:dateType/*/@codeListValue = ('publication', 'revision')]/
-                                      cit:date/gco:*[. != '']">
-                  <xsl:sort select="." order="descending"/>
-                </xsl:perform-sort>
-              </xsl:variable>
-              <xsl:choose>
-                <xsl:when test="$publicationDate/*[1]">
-                  <xsl:for-each select="$publicationDate/*[1]">
-                    (<xsl:value-of select="substring($publicationDate, 1, 4)"/>).
-                  </xsl:for-each>
-                </xsl:when>
-                <xsl:otherwise>.<xsl:comment select="'.'"/></xsl:otherwise>
-              </xsl:choose>
-
-              <!-- Title -->
-              <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:title">
-                <xsl:call-template name="get-iso19115-3.2018-localised">
-                  <xsl:with-param name="langId" select="$langId"/>
-                </xsl:call-template>
-              </xsl:for-each>
-
-              <xsl:text>. </xsl:text>
-
-              <!-- Publishers -->
-              <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/
-                                  *[cit:role/*/@codeListValue = 'publisher']">
-                <xsl:for-each select="cit:party/*/cit:name">
-                  <xsl:call-template name="get-iso19115-3.2018-localised">
-                    <xsl:with-param name="langId" select="$langId"/>
-                  </xsl:call-template>
-                </xsl:for-each>
-                <xsl:if test="position() != last()"><xsl:comment select="'.'"/>-<xsl:comment select="'.'"/></xsl:if>
-              </xsl:for-each>
-
-              <br/>
-              <a href="{$landingPageUrl}">
-                <xsl:value-of select="$landingPageUrl"/>
-              </a>
-              <br/>
-            </p>
-          </div>
-        </div>
-      </blockquote>
+        </xsl:when>
+        <xsl:otherwise>
+          <div data-ng-if="showCitation"
+               data-gn-metadata-citation="md"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 

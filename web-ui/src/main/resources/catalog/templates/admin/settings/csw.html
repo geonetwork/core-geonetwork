@@ -1,48 +1,64 @@
-<div class="row"
-     data-ng-controller="GnSearchController">
+<div class="row">
   <div class="col-md-12">
     <span data-ng-controller="GnCSWSettingsController">
       <div class="panel panel-default">
         <div class="panel-heading">
           <span data-translate="">cswService</span>
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-primary pull-right"
-                    data-ng-click="saveSettings('#gn-settings')"
-            ><span class="fa fa-save"></span> {{"save"|translate}}</button>
+            <button
+              type="submit"
+              class="btn btn-primary pull-right"
+              data-ng-click="saveSettings('#gn-settings')"
+            >
+              <span class="fa fa-save"></span> {{"save"|translate}}
+            </button>
           </div>
         </div>
-
 
         <div class="panel-body">
           <form id="gn-settings">
             <div>
               <label>
-                <input type="checkbox" name="system/csw/enable"
-                      value="{{cswSettings['system/csw/enable']}}"
-                      data-ng-model="cswSettings['system/csw/enable']"/>
+                <input
+                  type="checkbox"
+                  name="system/csw/enable"
+                  value="{{cswSettings['system/csw/enable']}}"
+                  data-ng-model="cswSettings['system/csw/enable']"
+                />
                 <span>{{'system/csw/enable' | translate}}</span>
               </label>
               <p class="help-block">{{'system/csw/enable-help' | translate}}</p>
             </div>
 
             <div>
-              <label for="serviceList">{{'system/csw/capabilityRecordUuid' | translate}}</label>
-
-              <div data-gn-metadata-selector="cswSettings['system/csw/capabilityRecordUuid']"
-                   data-search-obj="serviceRecordSearchObj"
-                   data-md="cswServiceRecord"
-                   data-ng-show="cswSettings['system/csw/enable']"
-                   data-element-name="system/csw/capabilityRecordUuid"
-                   id="serviceList" />
-
-               <p class="help-block">{{'system/csw/capabilityRecordUuid-help' | translate}}</p>
+              <label for="serviceList"
+                >{{'system/csw/capabilityRecordUuid' | translate}}</label
+              >
+              <input
+                type="hidden"
+                name="system/csw/capabilityRecordUuid"
+                value="{{cswSettings['system/csw/capabilityRecordUuid']}}"
+                data-ng-model="cswSettings['system/csw/capabilityRecordUuid']"
+              />
+              <div
+                data-gn-suggest="serviceRecordSearchObj"
+                data-gn-suggest-model="cswSettings['system/csw/capabilityRecordUuid']"
+                data-gn-suggest-property="_id"
+                data-gn-suggest-display-title="span"
+              />
+              <p class="help-block">
+                {{'system/csw/capabilityRecordUuid-help' | translate}}
+              </p>
             </div>
 
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>
-                <input type="checkbox" name="system/csw/metadataPublic"
-                      value="{{cswSettings['system/csw/metadataPublic']}}"
-                      data-ng-model="cswSettings['system/csw/metadataPublic']"/>
+                <input
+                  type="checkbox"
+                  name="system/csw/metadataPublic"
+                  value="{{cswSettings['system/csw/metadataPublic']}}"
+                  data-ng-model="cswSettings['system/csw/metadataPublic']"
+                />
                 <span>{{'system/csw/metadataPublic' | translate}}</span>
               </label>
 
@@ -50,48 +66,71 @@
             </div>
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>
-                <input type="checkbox" name="system/csw/transactionUpdateCreateXPath"
-                      value="{{cswSettings['system/csw/transactionUpdateCreateXPath']}}"
-                      data-ng-model="cswSettings['system/csw/transactionUpdateCreateXPath']"/>
+                <input
+                  type="checkbox"
+                  name="system/csw/transactionUpdateCreateXPath"
+                  value="{{cswSettings['system/csw/transactionUpdateCreateXPath']}}"
+                  data-ng-model="cswSettings['system/csw/transactionUpdateCreateXPath']"
+                />
                 <span>{{'system/csw/transactionUpdateCreateXPath' | translate}}</span>
               </label>
 
-              <p class="help-block">{{'system/csw/transactionUpdateCreateXPath-help' | translate}}</p>
+              <p class="help-block">
+                {{'system/csw/transactionUpdateCreateXPath-help' | translate}}
+              </p>
             </div>
           </form>
 
-
-          <div data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration.html"></div>
+          <div data-gn-need-help="csw-configuration"></div>
         </div>
       </div>
 
-      <div class="panel panel-default"
-           data-ng-show="cswSettings['system/csw/enable']">
+      <div class="panel panel-default" data-ng-show="cswSettings['system/csw/enable']">
         <div class="panel-heading">
           <span data-translate="">customizeElementSet</span>
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-primary pull-right"
-                    data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')"
-            ><span class="fa fa-save"></span> {{"save"|translate}}</button>
+            <button
+              type="submit"
+              class="btn btn-primary pull-right"
+              data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')"
+            >
+              <span class="fa fa-save"></span> {{"save"|translate}}
+            </button>
           </div>
         </div>
         <div class="panel-body">
           <form id="gn-csw-elementsetname" class="form-horizontal">
-                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+            <input type="hidden" name="_csrf" value="{{csrf}}" />
             <fieldset>
               <p class="help-block" data-translate="">customizeElementSetHelp</p>
-              <div class="form-group" data-ng-repeat="e in cswElementSetName track by $index">
+              <div
+                class="form-group"
+                data-ng-repeat="e in cswElementSetName track by $index"
+              >
                 <div class="col-lg-10">
-                  <input type="text" name="xpath" placeholder="/xpath" class="form-control"
-                        data-ng-model="e"/>
+                  <input
+                    type="text"
+                    name="xpath"
+                    placeholder="/xpath"
+                    class="form-control"
+                    data-ng-model="e"
+                  />
                 </div>
                 <label class="col-lg-2 control-label">
-                  <i class="fa fa-times text-danger" data-ng-click="deleteElementSetName(e)"></i>
+                  <i
+                    class="fa fa-times text-danger"
+                    data-ng-click="deleteElementSetName(e)"
+                  ></i>
                 </label>
               </div>
               <div class="btn-toolbar">
-                <button type="submit" class="btn btn-default" data-ng-click="addCSWElementSetName()"
-                ><span class="fa fa-plus"></span> {{"add"|translate}}</button>
+                <button
+                  type="submit"
+                  class="btn btn-default"
+                  data-ng-click="addCSWElementSetName()"
+                >
+                  <span class="fa fa-plus"></span> {{"add"|translate}}
+                </button>
               </div>
             </fieldset>
           </form>

@@ -68,6 +68,9 @@
     "atomDatasetsInFeed": "Datasets available",
     "atomLinkDetails": "Þetta gagnasett er birt í  Atom Feed sem finna má hér <a href='{{url}}' target='_blank'>{{url}}</a> with name <strong>{{layer}}</strong>.",
     "otherLinkDetails": "Önnur gögn",
+    "qualityLinkDetails": "Quality report",
+    "featurecatalogueLinkDetails": "Feature catalogue",
+    "legendLinkDetails": "Legend",
     "wmsCapabilitiesNotAvailable": "Gat ekki athugað GetCapabilities svörun",
     "wmsLayerNotAvailable": "Lagið {{layerName}} er ekki til staðar í  WMS þjónustunni. Þú getur hins vegar skoðað þau sem eru til staðar.",
     "wmsChooseLayerToAdd": "Veldu kortalag til að bæta við kortið",
@@ -537,5 +540,13 @@
     "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
     "seriesComposedOf": "Composed of",
     "seriesCoveringPeriod": "Covering period",
-    "approve": "Samþykkja"
+    "approve": "Samþykkja",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required",
+    "addLayerPrefix": "Add layer",
+    "addLayerPostfix": "to the map",
+    "submit": "Leggja fram"
 }

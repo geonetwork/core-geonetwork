@@ -104,6 +104,7 @@ public final class Geonet {
         public static final String SET_UUID = "set-uuid.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
+        public static final String DUPLICATE_METADATA = "duplicate-metadata.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";
         public static final String SCHEMA_SUBSTITUTES = "schema-substitutes.xml";
         public static final String SCHEMA_CONVERSIONS = "schema-conversions.xml";
@@ -649,7 +650,7 @@ public final class Geonet {
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
         public static final String GROUP_PUBLISHED = "groupPublished";
-        public static final String CAT = "_cat";
+        public static final String CAT = "cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";
@@ -678,6 +679,7 @@ public final class Geonet {
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
         public static final String STATUS_WORKFLOW = "statusWorkflow";
+        public static final String USER_SAVED_COUNT = "userSavedCount";
     }
 
     public static class SearchConfig {

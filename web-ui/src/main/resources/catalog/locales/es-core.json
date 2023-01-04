@@ -430,7 +430,7 @@
     "link-fcats": "Catálogo de funciones",
     "link-associated": "Recursos asociados",
     "indexAccessError": "Error durante el acceso al índice",
-    "applyFilter": "Aplicar Filtro",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Confirmar Acción",
     "close": "Cerrar",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Aprobación de metadatos por lotes",
     "batchApproveInfo": "Esta opción aprueba los metadatos seleccionados que son propiedad del usuario. De forma predeterminada, solo se aprueban los metadatos en estado enviado, seleccione la opción a continuación para aprobar directamente los metadatos que no están en estado enviado.",
     "batchApproveDirect": "Aprobar los metadatos sin necesidad de estar en estado enviado",
-    "facet-mdStatus": "Progreso del flujo de trabajo"
+    "facet-mdStatus": "Progreso del flujo de trabajo",
+    "skipLink": "Skip and go to the content"
 }

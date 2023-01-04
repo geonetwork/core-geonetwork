@@ -156,6 +156,28 @@
   </xsl:template>
 
 
+
+  <xsl:template mode="index"
+                match="mrs:MD_ReferenceSystem[count(ancestor::node()) =  1]"
+                priority="2">
+    <xsl:variable name="type" select="local-name(.)"/>
+
+    <xsl:variable name="code"
+                  select="mrs:referenceSystemIdentifier/*/mcc:code/*/text()"/>
+    <xsl:variable name="description"
+                  select="mrs:referenceSystemIdentifier/*/mcc:description/*/text()"/>
+    <resourceTitleObject type="object">{
+      "default": "<xsl:value-of select="gn-fn-index:json-escape(if ($description != '')
+                                          then concat($description, ' (', $code, ')')
+                                          else $code)"/>"
+      }
+    </resourceTitleObject>
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+  </xsl:template>
+
+
+
   <!-- Indexing DQ report -->
   <xsl:template mode="index"
                 match="mdq:*[mdq:result and count(ancestor::node()) =  1]"

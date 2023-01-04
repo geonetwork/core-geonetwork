@@ -223,11 +223,6 @@
     <description></description>
     <condition></condition>
   </element>
-  <element name="mac:prority">
-    <label>Prority</label>
-    <description></description>
-    <condition></condition>
-  </element>
   <element name="mac:requestedDate">
     <label>Requested date</label>
     <description>Range of date validity</description>
@@ -254,7 +249,7 @@
     <condition></condition>
   </element>
   <element name="mac:satisifiedPlan">
-    <label>Satisified plan</label>
+    <label>Satisfied plan</label>
     <description></description>
     <condition></condition>
   </element>
@@ -742,6 +737,31 @@
     </description>
     <condition>optional</condition>
   </element>
+  <element name="xsi:nil">
+    <label>Nil</label>
+    <description>Indicates that a certain element does not have a value or that the value is unknown.</description>
+  </element>
+  <element name="isInfinite">
+    <label>Is infinite</label>
+  </element>
+  <element name="gco:Multiplicity">
+    <label>Multiplicity</label>
+  </element>
+  <element name="gco:range">
+    <label>Range</label>
+  </element>
+  <element name="gco:MultiplicityRange">
+    <label>Multiplicity range</label>
+  </element>
+  <element name="gfc:FC_Binding">
+    <label>Binding</label>
+  </element>
+  <element name="gfc:FC_BoundAssociationRole">
+    <label>Bound association role</label>
+  </element>
+  <element name="gfc:FC_BoundFeatureAttribute">
+    <label>Bound feature attribute</label>
+  </element>
   <element name="gfc:identifier">
     <label>Identifier</label>
   </element>
@@ -1145,7 +1165,7 @@
     </description>
   </element>
   <element name="mrc:attribute" id="209.0">
-    <label>Attribut</label>
+    <label>Attribute</label>
     <description iso="true">Information on an attribute of the resource
     </description>
     <condition>optional</condition>
@@ -2217,7 +2237,7 @@
   </element>
   <element name="mri:compressionGenerationQuantity" id="250.0">
     <label>Compression generation quantity</label>
-    <description>Count of the number the number of lossy compression cycles
+    <description>Count of the number of lossy compression cycles
       performed on the
       image
     </description>
@@ -2242,7 +2262,7 @@
     <label>Contact</label>
     <description>Identification of, and means of communication with, person(s)
       and
-      organization(s) with responsability for maintaining the metadata
+      organization(s) with responsibility for maintaining the metadata
     </description>
   </element>
   <element name="mri:contact" id="8.0">
@@ -3900,6 +3920,10 @@
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">View (OWS Context)</option>-->
 
+      <option value="OGC API - Coverages">OGC API - Coverages</option>
+      <option value="OGC API - Features">OGC API - Features</option>
+      <option value="OGC API - Maps">OGC API - Maps</option>
+      <option value="OGC API - Records">OGC API - Records</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web
       </option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language
@@ -4427,7 +4451,7 @@
   </element>
   <element name="mri:topicCategory" id="41.0">
     <label>Topic category</label>
-    <description>Main theme(s) of the datset</description>
+    <description>Main theme(s) of the dataset</description>
     <condition>mandatory</condition>
   </element>
   <element name="mri:MD_TopicCategoryCode">
@@ -5003,7 +5027,7 @@
   </element>
   <element name="srv:name">
     <label>Name</label>
-    <description>The name, as used by the service for this chain or paramater
+    <description>The name, as used by the service for this chain or parameter
     </description>
   </element>
   <element name="srv:description">
@@ -5861,7 +5885,7 @@
     <description></description>
   </element>
   <element name="mac:objectiveOccurence">
-    <label>Objective occurence</label>
+    <label>Objective occurrence</label>
     <description></description>
   </element>
   <element name="mac:trigger">

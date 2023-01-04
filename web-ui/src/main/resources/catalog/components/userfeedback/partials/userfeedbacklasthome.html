@@ -1,37 +1,50 @@
 <div>
   <div data-ng-show="lastCommentsList.length">
-    <div class="gn-userfeedback-card"
-      data-ng-repeat="row in lastCommentsList">
+    <div class="gn-userfeedback-card" data-ng-repeat="row in lastCommentsList">
       <div class="gn-userfeedback-pre-title">
         <span data-translate="">GUFfeedbackOn</span>
-        <span data-ng-hide="row.published"> -
+        <span data-ng-hide="row.published">
+          -
           <strong data-translate="">GUFwaitingForApproval</strong>
         </span>
+
+        <a
+          class="pull-right"
+          data-ng-if="allowDelete"
+          data-ng-click="deleteC(row.uuid)"
+          title="{{'GUFdeleteUserFeedback' | translate}}"
+        >
+          <i class="fa fa-fw fa-times text-danger"></i>
+        </a>
       </div>
-      <a data-ng-href="#/metadata/{{row.metadataUUID}}">{{row.metadataTitle}}</a>
+      <a data-ng-href="catalog.search#/metadata/{{row.metadataUUID}}"
+        >{{row.metadataTitle}}</a
+      >
       <q class="gn-quote" data-ng-show="row.comment">{{row.comment}}</q>
       <div class="clearfix">
         <div
           class="gn-userfeedback-score gn-userfeedback-score-{{row.ratingAVG}} gn-userfeedback-badge"
-          data-ng-show="row.ratingAVG">
+          data-ng-show="row.ratingAVG"
+        >
           {{row.ratingAVG}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
         </div>
         <div class="gn-userfeedback-score" data-ng-hide="row.ratingAVG">
           - / - <span class="fa fa-fw fa-star">&nbsp;</span>
         </div>
         <div class="gn-userfeedback-reply">
-          <em>{{row.authorName}}</em><br>on {{row.date | date:'medium'}}
+          <em>{{row.authorName}}</em><br />on {{row.date | date:'medium'}}
         </div>
       </div>
     </div>
-    <button class="btn btn-link"
-            data-ng-hide="allCommentsLoaded"
-            data-ng-click="loadMore()"
-            data-translate="">more</button>
+    <button
+      class="btn btn-link"
+      data-ng-hide="allCommentsLoaded"
+      data-ng-click="loadMore()"
+      data-translate=""
+    >
+      more
+    </button>
   </div>
 
   <div data-ng-hide="lastCommentsList.length" data-translate="">GUFnoComments</div>
-
 </div>
-
-

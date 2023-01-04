@@ -430,7 +430,7 @@
     "link-fcats": "Objektartenkatalaog",
     "link-associated": "Verlinkte Ressourcen",
     "indexAccessError": "Fehler beim Zugriff auf den Index.",
-    "applyFilter": "Filter anwenden",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Aktion bestätigen",
     "close": "Schliessen",
@@ -577,5 +577,6 @@
     "batchApproveTitle": "Genehmigung von Batch-Metadaten",
     "batchApproveInfo": "Diese Option genehmigt die ausgewählten Metadaten des Benutzers. Standardmäßig werden nur die Metadaten im Status &quot;Übermittelt&quot; genehmigt. Wählen Sie die folgende Option aus, um die Metadaten, die sich nicht im Status &quot;Übermittelt&quot; befinden, direkt zu genehmigen.",
     "batchApproveDirect": "Genehmigen Sie die Metadaten, ohne dass Sie sich im Status &quot;Übermittelt&quot; befinden müssen",
-    "facet-mdStatus": "Fortschritt des Arbeitsablaufes"
+    "facet-mdStatus": "Fortschritt des Arbeitsablaufes",
+    "skipLink": "Skip and go to the content"
 }

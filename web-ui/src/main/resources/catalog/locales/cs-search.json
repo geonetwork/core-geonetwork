@@ -540,5 +540,13 @@
     "esriCapabilitiesNoValid": "Odpověď není platným dokumentem o možnostech ESRI Rest.",
     "seriesComposedOf": "Složen z",
     "seriesCoveringPeriod": "Krycí období",
-    "approve": "Schválit"
+    "approve": "Schválit",
+    "fieldRequired": "Hodnota je povinná",
+    "fieldTooLong": "Hodnota je příliš dlouhá",
+    "fieldTooLongMax": "Hodnota je příliš dlouhá (max. {{maxChar}} znaků)",
+    "fieldTooShort": "Hodnota je příliš krátká",
+    "fieldEmailNotValid": "Je vyžadována platná e-mailová adresa",
+    "addLayerPrefix": "Přidat vrstvu",
+    "addLayerPostfix": "do mapy",
+    "submit": "Odeslat"
 }

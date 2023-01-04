@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
@@ -231,7 +232,7 @@ public class MetadataUtils {
                     };
                     queries.put(type,
                         new RelatedTypeDetails(
-                            String.format("uuid:(%s)%s",
+                            String.format("(uuid:(%s)%s) AND (draft:\"n\" OR draft:\"e\")",
                             listOfUUIDs.stream()
                                 .collect(Collectors.joining("\" OR \"", "\"", "\"")),
                                 type == RelatedItemType.parent
@@ -249,7 +250,7 @@ public class MetadataUtils {
                 // and search for records associated to them
                 queries.put(type,
                     new RelatedTypeDetails(
-                        String.format("+%s:(%s) -uuid:\"%s\"",
+                        String.format("+%s:(%s) -uuid:\"%s\" AND (draft:\"n\" OR draft:\"e\")",
                         relatedIndexFields.get(type.value()),
                         listOfUUIDs.stream()
                             .collect(Collectors.joining("\" OR \"", "\"", "\"")),
@@ -268,7 +269,7 @@ public class MetadataUtils {
                 // and search for records associated and records having parentUuid equal to current
                 queries.put(type,
                     new RelatedTypeDetails(
-                        String.format("%s:\"%s\" OR uuid:(%s)",
+                        String.format("(%s:\"%s\" OR uuid:(%s)) AND (draft:\"n\" OR draft:\"e\")",
                             relatedIndexFields.get(type.value()),
                             md.getUuid(),
                             isComposedOfList.stream()
@@ -390,9 +391,10 @@ public class MetadataUtils {
     }
 
     private static String buildRemoteRecord(Map<String, String> props) {
-        return props == null ? "{}" : String.format(
-            "{\"resourceTitleObject\": {\"default\": \"%s\"}}",
-            props.get("resourceTitle"));
+        return props == null || props.get("resourceTitle") == null
+            ? "{}"
+            : String.format("{\"resourceTitleObject\": {\"default\": \"%s\"}}",
+                StringEscapeUtils.escapeJson(props.get("resourceTitle")));
     }
 
     @Deprecated
@@ -758,9 +760,9 @@ public class MetadataUtils {
                 BinaryFile.copy(is, os);
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Backup record. Error: " + e.getMessage(), e);
+            throw new RuntimeException("Error performing backup on record '" + metadata.getUuid() + "'. Contact the system administrator if the problem persists: " + e.getMessage(), e);
         } finally {
-            if (file == null) {
+            if (file != null) {
                 IO.deleteFile(file, false, Geonet.MEF);
             }
         }
@@ -907,8 +909,8 @@ public class MetadataUtils {
 
             Element finalResponseRoot = responseRoot;
             ((ArrayList) values).forEach(recordLink -> {
-                if (recordLink instanceof HashMap) {
-                    HashMap<String, String> linkProperties = (HashMap) recordLink;
+                if (recordLink instanceof Map) {
+                    Map<String, String> linkProperties = (Map) recordLink;
                     if (type.equals(linkProperties.get(Geonet.IndexFieldNames.RecordLink.TYPE))
                         && "remote".equals(linkProperties.get("origin"))) {
                         Element record = new Element("metadata");

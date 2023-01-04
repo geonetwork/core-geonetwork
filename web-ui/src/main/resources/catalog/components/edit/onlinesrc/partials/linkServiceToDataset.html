@@ -1,36 +1,36 @@
 <div>
-  <form class="form-horizontal" role="form"
-        data-ng-search-form="">
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <form class="form-horizontal" role="form" data-ng-search-form="">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
     <div class="onlinesrc-container">
       <div class="form-group">
         <div class="col-sm-12">
           <div class="input-group gn-margin-bottom">
-            <span class="input-group-addon"><i
-              class="fa fa-search"/></span>
-            <input class="form-control"
-                   data-ng-change="triggerSearch()"
-                   type="text"
-                   data-ng-model="searchObj.params.any"
-                   data-ng-model-options="modelOptions"
-                   autocomplete="off"
-                   placeholder="{{'anyPlaceHolder' | translate}}"
-                   aria-label="{{'anyPlaceHolder' | translate}}"
-                   autofocus=""/>
+            <span class="input-group-addon"><i class="fa fa-search" /></span>
+            <input
+              class="form-control"
+              data-ng-change="triggerSearch()"
+              type="text"
+              data-ng-model="searchObj.params.any"
+              data-ng-model-options="modelOptions"
+              autocomplete="off"
+              placeholder="{{'anyPlaceHolder' | translate}}"
+              aria-label="{{'anyPlaceHolder' | translate}}"
+              autofocus=""
+            />
           </div>
           <div data-gn-remote-record-selector=""></div>
         </div>
       </div>
-      <div data-gn-search-form-results
-           data-gn-search-form-results-mode="simple"
-           data-gn-search-form-results-selection-mode="local simple"
-           data-search-results="searchResults"
-           data-select-records="stateObj.selectRecords"
-           data-pagination-info="paginationInfo">
-      </div>
+      <div
+        data-gn-search-form-results
+        data-gn-search-form-results-mode="simple"
+        data-gn-search-form-results-selection-mode="local simple"
+        data-search-results="searchResults"
+        data-select-records="stateObj.selectRecords"
+        data-pagination-info="paginationInfo"
+      ></div>
 
-      <p class="alert alert-warning"
-         data-ng-show="alertMsg">{{alertMsg}}</p>
+      <p class="alert alert-warning" data-ng-show="alertMsg">{{alertMsg}}</p>
 
       <h4 data-ng-show="mode == 'dataset' && layers.length > 0">
         <span data-translate="">chooseZeroOrMoreLayerFromService</span>
@@ -40,32 +40,34 @@
         <span data-translate="">chooseZeroOrMoreLayer</span>
         <span>{{currentMdTitle}}</span>
       </h4>
-      <div data-gn-layers-grid
-           data-gn-selection-mode="layerSelectionMode"
-           data-layers="layers"
-           data-selection="srcParams.selectedLayers">
-      </div>
+      <div
+        data-gn-layers-grid
+        data-gn-selection-mode="layerSelectionMode"
+        data-layers="layers"
+        data-selection="srcParams.selectedLayers"
+      ></div>
 
       <div>
         <label>
-          <input type="checkbox"
-                 data-ng-model="addOnlineSrcInDataset"/>
+          <input type="checkbox" data-ng-model="addOnlineSrcInDataset" />
           <span data-translate="">addTheFollowingLinkInDataset</span>
         </label>
         <span>{{onlineSrcLink}}</span>
       </div>
     </div>
     <div class="">
-      <button type="button" class="btn navbar-btn btn-success"
-              data-gn-click-and-spin="linkTo(addOnlineSrcInDataset)"
-              data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
-        <i class="fa gn-icon-service"/>&nbsp;
+      <button
+        type="button"
+        class="btn navbar-btn btn-success"
+        data-gn-click-and-spin="linkTo(addOnlineSrcInDataset)"
+        data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+      >
+        <i class="fa gn-icon-service" />&nbsp;
         <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>
         <span data-translate="" data-ng-hide="mode == 'service'">linkToDataset</span>
       </button>
 
-      <div data-gn-need-help="user-guide/associating-resources/linking-dataset-or-service.html"
-           class="pull-right"></div>
+      <div data-gn-need-help="linking-dataset-or-service" class="pull-right"></div>
     </div>
   </form>
 </div>

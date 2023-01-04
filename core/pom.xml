@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.2.1-SNAPSHOT</version>
+    <version>4.2.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -83,8 +83,49 @@
     <dependency>
       <groupId>org.apache.directory.server</groupId>
       <artifactId>apacheds-all</artifactId>
-      <version>2.0.0-M24</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- log4j 2 api -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <!-- commons logging bridge is provided by spring-framework -->
+    <!-- dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jcl</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency-->
+    <!-- bridge log4j 1.2 api to log4j2 -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+    </dependency>
+    <!-- bridge java util logging api based on logging.properties -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jul</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <!-- bridge slf4j api for testig wtih apacheds -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- log4j 2 logging configured via log4j2.xml -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
     </dependency>
 
     <dependency>
@@ -126,8 +167,27 @@
     <dependency>
       <groupId>org.keycloak</groupId>
       <artifactId>keycloak-spring-security-adapter</artifactId>
-      <version>16.1.1</version>
+      <version>18.0.2</version>
     </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-client</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-jose</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-resource-server</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
@@ -303,14 +363,6 @@
     <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
       <groupId>jaxen</groupId>
@@ -515,6 +567,12 @@
       <groupId>org.owasp.esapi</groupId>
       <artifactId>esapi</artifactId>
       <version>2.4.0.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xmlunit</groupId>
@@ -542,7 +600,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.11.618</version>
+      <version>1.12.261</version>
     </dependency>
     <dependency>
       <groupId>org.jasypt</groupId>

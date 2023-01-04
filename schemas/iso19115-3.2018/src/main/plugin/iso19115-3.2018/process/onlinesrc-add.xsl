@@ -44,7 +44,7 @@
 
   <xsl:variable name="mainLang"
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"
-                as="xs:string"/>
+                as="xs:string?"/>
 
   <xsl:variable name="useOnlyPTFreeText"
                 select="count(//*[lan:PT_FreeText and not(gco:CharacterString)]) > 0"

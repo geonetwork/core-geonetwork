@@ -3,55 +3,100 @@
     <i class="fa fa-fw fa-clock-o"></i>
     <span data-translate="">harvesterSchedule</span>
 
-    <div id="gn-harvest-settings-selected-schedule-buttons" class="btn-group btn-group-sm pull-right gn-margin-bottom" data-toggle="buttons">
-      <label id="gn-harvest-settings-selected-schedule-buttons-enable"
-             class="btn btn-default"
-             data-ng-click="harvester.options.status = 'active'"
-             data-ng-class="harvester.options.status === 'active' ? 'active' : ''">
-        <input type="radio" name="harvesterStatus"/>
+    <div
+      id="gn-harvest-settings-selected-schedule-buttons"
+      class="btn-group btn-group-sm pull-right gn-margin-bottom"
+      data-toggle="buttons"
+    >
+      <label
+        id="gn-harvest-settings-selected-schedule-buttons-enable"
+        class="btn btn-default"
+        data-ng-click="harvester.options.status = 'active'"
+        data-ng-class="harvester.options.status === 'active' ? 'active' : ''"
+      >
+        <input type="radio" name="harvesterStatus" />
         <strong data-translate="" class="">enable</strong>
       </label>
-      <label id="gn-harvest-settings-selected-schedule-buttons-disable"
-             class="btn btn-default"
-             data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
-             data-ng-click="harvester.options.status = 'inactive'">
-        <input type="radio" name="harvesterStatus"/>
+      <label
+        id="gn-harvest-settings-selected-schedule-buttons-disable"
+        class="btn btn-default"
+        data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
+        data-ng-click="harvester.options.status = 'inactive'"
+      >
+        <input type="radio" name="harvesterStatus" />
         <strong data-translate="" class="">disable</strong>
       </label>
     </div>
   </legend>
-  <div id="gn-harvest-settings-selected-schedule-freq-row" data-ng-show="harvester.options.status === 'active'">
-    <label id="gn-harvest-settings-selected-schedule-freq-label" class="control-label" data-translate="">frequency</label>
+  <div
+    id="gn-harvest-settings-selected-schedule-freq-row"
+    data-ng-show="harvester.options.status === 'active'"
+  >
+    <label
+      id="gn-harvest-settings-selected-schedule-freq-label"
+      class="control-label"
+      data-translate=""
+      >frequency</label
+    >
     <div class="input-group">
-      <input id="gn-harvest-settings-selected-schedule-freq-input" type="text" class="form-control" data-ng-model="harvester.options.every"/>
+      <input
+        id="gn-harvest-settings-selected-schedule-freq-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvester.options.every"
+      />
       <div class="input-group-btn">
-        <button id="gn-harvest-settings-selected-schedule-freq-list" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"/>
+        <button
+          id="gn-harvest-settings-selected-schedule-freq-list"
+          type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+        >
+          <i class="fa fa-clock-o"></i>&nbsp;<span class="caret" />
         </button>
         <ul class="dropdown-menu pull-right">
           <li data-ng-repeat="exp in cronExp">
-            <a href="" data-ng-click="setSchedule(exp)" title="{{exp}}">{{('cron-' + exp) |
-              translate}}</a>
+            <a href="" data-ng-click="setSchedule(exp)" title="{{exp}}"
+              >{{('cron-' + exp) | translate}}</a
+            >
           </li>
-          <li class="divider"/>
+          <li class="divider" />
           <li>
-            <a class="btn btn-link"
-               href="http://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger"
-               target="_blank"
-               data-translate="">moreExamples</a>
+            <a
+              class="btn btn-link"
+              href="http://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger"
+              target="_blank"
+              data-translate=""
+              >moreExamples</a
+            >
           </li>
         </ul>
       </div>
     </div>
-    <p ng-show="timeZone" class="help-block" data-translate="" data-translate-values="{ timeZoneTransl: timeZone, zoneOffset: timeZoneOffset}">harvesterTimeZoneHelp</p>
+    <p
+      ng-show="timeZone"
+      class="help-block"
+      data-translate=""
+      data-translate-values="{ timeZoneTransl: timeZone, zoneOffset: timeZoneOffset}"
+    >
+      harvesterTimeZoneHelp
+    </p>
   </div>
 
-  <div id="gn-harvest-settings-selected-schedule-run-row" data-ng-show="harvester.options.status === 'active'">
+  <div
+    id="gn-harvest-settings-selected-schedule-run-row"
+    data-ng-show="harvester.options.status === 'active'"
+  >
     <label class="control-label">
-      <input id="gn-harvest-settings-selected-schedule-run-checkbox" type="checkbox" data-ng-model="harvester.options.oneRunOnly"/>&nbsp;
-      <span id="gn-harvest-settings-selected-schedule-run-label" data-translate="">oneRunOnly</span>
+      <input
+        id="gn-harvest-settings-selected-schedule-run-checkbox"
+        type="checkbox"
+        data-ng-model="harvester.options.oneRunOnly"
+      />&nbsp;
+      <span id="gn-harvest-settings-selected-schedule-run-label" data-translate=""
+        >oneRunOnly</span
+      >
     </label>
     <p class="help-block" data-translate="">oneRunOnlyHelp</p>
   </div>
-
 </fieldset>
