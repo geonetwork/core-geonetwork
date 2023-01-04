@@ -276,7 +276,7 @@
     if (this.facet.type === "tree") {
       this.item.path = [this.facet.key, this.item.key];
       this.item.collapsed = !this.searchCtrl.hasChildInSearch(this.item.path);
-    } else if (this.facet.type === "filters" || this.facet.type === "histogram") {
+    } else {
       this.item.inverted = this.searchCtrl.isNegativeSearch(this.item.path);
     }
   };
