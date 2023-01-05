@@ -334,13 +334,6 @@
                 terms: {
                   field: "resourceType"
                 },
-                aggs: {
-                  format: {
-                    terms: {
-                      field: "format"
-                    }
-                  }
-                },
                 meta: {
                   decorator: {
                     type: "icon",
@@ -361,6 +354,14 @@
                 terms: {
                   field: "cl_spatialRepresentationType.key",
                   size: 10
+                }
+              },
+              format: {
+                terms: {
+                  field: "format"
+                },
+                meta: {
+                  collapsed: true
                 }
               },
               availableInServices: {
