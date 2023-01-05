@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  httpd:
+    image: httpd:2.4
+    ports:
+      - "8080:80"
+    volumes:
+      - ./aptly-public:/usr/local/apache2/htdocs/:ro
+  test-docker:
+    image: debian:bullseye
+    tty: true
+  aptly:
+    image: mikepurvis/aptly:latest
+    tty: true
+    volumes:
+    - ./aptly-public:/mnt/aptly-public
+    - ./bullseye:/mnt/bullseye
+    - ./update-repos.sh:/mnt/update-repos.sh
+    - ./aptly.conf:/mnt/aptly.conf
+    - ./gpg:/root/.gnupg
+

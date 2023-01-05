@@ -1,0 +1,37 @@
+This is a revocation certificate for the OpenPGP key:
+
+pub   rsa4096 2023-01-05 [S]
+      BAA003AB9C3253805A0E2F3E18EA8CC7A12C8C92
+uid          Ifremer Debian packages <debian-packages@ifremer.fr>
+
+A revocation certificate is a kind of "kill switch" to publicly
+declare that a key shall not anymore be used.  It is not possible
+to retract such a revocation certificate once it has been published.
+
+Use it to revoke this key in case of a compromise or loss of
+the secret key.  However, if the secret key is still accessible,
+it is better to generate a new revocation certificate and give
+a reason for the revocation.  For details see the description of
+of the gpg command "--generate-revocation" in the GnuPG manual.
+
+To avoid an accidental use of this file, a colon has been inserted
+before the 5 dashes below.  Remove this colon with a text editor
+before importing and publishing this revocation certificate.
+
+:-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: This is a revocation certificate
+
+iQI2BCABCAAgFiEEuqADq5wyU4BaDi8+GOqMx6EsjJIFAmO2zT0CHQAACgkQGOqM
+x6EsjJJQxBAAu6tm5puEQEJeCaQy27OJjfmgB6/ZOv+ZoxBWJORAlH7b2W/Ijk+E
+8BJ6bV+KCjMNcyeZwgjMiVvhwwTZhYmlgX8gYgzPgEcy9JlfpAGRex3BQKPE4CHf
+iQxvqliix/hiOwHiRxNap99mQ05azd7Ner+tyOI7GFmv6BCkaUD1ercJBxgExIcQ
+lTiRBDdRyeNWQySTbFTGBpPzyu06wPi/DTbObP20+run5LgALwWmc9fVtziefvE8
+woGR7XRY7psujIuTwe4YbXCv64cI9oBGkO+iaGAir2ESBdMNlf9u9Hb5dk+vdyn2
+MudL0+F2PmFRtpP4Z3IVjqHCPR657qjHcOueSfyyjzl4cZOXq1aBkERklthYsQiP
+zF+7rNjrB9lg5fqXWSDG8ECdgbLP1U8eoiruT5xtfYh4YqrrrFhsL0RPrNF7cn18
+lrYOkVUN33EgCHsMyvTMu2lLazvcGGJJOQ6PBliMIDqzmTbzRry1PmEoqk0ty7ws
+pgtddy/B/GPYhpGA+6pBJkebNCyWHYkC8jbOCBRtVw82XIdHIS37HNORBF5oFwRf
+v5pNUlqKPiq2oIMqblcCpImxZ9WayDA1SDMkVrRw6RmpAStokxCbl29wgJW5epcJ
+Obba/04NWKhg4HLqffXK63rh1kZQTOuJX0RQisaSLuHkNQllgdbrUbM=
+=B0rM
+-----END PGP PUBLIC KEY BLOCK-----
