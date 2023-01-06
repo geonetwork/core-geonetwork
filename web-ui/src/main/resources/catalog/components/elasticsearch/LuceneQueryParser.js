@@ -122,32 +122,6 @@
         }
         return query_string;
       }
-
-      function parseAstNode(node, facets) {
-        if (!node) return;
-
-        var left = node.left;
-        var right = node.right;
-        var field = node.field;
-        var operator = node.operator;
-        var term = node.term;
-        var nextGroup = facets;
-
-        if (field) {
-          var indexKey = field.field;
-          facets[indexKey] = facets[indexKey] || [];
-          nextGroup = facets[indexKey];
-        }
-
-        if (Array.isArray(facets)) {
-          if (term) {
-            facets.push(term);
-          }
-        } else if (typeof facets == "object") {
-        }
-        parseAstNode(left, nextGroup);
-        parseAstNode(right, nextGroup);
-      }
     }
   ]);
 })();
