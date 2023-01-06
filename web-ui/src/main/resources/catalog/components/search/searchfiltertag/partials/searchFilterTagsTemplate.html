@@ -27,7 +27,7 @@
       <div class="flex-spacer"></div>
       <span ng-if="::specific"> {{::filter.value | characters:180}} </span>
       <span ng-if="::type === 'RANGE'">
-        {{::filter.value | renderRangeExpression:key}}
+        {{::filter.value | renderRangeExpression:filter.key}}
       </span>
       <span
         ng-if="::filter.label"
