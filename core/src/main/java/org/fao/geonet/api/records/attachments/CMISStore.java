@@ -506,7 +506,7 @@ public class CMISStore extends AbstractStore {
             if (folderRoot == null) {
                 folderRoot = "";
             }
-            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
+            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot, false, true);
             MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
                 getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
 
