@@ -76,7 +76,7 @@
 
           scope.$watchCollection(optionsAttr, function(newVal) {
 
-            var options = goog.cloneObject(newVal);
+            var options = $.extend(true, {}, newVal);
 
             if (options !== undefined) {
 
@@ -133,9 +133,13 @@
               }
             });
 
-          goog.events.listen(window, goog.events.EventType.RESIZE,
-            gnDebounce(refreshData, 50, true),
-            false, this);
+            window.addEventListener(
+              "resize",
+              function (event) {
+                gnDebounce(refreshData, 50, true);
+              },
+              true
+            );
 
           function refreshData() {
             if (profile !== undefined) {

@@ -99,6 +99,8 @@
      * Hover callback function.
      * @type {function(Object, number, string, Object.<string, number>, string)}
      */
+    var hoverCallback =
+      options.hoverCallback !== undefined ? options.hoverCallback : null;
     var hoverCallback = options.hoverCallback !== undefined ?
       options.hoverCallback : goog.nullFunction;
 
@@ -106,8 +108,7 @@
      * Out callback function.
      * @type {function()}
      */
-    var outCallback = options.outCallback !== undefined ?
-      options.outCallback : goog.nullFunction;
+    var outCallback = options.outCallback !== undefined ? options.outCallback : null;
 
     /**
      * Distance data extractor used to get the dist values.
@@ -201,7 +202,7 @@
     };
 
     if (options.formatter !== undefined) {
-      goog.object.extend(formatter, options.formatter);
+      object.assign(formatter, options.formatter);
     }
 
     /**
@@ -579,7 +580,12 @@
 
     profile.showPois = function(pois) {
       pois = pois !== undefined ? pois : [];
-      goog.asserts.assert(pois.length === 0 || poiExtractor !== undefined);
+      if (pois.length === 0 || poiExtractor !== undefined) {
+        console.warn(
+          "Will nos show Pois, because there are none and poiExtractor is Undefined"
+        );
+        return;
+      }
 
       var pe = poiExtractor;
       var g = svg.select('g');
