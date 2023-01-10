@@ -466,6 +466,7 @@ eg.
       <xsl:value-of select="($metadata//gmd:identificationInfo/*/
         gmd:pointOfContact/*[gmd:role/*/@codeListValue = ($publisherRoles)])/
           gmd:organisationName/gco:CharacterString"/>
+      <!--<xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/*/text()"/>-->
     </datacite:publisher>
 
     <!--

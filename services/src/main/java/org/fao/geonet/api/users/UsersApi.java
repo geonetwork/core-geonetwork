@@ -451,6 +451,13 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
+        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
+        // Otherwise the password cannot be null.
+        if (userDto.getPassword() == null
+            && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
+            throw new IllegalArgumentException("Users password must be supplied");
+        }
+
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
         if (!existingUsers.isEmpty()) {
             throw new IllegalArgumentException("Users with username "
@@ -465,9 +472,11 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
         User user = new User();
-        user.getSecurity().setPassword(
-            PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-                userDto.getPassword()));
+        if (userDto.getPassword() != null) {
+            user.getSecurity().setPassword(
+                PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
+                    userDto.getPassword()));
+        }
 
         fillUserFromParams(user, userDto);
 

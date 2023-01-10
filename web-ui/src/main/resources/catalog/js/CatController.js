@@ -334,13 +334,6 @@
                 terms: {
                   field: "resourceType"
                 },
-                aggs: {
-                  format: {
-                    terms: {
-                      field: "format"
-                    }
-                  }
-                },
                 meta: {
                   decorator: {
                     type: "icon",
@@ -361,6 +354,14 @@
                 terms: {
                   field: "cl_spatialRepresentationType.key",
                   size: 10
+                }
+              },
+              format: {
+                terms: {
+                  field: "format"
+                },
+                meta: {
+                  collapsed: true
                 }
               },
               availableInServices: {
@@ -1915,7 +1916,10 @@
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                   selectedFacet = keys[0];
                   for (var i = 0; i < keys.length; i++) {
-                    if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
+                    if (
+                      $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
+                      Object.keys($scope.searchInfo.aggregations[keys[i]]).length > 0
+                    ) {
                       selectedFacet = keys[i];
                       break;
                     }

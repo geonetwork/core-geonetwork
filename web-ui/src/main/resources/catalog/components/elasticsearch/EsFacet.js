@@ -73,7 +73,7 @@
           track_total_hits: true
         },
         home: {
-          facets: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+          facets: {},
           source: {
             includes: [
               "id",

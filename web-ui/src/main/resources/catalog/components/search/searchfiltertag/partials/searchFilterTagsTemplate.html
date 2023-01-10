@@ -27,7 +27,7 @@
       <div class="flex-spacer"></div>
       <span ng-if="::specific"> {{::filter.value | characters:180}} </span>
       <span ng-if="::type === 'RANGE'">
-        {{::filter.value.replace('+' + filter.key + ':', '') | renderRangeExpression}}
+        {{::filter.value | renderRangeExpression:filter.key}}
       </span>
       <span
         ng-if="::filter.label"
@@ -38,10 +38,16 @@
       <span
         ng-if="::!specific && filter.label === undefined && type === undefined"
         ng-repeat="(key, value) in filter.value track by $index"
+        ng-init="type = getFilterType({value: value})"
         ng-class="{'gn-filter-negative': isNegative(value)}"
-        translate
-        >{{::key | facetTranslator: filter.key | capitalize}}</span
       >
+        <span ng-if="::type === 'RANGE'">
+          {{::value | renderRangeExpression:filter.key}}
+        </span>
+        <span ng-if="::type !== 'RANGE'">
+          {{::key | facetTranslator: filter.key | capitalize}}
+        </span>
+      </span>
       <!-- TODO: Nested aggs support -->
       <div class="flex-grow"></div>
       <span class="fa fa-times text-danger delete-icon pull-right"></span>
