@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -47,7 +48,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -132,7 +132,7 @@ public class AttachmentsActionsApi {
             return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC, false);
         } finally {
             if (thumbnailFile != null) {
-                Files.deleteIfExists(thumbnailFile);
+                FileUtils.deleteQuietly(thumbnailFile.toFile());
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -27,6 +27,7 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.apache.commons.io.FileUtils;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -45,11 +46,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlElementReader;
-import org.fao.geonet.utils.XmlRequest;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -61,12 +58,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
@@ -306,7 +298,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 harvest(records, fragmentHarvester);
             }
         } finally {
-            Files.deleteIfExists(tempFile);
+            FileUtils.deleteQuietly(tempFile.toFile());
         }
     }
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2022 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -440,12 +441,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
             result.unretrievable++;
             log.error(e);
         } finally {
-            try {
-                if (mefFile != null) {
-                    Files.deleteIfExists(mefFile);
-                }
-            } catch (IOException e) {
-                log.warning("Unable to delete mefFile: " + mefFile);
+            if (mefFile != null) {
+                FileUtils.deleteQuietly(mefFile.toFile());
             }
         }
     }
@@ -731,14 +728,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     //--- we ignore the exception here. Maybe the metadata has been removed just now
                     result.unretrievable++;
                 } finally {
-                    try {
-                        if (mefFile != null) {
-                            Files.deleteIfExists(mefFile);
-                        }
-                    } catch (IOException e) {
-                        log.warning("Unable to delete mefFile: " + mefFile);
+                    if (mefFile != null) {
+                        FileUtils.deleteQuietly(mefFile.toFile());
                     }
-
                 }
             } else {
                 result.unchangedMetadata++;

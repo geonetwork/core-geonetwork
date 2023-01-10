@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -26,6 +26,7 @@
 package org.fao.geonet.guiapi.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.utils.XML11Char;
 import org.fao.geonet.ApplicationContextHolder;
@@ -125,7 +126,7 @@ public class XsltResponseWriter {
             response.getOutputStream().write(Files.readAllBytes(file));
             response.getOutputStream().flush();
         } finally {
-            Files.deleteIfExists(file);
+            FileUtils.deleteQuietly(file.toFile());
         }
 
     }

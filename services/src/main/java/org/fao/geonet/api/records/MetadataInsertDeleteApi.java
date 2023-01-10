@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -354,7 +354,7 @@ public class MetadataInsertDeleteApi {
                         String.format(messages.getString("api.metadata.import.errorFromUrl"), url)));
                 } finally {
                     if (tempFile != null) {
-                        Files.deleteIfExists(tempFile);
+                        FileUtils.deleteQuietly(tempFile.toFile());
                     }
                 }
                 if (xmlContent != null) {

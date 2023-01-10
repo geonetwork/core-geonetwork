@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -308,10 +308,10 @@ public class FormatterAdminApi extends AbstractFormatService {
         }
         finally {
             if (zippedFile != null) {
-                Files.deleteIfExists(zippedFile);
+                FileUtils.deleteQuietly(zippedFile.toFile());
             }
             if (tmpDir != null) {
-                Files.deleteIfExists(tmpDir);
+                FileUtils.deleteQuietly(tmpDir.toFile());
             }
         }
     }

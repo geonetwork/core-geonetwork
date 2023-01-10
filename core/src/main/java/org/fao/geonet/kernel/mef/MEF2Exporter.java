@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Constants;
@@ -114,8 +115,7 @@ class MEF2Exporter {
             )));
             Element body = new Element("body");
             html.addContent(body);
-            for (String uuid1 : uuids) {
-                String uuid = uuid1;
+            for (String uuid : uuids) {
                 final String cleanUUID = cleanForCsv(uuid);
 
                 AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
@@ -183,7 +183,7 @@ class MEF2Exporter {
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
         } catch (Exception e) {
-            Files.deleteIfExists(file);
+            FileUtils.deleteQuietly(file.toFile());
             throw e;
         }
         return file;
