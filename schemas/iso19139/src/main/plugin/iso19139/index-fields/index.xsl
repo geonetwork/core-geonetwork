@@ -544,6 +544,21 @@
                       </errors>
                     </xsl:if>
 
+
+                    <xsl:variable name="expansionConfig"
+                                  select="$keywordExpansion[ends-with($thesaurusId, @id)]"/>
+                    <xsl:if test="$expansionConfig">
+                      <narrowers>
+                        <xsl:for-each select="util:getNarrowerKeywords(
+                                                   (*/text())[1],
+                                                   $thesaurusId,
+                                                   $allLanguages/lang[@id = 'default']/@value,
+                                                   $expansionConfig/@depth)">
+                          <value><xsl:value-of select="."/></value>
+                        </xsl:for-each>
+                      </narrowers>
+                    </xsl:if>
+
                     <tree>
                       <defaults>
                         <xsl:call-template name="get-keyword-tree-values">

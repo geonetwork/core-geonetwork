@@ -1409,6 +1409,32 @@ public final class XslUtil {
         return res;
     }
 
+
+    public static List<String> getNarrowerKeywords(String keyword,
+                                                   String thesaurusId,
+                                                   String langCode,
+                                                   int depth) {
+        List<String> res = new ArrayList<String>();
+        if (StringUtils.isEmpty(thesaurusId)) {
+            return res;
+        }
+
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+            thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+            if (thesaurus != null) {
+                res = thesaurus.getNarrowerKeywords(keyword, langCode, depth);
+            }
+            return res;
+        } catch (Exception ex) {
+        }
+        return res;
+    }
+
     public static String getKeywordValueByUri(String uri, String thesaurusId, String langCode) {
         if (StringUtils.isEmpty(thesaurusId)) {
             return "";

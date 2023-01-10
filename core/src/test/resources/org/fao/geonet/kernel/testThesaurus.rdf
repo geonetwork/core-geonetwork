@@ -456,6 +456,14 @@
 	<ns2:broader rdf:resource="http://abstract.thesaurus.test#20"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://abstract.thesaurus.test#15">
+	<ns2:narrower rdf:resource="http://abstract.thesaurus.test#150"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://abstract.thesaurus.test#150">
+	<ns2:broader rdf:resource="http://abstract.thesaurus.test#15"/>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://abstract.thesaurus.test#21">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="en">21_testValue_eng</ns2:prefLabel>
