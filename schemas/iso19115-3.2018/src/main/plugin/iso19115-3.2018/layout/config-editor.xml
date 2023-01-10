@@ -361,7 +361,7 @@
     <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="false"
               data-template-type="logo"
               data-filter='{"root": "mcc:MD_BrowseGraphic"}'/>
@@ -370,7 +370,7 @@
     <for name="mdq:report" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="false"
               data-template-type="report"
               data-filter='{"root": "mdq:DQ_*"}'/>
@@ -379,7 +379,7 @@
     <for name="mri:resourceConstraints" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="false"
               data-template-type="resourceConstraints"
               data-filter='{"root": "mco:MD_*"}'/>
@@ -1113,7 +1113,7 @@
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"root": "gmd:CI_ResponsibleParty", "groupPublished": "CONTACTS_CDS-SAT"}'
@@ -1775,7 +1775,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"_groupPublished": "CONTACTS_EDMERP"}'
@@ -1883,7 +1883,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -2001,7 +2001,7 @@
                   in="/mdb:MD_Metadata/mdb:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'

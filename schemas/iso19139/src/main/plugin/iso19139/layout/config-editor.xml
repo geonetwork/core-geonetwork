@@ -120,7 +120,7 @@
     <for name="gmd:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="extent"
         data-filter='{"_root": "gmd:EX_Extent"}'
@@ -131,7 +131,7 @@
     <for name="gmd:resourceFormat" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="format"
               data-filter='{"_root": "gmd:MD_Format"}'
@@ -140,7 +140,7 @@
     <for name="gmd:distributionFormat" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="format"
               data-filter='{"_root": "gmd:MD_Format"}'
@@ -151,7 +151,7 @@
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -160,7 +160,7 @@
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -169,7 +169,7 @@
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -178,7 +178,7 @@
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -187,7 +187,7 @@
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
@@ -196,7 +196,7 @@
     <for name="gmd:report" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
-        data-search-action="false"
+        data-search-action="true"
         data-popup-action="true"
         data-filter='{"_root": "gmd:DQ_DomainConsistency"}'
         data-insert-modes=""
@@ -546,7 +546,7 @@
             <directiveAttributes
               data-template-add-action="true"
               data-template-type="contact"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
@@ -945,7 +945,7 @@
                   in="/gmd:MD_Metadata">
             <directiveAttributes
               data-template-add-action="true"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -1817,7 +1817,7 @@
             data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -1892,7 +1892,7 @@
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -1967,7 +1967,7 @@
                   in="/gmd:MD_Metadata">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -2062,7 +2062,7 @@
                   in="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -2323,7 +2323,7 @@
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -2434,7 +2434,7 @@
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -2650,7 +2650,7 @@
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-filter='{"groupPublished": "CONTACTS_EDMO"}'
@@ -3103,7 +3103,7 @@
                   in="/gmd:MD_Metadata">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -3796,7 +3796,7 @@
               <directiveAttributes
                 data-template-add-action="true"
                 data-template-type="contact"
-                data-search-action="false"
+                data-search-action="true"
                 data-popup-action="true"
                 data-display-if="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
                 data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -3844,7 +3844,7 @@
                   in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <directiveAttributes
               data-template-add-action="false"
-              data-search-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
