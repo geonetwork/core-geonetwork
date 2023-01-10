@@ -32,7 +32,7 @@
     <cssSource webappPath="/catalog/style/"/>
     <cssSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.css" />
   </require>
-  <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="gnlib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
@@ -101,7 +101,7 @@
     <jsSource webappPath="/catalog/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + olcesium -->
-  <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="gnlib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>

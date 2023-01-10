@@ -33,7 +33,7 @@
     <!-- the bs-table css is imported in a less file in Sextant so it should not be included in Wro4j build
     <cssSource webappPath="/sextant/lib/bootstrap-table/dist"/> -->
   </require>
-  <declarative name="sextantlib" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
     <jsSource webappPath="/sextant/lib/jquery-2.2.4.min.js" minimize="false"/>
@@ -105,7 +105,7 @@
     <jsSource webappPath="/sextant/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + olcesium -->
-  <declarative name="sextantlib3d" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
@@ -185,7 +185,7 @@
     Same as lib.js but without bootstrap.js, as to avoid conflicts on some
     Sextant integrations
   -->
-  <declarative name="sextantlib_nobs" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="lib_nobs" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>
@@ -257,7 +257,7 @@
     <jsSource webappPath="/sextant/lib/xml2json/xml2json.min.js" minimize="false"/>
     <jsSource webappPath="/sextant/lib/dom-to-image/dom-to-image.min.js" minimize="false"/>
   </declarative>
-  <declarative name="sextantlib_nojquery" pathOnDisk="web-ui/src/main/resources">
+  <declarative name="lib_nojquery" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/sextant/lib/closure/base.js" minimize="false"/>
     <jsSource webappPath="/sextant/lib/modernizr.js" minimize="false"/>
     <!-- <jsSource webappPath="/sextant/views/sextant/jquerynoconflict.js"/>

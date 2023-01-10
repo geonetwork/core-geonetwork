@@ -233,12 +233,12 @@
       <xsl:otherwise>
 
         <xsl:choose>
-          <xsl:when test="$uiResourcesPath = '../../sextant/'">
-            <script src="{/root/gui/url}/static/sextantlib.js?v={$buildNumber}"></script>
+          <xsl:when test="$uiResourcesPath = '../../catalog/'">
+            <script src="{/root/gui/url}/static/gnlib.js?v={$buildNumber}"></script>
           </xsl:when>
-          <xsl:when test="$uiResourcesPath = '../../sextant/' and $is3DModeAllowed">
+          <xsl:when test="$uiResourcesPath = '../../catalog/' and $is3DModeAllowed">
             <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>
-            <script src="{/root/gui/url}/static/sextantlib3d.js?v={$buildNumber}"></script>
+            <script src="{/root/gui/url}/static/gnlib3d.js?v={$buildNumber}"></script>
           </xsl:when>
           <xsl:when test="$is3DModeAllowed">
             <script src="{$uiResourcesPath}lib/olcesium/Cesium/Cesium.js?v={$buildNumber}"></script>

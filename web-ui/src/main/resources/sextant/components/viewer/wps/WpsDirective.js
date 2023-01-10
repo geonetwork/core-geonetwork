@@ -491,12 +491,12 @@
                             // check if geom can be multi
                             var isMulti = false;
                             if (input.metadata !== undefined) {
-                              input.metadata.forEach(function(m) {
-                                if (m.title.contains('allowMultipart')){
+                              input.metadata.forEach(function (m) {
+                                if (m.title.contains("allowMultipart")) {
                                   isMulti = true;
                                 }
                               });
-                            };
+                            }
 
                             scope.getGeomType = function (geom) {
                               if (!geom) {
