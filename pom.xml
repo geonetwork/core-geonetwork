@@ -1544,8 +1544,8 @@
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
-    <spring.version>5.2.20.RELEASE</spring.version>
-    <spring.security.version>5.7.3</spring.security.version>
+    <spring.version>5.2.22.RELEASE</spring.version>
+    <spring.security.version>5.7.6</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
