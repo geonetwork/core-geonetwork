@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import org.apache.camel.Exchange;
+import org.apache.camel.spring.SpringCamelContext;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -42,6 +43,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
@@ -174,6 +176,15 @@ public class EsWFSFeatureIndexer {
         WFSHarvesterParameter configuration = (WFSHarvesterParameter) exchange.getProperty("configuration");
         if (configuration == null) {
             throw new InvalidArgumentException("Missing WFS harvester configuration.");
+        }
+
+        try {
+            ((SpringCamelContext) exchange.getContext())
+                .getApplicationContext()
+                .getBean(EsSearchManager.class)
+                .init(false, Optional.of(Arrays.asList("features")));
+        } catch (Exception e) {
+            LOGGER.error("Failed to create missing index for features. " + e.getMessage());
         }
 
         LOGGER.info("Initializing harvester configuration for uuid '{}', url '{}'," +
