@@ -119,7 +119,10 @@
                 docs: {
                   top_hits: {
                     // associated stats with UUIDs
-                    size: 100
+                    size: 100,
+                    _source: {
+                      includes: ["uuid"]
+                    }
                   }
                 }
               };
@@ -131,7 +134,7 @@
             var relatedRecordKeysWithValues = []; // keep track of the relations with values
 
             Object.keys(relatedRecords).forEach(function (k) {
-              if (relatedRecords[k] && relatedRecords[k].map) {
+              if (relatedRecords[k] && relatedRecords[k].length > 0) {
                 relatedRecordKeysWithValues.push(k);
 
                 body += '{"index": "records"}\n';
