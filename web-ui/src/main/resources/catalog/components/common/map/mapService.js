@@ -584,7 +584,9 @@
                   featureProjection: proj,
                   dataProjection: "EPSG:4326"
                 });
-                geoms.push(geom);
+                if (geom) {
+                  geoms.push(geom);
+                }
               });
               var geometryCollection = new ol.geom.GeometryCollection(geoms);
               feat.setGeometry(geometryCollection);
