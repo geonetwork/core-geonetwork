@@ -304,7 +304,10 @@
       function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(
       <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
-      null, gnViewerSettings, gnSearchSettings);
+      // Relative path is safer as even if settings are wrong, the client app works.
+      null,
+      <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
+      gnViewerSettings, gnSearchSettings);
       }]);
     </script>
   </xsl:template>

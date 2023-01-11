@@ -330,7 +330,7 @@
        * @param {String} title
        * @param {String} url
        */
-      function getPermalink(title, url) {
+      function displayPermalink(title, url) {
         gnPopup.createModal({
           title: $translate.instant("permalinkTo", { title: title }),
           content:
@@ -434,7 +434,7 @@
         CSVToArray: CSVToArray,
         getUrlParameter: getUrlParameter,
         randomUuid: randomUuid,
-        getPermalink: getPermalink,
+        displayPermalink: displayPermalink,
         openModal: openModal,
         goBack: goBack
       };
