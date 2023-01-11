@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -86,7 +86,6 @@ import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 @RequestMapping(value = {
@@ -138,25 +137,23 @@ public class CatalogApi {
     @Autowired
     SettingInfo settingInfo;
     @Autowired
-    private ServletContext servletContext;
-    @Autowired
     LanguageUtils languageUtils;
     @Autowired
     IsoLanguagesMapper isoLanguagesMapper;
+    @Autowired
+    private ServletContext servletContext;
 
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
      */
     private static String paramsAsString(Map<String, String> requestParams) {
-        String paramNonPaging = "";
-        Iterator<Entry<String, String>> it = requestParams.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = it.next();
+        StringBuilder paramNonPaging = new StringBuilder();
+        for (Entry<String, String> pair : requestParams.entrySet()) {
             if (!pair.getKey().equals("from") && !pair.getKey().equals("to")) {
-                paramNonPaging = paramNonPaging + (paramNonPaging.equals("") ? "" : "&") + pair.getKey() + "=" + pair.getValue();
+                paramNonPaging.append(paramNonPaging.toString().equals("") ? "" : "&").append(pair.getKey()).append("=").append(pair.getValue());
             }
         }
-        return paramNonPaging;
+        return paramNonPaging.toString();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -184,61 +181,61 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
             description = "MEF file format.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "FULL")
-            MEFLib.Format format,
+        MEFLib.Format format,
         @Parameter(
             description = "With related records (parent and service).",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean withRelated,
+        boolean withRelated,
         @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean withXLinksResolved,
+        boolean withXLinksResolved,
         @Parameter(
             description = "Preserve XLink URLs in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean withXLinkAttribute,
+        boolean withXLinkAttribute,
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean addSchemaLocation,
+        boolean addSchemaLocation,
         @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean approved,
+        boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
         )
-            String acceptHeader,
+        String acceptHeader,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse response,
+        HttpServletResponse response,
         @Parameter(hidden = true)
-            HttpServletRequest request)
+        HttpServletRequest request)
         throws Exception {
 
         // Get parameters
@@ -259,8 +256,7 @@ public class CatalogApi {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
             Set<String> allowedUuid = new HashSet<String>();
-            for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
-                String uuid = iter.next();
+            for (String uuid : uuidList) {
                 try {
                     ApiUtils.canViewRecord(uuid, request);
                     allowedUuid.add(uuid);
@@ -280,9 +276,7 @@ public class CatalogApi {
                 int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
                 Set<String> tmpUuid = new HashSet<String>();
-                for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
-                    String uuid = iter.next();
-
+                for (String uuid : allowedUuid) {
                     Map<RelatedItemType, List<AssociatedRecord>> associated =
                         MetadataUtils.getAssociated(context,
                             metadataRepository.findOneByUuid(uuid),
@@ -324,6 +318,10 @@ public class CatalogApi {
             } finally {
                 // -- Reset selection manager
                 selectionManger.close(SelectionManager.SELECTION_METADATA);
+                // Delete the temporary file
+                if (file != null) {
+                    FileUtils.deleteQuietly(file.toFile());
+                }
             }
         }
     }
@@ -349,23 +347,23 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse httpResponse,
+        HttpServletResponse httpResponse,
         @Parameter(hidden = true)
-            HttpServletRequest httpRequest)
+        HttpServletRequest httpRequest)
         throws Exception {
 
 
@@ -453,7 +451,7 @@ public class CatalogApi {
         });
 
         Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         new XsltResponseWriter("env", "search")
@@ -464,6 +462,7 @@ public class CatalogApi {
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
             .asPdf(httpResponse, replaceFilenamePlaceholder(settingManager.getValue("metadata/pdfReport/pdfName"), "pdf"));
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -487,23 +486,23 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse httpResponse,
+        HttpServletResponse httpResponse,
         @Parameter(hidden = true)
-            HttpServletRequest httpRequest)
+        HttpServletRequest httpRequest)
         throws Exception {
         final UserSession session = ApiUtils.getUserSession(httpSession);
         Set<String> uuidList = ApiUtils.getUuidsParameterOrSelection(
@@ -525,7 +524,7 @@ public class CatalogApi {
                         context,
                         (String) h.getSourceAsMap().get("id"),
                         false, false, false));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         });
 
@@ -535,7 +534,7 @@ public class CatalogApi {
             .asElement();
 
         // Determine filename to use
-        String fileName =  replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
+        String fileName = replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
 
         httpResponse.setContentType("text/csv");
         httpResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -596,7 +595,7 @@ public class CatalogApi {
     void getAsRdf(
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         HttpServletResponse response,
         HttpServletRequest request
     ) throws Exception {
@@ -717,7 +716,10 @@ public class CatalogApi {
             Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
         } catch (IOException e) {
             Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
+        } finally {
+            FileUtils.deleteQuietly(rdfFile);
         }
+
     }
 
     /*
@@ -732,7 +734,7 @@ public class CatalogApi {
 
     }
 
-    private String replaceFilenamePlaceholder(String fileName,  String extension) {
+    private String replaceFilenamePlaceholder(String fileName, String extension) {
         // Checks for a parameter documentFileName with the document file name,
         // otherwise uses a default value
         if (StringUtils.isEmpty(fileName)) {

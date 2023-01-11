@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,30 +24,26 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import org.apache.commons.io.FileUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.mef.MEFLib.Format;
+import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.fao.geonet.Constants;
-import org.fao.geonet.ZipUtil;
-import org.fao.geonet.api.records.attachments.Store;
-import org.fao.geonet.api.records.attachments.StoreUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.mef.MEFLib.Format;
-import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.Log;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
 
 /**
@@ -146,9 +142,10 @@ class MEFExporter {
 
                 }
             }
+        } catch (Exception e) {
+            FileUtils.deleteQuietly(file.toFile());
+            throw e;
         }
         return file;
     }
 }
-
-// =============================================================================

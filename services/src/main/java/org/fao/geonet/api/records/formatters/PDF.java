@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -70,6 +70,7 @@ public class PDF implements Service {
             renderer.createPDF(os);
         }
 
+        // Jeeves ServiceManager will delete the temporary file at the end of the request
         return BinaryFile.encode(200, tempFile.toAbsolutePath().normalize(), true).getElement();
     }
 
