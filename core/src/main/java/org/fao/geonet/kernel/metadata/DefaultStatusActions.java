@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -41,22 +41,12 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.util.MailUtil;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
@@ -78,9 +68,10 @@ public class DefaultStatusActions implements StatusActions {
     protected String siteName;
     protected UserSession session;
     protected boolean emailNotes = true;
-    private String from, replyTo, replyToDescr;
-    private StatusValueRepository _statusValueRepository;
-    private IMetadataStatus metadataStatusManager;
+    private String replyTo;
+    private String replyToDescr;
+    private StatusValueRepository statusValueRepository;
+    protected IMetadataStatus metadataStatusManager;
 
     /**
      * Constructor.
@@ -95,14 +86,14 @@ public class DefaultStatusActions implements StatusActions {
 
         this.context = context;
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        this._statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
+        this.statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
         this.metadataUtils = applicationContext.getBean(IMetadataUtils.class);
         this.language = context.getLanguage();
 
         SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
-        from = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
+        String from = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
 
         if (from == null || from.length() == 0) {
             context.error("Mail feedback address not configured, email notifications won't be sent.");
@@ -153,7 +144,7 @@ public class DefaultStatusActions implements StatusActions {
      */
     public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
 
-        Set<Integer> unchanged = new HashSet<Integer>();
+        Set<Integer> unchanged = new HashSet<>();
 
         // -- process the metadata records to set status
         for (MetadataStatus status : listOfStatus) {
@@ -200,7 +191,7 @@ public class DefaultStatusActions implements StatusActions {
                   try {
                     Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
                     context.getApplicationContext().publishEvent(new MetadataStatusChanged(
-                        metadataUtils.findOne(Integer.valueOf(mid)),
+                        metadataUtils.findOne(mid),
                         status.getStatusValue(), status.getChangeMessage(),
                         status.getUserId()));
                   } catch (Exception error) {
@@ -264,6 +255,10 @@ public class DefaultStatusActions implements StatusActions {
      * @throws Exception
      */
     private void notify(List<User> userToNotify, MetadataStatus status) throws Exception {
+        if ((userToNotify == null) || userToNotify.isEmpty()) {
+            return;
+        }
+
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
 
         String translatedStatusName = getTranslatedStatusName(status.getStatusValue().getId());
@@ -335,7 +330,7 @@ public class DefaultStatusActions implements StatusActions {
         return getUserToNotify(notificationLevel, listOfId, status.getOwner());
     }
 
-    static public List<User> getUserToNotify(StatusValueNotificationLevel notificationLevel, Set<Integer> recordIds, Integer ownerId) {
+     public static List<User> getUserToNotify(StatusValueNotificationLevel notificationLevel, Set<Integer> recordIds, Integer ownerId) {
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         List<User> users = new ArrayList<>();
 
@@ -384,7 +379,7 @@ public class DefaultStatusActions implements StatusActions {
         return users;
     }
 
-    static public List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
+     public static List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
         GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         List<Group> groups = new ArrayList<>();
 
@@ -413,7 +408,7 @@ public class DefaultStatusActions implements StatusActions {
 
     private String getTranslatedStatusName(int statusValueId) {
         String translatedStatusName = "";
-        StatusValue s = _statusValueRepository.findOneById(statusValueId);
+        StatusValue s = statusValueRepository.findOneById(statusValueId);
         if (s == null) {
             translatedStatusName = statusValueId
                     + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
@@ -430,7 +425,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param subject Subject to be used for email notices
      * @param message Text of the mail
      */
-    protected void sendEmail(String sendTo, String subject, String message) throws Exception {
+    protected void sendEmail(String sendTo, String subject, String message) {
 
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
