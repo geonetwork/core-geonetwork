@@ -89,6 +89,12 @@
     </doc>
   </xsl:variable>
 
+  <!--
+  Collecting links in the metadata records. This is used during
+  indexing (using forIndexing=true to return the complete element
+  (which could be multilingual and will be indexed with translations)
+  and in extract-relations.xsl which return only the current API call language.
+  -->
   <xsl:template name="collect-documents">
     <xsl:param name="forIndexing" select="false()" as="xs:boolean"/>
 
