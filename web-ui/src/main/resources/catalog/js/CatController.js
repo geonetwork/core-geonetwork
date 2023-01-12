@@ -202,13 +202,15 @@
             // It also applies to aggregation using ${aggLanguage} substitute.
             // Language strategy can be:
             // * searchInUILanguage: search in UI languages
-            // eg. full text field is any.langfre if French
-            // * searchInAllLanguages: search using any.* fields
+            // eg. full text field is any.langfre if French, aggLanguage is uiLanguage.
+            // * searchInAllLanguages: search using any.* fields, aggLanguage is default
             // (no analysis is done, more records are returned)
             // * searchInDetectedLanguage: restrict the search to the language detected
-            // based on user search. If language detection fails, search in all languages.
+            // based on user search. aggLanguage is detectedLanguage.
+            // If language detection fails, search in all languages and aggLanguage is uiLanguage
             // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
             // 'languageStrategy': 'searchInThatLanguage:fre',
+            // aggLanguage is forcedLanguage.
             languageStrategy: "searchInAllLanguages",
             // Limit language detection to some languages only.
             // If empty, the list of languages in catalogue records is used
