@@ -496,21 +496,19 @@ public class CMISStore extends AbstractStore {
 
         final String key = getMetadataDir(context, metadataId);
 
-        try {
-            String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
-            if (folderRoot == null) {
-                folderRoot = "";
-            }
-            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
-            MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
 
-            return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
-                settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
-
-        } catch (CmisObjectNotFoundException e) {
-            return null;
+        String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
+        if (folderRoot == null) {
+            folderRoot = "";
         }
+        Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot, false, true);
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
+
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
+            settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
+
+
     }
 
     @Override
