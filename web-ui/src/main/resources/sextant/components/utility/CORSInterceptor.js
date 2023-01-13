@@ -97,6 +97,8 @@
                   config.method == "GET" &&
                   config.cache != true &&
                   config.url != "q" &&
+                  config.url != "../../criticalhealthcheck" &&
+                  config.url != "../../warninghealthcheck" &&
                   config.url.indexOf("qi?") != 0 &&
                   config.url.indexOf("q?") != 0 &&
                   config.url.indexOf("GetFeatureInfo") < 0
