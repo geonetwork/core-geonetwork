@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.io.StringReader;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.fao.geonet.kernel.csw.services.getrecords.FilterParser;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.junit.jupiter.api.Test;
@@ -52,14 +53,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * CswFilter2Es converts (XML-based) CSW queries into ElasticSearch queries.
  * These ES-queries are in JSON-notation. We do not want to test the resulting
  * JSON-String char-by-char as this is error-prone.<br>
- * 
+ * <p>
  * Instead, we deserialize the output string back to a JSON-tree. We then
  * compare this output tree with an expected tree we built up using an
  * Elasticsearch oriented DSL.
- * 
  *
  * @author bhoefling
- *
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CswFilter2EsTestConfiguration.class)
@@ -94,14 +93,14 @@ class CswFilter2EsTest {
         // triple-quotes.
         // INPUT:
         final String input = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" + "    <PropertyIsEqualTo>\n"
-                + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>Hydrological</Literal>\n"
-                + "    </PropertyIsEqualTo>\n" + "      </Filter>";
+            + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>Hydrological</Literal>\n"
+            + "    </PropertyIsEqualTo>\n" + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
-                must(array(match("Title", "Hydrological"))). //
-                filter(queryStringPart()). //
-                bld();
+            must(array(queryStringPart("Title", "Hydrological"))). //
+            filter(queryStringPart(null, null)). //
+            bld();
 
         assertFilterEquals(expected, input);
     }
@@ -111,25 +110,26 @@ class CswFilter2EsTest {
 
         // INPUT:
         final String input = "      <Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
-                + "        <And>\n" //
-                + "      <PropertyIsEqualTo>\n" //
-                + "        <PropertyName>Title</PropertyName>\n" //
-                + "            <Literal>Hydrological</Literal>\n" //
-                + "      </PropertyIsEqualTo>\n" //
-                + "      <PropertyIsEqualTo>\n" //
-                + "        <PropertyName>Title</PropertyName>\n" //
-                + "            <Literal>Africa</Literal>\n" //
-                + "      </PropertyIsEqualTo>\n" //
-                + "    </And>\n" //
-                + "      </Filter>\n" //
-                + "";
+            + "        <And>\n" //
+            + "      <PropertyIsEqualTo>\n" //
+            + "        <PropertyName>Title</PropertyName>\n" //
+            + "            <Literal>Hydrological</Literal>\n" //
+            + "      </PropertyIsEqualTo>\n" //
+            + "      <PropertyIsEqualTo>\n" //
+            + "        <PropertyName>Title</PropertyName>\n" //
+            + "            <Literal>Africa</Literal>\n" //
+            + "      </PropertyIsEqualTo>\n" //
+            + "    </And>\n" //
+            + "      </Filter>\n" //
+            + "";
 
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
-                must(array(match("Title", "Africa"), //
-                        match("Title", "Hydrological")))
-                . //
-                filter(queryStringPart()). //
+            must(array(
+            queryStringPart("Title", "Africa"),
+            queryStringPart("Title", "Hydrological"))) //
+            . //
+                filter(queryStringPart(null, null)). //
                 bld();
 
         assertFilterEquals(expected, input);
@@ -140,22 +140,22 @@ class CswFilter2EsTest {
 
         // INPUT:
         final String input = "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
-                + "          <ogc:BBOX>\n" //
-                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
-                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
-                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
-                + "            </gml:Envelope>\n" //
-                + "          </ogc:BBOX>\n" //
-                + "      </ogc:Filter>\n" //
-                + "";
+            + "          <ogc:BBOX>\n" //
+            + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+            + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+            + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+            + "            </gml:Envelope>\n" //
+            + "          </ogc:BBOX>\n" //
+            + "      </ogc:Filter>\n" //
+            + "";
 
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
-                must(array(geoShape("geom", //
-                        envelope(-180d, 90d, 180d, -90d), //
-                        "intersects"))) //
-                . //
-                filter(queryStringPart()). //
+            must(array(geoShape("geom", //
+            envelope(-180d, 90d, 180d, -90d), //
+            "intersects"))) //
+            . //
+                filter(queryStringPart(null, null)). //
                 bld();
 
         assertFilterEquals(expected, input);
@@ -163,7 +163,7 @@ class CswFilter2EsTest {
 
     /**
      * A more complex example with AND, OR and BBox filter.
-     * 
+     *
      * @throws IOException
      */
     @Test
@@ -171,52 +171,52 @@ class CswFilter2EsTest {
 
         // INPUT:
         final String input = "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
-                + "        <ogc:And>\n" //
-                + "          <ogc:Or>\n" //
-                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-                + "              <ogc:Literal>data</ogc:Literal>\n" //
-                + "            </ogc:PropertyIsEqualTo>\n" //
-                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-                + "              <ogc:Literal>dataset</ogc:Literal>\n" //
-                + "            </ogc:PropertyIsEqualTo>\n" //
-                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-                + "              <ogc:Literal>datasetcollection</ogc:Literal>\n" //
-                + "            </ogc:PropertyIsEqualTo>\n" //
-                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-                + "              <ogc:Literal>series</ogc:Literal>\n" //
-                + "            </ogc:PropertyIsEqualTo>\n" //
-                + "          </ogc:Or>\n" //
-                + "          <ogc:BBOX>\n" //
-                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
-                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
-                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
-                + "            </gml:Envelope>\n" //
-                + "          </ogc:BBOX>\n" //
-                + "        </ogc:And>\n" //
-                + "      </ogc:Filter>";
+            + "        <ogc:And>\n" //
+            + "          <ogc:Or>\n" //
+            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+            + "              <ogc:Literal>data</ogc:Literal>\n" //
+            + "            </ogc:PropertyIsEqualTo>\n" //
+            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+            + "              <ogc:Literal>dataset</ogc:Literal>\n" //
+            + "            </ogc:PropertyIsEqualTo>\n" //
+            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+            + "              <ogc:Literal>datasetcollection</ogc:Literal>\n" //
+            + "            </ogc:PropertyIsEqualTo>\n" //
+            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+            + "              <ogc:Literal>series</ogc:Literal>\n" //
+            + "            </ogc:PropertyIsEqualTo>\n" //
+            + "          </ogc:Or>\n" //
+            + "          <ogc:BBOX>\n" //
+            + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+            + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+            + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+            + "            </gml:Envelope>\n" //
+            + "          </ogc:BBOX>\n" //
+            + "        </ogc:And>\n" //
+            + "      </ogc:Filter>";
 
         final ObjectNode propertiesPart = boolbdr().should(array( //
-                match("Type", "series"), //
-                match("Type", "datasetcollection"), //
-                match("Type", "dataset"), //
-                match("Type", "data") //
-        )) //
-                .bld();
+                queryStringPart("Type", "series"), //
+                queryStringPart("Type", "datasetcollection"), //
+                queryStringPart("Type", "dataset"), //
+                queryStringPart("Type", "data")
+            )) //
+            .bld();
 
         final ObjectNode geoShapePart = geoShape("geom", //
-                envelope(-180d, 90d, 180d, -90d), //
-                "intersects");
+            envelope(-180d, 90d, 180d, -90d), //
+            "intersects");
 
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
-                must(array(geoShapePart, //
-                        propertiesPart)) //
-                . //
-                filter(queryStringPart()). //
+            must(array(geoShapePart, //
+            propertiesPart)) //
+            . //
+                filter(queryStringPart(null, null)). //
                 bld();
 
         assertFilterEquals(expected, input);
@@ -225,7 +225,7 @@ class CswFilter2EsTest {
     /**
      * {@see #assertFilterEquals(JsonNode, String, String)} with
      * FilterCapabilities.VERSION_110 in use.
-     * 
+     *
      * @param expected
      * @param actual
      * @throws IOException
@@ -238,7 +238,7 @@ class CswFilter2EsTest {
      * Converts xml-string into OGC Filter expression using a specific filter
      * version. This Filter is then finally converted to an ElasticSearch expression
      * and checked against the expected output
-     * 
+     *
      * @param expected          JsonNode representing the expected ElasticSearch
      *                          query.
      * @param actual            XML text of the OGC Filter.
@@ -255,23 +255,37 @@ class CswFilter2EsTest {
 
     /**
      * Builds up the following sub-tree:
-     * 
+     *
      * <pre>
      * {
      *   "query_string": {
      *     "query": "%s"
      * }
+     * or
+     * {
+     *   "query_string": {
+     *     "fields": ["field"]
+     *     "query": "queryString"
+     * }
      * </pre>
      *
+     * @param field
+     * @param queryString
      * @return see description.
      */
-    private static ObjectNode queryStringPart() {
-        // build the "query_string" part:
+    private static ObjectNode queryStringPart(String field, String queryString) {
         final ObjectNode query = MAPPER.createObjectNode();
-        query.put("query", "%s");
+        final ObjectNode queryStringNode = MAPPER.createObjectNode();
 
-        final ObjectNode queryString = MAPPER.createObjectNode();
-        queryString.set("query_string", query);
-        return queryString;
+        if (field != null) {
+            final ArrayNode fieldValues = MAPPER.createArrayNode();
+            fieldValues.add(field);
+            query.set("fields", fieldValues);
+        }
+        query.put("query", queryString == null ? "%s" : queryString);
+
+        queryStringNode.set("query_string", query);
+
+        return queryStringNode;
     }
 }
