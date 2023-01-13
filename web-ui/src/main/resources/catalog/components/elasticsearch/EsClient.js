@@ -39,11 +39,22 @@
         return ES_API_URL + service;
       };
 
-      this.search = function (params, selectionBucket, configId, types) {
+      this.search = function (
+        params,
+        selectionBucket,
+        configId,
+        types,
+        initialAggregationsValues
+      ) {
         return callApi("_search", params, selectionBucket, types).then(function (
           response
         ) {
-          return gnESFacet.getUIModel(response, params, configId);
+          return gnESFacet.getUIModel(
+            response,
+            params,
+            configId,
+            initialAggregationsValues
+          );
         });
       };
 
@@ -115,7 +126,7 @@
           facetConfig
         );
         return callApi("_search", params).then(function (response) {
-          var model = gnESFacet.getUIModel(response, params);
+          var model = gnESFacet.getUIModel(response, params, null);
           return model.facets[0];
         });
       };

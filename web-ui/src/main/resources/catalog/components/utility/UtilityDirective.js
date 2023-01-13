@@ -1964,6 +1964,7 @@
       };
     }
   ]);
+
   module.filter("signInLink", [
     "$location",
     "gnLangs",
@@ -1980,6 +1981,7 @@
       };
     }
   ]);
+
   module.filter("getMailDomain", [
     function () {
       return function (mail) {
@@ -1987,6 +1989,7 @@
       };
     }
   ]);
+
   /**
    * Append size parameter to request a smaller thumbnail.
    */

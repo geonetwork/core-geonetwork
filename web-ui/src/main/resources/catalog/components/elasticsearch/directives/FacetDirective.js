@@ -52,22 +52,6 @@
             ? this.fLvlCollapse[this.list[i].key]
             : this.list[i].collapsed === true;
         }
-
-        var lastFacet = this.lastUpdatedFacet;
-
-        if (
-          this._isNotNestedFacet(lastFacet) &&
-          this.searchCtrl.hasFiltersForKey(lastFacet.path[0])
-        ) {
-          this.list.forEach(
-            function (f) {
-              if (f.key === lastFacet.key) {
-                f.items = lastFacet.items;
-              }
-            }.bind(this)
-          );
-          this.lastUpdatedFacet = null;
-        }
       }.bind(this)
     );
   };
@@ -285,16 +269,11 @@
     var value = !item.inverted;
     if (facet.type === "terms") {
       facet.include = "";
-      if (!item.isNested) {
-        this.facetsCtrl.lastUpdatedFacet = facet;
-      }
     } else if (facet.type === "filters" || facet.type === "histogram") {
       value = item.query_string.query_string.query;
       if (item.inverted) {
         value = "-(" + value + ")";
       }
-    } else if (facet.type === "tree") {
-      this.facetsCtrl.lastUpdatedFacet = facet;
     }
 
     this.searchCtrl.updateState(item.path, value);

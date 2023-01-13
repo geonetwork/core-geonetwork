@@ -335,6 +335,7 @@
                   field: "resourceType"
                 },
                 meta: {
+                  refreshAction: "displayAll",
                   decorator: {
                     type: "icon",
                     prefix: "fa fa-fw gn-icon-"
@@ -354,6 +355,9 @@
                 terms: {
                   field: "cl_spatialRepresentationType.key",
                   size: 10
+                },
+                meta: {
+                  refreshAction: "displayAll"
                 }
               },
               format: {
@@ -366,7 +370,7 @@
               },
               availableInServices: {
                 filters: {
-                  //"other_bucket_key": "others",
+                  // "other_bucket_key": "others",
                   // But does not support to click on it
                   filters: {
                     availableInViewService: {
@@ -460,6 +464,7 @@
                   size: 10
                 },
                 meta: {
+                  refreshAction: 'displayAll',
                   caseInsensitiveInclude: true
                 }
               },
@@ -532,6 +537,7 @@
                   size: 15
                 },
                 meta: {
+                  refreshAction: "displayAll",
                   // Always display filter even no more elements
                   // This can be used when all facet values are loaded
                   // with a large size and you want to provide filtering.
@@ -1506,6 +1512,7 @@
     "$cookies",
     "gnExternalViewer",
     "gnAlertService",
+    "gnSearchLocation",
     function (
       $scope,
       $http,
@@ -1525,7 +1532,8 @@
       gnSearchSettings,
       $cookies,
       gnExternalViewer,
-      gnAlertService
+      gnAlertService,
+      gnSearchLocation
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1911,12 +1919,21 @@
               if (gnGlobalSettings.gnCfg.mods.search.filters) {
                 query.bool.filter = gnGlobalSettings.gnCfg.mods.search.filters;
               }
+
+              var homeAndSearchAggs = angular.merge(
+                {},
+                gnGlobalSettings.gnCfg.mods[
+                  gnSearchLocation.isEditorBoard() ? "editor" : "search"
+                ].facetConfig,
+                gnGlobalSettings.gnCfg.mods.home.facetConfig
+              );
+
               return $http
                 .post("../api/search/records/_search", {
                   size: 0,
                   track_total_hits: true,
                   query: query,
-                  aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig
+                  aggs: homeAndSearchAggs
                 })
                 .then(function (r) {
                   $scope.searchInfo = r.data;

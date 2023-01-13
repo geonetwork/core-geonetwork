@@ -35,8 +35,8 @@
         || ctrl.facet.key | capitalize}}
       </span>
       <span
-        ng-if="ctrl.item.count"
-        class="gn-facet-count flex-no-shrink gn-facet-count-{{ctrl.item.count}}"
+        ng-if="::ctrl.item.count"
+        class="gn-facet-count flex-no-shrink gn-facet-count-{{::ctrl.item.count}}"
         >{{::ctrl.item.count}}</span
       >
     </a>

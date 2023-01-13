@@ -42,6 +42,7 @@
       gnExternalViewer
     ) {
       this.SEARCH = "/search";
+      this.EDITORBOARD = "/board";
       this.SEARCHPAGES = /\/search|\/board/;
       this.MAP = "/map";
       this.METADATA = "/metadata/";
@@ -74,6 +75,10 @@
 
       this.isMap = function () {
         return $location.path() == this.MAP;
+      };
+
+      this.isEditorBoard = function () {
+        return $location.path() == this.EDITORBOARD;
       };
 
       this.isHome = function () {

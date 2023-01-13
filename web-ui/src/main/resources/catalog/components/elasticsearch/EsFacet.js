@@ -292,20 +292,71 @@
         }
       };
 
-      this.getUIModel = function (response, request, configId) {
+      this.getUIModel = function (
+        response,
+        request,
+        configId,
+        initialAggregationsValues
+      ) {
         var listModel;
         listModel = this.createFacetModel(
           request.aggregations,
           response.data.aggregations,
           undefined,
           undefined,
-          configId
+          configId,
+          initialAggregationsValues
         );
         response.data.facets = listModel;
         return response.data;
       };
 
-      this.createFacetModel = function (reqAggs, respAggs, isNested, path, configId) {
+      function applyAggregationRefreshPolicy(model, response, initialBuckets) {
+        if (model.meta.refreshAction === "displayAll") {
+          if (
+            model.config.hasOwnProperty("histogram") ||
+            model.config.hasOwnProperty("date_histogram") ||
+            model.config.hasOwnProperty("auto_date_histogram")
+          ) {
+            console.warn(
+              "Aggregation meta.refreshAction set to displayAll " +
+                "is not supported for histograms."
+            );
+            return;
+          }
+          // All buckets from the initial search are displayed with count null
+          // and those for the current search have counts
+          var allbuckets = JSON.parse(JSON.stringify(initialBuckets)),
+            currentKeyCount = {},
+            addedKeys = [];
+
+          response.buckets.map(function (bucket) {
+            currentKeyCount[bucket.key] = bucket.doc_count;
+          });
+
+          angular.forEach(allbuckets, function (b) {
+            if (Object.keys(currentKeyCount).indexOf(b.key) === -1) {
+              b.doc_count = null;
+            } else {
+              b.doc_count = currentKeyCount[b.key];
+            }
+            addedKeys.push(b.key);
+          });
+          response.buckets = allbuckets;
+        } else if (model.meta.refreshAction === "none") {
+          // Initial buckets are used only.
+          response.buckets = JSON.parse(JSON.stringify(initialBuckets));
+        }
+      }
+
+      this.createFacetModel = function (
+        reqAggs,
+        respAggs,
+        isNested,
+        path,
+        configId,
+        initialAggregationsValues
+      ) {
         var listModel = [];
         if (respAggs == undefined) {
           return;
@@ -334,6 +385,18 @@
             items: [],
             path: (path || []).concat([searchFieldId])
           };
+
+          if (
+            facetModel.meta &&
+            facetModel.meta.refreshAction &&
+            initialAggregationsValues // Not loading more buckets or filtering
+          ) {
+            applyAggregationRefreshPolicy(
+              facetModel,
+              respAgg,
+              initialAggregationsValues[fieldId].buckets
+            );
+          }
 
           if (reqAgg.hasOwnProperty("terms")) {
             if (fieldId.contains("_tree")) {
