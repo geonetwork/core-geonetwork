@@ -1509,8 +1509,13 @@
 
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
 
+    <!-- If elasticsearch security is on,
+    add a read/write user for index features and records: -->
     <es.username></es.username>
     <es.password></es.password>
+    <!-- and a readonly user for index features access. -->
+    <es.ro.username></es.ro.username>
+    <es.ro.password></es.ro.password>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>

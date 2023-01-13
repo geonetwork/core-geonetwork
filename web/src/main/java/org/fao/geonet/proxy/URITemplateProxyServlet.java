@@ -27,9 +27,7 @@ import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
@@ -241,6 +239,9 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             proxyRequest.setHeader("X-Forwarded-Proto", servletRequest.getScheme());
             proxyRequest.setHeader("X-Forwarded-Prefix", servletRequest.getContextPath() + this.doForwardHostPrefixPath);
         }
+
+        // remove host on proxy request to avoid issues in case of redirection
+        proxyRequest.removeHeaders("Host");
 
         // Only attempt this logic is the Authorization is currently not used.
         if (StringUtils.isEmpty(servletRequest.getHeader("Authorization"))) {

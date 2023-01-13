@@ -416,6 +416,36 @@
       <param-value>false</param-value>
     </init-param>
   </servlet>
+  <!--
+  If Elasticsearch has a security layer, create a readonly user
+  with access to the features index and configure the proxy
+  with basic authentication if needed. Example:
+  <servlet>
+    <servlet-name>ESFeaturesProxy</servlet-name>
+    <servlet-class>org.fao.geonet.proxy.EsBasicAuthInjectorProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.features}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>username</param-name>
+      <param-value>${es.ro.username}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value>${es.ro.password}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>isSecured</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  -->
+
   <servlet-mapping>
     <servlet-name>ESFeaturesProxy</servlet-name>
     <url-pattern>/index/features</url-pattern>
