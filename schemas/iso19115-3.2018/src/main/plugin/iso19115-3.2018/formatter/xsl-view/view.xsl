@@ -397,8 +397,11 @@
       <xsl:variable name="cptId" select="*/@uuid"/>
       <div>
         <h3 style="width:100%">
-          <xsl:value-of select="util:getIndexField('',
-                                string(tokenize($cptId, '/')[3]), '_defaultTitle', 'eng')"/>
+          <xsl:variable name="uuid"
+                        select="string(tokenize($cptId, '/')[3])"/>
+          <xsl:if test="$uuid != ''">
+            <xsl:value-of select="util:getIndexField('', $uuid, 'resourceTitleObject', 'eng')"/>
+          </xsl:if>
           <!--<xsl:text> - </xsl:text>
           <xsl:value-of select="*/mdq:scope/*/mcc:levelDescription[1]/*/mcc:other/*"/>-->
           <xsl:if test="*/mdq:scope/*/mcc:levelDescription[2]/*/mcc:other/* != ''">
