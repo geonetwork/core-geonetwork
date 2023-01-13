@@ -227,7 +227,7 @@
         <!-- Use Closure to load the application scripts -->
         <script src="{/root/gui/url}/static/closure_deps.js?v={$buildNumber}"></script>
         <script>
-          goog.require('<xsl:value-of select="if ($angularModule = 'gn_search_sextant') then 'sx_search_sextant' else $angularModule"/>');
+          goog.require('<xsl:value-of select="if ($angularModule = 'gn_search_sextant') then 'gn_search_sextant' else $angularModule"/>');
         </script>
       </xsl:when>
       <xsl:otherwise>
