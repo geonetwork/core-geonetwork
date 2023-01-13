@@ -251,7 +251,7 @@
 
         <xsl:choose>
           <xsl:when test="$uiResourcesPath = '../../sextant/'">
-            <script src="{/root/gui/url}/static/sx_search_sextant.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
+            <script src="{/root/gui/url}/static/gn_search_sextant.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
           </xsl:when>
           <xsl:otherwise>
             <script src="{/root/gui/url}/static/{$angularModule}.js?v={$buildNumber}&amp;{$minimizedParam}"></script>
