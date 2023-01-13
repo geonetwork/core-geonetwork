@@ -23,20 +23,22 @@
 package org.fao.geonet.proxy;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * A useless proxy
@@ -46,8 +48,12 @@ import javax.servlet.ServletException;
 public class EsBasicAuthInjectorProxyServlet
     extends org.mitre.dsmiley.httpproxy.URITemplateProxyServlet {
 
+    private static final String P_IS_SECURED = "isSecured";
+
+    protected boolean isSecured = false;
+
     private String username;
-    
+
     private String password;
 
     public String getUsername() {
@@ -70,9 +76,39 @@ public class EsBasicAuthInjectorProxyServlet
     public void init(ServletConfig servletConfig) throws ServletException {
         this.username = servletConfig.getInitParameter("username");
         this.password = servletConfig.getInitParameter("password");
+
+        String doIsSecured = servletConfig.getInitParameter(P_IS_SECURED);
+        if(doIsSecured != null) {
+            isSecured = Boolean.parseBoolean(doIsSecured);
+        }
+
         super.init(servletConfig);
     }
-    
+
+    /**
+     * Hides the {{@link org.mitre.dsmiley.httpproxy.ProxyServlet#getContentLength(HttpServletRequest)}} private method.
+     */
+    private long getContentLength(HttpServletRequest request) {
+        String contentLengthHeader = request.getHeader("Content-Length");
+        return contentLengthHeader != null ? Long.parseLong(contentLengthHeader) : -1L;
+    }
+
+    @Override
+    protected HttpRequest newProxyRequestWithEntity(String method, String proxyRequestUri, HttpServletRequest servletRequest) throws IOException {
+        HttpEntityEnclosingRequest eProxyRequest = new BasicHttpEntityEnclosingRequest(method, proxyRequestUri);
+        InputStreamEntity entity = new InputStreamEntity(servletRequest.getInputStream(), this.getContentLength(servletRequest));
+
+        // https://github.com/mitre/HTTP-Proxy-Servlet/issues/67
+        if ("GET".equals(method) || !isSecured) {
+            eProxyRequest.setEntity(entity);
+        } else {
+            BufferedHttpEntity bufferedHttpEntity = new BufferedHttpEntity(entity);
+            eProxyRequest.setEntity(bufferedHttpEntity);
+        }
+
+        return eProxyRequest;
+    }
+
     /**
      * Add the basic authentication
      */
