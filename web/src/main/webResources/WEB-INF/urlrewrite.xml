@@ -28,6 +28,11 @@
     Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
 -->
 <urlrewrite use-query-string="true" use-context="false">
+  <rule>
+    <note>Sextant app redirect.</note>
+    <from>^/catalog/views/sextant/(.*)$</from>
+    <to type="permanent-redirect">%{context-path}/sextant/views/sextant/$1</to>
+  </rule>
 
   <rule>
     <note>API Documentation redirection as Spring does not redirect to index.html.</note>

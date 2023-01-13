@@ -1,5 +1,5 @@
 (function () {
-  goog.provide("sx_search_sextant");
+  goog.provide("gn_search_sextant");
 
   goog.require("sx_search");
   goog.require("sx_search_sextant_config");
