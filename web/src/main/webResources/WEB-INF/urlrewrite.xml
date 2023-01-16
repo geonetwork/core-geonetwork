@@ -31,7 +31,7 @@
   <rule>
     <note>Sextant app redirect.</note>
     <from>^/catalog/views/sextant/(.*)$</from>
-    <to type="permanent-redirect">%{context-path}/sextant/views/sextant/$1</to>
+    <to type="forward">/sextant/views/sextant/$1</to>
   </rule>
 
   <rule>
