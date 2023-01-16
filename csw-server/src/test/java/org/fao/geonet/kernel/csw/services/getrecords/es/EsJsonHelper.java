@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,14 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
-import java.util.List;
-
-import org.geotools.geometry.jts.ReferencedEnvelope;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.util.List;
 
 /**
  * Tools to build up ElasticSearch JSON structures via Jackson.
@@ -43,14 +41,14 @@ public class EsJsonHelper {
 
     /**
      * Returns a structure like
-     * 
+     *
      * <pre>
-     *  { "match": 
+     *  { "match":
      *    {
      *      "property": "matchString"
      *    }
      * </pre>
-     * 
+     *
      * @param property
      * @param matchString
      * @return
@@ -73,7 +71,7 @@ public class EsJsonHelper {
 
     /**
      * An Envelope.
-     * 
+     *
      * @param x0
      * @param y0
      * @param x1
@@ -90,7 +88,7 @@ public class EsJsonHelper {
 
     /**
      * Creates a "geo_shape" node.
-     * 
+     *
      * @param property The name of the index' property where the geometry search
      *                 should take place.
      * @param geometry A geometry.
@@ -113,10 +111,10 @@ public class EsJsonHelper {
 
     /**
      * Crate a "shape" object.<br>
-     * 
+     *
      * It is the responsibility of the caller that type and coordinates fit
      * together.
-     * 
+     *
      * @param shapeType   For example "envelope" or "point".
      * @param coordinates
      * @return
@@ -145,9 +143,19 @@ public class EsJsonHelper {
         return outerNode;
     }
 
-    /*
+    /**
      * Creates a "bool" node with "must", "filter", "should", "must_not" clauses.
-     * Only non-null parameters will trigger the corresponding clause.
+     * Only non-null parameters will trigger the corresponding clause:
+     * <pre>
+     *     {
+     *         "bool": {
+     *             "must": "...",
+     *             "filter": "...",
+     *             "should": "...",
+     *             "must_no": "..."
+     *         }
+     *     }
+     * </pre>
      */
     public static ObjectNode bool(JsonNode must, JsonNode filter, JsonNode should, JsonNode mustNot) {
         final ObjectNode boolNode = MAPPER.createObjectNode();
@@ -173,7 +181,7 @@ public class EsJsonHelper {
     }
 
     /**
-     * 
+     *
      * @return a new BoolBdr
      */
     public static BoolBdr boolbdr() {
@@ -201,6 +209,11 @@ public class EsJsonHelper {
             return this;
         }
 
+        /** Set the filter.
+         *
+         * @param filter the filter.
+         * @return this instance of BoolBdr.
+         */
         public BoolBdr filter(JsonNode filter) {
             this.filter = filter;
             return this;
@@ -218,13 +231,18 @@ public class EsJsonHelper {
 
     }
 
+    /** Creates an {@link com.fasterxml.jackson.databind.node.ArrayNode} with the list of itemp passed.
+     *
+     * @param items elements of the new array.
+     * @return an ArrayNode with the items passed.
+     */
     public static ArrayNode array(ObjectNode... items) {
-        final ArrayNode boolNode = MAPPER.createArrayNode();
+        final ArrayNode arrayNode = MAPPER.createArrayNode();
 
         for (final ObjectNode node : items) {
-            boolNode.add(node);
+            arrayNode.add(node);
         }
-        return boolNode;
+        return arrayNode;
     }
 
     public static ArrayNode array(List<ObjectNode> items) {
