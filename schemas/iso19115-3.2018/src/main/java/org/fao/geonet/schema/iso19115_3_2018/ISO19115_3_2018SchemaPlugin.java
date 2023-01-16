@@ -154,7 +154,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation");
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref]");
         return associatedResources;
     }
 

@@ -26,12 +26,103 @@
 
   var module = angular.module("gn_es_service", []);
 
+  module.service("gnEsLanguageService", [
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
+      this.autoDetectLanguage = function (any, languageWhiteList) {
+        var whitelist =
+          gnGlobalSettings.gnCfg.mods.search.languageWhitelist &&
+          gnGlobalSettings.gnCfg.mods.search.languageWhitelist.length > 0
+            ? gnGlobalSettings.gnCfg.mods.search.languageWhitelist
+            : languageWhiteList ||
+              Object.keys(gnGlobalSettings.gnCfg.mods.header.languages);
+        var detectedLanguage = franc.all(any, {
+            whitelist: whitelist,
+            minLength: 10
+          }),
+          firstLanguage = detectedLanguage[0];
+        return firstLanguage[0];
+      };
+
+      this.getLanguageConfig = function (any, state) {
+        var languageFound = false,
+          searchLanguage = "lang" + state.forcedLanguage,
+          uiLanguage = "lang" + gnGlobalSettings.iso3lang,
+          aggLanguage = "lang" + gnGlobalSettings.iso3lang;
+        state.detectedLanguage = undefined;
+        if (state.forcedLanguage !== undefined) {
+          searchLanguage = aggLanguage = "lang" + state.forcedLanguage;
+          languageFound = true;
+        } else if (state.languageStrategy === "searchInDetectedLanguage") {
+          searchLanguage = this.autoDetectLanguage(any || "", state.languageWhiteList);
+          state.detectedLanguage = searchLanguage;
+          languageFound = searchLanguage !== "und";
+          if (languageFound) {
+            searchLanguage = aggLanguage = "lang" + searchLanguage;
+          } else {
+            searchLanguage = "\\*";
+          }
+        } else if (state.languageStrategy === "searchInUILanguage") {
+          searchLanguage = aggLanguage = uiLanguage;
+          languageFound = true;
+        } else if (
+          state.languageStrategy &&
+          state.languageStrategy.indexOf("searchInThatLanguage") === 0
+        ) {
+          var config = state.languageStrategy.split(":");
+          if (config.length !== 2) {
+            console.warn(
+              "When using language strategy searchInThatLanguage, configuration MUST be like searchInThatLanguage:fre"
+            );
+          } else {
+            searchLanguage = aggLanguage = "lang" + config[1];
+            languageFound = true;
+          }
+        } else if (state.languageStrategy === "searchInAllLanguages") {
+          languageFound = false;
+          searchLanguage = "\\*";
+          uiLanguage = "\\*";
+          aggLanguage = "default";
+        }
+        return {
+          languageFound: languageFound,
+          searchLanguage: searchLanguage,
+          uiLanguage: uiLanguage,
+          aggLanguage: aggLanguage
+        };
+      };
+
+      this.injectLanguage = function (text, languageConfig, escape) {
+        return languageConfig
+          ? text
+              .replace(/\$\{uiLang\}/g, languageConfig.uiLanguage)
+              .replace(/\$\{aggLang\}/g, languageConfig.aggLanguage)
+              .replace(
+                /\$\{searchLang\}/g,
+                languageConfig.languageFound && languageConfig.searchLanguage
+                  ? languageConfig.searchLanguage
+                  : escape
+                  ? "\\*"
+                  : "*"
+              )
+          : text;
+      };
+    }
+  ]);
+
   module.service("gnESService", [
     "gnESFacet",
+    "gnEsLanguageService",
     "gnEsLuceneQueryParser",
     "gnGlobalSettings",
     "$rootScope",
-    function (gnESFacet, gnEsLuceneQueryParser, gnGlobalSettings, $rootScope) {
+    function (
+      gnESFacet,
+      gnEsLanguageService,
+      gnEsLuceneQueryParser,
+      gnGlobalSettings,
+      $rootScope
+    ) {
       var mappingFields = {
         title: "resourceTitle",
         abstract: "resourceAbstract",
@@ -50,75 +141,6 @@
       this.facetsToLuceneQuery = function (facetsState) {
         return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
       };
-
-      function autoDetectLanguage(any, languageWhiteList) {
-        var whitelist =
-          gnGlobalSettings.gnCfg.mods.search.languageWhitelist &&
-          gnGlobalSettings.gnCfg.mods.search.languageWhitelist.length > 0
-            ? gnGlobalSettings.gnCfg.mods.search.languageWhitelist
-            : languageWhiteList ||
-              Object.keys(gnGlobalSettings.gnCfg.mods.header.languages);
-        var detectedLanguage = franc.all(any, {
-            whitelist: whitelist,
-            minLength: 10
-          }),
-          firstLanguage = detectedLanguage[0];
-        return firstLanguage[0];
-      }
-
-      function getLanguageConfig(any, state) {
-        var languageFound = false,
-          searchLanguage = "lang" + state.forcedLanguage,
-          uiLanguage = "lang" + gnGlobalSettings.iso3lang;
-        state.detectedLanguage = undefined;
-        if (state.forcedLanguage !== undefined) {
-          searchLanguage = "lang" + state.forcedLanguage;
-          languageFound = true;
-        } else if (state.languageStrategy === "searchInDetectedLanguage") {
-          searchLanguage = autoDetectLanguage(any, state.languageWhiteList);
-          state.detectedLanguage = searchLanguage;
-          languageFound = searchLanguage !== "und";
-          searchLanguage = languageFound ? "lang" + searchLanguage : "\\*";
-        } else if (state.languageStrategy === "searchInUILanguage") {
-          searchLanguage = uiLanguage;
-          languageFound = true;
-        } else if (
-          state.languageStrategy &&
-          state.languageStrategy.indexOf("searchInThatLanguage") === 0
-        ) {
-          var config = state.languageStrategy.split(":");
-          if (config.length !== 2) {
-            console.warn(
-              "When using language strategy searchInThatLanguage, configuration MUST be like searchInThatLanguage:fre"
-            );
-          } else {
-            searchLanguage = "lang" + config[1];
-            languageFound = true;
-          }
-        } else if (state.languageStrategy === "searchInAllLanguages") {
-          languageFound = false;
-          searchLanguage = "\\*";
-          uiLanguage = "\\*";
-        }
-        return {
-          languageFound: languageFound,
-          searchLanguage: searchLanguage,
-          uiLanguage: uiLanguage
-        };
-      }
-
-      function injectLanguage(text, languageConfig, escape) {
-        return text
-          .replace(/\$\{uiLang\}/g, languageConfig.uiLanguage)
-          .replace(
-            /\$\{searchLang\}/g,
-            languageConfig.languageFound && languageConfig.searchLanguage
-              ? languageConfig.searchLanguage
-              : escape
-              ? "\\*"
-              : "*"
-          );
-      }
 
       function filterPermalinkFlags(p, searchState) {
         if (p.titleOnly) {
@@ -189,6 +211,9 @@
           "editable",
           "queryBase"
         ];
+
+        state.languageConfig = gnEsLanguageService.getLanguageConfig(p.any, state);
+
         if (p.any || luceneQueryString) {
           var queryStringParams = [];
           if (p.any) {
@@ -226,12 +251,10 @@
                 queryBase = defaultQuery;
               }
 
-              var languageConfig = getLanguageConfig(p.any, state),
-                searchString = escapeSpecialCharacters(p.any),
-                q = injectLanguage(queryBase, languageConfig, true).replace(
-                  /\$\{any\}/g,
-                  searchString
-                );
+              var searchString = escapeSpecialCharacters(p.any),
+                q = gnEsLanguageService
+                  .injectLanguage(queryBase, state.languageConfig, true)
+                  .replace(/\$\{any\}/g, searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -433,7 +456,7 @@
         //   },
         //   "max_concurrent_group_searches": 4
         // };
-        gnESFacet.addFacets(params, searchConfigId);
+        gnESFacet.addFacets(params, searchConfigId, searchState.languageConfig);
         gnESFacet.addSourceConfiguration(params, searchConfigId);
 
         return params;
@@ -453,7 +476,10 @@
         angular.copy(searchObj, currentSearch);
 
         var params = {},
-          languageConfig = getLanguageConfig(any, currentSearch.state),
+          languageConfig = gnEsLanguageService.getLanguageConfig(
+            any,
+            currentSearch.state
+          ),
           defaultScore = {
             script_score: {
               script: {
@@ -481,7 +507,7 @@
         // Inject language in field name to search on
         var queryFields = autocompleteQuery.bool.must[0].multi_match.fields;
         angular.forEach(queryFields, function (k, i) {
-          queryFields[i] = injectLanguage(k, languageConfig, false);
+          queryFields[i] = gnEsLanguageService.injectLanguage(k, languageConfig, false);
         });
         params.query.function_score["query"] = autocompleteQuery;
 
@@ -607,65 +633,56 @@
 
       this.getTermsParamsWithNewSizeOrFilter = function (
         query,
-        facetPath,
+        key,
+        facetConfig,
         newSize,
         include,
-        exclude,
-        facetConfig
+        exclude
       ) {
         var params = {
           query: query || { bool: { must: [] } },
           size: 0
         };
         var aggregations = params;
-        for (var i = 0; i < facetPath.length; i++) {
-          if ((i + 1) % 2 === 0) continue;
-          var key = facetPath[i],
-            isFilter = angular.isDefined(include) || angular.isDefined(exclude);
-          aggregations.aggregations = {};
-          // Work on a copy of facetConfig to not alter main search
-          // aggregations.aggregations[key] = facetConfig[key];
-          aggregations.aggregations[key] = isFilter
-            ? angular.copy(facetConfig[key], {})
-            : facetConfig[key];
-          if (aggregations.aggregations[key].terms) {
-            if (Number.isInteger(newSize)) {
-              aggregations.aggregations[key].terms.size = newSize;
-            }
-            if (angular.isDefined(include)) {
-              var isARegex = include.match(/^\/.*\/$/) != null,
-                filter = "";
-
-              // Note that ES filter on terms can not be case insensitive
-              // See https://discuss.elastic.co/t/terms-aggregation-with-include-filter/50976/10
-              // but we can still build a case insensitive regex.
-              if (facetConfig[key].meta && facetConfig[key].meta.caseInsensitiveInclude) {
-                filter =
-                  ".*" +
-                  include
-                    .split("")
-                    .map(function (l) {
-                      return "[" + l.toLowerCase() + l.toUpperCase() + "]";
-                    })
-                    .join("") +
-                  ".*";
-              } else {
-                filter = isARegex
-                  ? include.substr(1, include.length - 2)
-                  : ".*" + include + ".*";
-              }
-              aggregations.aggregations[key].terms.include = filter;
-            }
-            if (angular.isDefined(exclude)) {
-              aggregations.aggregations[key].terms.exclude = exclude;
-            }
-          } else {
-            console.warn(
-              "Loading more results of a none terms directive is not supported",
-              aggregations.aggregations[key]
-            );
+        aggregations.aggregations = {};
+        // Work on a copy of facetConfig to not alter main search
+        aggregations.aggregations[key] = angular.copy(facetConfig, {});
+        if (aggregations.aggregations[key].terms) {
+          if (Number.isInteger(newSize)) {
+            aggregations.aggregations[key].terms.size = newSize;
           }
-          aggregations = aggregations.aggregations[key];
+          if (angular.isDefined(include)) {
+            var isARegex = include.match(/^\/.*\/$/) != null,
+              filter = "";
+
+            // Note that ES filter on terms can not be case insensitive
+            // See https://discuss.elastic.co/t/terms-aggregation-with-include-filter/50976/10
+            // but we can still build a case insensitive regex.
+            if (facetConfig.meta && facetConfig.meta.caseInsensitiveInclude) {
+              filter =
+                ".*" +
+                include
+                  .split("")
+                  .map(function (l) {
+                    return "[" + l.toLowerCase() + l.toUpperCase() + "]";
+                  })
+                  .join("") +
+                ".*";
+            } else {
+              filter = isARegex
+                ? include.substr(1, include.length - 2)
+                : ".*" + include + ".*";
+            }
+            aggregations.aggregations[key].terms.include = filter;
+          }
+          if (angular.isDefined(exclude)) {
+            aggregations.aggregations[key].terms.exclude = exclude;
+          }
+        } else {
+          console.warn(
+            "Loading more results of a none terms directive is not supported",
+            aggregations.aggregations[key]
+          );
         }
         return params;
       };

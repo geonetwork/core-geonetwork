@@ -562,9 +562,19 @@
         "process": "fcats-file-add",
         "fields": {
           "url": {
+            "isMultilingual": true
+          },
+          "name": {},
+          "function": {
+            "value": "featureCatalogue",
+            "hidden": true,
             "isMultilingual": false
           },
-          "name": {}
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -578,13 +588,23 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
           "type": {
             "param": "type",
             "value": "qualityReport",
+            "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
             "isMultilingual": false
           }
         }
@@ -600,13 +620,23 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
           "type": {
             "param": "type",
             "value": "qualitySpecification",
+            "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
             "isMultilingual": false
           }
         }
@@ -622,13 +652,23 @@
         "process": "dq-report-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "name": {},
           "desc": {},
           "type": {
             "param": "type",
             "value": "lineage",
+            "isMultilingual": false
+          },
+          "function": {
+            "value": "dataQualityReport",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
             "isMultilingual": false
           }
         }
@@ -645,9 +685,19 @@
         "process": "legend-add",
         "fields": {
           "url": {
+            "isMultilingual": true
+          },
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
             "isMultilingual": false
           },
-          "name": {}
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -662,9 +712,19 @@
         "process": "legend-add",
         "fields": {
           "url": {
+            "isMultilingual": true
+          },
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
             "isMultilingual": false
           },
-          "name": {}
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -679,9 +739,19 @@
         "process": "legend-add",
         "fields": {
           "url": {
+            "isMultilingual": true
+          },
+          "name": {},
+          "function": {
+            "value": "legend",
+            "hidden": true,
             "isMultilingual": false
           },
-          "name": {}
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          }
         }
       },
       {
@@ -692,7 +762,7 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "protocol": {
             "value": "WWW:LINK",
@@ -719,7 +789,7 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": true
           },
           "protocol": {
             "value": "WWW:LINK",

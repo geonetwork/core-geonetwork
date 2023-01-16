@@ -144,7 +144,7 @@
               },
               // 'OrgForResource': {
               //   'terms': {
-              //     'field': 'OrgForResource',
+              //     'field': 'OrgForResourceObject',
               //     'include': '.*',
               //     'missing': '- No org -',
               //     'size': 15
@@ -198,15 +198,19 @@
               exactMatch: true,
               language: true
             },
+            // The language strategy define how to search on multilingual content.
+            // It also applies to aggregation using ${aggLanguage} substitute.
             // Language strategy can be:
             // * searchInUILanguage: search in UI languages
-            // eg. full text field is any.langfre if French
-            // * searchInAllLanguages: search using any.* fields
+            // eg. full text field is any.langfre if French, aggLanguage is uiLanguage.
+            // * searchInAllLanguages: search using any.* fields, aggLanguage is default
             // (no analysis is done, more records are returned)
             // * searchInDetectedLanguage: restrict the search to the language detected
-            // based on user search. If language detection fails, search in all languages.
+            // based on user search. aggLanguage is detectedLanguage.
+            // If language detection fails, search in all languages and aggLanguage is uiLanguage
             // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
             // 'languageStrategy': 'searchInThatLanguage:fre',
+            // aggLanguage is forcedLanguage.
             languageStrategy: "searchInAllLanguages",
             // Limit language detection to some languages only.
             // If empty, the list of languages in catalogue records is used
@@ -453,9 +457,9 @@
                   }
                 }
               },
-              "tag.default": {
+              tag: {
                 terms: {
-                  field: "tag.default",
+                  field: "tag.${aggLang}",
                   include: ".*",
                   size: 10
                 },
@@ -527,9 +531,11 @@
               // },
               OrgForResource: {
                 terms: {
-                  field: "OrgForResource",
+                  field: "OrgForResourceObject.${aggLang}",
+                  // field: "OrgForResourceObject.default",
+                  // field: "OrgForResourceObject.langfre",
                   include: ".*",
-                  size: 15
+                  size: 20
                 },
                 meta: {
                   // Always display filter even no more elements

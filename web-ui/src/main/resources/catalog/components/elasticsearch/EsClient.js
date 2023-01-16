@@ -100,19 +100,19 @@
 
       this.getTermsParamsWithNewSizeOrFilter = function (
         query,
-        facetPath,
+        key,
+        facetConfig,
         newSize,
         include,
-        exclude,
-        facetConfig
+        exclude
       ) {
         var params = gnESService.getTermsParamsWithNewSizeOrFilter(
           query,
-          facetPath,
+          key,
+          facetConfig,
           newSize,
           include,
-          exclude,
-          facetConfig
+          exclude
         );
         return callApi("_search", params).then(function (response) {
           var model = gnESFacet.getUIModel(response, params);
