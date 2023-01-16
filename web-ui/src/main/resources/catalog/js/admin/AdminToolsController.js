@@ -121,12 +121,12 @@
       };
 
       function loadEditors() {
-        $http.get("../api/users/owners").success(function (data) {
-          $scope.editors = data;
+        $http.get("../api/users/owners").then(function (response) {
+          $scope.editors = response.data;
         });
-        $http.get("../api/users/groups").success(function (data) {
+        $http.get("../api/users/groups").then(function (response) {
           var uniqueUserGroups = {};
-          angular.forEach(data, function (g) {
+          angular.forEach(response.data, function (g) {
             var key = g.groupId + "-" + g.userId;
             if (!uniqueUserGroups[key]) {
               uniqueUserGroups[key] = g;
@@ -159,9 +159,9 @@
       }
       $scope.selectUser = function (id) {
         $scope.editorSelectedId = id;
-        $http.get("../api/users/" + id + "/groups").success(function (data) {
+        $http.get("../api/users/" + id + "/groups").then(function (response) {
           var uniqueGroup = {};
-          angular.forEach(data, function (g) {
+          angular.forEach(response.data, function (g) {
             if (!uniqueGroup[g.group.id]) {
               uniqueGroup[g.group.id] = g.group;
             }
@@ -186,21 +186,23 @@
             targetUser: params.targetGroup.userId,
             targetGroup: params.targetGroup.groupId
           })
-          .success(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("transfertPrivilegesFinished", {
-                privileges: data.privileges,
-                metadata: data.metadata
-              }),
-              timeout: 2,
-              type: "success"
-            });
-            params.running = false;
-          })
-          .error(function (data) {
-            // TODO
-            params.running = false;
-          });
+          .then(
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("transfertPrivilegesFinished", {
+                  privileges: response.data.privileges,
+                  metadata: response.data.metadata
+                }),
+                timeout: 2,
+                type: "success"
+              });
+              params.running = false;
+            },
+            function (response) {
+              // TODO
+              params.running = false;
+            }
+          );
       };
       $scope.isRunning = function (sourceGroup) {
         return $scope.transfertList[sourceGroup].running;
@@ -232,16 +234,16 @@
        */
       function checkIsIndexing() {
         // Check if indexing
-        return $http.get("../api/site/indexing").success(function (data, status) {
-          $scope.isIndexing = data;
+        return $http.get("../api/site/indexing").then(function (response) {
+          $scope.isIndexing = response.data;
           if ($scope.isIndexing) {
             $timeout(checkIsIndexing, indexCheckInterval);
           }
           // Get the number of records (template, records, subtemplates)
           $http
             .post("../api/search/records/_search", { size: 0 })
-            .success(function (data, status) {
-              $scope.numberOfIndexedRecords = data.hits.total;
+            .then(function (response) {
+              $scope.numberOfIndexedRecords = response.data.hits.total;
             });
         });
       }
@@ -254,61 +256,61 @@
           dropFirst +
           "&asynchronous=true" +
           (index ? "&indices=" + index : "");
-        return $http
-          .put(url)
-          .success(function (data) {
+        return $http.put(url).then(
+          function (response) {
             checkIsIndexing();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("rebuildIndexError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.commitIndexChanges = function (dropFirst) {
-        return $http
-          .put("../api/site/index/commit")
-          .success(function (data) {
+        return $http.put("../api/site/index/commit").then(
+          function (response) {
             checkIsIndexing();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("indexCommitError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.clearXLinkCache = function () {
-        return $http
-          .get("admin.index.rebuildxlinks")
-          .success(function (data) {
+        return $http.get("admin.index.rebuildxlinks").then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("xlinkCacheCleared"),
               timeout: 2,
               type: "success"
             });
             // TODO: Does this is asynch and make the search unavailable?
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("rebuildIndexError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.clearJsCache = function () {
-        return $http.get("../../static/wroAPI/reloadModel").success(function (data) {
-          $http.get("../../static/wroAPI/reloadCache").success(function (data) {
+        return $http.get("../../static/wroAPI/reloadModel").then(function (response) {
+          $http.get("../../static/wroAPI/reloadCache").then(function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("jsCacheCleared"),
               timeout: 2,
@@ -319,43 +321,43 @@
       };
 
       $scope.clearFormatterCache = function () {
-        return $http
-          .delete("../api/formatters/cache")
-          .success(function (data) {
+        return $http.delete("../api/formatters/cache").then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("formatterCacheCleared"),
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("formatCacheClearFailure"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.translationPackClearCache = function () {
-        return $http
-          .delete("../api/i18n/cache")
-          .success(function (data) {
+        return $http.delete("../api/i18n/cache").then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("translationPackCacheCleared"),
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("translationPackCacheClearFailure"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       gnConfigService.loadPromise.then(function (settings) {

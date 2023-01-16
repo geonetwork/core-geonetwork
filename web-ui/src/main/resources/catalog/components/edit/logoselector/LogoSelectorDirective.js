@@ -52,8 +52,8 @@
 
           $http
             .get("admin.harvester.info@json?type=icons", { cache: true })
-            .success(function (data) {
-              scope.logos = data[0];
+            .then(function (response) {
+              scope.logos = response.data[0];
             });
         }
       };

@@ -72,7 +72,9 @@
             scope.nodes = null;
             scope.gsNode = null;
             var map;
-            gnGeoPublisher.getList().success(function (data) {
+            gnGeoPublisher.getList().then(function (response) {
+              var data = response.data;
+
               if (data != null) {
                 scope.nodes = data;
                 scope.gsNode = data[0];
@@ -264,13 +266,15 @@
                   scope.resource.title,
                   scope.resource["abstract"]
                 )
-                .success(function (data) {
-                  readResponse(data, "publish");
-                })
-                .error(function (data) {
-                  scope.statusCode = data.description;
-                  scope.isPublished = false;
-                });
+                .then(
+                  function (response) {
+                    readResponse(response.data, "publish");
+                  },
+                  function (response) {
+                    scope.statusCode = response.data.description;
+                    scope.isPublished = false;
+                  }
+                );
             };
 
             /**
@@ -280,16 +284,16 @@
               if (scope.layer != null) {
                 map.removeLayer(scope.layer);
               }
-              return gnGeoPublisher
-                .unpublishNode(scope.gsNode.id, scope.name)
-                .success(function (data) {
-                  scope.statusCode = data;
+              return gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name).then(
+                function (response) {
+                  scope.statusCode = response.data;
                   scope.isPublished = false;
-                })
-                .error(function (data) {
-                  scope.statusCode = data.description;
+                },
+                function (response) {
+                  scope.statusCode = response.data.description;
                   scope.isPublished = false;
-                });
+                }
+              );
             };
 
             /**

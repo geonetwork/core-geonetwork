@@ -162,8 +162,8 @@
       var init = function () {
         $http
           .get("../api/groups?profile=Editor", { cache: true })
-          .success(function (data) {
-            $scope.groups = data;
+          .then(function (response) {
+            $scope.groups = response.data;
           });
 
         refreshEntriesInfo();

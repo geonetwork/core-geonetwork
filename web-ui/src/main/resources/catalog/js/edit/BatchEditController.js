@@ -98,7 +98,9 @@
           $scope.selectedRecordsCount = 0;
           $scope.selectedStandards = [];
           $scope.selectedRecords = [];
-          $http.get("../api/selections/e101").success(function (uuids) {
+
+          $http.get("../api/selections/e101").then(function (response) {
+            var uuids = response.data;
             $scope.selectedRecordsCount = uuids.length;
             if (uuids.length > 0) {
               var query = {
@@ -129,6 +131,7 @@
                 },
                 _source: ["resourceTitleObject.default"]
               };
+
               $http.post("../api/search/records/_search", query).then(
                 function (r) {
                   $scope.selectedRecords = r.data.hits;
@@ -169,7 +172,8 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function (params) {
-        $http.get("../api/selections/e101").success(function (uuids) {
+        $http.get("../api/selections/e101").then(function (response) {
+          var uuids = response.data;
           $scope.searchObj.params = angular.extend(
             {
               uuid: uuids
@@ -635,16 +639,16 @@
       };
 
       function init() {
-        $http
-          .get("../api/standards/batchconfiguration")
-          .success(function (data) {
-            $scope.fieldConfig = data;
+        $http.get("../api/standards/batchconfiguration").then(
+          function (response) {
+            $scope.fieldConfig = response.data;
             gnSchemaManagerService.getNamespaces();
             $scope.setType($scope.editTypes[0].id);
-          })
-          .error(function (response) {
-            console.warn(response);
-          });
+          },
+          function (response) {
+            console.warn(response.data);
+          }
+        );
       }
       init();
     }

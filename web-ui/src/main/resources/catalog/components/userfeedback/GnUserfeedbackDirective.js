@@ -107,7 +107,7 @@
         if (window.confirm($translate.instant("GUFpublishConfirm"))) {
           return $http
             .get("../api/userfeedback/" + id + "/publish")
-            .success(function (data, status) {
+            .then(function (response) {
               $rootScope.$broadcast("reloadCommentList");
             });
         }
@@ -115,7 +115,7 @@
 
       this.deleteC = function (id, scope) {
         if (window.confirm($translate.instant("GUFdeleteConfirm"))) {
-          return $http.delete("../api/userfeedback/" + id).success(function (data) {
+          return $http.delete("../api/userfeedback/" + id).then(function (response) {
             $rootScope.$broadcast("reloadCommentList");
           });
         }
@@ -413,7 +413,7 @@
               return;
             }
 
-            $http.post("../api/userfeedback", data).success(function (data, status) {
+            $http.post("../api/userfeedback", data).then(function (response) {
               $rootScope.$broadcast("reloadCommentList");
               angular.element("#gn-userfeedback-addcomment").modal("hide");
 

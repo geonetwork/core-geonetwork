@@ -100,20 +100,22 @@
        * Load catalog settings and extract CSW settings
        */
       function loadSettings() {
-        $http
-          .get("../api/site/settings?set=CSW")
-          .success(function (data) {
-            $scope.cswSettings = data;
-          })
-          .error(function (data) {
+        $http.get("../api/site/settings?set=CSW").then(
+          function (response) {
+            $scope.cswSettings = response.data;
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       }
 
       function loadCSWElementSetName() {
         $http
           .get("admin.config.csw.customelementset?_content_type=json&")
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             if (data) {
               $scope.cswElementSetName = $.isArray(data.xpaths)
                 ? data.xpaths
@@ -136,7 +138,7 @@
           url: "admin.config.csw.customelementset.save",
           data: "_content_type=json&" + $(formId).serialize(),
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        }).success(function (data) {
+        }).then(function (response) {
           loadCSWElementSetName();
         });
       };
@@ -150,21 +152,23 @@
           .post("../api/site/settings", gnUtilityService.serialize(formId), {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .success(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("settingsUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("settingsUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("settingsUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("settingsUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**

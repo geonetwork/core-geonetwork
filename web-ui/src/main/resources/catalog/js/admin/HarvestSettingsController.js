@@ -107,9 +107,10 @@
 
       function loadHarvester(id) {
         $scope.isLoadingOneHarvester = true;
-        return $http
-          .get("admin.harvester.list?_content_type=json&id=" + id)
-          .success(function (data) {
+        return $http.get("admin.harvester.list?_content_type=json&id=" + id).then(
+          function (response) {
+            var data = response.data;
+
             if (data && data[0]) {
               $scope.harvesterSelected = data[0];
               $scope.harvesterUpdated = false;
@@ -163,11 +164,12 @@
                 };
               }
             }
-          })
-          .error(function (data) {
+          },
+          function (response) {
             // TODO
             $scope.isLoadingOneHarvester = false;
-          });
+          }
+        );
       }
 
       function loadHistory(backgroundLoad) {
@@ -193,19 +195,23 @@
               size +
               "&_content_type=json"
           )
-          .success(function (data) {
-            $scope.harvesterHistory = data.harvesthistory;
-            $scope.harvesterHistoryPaging.pages = parseInt(data.pages);
-            $scope.harvesterHistoryPaging.total = parseInt(data.total);
-            $scope.isLoadingHarvesterHistory = false;
-            if (list) {
-              list.removeClass("loading");
+          .then(
+            function (response) {
+              var data = response.data;
+
+              $scope.harvesterHistory = data.harvesthistory;
+              $scope.harvesterHistoryPaging.pages = parseInt(data.pages);
+              $scope.harvesterHistoryPaging.total = parseInt(data.total);
+              $scope.isLoadingHarvesterHistory = false;
+              if (list) {
+                list.removeClass("loading");
+              }
+            },
+            function (response) {
+              // TODO
+              $scope.isLoadingHarvesterHistory = false;
             }
-          })
-          .error(function (data) {
-            // TODO
-            $scope.isLoadingHarvesterHistory = false;
-          });
+          );
       }
 
       $scope.historyFirstPage = function () {
@@ -235,29 +241,31 @@
           .get("admin.harvester.info?_content_type=json&type=harvesterTypes", {
             cache: true
           })
-          .success(function (data) {
-            angular.forEach(data[0], function (value) {
-              $scope.harvesterTypes[value] = {
-                type: value,
-                label: "harvester-" + value
-              };
+          .then(
+            function (response) {
+              angular.forEach(response.data[0], function (value) {
+                $scope.harvesterTypes[value] = {
+                  type: value,
+                  label: "harvester-" + value
+                };
 
-              $.getScript("../../catalog/templates/admin/harvest/type/" + value + ".js")
-                .done(function (script, textStatus) {
-                  $scope.$apply(function () {
-                    $scope.harvesterTypes[value].loaded = true;
+                $.getScript("../../catalog/templates/admin/harvest/type/" + value + ".js")
+                  .done(function (script, textStatus) {
+                    $scope.$apply(function () {
+                      $scope.harvesterTypes[value].loaded = true;
+                    });
+                    // FIXME: could we make those harvester specific
+                    // function a controller
+                  })
+                  .fail(function (jqxhr, settings, exception) {
+                    $scope.harvesterTypes[value].loaded = false;
                   });
-                  // FIXME: could we make those harvester specific
-                  // function a controller
-                })
-                .fail(function (jqxhr, settings, exception) {
-                  $scope.harvesterTypes[value].loaded = false;
-                });
-            });
-          })
-          .error(function (data) {
-            // TODO
-          });
+              });
+            },
+            function (response) {
+              // TODO
+            }
+          );
       }
 
       $scope.getTplForHarvester = function () {
@@ -292,21 +300,21 @@
       };
 
       $scope.cloneHarvester = function (id) {
-        $http
-          .get("admin.harvester.clone?_content_type=json&id=" + id)
-          .success(function (data) {
+        $http.get("admin.harvester.clone?_content_type=json&id=" + id).then(
+          function (response) {
             $scope.$parent.loadHarvesters().then(function () {
               // Select the clone
               angular.forEach($scope.$parent.harvesters, function (h) {
-                if (h["@id"] === data[0]) {
+                if (h["@id"] === response.data[0]) {
                   $scope.selectHarvester(h);
                 }
               });
             });
-          })
-          .error(function (data) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       };
 
       $scope.addFromClipboard = function () {
@@ -379,31 +387,35 @@
               headers: { "Content-type": "application/xml" }
             }
           )
-          .success(function (data) {
-            if (!$scope.harvesterSelected["@id"]) {
-              $scope.harvesterSelected["@id"] = data[0];
-            }
-            // Activate or disable it
-            $scope.setHarvesterSchedule().finally(function () {
-              $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
-            });
+          .then(
+            function (response) {
+              var data = response.data;
 
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("harvesterUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-            deferred.resolve(data);
-          })
-          .error(function (data) {
-            deferred.reject(data);
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("harvesterUpdated"),
-              error: data,
-              timeout: 2,
-              type: "danger"
-            });
-          });
+              if (!$scope.harvesterSelected["@id"]) {
+                $scope.harvesterSelected["@id"] = data[0];
+              }
+              // Activate or disable it
+              $scope.setHarvesterSchedule().finally(function () {
+                $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
+              });
+
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("harvesterUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+              deferred.resolve(data);
+            },
+            function (response) {
+              deferred.reject(response.data);
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("harvesterUpdated"),
+                error: response.data,
+                timeout: 2,
+                type: "danger"
+              });
+            }
+          );
 
         return deferred.promise;
       };
@@ -462,18 +474,19 @@
             "admin.harvester.remove?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .success(function (data) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          })
-          .error(function (data) {
-            console.log(data);
-          })
-          .then(function () {
-            $scope.deleting.splice($scope.deleting.indexOf(3), 1);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1);
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
 
       $scope.deleteHarvesterRecord = function () {
@@ -482,15 +495,17 @@
             "admin.harvester.clear?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .success(function (data) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          })
-          .error(function (data) {
-            console.log(data);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
       $scope.assignHarvestedRecordToLocalNode = function () {
         $http
@@ -500,22 +515,24 @@
               "/assign?source=" +
               gnConfig["system.site.siteId"]
           )
-          .success(function (data) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          })
-          .error(function (data) {
-            console.log(data);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
       $scope.deleteHarvesterHistory = function () {
         return $http
           .get(
             "admin.harvester.history.delete?uuid=" + $scope.harvesterSelected.site.uuid
           )
-          .success(function (data) {
+          .then(function (response) {
             $scope.$parent.loadHarvesters().then(function () {
               $scope.selectHarvester($scope.harvesterSelected);
             });
@@ -526,7 +543,7 @@
           .get(
             "admin.harvester.run?_content_type=json&id=" + $scope.harvesterSelected["@id"]
           )
-          .success(function (data) {
+          .then(function (response) {
             $scope.$parent.loadHarvesters().then(function () {
               refreshSelectedHarvester();
             });
@@ -539,10 +556,8 @@
         $scope.stopping = true;
         return $http
           .get("admin.harvester.stop?_content_type=json&id=" + id + "&status=" + status)
-          .success(function (data) {
-            $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
-          })
           .then(function () {
+            $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
             $scope.stopping = false;
           });
       };
@@ -563,18 +578,22 @@
               "?_content_type=json&id=" +
               $scope.harvesterSelected["@id"]
           )
-          .success(function (data) {
-            deferred.resolve(data);
-          })
-          .error(function (data) {
-            deferred.reject(data);
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("harvesterSchedule" + status),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              deferred.resolve(response.data);
+            },
+            function (response) {
+              var data = response.data;
+
+              deferred.reject(data);
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("harvesterSchedule" + status),
+                error: data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
         return deferred.promise;
       };
 
@@ -605,26 +624,28 @@
       $scope.geonetworkGetSources = function (url) {
         $http
           .get($scope.proxyUrl + encodeURIComponent(url + "/srv/eng/info?type=sources"))
-          .success(function (data) {
-            $scope.geonetworkSources = [];
-            var i = 0;
-            var xmlDoc = $.parseXML(data);
-            var $xml = $(xmlDoc);
-            $sources = $xml.find("uuid");
-            $names = $xml.find("name");
+          .then(
+            function (response) {
+              $scope.geonetworkSources = [];
+              var i = 0;
+              var xmlDoc = $.parseXML(response.data);
+              var $xml = $(xmlDoc);
+              $sources = $xml.find("uuid");
+              $names = $xml.find("name");
 
-            angular.forEach($sources, function (s) {
-              // FIXME: probably some issue on IE ?
-              $scope.geonetworkSources.push({
-                uuid: s.textContent,
-                name: $names[i].textContent
+              angular.forEach($sources, function (s) {
+                // FIXME: probably some issue on IE ?
+                $scope.geonetworkSources.push({
+                  uuid: s.textContent,
+                  name: $names[i].textContent
+                });
+                i++;
               });
-              i++;
-            });
-          })
-          .error(function (data) {
-            // TODO
-          });
+            },
+            function (response) {
+              // TODO
+            }
+          );
       };
 
       // OGCWxS
@@ -722,15 +743,19 @@
           .post("admin.harvester.info?_content_type=json", body, {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
-            if (data[0].sets && data[0].formats) {
-              $scope.oaipmhSets = data[0].sets;
-              $scope.oaipmhPrefix = data[0].formats;
-            } else {
-              $scope.oaipmhInfo = $translate.instant("oaipmh-FailedToGetSetsAndPrefix");
-            }
-          })
-          .error(function (data) {});
+          .then(
+            function (response) {
+              var data = response.data;
+
+              if (data[0].sets && data[0].formats) {
+                $scope.oaipmhSets = data[0].sets;
+                $scope.oaipmhPrefix = data[0].formats;
+              } else {
+                $scope.oaipmhInfo = $translate.instant("oaipmh-FailedToGetSetsAndPrefix");
+              }
+            },
+            function (response) {}
+          );
       };
 
       // TODO : enable watch only if OAIPMH
@@ -823,14 +848,13 @@
               "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
           }
 
-          $http
-            .get($scope.proxyUrl + encodeURIComponent(url))
-            .success(function (data) {
+          $http.get($scope.proxyUrl + encodeURIComponent(url)).then(
+            function (response) {
               $scope.cswCriteria = [];
 
               var i = 0;
               try {
-                var xmlDoc = $.parseXML(data);
+                var xmlDoc = $.parseXML(response.data);
 
                 // Create properties in model if no criteria defined
                 if (!$scope.harvesterSelected.searches) {
@@ -892,10 +916,11 @@
                   "csw-FailedToParseCapabilities"
                 );
               }
-            })
-            .error(function (data) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
         }
       };
 
@@ -916,8 +941,8 @@
       // WFS GetFeature harvester
       $scope.harvesterTemplates = null;
       var loadHarvesterTemplates = function () {
-        $http.get("info?_content_type=json&type=templates").success(function (data) {
-          $scope.harvesterTemplates = data.templates;
+        $http.get("info?_content_type=json&type=templates").then(function (response) {
+          $scope.harvesterTemplates = response.data.templates;
         });
       };
 
@@ -932,8 +957,8 @@
           .post("admin.harvester.info?_content_type=json", body, {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
-            $scope.harvesterGetFeatureXSLT = data[0];
+          .then(function (response) {
+            $scope.harvesterGetFeatureXSLT = response.data[0];
           });
       };
 
@@ -953,8 +978,8 @@
       var loadHarvesterZ3950Repositories = function () {
         $http
           .get("info?_content_type=json&type=z3950repositories", { cache: true })
-          .success(function (data) {
-            $scope.harvesterZ3950repositories = data.z3950repositories;
+          .then(function (response) {
+            $scope.harvesterZ3950repositories = response.data.z3950repositories;
           });
       };
       $scope.$watch("harvesterSelected.site.repositories", function () {
@@ -982,8 +1007,8 @@
           .post("admin.harvester.info?_content_type=json", body, {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
-            $scope.harvesterThreddsXSLT = data[0];
+          .then(function (response) {
+            $scope.harvesterThreddsXSLT = response.data[0];
           });
       };
       $scope.$watch(

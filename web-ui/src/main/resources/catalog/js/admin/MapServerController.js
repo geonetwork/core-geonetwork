@@ -45,8 +45,8 @@
 
       function loadMapservers() {
         $scope.mapserverSelected = null;
-        $http.get("../api/mapservers").success(function (data) {
-          $scope.mapservers = data;
+        $http.get("../api/mapservers").then(function (response) {
+          $scope.mapservers = response.data;
         });
       }
 
@@ -85,22 +85,24 @@
               ($scope.isUpdate ? "/" + $scope.mapserverSelected.id : ""),
             $scope.mapserverSelected
           )
-          .success(function (data) {
-            loadMapservers();
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("mapserverUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("mapserverUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              loadMapservers();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("mapserverUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("mapserverUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.resetPassword = null;
@@ -121,13 +123,15 @@
           .post("../api/mapservers/" + $scope.mapserverSelected.id + "/auth", data, {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .success(function (data) {
-            $scope.resetPassword = null;
-            $("#passwordResetModal").modal("hide");
-          })
-          .error(function (data) {
-            // TODO
-          });
+          .then(
+            function (response) {
+              $scope.resetPassword = null;
+              $("#passwordResetModal").modal("hide");
+            },
+            function (response) {
+              // TODO
+            }
+          );
       };
 
       $scope.deleteMapserverConfig = function () {
@@ -135,19 +139,19 @@
       };
 
       $scope.confirmDeleteMapserverConfig = function () {
-        $http
-          .delete("../api/mapservers/" + $scope.mapserverSelected.id)
-          .success(function (data) {
+        $http.delete("../api/mapservers/" + $scope.mapserverSelected.id).then(
+          function (response) {
             loadMapservers();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("mapserverDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
       loadMapservers();
     }

@@ -95,7 +95,9 @@
      */
     var updatePrintConfig = function () {
       var http = $http.get(options.printConfigUrl);
-      http.success(function (data) {
+      http.then(function (response) {
+        var data = response.data;
+
         // default values:
         var layout = data.layouts[0];
         if ($scope.defaultLayout) {
@@ -282,18 +284,20 @@
         $scope.config.createURL + "?url=" + encodeURIComponent("../../pdf"),
         spec
       );
-      http.success(function (data) {
-        $scope.printing = false;
-        $scope.downloadUrl(data.getURL);
-        //After standard print, download the pdf Legends
-        //if there are any
-        for (var i = 0; i < pdfLegendsToDownload.length; i++) {
-          $window.open(pdfLegendsToDownload[i]);
+      http.then(
+        function (response) {
+          $scope.printing = false;
+          $scope.downloadUrl(response.data.getURL);
+          //After standard print, download the pdf Legends
+          //if there are any
+          for (var i = 0; i < pdfLegendsToDownload.length; i++) {
+            $window.open(pdfLegendsToDownload[i]);
+          }
+        },
+        function (response) {
+          $scope.printing = false;
         }
-      });
-      http.error(function () {
-        $scope.printing = false;
-      });
+      );
     };
 
     // Encode ol.Layer to a basic js object

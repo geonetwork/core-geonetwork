@@ -160,8 +160,9 @@
         mode: "prefetch",
         promise: (function () {
           var defer = $q.defer();
-          $http.get("../api/tags", { cache: true }).success(function (data) {
+          $http.get("../api/tags", { cache: true }).then(function (response) {
             var res = [];
+            var data = response.data;
             for (var i = 0; i < data.length; i++) {
               res.push({
                 id: data[i].name,
@@ -179,13 +180,14 @@
         mode: "prefetch",
         promise: (function () {
           var defer = $q.defer();
-          $http.get("../api/sources", { cache: true }).success(function (a) {
+          $http.get("../api/sources", { cache: true }).then(function (response) {
             var res = [];
-            for (var i = 0; i < a.length; i++) {
+            var data = response.data;
+            for (var i = 0; i < data.length; i++) {
               res.push({
-                id: a[i].uuid,
-                name: a[i].name,
-                serviceRecord: a[i].serviceRecord
+                id: data[i].uuid,
+                name: data[i].name,
+                serviceRecord: data[i].serviceRecord
               });
             }
             defer.resolve(res);
