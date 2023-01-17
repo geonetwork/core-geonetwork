@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd"
+  xmlns="http://www.springframework.org/schema/beans">
+
+  <!--
+    UUID with URL special character support.
+    eg. info:doi:10.24396/ORDAR-56 or http://dada.moo/ORDAR-56
+
+    In order to support UUID with character like / or ; in it, you need
+    to configure a custom Spring HTTP Firewall which by default
+    consider those characters unsecure.
+    Error would look like "URL contained a potentially malicious String "%2F""
+
+    For this configure a custom StrictHttpFirewall configuration
+    and add it to the filterChainProxy.
+
+    Client side URL encode UUIDs and spring will not
+    decode path before matching URL (which would cause issue with request mapping).
+  -->
+
+  <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+    <constructor-arg ref="filterChainPatterns"/>
+    <property name="firewall" ref="httpFirewall"/>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" >
+    <property name="urlDecode" value="false"/>
+  </bean>
+
+  <bean id="httpFirewall"
+        class="org.springframework.security.web.firewall.StrictHttpFirewall">
+    <property name="allowUrlEncodedSlash" value="true"/>
+    <property name="allowUrlEncodedDoubleSlash" value="true"/>
+  </bean>
+
+  <bean id="coreFilterChain"
+        class="org.springframework.security.web.DefaultSecurityFilterChain">
+    <constructor-arg>
+      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg value="/**"/>
+      </bean>
+    </constructor-arg>
+    <constructor-arg>
+      <ref bean="filterChainFilters"/>
+    </constructor-arg>
+  </bean>
+</beans>
