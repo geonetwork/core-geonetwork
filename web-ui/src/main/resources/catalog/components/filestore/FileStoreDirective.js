@@ -39,7 +39,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/filestore/" + "partials/dataUploaderButton.html",
+            "../../catalog/components/filestore/partials/dataUploaderButton.html",
           scope: {
             btnLabel: "=?gnDataUploaderButton",
             isOverview: "=?isOverview",

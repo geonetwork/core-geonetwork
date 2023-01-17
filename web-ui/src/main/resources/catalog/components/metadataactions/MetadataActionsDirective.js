@@ -616,8 +616,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "citation.html",
+        templateUrl: "../../catalog/components/metadataactions/partials/citation.html",
         scope: {
           md: "=gnMetadataCitation",
           format: "@"

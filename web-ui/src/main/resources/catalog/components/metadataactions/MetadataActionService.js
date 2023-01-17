@@ -609,7 +609,7 @@
        * @param {Object} md
        */
       this.getPermalink = function (md) {
-        $http.get("../api/records/" + md.getUuid() + "/permalink").then(function (r) {
+        $http.get("../api/records/" + encodeURIComponent(md.getUuid()) + "/permalink").then(function (r) {
           gnUtilityService.displayPermalink(md.resourceTitle, r.data);
         });
       };
