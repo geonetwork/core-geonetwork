@@ -446,14 +446,6 @@
       };
 
       /**
-       * Create a child of the given metadata. Open the editor in new page.
-       * @param {string} md
-       */
-      this.createChild = function (md) {
-        duplicateMetadata(md.id, true);
-      };
-
-      /**
        * Update publication on metadata (one or selection).
        * If a md is provided, it update publication of the given md, depending
        * on its current state. If no metadata is given, it updates the
