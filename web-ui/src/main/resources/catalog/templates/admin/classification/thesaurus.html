@@ -119,6 +119,15 @@
             >
           </button>
           <div class="flex-spacer flex-grow"></div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-ng-click="updateThesaurus()"
+            data-ng-if="thesaurusSelected.type == 'local'"
+          >
+            <i class="fa fa-save"></i>&nbsp;<span data-translate="">saveThesaurus</span>
+          </button>
+          <div class="flex-spacer"></div>
           <button type="button" class="btn btn-danger" data-ng-click="deleteThesaurus()">
             <i class="fa fa-times"></i>&nbsp;<span data-translate=""
               >deleteThesaurus</span
@@ -133,6 +142,23 @@
           <div class="form-group">
             <label class="control-label col-sm-2" translate>thesaurusTitle</label>
             <div class="col-sm-10">
+              <div
+                gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}"
+              >
+                <input
+                  ng-repeat="(lang3, lang2) in availableLangs"
+                  type="text"
+                  name="title"
+                  class="form-control"
+                  lang="{{lang2}}"
+                  ng-disabled="thesaurusSelected.type !== 'local'"
+                  ng-model="thesaurusSelected.multilingualTitles[lang3]"
+                />
+              </div>
+            </div>
+
+            <!--<div class="col-sm-10">
               <input
                 type="text"
                 name="title"
@@ -140,18 +166,33 @@
                 ng-disabled="!isNew()"
                 ng-model="thesaurusSelected.title"
               />
-            </div>
+            </div>-->
           </div>
           <div class="form-group" data-ng-if="thesaurusSelected.description != ''">
             <label class="control-label col-sm-2" translate>thesaurusDescription</label>
             <div class="col-sm-10">
-              <textarea
+              <div
+                gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}"
+              >
+                <textarea
+                  ng-repeat="(lang3, lang2) in availableLangs"
+                  type="text"
+                  name="title"
+                  class="form-control"
+                  lang="{{lang2}}"
+                  ng-disabled="thesaurusSelected.type !== 'local'"
+                  ng-model="thesaurusSelected.multilingualDescriptions[lang3]"
+                />
+              </div>
+
+              <!--<textarea
                 type="text"
                 name="title"
                 class="form-control"
-                ng-disabled="!isNew()"
+                ng-disabled="thesaurusSelected.type !== 'local'"
                 ng-model="thesaurusSelected.description"
-              />
+              />-->
             </div>
           </div>
           <div class="form-group">
@@ -161,14 +202,14 @@
                 type="text"
                 name="filename"
                 class="form-control"
-                ng-disabled="!isNew()"
+                disabled
                 ng-model="thesaurusSelected.filename"
               />
             </div>
             <label class="control-label col-sm-3" translate>thesaurusClass</label>
             <div class="col-sm-3">
               <div
-                data-ng-disabled="!isNew()"
+                data-ng-disabled="true"
                 data-schema-info-combo="codelist"
                 data-selected-info="thesaurusSelected.dname"
                 data-gn-schema-info="gmd:MD_KeywordTypeCode"
@@ -184,22 +225,9 @@
                 type="text"
                 name="defaultNamespace"
                 class="form-control"
-                ng-disabled="!isNew()"
+                disabled
                 ng-model="thesaurusSelected.defaultNamespace"
               />
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-10 col-sm-offset-2">
-              <label>
-                <input
-                  type="checkbox"
-                  data-ng-model="thesaurusSelectedActivated"
-                  data-ng-click="enableThesaurus()"
-                />
-                {{ 'enable' | translate }} </label
-              ><br />
-              <span class="text-muted" translate>enableThesaurusHelp</span>
             </div>
           </div>
         </form>
@@ -372,6 +400,7 @@
       </div>
     </form>
   </div>
+
   <!-- New thesaurus popup -->
   <div
     class="modal fade"
@@ -500,7 +529,21 @@
               data-ng-class="gnCreateThesaurus.title.$error.required ? 'has-error' : ''"
             >
               <label class="control-label" data-translate="">thesaurusTitle</label>
-              <input
+              <div
+                gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}"
+              >
+                <input
+                  ng-repeat="(lang3, lang2) in availableLangs"
+                  type="text"
+                  name="title"
+                  class="form-control"
+                  lang="{{lang2}}"
+                  ng-model="thesaurusSelected.multilingualTitles[lang3]"
+                />
+              </div>
+
+              <!--<input
                 type="text"
                 name="title"
                 class="form-control"
@@ -508,19 +551,33 @@
                 id="gn-thesaurus-title"
                 data-ng-model="thesaurusSelected.title"
                 data-ng-required="true"
-              />
+              />-->
             </div>
 
             <div class="form-group">
               <label class="control-label" data-translate="">thesaurusDescription</label>
-              <textarea
+              <div
+                gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}"
+              >
+                <textarea
+                  ng-repeat="(lang3, lang2) in availableLangs"
+                  type="text"
+                  name="title"
+                  class="form-control"
+                  lang="{{lang2}}"
+                  ng-model="thesaurusSelected.multilingualDescriptions[lang3]"
+                />
+              </div>
+
+              <!--<textarea
                 type="text"
                 name="description"
                 class="form-control"
                 data-ng-disabled="!isNew()"
                 id="gn-thesaurus-description"
                 data-ng-model="thesaurusSelected.description"
-              />
+              />-->
             </div>
 
             <div

@@ -1,4 +1,4 @@
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -300,9 +301,11 @@ public class ThesaurusManager implements ThesaurusFinder {
         thesauriMap.put(thesaurusName, gst);
 
         if (writeConceptScheme) {
-            gst.writeConceptScheme(
+            gst.createConceptScheme(
                 gst.getTitle(),
+                gst.getMultilingualTitles(),
                 gst.getDescription(),
+                gst.getMultilingualDescriptions(),
                 gst.getFname(),
                 gst.getDname(),
                 gst.getDefaultNamespace());
@@ -440,7 +443,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         }
 
         String theKey = gst.getKey();
-        gst.retrieveThesaurusTitle();
+        gst.retrieveThesaurusInformation();
 
         addOrReloadThesaurus(gst);
 
@@ -487,15 +490,17 @@ public class ThesaurusManager implements ThesaurusFinder {
             //      ],
             Element elMultilingualTitles = new Element("multilingualTitles");
             for (Map.Entry<String, String> entry : currentTh.getMultilingualTitles().entrySet()) {
-                Element elMultilingualTitle = new Element("multilingualTitle");
-                Element elMultilingualTitl_lang = new Element("lang");
-                elMultilingualTitl_lang.setText(entry.getKey());
-                Element elMultilingualTitle_title = new Element("title");
-                elMultilingualTitle_title.setText(entry.getValue());
-                elMultilingualTitle.addContent(elMultilingualTitl_lang);
-                elMultilingualTitle.addContent(elMultilingualTitle_title);
+                if (StringUtils.isNotBlank(entry.getValue())) {
+                    Element elMultilingualTitle = new Element("multilingualTitle");
+                    Element elMultilingualTitleLang = new Element("lang");
+                    elMultilingualTitleLang.setText(entry.getKey());
+                    Element elMultilingualTitleTitle = new Element("title");
+                    elMultilingualTitleTitle.setText(entry.getValue());
+                    elMultilingualTitle.addContent(elMultilingualTitleLang);
+                    elMultilingualTitle.addContent(elMultilingualTitleTitle);
 
-                elMultilingualTitles.addContent(elMultilingualTitle);
+                    elMultilingualTitles.addContent(elMultilingualTitle);
+                }
             }
 
             //add dublin core items to the response
@@ -507,20 +512,41 @@ public class ThesaurusManager implements ThesaurusFinder {
             for (Map.Entry<String, Map<String,String>> entryLang : currentTh.getDublinCoreMultilingual().entrySet()) {
                 String lang = entryLang.getKey();
                 for (Map.Entry<String, String> entryItem : entryLang.getValue().entrySet()) {
-                    Element elItem = new Element("dublinCoreMultilingual");
-                    Element elLang = new Element("lang");
-                    elLang.setText(lang);
-                    Element elTag = new Element("tag");
-                    elTag.setText(entryItem.getKey());
-                    Element elValue = new Element("value");
-                    elValue.setText(entryItem.getValue());
+                    if (StringUtils.isNotBlank(entryItem.getValue())) {
+                        Element elItem = new Element("dublinCoreMultilingual");
+                        Element elLang = new Element("lang");
+                        elLang.setText(lang);
+                        Element elTag = new Element("tag");
+                        elTag.setText(entryItem.getKey());
+                        Element elValue = new Element("value");
+                        elValue.setText(entryItem.getValue());
 
-                    elItem.addContent(elLang);
-                    elItem.addContent(elTag);
-                    elItem.addContent(elValue);
+                        elItem.addContent(elLang);
+                        elItem.addContent(elTag);
+                        elItem.addContent(elValue);
 
+                        elDublinCoreMultilingual.addContent(elItem);
+                    }
+                }
+            }
 
-                    elDublinCoreMultilingual.addContent(elItem);
+            //add multilingual descriptions in to response
+            //      "multilingualDescriptions":     [
+            //            { "lang": "fr","title": "Data Usage Scope FR"},
+            //            {"lang": "en","title": "Data Usage Scope EN"}
+            //      ],
+            Element elMultilingualDescriptions = new Element("multilingualDescriptions");
+            for (Map.Entry<String, String> entry : currentTh.getMultilingualDescriptions().entrySet()) {
+                if (StringUtils.isNotBlank(entry.getValue())) {
+                    Element elMultilingualDescription = new Element("multilingualDescription");
+                    Element elMultilingualDescLang = new Element("lang");
+                    elMultilingualDescLang.setText(entry.getKey());
+                    Element elMultilingualDescDesc = new Element("description");
+                    elMultilingualDescDesc.setText(entry.getValue());
+                    elMultilingualDescription.addContent(elMultilingualDescLang);
+                    elMultilingualDescription.addContent(elMultilingualDescDesc);
+
+                    elMultilingualDescriptions.addContent(elMultilingualDescription);
                 }
             }
 
@@ -558,6 +584,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elTitle);
             elLoop.addContent(elMultilingualTitles);
             elLoop.addContent(elDublinCoreMultilingual);
+            elLoop.addContent(elMultilingualDescriptions);
             elLoop.addContent(elDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);
