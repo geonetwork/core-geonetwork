@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,8 +44,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -54,7 +51,6 @@ import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -92,15 +88,12 @@ public class ThesaurusManager implements ThesaurusFinder {
     private IsoLanguagesMapper isoLanguagesMapper;
 
     @Autowired
-    private ThesaurusActivationRepository thesaurusActivationRepository;
-
-    @Autowired
     private IMetadataSchemaUtils metadataSchemaUtils;
 
     @Autowired
     private AllThesaurus allThesaurus;
 
-    private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
+    private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<>();
     private LocalService service = null;
     private Path thesauriDirectory = null;
     private boolean initialized = false;
@@ -566,17 +559,6 @@ public class ThesaurusManager implements ThesaurusFinder {
             String defaultURI = currentTh.getDefaultNamespace();
             elDefaultURI.addContent(defaultURI);
 
-
-            Element elActivated = new Element("activated");
-
-            // By default thesaurus are enabled (if nothing defined in db)
-            char activated = Constants.YN_TRUE;
-            final Optional<ThesaurusActivation> activation = thesaurusActivationRepository.findById(currentTh.getKey());
-            if (activation.isPresent() && !activation.get().isActivated()) {
-                activated = Constants.YN_FALSE;
-            }
-            elActivated.setText("" + activated);
-
             elLoop.addContent(elKey);
             elLoop.addContent(elDname);
             elLoop.addContent(description);
@@ -589,7 +571,6 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);
             elLoop.addContent(elType);
-            elLoop.addContent(elActivated);
 
             elRoot.addContent(elLoop);
         }

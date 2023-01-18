@@ -94,10 +94,6 @@
        */
       $scope.thesaurusSelected = null;
       /**
-       * Is the selected thesaurus activated or not.
-       */
-      $scope.thesaurusSelectedActivated = false;
-      /**
        * A suggested namespace for new thesaurus based
        * on other thesaurus properties
        */
@@ -173,7 +169,6 @@
       $scope.selectThesaurus = function (t) {
         creatingThesaurus = false;
         $scope.thesaurusSelected = t;
-        $scope.thesaurusSelectedActivated = t.activated == "y";
 
         $("#keywordFilter").focus();
         searchThesaurusKeyword();

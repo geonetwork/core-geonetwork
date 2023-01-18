@@ -29,13 +29,10 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -88,13 +85,6 @@ public class Add extends NotInReadOnlyModeService {
         multilingualDescriptions.put("eng", description);
         Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, multilingualTitles, multilingualDescriptions, tnamespace, type, dname, rdfFile, siteURL, false, tm.getThesaurusCacheMaxSize());
         tm.addThesaurus(thesaurus, true);
-
-        // Save activated status in the database
-        ThesaurusActivation activation = new ThesaurusActivation();
-        activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
-        activation.setId(fname);
-
-        context.getBean(ThesaurusActivationRepository.class).save(activation);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         Element elRef = new Element("ref");

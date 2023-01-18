@@ -48,14 +48,12 @@ import org.fao.geonet.api.registries.model.ThesaurusInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.utils.*;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -126,9 +124,6 @@ public class KeywordsApi {
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
-
-    @Autowired
-    ThesaurusActivationRepository thesaurusActivationRepository;
 
     @Autowired
     GeonetHttpRequestFactory httpRequestFactory;
@@ -615,12 +610,6 @@ public class KeywordsApi {
         // Remove file
         if (Files.exists(item)) {
             IO.deleteFile(item, true, Geonet.THESAURUS);
-
-            // Delete thesaurus record in the database
-            String thesaurusId = thesaurusObject.getFname();
-            if (thesaurusActivationRepository.existsById(thesaurusId)) {
-                thesaurusActivationRepository.deleteById(thesaurusId);
-            }
         } else {
             throw new IllegalArgumentException(String.format(
                 "Thesaurus RDF file was not found for thesaurus with identifier '%s'.",
@@ -1234,13 +1223,6 @@ public class KeywordsApi {
             thesaurusInfo.getDname(), rdfFile, siteURL, false, thesaurusMan.getThesaurusCacheMaxSize());
 
         thesaurusMan.addThesaurus(thesaurus, true);
-
-        // Save activated status in the database
-        ThesaurusActivation activation = new ThesaurusActivation();
-        activation.setActivated(org.fao.geonet.domain.Constants.toBoolean_fromYNChar(thesaurusInfo.getActivated().charAt(0)));
-        activation.setId(thesaurusInfo.getFilename());
-
-        applicationContext.getBean(ThesaurusActivationRepository.class).save(activation);
     }
 
 
