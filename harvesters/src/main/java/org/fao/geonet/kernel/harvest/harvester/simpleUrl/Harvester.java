@@ -42,8 +42,10 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Text;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -64,6 +66,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.utils.Xml.isXMLLike;
+
 /**
  * Harvest metadata from a JSON source.
  * <p>
@@ -73,7 +77,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * This harvester has been tested with CKAN search API.
  */
 class Harvester implements IHarvester<HarvestResult> {
-    public static final String LOGGER_NAME = "geonetwork.harvester.json";
+    public static final String LOGGER_NAME = "geonetwork.harvester.simpleurl";
 
     private final AtomicBoolean cancelMonitor;
     private Logger log;
@@ -97,86 +101,153 @@ class Harvester implements IHarvester<HarvestResult> {
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
-        log.debug("Retrieving simple URL: " + params.getName());
+        log.debug("Retrieving from harvester: " + params.getName());
 
         requestFactory = context.getBean(GeonetHttpRequestFactory.class);
 
-        String jsonResponse = retrieveUrl(params.url, log);
-        if (cancelMonitor.get()) {
-            return new HarvestResult();
-        }
-        log.debug("Response is: " + jsonResponse);
-
-        // TODO: Add support for XML or JSON
-        int numberOfRecordsToHarvest = -1;
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonObj = objectMapper.readTree(jsonResponse);
-
-        if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
-            try {
-                numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
-                log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
-            } catch (Exception e) {
-            }
-        }
+        String[] urlList = params.url.split("\n");
         boolean error = false;
-        HarvestResult result = null;
-        Map<String, Element> allUuids = new HashMap<String, Element>();
-        try {
-            Aligner aligner = new Aligner(cancelMonitor, context, params, log);
-            List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
-            for (int i = 0; i < listOfUrlForPages.size(); i ++) {
-                if (i != 0) {
-                    jsonResponse = retrieveUrl(listOfUrlForPages.get(i), log);
-                    jsonObj = objectMapper.readTree(jsonResponse);
-                }
-                Map<String, Element> uuids = new HashMap<String, Element>();
-                JsonNode nodes;
-                if (StringUtils.isNotEmpty(params.loopElement)) {
-                    try {
-                        nodes = jsonObj.at(params.loopElement);
-                        log.debug("Number of records in response: " + nodes.size());
+        Aligner aligner = new Aligner(cancelMonitor, context, params, log);
 
-                        nodes.forEach(record -> {
-                            String uuid = this.extractUuidFromIdentifier(record.get(params.recordIdPath).asText());
-                            String apiUrl = params.url.split("\\?")[0];
-                            URL url = null;
-                            try {
-                                url = new URL(apiUrl);
-                                String nodeUrl = new StringBuilder(url.getProtocol()).append("://").append(url.getAuthority()).toString();
-                                Element xml = convertRecordToXml(record, uuid, apiUrl, nodeUrl);
-                                uuids.put(uuid, xml);
-                            } catch (MalformedURLException e) {
-                                log.warning("Failed to parse Node URL");
+        for (String url : urlList) {
+            log.debug("Loading URL: " + url);
+            String content = retrieveUrl(url, log);
+            if (cancelMonitor.get()) {
+                return new HarvestResult();
+            }
+            log.debug("Response is: " + content);
+
+            int numberOfRecordsToHarvest = -1;
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonObj = null;
+            Element xmlObj = null;
+            SimpleUrlResourceType type = content.startsWith("<?xml version") || isXMLLike(content)
+                ? SimpleUrlResourceType.XML : SimpleUrlResourceType.JSON;
+            if (type == SimpleUrlResourceType.XML) {
+                xmlObj = Xml.loadString(content, false);
+            } else {
+                jsonObj = objectMapper.readTree(content);
+            }
+
+            if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
+                try {
+                    if (type == SimpleUrlResourceType.XML) {
+                        Object element = Xml.selectSingle(xmlObj, params.numberOfRecordPath, xmlObj.getAdditionalNamespaces());
+                        if (element != null) {
+                            String s = getXmlElementTextValue(element);
+                            numberOfRecordsToHarvest = Integer.parseInt(s);
+                        }
+                    } else {
+                        numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
+                    }
+                    log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
+                } catch (Exception e) {
+                    log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
+                        params.numberOfRecordPath, e.getMessage()));
+                }
+            }
+            Map<String, Element> allUuids = new HashMap<String, Element>();
+            try {
+                Map<String, Element> uuids = new HashMap<String, Element>();
+                List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
+                for (int i = 0; i < listOfUrlForPages.size(); i++) {
+                    if (i != 0) {
+                        content = retrieveUrl(listOfUrlForPages.get(i), log);
+                        if (type == SimpleUrlResourceType.XML) {
+                            xmlObj = Xml.loadString(content, false);
+                        } else {
+                            jsonObj = objectMapper.readTree(content);
+                        }
+                    }
+                    JsonNode nodes = null;
+                    List<Element> xmlNodes = null;
+                    if (StringUtils.isNotEmpty(params.loopElement)) {
+                        try {
+                            if (type == SimpleUrlResourceType.XML) {
+                                xmlNodes = Xml.selectNodes(xmlObj, params.loopElement, xmlObj.getAdditionalNamespaces());
+                                log.debug(String.format("%d records found in XML response.", xmlNodes.size()));
+                            } else {
+                                nodes = jsonObj.at(params.loopElement);
+                                log.debug(String.format("%d records found in JSON response.", nodes.size()));
                             }
-                        });
-                        aligner.align(uuids, errors);
-                        allUuids.putAll(uuids);
-                    } catch (Exception e) {
-                        log.warning("Failed to collect record in response");
+
+
+                            if (type == SimpleUrlResourceType.XML && xmlNodes != null) {
+                                xmlNodes.forEach(record -> {
+                                    String uuid =
+                                        null;
+                                    try {
+                                        uuid = getXmlElementTextValue(Xml.selectSingle(record, params.recordIdPath, record.getAdditionalNamespaces()));
+                                        uuids.put(uuid, record);
+                                    } catch (JDOMException e) {
+                                        log.error(String.format("Failed to extract UUID for record. Error is %s.",
+                                            e.getMessage()));
+                                        aligner.getResult().badFormat ++;
+                                        aligner.getResult().totalMetadata ++;
+                                    }
+                                });
+                            } else if (nodes != null) {
+                                nodes.forEach(record -> {
+                                    String uuid = null;
+                                    try {
+                                        uuid = this.extractUuidFromIdentifier(record.at(params.recordIdPath).asText());
+                                    } catch (Exception e) {
+                                        log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
+                                            params.recordIdPath, e.getMessage()));
+                                    }
+                                    String apiUrlPath = params.url.split("\\?")[0];
+                                    URL apiUrl = null;
+                                    try {
+                                        apiUrl = new URL(apiUrlPath);
+                                        String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
+                                        Element xml = convertRecordToXml(record, uuid, apiUrlPath, nodeUrl);
+                                        uuids.put(uuid, xml);
+                                    } catch (MalformedURLException e) {
+                                        log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
+                                    }
+                                });
+                            }
+                            aligner.align(uuids, errors);
+                            allUuids.putAll(uuids);
+                        } catch (Exception e) {
+                            log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
+                                params.loopElement, e.getMessage()));
+                        }
                     }
                 }
+                aligner.cleanupRemovedRecords(allUuids.keySet());
+            } catch (Exception t) {
+                error = true;
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                log.error(t);
+                errors.add(new HarvestError(context, t));
+            } catch (Throwable t) {
+                error = true;
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                errors.add(new HarvestError(context, t));
             }
-            result = aligner.cleanupRemovedRecords(allUuids.keySet());
-        } catch (Exception t) {
-            error = true;
-            log.error("Unknown error trying to harvest");
-            log.error(t.getMessage());
-            log.error(t);
-            errors.add(new HarvestError(context, t));
-        } catch (Throwable t) {
-            error = true;
-            log.fatal("Something unknown and terrible happened while harvesting");
-            log.fatal(t.getMessage());
-            errors.add(new HarvestError(context, t));
-        }
 
-        log.info("Total records processed in all searches :" + allUuids.size());
-        if (error) {
-            log.warning("Due to previous errors the align process has not been called");
+            log.info("Total records processed in all searches :" + allUuids.size());
+            if (error) {
+                log.warning("Due to previous errors the align process has not been called");
+            }
         }
+        return aligner.getResult();
+    }
 
-        return result;
+    private String getXmlElementTextValue(Object element) {
+        String s = null;
+        if (element instanceof Text) {
+            s = ((Text) element).getTextNormalize();
+        } else if (element instanceof Attribute) {
+            s = ((Attribute) element).getValue();
+        } else if (element instanceof String) {
+            s = (String) element;
+        }
+        return s;
     }
 
     private String extractUuidFromIdentifier(final String identifier ) {

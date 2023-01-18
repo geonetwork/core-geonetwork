@@ -88,8 +88,7 @@
         scope: {
           harvester: "=gnHarvesterAccount"
         },
-        templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "account.html",
+        templateUrl: "../../catalog/components/admin/harvester/partials/account.html",
         link: function (scope, element, attrs) {}
       };
     }

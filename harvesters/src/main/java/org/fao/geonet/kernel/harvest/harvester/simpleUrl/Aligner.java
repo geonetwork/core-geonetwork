@@ -69,6 +69,10 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
     private IMetadataIndexer metadataIndexer;
 
     private HarvestResult result;
+
+    public HarvestResult getResult() {
+        return result;
+    }
     private Map<String, Object> processParams = new HashMap<String, Object>();
     private Logger log;
 
@@ -146,7 +150,6 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                         addPrivileges(id, params.getPrivileges(), localGroups, context);
                         result.privilegesAppendedOnExistingRecord++;
                     }
-
                 }
                 result.totalMetadata++;
             } catch (Throwable t) {
@@ -178,7 +181,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                 String id = localUuids.getID(uuid);
                 log.debug("  - Removing old metadata with local id:" + id);
                 metadataManager.deleteMetadata(context, id);
-                result.locallyRemoved++;
+                result.locallyRemoved ++;
             }
         }
         dataMan.forceIndexChanges();
