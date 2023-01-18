@@ -77,6 +77,8 @@
           "https://registry.geonetwork-opensource.org/{{type}}/{{filename}}";
       });
 
+      $scope.angularEquals = angular.equals;
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       /**
@@ -369,15 +371,20 @@
           multilingualDescriptions: {}
         };
 
-        for (var key in $scope.thesaurusSelected.multilingualTitles) {
-          thesaurusToUpdate.multilingualTitles[$scope.availableLangs[key]] =
-            $scope.thesaurusSelected.multilingualTitles[key];
-        }
+        // Change the keys from iso3lang to iso2lang
+        thesaurusToUpdate.multilingualTitles = _.mapKeys(
+          $scope.thesaurusSelected.multilingualTitles,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
 
-        for (var key in $scope.thesaurusSelected.multilingualDescriptions) {
-          thesaurusToUpdate.multilingualDescriptions[$scope.availableLangs[key]] =
-            $scope.thesaurusSelected.multilingualDescriptions[key];
-        }
+        thesaurusToUpdate.multilingualDescriptions = _.mapKeys(
+          $scope.thesaurusSelected.multilingualDescriptions,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
 
         $http
           .put(
@@ -852,60 +859,91 @@
           function (response) {
             $scope.thesaurus = response.data[0];
 
-            // Process thesaurus titles and description to convert them to the
-            // format required by the field multilingual directive.
+            // {"iso2lang": "iso3lang", ...
+            var invertedAvailableLangs = _.invert($scope.availableLangs);
+
             for (var i = 0; i < $scope.thesaurus.length; i++) {
-              var langsTitles = {};
-              var langsDesc = {};
-              var hasMultilingualTitlesValues = false;
-              var hasMultilingualDescValues = false;
-              for (var key in $scope.availableLangs) {
-                var lang = key;
-                var value = $scope.availableLangs[key];
+              // JSON output is returning empty values as empty array
+              $scope.thesaurus[i].title = Array.isArray($scope.thesaurus[i].title)
+                ? ""
+                : $scope.thesaurus[i].title;
+              $scope.thesaurus[i].description = Array.isArray(
+                $scope.thesaurus[i].description
+              )
+                ? ""
+                : $scope.thesaurus[i].description;
 
-                var indexTitles = _.findIndex(
-                  $scope.thesaurus[i].multilingualTitles,
-                  function (o) {
-                    return o.lang == value;
-                  }
-                );
+              // Convert the multilingual titles object from {"lang": "iso2lang", "title": "value", ...
+              // to the format required by the multilingual field directive: {"iso3lang": "value", ...
+              $scope.thesaurus[i].multilingualTitles = _.zipObject(
+                _.map($scope.thesaurus[i].multilingualTitles, function (t) {
+                  return invertedAvailableLangs[t.lang];
+                }),
+                _.map($scope.thesaurus[i].multilingualTitles, "title")
+              );
 
-                if (indexTitles > -1) {
-                  hasMultilingualTitlesValues = true;
-                }
+              // Add missing languages with empty values to the multilingual titles object
+              var availableLangsEmptyValues = _.zipObject(
+                _.keys($scope.availableLangs),
+                _.map(Array(_.keys($scope.availableLangs).length), function () {
+                  return "";
+                })
+              );
 
-                langsTitles[lang] =
-                  indexTitles > -1
-                    ? $scope.thesaurus[i].multilingualTitles[indexTitles].title
-                    : "";
+              $scope.thesaurus[i].multilingualTitles = _.merge(
+                availableLangsEmptyValues,
+                $scope.thesaurus[i].multilingualTitles
+              );
 
-                var indexDesc = _.findIndex(
-                  $scope.thesaurus[i].multilingualDescriptions,
-                  function (o) {
-                    return o.lang == value;
-                  }
-                );
+              // Convert the multilingual descriptions object from {"lang": "iso2lang", "title": "value", ...
+              // to the format required by the multilingual field directive: {"iso3lang": "value", ...
+              $scope.thesaurus[i].multilingualDescriptions = _.zipObject(
+                _.map($scope.thesaurus[i].multilingualDescriptions, function (t) {
+                  return invertedAvailableLangs[t.lang];
+                }),
+                _.map($scope.thesaurus[i].multilingualDescriptions, "description")
+              );
 
-                if (indexDesc > -1) {
-                  hasMultilingualDescValues = true;
-                }
+              availableLangsEmptyValues = _.zipObject(
+                _.keys($scope.availableLangs),
+                _.map(Array(_.keys($scope.availableLangs).length), function () {
+                  return "";
+                })
+              );
 
-                langsDesc[lang] =
-                  indexDesc > -1
-                    ? $scope.thesaurus[i].multilingualDescriptions[indexDesc].description
-                    : "";
-              }
+              // Add missing languages with empty values to the multilingual titles object
+              $scope.thesaurus[i].multilingualDescriptions = _.merge(
+                availableLangsEmptyValues,
+                $scope.thesaurus[i].multilingualDescriptions
+              );
 
-              $scope.thesaurus[i].multilingualTitles = langsTitles;
-              $scope.thesaurus[i].multilingualDescriptions = langsDesc;
+              var hasMultilingualTitlesValues = !_.values(
+                $scope.thesaurus[i].multilingualTitles
+              ).every(_.isEmpty);
+              var hasMultilingualDescValues = !_.values(
+                $scope.thesaurus[i].multilingualDescriptions
+              ).every(_.isEmpty);
 
               if (!hasMultilingualTitlesValues) {
-                $scope.thesaurus[i].multilingualTitles["eng"] = $scope.thesaurus[i].title;
+                if ($scope.thesaurus[i].type == "external") {
+                  // Clear the multilingual title object to display a single textarea control with the description
+                  $scope.thesaurus[i].multilingualTitles = {};
+                } else {
+                  // Assign the title if available as the default language multilingual title
+                  $scope.thesaurus[i].multilingualTitles["eng"] =
+                    $scope.thesaurus[i].title;
+                }
               }
 
               if (!hasMultilingualDescValues) {
-                $scope.thesaurus[i].multilingualDescriptions["eng"] =
-                  $scope.thesaurus[i].description;
+                if ($scope.thesaurus[i].type == "external") {
+                  // Clear the multilingual description object to display a single textarea control with the description
+                  $scope.thesaurus[i].multilingualDescriptions = {};
+                } else {
+                  // Assign the description if available as the default language multilingual description
+                  $scope.thesaurus[i].multilingualDescriptions["eng"] =
+                    $scope.thesaurus[i].description;
+                }
               }
             }
           },
