@@ -345,6 +345,21 @@
       $scope.createThesaurus = function () {
         var thesaurusToCreate = Object.assign({}, $scope.thesaurusSelected);
 
+        // Change the keys from iso3lang to iso2lang
+        thesaurusToCreate.multilingualTitles = _.mapKeys(
+          thesaurusToCreate.multilingualTitles,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
+        thesaurusToCreate.multilingualDescriptions = _.mapKeys(
+          thesaurusToCreate.multilingualDescriptions,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
         $http.post("../api/registries/vocabularies/new", thesaurusToCreate).then(
           function (response) {
             $scope.thesaurusSelected = null;

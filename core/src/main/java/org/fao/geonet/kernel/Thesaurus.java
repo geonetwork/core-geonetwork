@@ -166,10 +166,22 @@ public class Thesaurus {
 
         if (multilingualTitles != null) {
             this.multilingualTitles = multilingualTitles;
+
+            if (StringUtils.isBlank(this.title)) {
+                this.title = this.multilingualTitles.get(toiso639_1_Lang(Geonet.DEFAULT_LANGUAGE));
+            }
+
+            if (StringUtils.isBlank(this.title)) {
+                this.title = dname + "." + fname;
+            }
         }
 
         if (multilingualDescriptions != null) {
             this.multilingualDescriptions = multilingualDescriptions;
+
+            if (StringUtils.isBlank(this.description)) {
+                this.description = this.multilingualDescriptions.get(toiso639_1_Lang(Geonet.DEFAULT_LANGUAGE));
+            }
         }
     }
 
@@ -887,6 +899,8 @@ public class Thesaurus {
      * Used to set the thesaurusName and thesaurusDate for keywords.
      */
     private void retrieveThesaurusInformation(Path thesaurusFile, String defaultTitle, boolean ignoreMissingError) {
+        if (!Files.exists(thesaurusFile)) return;
+
         // set defaults as in the case of a local thesaurus file, this info
         // may not be present yet
         this.title = defaultTitle;

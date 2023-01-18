@@ -37,7 +37,6 @@ public class ThesaurusInfo {
     private String defaultNamespace;
     private String dname;
     private String type;
-    private String activated = "y";
 
     public String getFilename() {
         return filename;
@@ -106,13 +105,5 @@ public class ThesaurusInfo {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getActivated() {
-        return activated;
-    }
-
-    public void setActivated(String activated) {
-        this.activated = activated;
     }
 }

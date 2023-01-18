@@ -31,7 +31,7 @@
             ng-repeat="t in pageItems()"
             ng-click="selectThesaurus(t)"
           >
-            <strong>{{t.title}}</strong> ({{t.dname}})
+            <strong>{{t.multilingualTitles[lang] || t.title}}</strong> ({{t.dname}})
           </a>
         </div>
         <div
@@ -123,6 +123,7 @@
             type="button"
             class="btn btn-primary"
             data-ng-click="updateThesaurus()"
+            data-ng-disabled="!gnEditThesaurus.$valid"
             data-ng-if="thesaurusSelected.type == 'local'"
           >
             <i class="fa fa-save"></i>&nbsp;<span data-translate="">saveThesaurus</span>
@@ -137,7 +138,7 @@
       </div>
 
       <div class="panel-body">
-        <form id="gn-edit-thesaurus" name="gn-edit-thesaurus" class="form-horizontal">
+        <form name="gnEditThesaurus" id="gn-edit-thesaurus" class="form-horizontal">
           <input type="hidden" name="_csrf" value="{{csrf}}" />
           <div class="form-group">
             <label class="control-label col-sm-2" translate>thesaurusTitle</label>
@@ -157,6 +158,7 @@
                   name="title"
                   class="form-control"
                   lang="{{lang2}}"
+                  ng-required="thesaurusSelected.type === 'local' && lang3 === 'eng'"
                   ng-disabled="thesaurusSelected.type !== 'local'"
                   ng-model="thesaurusSelected.multilingualTitles[lang3]"
                 />
@@ -555,19 +557,10 @@
                   name="title"
                   class="form-control"
                   lang="{{lang2}}"
+                  ng-required="lang3 === 'eng'"
                   ng-model="thesaurusSelected.multilingualTitles[lang3]"
                 />
               </div>
-
-              <!--<input
-                type="text"
-                name="title"
-                class="form-control"
-                data-ng-disabled="!isNew()"
-                id="gn-thesaurus-title"
-                data-ng-model="thesaurusSelected.title"
-                data-ng-required="true"
-              />-->
             </div>
 
             <div class="form-group">
@@ -585,15 +578,6 @@
                   ng-model="thesaurusSelected.multilingualDescriptions[lang3]"
                 />
               </div>
-
-              <!--<textarea
-                type="text"
-                name="description"
-                class="form-control"
-                data-ng-disabled="!isNew()"
-                id="gn-thesaurus-description"
-                data-ng-model="thesaurusSelected.description"
-              />-->
             </div>
 
             <div
