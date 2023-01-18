@@ -343,6 +343,15 @@
        * and refresh the list.
        */
       $scope.createThesaurus = function () {
+        var hasMultilingualTitlesValues = !_.values(
+          $scope.thesaurusSelected.multilingualTitles
+        ).every(_.isEmpty);
+
+        if (!hasMultilingualTitlesValues) {
+          alert($translate.instant("thesaurusTitleRequired"));
+          return;
+        }
+
         var thesaurusToCreate = Object.assign({}, $scope.thesaurusSelected);
 
         // Change the keys from iso3lang to iso2lang
@@ -381,6 +390,15 @@
        * Updates the thesaurus titles and descriptions, for local thesaurus.
        */
       $scope.updateThesaurus = function () {
+        var hasMultilingualTitlesValues = !_.values(
+          $scope.thesaurusSelected.multilingualTitles
+        ).every(_.isEmpty);
+
+        if (!hasMultilingualTitlesValues) {
+          alert($translate.instant("thesaurusTitleRequired"));
+          return;
+        }
+
         var thesaurusToUpdate = {
           multilingualTitles: {},
           multilingualDescriptions: {}

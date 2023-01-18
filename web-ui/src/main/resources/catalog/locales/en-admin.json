@@ -348,6 +348,7 @@
     "thesaurusUpdateError": "Error on updating the thesaurus",
     "thesaurusUploadError": "Error on upload of the thesaurus",
     "thesaurusDeleteError": "Error on deleting the thesaurus",
+    "thesaurusTitleRequired": "The thesaurus title is required",
     "information": "Information",
     "inspireatom-errors": "Errors:",
     "inspireatom-harvestedfeeds": "Harvested feeds:",

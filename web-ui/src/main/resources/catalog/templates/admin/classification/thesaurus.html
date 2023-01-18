@@ -158,7 +158,6 @@
                   name="title"
                   class="form-control"
                   lang="{{lang2}}"
-                  ng-required="thesaurusSelected.type === 'local' && lang3 === 'eng'"
                   ng-disabled="thesaurusSelected.type !== 'local'"
                   ng-model="thesaurusSelected.multilingualTitles[lang3]"
                 />
@@ -557,7 +556,6 @@
                   name="title"
                   class="form-control"
                   lang="{{lang2}}"
-                  ng-required="lang3 === 'eng'"
                   ng-model="thesaurusSelected.multilingualTitles[lang3]"
                 />
               </div>
