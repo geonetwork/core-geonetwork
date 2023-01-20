@@ -1,50 +1,54 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-  <!-- <xsl:output method="xml" doctype-system="c:\temp\ESRI_ISO1.dtd"/> -->
-  <xsl:template match="/root">
-    <metadata>
-      <xsl:apply-templates select="Metadata/mdFileID"/>
-      <xsl:apply-templates select="Metadata/mdLang"/>
-      <xsl:apply-templates select="Metadata/mdChar"/>
-      <xsl:apply-templates select="Metadata/mdParentID"/>
-      <xsl:for-each select="Metadata/mdHrLv">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+  <xsl:output method="xml"/>
+  <!--  <xsl:output method="xml" doctype-system="ISO_19115.dtd"/> -->
+  <xsl:template match="/">
+    <Metadata>
+      <xsl:apply-templates select="metadata/mdFileID"/>
+      <xsl:apply-templates select="metadata/mdLang"/>
+      <xsl:apply-templates select="metadata/mdChar"/>
+      <xsl:apply-templates select="metadata/mdParentID"/>
+      <xsl:for-each select="metadata/mdHrLv">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/mdHrLvName">
+      <xsl:for-each select="metadata/mdHrLvName">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:apply-templates select="Metadata/mdContact"/>
-      <xsl:apply-templates select="Metadata/mdDateSt"/>
-      <xsl:apply-templates select="Metadata/mdStanName"/>
-      <xsl:apply-templates select="Metadata/mdStanVer"/>
-      <xsl:apply-templates select="Metadata/distInfo"/>
-      <xsl:for-each select="Metadata/dataIdInfo">
+
+      <xsl:apply-templates select="metadata/mdContact"/>
+
+      <xsl:apply-templates select="metadata/mdDateSt"/>
+      <xsl:apply-templates select="metadata/mdStanName"/>
+      <xsl:apply-templates select="metadata/mdStanVer"/>
+      <xsl:apply-templates select="metadata/distInfo"/>
+      <xsl:for-each select="metadata/dataIdInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/appSchInfo">
+      <xsl:for-each select="metadata/appSchInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/porCatInfo">
+      <xsl:for-each select="metadata/porCatInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:apply-templates select="Metadata/mdMaint"/>
-      <xsl:for-each select="Metadata/mdConst">
+      <xsl:apply-templates select="metadata/mdMaint"/>
+      <xsl:for-each select="metadata/mdConst">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/dqInfo">
+      <xsl:for-each select="metadata/dqInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/spatRepInfo">
+      <xsl:for-each select="metadata/spatRepInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/refSysInfo">
+      <xsl:for-each select="metadata/refSysInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-      <xsl:for-each select="Metadata/contInfo">
+      <xsl:for-each select="metadata/contInfo">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
-    </metadata>
+    </Metadata>
   </xsl:template>
+
   <!-- contInfo-->
   <xsl:template match="contInfo">
     <contInfo>
@@ -454,33 +458,46 @@
   <!-- distInfo-->
   <xsl:template match="distInfo">
     <distInfo>
-      <distributor>
-        <xsl:for-each select="distributor">
-          <xsl:apply-templates select="distorCont"/>
-          <xsl:for-each select="distorFormat">
-            <xsl:apply-templates select="."/>
-          </xsl:for-each>
-          <xsl:for-each select="distorOrdPrc">
-            <distorOrdPrc>
-              <xsl:apply-templates select="resFees"/>
-              <xsl:apply-templates select="planAvDtTm"/>
-              <xsl:apply-templates select="ordInstr"/>
-              <xsl:apply-templates select="ordTurn"/>
-            </distorOrdPrc>
-          </xsl:for-each>
-          <!--          <xsl:for-each select="distorTran">
-                                  <xsl:apply-templates select="."/>
-                              </xsl:for-each> -->
-        </xsl:for-each>
-        <xsl:for-each select="distTranOps">
+      <xsl:for-each select="distributor">
+        <xsl:if test="distorCont">
+          <distributor>
+            <xsl:apply-templates select="distorCont"/>
+            <xsl:for-each select="distorFormat">
+              <xsl:apply-templates select="."/>
+            </xsl:for-each>
+            <xsl:for-each select="distorOrdPrc">
+              <distorOrdPrc>
+                <xsl:apply-templates select="resFees"/>
+                <xsl:apply-templates select="planAvDtTm"/>
+                <xsl:apply-templates select="ordInstr"/>
+                <xsl:apply-templates select="ordTurn"/>
+              </distorOrdPrc>
+            </xsl:for-each>
+          </distributor>
+        </xsl:if>
+        <xsl:for-each select="distorTran">
           <xsl:apply-templates select="."/>
         </xsl:for-each>
-      </distributor>
+      </xsl:for-each>
+      <!--      <xsl:for-each select="distTranOps">
+                      <xsl:apply-templates select="."/>
+                  </xsl:for-each> -->
     </distInfo>
   </xsl:template>
-  <!-- onLineMed - because of an error in ArcCatalog, we will match on onLineMed but output offLineMed -->
-  <xsl:template match="onLineMed">
-    <offLineMed>
+  <!-- onLineSrc -->
+  <xsl:template match="onLineSrc">
+    <onLineSrc>
+      <xsl:apply-templates select="linkage"/>
+      <xsl:apply-templates select="protocol"/>
+      <xsl:apply-templates select="appProfile"/>
+      <xsl:apply-templates select="orName"/>
+      <xsl:apply-templates select="orDesc"/>
+      <xsl:apply-templates select="orFunct"/>
+    </onLineSrc>
+  </xsl:template>
+  <!-- onLineMed - because of an error in ArcCatalog, we will match on offLineMed -->
+  <xsl:template match="offLineMed">
+    <onLineMed>
       <xsl:apply-templates select="medName"/>
       <xsl:for-each select="medDensity">
         <xsl:apply-templates select="."/>
@@ -491,7 +508,7 @@
         <xsl:apply-templates select="."/>
       </xsl:for-each>
       <xsl:apply-templates select="medNote"/>
-    </offLineMed>
+    </onLineMed>
   </xsl:template>
   <!-- dataIdInfo-->
   <xsl:template match="dataIdInfo">
@@ -529,23 +546,6 @@
       </xsl:for-each>
       <xsl:for-each select="descKeys">
         <descKeys>
-          <xsl:attribute name="KeyTypCd">
-            <xsl:if test="keyTyp/KeyTypCd/@value = 'discipline'">
-              <xsl:text>001</xsl:text>
-            </xsl:if>
-            <xsl:if test="keyTyp/KeyTypCd/@value = 'place'">
-              <xsl:text>002</xsl:text>
-            </xsl:if>
-            <xsl:if test="keyTyp/KeyTypCd/@value = 'stratum'">
-              <xsl:text>003</xsl:text>
-            </xsl:if>
-            <xsl:if test="keyTyp/KeyTypCd/@value = 'temporal'">
-              <xsl:text>004</xsl:text>
-            </xsl:if>
-            <xsl:if test="keyTyp/KeyTypCd/@value = 'theme'">
-              <xsl:text>005</xsl:text>
-            </xsl:if>
-          </xsl:attribute>
           <xsl:for-each select="keyword">
             <xsl:apply-templates select="."/>
           </xsl:for-each>
@@ -577,12 +577,11 @@
         <xsl:apply-templates select="."/>
       </xsl:for-each>
       <xsl:for-each select="geoBox">
-        <geoBox esriExtentType="decdegrees"> <!-- ArcCatalog specific -->
+        <geoBox>
           <xsl:apply-templates select="westBL"/>
           <xsl:apply-templates select="eastBL"/>
           <xsl:apply-templates select="southBL"/>
           <xsl:apply-templates select="northBL"/>
-          <exTypeCode>1</exTypeCode> <!-- ArcCatalog specific -->
         </geoBox>
       </xsl:for-each>
       <xsl:for-each select="geoDesc">
@@ -778,8 +777,9 @@
     </LegConsts>
   </xsl:template>
   <!-- Template with "xsl:value-of" -->
+  <!-- <xsl:template match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | orDesc | cntHours | cntInstr | mdDateSt | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | transSize | unitsODist | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL"> -->
   <xsl:template
-    match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | cntHours | cntInstr | mdDateSt | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | transSize | unitsODist | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL">
+    match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | cntHours | cntInstr | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
       <xsl:if test="@value">
@@ -787,32 +787,74 @@
           <xsl:apply-templates select="@value"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:value-of select="."/>
+      <!-- Strip html tags -->
+      <xsl:value-of select="replace(., '&lt;/?\w+[^&lt;]*&gt;', '')"/>
     </xsl:element>
   </xsl:template>
-  <xsl:template match="conversionToISOstandarUnit">
-    <conversionToISOstandardUnit>
-      <xsl:value-of select="."/>
-    </conversionToISOstandardUnit>
-  </xsl:template>
-  <xsl:template match="refDate">
+
+  <xsl:template
+    match="mdDateSt">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
-      <xsl:value-of select="translate(.,'-','')"/>
+      <xsl:if test="@value">
+        <xsl:attribute name="value">
+          <xsl:apply-templates select="@value"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="string-length(.) = 8">
+          <xsl:value-of select="substring(., 1, 4)"/>-<xsl:value-of select="substring(., 5, 2)"/>-<xsl:value-of select="substring(., 7, 2)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:element>
   </xsl:template>
-  <xsl:template match="conversionToISOstandarUnit">
-    <conversionToISOstandardUnit>
+
+  <xsl:template match="conversionToISOstandardUnit">
+    <conversionToISOstandarUnit>
       <xsl:value-of select="."/>
-    </conversionToISOstandardUnit>
+    </conversionToISOstandarUnit>
   </xsl:template>
-  <!-- Template with only 1 child node -->
+  <!-- ArcCatalog 8 & 9 do not provide unit of distribution in the ISO metadata, so I've hardcoded that here, assuming is is always provided in MB -->
+  <xsl:template match="transSize">
+    <unitsODist>MB</unitsODist>
+    <transSize>
+      <xsl:value-of select="."/>
+    </transSize>
+  </xsl:template>
+  <!-- Update to add - separators in date (it is assumed the incoming date format is CCYYMMDD)-->
+  <xsl:template match="refDate">
+    <xsl:variable name="name" select="local-name(.)"/>
+    <xsl:variable name="year" select="substring(., 1, 4)"/>
+    <xsl:variable name="month" select="substring(., 5, 2)"/>
+    <xsl:variable name="day" select="substring(., 7, 2)"/>
+    <xsl:variable name="date" select="string(concat($year,'-',$month,'-',$day))"></xsl:variable>
+    <xsl:element name="{$name}">
+      <xsl:value-of select="$date"/>
+    </xsl:element>
+  </xsl:template>
+  <!-- Template with only 1 child node THIS IS THE CORRECT ONE ACCORDING TO ISO 19115 -->
+  <!--    <xsl:template match="mdLang | mdChar | orFunct | role | medName | TempExtent | exTemp | TM_Instant | TM_CalDate | TM_ClockTime | vertDatum | keyTyp | equScale | dataChar | class | maintFreq | presForm | accessConsts | useConsts | medFormat | status | spatRpType | dataLang | tpCat | polygon | scpLvl | srcScale | RefSystem | evalMethType | cellGeo | ptInPixel | dimName | topLvl | geoObjTyp | contentTyp | catLang | LocalName | ScopedName | imagCond | refDateType">
+        <xsl:variable name="name" select="local-name(.)"/>
+        <xsl:element name="{$name}">
+            <xsl:apply-templates select="node()"/>
+        </xsl:element>
+    </xsl:template> -->
+  <!-- Template with only 1 child node TEMPORARILY MODIFIED TO MATCH GEONETWORK -->
   <xsl:template
-    match="mdLang | mdChar | orFunct | role | medName | TempExtent | exTemp | TM_Instant | TM_CalDate | TM_ClockTime | vertDatum | keyTyp | equScale | dataChar | class | maintFreq | presForm | accessConsts | useConsts | medFormat | status | spatRpType | dataLang | tpCat | polygon | scpLvl | srcScale | RefSystem | evalMethType | cellGeo | ptInPixel | dimName | topLvl | geoObjTyp | contentTyp | catLang | LocalName | ScopedName | imagCond | refDateType">
+    match="mdLang | mdChar | orFunct | role | medName | TempExtent | exTemp | TM_Instant | TM_CalDate | TM_ClockTime | vertDatum | keyTyp | equScale | dataChar | class | maintFreq | presForm | accessConsts | useConsts | medFormat | status | spatRpType | dataLang | tpCat | polygon | scpLvl | srcScale | RefSystem | evalMethType | cellGeo | ptInPixel | dimName | topLvl | geoObjTyp | contentTyp | catLang | LocalName | ScopedName | imagCond">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
       <xsl:apply-templates select="node()"/>
     </xsl:element>
+  </xsl:template>
+  <!-- refDateType TO BE DELETED WHEN REMOVING THE TEMPORARYTemplate with only 1 child -->
+  <xsl:template match="refDateType">
+    <refDateType>
+      <xsl:apply-templates select="node()"/>
+    </refDateType>
   </xsl:template>
   <!-- Template with only 1 child node with "xsl:for-each"-->
   <xsl:template match="porCatInfo | mdHrLv | Consts | axDimProps">
@@ -823,22 +865,28 @@
       </xsl:for-each>
     </xsl:element>
   </xsl:template>
-  <!-- Template with SecConsts LegConsts Consts-->
+  <!-- Template with SecConsts LegConsts Consts -->
   <xsl:template match="mdConst | resConst">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
-      <xsl:apply-templates select="SecConsts"/>
-      <xsl:apply-templates select="LegConsts"/>
-      <xsl:apply-templates select="Consts"/>
+      <xsl:if test="node()=SecConsts">
+        <xsl:apply-templates select="SecConsts"/>
+      </xsl:if>
+      <xsl:if test="node()=LegConsts">
+        <xsl:apply-templates select="LegConsts"/>
+      </xsl:if>
+      <xsl:if test="node()=Consts">
+        <xsl:apply-templates select="Consts"/>
+      </xsl:if>
     </xsl:element>
   </xsl:template>
-  <!-- Template with uomName conversionToISOstandarUnit-->
+  <!-- Template with uomName conversionToISOstandardUnit-->
   <xsl:template
     match="vertUoM | axisUnits | falENUnits | UomArea | UomTime | UomLength | UomVolume | UomVelocity | UomAngle | UomScale | valUnit">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
       <xsl:apply-templates select="uomName"/>
-      <xsl:apply-templates select="conversionToISOstandarUnit"/>
+      <xsl:apply-templates select="conversionToISOstandardUnit"/>
     </xsl:element>
   </xsl:template>
   <!-- Template with rpIndName rpOrgName rpPosName rpCntInfo role-->
@@ -882,9 +930,12 @@
       </xsl:for-each>
     </xsl:element>
   </xsl:template>
-  <!-- Template with resTitle resAltTitle resRefDate resEd resEdDate citId citIdType citRespParty presForm otherCitDet collTitle isbn issn-->
+
+  <!-- Template for Citation with resTitle resAltTitle resRefDate resEd resEdDate citId citIdType citRespParty presForm otherCitDet collTitle isbn issn-->
+  <!-- When no resRefDate is found in the source document, the whole citation object is neglected/skipped!!! -->
   <xsl:template
     match="portCatCit | asName | identAuth | thesaName | idCitation | srcCitatn | evaluationProcedure | conSpec | paraCit | catCitation">
+    <!--<xsl:if test="resRefDate/refDateType">-->
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
       <xsl:apply-templates select="resTitle"/>
@@ -892,10 +943,12 @@
         <xsl:apply-templates select="."/>
       </xsl:for-each>
       <xsl:for-each select="resRefDate">
-        <resRefDate>
-          <xsl:apply-templates select="refDate"/>
-          <xsl:apply-templates select="refDateType"/>
-        </resRefDate>
+        <xsl:if test="refDateType">
+          <resRefDate>
+            <xsl:apply-templates select="refDate"/>
+            <xsl:apply-templates select="refDateType"/>
+          </resRefDate>
+        </xsl:if>
       </xsl:for-each>
       <xsl:apply-templates select="resEd"/>
       <xsl:apply-templates select="resEdDate"/>
@@ -923,37 +976,28 @@
       <xsl:apply-templates select="isbn"/>
       <xsl:apply-templates select="issn"/>
     </xsl:element>
+    <!--</xsl:if>-->
   </xsl:template>
-
 
   <!-- Template with unitsODist transSize onLineSrc onLineMed-->
+  <!--  <xsl:template match="distorTran | distTranOps">
+          <xsl:variable name="name" select="local-name(.)"/>
+          <xsl:element name="{$name}">
+              <xsl:apply-templates select="unitsODist"/>
+              <xsl:apply-templates select="transSize"/>
+              <xsl:apply-templates select="onLineSrc"/>
+              <xsl:apply-templates select="onLineMed"/>
+          </xsl:element>
+      </xsl:template> -->
   <xsl:template match="distorTran | distTranOps">
-    <!-- <xsl:variable name="name" select="local-name(.)"/> -->
-    <!--    <distributor>
-                <distorFormat>
-                    <formatName></formatName>
-                    <formatVer></formatVer>
-                </distorFormat> -->
-    <distorTran>
-      <xsl:apply-templates select="onLineSrc"/>
+    <!--    <xsl:variable name="name" select="local-name(.)"/> -->
+    <xsl:element name="distTranOps">
       <xsl:apply-templates select="unitsODist"/>
       <xsl:apply-templates select="transSize"/>
-      <xsl:apply-templates select="onLineMed"/>
-    </distorTran>
-    <!--    </distributor> -->
-  </xsl:template>
-
-
-  <!-- onLineSrc -->
-  <xsl:template match="onLineSrc">
-    <onLineSrc>
-      <xsl:apply-templates select="linkage"/>
-      <xsl:apply-templates select="protocol"/>
-      <xsl:apply-templates select="appProfile"/>
-      <xsl:apply-templates select="orName"/>
-      <xsl:apply-templates select="orDesc"/>
-      <xsl:apply-templates select="orFunct"/>
-    </onLineSrc>
+      <xsl:apply-templates select="onLineSrc"/>
+      <xsl:apply-templates
+        select="offLineMed"/>  <!-- because of an error in ArcCatalog, we will match on offLineMed -->
+    </xsl:element>
   </xsl:template>
   <!-- Template with identAuth identCode -->
   <xsl:template
@@ -1007,26 +1051,27 @@
           <xsl:apply-templates select="TempExtent"/>
         </tempEle>
       </xsl:for-each>
-      <xsl:for-each select="geoEle">
-        <xsl:apply-templates select="."/>
-      </xsl:for-each>
+      <!-- ArcCatalog has some non ISO content stored in the geoEle element, so just ignored here -->
+      <!--      <xsl:for-each select="geoEle">
+                <xsl:apply-templates select="."/>
+            </xsl:for-each> -->
     </xsl:element>
   </xsl:template>
   <xsl:template match="DateTypCd">
     <DateTypCd>
-      <xsl:if test="@value = 'creation'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>creation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'publication'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>publication</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'revision'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>revision</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </DateTypCd>
@@ -1034,35 +1079,35 @@
   <xsl:template match="orDesc">
     <orDesc>
       <xsl:choose>
-        <xsl:when test=".='Live Data and Maps'">
-          <xsl:text>001</xsl:text>
+        <xsl:when test=".=001">
+          <xsl:text>Live Data and Maps</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Downloadable data'">
-          <xsl:text>002</xsl:text>
+        <xsl:when test=".=002">
+          <xsl:text>Downloadable data</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Offline Data'">
-          <xsl:text>003</xsl:text>
+        <xsl:when test=".=003">
+          <xsl:text>Offline Data</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Static Map Images'">
-          <xsl:text>004</xsl:text>
+        <xsl:when test=".=004">
+          <xsl:text>Static Map Images</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Other Documents'">
-          <xsl:text>005</xsl:text>
+        <xsl:when test=".=005">
+          <xsl:text>Other Documents</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Applications'">
-          <xsl:text>006</xsl:text>
+        <xsl:when test=".=006">
+          <xsl:text>Applications</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Geographic Services'">
-          <xsl:text>007</xsl:text>
+        <xsl:when test=".=007">
+          <xsl:text>Geographic Services</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Clearinghouses'">
-          <xsl:text>008</xsl:text>
+        <xsl:when test=".=008">
+          <xsl:text>Clearinghouses</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Map Files'">
-          <xsl:text>009</xsl:text>
+        <xsl:when test=".=009">
+          <xsl:text>Map Files</xsl:text>
         </xsl:when>
-        <xsl:when test=".='Geographic Activities'">
-          <xsl:text>010</xsl:text>
+        <xsl:when test=".=010">
+          <xsl:text>Geographic Activities</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="."/>
@@ -1072,1299 +1117,1299 @@
   </xsl:template>
   <xsl:template match="OnFunctCd">
     <OnFunctCd>
-      <xsl:if test="@value = 'download'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>download</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'information'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>information</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'offlineAccess'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>offlineAccess</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'order'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>order</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'search'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>search</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </OnFunctCd>
   </xsl:template>
   <xsl:template match="PresFormCd">
     <PresFormCd>
-      <xsl:if test="@value = 'documentDigital'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>documentDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'documentHardcopy'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>documentHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'imageDigital'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>imageDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'imageHardcopy'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>imageHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'mapDigital'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>mapDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'mapHardcopy'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>mapHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'modelDigital'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>modelDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'modelHardcopy'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>modelHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'profileDigital'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>profileDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'profileHardcopy'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>profileHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'tableDigital'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>tableDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'tableHardcopy'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>tableHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'videoDigital'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>videoDigital</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'videoHardcopy'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>videoHardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </PresFormCd>
   </xsl:template>
   <xsl:template match="RoleCd">
     <RoleCd>
-      <xsl:if test="@value = 'resourceProvider'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>resourceProvider</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'custodian'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>custodian</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'owner'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>owner</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'user'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>user</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'distributor'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>distributor</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'originator'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>originator</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'pointOfContact'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>pointOfContact</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'principalInvestigator'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>principalInvestigator</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'processor'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>processor</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'publisher'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>publisher</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </RoleCd>
   </xsl:template>
   <xsl:template match="EvalMethTypeCd">
     <EvalMethTypeCd>
-      <xsl:if test="@value = 'directInternal'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>directInternal</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'directExternal'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>directExternal</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'indirect'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>indirect</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </EvalMethTypeCd>
   </xsl:template>
   <xsl:template match="AscTypeCd">
     <AscTypeCd>
-      <xsl:if test="@value = 'crossReference'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>crossReference</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'largerWorkCitation'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>largerWorkCitation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'partOfSeamlessDatabase'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>partOfSeamlessDatabase</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'source'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>source</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'stereomate'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>stereomate</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </AscTypeCd>
   </xsl:template>
   <xsl:template match="InitTypCd">
     <InitTypCd>
-      <xsl:if test="@value = 'campaign'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>campaign</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'collection'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>collection</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'exercise'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>exercise</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'experiment'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>experiment</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'investigation'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>investigation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'mission'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>mission</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'nonImageSensor'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>nonImageSensor</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'operation'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>operation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'platform'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>platform</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'process'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>process</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'program'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>program</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'project'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>project</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'study'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>study</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'task'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>task</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'trial'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>trial</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </InitTypCd>
   </xsl:template>
   <xsl:template match="CellGeoCd">
     <CellGeoCd>
-      <xsl:if test="@value = 'point'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>point</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'area'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>area</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </CellGeoCd>
   </xsl:template>
   <xsl:template match="CharSetCd">
     <CharSetCd>
-      <xsl:if test="@value = 'ucs2'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>ucs2</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'ucs4'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>ucs4</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'utf7'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>utf7</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'utf8'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>utf8</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'utf16'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>utf16</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part1'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>8859part1</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part2'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>8859part2</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part3'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>8859part3</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part4'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>8859part4</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part5'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>8859part5</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part6'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>8859part6</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part7'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>8859part7</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part8'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>8859part8</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part9'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>8859part9</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part11'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>8859part11</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part14'">
+      <xsl:if test="@value=016">
         <xsl:attribute name="value">
-          <xsl:text>016</xsl:text>
+          <xsl:text>8859part14</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8859part15'">
+      <xsl:if test="@value=017">
         <xsl:attribute name="value">
-          <xsl:text>017</xsl:text>
+          <xsl:text>8859part15</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'jis'">
+      <xsl:if test="@value=018">
         <xsl:attribute name="value">
-          <xsl:text>018</xsl:text>
+          <xsl:text>jis</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'shiftJIS'">
+      <xsl:if test="@value=019">
         <xsl:attribute name="value">
-          <xsl:text>019</xsl:text>
+          <xsl:text>shiftJIS</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'eucJP'">
+      <xsl:if test="@value=020">
         <xsl:attribute name="value">
-          <xsl:text>020</xsl:text>
+          <xsl:text>eucJP</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'usAscii'">
+      <xsl:if test="@value=021">
         <xsl:attribute name="value">
-          <xsl:text>021</xsl:text>
+          <xsl:text>usAscii</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'ebcdic'">
+      <xsl:if test="@value=022">
         <xsl:attribute name="value">
-          <xsl:text>022</xsl:text>
+          <xsl:text>ebcdic</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'eucKR'">
+      <xsl:if test="@value=023">
         <xsl:attribute name="value">
-          <xsl:text>023</xsl:text>
+          <xsl:text>eucKR</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'big5'">
+      <xsl:if test="@value=024">
         <xsl:attribute name="value">
-          <xsl:text>024</xsl:text>
+          <xsl:text>big5</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </CharSetCd>
   </xsl:template>
   <xsl:template match="ClasscationCd">
     <ClasscationCd>
-      <xsl:if test="@value = 'unclassified'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>unclassified</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'restricted'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>restricted</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'confidential'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>confidential</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'secret'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>secret</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'topsecret'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>topsecret</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ClasscationCd>
   </xsl:template>
   <xsl:template match="ContentTypCd">
     <ContentTypCd>
-      <xsl:if test="@value = 'image'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>image</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'thematicClassification'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>thematicClassification</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'physicalMeasurement'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>physicalMeasurement</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ContentTypCd>
   </xsl:template>
   <xsl:template match="DatatypeCd">
     <DatatypeCd>
-      <xsl:if test="@value = 'class'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>class</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'codelist'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>codelist</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'enumeration'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>enumeration</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'codelistElement'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>codelistElement</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'abstractClass'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>abstractClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'aggregateClass'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>aggregateClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'specifiedClass'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>specifiedClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'datatypeClass'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>datatypeClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'interfaceClass'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>interfaceClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'unionClass'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>unionClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'metaclass'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>metaclass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'typeClass'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>typeClass</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'characterString'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>characterString</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'integer'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>integer</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'association'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>association</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </DatatypeCd>
   </xsl:template>
   <xsl:template match="DimNameTypCd">
     <DimNameTypCd>
-      <xsl:if test="@value = 'row'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>row</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'column'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>column</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'vertical'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>vertical</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'track'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>track</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'crossTrack'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>crossTrack</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'line'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>line</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'sample'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>sample</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'time'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>time</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </DimNameTypCd>
   </xsl:template>
   <xsl:template match="GeoObjTypCd">
     <GeoObjTypCd>
-      <xsl:if test="@value = 'complexes'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>complexes</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'composites'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>composites</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'curve'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>curve</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'point'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>point</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'solid'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>solid</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'surface'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>surface</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </GeoObjTypCd>
   </xsl:template>
   <xsl:template match="ImgCondCd">
     <ImgCondCd>
-      <xsl:if test="@value = 'blurredImage'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>blurredImage</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'cloud'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>cloud</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'degradingObliquity'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>degradingObliquity</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fog'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>fog</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'heavySmokeOrDust'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>heavySmokeOrDust</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'night'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>night</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'rain'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>rain</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'semiDarkness'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>semiDarkness</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'shadow'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>shadow</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'snow'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>snow</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'terrainMasking'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>terrainMasking</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ImgCondCd>
   </xsl:template>
   <xsl:template match="KeyTypCd">
     <KeyTypCd>
-      <xsl:if test="@value = 'discipline'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>discipline</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'place'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>place</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'stratum'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>stratum</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'temporal'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>temporal</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'theme'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>theme</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </KeyTypCd>
   </xsl:template>
   <xsl:template match="MaintFreqCd">
     <MaintFreqCd>
-      <xsl:if test="@value = 'continual'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>continual</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'daily'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>daily</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'weekly'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>weekly</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fortnightly'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>fortnightly</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'monthly'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>monthly</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'quarterly'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>quarterly</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'biannually'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>biannually</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'annually'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>annually</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'asNeeded'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>asNeeded</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'irregular'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>irregular</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'notPlanned'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>notPlanned</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'unknown'">
+      <xsl:if test="@value=998">
         <xsl:attribute name="value">
-          <xsl:text>998</xsl:text>
+          <xsl:text>unknown</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </MaintFreqCd>
   </xsl:template>
   <xsl:template match="MedFormCd">
     <MedFormCd>
-      <xsl:if test="@value = 'cpio'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>cpio</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'tar'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>tar</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'highSierra'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>highSierra</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'iso9660'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>iso9660</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'iso9660RockRidge'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>iso9660RockRidge</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'iso9660AppleHFS'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>iso9660AppleHFS</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </MedFormCd>
   </xsl:template>
   <xsl:template match="MedNameCd">
     <MedNameCd>
-      <xsl:if test="@value = 'cdRom'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>cdRom</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'dvd'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>dvd</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'dvdRom'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>dvdRom</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '3halfInchFloppy'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>3halfInchFloppy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '5quarterInchFloppy'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>5quarterInchFloppy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '7trackTape'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>7trackTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '9trackTape'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>9trackTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '3480Cartridge'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>3480Cartridge</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '3490Cartridge'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>3490Cartridge</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '3580Cartridge'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>3580Cartridge</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '4mmCartridgeTape'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>4mmCartridgeTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '8mmCartridgeTape'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>8mmCartridgeTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = '1quarterInchCartridgeTape'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>1quarterInchCartridgeTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'digitalLinearTape'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>digitalLinearTape</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'onLine'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>onLine</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'satellite'">
+      <xsl:if test="@value=016">
         <xsl:attribute name="value">
-          <xsl:text>016</xsl:text>
+          <xsl:text>satellite</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'telephoneLink'">
+      <xsl:if test="@value=017">
         <xsl:attribute name="value">
-          <xsl:text>017</xsl:text>
+          <xsl:text>telephoneLink</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'hardcopy'">
+      <xsl:if test="@value=018">
         <xsl:attribute name="value">
-          <xsl:text>018</xsl:text>
+          <xsl:text>hardcopy</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </MedNameCd>
   </xsl:template>
   <xsl:template match="ObCd">
     <ObCd>
-      <xsl:if test="@value = 'mandatory'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>mandatory</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'optional'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>optional</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'conditional'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>conditional</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ObCd>
   </xsl:template>
   <xsl:template match="PixOrientCd">
     <PixOrientCd>
-      <xsl:if test="@value = 'center'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>center</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'lowerLeft'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>lowerLeft</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'lowerRight'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>lowerRight</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'upperRight'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>upperRight</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'upperLeft'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>upperLeft</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </PixOrientCd>
   </xsl:template>
   <xsl:template match="ProgCd">
     <ProgCd>
-      <xsl:if test="@value = 'completed'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>completed</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'historicalArchive'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>historicalArchive</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'obsolete'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>obsolete</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'onGoing'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>onGoing</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'planned'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>planned</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'required'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>required</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'underdevelopment'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>underdevelopment</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ProgCd>
   </xsl:template>
   <xsl:template match="RestrictCd">
     <RestrictCd>
-      <xsl:if test="@value = 'copyright'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>copyright</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'patent'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>patent</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'patentPending'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>patentPending</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'trademark'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>trademark</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'license'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>license</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'intellectualPropertyRights'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>intellectualPropertyRights</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'restricted'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>restricted</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'otherRestictions'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>otherRestictions</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </RestrictCd>
   </xsl:template>
   <xsl:template match="ScopeCd">
     <ScopeCd>
-      <xsl:if test="@value = 'attribute'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>attribute</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'attributeType'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>attributeType</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'collectionHardware'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>collectionHardware</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'collectionSession'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>collectionSession</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'dataset'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>dataset</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'series'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>series</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'nonGeographicDataset'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>nonGeographicDataset</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'dimensionGroup'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>dimensionGroup</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'feature'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>feature</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'featureType'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>featureType</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'propertyType'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>propertyType</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fieldSession'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>fieldSession</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'software'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>software</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'service'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>service</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'model'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>model</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </ScopeCd>
   </xsl:template>
   <xsl:template match="SpatRepTypCd">
     <SpatRepTypCd>
-      <xsl:if test="@value = 'vector'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>vector</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'grid'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>grid</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'textTable'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>textTable</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'tin'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>tin</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'stereoModel'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>stereoModel</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'video'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>video</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </SpatRepTypCd>
   </xsl:template>
   <xsl:template match="TopicCatCd">
     <TopicCatCd>
-      <xsl:if test="@value = 'farming'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>farming</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'biota'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>biota</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'boundaries'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>boundaries</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'climatologyMeteorologyAtmosphere'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>climatologyMeteorologyAtmosphere</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'economy'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>economy</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'elevation'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>elevation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'environment'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>environment</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'geoscientificInformation'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>geoscientificInformation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'health'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>health</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'imageryBaseMapsEarthCover'">
+      <xsl:if test="@value=010">
         <xsl:attribute name="value">
-          <xsl:text>010</xsl:text>
+          <xsl:text>imageryBaseMapsEarthCover</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'intelligenceMilitary'">
+      <xsl:if test="@value=011">
         <xsl:attribute name="value">
-          <xsl:text>011</xsl:text>
+          <xsl:text>intelligenceMilitary</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'inlandWaters'">
+      <xsl:if test="@value=012">
         <xsl:attribute name="value">
-          <xsl:text>012</xsl:text>
+          <xsl:text>inlandWaters</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'location'">
+      <xsl:if test="@value=013">
         <xsl:attribute name="value">
-          <xsl:text>013</xsl:text>
+          <xsl:text>location</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'oceans'">
+      <xsl:if test="@value=014">
         <xsl:attribute name="value">
-          <xsl:text>014</xsl:text>
+          <xsl:text>oceans</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'planningCadastre'">
+      <xsl:if test="@value=015">
         <xsl:attribute name="value">
-          <xsl:text>015</xsl:text>
+          <xsl:text>planningCadastre</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'society'">
+      <xsl:if test="@value=016">
         <xsl:attribute name="value">
-          <xsl:text>016</xsl:text>
+          <xsl:text>society</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'structure'">
+      <xsl:if test="@value=017">
         <xsl:attribute name="value">
-          <xsl:text>017</xsl:text>
+          <xsl:text>structure</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'transportation'">
+      <xsl:if test="@value=018">
         <xsl:attribute name="value">
-          <xsl:text>018</xsl:text>
+          <xsl:text>transportation</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'utilitiesCommunication'">
+      <xsl:if test="@value=019">
         <xsl:attribute name="value">
-          <xsl:text>019</xsl:text>
+          <xsl:text>utilitiesCommunication</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </TopicCatCd>
   </xsl:template>
   <xsl:template match="TopoLevCd">
     <TopoLevCd>
-      <xsl:if test="@value = 'geometryOnly'">
+      <xsl:if test="@value=001">
         <xsl:attribute name="value">
-          <xsl:text>001</xsl:text>
+          <xsl:text>geometryOnly</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'topology1D'">
+      <xsl:if test="@value=002">
         <xsl:attribute name="value">
-          <xsl:text>002</xsl:text>
+          <xsl:text>topology1D</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'planarGraph'">
+      <xsl:if test="@value=003">
         <xsl:attribute name="value">
-          <xsl:text>003</xsl:text>
+          <xsl:text>planarGraph</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fullPlanarGraph'">
+      <xsl:if test="@value=004">
         <xsl:attribute name="value">
-          <xsl:text>004</xsl:text>
+          <xsl:text>fullPlanarGraph</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'surfaceGraph'">
+      <xsl:if test="@value=005">
         <xsl:attribute name="value">
-          <xsl:text>005</xsl:text>
+          <xsl:text>surfaceGraph</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fullSurfaceGraph'">
+      <xsl:if test="@value=006">
         <xsl:attribute name="value">
-          <xsl:text>006</xsl:text>
+          <xsl:text>fullSurfaceGraph</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'topology3D'">
+      <xsl:if test="@value=007">
         <xsl:attribute name="value">
-          <xsl:text>007</xsl:text>
+          <xsl:text>topology3D</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'fullTopology3D'">
+      <xsl:if test="@value=008">
         <xsl:attribute name="value">
-          <xsl:text>008</xsl:text>
+          <xsl:text>fullTopology3D</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@value = 'abstract'">
+      <xsl:if test="@value=009">
         <xsl:attribute name="value">
-          <xsl:text>009</xsl:text>
+          <xsl:text>abstract</xsl:text>
         </xsl:attribute>
       </xsl:if>
     </TopoLevCd>

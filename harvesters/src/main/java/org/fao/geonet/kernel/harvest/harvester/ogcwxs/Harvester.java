@@ -37,6 +37,7 @@ import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -374,13 +375,11 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         }
 
         // Apply custom transformation if requested
-        Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+        Path importXsl;
         String importXslFile = params.getImportXslt();
         if (importXslFile != null && !importXslFile.equals("none")) {
-            if (!importXslFile.endsWith("xsl")) {
-                importXslFile = importXslFile + ".xsl";
-            }
-            importXsl = importXsl.resolve(importXslFile);
+            importXsl = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                .getXsltConversion(importXslFile);
             log.info("Applying custom import XSL " + importXsl.getFileName());
             md = Xml.transform(md, importXsl);
             schema = dataMan.autodetectSchema(md, null);
@@ -783,13 +782,11 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     xml = Xml.transform(capa, styleSheet, param);
 
                     // Apply custom transformation if requested
-                    Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+                    Path importXsl;
                     String importXslFile = params.getImportXslt();
                     if (importXslFile != null && !importXslFile.equals("none")) {
-                        if (!importXslFile.endsWith("xsl")) {
-                            importXslFile = importXslFile + ".xsl";
-                        }
-                        importXsl = importXsl.resolve(importXslFile);
+                        importXsl = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                            .getXsltConversion(importXslFile);
                         log.info("Applying custom import XSL " + importXsl.getFileName());
                         xml = Xml.transform(xml, importXsl);
                     }

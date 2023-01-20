@@ -677,8 +677,7 @@ public class MetadataInsertDeleteApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        String styleSheetWmc = dataDirectory.getWebappDir() + File.separator + Geonet.Path.IMPORT_STYLESHEETS
-            + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
+        Path styleSheetWmc = dataDirectory.getXsltConversion("schema:iso19139:convert/fromOGCWMC-OR-OWSC");
 
         FilePathChecker.verify(filename);
 
@@ -705,7 +704,7 @@ public class MetadataInsertDeleteApi {
         // 1. JDOMize the string
         Element wmcDoc = Xml.loadString(xml, false);
         // 2. Apply XSL (styleSheetWmc)
-        Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
+        Element transformedMd = Xml.transform(wmcDoc, styleSheetWmc, xslParams);
 
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
@@ -864,9 +863,8 @@ public class MetadataInsertDeleteApi {
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         if (!transformWith.equals("_none_")) {
-            Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
             FilePathChecker.verify(transformWith);
-            Path xslFile = folder.resolve(transformWith + ".xsl");
+            Path xslFile = dataDirectory.getXsltConversion(transformWith);
             if (Files.exists(xslFile)) {
                 xmlElement = Xml.transform(xmlElement, xslFile);
             } else {

@@ -55,6 +55,7 @@ import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -89,6 +90,7 @@ import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
@@ -107,6 +109,7 @@ import java.util.TimeZone;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
+import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
 
 /**
  *
@@ -119,9 +122,13 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
-
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    SchemaManager schemaManager;
 
     @Autowired
     NodeInfo node;
@@ -826,13 +833,30 @@ public class SiteApi {
     @ResponseBody
     public List<String> getXslTransformations(
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+        List<String> list = new ArrayList<>();
+
+        schemaManager.getSchemas().forEach(schema -> {
+            try (DirectoryStream<Path> sheets = Files.newDirectoryStream(
+                dataDirectory.getSchemaPluginsDir()
+                    .resolve(schema)
+                    .resolve("convert")
+            )) {
+                for (Path sheet : sheets) {
+                    String id = sheet.toString();
+                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                        String name = com.google.common.io.Files.getNameWithoutExtension(
+                            sheet.getFileName().toString());
+                        list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);
+                    }
+                }
+            } catch (IOException e) {
+
+            }
+        });
 
         try (DirectoryStream<Path> sheets = Files.newDirectoryStream(
             dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS)
         )) {
-            List<String> list = new ArrayList<>();
             for (Path sheet : sheets) {
                 String id = sheet.toString();
                 if (id != null && id.endsWith(".xsl")) {
