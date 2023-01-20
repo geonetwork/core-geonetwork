@@ -1,4 +1,4 @@
-package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
+package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
 import org.fao.geonet.utils.Log;
 import org.junit.Test;

@@ -1,0 +1,46 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct: <http://purl.org/dc/terms/>
+
+# Set URIs of blank-node dcat:Dataset and dcat:DataService instances to a URN composed of the resource's first title.
+CONSTRUCT {
+  ?newResourceURI ?p1 ?o1 .
+  ?s2 ?p2 ?newResourceURI .
+  ?s3 ?p3 ?o3 .
+}
+WHERE {
+  {
+    ?oldResourceURI a dcat:Dataset .
+    ?oldResourceURI ?p1 ?o1 .
+    ?s2 ?p2 ?oldResourceURI .
+    FILTER (isBlank(?oldResourceURI)) .
+    {
+      SELECT ?oldResourceURI (UUID() AS ?uuid) (MIN(?t) AS ?title)
+      WHERE {
+        ?oldResourceURI dct:title ?t .
+      }
+      GROUP BY ?oldResourceURI
+    }
+    BIND (?uuid AS ?newResourceURI) .
+  } UNION {
+    ?s3 ?p3 ?o3 .
+    FILTER (NOT EXISTS {?s3 a dcat:Dataset . FILTER (isBlank(?s3)) .}) .
+    FILTER (NOT EXISTS {?o3 a dcat:Dataset . FILTER (isBlank(?o3)) .}) .
+  } UNION {
+    ?oldResourceURI a dcat:DataService .
+    ?oldResourceURI ?p1 ?o1 .
+    ?s2 ?p2 ?oldResourceURI .
+    FILTER (isBlank(?oldResourceURI)) .
+    {
+      SELECT ?oldResourceURI (UUID() AS ?uuid) (MIN(?t) AS ?title)
+      WHERE {
+        ?oldResourceURI dct:title ?t .
+      }
+      GROUP BY ?oldResourceURI
+    }
+    BIND (?uuid AS ?newResourceURI) .
+  } UNION {
+    ?s3 ?p3 ?o3 .
+    FILTER (NOT EXISTS {?s3 a dcat:DataService . FILTER (isBlank(?s3)) .}) .
+    FILTER (NOT EXISTS {?o3 a dcat:DataService . FILTER (isBlank(?o3)) .}) .
+  }
+}
