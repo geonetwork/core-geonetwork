@@ -427,6 +427,12 @@
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <type>pom</type>
+        <version>3.17.0</version>
+      </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
       <dependency>

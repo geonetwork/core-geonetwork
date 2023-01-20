@@ -21,25 +21,13 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
+package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.csw.CswParams;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.UUID;
 
 /**
  * Harvest metadata from a JSON source.

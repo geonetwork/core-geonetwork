@@ -135,6 +135,7 @@ public final class Xml {
         + "\uE000-\uFFFD"
         + "\ud800\udc00-\udbff\udfff"
         + "]";
+    public static final String XML_VERSION_HEADER = "<\\?xml version='1.0' encoding='.*'\\?>\\s*";
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
@@ -1128,6 +1129,8 @@ public final class Xml {
         Pattern pattern;
         Matcher matcher;
 
+        inXMLStr = inXMLStr.replaceFirst(XML_VERSION_HEADER, "");
+
         // Regular expression to see if it starts and ends with the same element or
         // it's a self-closing element.
         final String XML_PATTERN_STR = "<(\\S+?)(.*?)>(.*?)</\\1>|<(\\S+?)(.*?)/>";
@@ -1145,6 +1148,23 @@ public final class Xml {
 
         return retBool;
     }
+
+    /**
+     * Check if is XML and the first tag local name
+     * is rdf or something like a DCAT feed.
+     */
+    public static boolean isRDFLike(String inXMLStr) {
+        boolean retBool = false;
+        if (isXMLLike(inXMLStr)) {
+            String xml = inXMLStr.replaceFirst(XML_VERSION_HEADER, ""),
+            firstTag = xml
+                .substring(0, xml.indexOf(" "))
+                .toLowerCase();
+            retBool = firstTag.matches("<.*:(rdf|catalog|catalogrecord)");
+        }
+        return retBool;
+    }
+
 
     private static class JeevesURIResolver implements URIResolver {
 

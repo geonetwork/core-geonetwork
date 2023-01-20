@@ -761,6 +761,22 @@ public final class XslUtil {
         return ret;
     }
 
+    public static String geoJsonGeomToBbox(Object WKT) throws Exception {
+        String ret = "";
+        try {
+            Geometry geometry = new GeometryJSON().read(WKT);
+            if (geometry != null) {
+                final Envelope envelope = geometry.getEnvelopeInternal();
+                return
+                    String.format("%f|%f|%f|%f",
+                        envelope.getMinX(), envelope.getMinY(),
+                        envelope.getMaxX(), envelope.getMaxY());
+            }
+        } catch (Throwable e) {
+        }
+        return ret;
+    }
+
     /**
      * Get field value for metadata identified by uuid.
      *

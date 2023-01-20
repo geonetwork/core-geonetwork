@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
+package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
