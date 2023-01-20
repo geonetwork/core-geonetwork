@@ -32,9 +32,11 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -321,8 +323,8 @@ class Harvester implements IHarvester<HarvestResult> {
             recordAsElement.addContent(new Element("uuid").setText(uuid));
             recordAsElement.addContent(new Element("apiUrl").setText(apiUrl));
             recordAsElement.addContent(new Element("nodeUrl").setText(nodeUrl));
-            Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-            final Path xslPath = importXsl.resolve(params.toISOConversion + ".xsl");
+            final Path xslPath = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                               .getXsltConversion(params.toISOConversion);
             return Xml.transform(recordAsElement, xslPath);
         } catch (JSONException e) {
             e.printStackTrace();

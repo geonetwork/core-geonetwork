@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.arcsde;
 import com.google.common.collect.Sets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
@@ -33,6 +34,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -66,7 +68,7 @@ import java.util.Set;
 public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEParams> {
 
     private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
-    private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
+    private static final String ISO19115_TO_ISO19139_TRANSFORMER = "fromISO19115.xsl";
 
     @Override
     protected void storeNodeExtra(ArcSDEParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -133,9 +135,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         metadataManager.flush();
 
-
-        Path ArcToISO19115Transformer = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ARC_TO_ISO19115_TRANSFORMER);
-        Path ISO19115ToISO19139Transformer = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ISO19115_TO_ISO19139_TRANSFORMER);
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        Path ArcToISO19115Transformer =
+            dataDirectory.getXsltConversion("schema:iso19139:convert/" + ARC_TO_ISO19115_TRANSFORMER);
+        Path ISO19115ToISO19139Transformer =
+            dataDirectory.getXsltConversion("schema:iso19139:convert/" + ISO19115_TO_ISO19139_TRANSFORMER);
 
 
         List<Integer> idsForHarvestingResult = new ArrayList<Integer>();

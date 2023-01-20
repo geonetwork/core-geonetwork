@@ -36,8 +36,8 @@
                 xmlns:mai="http://standards.iso.org/iso/19115/-3/mai/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
-  <xsl:include href="../../../WEB-INF/data/config/schema_plugins/iso19115-3.2018/convert/ISO19139/fromISO19139.xsl"/>
-  <xsl:include href="../../../WEB-INF/data/config/schema_plugins/iso19115-3.2018/process/languages-refactor.xsl"/>
+  <xsl:include href="ISO19139/fromISO19139.xsl"/>
+  <xsl:include href="../process/languages-refactor.xsl"/>
 
 
   <xsl:template match="/" priority="999">
