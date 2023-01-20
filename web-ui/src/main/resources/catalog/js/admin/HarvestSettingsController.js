@@ -421,6 +421,9 @@
       };
 
       $scope.selectHarvester = function (h) {
+        $scope.activeTab.settings = true;
+        $scope.setSimpleUrlPagination();
+
         // TODO: Specific to thredds
         if (h["@type"] === "thredds") {
           $scope.threddsCollectionsMode =
@@ -617,10 +620,91 @@
 
       loadHarvesterTypes();
 
+      $scope.activeTab = {
+        settings: true,
+        history: false,
+        results: false
+      };
+
       // ---------------------------------------
       // Those function are harvester dependant and
       // should move in the harvester code
       // TODO
+      $scope.simpleUrlHarvesterHelperConfig = {
+        "DCAT feed > ISO": {
+          defaultValues: {
+            loopElement: "",
+            numberOfRecordPath: "",
+            pageSizeParam: "",
+            pageFromParam: "",
+            recordIdPath: "",
+            toISOConversion: "schema:iso19115-3.2018:convert/fromSPARQL-DCAT"
+          }
+        },
+        JSON: {
+          defaultValues: {
+            loopElement: "/datasets",
+            numberOfRecordPath: "/total_count",
+            pageSizeParam: "limit",
+            pageFromParam: "offset",
+            recordIdPath: "/dataset/dataset_id",
+            toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
+          }
+        },
+        "XML (ISO19115-3)": {
+          defaultValues: {
+            loopElement: ".",
+            numberOfRecordPath: "",
+            pageSizeParam: "",
+            pageFromParam: "",
+            recordIdPath: "mdb:metadataIdentifier/*/mcc:code/*/text()",
+            toISOConversion: ""
+          }
+        },
+        "XML (CSW-ISO19139)": {
+          defaultValues: {
+            loopElement: ".//csw:SearchResults/*",
+            numberOfRecordPath: "",
+            pageSizeParam: "",
+            pageFromParam: "",
+            recordIdPath: "gmd:fileIdentifier/*/text()",
+            toISOConversion: ""
+          }
+        }
+      };
+
+      $scope.getSimpleUrlConfigHelper = function (configKey) {
+        var helper = "";
+        angular.forEach(
+          $scope.simpleUrlHarvesterHelperConfig[configKey].defaultValues,
+          function (v, k) {
+            helper += $translate.instant(k) + " (" + k + "): " + v + "\n";
+          }
+        );
+        return helper;
+      };
+      $scope.setSimpleUrlConfig = function (configKey) {
+        angular.forEach(
+          $scope.simpleUrlHarvesterHelperConfig[configKey].defaultValues,
+          function (v, k) {
+            $scope.harvesterSelected.site[k] = v;
+          }
+        );
+        $scope.setSimpleUrlPagination();
+      };
+
+      $scope.setSimpleUrlPagination = function () {
+        if (
+          $scope.harvesterSelected &&
+          $scope.harvesterSelected.site &&
+          $scope.harvesterSelected.site.numberOfRecordPath
+        ) {
+          $scope.usePagination = {
+            enabled: $scope.harvesterSelected.site.numberOfRecordPath.length > 0
+          };
+        }
+      };
+
       $scope.geonetworkGetSources = function (url) {
         $http
           .get($scope.proxyUrl + encodeURIComponent(url + "/srv/eng/info?type=sources"))
