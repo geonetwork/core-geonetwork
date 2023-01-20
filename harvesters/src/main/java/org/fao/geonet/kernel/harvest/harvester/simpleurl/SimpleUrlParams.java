@@ -55,9 +55,9 @@ public class SimpleUrlParams extends AbstractParams {
         url = Util.getParam(site, "url", "");
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
-        recordIdPath = Util.getParam(site, "recordIdPath", "id");
-        pageSizeParam = Util.getParam(site, "pageSizeParam", "rows");
-        pageFromParam = Util.getParam(site, "pageFromParam", "start");
+        recordIdPath = Util.getParam(site, "recordIdPath", "");
+        pageSizeParam = Util.getParam(site, "pageSizeParam", "");
+        pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
         icon = Util.getParam(site, "icon", "");
     }

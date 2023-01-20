@@ -1119,6 +1119,10 @@ public final class Xml {
 
     /**
      * return true if the String passed in is something like XML
+     * Check for XML header first.
+     * Then use a Regular expression to see if it starts and ends with
+     * the same element or it's a self-closing element.
+     * Regex can be slow on large document.
      *
      * @param inXMLStr a string that might be XML
      * @return true of the string is XML, false otherwise
@@ -1129,6 +1133,9 @@ public final class Xml {
         Pattern pattern;
         Matcher matcher;
 
+        if (inXMLStr.startsWith("<?xml")) {
+            return true;
+        }
         inXMLStr = inXMLStr.replaceFirst(XML_VERSION_HEADER, "");
 
         // Regular expression to see if it starts and ends with the same element or
