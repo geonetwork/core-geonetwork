@@ -369,7 +369,7 @@
           }
         );
 
-        $http.post("../api/registries/vocabularies/new", thesaurusToCreate).then(
+        $http.put("../api/registries/vocabularies", thesaurusToCreate).then(
           function (response) {
             $scope.thesaurusSelected = null;
             $("#thesaurusModal").modal("hide");

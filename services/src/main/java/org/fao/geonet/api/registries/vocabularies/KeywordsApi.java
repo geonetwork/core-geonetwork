@@ -1092,6 +1092,7 @@ public class KeywordsApi {
             description = "XSL to be use to convert the thesaurus before load. Default _none_.")
         @RequestParam(value = "stylesheet", defaultValue = "_none_")
             String stylesheet,
+        @RequestBody(required = false) ThesaurusInfo thesaurusInfo,
         HttpServletRequest request
     ) throws Exception {
 
@@ -1133,6 +1134,24 @@ public class KeywordsApi {
                 "-" +
                 itemName + ".rdf";
 
+        } else if (thesaurusInfo != null) {
+            final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+            rdfFile = thesaurusMan.buildThesaurusFilePath(thesaurusInfo.getFilename(), thesaurusInfo.getType(), thesaurusInfo.getDname());
+
+            final String siteURL = applicationContext.getBean(SettingManager.class).getSiteURL(context);
+            final IsoLanguagesMapper isoLanguageMapper = applicationContext.getBean(IsoLanguagesMapper.class);
+            Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, thesaurusInfo.getFilename(), thesaurusInfo.getMultilingualTitles(),
+                thesaurusInfo.getMultilingualDescriptions(), thesaurusInfo.getDefaultNamespace(), thesaurusInfo.getType(),
+                thesaurusInfo.getDname(), rdfFile, siteURL, false, thesaurusMan.getThesaurusCacheMaxSize());
+
+            thesaurusMan.addThesaurus(thesaurus, true);
+
+            long end = System.currentTimeMillis();
+            long duration = (end - start) / 1000;
+
+            return String.format("Thesaurus '%s' loaded in %d sec.",
+                fname, duration);
         } else {
 
             Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
@@ -1176,55 +1195,6 @@ public class KeywordsApi {
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
     }
-
-
-    /**
-     * Create a new thesaurus.
-     *
-     * @param thesaurusInfo
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Creates a new thesaurus",
-        description = "Creates a new thesaurus."
-    )
-    @RequestMapping(
-        value = "/new",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Thesaurus created."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
-    })
-    @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void createThesaurus(
-        @Parameter(
-            description = "Thesaurus information")
-        @RequestBody
-        ThesaurusInfo thesaurusInfo,
-        @Parameter(hidden = true)
-        HttpServletRequest request
-
-    ) throws Exception {
-        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        Path rdfFile = thesaurusMan.buildThesaurusFilePath(thesaurusInfo.getFilename(), thesaurusInfo.getType(), thesaurusInfo.getDname());
-
-        final String siteURL = applicationContext.getBean(SettingManager.class).getSiteURL(context);
-        final IsoLanguagesMapper isoLanguageMapper = applicationContext.getBean(IsoLanguagesMapper.class);
-        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, thesaurusInfo.getFilename(), thesaurusInfo.getMultilingualTitles(),
-            thesaurusInfo.getMultilingualDescriptions(), thesaurusInfo.getDefaultNamespace(), thesaurusInfo.getType(),
-            thesaurusInfo.getDname(), rdfFile, siteURL, false, thesaurusMan.getThesaurusCacheMaxSize());
-
-        thesaurusMan.addThesaurus(thesaurus, true);
-    }
-
 
     /**
      * Update the information related to a local thesaurus .
