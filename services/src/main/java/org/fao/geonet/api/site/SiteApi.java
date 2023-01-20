@@ -68,6 +68,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -850,7 +851,8 @@ public class SiteApi {
                     }
                 }
             } catch (IOException e) {
-
+                Log.warning(Geonet.GEONETWORK,
+                    "Error getting conversion xslt transformations for schemas: " + e.getMessage());
             }
         });
 
