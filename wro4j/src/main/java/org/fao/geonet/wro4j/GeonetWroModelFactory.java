@@ -504,7 +504,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     private Map<String, Group> addJavascriptGroupsByRequireDependencies(final WroModel model, final ClosureRequireDependencyManager
         dependencyManager, Group closureDepsGroup) {
         final Set<String> moduleIds = dependencyManager.getAllModuleIds();
-        Map<String, Group> groupMap = new HashMap<String, Group>((int) (moduleIds.size() * 1.5));
+        Map<String, Group> groupMap = new HashMap<>((int) (moduleIds.size() * 1.5));
 
         for (String moduleId : moduleIds) {
             Group group = new Group(moduleId);
@@ -513,7 +513,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             closureDepsGroup.addResource(ClosureDependencyUriLocator.createClosureDepResource(dependencyManager.getNode(moduleId)));
             final Collection<ClosureRequireDependencyManager.Node> deps = dependencyManager.getTransitiveDependenciesFor(moduleId, true);
 
-            List<Resource> resources = new ArrayList<Resource>();
+            List<Resource> resources = new ArrayList<>();
             for (ClosureRequireDependencyManager.Node dep : deps) {
                 group.addResource(createResourceFrom(dep));
                 addTemplateResourceFrom(resources, dep);
