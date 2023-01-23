@@ -871,6 +871,28 @@
             </configuration>
           </execution>
           <execution>
+            <id>copy-filter-sextant-for-wro4jcache</id>
+            <!-- Copy Sextant specific settings.js file required
+            for building WRO4J cache at build time. -->
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${project.basedir}/../web-ui/src/main/resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${build.webapp.resources}/../webapp</directory>
+                  <include>sextant/views/sextant/settings.js</include>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
             <id>copy-documentation</id>
             <phase>process-resources</phase>
             <goals>
@@ -944,6 +966,7 @@
                   <filtering>false</filtering>
                   <includes>
                     <include>web-ui-wro-sources.xml</include>
+                    <include>web-ui-wro-sources-sextant.xml</include>
                   </includes>
                 </resource>
               </resources>
@@ -1135,6 +1158,8 @@
                   <extraConfigFile>${build.webapp.resources}/WEB-INF/wro-maven.properties</extraConfigFile>
                   <wroFile>${project.build.directory}/geonetwork/WEB-INF/wro-sources-maven.xml</wroFile>
                   <destinationFolder>${wro4jOutput}</destinationFolder>
+                  <!-- TODO For group gn_search_sextant LESS is not compiled properly -->
+                  <targetGroups>gnlib,gnlib3d,lib,lib3d,lib_nobs,lib_nojquery,gn_search,gn_login,gn_login_default,gn_editor,gn_editor_default,gn_admin,gn_admin_default,nv.d3,gn_fonts,gn_inspire,gn_pickers,gn_print_default,ng-skos,bootstrap-table.min</targetGroups>
                 </configuration>
               </execution>
             </executions>
