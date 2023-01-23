@@ -693,6 +693,7 @@ public class Thesaurus {
     public void writeConceptScheme(String thesaurusTitle, String namespace) throws IOException, AccessDeniedException, GraphException {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
         writeConceptScheme(myGraph, thesaurusTitle, null, null, null, null, null, namespace);
+        repository.addGraph(myGraph);
     }
 
     /**
@@ -762,23 +763,28 @@ public class Thesaurus {
         URI titleURI = myFactory.createURI(DC_NAMESPACE, "title");
         addElement("title", thesaurusTitle, myGraph, myFactory, mySubject);
 
-        for (Entry<String, String> entrySet : multilingualTitles.entrySet()) {
-            if (StringUtils.isNotEmpty(entrySet.getValue())) {
-                String language = toiso639_1_Lang(entrySet.getKey());
-                Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
-                myGraph.add(mySubject, titleURI, valueObj);
+        if (multilingualTitles != null) {
+            for (Entry<String, String> entrySet : multilingualTitles.entrySet()) {
+                if (StringUtils.isNotEmpty(entrySet.getValue())) {
+                    String language = toiso639_1_Lang(entrySet.getKey());
+                    Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
+                    myGraph.add(mySubject, titleURI, valueObj);
+                }
             }
         }
 
         URI descriptionURI = myFactory.createURI(DC_NAMESPACE, "description");
         addElement("description", thesaurusDescription, myGraph, myFactory, mySubject);
 
-        for (Entry<String, String> entrySet : multilingualDescriptions.entrySet()) {
-            if (StringUtils.isNotEmpty(entrySet.getValue())) {
-                String language = toiso639_1_Lang(entrySet.getKey());
-                Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
-                myGraph.add(mySubject, descriptionURI, valueObj);
+        if (multilingualDescriptions != null) {
+            for (Entry<String, String> entrySet : multilingualDescriptions.entrySet()) {
+                if (StringUtils.isNotEmpty(entrySet.getValue())) {
+                    String language = toiso639_1_Lang(entrySet.getKey());
+                    Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
+                    myGraph.add(mySubject, descriptionURI, valueObj);
+                }
             }
+
         }
 
         addElement("identifier", identifier, myGraph, myFactory, mySubject);
