@@ -1,6 +1,0 @@
-<config>
-  <portalUrl>
-    <fre>https://sextant.ifremer.fr/documentation/emodnet_chemistry/api/catalogue.html#/metadata/${uuid}</fre>
-    <eng>https://sextant.ifremer.fr/documentation/emodnet_chemistry/api/catalogue.html#/metadata/${uuid}</eng>
-  </portalUrl>
-</config>
