@@ -20,16 +20,14 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
+<!-- This file is used when invoked mvn wro4j:run -Dminimize=false -DtargetGroup=all to generate wro4j database in
+build time
+ Main difference with wro-sources.xml is that {{schemaPluginDir}}... placeholders have been manually set to
+ their actual relative paths to web/target/geonetwork tree.-->
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="wro-sources.xsd" >
-  <include file="classpath:web-ui-wro-sources.xml" />
+         xsi:noNamespaceSchemaLocation="wro-sources.xsd">
+  <include file="classpath:web-ui-wro-sources.xml"/>
   <include file="classpath:web-ui-wro-sources-sextant.xml" />
-
-  <require>
-    <jsSource webappPath="{{schemaPluginsDir}}"/>
-    <jsSource webappPath="{{formatterDir}}"/>
-    <cssSource webappPath="{{schemaPluginsDir}}"/>
-    <cssSource webappPath="{{formatterDir}}"/>
-  </require>
+  <require pathOnDisk="web/target/geonetwork"/>
+  <require pathOnDisk="web/target/webapp"/>
 </sources>

@@ -930,6 +930,44 @@
               <overwrite>false</overwrite>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-web-ui-wro-sources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../web-ui/src/main/resources/WEB-INF/classes</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>web-ui-wro-sources.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+ <!--         <execution>
+            <id>copy-prebuilt-wro4j-db</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/geonetwork/WEB-INF/prebuilt/</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>wro4j-cache.mv.db</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>-->
         </executions>
       </plugin>
 
@@ -961,8 +999,16 @@
             <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
+            <resource>
+              <directory>${project.build.directory}</directory>
+              <includes>
+                <include>wro4j-cache.mv.db</include>
+              </includes>
+              <targetPath>WEB-INF/prebuilt</targetPath>
+            </resource>
           </webResources>
           <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
+
           <packagingExcludes>
             xml/schemas/**,
             WEB-INF/data/*.db,
@@ -1056,10 +1102,46 @@
           <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
+
+
     </plugins>
   </build>
 
   <profiles>
+    <profile>
+      <id>wro4j-prebuild-cache</id>
+      <activation>
+        <property>
+          <name>prebuild-cache</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- build WRO4J Cache during build time -->
+          <plugin>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-maven-plugin</artifactId>
+            <version>${wro.version}</version>
+            <executions>
+              <execution>
+                <id>wro4j-prebuild-cache</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenNoTestsWrojManagerFactory</wroManagerFactory>
+                  <extraConfigFile>${build.webapp.resources}/WEB-INF/wro-maven.properties</extraConfigFile>
+                  <wroFile>${project.build.directory}/geonetwork/WEB-INF/wro-sources-maven.xml</wroFile>
+                  <destinationFolder>${wro4jOutput}</destinationFolder>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
     <!-- Unpack schema resources from maven artifacts -->
     <profile>
