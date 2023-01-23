@@ -135,7 +135,7 @@ public final class Xml {
         + "\uE000-\uFFFD"
         + "\ud800\udc00-\udbff\udfff"
         + "]";
-    public static final String XML_VERSION_HEADER = "<\\?xml version='1.0' encoding='.*'\\?>\\s*";
+    public static final String XML_VERSION_HEADER = "<\\?xml version=['\"]1.0['\"] encoding=['\"].*['\"]\\?>\\s*";
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
