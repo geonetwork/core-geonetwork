@@ -56,6 +56,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.kernel.harvest.harvester.csw.Aligner.applyBatchEdits;
+
 public class Aligner extends BaseAligner<SimpleUrlParams> {
 
     private ServiceContext context;
@@ -215,6 +217,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
             xml = dataMan.setUUID(schema, uuid, record.getValue());
         }
 
+        applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, null);
 
         log.debug("  - Adding metadata with uuid:" + uuid + " schema:" + schema);
 
@@ -265,6 +268,8 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         String language = context.getLanguage();
         String schema = dataMan.autodetectSchema(md, null);
         final String dateModified = dataMan.extractDateModified(schema, ri.getValue());
+
+        applyBatchEdits(ri.getKey(), md, schema, params.getBatchEdits(), context, null);
 
         final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo,
             language, dateModified, true, IndexingMode.none);
