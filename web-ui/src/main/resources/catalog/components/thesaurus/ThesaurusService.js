@@ -220,20 +220,22 @@
               thesaurus: thesaurus
             })
           );
-          $http
-            .get(url, { cache: true })
-            .success(function (data, status) {
+          $http.get(url, { cache: true }).then(
+            function (response) {
+              var data = response.data;
+
               if (data != null && data.narrower) {
                 defer.resolve(data);
               } else {
                 // not a top concept
                 defer.reject();
               }
-            })
-            .error(function (data, status) {
+            },
+            function (response) {
               //                TODO handle error
               defer.reject();
-            });
+            }
+          );
           return defer.promise;
         };
 
@@ -247,15 +249,15 @@
               id: keywordUris instanceof Array ? keywordUris.join(",") : keywordUris || ""
             })
           );
-          $http
-            .get(url, { cache: true })
-            .success(function (data, status) {
-              defer.resolve(data);
-            })
-            .error(function (data, status) {
+          $http.get(url, { cache: true }).then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
               //                TODO handle error
               //                defer.reject(error);
-            });
+            }
+          );
           return defer.promise;
         }
 
@@ -365,15 +367,17 @@
                   Accept: "application/xml"
                 }
               })
-              .success(function (data, status) {
-                // TODO: could be a global constant ?
-                var xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
-                defer.resolve(data.replace(xmlDeclaration, ""));
-              })
-              .error(function (data, status) {
-                //                TODO handle error
-                //                defer.reject(error);
-              });
+              .then(
+                function (response) {
+                  // TODO: could be a global constant ?
+                  var xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
+                  defer.resolve(response.data.replace(xmlDeclaration, ""));
+                },
+                function (response) {
+                  //                TODO handle error
+                  //                defer.reject(error);
+                }
+              );
             return defer.promise;
           },
           /**
@@ -388,20 +392,22 @@
                   (schema || "iso19139"),
                 { cache: true }
               )
-              .success(function (data, status) {
-                var listOfThesaurus = [];
-                //converted and non-converted value
-                // i.e. fra and fre
-                var uiLangs = getUILangs();
-                angular.forEach(data[0], function (k) {
-                  listOfThesaurus.push(new Thesaurus(k, uiLangs));
-                });
-                defer.resolve(listOfThesaurus);
-              })
-              .error(function (data, status) {
-                //                TODO handle error
-                //                defer.reject(error);
-              });
+              .then(
+                function (response) {
+                  var listOfThesaurus = [];
+                  //converted and non-converted value
+                  // i.e. fra and fre
+                  var uiLangs = getUILangs();
+                  angular.forEach(response.data[0], function (k) {
+                    listOfThesaurus.push(new Thesaurus(k, uiLangs));
+                  });
+                  defer.resolve(listOfThesaurus);
+                },
+                function (response) {
+                  //                TODO handle error
+                  //                defer.reject(error);
+                }
+              );
             return defer.promise;
           },
           getKeywordsSearchUrl: getKeywordsSearchUrl,
@@ -426,15 +432,15 @@
               typeSearch,
               allLangs
             );
-            $http
-              .get(url, { cache: true })
-              .success(function (data, status) {
-                defer.resolve(parseKeywordsResponse(data));
-              })
-              .error(function (data, status) {
+            $http.get(url, { cache: true }).then(
+              function (response) {
+                defer.resolve(parseKeywordsResponse(response.data));
+              },
+              function (response) {
                 //                TODO handle error
                 //                defer.reject(error);
-              });
+              }
+            );
             return defer.promise;
           },
 

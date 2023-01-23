@@ -218,8 +218,8 @@
 
     <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>
     <xsl:message>gn-fn-index:add-field elements <xsl:copy-of select="$elements"/></xsl:message>
-    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>
--->
+    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
+
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
@@ -246,7 +246,23 @@
                                            $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
 
-            <xsl:for-each select="$element//*:LocalisedCharacterString[. != '']">
+            <xsl:variable name="translations"
+                          select="$element//*:LocalisedCharacterString[. != '']"/>
+
+            <xsl:if test="count($element//(*:CharacterString|*:Anchor)[. != '']) = 0
+                          and count($translations) > 0">
+
+              <xsl:variable name="mainLanguageId"
+                            select="concat('#', $languages/lang[@id != 'default' and @value = $mainLanguage]/@id)"/>
+
+              <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(
+                                           if ($translations[@local = $mainLanguageId])
+                                           then $translations[@local = $mainLanguageId]
+                                           else $translations[1]), $doubleQuote)"/></value>
+            </xsl:if>
+
+            <xsl:for-each select="$translations">
               <xsl:variable name="elementLanguage"
                             select="replace(@locale, '#', '')"/>
               <xsl:variable name="elementLanguage3LetterCode"
@@ -279,25 +295,35 @@
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:if test="count($textObject[. != '']) > 0">
-        <xsl:choose>
-          <xsl:when test="$asJson">
-            <xsl:if test="$isArray and position() = 1">[</xsl:if>
-            {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
-            <xsl:if test="$isArray and position() != last()">,</xsl:if>
-            <xsl:if test="$isArray and position() = last()">]</xsl:if>
-          </xsl:when>
-          <xsl:when test="$asXml">
-            <xsl:copy-of select="$textObject"/>
-          </xsl:when>
-          <xsl:otherwise>
+      <xsl:choose>
+        <xsl:when test="count($textObject[. != '']) > 0">
+          <xsl:choose>
+            <xsl:when test="$asJson">
+              <xsl:if test="$isArray and position() = 1">[</xsl:if>
+              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              <xsl:if test="$isArray and position() != last()">,</xsl:if>
+              <xsl:if test="$isArray and position() = last()">]</xsl:if>
+            </xsl:when>
+            <xsl:when test="$asXml">
+              <xsl:copy-of select="$textObject"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:element name="{$fieldName}Object">
+                <xsl:attribute name="type" select="'object'"/>
+                {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              </xsl:element>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="not($asJson) and not($asXml)">
             <xsl:element name="{$fieldName}Object">
               <xsl:attribute name="type" select="'object'"/>
-              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              {}
             </xsl:element>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:function>
 

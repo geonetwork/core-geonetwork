@@ -91,11 +91,11 @@ public class ReportDownloads implements IReport {
             for (MetadataFileDownload fileDownload : records) {
                 // User should be the user that uploaded the file
                 int fileUploadId = fileDownload.getFileUploadId();
-                MetadataFileUpload metadataFileUpload =
+                Optional<MetadataFileUpload> metadataFileUpload =
                     uploadRepo.findOne(
-                        MetadataFileUploadSpecs.hasId(fileUploadId)).get();
+                        MetadataFileUploadSpecs.hasId(fileUploadId));
 
-                String username = metadataFileUpload.getUserName();
+                String username = metadataFileUpload.isPresent() ? metadataFileUpload.get().getUserName() : "";
                 String name = "";
                 String surname = "";
                 String email = "";
@@ -159,7 +159,7 @@ public class ReportDownloads implements IReport {
                 record.add(name);
                 record.add(email);
                 record.add(profile);
-                record.add(metadataFileUpload.getDeletedDate());
+                record.add(metadataFileUpload.isPresent() ? metadataFileUpload.get().getDeletedDate() : "");
 
                 csvFilePrinter.printRecord(record);
             }

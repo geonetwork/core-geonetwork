@@ -267,7 +267,9 @@
           link: function (scope, element, attrs) {
             var url = "info?_content_type=json&type=users";
 
-            $http.get(url, { cache: true }).success(function (data) {
+            $http.get(url, { cache: true }).then(function (response) {
+              var data = response.data;
+
               scope.users = data !== "null" ? data.users : null;
 
               // Select by default the first group.
@@ -318,7 +320,9 @@
               }
             }
 
-            $http.get(url, { cache: true }).success(function (data) {
+            $http.get(url, { cache: true }).then(function (response) {
+              var data = response.data;
+
               //data-ng-if is not correctly updating groups.
               //So we do the filter here
               if (scope.excludeSpecialGroups) {

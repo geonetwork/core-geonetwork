@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -53,6 +53,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -173,7 +174,7 @@ public class MapRenderer {
             // * request param is a full url
             if (background.equalsIgnoreCase(MetadataExtentApi.SETTING_BACKGROUND)) {
                 String bgSetting = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
-                if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://")) {
+                if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://") || bgSetting.startsWith("{")) {
                     background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
                 } else if (regionGetMapBackgroundLayers.containsKey(bgSetting)) {
                     background = regionGetMapBackgroundLayers.get(bgSetting);
@@ -182,37 +183,18 @@ public class MapRenderer {
                 background = regionGetMapBackgroundLayers.get(background);
             }
 
-            String minx = Double.toString(bboxOfImage.getMinX());
-            String maxx = Double.toString(bboxOfImage.getMaxX());
-            String miny = Double.toString(bboxOfImage.getMinY());
-            String maxy = Double.toString(bboxOfImage.getMaxY());
-            background = background.replace("{minx}", minx).replace("{maxx}", maxx).replace("{miny}", miny)
-                .replace("{maxy}", maxy).replace("{srs}", srs)
-                .replace("{width}", Integer.toString(imageDimensions.width))
-                .replace("{height}", Integer.toString(imageDimensions.height)).replace("{MINX}", minx)
-                .replace("{MAXX}", maxx).replace("{MINY}", miny).replace("{MAXY}", maxy).replace("{SRS}", srs)
-                .replace("{WIDTH}", Integer.toString(imageDimensions.width))
-                .replace("{HEIGHT}", Integer.toString(imageDimensions.height));
+            BaseMapRenderer baseMapRenderer = new BaseMapRenderer(background);
+            baseMapRenderer
+                .srs(srs)
+                .bbox(bboxOfImage)
+                .imageDimensions(imageDimensions)
+                .context(context)
+                ;
 
-            InputStream in = null;
-            try {
-                URL imageUrl = new URL(background);
-                // Setup the proxy for the request if required
-                URLConnection conn = Lib.net.setupProxy(context, imageUrl);
-                in = conn.getInputStream();
-                BufferedImage original = ImageIO.read(in);
-                image = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = image.createGraphics();
-                g2d.drawImage(original, 0, 0, null);
-            } catch (IOException e) {
-                image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
-                error = e;
-            } finally {
-                if (in != null) {
-                    IOUtils.closeQuietly(in);
-                }
+            BufferedImage baseMapImage = baseMapRenderer.render();
+           // ImageIO.write(baseMapImage, "png", new File("delme.png"));
 
-            }
+            image = baseMapImage;
         } else {
             image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
         }

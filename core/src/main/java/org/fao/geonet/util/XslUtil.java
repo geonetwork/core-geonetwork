@@ -756,8 +756,9 @@ public final class XslUtil {
                 Geometry geometry = reader.read(wktString);
                 if (geometry != null) {
                     final Envelope envelope = geometry.getEnvelopeInternal();
+                    // Use Locale.US to make Java use dot "." as decimal separator
                     return
-                        String.format("%f|%f|%f|%f",
+                        String.format(Locale.US, "%f|%f|%f|%f",
                             envelope.getMinX(), envelope.getMinY(),
                             envelope.getMaxX(), envelope.getMaxY());
                 }

@@ -1184,7 +1184,7 @@
 
   <!-- ########################## -->
   <!-- Render values for text ... -->
-   <xsl:template mode="render-value"
+  <xsl:template mode="render-value"
                 match="*[gco:CharacterString]">
      <xsl:variable name="txt">
        <xsl:apply-templates mode="localised" select=".">

@@ -42,6 +42,7 @@
     "gnMetadataManager",
     "gnAlertService",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
     "gnPopup",
@@ -58,6 +59,7 @@
       gnMetadataManager,
       gnAlertService,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       gnShareService,
       gnPopup,
@@ -540,14 +542,14 @@
 
       this.assignGroup = function (metadataId, groupId) {
         var defer = $q.defer();
-        $http
-          .put("../api/records/" + metadataId + "/group", groupId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.put("../api/records/" + metadataId + "/group", groupId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
@@ -555,35 +557,48 @@
         var defer = $q.defer();
         $http
           .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+          .then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
+              defer.reject(response.data);
+            }
+          );
         return defer.promise;
       };
 
       this.startVersioning = function (metadataId) {
         var defer = $q.defer();
-        $http
-          .get("md.versioning.start?id=" + metadataId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.get("md.versioning.start?id=" + metadataId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
       /**
        * Get html formatter link for the given md
+       * and open the permalink modal.
+       *
+       * TODO: At some point we may use the point of truth URL
+       * provided in the metadata record (eg. DOI) if set.
+       *
        * @param {Object} md
        */
       this.getPermalink = function (md) {
-        var url = $location.absUrl().split("#")[0] + "#/metadata/" + md.uuid;
-        gnUtilityService.getPermalink(md.resourceTitle, url);
+        var permalinkBaseUrl = gnConfig["system.server.sitemapLinkUrl"],
+          url = gnGlobalSettings.nodeUrl + "api/records/" + md.uuid + "?language=all";
+
+        if (permalinkBaseUrl && permalinkBaseUrl.toUpperCase().indexOf("{{UUID}}")) {
+          url = permalinkBaseUrl.replace(/\{\{UUID\}\}/i, md.uuid);
+        }
+
+        gnUtilityService.displayPermalink(md.resourceTitle, url);
       };
 
       /**

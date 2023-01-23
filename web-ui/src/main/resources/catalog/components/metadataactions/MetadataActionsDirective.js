@@ -234,7 +234,9 @@
                 .get(
                   "../api/records/" + metadataId + "/status/" + scope.statusType + "/last"
                 )
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.status = data !== "null" ? data.status : null;
                   scope.newStatus.status = scope.statusToSelect;
                   scope.lastStatus = data.currentStatus.id.statusId;
@@ -242,7 +244,9 @@
             } else {
               return $http
                 .get("../api/status/" + scope.statusType)
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.status = data;
                   scope.newStatus = {
                     status: scope.task ? scope.task.id : 0,
@@ -356,7 +360,9 @@
             if (angular.isDefined(scope.groupOwner)) {
               $http
                 .get("../api/groups/" + scope.groupOwner, { cache: true })
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.enableallowedcategories = data.enableAllowedCategories;
                   scope.allowedcategories = [];
                   angular.forEach(data.allowedCategories, function (c) {
@@ -376,9 +382,9 @@
           });
 
           var init = function () {
-            return $http.get("../api/tags", { cache: true }).success(function (data) {
+            return $http.get("../api/tags", { cache: true }).then(function (response) {
               var lang = scope.lang;
-              scope.categories = data;
+              scope.categories = response.data;
               angular.forEach(scope.categories, function (c) {
                 if (
                   angular.isDefined(scope.currentCategories) &&
@@ -551,8 +557,8 @@
           scope.init = function (event) {
             return $http
               .get("../api/groups?profile=Editor", { cache: true })
-              .success(function (groups) {
-                scope.groups = groups;
+              .then(function (response) {
+                scope.groups = response.data;
               });
           };
 
@@ -727,9 +733,9 @@
           };
           $http
             .get("../api/users/groups")
-            .success(function (data) {
+            .then(function (data) {
               var uniqueUserGroups = {};
-              angular.forEach(data, function (g) {
+              angular.forEach(response.data, function (g) {
                 var key = g.groupId + "-" + g.userId;
                 if (!uniqueUserGroups[key]) {
                   uniqueUserGroups[key] = g;

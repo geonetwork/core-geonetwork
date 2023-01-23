@@ -78,7 +78,8 @@
                     }
                   }
                 })
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
                   angular.forEach(data.aggregations.mainLanguage.buckets, function (i) {
                     scope.languagesStats[i.key] = i.doc_count;
                   });

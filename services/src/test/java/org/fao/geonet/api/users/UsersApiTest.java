@@ -459,7 +459,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     public void resetPasswordNotExistingUser() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        String userId = "222";
+        String userId = "2222";
 
         this.mockHttpSession = loginAsAdmin();
 
@@ -527,13 +527,46 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
 
+    @Test
+    public void updateUserByUserAdminNotAllowed() throws Exception {
+        // User admin in Group test
+        User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
+        Assert.assertNotNull(loginUser);
+        // User to update in Group sample
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setId(String.valueOf(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(loginUser);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
+            .andExpect(status().is(400));
+    }
 
     @Test
     public void updateUserDuplicatedUsername() throws Exception {
@@ -705,6 +738,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupReviewer = new UserGroup().setGroup(testGroup)
             .setProfile(Profile.Editor).setUser(testUserReviewer);
         _userGroupRepo.save(userGroupReviewer);
+        userGroupReviewer = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.Reviewer).setUser(testUserReviewer);
+        _userGroupRepo.save(userGroupReviewer);
 
         // UserAdmin - Group sample
         User testUserUserAdmin = new User();
@@ -715,8 +751,20 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         _userRepo.save(testUserUserAdmin);
 
         UserGroup userGroupUserAdmin = new UserGroup().setGroup(sampleGroup)
-            .setProfile(Profile.Editor).setUser(testUserUserAdmin);
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdmin);
         _userGroupRepo.save(userGroupUserAdmin);
+
+        // UserAdmin - Test group
+        User testUserUserAdminForTestGroup = new User();
+        testUserUserAdminForTestGroup.setUsername("testuser-useradmin-testgroup");
+        testUserUserAdminForTestGroup.setProfile(Profile.UserAdmin);
+        testUserUserAdminForTestGroup.setEnabled(true);
+        testUserUserAdminForTestGroup.getEmailAddresses().add("test@mail.com");
+        _userRepo.save(testUserUserAdminForTestGroup);
+
+        UserGroup userGroupUserAdminForTestGroup = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdminForTestGroup);
+        _userGroupRepo.save(userGroupUserAdminForTestGroup);
 
         // User with same name different letter case
         User testUserEditor2 = new User();

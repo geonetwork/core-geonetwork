@@ -48,8 +48,7 @@
           featuresTablesCtrl: "^^gnFeaturesTables",
           ctrl: "gnFeaturesTable"
         },
-        templateUrl:
-          "../../catalog/components/viewer/gfi/partials/" + "featurestable.html",
+        templateUrl: "../../catalog/components/viewer/gfi/partials/featurestable.html",
         link: function (scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find("table"), scope, getBsTableLang, $translate);
         }
@@ -57,9 +56,7 @@
     }
   ]);
 
-  var GnFeaturesTableController = function () {
-    this.promise = this.loader.loadAll();
-  };
+  var GnFeaturesTableController = function () {};
 
   GnFeaturesTableController.prototype.initTable = function (
     element,
@@ -89,7 +86,7 @@
     function resizeBsTable() {
       element.bootstrapTable("resetView");
     }
-
+    this.loader.loadAll();
     this.loader.getBsTableConfig().then(
       function (bstConfig) {
         var once = true;

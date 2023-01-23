@@ -25,10 +25,19 @@ package org.fao.geonet.proxy;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.ApiUtils;
@@ -65,11 +74,18 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     private static final String P_SECURITY_MODE = "securityMode";
     public static final String P_FORWARDEDHOST = "forwardHost";
     public static final String P_FORWARDEDHOSTPREFIXPATH = "forwardHostPrefixPath";
+    private static final String P_IS_SECURED = "isSecured";
 
     private static final String TARGET_URI_NAME = "targetUri";
 
     protected boolean doForwardHost = false;
     protected String doForwardHostPrefixPath = "";
+
+    protected boolean isSecured = false;
+
+    private String username;
+
+    private String password;
 
     private enum SECURITY_MODE {
         NONE,
@@ -156,6 +172,14 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             throw new ServletException(P_TARGET_URI + " is required in web.xml or set externally");
         }
 
+        this.username = getConfigValue("username");
+        this.password = getConfigValue("password");
+
+        String doIsSecured = getConfigParam(P_IS_SECURED);
+        if(doIsSecured != null) {
+            isSecured = Boolean.parseBoolean(doIsSecured);
+        }
+
     }
 
     private String getConfigValue(String sufix) {
@@ -212,6 +236,26 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         return propertyValue;
     }
 
+    /**
+     * Add the basic authentication
+     */
+    @Override
+    protected HttpClient createHttpClient() {
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(username) && org.apache.commons.lang.StringUtils.isNotEmpty(password)) {
+            CredentialsProvider credentialsProvider =
+                new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(
+                AuthScope.ANY,
+                new UsernamePasswordCredentials(username, password));
+            return HttpClients.custom()
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .setDefaultRequestConfig(buildRequestConfig())
+                .useSystemProperties()
+                .build();
+        } else {
+            return super.createHttpClient();
+        }
+    }
 
     /**
      * Creates the HttpClient used to make the proxied requests.
@@ -278,6 +322,30 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 }
             }
         }
+    }
+
+    /**
+     * Hides the {{@link org.mitre.dsmiley.httpproxy.ProxyServlet#getContentLength(HttpServletRequest)}} private method.
+     */
+    private long getContentLength(HttpServletRequest request) {
+        String contentLengthHeader = request.getHeader("Content-Length");
+        return contentLengthHeader != null ? Long.parseLong(contentLengthHeader) : -1L;
+    }
+
+    @Override
+    protected HttpRequest newProxyRequestWithEntity(String method, String proxyRequestUri, HttpServletRequest servletRequest) throws IOException {
+        HttpEntityEnclosingRequest eProxyRequest = new BasicHttpEntityEnclosingRequest(method, proxyRequestUri);
+        InputStreamEntity entity = new InputStreamEntity(servletRequest.getInputStream(), this.getContentLength(servletRequest));
+
+        // https://github.com/mitre/HTTP-Proxy-Servlet/issues/67
+        if ("GET".equals(method) || !isSecured) {
+            eProxyRequest.setEntity(entity);
+        } else {
+            BufferedHttpEntity bufferedHttpEntity = new BufferedHttpEntity(entity);
+            eProxyRequest.setEntity(bufferedHttpEntity);
+        }
+
+        return eProxyRequest;
     }
 
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)

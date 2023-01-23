@@ -131,7 +131,7 @@
             scope.criteria.uivalue = newValue;
           };
           scope.describeCriteria = function () {
-            switch (angular.uppercase(scope.original.uitype)) {
+            switch (scope.original.uitype.toUpperCase()) {
               case "ALWAYS_ACCEPT":
                 return $translate.instant("schematronDescriptionAlwaysAccept");
               case "NEW":

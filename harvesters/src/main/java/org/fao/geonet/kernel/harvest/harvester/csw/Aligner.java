@@ -39,12 +39,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.BatchEditParameter;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -622,7 +617,7 @@ public class Aligner extends BaseAligner<CswParams> {
                                     Element md,
                                     String processName,
                                     Map<String, Object> processParams) {
-        Path filePath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(processName + ".xsl");
+        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
         if (!Files.exists(filePath)) {
             log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
         } else {

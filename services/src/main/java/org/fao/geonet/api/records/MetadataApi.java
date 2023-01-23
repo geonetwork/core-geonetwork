@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -37,8 +37,8 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.records.model.related.*;
 import org.fao.geonet.api.records.model.related.FCRelatedMetadataItem.FeatureType.AttributeTable;
+import org.fao.geonet.api.records.model.related.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -103,10 +103,30 @@ public class MetadataApi {
 
     private ApplicationContext context;
 
+    public static RelatedResponse getAssociatedResources(
+        String language, ServiceContext context,
+        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
+        // TODO PERF: ByPass XSL processing and create response directly
+        // At least for related metadata and keep XSL only for links
+        Element raw = new Element("root").addContent(Arrays.asList(
+            new Element("gui").addContent(Arrays.asList(
+                new Element("language").setText(language),
+                new Element("url").setText(context.getBaseUrl())
+            )),
+            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
+        ));
+        Path relatedXsl = ApplicationContextHolder.get()
+            .getBean(GeonetworkDataDirectory.class).getWebappDir()
+            .resolve("xslt/services/metadata/relation.xsl");
+
+        final Element transform = Xml.transform(raw, relatedXsl);
+        RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+        return response;
+    }
+
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
     }
-
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record",
         description = "Depending on the accept header the appropriate formatter is used. " +
@@ -137,7 +157,7 @@ public class MetadataApi {
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(description = "Accept header should indicate which is the appropriate format " +
             "to return. It could be text/html, application/xml, application/zip, ..." +
             "If no appropriate Accept header found, the XML format is returned.",
@@ -147,7 +167,7 @@ public class MetadataApi {
             defaultValue = MediaType.APPLICATION_XML_VALUE,
             required = false
         )
-            String acceptHeader,
+        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -180,7 +200,6 @@ public class MetadataApi {
         }
     }
 
-
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML or JSON",
         description = "")
     @RequestMapping(value =
@@ -204,33 +223,33 @@ public class MetadataApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(description = "Add XSD schema location based on standard configuration " +
             "(see schema-ident.xml).",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean addSchemaLocation,
+        boolean addSchemaLocation,
         @Parameter(description = "Increase record popularity",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean increasePopularity,
+        boolean increasePopularity,
         @Parameter(description = "Add geonet:info details",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
-            boolean withInfo,
+        boolean withInfo,
         @Parameter(description = "Download as a file",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
-            boolean attachment,
+        boolean attachment,
         @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean approved,
+        boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
         )
-            String acceptHeader,
+        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -332,48 +351,48 @@ public class MetadataApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(
             description = "MEF file format.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "FULL")
-            MEFLib.Format format,
+        MEFLib.Format format,
         @Parameter(
             description = "With related records (parent and service).",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean withRelated,
+        boolean withRelated,
         @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean withXLinksResolved,
+        boolean withXLinksResolved,
         @Parameter(
             description = "Preserve XLink URLs in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean withXLinkAttribute,
+        boolean withXLinkAttribute,
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean addSchemaLocation,
+        boolean addSchemaLocation,
         @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean approved,
+        boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
         )
-            String acceptHeader,
+        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -389,65 +408,70 @@ public class MetadataApi {
         Path file = null;
         ServiceContext context = ApiUtils.createServiceContext(request);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
-        if (version == MEFLib.Version.V1) {
-            // This parameter is deprecated in v2.
-            boolean skipUUID = false;
+        try {
+            if (version == MEFLib.Version.V1) {
+                // This parameter is deprecated in v2.
+                boolean skipUUID = false;
 
-            Integer id = -1;
+                Integer id = -1;
 
-            if (approved) {
-                id = metadataRepository.findOneByUuid(metadataUuid).getId();
+                if (approved) {
+                    id = metadataRepository.findOneByUuid(metadataUuid).getId();
+                } else {
+                    id = metadataUtils.findOneByUuid(metadataUuid).getId();
+                }
+
+                file = MEFLib.doExport(
+                    context, id, format.toString(),
+                    skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
+                );
+                response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
             } else {
-                id = metadataUtils.findOneByUuid(metadataUuid).getId();
+                Set<String> uuidsToExport = new HashSet<>();
+                uuidsToExport.add(metadataUuid);
+                // MEF version 2 support multiple metadata record by file.
+                if (withRelated) {
+                    // Adding children in MEF file
+
+                    RelatedResponse related = getAssociatedResources(
+                        metadataUuid, null, 0, 100, request);
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getServices()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getSiblings()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getRelated()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getAssociated()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getFcats()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHasfeaturecats()));
+                    uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHassources()));
+                }
+                Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
+                    + " records.");
+
+                file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+
+                response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
-
-            file = MEFLib.doExport(
-                context, id, format.toString(),
-                skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
-            );
-            response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
-        } else {
-            Set<String> uuidsToExport = new HashSet<String>();
-            uuidsToExport.add(metadataUuid);
-            // MEF version 2 support multiple metadata record by file.
-            if (withRelated) {
-                // Adding children in MEF file
-
-                RelatedResponse related = getAssociatedResources(
-                    metadataUuid, null, 0, 100, request);
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getServices()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getSiblings()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getRelated()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getAssociated()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getFcats()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHasfeaturecats()));
-                uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHassources()));
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
+                "inline; filename=\"%s.zip\"",
+                metadata.getUuid()
+            ));
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
+            FileUtils.copyFile(file.toFile(), response.getOutputStream());
+        } finally {
+            if (file != null) {
+                FileUtils.deleteQuietly(file.toFile());
             }
-            Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
-                + " records.");
-
-            file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
-
-            response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
         }
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
-            "inline; filename=\"%s.zip\"",
-            metadata.getUuid()
-        ));
-        response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-        FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 
     private List<String> getUuidsOfAssociatedRecords(IListOnlyClassToArray associatedRecords) {
         return Optional.ofNullable(associatedRecords)
-            .map(r -> ((List< RelatedMetadataItem >)r.getItem()).stream())
+            .map(r -> ((List<RelatedMetadataItem>) r.getItem()).stream())
             .orElseGet(Stream::empty)
             .map(i -> i.getId()).collect(Collectors.toList());
     }
-
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Increase record popularity",
         description = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.")
@@ -466,7 +490,7 @@ public class MetadataApi {
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         HttpServletRequest request
     )
         throws Exception {
@@ -484,7 +508,6 @@ public class MetadataApi {
 
         dataManager.increasePopularity(context, metadata.getId() + "");
     }
-
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record related resources",
@@ -508,20 +531,20 @@ public class MetadataApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(description = "Type of related resource. If none, all resources are returned.",
             required = false
         )
         @RequestParam(defaultValue = "")
-            RelatedItemType[] type,
+        RelatedItemType[] type,
         @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
         @RequestParam(defaultValue = "0")
-            int start,
+        int start,
         @Parameter(description = "Number of rows returned. Default 100.")
         @RequestParam(defaultValue = "100")
-            int rows,
+        int rows,
         HttpServletRequest request) throws Exception {
 
         AbstractMetadata md;
@@ -536,27 +559,6 @@ public class MetadataApi {
         final ServiceContext context = ApiUtils.createServiceContext(request);
 
         return getAssociatedResources(language, context, md, type, start, rows);
-    }
-
-    public static RelatedResponse getAssociatedResources(
-        String language, ServiceContext context,
-        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
-        // TODO PERF: ByPass XSL processing and create response directly
-        // At least for related metadata and keep XSL only for links
-        Element raw = new Element("root").addContent(Arrays.asList(
-            new Element("gui").addContent(Arrays.asList(
-                new Element("language").setText(language),
-                new Element("url").setText(context.getBaseUrl())
-            )),
-            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
-        ));
-        Path relatedXsl = ApplicationContextHolder.get()
-            .getBean(GeonetworkDataDirectory.class).getWebappDir()
-            .resolve("xslt/services/metadata/relation.xsl");
-
-        final Element transform = Xml.transform(raw, relatedXsl);
-        RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -579,7 +581,7 @@ public class MetadataApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};

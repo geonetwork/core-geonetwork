@@ -101,7 +101,18 @@
 
   <!--
    Create a multilingual element depending on the metadata record.
-   eg. eng#Basin of Africa|FR#Bassin versant d'Afrique
+
+   Example of input string:
+   EN#SLD style for the layer|FR#Style SLD pour la couche
+   EN#https://lemonde.fr#water|FR#https://lemonde.fr#eau
+   eng#Basin of Africa|FR#Bassin versant d'Afrique
+
+   So:
+    * first split each values with |
+    * split by value separator (usually #) to get each language code and value pair.
+    If not, eg. when adding URL which may contain # from onlinesrc-add.xsl
+    split on 2 chars to get language code and get string from the 4 position
+    to get the value.
    -->
   <xsl:function name="gn-fn-iso19115-3.2018:fillTextElement" as="node()*">
     <xsl:param name="string" as="xs:string"/>
@@ -122,9 +133,14 @@
       <xsl:when test="matches($string, concat('.*', $translationSeparator, '.*'))">
         <xsl:for-each select="tokenize($string, $translationSeparator)">
           <xsl:variable name="descLang"
-                        select="substring-before(., $valueSeparator)"/>
+                        select="if ($valueSeparator != '')
+                                then substring-before(., $valueSeparator)
+                                else substring(., 1, 2)"/>
           <xsl:variable name="descValue"
-                        select="substring-after(., $valueSeparator)"/>
+                        select="if ($valueSeparator != '')
+                                then substring-after(., $valueSeparator)
+                                else substring(., 4)"/>
+
           <xsl:if test="$useOnlyPTFreeText = false() and $descLang = $mainLanguage">
             <gco:CharacterString>
               <xsl:value-of select="$descValue"/>
@@ -135,9 +151,13 @@
         <lan:PT_FreeText>
           <xsl:for-each select="tokenize($string, $translationSeparator)">
             <xsl:variable name="descLang"
-                          select="substring-before(., $valueSeparator)"/>
+                          select="if ($valueSeparator != '')
+                                  then substring-before(., $valueSeparator)
+                                  else substring(., 1, 2)"/>
             <xsl:variable name="descValue"
-                          select="substring-after(., $valueSeparator)"/>
+                          select="if ($valueSeparator != '')
+                                  then substring-after(., $valueSeparator)
+                                  else substring(., 4)"/>
             <xsl:if test="$useOnlyPTFreeText or $descLang != $mainLanguage">
               <lan:textGroup>
                 <lan:LocalisedCharacterString locale="{concat('#', $descLang)}">
