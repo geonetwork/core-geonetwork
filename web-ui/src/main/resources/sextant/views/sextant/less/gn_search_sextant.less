@@ -71,7 +71,7 @@ body > div:not(.gn-alerts):not(.g):not(.datepicker),
 @media (min-width: @screen-md-min) {
   .sxt-search-main-container {
     z-index: 0;
-    height: calc(~"100% - "@sxt-viewer-top);
+    height: calc(~"100% - @{sxt-viewer-top}");
     .noresult {
       position: absolute;
       top: 30px;
@@ -95,7 +95,7 @@ body > div:not(.gn-alerts):not(.g):not(.datepicker),
   }
   [search-results]
   {
-    height: calc(~"100% - "@results-toolbar-height);
+    height: calc(~"100% - @{results-toolbar-height}");
     overflow: auto;
     padding-bottom: 14em;
   }

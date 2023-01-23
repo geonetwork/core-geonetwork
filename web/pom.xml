@@ -1159,7 +1159,7 @@
                   <wroFile>${project.build.directory}/geonetwork/WEB-INF/wro-sources-maven.xml</wroFile>
                   <destinationFolder>${wro4jOutput}</destinationFolder>
                   <!-- TODO For group gn_search_sextant LESS is not compiled properly -->
-                  <targetGroups>gnlib,gnlib3d,lib,lib3d,lib_nobs,lib_nojquery,gn_search,gn_login,gn_login_default,gn_editor,gn_editor_default,gn_admin,gn_admin_default,nv.d3,gn_fonts,gn_inspire,gn_pickers,gn_print_default,ng-skos,bootstrap-table.min</targetGroups>
+                  <targetGroups>gn_search_sextant,gnlib,gnlib3d,lib,lib3d,lib_nobs,lib_nojquery,gn_search,gn_login,gn_login_default,gn_editor,gn_editor_default,gn_admin,gn_admin_default,nv.d3,gn_fonts,gn_inspire,gn_pickers,gn_print_default,ng-skos,bootstrap-table.min</targetGroups>
                 </configuration>
               </execution>
             </executions>
