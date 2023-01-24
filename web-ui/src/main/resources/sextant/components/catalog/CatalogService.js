@@ -534,16 +534,8 @@
 
               // SPECIFIC SEXTANT: append ui.config to the promise for backwards compatibility
               // TODO: get rid of this when the app is loaded with the configs already there
-              $http.get("../api/ui/srv", { cache: true }).then(
-                function (response) {
-                  gnConfig["ui.config"] = JSON.parse(response.data.configuration);
-                  defer.resolve(gnConfig);
-                },
-                function () {
-                  gnConfig["ui.config"] = gnGlobalSettings.getDefaultConfig();
-                  defer.resolve(gnConfig);
-                }
-              );
+              gnConfig["ui.config"] = gnGlobalSettings.getDefaultConfig();
+              defer.resolve(gnConfig);
               // END SPECIFIC SEXTANT
             },
             function () {

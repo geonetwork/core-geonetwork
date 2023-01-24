@@ -50,6 +50,7 @@
         gnGlobalSettings.init(
           {},
           typeof sxtGnUrl != "undefined" ? sxtGnUrl : undefined,
+          typeof sxtGnUrl != "undefined" ? sxtGnUrl : undefined,
           viewerSettings,
           searchSettings
         );

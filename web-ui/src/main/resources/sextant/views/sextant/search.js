@@ -51,7 +51,7 @@
       cssLoaded =
         cssLoaded ||
         (document.styleSheets.item(i).href &&
-          document.styleSheets.item(i).href.indexOf("geonetwork/static") > 0);
+          document.styleSheets.item(i).href.indexOf("geonetwork/sextant/views/sextant/api") > 0);
     }
     if (!cssLoaded) {
       setTimeout(removeLoadingScreen, 500);
@@ -91,7 +91,7 @@
       "gnSearchSettings",
       "gnGlobalSettings",
       function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
-        gnGlobalSettings.init({}, null, gnViewerSettings, gnSearchSettings);
+        gnGlobalSettings.init({}, null, sxtGnUrl, gnViewerSettings, gnSearchSettings);
       }
     ]);
 
@@ -99,7 +99,7 @@
     // also add a preload link to inform the browser of the priority of the css
     // when the css is loaded, hide the loading screen & restore the general overflow attribute
     var theme = sxtSettings.theme || "default";
-    var stylesheetUrl = sxtGnUrl + "../static/api-" + theme + ".css";
+    var stylesheetUrl = sxtGnUrl + "../sextant/views/sextant/api/api-" + theme + ".css";
 
     var preloadLink = document.createElement("link");
     preloadLink.href = stylesheetUrl;

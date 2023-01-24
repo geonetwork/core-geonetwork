@@ -1069,11 +1069,7 @@
         isShowLoginAsLink: false,
         isUserProfileUpdateEnabled: true,
         isUserGroupUpdateEnabled: true,
-        init: function (config,
-                        gnUrl,
-                        nodeUrl,
-                        gnViewerSettings,
-                        gnSearchSettings) {
+        init: function (config, gnUrl, nodeUrl, gnViewerSettings, gnSearchSettings) {
           // start from the default config to make sure every field is present
           // and override with config arg if required
           angular.merge(this.gnCfg, config, {});
