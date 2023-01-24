@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
@@ -123,7 +124,7 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
                             // Copy the prebuilt cache if it doesn't exist in the data directory or if the version in data
                             // directory doesn't match the current GN git version
                             if (!gitVersionMatch || Files.notExists(dataWroCache)) {
-                                Files.copy(bundledPrebuiltCacheStream, dataWroCache);
+                                Files.copy(bundledPrebuiltCacheStream, dataWroCache, StandardCopyOption.REPLACE_EXISTING);
                                 Path customLessFiles = dataDirPath.resolve(Geonet.Config.NODE_LESS_DIR).resolve("gn_dynamic_style.json");
                                 if (Files.exists(customLessFiles)) {
                                     removeCSSFromCache(dataDirPath);
