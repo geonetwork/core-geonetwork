@@ -129,8 +129,6 @@
                            access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.remove!?.*"
                            access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.enable!?.*"
-                           access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.add!?.*"
                            access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.update!?.*"
