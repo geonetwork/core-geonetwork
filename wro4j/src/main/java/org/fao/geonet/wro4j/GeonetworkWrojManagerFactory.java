@@ -37,6 +37,7 @@ import ro.isdc.wro.model.factory.WroModelFactory;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -107,10 +108,14 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
                 Properties propInDataDir = new Properties();
                 Path propFileInDataDir = dataDirPath.resolve("git.properties");
                 if (Files.exists(propFileInDataDir)) {
-                    propInDataDir.load(Files.newInputStream(propFileInDataDir));
+                    try (InputStream propertiesInputStream = Files.newInputStream(propFileInDataDir)) {
+                        propInDataDir.load(propertiesInputStream);
+                    }
                 } else {
-                    bundledProperties.store(Files.newOutputStream(propFileInDataDir),
-                        "Copied from GN git.properties on " + DateTimeFormatter.ISO_DATE_TIME.format(OffsetDateTime.now()));
+                    try (OutputStream propertiesOutputStream = Files.newOutputStream(propFileInDataDir)) {
+                        bundledProperties.store(propertiesOutputStream,
+                            "Copied from GN git.properties on " + DateTimeFormatter.ISO_DATE_TIME.format(OffsetDateTime.now()));
+                    }
                 }
                 String dataDirGitVersion = propInDataDir.getProperty("git.commit.id");
                 gitVersionMatch = bundledGitRevision.equals(dataDirGitVersion);
