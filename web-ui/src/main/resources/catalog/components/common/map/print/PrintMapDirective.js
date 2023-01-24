@@ -126,15 +126,16 @@
 
       var initMapEvents = function () {
         deregister = [
-          $scope.map.getView().on("change:resolution", function (event) {
-            if ($scope.map.getView().getAnimating()) {
-              return;
-            }
-            if ($scope.auto) {
-              fitRectangleToView();
-              $scope.$apply();
-            } else {
-              updatePrintRectanglePixels($scope.config.scale);
+          $scope.map.on("moveend", function (event) {
+            var newZoom = $scope.map.getView().getZoom();
+            if (currZoom != newZoom) {
+              currZoom = newZoom;
+              if ($scope.auto) {
+                fitRectangleToView();
+                $scope.$apply();
+              } else {
+                updatePrintRectanglePixels($scope.config.scale);
+              }
             }
           }),
           $scope.$watch("auto", function (v) {
