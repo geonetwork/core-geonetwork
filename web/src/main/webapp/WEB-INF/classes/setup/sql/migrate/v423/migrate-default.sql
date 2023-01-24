@@ -1,7 +1,6 @@
 UPDATE Settings SET internal = 'n' WHERE name = 'system/server/sitemapLinkUrl';
 
 
-
 UPDATE harvestersettings SET value = replace(value, 'gmiTogmd', 'iso19139:convert/fromISO19115-2') WHERE value LIKE 'gmiTogmd%';
 UPDATE harvestersettings SET value = replace(value, 'DIF-to-ISO19139', 'iso19139:convert/fromDIF-GCMD') WHERE value LIKE 'DIF-to-ISO19139%';
 UPDATE harvestersettings SET value = replace(value, 'EsriGeosticker-to-ISO19139', 'iso19139:convert/fromESRI-Geosticker') WHERE value LIKE 'EsriGeosticker-to-ISO19139%';
@@ -27,6 +26,9 @@ UPDATE harvestersettings SET value = replace(value, 'ISO19139-to-ISO19115-3-2018
 UPDATE harvestersettings SET value = replace(value, 'OPENDATASOFT-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromJsonOpenDataSoft.xsl') WHERE value LIKE 'OPENDATASOFT-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'SPARQL-DCAT-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromSPARQL-DCAT') WHERE value LIKE 'SPARQL-DCAT-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'udata-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromJsonUdata') WHERE value LIKE 'udata-to-ISO19115-3-2018%';
+
+DROP TABLE Thesaurus;
+
 
 UPDATE Settings SET value='4.2.3' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';

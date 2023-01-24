@@ -71,19 +71,6 @@
       <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
-    <service name="thesaurus.enable">
-      <documentation><![CDATA[
-        Enable a thesaurus or not. If disabled, it will not be proposed
-        in metadata editor.
-
-        Parameters are:
-        * ref: The thesaurus identifier
-        * activated: y or n
-        ]]></documentation>
-      <class name=".services.thesaurus.Activate"/>
-      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
-    </service>
-
 
     <service name="thesaurus.topconcept" type="xml">
       <documentation><![CDATA[

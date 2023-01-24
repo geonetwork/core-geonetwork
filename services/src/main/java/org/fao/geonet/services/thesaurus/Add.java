@@ -29,21 +29,21 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * For editing : adds a tag to a thesaurus. Access is restricted
  */
+@Deprecated
 public class Add extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -79,15 +79,12 @@ public class Add extends NotInReadOnlyModeService {
 
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
-        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, description, tnamespace, type, dname, rdfFile, siteURL, false, tm.getThesaurusCacheMaxSize());
+        Map<String, String> multilingualTitles = new HashMap<>();
+        multilingualTitles.put("eng", tname);
+        Map<String, String> multilingualDescriptions = new HashMap<>();
+        multilingualDescriptions.put("eng", description);
+        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, multilingualTitles, multilingualDescriptions, tnamespace, type, dname, rdfFile, siteURL, false, tm.getThesaurusCacheMaxSize());
         tm.addThesaurus(thesaurus, true);
-
-        // Save activated status in the database
-        ThesaurusActivation activation = new ThesaurusActivation();
-        activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
-        activation.setId(fname);
-
-        context.getBean(ThesaurusActivationRepository.class).save(activation);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         Element elRef = new Element("ref");
