@@ -267,8 +267,7 @@
                             select="replace(@locale, '#', '')"/>
               <xsl:variable name="elementLanguage3LetterCode"
                             select="$languages/lang[@id = $elementLanguage]/@value"/>
-
-              <xsl:if test="$elementLanguage3LetterCode != ''">
+              <xsl:if test="$elementLanguage3LetterCode != '' and ($elementLanguage3LetterCode !=$mainLanguage or count($element//(*:CharacterString|*:Anchor)[. != ''])=0) ">
                 <xsl:variable name="field"
                               select="concat('lang', $elementLanguage3LetterCode)"/>
                 <value><xsl:value-of select="concat(
