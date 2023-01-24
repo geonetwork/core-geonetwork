@@ -138,13 +138,17 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
                 logWarnings(result);
                 writer.write(result.getCss());
             } catch (final Less4jException e) {
-                GeonetLessCompilerProcessor.LOG.fine("Failed to compile less resource: {}.");
+                GeonetLessCompilerProcessor.LOG.warning(String.format(
+                    "Failed to compile less resource: %s.",
+                    resource.getUri()));
                 for (final Problem problem : e.getErrors()) {
-                    GeonetLessCompilerProcessor.LOG.fine(problemAsString(problem));
+                    GeonetLessCompilerProcessor.LOG.warning(problemAsString(problem));
                 }
                 throw WroRuntimeException.wrap(e);
             } catch (final Exception e) {
-                GeonetLessCompilerProcessor.LOG.fine("Exception while compiling less resource: {}.");
+                GeonetLessCompilerProcessor.LOG.warning(String.format(
+                    "Exception while compiling less resource: %s.",
+                    resource.getUri()));
                 throw WroRuntimeException.wrap(e);
             }
         } else {
