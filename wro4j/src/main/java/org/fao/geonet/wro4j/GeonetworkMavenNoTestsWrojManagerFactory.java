@@ -25,7 +25,6 @@ package org.fao.geonet.wro4j;
 import ro.isdc.wro.cache.CacheKey;
 import ro.isdc.wro.cache.CacheStrategy;
 import ro.isdc.wro.cache.CacheValue;
-import ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory;
 import ro.isdc.wro.model.factory.WroModelFactory;
 import ro.isdc.wro.model.resource.locator.factory.UriLocatorFactory;
 
@@ -46,11 +45,6 @@ public class GeonetworkMavenNoTestsWrojManagerFactory extends GeonetworkMavenWro
                 return createProperties();
             }
         };
-    }
-
-    @Override
-    protected UriLocatorFactory newUriLocatorFactory() {
-        return super.newUriLocatorFactory();
     }
 
     @Override

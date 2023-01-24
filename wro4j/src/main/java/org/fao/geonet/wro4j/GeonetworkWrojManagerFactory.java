@@ -27,6 +27,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+import ro.isdc.wro.WroRuntimeException;
 import ro.isdc.wro.cache.CacheKey;
 import ro.isdc.wro.cache.CacheStrategy;
 import ro.isdc.wro.cache.CacheValue;
@@ -154,7 +155,7 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
         try (DiskbackedCache tempCache = new DiskbackedCache(50, dataDirPath.resolve("wro4j-cache").toString())) {
             tempCache.deleteCSSItems();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new WroRuntimeException("Error removing CSS files from the wro4j cache", e);
         }
     }
 
