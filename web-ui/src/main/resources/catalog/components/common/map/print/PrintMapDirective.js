@@ -125,6 +125,7 @@
       $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
 
       var initMapEvents = function () {
+        var currZoom = $scope.map.getView().getZoom();
         deregister = [
           $scope.map.on("moveend", function (event) {
             var newZoom = $scope.map.getView().getZoom();
