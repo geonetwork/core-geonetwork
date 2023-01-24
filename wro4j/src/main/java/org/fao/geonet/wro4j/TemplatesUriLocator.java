@@ -1,23 +1,13 @@
 package org.fao.geonet.wro4j;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.model.resource.locator.UriLocator;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-
-import javax.servlet.ServletContext;
 
 /**
  * Converts a resource to a closure goog.addDependency statement.
@@ -30,6 +20,7 @@ public class TemplatesUriLocator implements UriLocator {
     public static final String URI_PREFIX_HEADER = "template://header";
     public static final String URI_PREFIX_FOOTER = "template://footer";
     public static final String URI_LOCATOR_ID = "templateURILocator";
+    public static final String SRC_MAIN_RESOURCES_FOLDER = "src/main/resources/";
 
     @Override
     public InputStream locate(String uri) throws IOException {
@@ -51,7 +42,7 @@ public class TemplatesUriLocator implements UriLocator {
 
             // Check to avoid NullPointerException
             if (realPath == null) {
-                return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
+                return new ByteArrayInputStream(javascript.toString().getBytes(StandardCharsets.UTF_8));
             }
 
             // Recursively walk each folders and add each templates found.
@@ -62,27 +53,36 @@ public class TemplatesUriLocator implements UriLocator {
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         if (!Files.isDirectory(file) && file.getFileName().toString().endsWith("html")) {
                             String fileFolder = file.getParent().toUri().toString();
-                            String relativeFileFolderPath = fileFolder.substring(fileFolder.indexOf(path));
-                            addFileToTemplateCache(javascript, "../.." + relativeFileFolderPath + file.getFileName(), file.toFile());
+
+                            String relativeFileFolderPath = "";
+                            if (fileFolder.contains(SRC_MAIN_RESOURCES_FOLDER)) {
+                                relativeFileFolderPath = fileFolder.substring(
+                                    fileFolder.indexOf(SRC_MAIN_RESOURCES_FOLDER)
+                                        + SRC_MAIN_RESOURCES_FOLDER.length() - 1
+                                );
+                            } else {
+                                relativeFileFolderPath =
+                                    fileFolder.substring(fileFolder.indexOf(path));
+                            }
+                            addFileToTemplateCache(javascript, "../.."
+                                + relativeFileFolderPath
+                                + file.getFileName(), file.toFile());
                         }
                         return FileVisitResult.CONTINUE;
                     }
                 });
             }
         }
-        return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
+        return new ByteArrayInputStream(javascript.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     private void addFileToTemplateCache(StringBuilder javascript, String s, File file) throws IOException {
-        BufferedReader br = null;
         StringBuilder template = null;
 
         String sCurrentLine;
         template = new StringBuilder();
-        final Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-        try {
-            
-            br = new BufferedReader(reader);
+        final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+        try (BufferedReader br = new BufferedReader(reader)){
             while ((sCurrentLine = br.readLine()) != null) {
                 template.append(sCurrentLine).append("\n");
             }
@@ -90,21 +90,19 @@ public class TemplatesUriLocator implements UriLocator {
             // Build a template in a one line String for the JS templateCache
             String sTemplate = template.toString();
             // Remove all empty content between tags but not new lines
-            sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><"); 
+            sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><");
             // Replace all successions of spaces, tabs ... by a single space
-            sTemplate = sTemplate.replaceAll("\\s\\s+", " "); 
+            sTemplate = sTemplate.replaceAll("\\s\\s+", " ");
             // The backslash (\) is an escape character in Javascript
             sTemplate = sTemplate.replace("\\", "\\\\");
             // Escape new lines
             sTemplate = sTemplate.replaceAll("\\n", "\\\\n");
             // Escape quotes
-            sTemplate = sTemplate.replace("'", "\\'");  
+            sTemplate = sTemplate.replace("'", "\\'");
             javascript.append(
                 String.format("$templateCache.put('%s', '%s');",
                     s,
                     sTemplate));
-        } finally {
-            IOUtils.closeQuietly(reader);
         }
     }
 
