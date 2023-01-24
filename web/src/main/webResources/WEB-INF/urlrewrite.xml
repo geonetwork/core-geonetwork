@@ -33,6 +33,11 @@
     <from>^/catalog/views/sextant/(.*)$</from>
     <to type="forward">/sextant/views/sextant/$1</to>
   </rule>
+  <rule>
+    <note>Sextant relative path in API CSS.</note>
+    <from>^/sextant/views/sextant/sextant/lib/style/(.*)$</from>
+    <to type="forward">/sextant/lib/style/$1</to>
+  </rule>
 
   <rule>
     <note>API Documentation redirection as Spring does not redirect to index.html.</note>
