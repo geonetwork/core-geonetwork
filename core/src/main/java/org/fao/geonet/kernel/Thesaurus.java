@@ -761,20 +761,27 @@ public class Thesaurus {
         mySubject.addProperty(rdfType, skosClass);
 
         URI titleURI = myFactory.createURI(DC_NAMESPACE, "title");
-        addElement("title", thesaurusTitle, myGraph, myFactory, mySubject);
 
+        boolean addTitleElement = true;
         if (multilingualTitles != null) {
             for (Entry<String, String> entrySet : multilingualTitles.entrySet()) {
                 if (StringUtils.isNotEmpty(entrySet.getValue())) {
                     String language = toiso639_1_Lang(entrySet.getKey());
                     Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
                     myGraph.add(mySubject, titleURI, valueObj);
+
+                    addTitleElement = false;
                 }
             }
         }
 
+        if (addTitleElement) {
+            addElement("title", thesaurusTitle, myGraph, myFactory, mySubject);
+        }
+
+
+        boolean addDescriptionElement = true;
         URI descriptionURI = myFactory.createURI(DC_NAMESPACE, "description");
-        addElement("description", thesaurusDescription, myGraph, myFactory, mySubject);
 
         if (multilingualDescriptions != null) {
             for (Entry<String, String> entrySet : multilingualDescriptions.entrySet()) {
@@ -782,9 +789,14 @@ public class Thesaurus {
                     String language = toiso639_1_Lang(entrySet.getKey());
                     Value valueObj = myFactory.createLiteral(entrySet.getValue(), language);
                     myGraph.add(mySubject, descriptionURI, valueObj);
+
+                    addDescriptionElement = false;
                 }
             }
+        }
 
+        if (addDescriptionElement) {
+            addElement("description", thesaurusDescription, myGraph, myFactory, mySubject);
         }
 
         addElement("identifier", identifier, myGraph, myFactory, mySubject);
