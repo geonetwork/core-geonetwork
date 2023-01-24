@@ -51,7 +51,12 @@
       cssLoaded =
         cssLoaded ||
         (document.styleSheets.item(i).href &&
-          document.styleSheets.item(i).href.indexOf("geonetwork/sextant/views/sextant/api") > 0);
+          (document.styleSheets
+            .item(i)
+            .href.indexOf("geonetwork/sextant/views/sextant/api") > 0
+          || document.styleSheets
+              .item(i)
+              .href.indexOf("geonetwork/static") > 0));
     }
     if (!cssLoaded) {
       setTimeout(removeLoadingScreen, 500);

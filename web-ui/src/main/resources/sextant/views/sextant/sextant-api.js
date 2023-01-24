@@ -52,7 +52,8 @@
             uiSettings.sextant && uiSettings.sextant.theme
               ? uiSettings.sextant.theme
               : "default";
-          var stylesheetUrl = sxtGnUrl + "../sextant/views/sextant/api/api-" + theme + ".css";
+          var stylesheetUrl =
+            sxtGnUrl + "../sextant/views/sextant/api/api-" + theme + ".css";
 
           // add theme-specific stylesheet & preload link
           var preloadLink = document.createElement("link");
