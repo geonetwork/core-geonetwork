@@ -26,7 +26,6 @@ import ro.isdc.wro.cache.CacheKey;
 import ro.isdc.wro.cache.CacheStrategy;
 import ro.isdc.wro.cache.CacheValue;
 import ro.isdc.wro.model.factory.WroModelFactory;
-import ro.isdc.wro.model.resource.locator.factory.UriLocatorFactory;
 
 import java.util.Properties;
 
