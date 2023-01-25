@@ -341,8 +341,10 @@
               }</resourceIdentifier>
           </xsl:for-each>
 
-          <xsl:for-each select="gmd:edition/*">
+          <xsl:for-each select="gmd:editionDate/*">
+            <xsl:if  test="current() castable as xs:date or current() castable as xs:dateTime and string-length(substring-before(., '-'))=4">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
+            </xsl:if>
           </xsl:for-each>
         </xsl:for-each>
 
