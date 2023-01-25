@@ -34,9 +34,12 @@
     <to type="forward">/sextant/views/sextant/$1</to>
   </rule>
   <rule>
-    <note>Sextant relative path in API CSS.</note>
-    <from>^/sextant/views/sextant/sextant/lib/style/(.*)$</from>
-    <to type="forward">/sextant/lib/style/$1</to>
+    <note>Sextant relative path in API CSS which can be used
+      in main app with CSS files produced by WRO4J and in API
+      mode with CSS files produced by node at build time.
+    </note>
+    <from>^/sextant/views/sextant/sextant/(.*)$</from>
+    <to type="forward">/sextant/$1</to>
   </rule>
 
   <rule>
