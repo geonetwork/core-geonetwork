@@ -161,7 +161,8 @@
     ["isTemplate", "recordType"],
     ["groupOwner", "group"],
     ["groupPublishedId", "group"],
-    ["sourceCatalogue", "source"]
+    ["sourceCatalogue", "source"],
+    ["statusWorkflow", "mdStatus"]
   ]);
 
   module.service("gnFacetSorter", [
