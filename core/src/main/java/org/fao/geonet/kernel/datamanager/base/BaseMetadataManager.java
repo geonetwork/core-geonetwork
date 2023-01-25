@@ -32,13 +32,13 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -289,14 +289,9 @@ public class BaseMetadataManager implements IMetadataManager {
         AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
         if (!settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION)
             && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-
-//		    TODOES
-            throw new NotImplementedException("SYSTEM_XLINK_ALLOW_REFERENCED_DELETION not implemented in ES.");
-//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
-//            if (result.size() > 0) {
-//                throw new Exception("this template is referenced.");
-//            }
+            if (this.hasReferencingMetadata(context, metadata)) {
+                throw new UnAuthorizedException("This template is referenced.", metadata);
+            }
         }
 
         // --- remove operations
@@ -320,22 +315,6 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);
-    }
-
-    private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata)
-        throws Exception {
-        // TODOES
-        throw new NotImplementedException("searcherForReferencingMetadata not implemented in ES.");
-//        MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE,
-//            Geonet.File.SEARCH_LUCENE);
-//        Element parameters = new Element(Jeeves.Elem.REQUEST);
-//        parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
-//        parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-//        parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
-//        parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
-//        ServiceConfig config = new ServiceConfig();
-//        searcher.search(context, parameters, config);
-//        return searcher;
     }
 
     // --------------------------------------------------------------------------
@@ -1329,4 +1308,10 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         return true;
     }
+
+    boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
+        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
+        return this.searchManager.query(query.toString(), null, 0, 0).getHits().getTotalHits().value > 0;
+    }
+
 }
