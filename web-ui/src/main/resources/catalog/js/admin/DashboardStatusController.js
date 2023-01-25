@@ -51,7 +51,16 @@
     "$rootScope",
     "$translate",
     "gnESFacet",
-    function ($scope, $routeParams, $http, $rootScope, $translate, gnESFacet) {
+    "gnUtilityService",
+    function (
+      $scope,
+      $routeParams,
+      $http,
+      $rootScope,
+      $translate,
+      gnESFacet,
+      gnUtilityService
+    ) {
       $scope.healthy = undefined;
       $scope.nowarnings = undefined;
       $scope.threadSortField = undefined;
@@ -246,6 +255,10 @@
         });
       };
 
+      $scope.getListOfUuids = function () {
+        return gnUtilityService.getSelectionListOfUuids("ies");
+      };
+
       $scope.indexMessages = function (md) {
         if (angular.isArray(md.indexingErrorMsg)) {
           return md.indexingErrorMsg;
@@ -309,6 +322,7 @@
       };
       $scope.searchObj = {
         configId: "recordsWithErrors",
+        selectionBucket: "ies",
         defaultParams: {
           indexingErrorMsg: "*",
           sortBy: "changeDate",

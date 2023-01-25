@@ -214,6 +214,16 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td>
+                    <button
+                      gn-copy-to-clipboard-button=""
+                      get-text-fn="getListOfUuids()"
+                      btn-class="btn btn-xs pull-right"
+                      tooltip="copyListOfUuids"
+                    ></button>
+                  </td>
+                </tr>
                 <tr data-ng-repeat="md in searchResults.records">
                   <td>
                     <div class="dropdown">
