@@ -81,7 +81,9 @@
     "$rootScope",
     "$timeout",
     "$window",
-    function (gnPopup, $translate, $location, $rootScope, $timeout, $window) {
+    "$q",
+    "$http",
+    function (gnPopup, $translate, $location, $rootScope, $timeout, $window, $q, $http) {
       /**
        * Scroll page to element.
        */
@@ -421,6 +423,19 @@
         }
       };
 
+      var getSelectionListOfUuids = function (bucket, separator) {
+        var url = "../api/selections/" + bucket,
+          defer = $q.defer();
+        $http.delete(url).then(function () {
+          $http.put(url).then(function () {
+            $http.get(url).then(function (response) {
+              defer.resolve(response.data.join(separator || "\n"));
+            });
+          });
+        });
+        return defer.promise;
+      };
+
       return {
         scrollTo: scrollTo,
         isInView: isInView,
@@ -433,6 +448,7 @@
         toCsv: toCsv,
         CSVToArray: CSVToArray,
         getUrlParameter: getUrlParameter,
+        getSelectionListOfUuids: getSelectionListOfUuids,
         randomUuid: randomUuid,
         displayPermalink: displayPermalink,
         openModal: openModal,
