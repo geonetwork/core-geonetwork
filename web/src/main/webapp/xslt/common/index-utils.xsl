@@ -597,8 +597,9 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start/text() castable as xs:date
-                    or $start/text() castable as xs:dateTime
+      <xsl:if test="(($start/text() castable as xs:date
+                    or $start/text() castable as xs:dateTime)
+                    and string-length(substring-before($start, '-'))=4)
                     or $start/text() castable as xs:gYearMonth
                     or $start/text() castable as xs:gYear">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start/text(), '&quot;')"/></value>
@@ -608,8 +609,9 @@
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end/text() castable as xs:date
-                    or $end/text() castable as xs:dateTime
+      <xsl:if test="(($end/text() castable as xs:date
+                    or $end/text() castable as xs:dateTime)
+                    and string-length(substring-before($end, '-'))=4)
                     or $end/text() castable as xs:gYearMonth
                     or $end/text() castable as xs:gYear">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end/text(), '&quot;')"/></value>
