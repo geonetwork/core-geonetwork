@@ -344,6 +344,12 @@
           <xsl:for-each select="gmd:edition/*">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
           </xsl:for-each>
+
+          <xsl:for-each select="gmd:editionDate/*">
+            <xsl:if  test="current() castable as xs:date or current() castable as xs:dateTime">
+              <xsl:copy-of select="gn-fn-index:add-field('resourceEditionDate', .)"/>
+            </xsl:if>
+          </xsl:for-each>
         </xsl:for-each>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', gmd:abstract, $allLanguages)"/>
