@@ -50,7 +50,7 @@
         <em>
           <img
             class="img-circle"
-            data-ng-src="../api/users/{{(row.authorUserId)}}.png?size=18"
+            data-ng-src="{{gnUrl}}../api/users/{{(row.authorUserId)}}.png?size=18"
           />&nbsp; {{row.authorName}}
           <span data-ng-show="row.authorOrganization">({{row.authorOrganization}})</span>,
           <span class="text-muted" data-gn-humanize-time="{{row.date}}" data-from-now=""

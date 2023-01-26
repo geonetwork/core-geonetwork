@@ -127,7 +127,8 @@
     "$http",
     "gnUserfeedbackService",
     "Metadata",
-    function ($http, gnUserfeedbackService, Metadata) {
+    "gnGlobalSettings",
+    function ($http, gnUserfeedbackService, Metadata, gnGlobalSettings) {
       return {
         restrict: "AEC",
         replace: true,
@@ -143,6 +144,7 @@
 
           scope.fewCommentsList = [];
           scope.loaded = false;
+          scope.gnUrl = gnGlobalSettings.gnUrl;
 
           scope.ratingCategories = [];
           scope.lang = scope.$parent.$parent.lang;
@@ -217,7 +219,8 @@
     "$translate",
     "$rootScope",
     "Metadata",
-    function ($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
+    "gnGlobalSettings",
+    function ($http, gnUserfeedbackService, $translate, $rootScope, Metadata, gnGlobalSettings) {
       return {
         restrict: "AEC",
         replace: true,
@@ -229,6 +232,7 @@
           "../../sextant/components/userfeedback/" + "partials/userfeedbackfull.html",
         link: function (scope) {
           scope.userName = null;
+          scope.gnUrl = gnGlobalSettings.gnUrl;
 
           function initRecord(md) {
             if (scope.record != null) {
