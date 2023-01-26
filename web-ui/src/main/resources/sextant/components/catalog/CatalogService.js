@@ -622,15 +622,29 @@
           record.geom = [record.geom];
         }
 
-        // Multilingual fields
-        $.each(this, function (key, value) {
-          var fieldName = key;
-          // Object fields and codelist are storing translations.
-          // Create a field with the UI translation or fallback to default.
-          if (key.endsWith("Object") || key.indexOf("cl_") === 0) {
-            record.translate(fieldName);
+        this.translateMultingualFields(this);
+
+        if (this.related) {
+          $.each(Object.keys(this.related), function (value, key) {
+            if (angular.isArray(record.related[key])) {
+              record.related[key] = record.related[key].map(function (r) {
+                return new Metadata(r);
+              });
           }
         });
+        }
+
+        // Open record not in current portal as a remote record
+        if (!gnGlobalSettings.isDefaultNode && this.origin === "catalog") {
+          this.remoteUrl =
+            "../../srv/" +
+            gnGlobalSettings.iso3lang +
+            "/catalog.search#/metadata/" +
+            this._id;
+        } else if (this.origin === "remote") {
+          this.remoteUrl = this.properties.url;
+          this.uuid = this._id;
+        }
 
         // See below; probably not necessary
         this.linksCache = [];
@@ -646,44 +660,60 @@
       }
 
       Metadata.prototype = {
-        // For codelist, default property is replaced
-        // For Object, a new field is created without the Object suffix.
-        translate: function (fieldName) {
-          var fieldValues = this[fieldName],
-            isCodelist = fieldName.indexOf("cl_") === 0;
-
-          // In object lang prop, in translations, default prop.
-          function getCodelistTranslation(o) {
-            if (o["lang" + gnLangs.current]) {
-              return o["lang" + gnLangs.current];
-            } else if ($translate.instant(o.key) != o.key) {
-              return $translate.instant(o.key);
-            }
-            return o.default;
-          }
-
-          if (angular.isArray(fieldValues)) {
-            var translatedValues = [];
-            angular.forEach(fieldValues, function (o) {
-              if (isCodelist) {
-                o.default = getCodelistTranslation(o);
-              } else {
-                translatedValues.push(o["lang" + gnLangs.current] || o.default);
-              }
+        translateMultilingualObjects: function (multilingualObjects) {
+          var mlObjs = angular.isArray(multilingualObjects)
+            ? multilingualObjects
+            : [multilingualObjects];
+          mlObjs.forEach(function (mlObj) {
+            mlObj.default =
+              mlObj["lang" + gnLangs.current] ||
+              mlObj.default ||
+              mlObj["lang" + this.mainLanguage];
+          });
+        },
+        translateCodelists: function (index) {
+          var codelists = angular.isArray(index) ? index : [index];
+          codelists.forEach(function (mlObj) {
+            mlObj.default =
+              mlObj["lang" + gnLangs.current] ||
+              ($translate.instant(mlObj.key) != mlObj.key &&
+                $translate.instant(mlObj.key)) ||
+              mlObj.default;
             });
-            if (!isCodelist) {
-              this[fieldName.slice(0, -6)] = translatedValues;
+        },
+        // For codelist, Object, and keywords, default property is replaced
+        // For Object a new field is also created without the Object suffix.
+        // The function is recursive
+        translateMultingualFields: function (index) {
+          for (var fieldName in index) {
+            var field = index[fieldName];
+            if (fieldName.endsWith("Object")) {
+              this.translateMultilingualObjects(field);
+              index[fieldName.replace(/Object$/g, "")] = angular.isArray(field)
+                ? field.map(function (mlObj) {
+                    return mlObj.default;
+                  })
+                : field.default;
+            } else if (fieldName.startsWith("cl_")) {
+              this.translateCodelists(field);
+            } else if (fieldName === "allKeywords") {
+              Object.keys(field).forEach(
+                function (th) {
+                  this.translateMultilingualObjects(field[th].keywords);
+                }.bind(this)
+              );
+            } else if (
+              fieldName.match(/th_.*$/) !== null &&
+              fieldName.match(/.*(_tree|Number)$/) === null
+            ) {
+              this.translateMultilingualObjects(field);
+            } else if (typeof field === "object") {
+              this.translateMultingualFields(field);
             }
-          } else if (angular.isObject(fieldValues)) {
-            if (isCodelist) {
-              o.default = getCodelistTranslation(fieldValues);
-            } else {
-              this[fieldName.slice(0, -6)] =
-                fieldValues["lang" + gnLangs.current] || fieldValues.default;
-            }
-          } else {
-            console.warn(fieldName + " is not defined in this record.");
           }
+        },
+        getUuid: function () {
+          return this.uuid;
         },
         isPublished: function () {
           return JSON.parse(this.isPublishedToAll) === true;
@@ -721,7 +751,7 @@
           return values;
         },
         getLinks: function () {
-          return this.link;
+          return this.link || [];
         },
         getLinkGroup: function (layer) {
           var links = this.getLinksByType("OGC:WMS");
