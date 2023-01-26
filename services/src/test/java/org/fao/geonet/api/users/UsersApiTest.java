@@ -86,7 +86,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(6)))
+            .andExpect(jsonPath("$", hasSize(7)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
