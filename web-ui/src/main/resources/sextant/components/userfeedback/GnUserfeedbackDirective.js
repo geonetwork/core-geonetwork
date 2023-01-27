@@ -220,7 +220,14 @@
     "$rootScope",
     "Metadata",
     "gnGlobalSettings",
-    function ($http, gnUserfeedbackService, $translate, $rootScope, Metadata, gnGlobalSettings) {
+    function (
+      $http,
+      gnUserfeedbackService,
+      $translate,
+      $rootScope,
+      Metadata,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "AEC",
         replace: true,

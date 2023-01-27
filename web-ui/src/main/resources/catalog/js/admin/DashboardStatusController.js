@@ -52,7 +52,15 @@
     "$translate",
     "gnESFacet",
     "gnUtilityService",
-    function ($scope, $routeParams, $http, $rootScope, $translate, gnESFacet, gnUtilityService) {
+    function (
+      $scope,
+      $routeParams,
+      $http,
+      $rootScope,
+      $translate,
+      gnESFacet,
+      gnUtilityService
+    ) {
       $scope.healthy = undefined;
       $scope.nowarnings = undefined;
       $scope.threadSortField = undefined;

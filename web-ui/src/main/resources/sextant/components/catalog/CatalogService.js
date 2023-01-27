@@ -630,8 +630,8 @@
               record.related[key] = record.related[key].map(function (r) {
                 return new Metadata(r);
               });
-          }
-        });
+            }
+          });
         }
 
         // Open record not in current portal as a remote record
@@ -679,7 +679,7 @@
               ($translate.instant(mlObj.key) != mlObj.key &&
                 $translate.instant(mlObj.key)) ||
               mlObj.default;
-            });
+          });
         },
         // For codelist, Object, and keywords, default property is replaced
         // For Object a new field is also created without the Object suffix.
