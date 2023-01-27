@@ -641,34 +641,54 @@
                                         */cit:title/gco:CharacterString, 'ISO 19115-3:2018 - Remote Sensing')">
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
+                   transformations="to-iso19115-3.2018-keyword-with-anchor"
                    fieldset="false"
                    maxtags="1"/>
         <thesaurus key="local.theme.sextant-theme"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"
                    maxtags="1"/>
         <thesaurus key="local.theme.cersat_format"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="external.theme.GCMDparameter"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_granularity"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_latency"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_metadata_convention"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_oceanic_regions"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_parameter"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_platform"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_processing_level"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_project"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_sensor"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
         <thesaurus key="local.theme.cersat_waveband"
+                   transformations="to-iso19115-3.2018-keyword"
+                   fieldset="false"/>
+        <thesaurus key="local.theme.odatis_variables"
+                   transformations="to-iso19115-3.2018-keyword"
+                   fieldset="false"/>
+        <thesaurus key="local.theme.odatis_centre_donnees"
+                   transformations="to-iso19115-3.2018-keyword"
                    fieldset="false"/>
       </thesaurusList>
       <sidePanel>
@@ -1359,7 +1379,8 @@
           </action>
         </section>
         <section name="eo-versions">
-          <field xpath="/*/mdb:resourceLineage/*/mrl:processStep"/>
+          <field name="eo-processstep"
+                 xpath="/*/mdb:resourceLineage/*/mrl:processStep"/>
 
           <action type="add"
                   btnLabel="eo-processstep-add"

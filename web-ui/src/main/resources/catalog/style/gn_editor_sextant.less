@@ -1,0 +1,393 @@
+
+form.gn-tab-characteristics,
+form.gn-tab-datasources,
+form.gn-tab-overview,
+form.gn-tab-spatialCoverage,
+form.gn-tab-timeCoverage,
+form.gn-tab-accessibility,
+form.gn-tab-medsea-metadata {
+  /* Do not highlight ISO mandatory fields */
+  .control-label {
+    color: inherit;
+  }
+
+  #gn-tab-accessibility,
+  #gn-tab-checkpoint-ud-qm,
+  #gn-tab-checkpoint-tdp-qm,
+  #gn-tab-checkpoint-dps-qm {
+    margin-top: 50px;
+    border-top: 2px solid black;
+  }
+
+  /* Do not display remove control ... */
+  a.btn[data-gn-click-and-spin^="remove"] {
+    display: none !important;
+  }
+  /* ... but keep it for format and contact */
+  .gn-format a.btn[data-gn-click-and-spin^="remove"],
+  .gn-projectTitle a.btn[data-gn-click-and-spin^="remove"],
+  .gn-organisationName a.btn[data-gn-click-and-spin^="remove"] {
+    display: block !important;
+  }
+
+  .gn-required > label:after {
+    display: none;
+  }
+
+  /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector="tagsinput"] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  /* Hide legend label for extent */
+  legend.EX_GeographicBoundingBox {
+    display: none;
+  }
+
+  .control-label {
+    text-align: left !important;
+  }
+}
+
+form.gn-tab-checkpoint-dps-characteristics,
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-characteristics,
+form.gn-tab-checkpoint-tdp-qm {
+  .gn-required > label:after {
+    display: none;
+  }
+
+  /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector="tagsinput"] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .control-label {
+    text-align: left !important;
+  }
+
+  .gn-field.gn-beginPosition label {
+    font-weight: bold;
+    color: #333333;
+  }
+  /* Date */
+  .gn-date label::after,
+  legend.EX_TemporalExtent::after,
+  .gn-checkpoint-ve legend:after,
+  legend.EX_GeographicBoundingBox::after {
+    display: inline;
+    content: "*" !important;
+    color: #6a6a6a;
+    font-size: 14px;
+  }
+}
+
+/* Add mandatory flag to keyword selector */
+form.gn-tab-characteristics {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(2) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(3) > legend.descriptiveKeywords::after,
+  div.gn-keyword > label::after,
+  fieldset:nth-of-type(5) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(6) > legend.descriptiveKeywords::after,
+  fieldset:nth-of-type(7) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+form.gn-tab-overview {
+  fieldset:nth-of-type(1) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+
+form.gn-tab-accessibility {
+  fieldset:nth-of-type(3) > legend.descriptiveKeywords::after {
+    content: "*";
+  }
+}
+/* ... except for EDMERP and EDMO fields */
+form.gn-tab-datasources {
+  div.gn-extra-field > label {
+    visibility: visible !important;
+  }
+
+  //input[id$=edmerpId][value=""],
+  //input[id$=edmoId][value=""] {
+  //  border-width: 3px;
+  //}
+  /* Display remove action for the third and fifth
+  form field in this tab. It should select EDMERP
+  and EDMO field if the record follow the guideline. */
+  .gn-field:nth-of-type(2) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
+    display: block;
+  }
+}
+
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-dq {
+  .gn-required > label:after {
+    display: none;
+  }
+}
+
+form.gn-tab-timeCoverage
+  div[data-tooltip="iso19115-3|msr:resolution|msr:MD_Dimension|/mdb:MD_Metadata/mdb:spatialRepresentationInfo/msr:MD_Georectified/msr:axisDimensionProperties/msr:MD_Dimension/msr:resolution"]
+  + .well,
+form.gn-tab-spatialCoverage
+  div[data-tooltip="iso19115-3|mri:distance||/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:spatialResolution/mri:MD_Resolution/mri:MD_Resolution_TypeCHOICE_ELEMENT0/mri:distance"]
+  + .well {
+  display: block !important;
+  visibility: visible !important;
+
+  button {
+    display: none;
+  }
+}
+
+form.gn-tab-accessibility {
+  /* Hide the last option of helper
+  which is the other for free text input. */
+  .helper > div > div.radio:last-of-type {
+    display: none;
+  }
+}
+
+
+.gn-tab-sextant-contact,
+.gn-tab-sextant-metadata,
+.gn-tab-sextant-identification,
+.gn-tab-sextant-spatial {
+  /* Hide remove control for source field, topic cat */
+  .gn-credit .col-sm-1.gn-control,
+  .gn-MD_TopicCategoryCode .col-sm-1.gn-control {
+    display: none;
+  }
+  /* Add mandatory flag to spatial representation type */
+  .gn-spatialRepresentationType label:after,
+  .gn-MD_TopicCategoryCode label:after {
+    content: "*";
+    font-size: 2.5em;
+    margin: 7px 0 0 7px;
+    position: absolute;
+    color: #a94442;
+    font-weight: normal;
+  }
+  /* Hide remove control */
+  .gn-topicCategory {
+    legend a.btn {
+      display: none;
+      visibility: hidden !important;
+    }
+  }
+  /* Hide Add action on CRS */
+  [data-gn-crs-selector] .input-group {
+    width: 100%;
+    span.input-group-btn {
+      display: none;
+    }
+  }
+
+  div.gn-individualName.gn-extra-field > label {
+    visibility: visible;
+  }
+  [data-gn-keyword-selector] {
+    .btn-group.pull-right {
+      display: none;
+    }
+  }
+}
+.gn-tab-sextant-usage {
+  /* Hide remove option in usage view. */
+  .col-sm-1.gn-control {
+    display: none;
+  }
+}
+
+.gn-tab-eo-tab-description {
+  /* Hide negative period, hide bbox region selector */
+  [data-gn-field-duration-div] > div > input[type="checkbox"],
+  [data-gn-field-duration-div] > div > label,
+  fieldset.gn-MI_Instrument > div.gn-code,
+  fieldset.gn-MI_Platform > div.gn-description,
+  [data-gn-measure] div.col-xs-4,
+  [data-gn-keyword-selector] .col-sm-1,
+  .gn-edition .col-xs-1,
+  legend.MD_Identifier,
+  legend.party,
+  legend.individual,
+  .gn-description .col-xs-1,
+  .gn-alternateTitle .col-xs-1,
+  .gn-EX_GeographicBoundingBox legend a,
+  .gn-EX_TemporalExtent legend a,
+  .gn-drawmap-panel > div.row:first-of-type {
+    display: none;
+  }
+  fieldset.gn-MD_Identifier,
+  fieldset.gn-party,
+  fieldset.gn-individual {
+    border: none;
+  }
+
+  /* Allow removal of projection desc */
+  .gn-eo-spatial-coverage .gn-description .col-xs-1 {
+    display: block;
+  }
+
+  [ngeo-map] {
+    height: 200px;
+  }
+}
+.gn-tab-eo-access-and-usage {
+  legend.party,
+  legend.individual,
+  .gn-pointOfContact .gn-role {
+    display: none;
+  }
+  fieldset.gn-party,
+  fieldset.gn-individual {
+    border: none;
+  }
+
+  .gn-otherConstraints {
+    .control-label {
+      visibility: visible;
+    }
+  }
+}
+/*.gn-tab-eo-history {
+  legend.resourceSpecificUsage,
+  legend.processStep,
+  legend.identifiedIssues {
+    display: none;
+  }
+  fieldset.gn-resourceSpecificUsage,
+  fieldset.gn-processStep,
+  fieldset.gn-identifiedIssues {
+    border: none;
+  }
+}*/
+
+.gn-tab-eo-tab-description,
+.gn-tab-eo-history,
+.gn-tab-eo-access-and-usage {
+  .gn-processStep .gn-level,
+  .gn-resourceSpecificUsage .gn-specificUsage,
+  .gn-resourceSpecificUsage .gn-userDeterminedLimitations,
+    /* Hide convention in issues */
+  .gn-identifiedIssues .gn-add-field,
+  .gn-required > label:after {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.gn-tab-copernicus-marine {
+  /* Hide the date type selector */
+  div.gn-date,
+  div[data-gn-date-picker] {
+    div.col-sm-3 {
+      width: 0px;
+    }
+    div.col-sm-6 {
+      width: 70%;
+    }
+    div.gn-date-picker {
+      width: 100%;
+    }
+  }
+  /* Hide link to store concept URI */
+  div.gn-featureTypes div.gn-keyword-picker-concept-id {
+    display: none;
+  }
+  /* Hide gazetteer search */
+  div.gn-drawmap-panel {
+    div.row > div.gn-field,
+    div.col-md-9 {
+      display: none;
+    }
+    div.col-md-3 {
+      button.btn {
+        .btn-xs();
+      }
+    }
+  }
+}
+
+.gn-tab-emodnetHydrography-when,
+.gn-tab-checkpoint-tdp-characteristics,
+.gn-tab-checkpoint-dps-characteristics {
+  .gn-date-picker {
+    > input[type="date"] {
+      width: 75% !important;
+    }
+    > input[type="time"] {
+      width: 0% !important;
+      display: none;
+    }
+  }
+  .gn-date-picker.gn-time-with-ind-position > input[type="date"] {
+    width: 75% !important;
+  }
+}
+
+.gn-editor.gn-tab-sdn-spatial {
+  .gn-codeSpace {
+    display: none;
+  }
+}
+
+.gn-editor.gn-tab-emodnetHydrography-what {
+  #gn-el-hierarchyLevelName,
+  .gn-useLimitation,
+  .gn-language,
+  .gn-date {
+    display: none;
+  }
+}
+
+
+/**
+Choose vector or grid action.
+Align on same line and move to the center of the form
+ */
+.gn-process-add-vector-info,
+.gn-process-add-grid-info {
+  width: 50%;
+  float: left;
+}
+.gn-process-add-vector-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 60%;
+  }
+}
+.gn-process-add-grid-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 0px;
+  }
+}
+.gn-process-change-to-vector-info,
+.gn-process-change-to-grid-info {
+  width: 100%;
+  .btn-default {
+    color: @btn-danger-color;
+    background-color: @btn-danger-bg;
+    border-color: @btn-danger-border;
+  }
+}
+
+.gn-access-manager-group  {
+  height: 200px;
+  overflow: auto;
+}

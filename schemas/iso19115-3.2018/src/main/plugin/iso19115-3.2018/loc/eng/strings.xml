@@ -142,7 +142,8 @@
   <eo-updates-add>Add update</eo-updates-add>
   <eo-issues>Issues</eo-issues>
   <eo-issues-add>Add issue</eo-issues-add>
-  <eo-processstep-add>Add process step</eo-processstep-add>
+  <eo-processstep>Version</eo-processstep>
+  <eo-processstep-add>Add version</eo-processstep-add>
   <eo-add-publication-date>Add publication date</eo-add-publication-date>
   <eo-publication-date>Publication date</eo-publication-date>
 
