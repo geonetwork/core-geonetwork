@@ -1,0 +1,77 @@
+<span data-ng-class="required ? 'gn-required' : ''">
+  <div class="" data-ng-show="isDisabled">
+    <span data-ng-show="sign">-&nbsp;</span>
+    <span data-ng-show="years != 0">{{years}} {{'year(s)' | translate}}&nbsp;</span>
+    <span data-ng-show="monthes != 0">{{monthes}} {{'month(s)' | translate}}&nbsp;</span>
+    <span data-ng-show="days != 0">{{days}} {{'day(s)' | translate}}&nbsp;</span>
+    <span data-ng-show="hours != 0">{{hours}} {{'hour(s)' | translate}}&nbsp;</span>
+    <span data-ng-show="minutes != 0">{{minutes}} {{'minute(s)' | translate}}&nbsp;</span>
+    <span data-ng-show="secondes != 0">{{secondes}} {{'second(s)' | translate}}</span>
+  </div>
+
+  <label data-ng-hide="isDisabled" class="control-label col-xs-2">{{label}}</label>
+  <div class="col-xs-9" data-ng-hide="isDisabled">
+    <!-- The hidden field with the value. -->
+    <input type="hidden" class="form-control" name="{{ref}}" value="{{value}}" />
+
+    <!-- Each components of a duration type -->
+    <input id="{{ref}}_neg" type="checkbox" data-ng-model="sign" />
+    <label for="{{ref}}_neg" data-translate="">negative</label>
+    <div class="row">
+      <div class="col-xs-2">
+        <label for="{{ref}}_years" data-translate="">years</label>
+        <input
+          id="{{ref}}_years"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="years"
+        />
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_monthes" data-translate="">months</label>
+        <input
+          id="{{ref}}_monthes"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="monthes"
+        />
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_days" data-translate="">days</label>
+        <input
+          id="{{ref}}_days"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="days"
+        />
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_hours" data-translate="">hours</label>
+        <input
+          id="{{ref}}_hours"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="hours"
+        />
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_minutes" data-translate="">minutes</label>
+        <input
+          id="{{ref}}_minutes"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="minutes"
+        />
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_secondes" data-translate="">seconds</label>
+        <input
+          id="{{ref}}_secondes"
+          type="{{number}}"
+          class="form-control"
+          data-ng-model="secondes"
+        />
+      </div>
+    </div>
+  </div>
+</span>
