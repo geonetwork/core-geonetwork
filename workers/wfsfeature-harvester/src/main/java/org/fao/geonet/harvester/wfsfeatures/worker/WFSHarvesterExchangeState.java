@@ -30,7 +30,7 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
-import org.geotools.data.wfs.internal.v1_x.MapServerWFSStrategy;
+import org.geotools.data.wfs.impl.WFSDataAccessFactory;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 
@@ -45,10 +45,15 @@ import java.util.stream.Collectors;
 public class WFSHarvesterExchangeState implements Serializable {
     private WFSHarvesterParameter parameters;
     private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-    private transient Map<String, String> fields = new LinkedHashMap<String, String>();
+    private transient Map<String, String> fields = new LinkedHashMap<>();
     private transient WFSDataStore wfsDatastore = null;
     private String resolvedTypeName = null;
-    public String strategyId = null;
+
+    private String strategyId = null;
+
+    public String getStrategyId() {
+        return strategyId;
+    }
 
     public WFSHarvesterParameter getParameters() {
         return parameters;
@@ -85,18 +90,16 @@ public class WFSHarvesterExchangeState implements Serializable {
 
 
     private void checkTaskParameters() {
-        logger.info("Checking parameters ...");
         if (StringUtils.isEmpty(parameters.getUrl())) {
             String errorMsg = "Empty WFS server URL is not allowed.";
             logger.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
         }
         if (StringUtils.isEmpty(parameters.getTypeName())) {
-            String errorMsg = "Empty WFS type name is not allowed.";
-            logger.error(errorMsg);
+            String errorMsg = "Check configuration for WFS {}. Empty type name is not allowed.";
+            logger.error(errorMsg, parameters.getUrl());
             throw new IllegalArgumentException(errorMsg);
         }
-        logger.info("Parameters are accepted.");
     }
 
     /**
@@ -114,29 +117,27 @@ public class WFSHarvesterExchangeState implements Serializable {
             factory = new WFSDataStoreFactory();
         }
 
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<>();
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
                     parameters.getUrl(), parameters.getVersion());
-            logger.info(String.format(
-                    "Connecting using GetCatapbilities URL '%s'.",
-                    getCapUrl));
+            logger.info("Connecting using GetCatapbilities URL '{}'.", getCapUrl);
 
-            m.put(WFSDataStoreFactory.URL.key, getCapUrl);
-            m.put(WFSDataStoreFactory.TIMEOUT.key, parameters.getTimeOut());
-            m.put(WFSDataStoreFactory.TRY_GZIP.key, true);
-            m.put(WFSDataStoreFactory.ENCODING.key, parameters.getEncoding());
-            m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, true);
-            m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
-            m.put(WFSDataStoreFactory.LENIENT.key, true);
+            m.put(WFSDataAccessFactory.URL.key, getCapUrl);
+            m.put(WFSDataAccessFactory.TIMEOUT.key, parameters.getTimeOut());
+            m.put(WFSDataAccessFactory.TRY_GZIP.key, true);
+            m.put(WFSDataAccessFactory.ENCODING.key, parameters.getEncoding());
+            m.put(WFSDataAccessFactory.USEDEFAULTSRS.key, true);
+            m.put(WFSDataAccessFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
+            m.put(WFSDataAccessFactory.LENIENT.key, true);
             if(!"investigator".equals(parameters.getStrategy())
                 && StringUtils.isNotEmpty(parameters.getStrategy())) {
-                m.put(WFSDataStoreFactory.WFS_STRATEGY.key, parameters.getStrategy());
+                m.put(WFSDataAccessFactory.WFS_STRATEGY.key, parameters.getStrategy());
             }
 
             if (parameters.getMaxFeatures() != -1) {
-                m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());
+                m.put(WFSDataAccessFactory.MAXFEATURES.key, parameters.getMaxFeatures());
             }
 
             wfsDatastore = factory.createDataStore(m);
@@ -145,63 +146,58 @@ public class WFSHarvesterExchangeState implements Serializable {
                 WFSClientWithStrategyInvestigator wfsClientWithStrategyInvestigator = (WFSClientWithStrategyInvestigator) wfsDatastore.getWfsClient();
                 this.strategyId = wfsClientWithStrategyInvestigator.getStrategyId();
                 if ("mapserver".equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
-                    Map connectionParameters = new HashMap();
+                    Map<String, Object> connectionParameters = new HashMap<>();
                     connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", parameters.getUrl());
                     wfsDatastore = (WFSDataStore) DataStoreFinder.getDataStore(connectionParameters);
                 }
             }
-
-            logger.info(String.format(
-                    "Reading feature type '%s' schema structure.",
-                    parameters.getTypeName()));
-            SimpleFeatureType sft = null;
-            try {
-                sft = wfsDatastore.getSchema(parameters.getTypeName());
-                resolvedTypeName = parameters.getTypeName();
-            } catch (IOException e) {
-                String[] typeNames = wfsDatastore.getTypeNames();
-                String typeNamesList = Arrays.stream(typeNames).collect(Collectors.joining(", "));
-                logger.info(String.format(
-                    "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
-                    parameters.getTypeName(),
-                    typeNamesList
-                   ));
-                Optional<String> typeFound = Arrays.stream(typeNames)
-                    .filter(t -> t.endsWith(parameters.getTypeName())).findFirst();
-                if (typeFound.isPresent()) {
-                    resolvedTypeName = typeFound.get();
-                    logger.info(String.format(
-                        "Found a type '%s'.",
-                        resolvedTypeName
-                    ));
-                    sft = wfsDatastore.getSchema(resolvedTypeName);
-                } else {
-                    throw new NoSuchElementException(String.format(
-                        "No type found for '%s' (with or without namespace match).",
-                        parameters.getTypeName()
-                    ));
-                }
-            }
-
-            List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
-
-            for (AttributeDescriptor desc : attributesDesc) {
-                fields.put(desc.getName().getLocalPart(), OwsUtils.getTypeFromFeatureType(desc));
-            }
-
-            logger.info(String.format(
-                    "Successfully analyzed %d attributes in schema.", fields.size()));
         } catch (IOException e) {
             String errorMsg = String.format(
-                    "Failed to create datastore from service using URL '%s'. Error is %s.", parameters.getUrl(), e.getMessage());
+                "Failed to create datastore from service using URL '%s'. Error is %s.", parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
-                    "Failed to GetCapabilities from service using URL '%s'. Error is %s.",
-                    parameters.getUrl(), e.getMessage());
+                "Failed to GetCapabilities from service using URL '%s'. Error is %s.",
+                parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
         }
+
+        logger.info("Reading feature type '{}' schema structure.",
+                    parameters.getTypeName());
+        SimpleFeatureType sft = null;
+        try {
+            sft = wfsDatastore.getSchema(parameters.getTypeName());
+            resolvedTypeName = parameters.getTypeName();
+        } catch (IOException e) {
+            String[] typeNames = wfsDatastore.getTypeNames();
+            String typeNamesList = Arrays.stream(typeNames).collect(Collectors.joining(", "));
+            logger.info(String.format(
+                "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
+                parameters.getTypeName(),
+                typeNamesList
+               ));
+            Optional<String> typeFound = Arrays.stream(typeNames)
+                .filter(t -> t.endsWith(parameters.getTypeName())).findFirst();
+            if (typeFound.isPresent()) {
+                resolvedTypeName = typeFound.get();
+                logger.info("Found a type '{}'.", resolvedTypeName);
+                sft = wfsDatastore.getSchema(resolvedTypeName);
+            } else {
+                throw new NoSuchElementException(String.format(
+                    "No type found for '%s' (with or without namespace match).",
+                    parameters.getTypeName()
+                ));
+            }
+        }
+
+        List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
+
+        for (AttributeDescriptor desc : attributesDesc) {
+            fields.put(desc.getName().getLocalPart(), OwsUtils.getTypeFromFeatureType(desc));
+        }
+
+        logger.info("Successfully analyzed {} attributes in schema.", fields.size());
     }
 }

@@ -46,7 +46,7 @@ import java.net.URL;
 public class WFSClientWithStrategyInvestigator extends WFSClient {
     private String describeFeatureTypeUrl;
     private String strategyId;
-    private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, String describeFeatureTypeUrl) throws IOException, ServiceException {
         this(capabilitiesURL, httpClient, config, (WFSGetCapabilities) null, describeFeatureTypeUrl);
@@ -55,12 +55,12 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, WFSGetCapabilities capabilities, String describeFeatureTypeUrl) throws IOException, ServiceException {
         super(capabilitiesURL, httpClient, config, capabilities);
         this.describeFeatureTypeUrl = describeFeatureTypeUrl;
-        logger.debug(String.format(
-            "WFS client default strategy is %s", getStrategy()));
+        logger.debug(
+            "WFS client default strategy is {}", getStrategy());
         WFSStrategy targetNsBasedStrategy = this.determineCorrectStrategy(httpClient);
         if (targetNsBasedStrategy != null) {
-            logger.debug(String.format(
-                "Overriding WFS client strategy with GFI target namespace strategy: %s", targetNsBasedStrategy.getClass().getName()));
+            logger.debug(
+                "Overriding WFS client strategy with GFI target namespace strategy: {}", targetNsBasedStrategy.getClass().getName());
             super.specification = targetNsBasedStrategy;
             ((WFSStrategy) specification).setCapabilities(super.capabilities);
         }
@@ -71,7 +71,7 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
         WFSStrategy strategy = null;
 
         try {
-            logger.debug(String.format("Determining strategy based on %s", describeFeatureTypeUrl));
+            logger.debug("Determining strategy based on {}", describeFeatureTypeUrl);
             HTTPResponse httpResponse = httpClient.get(new URL(describeFeatureTypeUrl));
             InputStream inputStream = httpResponse.getResponseStream();
 
