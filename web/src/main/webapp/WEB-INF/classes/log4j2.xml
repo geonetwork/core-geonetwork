@@ -55,7 +55,7 @@
     <Logger name="geonetwork.formatter" level="error"/>
     <Logger name="geonetwork.geoserver.publisher" level="error"/>
     <Logger name="geonetwork.geoserver.rest" level="error"/>
-    <Logger name="geonetwork.harvest.wfs.features"/>
+    <Logger name="geonetwork.harvest.wfs.features" level="debug"/>
     <Logger name="geonetwork.harvester" level="info"/>
     <Logger name="geonetwork.harvester" level="info"/>
     <Logger name="geonetwork.index" level="error"/>
