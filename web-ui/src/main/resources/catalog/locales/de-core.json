@@ -274,7 +274,7 @@
     "assignCategoryError": "Beim Zuweisen der Kategorie '{{category}}' trat ein Fehler auf.",
     "updatePassword": "Aktualisierung",
     "upload": "Hochladen",
-    "uuid": "Geobasisdaten-ID",
+    "uuid": "Metadatensatz-ID",
     "url": "URL",
     "resetUrl": "URL zurücksetzen",
     "records": "Datensatz/Datensätze",
