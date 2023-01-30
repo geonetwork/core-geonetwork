@@ -588,7 +588,8 @@ public class UserFeedbackAPI {
         @RequestParam(required = false, defaultValue = "")
         final String metadataEmail,
         @ApiIgnore final HttpServletRequest request
-    ) throws IOException {
+    ) throws Exception {
+        AbstractMetadata md = ApiUtils.canViewRecord(metadataUuid, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
@@ -611,7 +612,6 @@ public class UserFeedbackAPI {
         toAddress.add(to);
         if (StringUtils.isNotBlank(metadataEmail)) {
             //Check metadata email belongs to metadata security!!
-            AbstractMetadata md = metadataRepository.findOneByUuid(metadataUuid);
             String[] metadataAddresses = StringUtils.split(metadataEmail, ",");
             for (String metadataAddress : metadataAddresses) {
                 String cleanMetadataAddress = StringUtils.trimToEmpty(metadataAddress);
