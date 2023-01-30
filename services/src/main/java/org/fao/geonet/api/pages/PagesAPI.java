@@ -30,7 +30,6 @@ import jeeves.server.UserSession;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
@@ -54,11 +53,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(value = {"/{portal}/api/pages"})
 @Tag(name = "pages", description = "Static pages inside GeoNetwork")
@@ -81,27 +80,29 @@ public class PagesAPI {
     private LanguageUtils languageUtils;
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add a new Page object in DRAFT section in status HIDDEN",
+        summary = "Add or update a page",
         description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/",
-        method = RequestMethod.POST)
+    @PostMapping
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = PAGE_SAVED),
-        @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
+        @ApiResponse(responseCode = "201", description = PAGE_SAVED),
         @ApiResponse(responseCode = "400", description = ERROR_CREATE),
         @ApiResponse(responseCode = "409", description = PAGE_DUPLICATE),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public void addPage(
+    public ResponseEntity addPage(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
+        @RequestParam(value = "section", required = false) final Page.PageSection section[],
+        @RequestParam(value = "status", required = false) final Page.PageStatus status,
         @RequestParam(value = "data", required = false) final MultipartFile data,
         @RequestParam(value = "link", required = false) final String link,
-        @RequestParam(value = "format", required = true) final Page.PageFormat format,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceAlreadyExistException {
+        @RequestParam(value = "format", required = false) Page.PageFormat format) throws ResourceAlreadyExistException {
+
+        if (!StringUtils.isBlank(link)) {
+            format = Page.PageFormat.LINK;
+        }
 
         checkValidLanguage(language);
 
@@ -111,13 +112,26 @@ public class PagesAPI {
 
         checkCorrectFormat(data, link, format);
 
-        if (!pageRepository.findById(new PageIdentity(language, pageId)).isPresent()) {
-            Page page = getEmptyHiddenDraftPage(language, pageId, format);
+        Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-            fillContent(data, link, page);
+        if (!page.isPresent()) {
+            Page newPage = getEmptyHiddenDraftPage(language, pageId, format);
+            fillContent(data, link, newPage);
 
-            pageRepository.save(page);
+            if (section != null) {
+                List<Page.PageSection> sections = newPage.getSections();
+                sections.clear();
+                Arrays.asList(section).forEach(s -> {
+                    sections.add(s);
+                });
+            }
 
+            if (status != null) {
+                newPage.setStatus(status);
+            }
+
+            pageRepository.save(newPage);
+            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new ResourceAlreadyExistException();
         }
@@ -126,11 +140,10 @@ public class PagesAPI {
     // Isn't done with PUT because the multipart support as used by Spring
     // doesn't support other request method than POST
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Edit a Page content and format",
+        summary = "Update a page",
         description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}",
-        method = RequestMethod.POST
+    @PostMapping(
+        value = "/{language}/{pageId}"
     )
     @ApiResponses(
         value = {
@@ -140,88 +153,77 @@ public class PagesAPI {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity editPage(
-        @PathVariable(value = "language") final String language,
-        @PathVariable(value = "pageId") final String pageId,
-        @RequestParam(value = "data", required = false) final MultipartFile data,
-        @RequestParam(value = "link", required = false) final String link,
-        @RequestParam(value = "format", required = true) final Page.PageFormat format
-    ) throws ResourceNotFoundException {
-
-        checkValidLanguage(language);
-
-        checkUniqueContent(data, link);
-
-        checkCorrectFormat(data, link, format);
-
-        final Page page = searchPage(language, pageId, pageRepository);
-
-        fillContent(data, link, page);
-
-        page.setFormat(format);
-        pageRepository.save(page);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
-    /* Local Utility and constants */
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Edit a Page name and language",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}",
-        method = RequestMethod.PUT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    public void editPageName(
+    public ResponseEntity updatePage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
         @RequestParam(value = "newLanguage", required = false) final String newLanguage,
         @RequestParam(value = "newPageId", required = false) final String newPageId,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException, ResourceAlreadyExistException {
+        @RequestParam(value = "section", required = false) final Page.PageSection section[],
+        @RequestParam(value = "status", required = false) final Page.PageStatus status,
+        @RequestParam(value = "data", required = false) final MultipartFile data,
+        @RequestParam(value = "link", required = false) final String link,
+        @RequestParam(value = "format", required = false) Page.PageFormat format
+    ) throws ResourceNotFoundException, ResourceAlreadyExistException {
+        if (!StringUtils.isBlank(link)) {
+            format = Page.PageFormat.LINK;
+        }
 
         checkValidLanguage(language);
 
-        checkValidLanguage(newLanguage);
+        final Page page = searchPage(language, pageId, pageRepository);
 
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
+        if (data != null || link != null) {
+            checkUniqueContent(data, link);
+            fillContent(data, link, page);
+        }
 
-        if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found.");
+        if (format != null) {
+            checkCorrectFormat(data, link, format);
+            page.setFormat(format);
+        }
+
+        if (section != null) {
+            List<Page.PageSection> sections = page.getSections();
+            sections.clear();
+            Arrays.asList(section).forEach(s -> {
+                sections.add(s);
+            });
+        }
+
+        if (status != null) {
+            page.setStatus(status);
         }
 
         if (!language.equals(newLanguage) || !pageId.equals(newPageId)) {
             String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
             String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
 
-            Page newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId)).get();
-            if (newPage != null) {
+            checkValidLanguage(updatedLanguage);
+
+            Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
+            if (newPage.isPresent()) {
                 throw new ResourceAlreadyExistException();
             }
 
             PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
-            newPage = new Page(newId, page.getData(), page.getLink(), page.getFormat(), page.getSections(), page.getStatus());
+            Page pageCopy = new Page(newId, page.getData(), page.getLink(),
+                page.getFormat(), page.getSections(), page.getStatus());
 
-            newPage.setSections(new ArrayList<Page.PageSection>());
-
-            for (Page.PageSection p : page.getSections()) {
-                newPage.getSections().add(p);
-            }
-
-            pageRepository.save(newPage);
+            pageRepository.save(pageCopy);
             pageRepository.delete(page);
+        } else {
+            pageRepository.save(page);
         }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Delete a Page object",
+        summary = "Delete a page",
         description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}",
-        method = RequestMethod.DELETE)
+    @DeleteMapping(
+        value = "/{language}/{pageId}")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = PAGE_DELETED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
@@ -230,21 +232,17 @@ public class PagesAPI {
     @ResponseBody
     public void deletePage(
         @PathVariable(value = "language") final String language,
-        @PathVariable(value = "pageId") final String pageId,
-        @RequestParam(value = "format", required = true) final Page.PageFormat format,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
+        @PathVariable(value = "pageId") final String pageId) throws ResourceNotFoundException {
 
         searchPage(language, pageId, pageRepository);
-
         pageRepository.deleteById(new PageIdentity(language, pageId));
     }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Return the page object details except the content",
         description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
+    @GetMapping(
         value = "/{language}/{pageId}",
-        method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = PAGE_OK),
@@ -254,21 +252,17 @@ public class PagesAPI {
     public ResponseEntity<PageJSONWrapper> getPage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
-        @Parameter(hidden = true) final HttpServletResponse response,
-        @Parameter(hidden = true) final HttpSession session) {
+        @Parameter(hidden = true) final HttpSession session) throws ResourceNotFoundException {
 
-
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
-
+        Page page = searchPage(language, pageId, pageRepository);
         return checkPermissionsOnSinglePageAndReturn(session, page);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Return the static html content identified by pageId",
         description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
+    @GetMapping(
         value = "/{language}/{pageId}/content",
-        method = RequestMethod.GET,
         produces = "text/plain;charset=UTF-8")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
@@ -277,26 +271,25 @@ public class PagesAPI {
     public ResponseEntity<String> getPageContent(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
-        @Parameter(hidden = true) final HttpServletResponse response,
         @Parameter(hidden = true) final HttpSession session) {
 
 
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
+        final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (page == null) {
+        if (!page.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             final UserSession us = ApiUtils.getUserSession(session);
-            if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
+            if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if (page.getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            } else if (page.get().getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             } else {
                 String content = "";
-                if (page.getData() != null && page.getData().length > 0) {
-                    content = new String(page.getData(), StandardCharsets.UTF_8);
+                if (page.get().getData() != null && page.get().getData().length > 0) {
+                    content = new String(page.get().getData(), StandardCharsets.UTF_8);
                 } else {
-                    content = page.getLink();
+                    content = page.get().getLink();
                 }
 
                 return new ResponseEntity<>(content, HttpStatus.OK);
@@ -304,180 +297,44 @@ public class PagesAPI {
         }
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Adds the page to a section. This means that the link to the page will be shown in the list associated to that section.",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}/{section}",
-        method = RequestMethod.POST)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
-        @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    public void addPageToSection(
-        @PathVariable(value = "language") final String language,
-        @PathVariable(value = "pageId") final String pageId,
-        @PathVariable(value = "section") final Page.PageSection section,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
-
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
-
-        if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found.");
-        }
-
-        final Page.PageSection sectionToAdd = section;
-
-        if (sectionToAdd.equals(Page.PageSection.ALL)) {
-            page.setSections(new ArrayList<Page.PageSection>());
-            page.getSections().add(sectionToAdd);
-        } else if (!page.getSections().contains(sectionToAdd)) {
-            page.getSections().add(sectionToAdd);
-        }
-
-        pageRepository.save(page);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Removes the page from a section. This means that the link to the page will not be shown in the list associated to that section.",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}/{section}",
-        method = RequestMethod.DELETE)
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = PAGE_UPDATED),
-        @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    public void removePageFromSection(
-        @PathVariable(value = "language") final String language,
-        @PathVariable(value = "pageId") final String pageId,
-        @PathVariable(value = "section") final Page.PageSection section,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
-
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
-
-        if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found.");
-        }
-
-        if (section.equals(Page.PageSection.ALL)) {
-            page.setSections(new ArrayList<Page.PageSection>());
-            page.getSections().add(Page.PageSection.DRAFT);
-        } else if (section.equals(Page.PageSection.DRAFT)) {
-            // Cannot remove a page from DRAFT section
-        } else page.getSections().remove(section);
-
-        pageRepository.save(page);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Changes the status of a page.",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/{language}/{pageId}/{status}",
-        method = RequestMethod.PUT)
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = PAGE_UPDATED),
-        @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
-    public void changePageStatus(
-        @PathVariable(value = "language") final String language,
-        @PathVariable(value = "pageId") final String pageId,
-        @PathVariable(value = "status") final Page.PageStatus status,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
-
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
-
-        if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found.");
-        }
-
-        page.setStatus(status);
-
-        pageRepository.save(page);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "List all pages according to the filters",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(
-        value = "/list",
-        method = RequestMethod.GET,
+    @GetMapping(
+        value = "/config/formats",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK)})
     @ResponseBody
-    public ResponseEntity<List<PageJSONWrapper>> listPages(
-        @RequestParam(value = "language", required = false) final String language,
-        @RequestParam(value = "section", required = false) final Page.PageSection section,
-        @RequestParam(value = "format", required = false) final Page.PageFormat format,
-        @Parameter(hidden = true) final HttpServletResponse response,
-        @Parameter(hidden = true) final HttpSession session) {
-
-        final UserSession us = ApiUtils.getUserSession(session);
-        List<Page> unfilteredResult = null;
-
-        if (language == null) {
-            unfilteredResult = pageRepository.findAll();
-        } else {
-            unfilteredResult = pageRepository.findByPageIdentityLanguage(language);
-        }
-
-        final List<PageJSONWrapper> filteredResult = new ArrayList<>();
-
-        for (final Page page : unfilteredResult) {
-            if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
-                || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
-                || page.getStatus().equals(Page.PageStatus.PUBLIC)
-                || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
-                if (section == null || Page.PageSection.ALL.equals(section)) {
-                    filteredResult.add(new PageJSONWrapper(page));
-                } else {
-                    final List<Page.PageSection> sections = page.getSections();
-                    final boolean containsALL = sections.contains(Page.PageSection.ALL);
-                    final boolean containsRequestedSection = sections.contains(section);
-                    if (containsALL || containsRequestedSection) {
-                        filteredResult.add(new PageJSONWrapper(page));
-                    }
-                }
-            }
-        }
-
-        return new ResponseEntity<>(filteredResult, HttpStatus.OK);
+    public Page.PageFormat[] getPageFormats() {
+        return Page.PageFormat.values();
     }
 
-    /* HTTP status messages not from ApiParams */
+    @GetMapping(
+        value = "/config/sections",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK)})
+    @ResponseBody
+    public Page.PageSection[] getPageSections() {
+        return Page.PageSection.values();
+    }
 
-    /**
-     * Check correct format.
-     *
-     * @param data   the data
-     * @param link   the link
-     * @param format the format
-     */
+    @GetMapping(
+        value = "/config/status",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK)})
+    @ResponseBody
+    public Page.PageStatus[] getPageStatus() {
+        return Page.PageStatus.values();
+    }
+
+
     private void checkCorrectFormat(final MultipartFile data, final String link, final Page.PageFormat format) {
-        // Cannot set format to LINK and upload a file
         if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
-            throw new IllegalArgumentException("Wrong format.");
+            throw new IllegalArgumentException("Wrong format. Cannot set format to LINK and upload a file.");
         }
 
-        // Cannot set a link without setting format to LINK
         if (!Page.PageFormat.LINK.equals(format) && !StringUtils.isBlank(link)) {
-            throw new IllegalArgumentException("Wrong format.");
+            throw new IllegalArgumentException("Wrong format. Cannot set a link without setting format to LINK.");
         }
     }
 
-    /**
-     * Check that link or a file is defined.
-     *
-     * @param data the data
-     * @param link the link
-     */
     private void checkMandatoryContent(final MultipartFile data, final String link) {
         // Cannot set both: link and file
         if (StringUtils.isBlank(link) && (data == null || data.isEmpty())) {
@@ -485,12 +342,6 @@ public class PagesAPI {
         }
     }
 
-    /**
-     * Check unique content.
-     *
-     * @param data the data
-     * @param link the link
-     */
     private void checkUniqueContent(final MultipartFile data, final String link) {
         // Cannot set both: link and file
         if (!StringUtils.isBlank(link) && data != null && !data.isEmpty()) {
@@ -498,17 +349,11 @@ public class PagesAPI {
         }
     }
 
-    /**
-     * Check file type.
-     *
-     * @param data the data
-     */
+
     private void checkFileType(final MultipartFile data) {
         if (data != null) {
             String extension = FilenameUtils.getExtension(data.getOriginalFilename());
-            final String[] supportedExtensions = {"html", "HTML", "txt", "TXT", "md", "MD"};
-
-            if (!ArrayUtils.contains(supportedExtensions, extension)) {
+            if (!ArrayUtils.contains(Page.PageExtension.values(), extension.toUpperCase())) {
                 throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
             }
         }
@@ -556,12 +401,12 @@ public class PagesAPI {
      */
     private Page searchPage(final String language, final String pageId, final PageRepository pageRepository)
         throws ResourceNotFoundException {
-        final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
+        final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
-        if (page == null) {
+        if (!page.isPresent()) {
             throw new ResourceNotFoundException("Page " + pageId + " not found");
         }
-        return page;
+        return page.get();
     }
 
     /**
@@ -570,11 +415,10 @@ public class PagesAPI {
      * @param format
      * @return An empty hidden draft Page
      */
-    private Page getEmptyHiddenDraftPage(final String language, final String pageId, final Page.PageFormat format) {
+    protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final Page.PageFormat format) {
         final List<Page.PageSection> sections = new ArrayList<>();
         sections.add(Page.PageSection.DRAFT);
-        Page page = new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN);
-        return page;
+        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN);
     }
 
     /**
