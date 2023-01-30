@@ -38,16 +38,20 @@
 
       function loadStaticPages() {
         $scope.staticPageSelected = null;
-        $http.get("../api/pages/list").success(function (data) {
-          $scope.staticPages = data;
+        $http.get("../api/pages/list").then(function (r) {
+          $scope.staticPages = r.data;
 
           $scope.staticPages.forEach(function (p) {
             // Support 1 section. TODO: Support multiple sections
-            p.section = _.first(_.filter(p.sections, function(s) { return s !== 'DRAFT'}));
+            p.section = _.first(
+              _.filter(p.sections, function (s) {
+                return s !== "DRAFT";
+              })
+            );
             p.pageId = p.linkText;
             delete p.linkText;
             delete p.sections;
-          })
+          });
         });
       }
 
@@ -60,11 +64,10 @@
           link: "",
           status: "HIDDEN"
         };
-      }
+      };
 
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
-        //$scope.mapserverUpdated = false;
         $scope.staticPageSelected = v;
       };
 
@@ -77,54 +80,76 @@
 
         $http
           .post(
-            "../api/pages/" +  ($scope.isUpdate ? $scope.staticPageSelected.language + "/" + $scope.staticPageSelected.pageId : "") + "?" +
-            gnUrlUtils.toKeyValue(sp)
+            "../api/pages/" +
+              ($scope.isUpdate
+                ? $scope.staticPageSelected.language +
+                  "/" +
+                  $scope.staticPageSelected.pageId
+                : "") +
+              "?" +
+              gnUrlUtils.toKeyValue(sp)
           )
-          .success(function (data) {
-            $http
-              .post(
-                "../api/pages/" + $scope.staticPageSelected.language + "/" + $scope.staticPageSelected.pageId + "/" + $scope.staticPageSelected.section
-              )
-              .success(function (data) {
-                $http
-                  .put(
-                    "../api/pages/" + $scope.staticPageSelected.language + "/" + $scope.staticPageSelected.pageId + "/" + $scope.staticPageSelected.status
-                  )
-                  .success(function (data) {
-                    loadStaticPages();
-                    $rootScope.$broadcast("StatusUpdated", {
-                      msg: $translate.instant("staticPageUpdated"),
-                      timeout: 2,
-                      type: "success"
-                    });
-                  })
-                  .error(function (data) {
+          .then(
+            function (r) {
+              $http
+                .post(
+                  "../api/pages/" +
+                    $scope.staticPageSelected.language +
+                    "/" +
+                    $scope.staticPageSelected.pageId +
+                    "/" +
+                    $scope.staticPageSelected.section
+                )
+                .then(
+                  function (r) {
+                    $http
+                      .put(
+                        "../api/pages/" +
+                          $scope.staticPageSelected.language +
+                          "/" +
+                          $scope.staticPageSelected.pageId +
+                          "/" +
+                          $scope.staticPageSelected.status
+                      )
+                      .then(
+                        function (r) {
+                          loadStaticPages();
+                          $rootScope.$broadcast("StatusUpdated", {
+                            msg: $translate.instant("staticPageUpdated"),
+                            timeout: 2,
+                            type: "success"
+                          });
+                        },
+                        function (data) {
+                          $rootScope.$broadcast("StatusUpdated", {
+                            title: $translate.instant("staticPageUpdateError"),
+                            error: data,
+                            timeout: 0,
+                            type: "danger"
+                          });
+                        }
+                      );
+                  },
+                  function (data) {
                     $rootScope.$broadcast("StatusUpdated", {
                       title: $translate.instant("staticPageUpdateError"),
                       error: data,
                       timeout: 0,
                       type: "danger"
                     });
-                  });
-              })
-              .error(function (data) {
-                $rootScope.$broadcast("StatusUpdated", {
-                  title: $translate.instant("staticPageUpdateError"),
-                  error: data,
-                  timeout: 0,
-                  type: "danger"
-                });
+                  }
+                );
+            },
+            function (data) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("staticPageUpdateError"),
+                error: data,
+                timeout: 0,
+                type: "danger"
               });
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("staticPageUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
-      }
+            }
+          );
+      };
 
       $scope.deleteStaticPageConfig = function () {
         $("#gn-confirm-remove-static-page").modal("show");
@@ -132,18 +157,27 @@
 
       $scope.confirmDeleteStaticPageConfig = function () {
         $http
-          .delete("../api/pages/" + $scope.staticPageSelected.language + "/" + $scope.staticPageSelected.linkText + "?format=" + $scope.staticPageSelected.format)
-          .success(function (data) {
-            loadStaticPages();
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("staticPageDeleteError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .delete(
+            "../api/pages/" +
+              $scope.staticPageSelected.language +
+              "/" +
+              $scope.staticPageSelected.linkText +
+              "?format=" +
+              $scope.staticPageSelected.format
+          )
+          .then(
+            function () {
+              loadStaticPages();
+            },
+            function (data) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("staticPageDeleteError"),
+                error: data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       loadStaticPages();
