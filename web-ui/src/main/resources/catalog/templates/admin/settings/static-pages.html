@@ -1,4 +1,8 @@
-<div class="row" data-ng-controller="GnStaticPagesController" id="gn-static-pages-container">
+<div
+  class="row"
+  data-ng-controller="GnStaticPagesController"
+  id="gn-static-pages-container"
+>
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">manageStaticPages</div>
@@ -40,12 +44,8 @@
   <div class="col-lg-8" data-ng-if="staticPageSelected !== null">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span data-ng-hide="!isUpdate" data-translate=""
-        >updateStaticPage</span
-        >
-        <span data-ng-hide="isUpdate" data-translate=""
-        >newStaticPage</span
-        >
+        <span data-ng-hide="!isUpdate" data-translate="">updateStaticPage</span>
+        <span data-ng-hide="isUpdate" data-translate="">newStaticPage</span>
 
         <div class="btn-toolbar pull-right">
           <button
@@ -68,19 +68,11 @@
         </div>
       </div>
       <div class="panel-body">
-
-
-        <form
-          id="gn-static-page-edit"
-          name="gnStaticPageEdit"
-          class="form-horizontal"
-        >
+        <form id="gn-static-page-edit" name="gnStaticPageEdit" class="form-horizontal">
           <input type="hidden" name="_csrf" value="{{csrf}}" />
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >language</label
-            >
+            <label class="control-label col-sm-3" data-translate="">language</label>
 
             <div class="col-sm-9">
               <input
@@ -94,9 +86,7 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >pageId</label
-            >
+            <label class="control-label col-sm-3" data-translate="">pageId</label>
 
             <div class="col-sm-9">
               <input
@@ -109,11 +99,8 @@
             </div>
           </div>
 
-
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >link</label
-            >
+            <label class="control-label col-sm-3" data-translate="">link</label>
 
             <div class="col-sm-9">
               <input
@@ -127,9 +114,7 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >format</label
-            >
+            <label class="control-label col-sm-3" data-translate="">format</label>
 
             <div class="col-sm-9">
               <select
@@ -144,9 +129,7 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >section</label
-            >
+            <label class="control-label col-sm-3" data-translate="">section</label>
 
             <div class="col-sm-9">
               <select
@@ -162,9 +145,7 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate=""
-            >status</label
-            >
+            <label class="control-label col-sm-3" data-translate="">status</label>
 
             <div class="col-sm-9">
               <select
@@ -181,7 +162,6 @@
           </div>
         </form>
       </div>
-
     </div>
   </div>
 
