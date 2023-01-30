@@ -83,6 +83,12 @@ public class Page extends GeonetEntity implements Serializable {
         ALL, TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3, DRAFT;
     }
 
+    public enum PageExtension {
+        HTML,
+        TXT,
+        MD
+    }
+
     @EmbeddedId
     public PageIdentity getPageIdentity() {
         return pageIdentity;
