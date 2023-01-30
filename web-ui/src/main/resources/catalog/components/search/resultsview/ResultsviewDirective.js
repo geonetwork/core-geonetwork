@@ -151,8 +151,28 @@
                 }
               });
               if (!ol.extent.isEmpty(extent)) {
-                // fit extent in map
-                scope.map.getView().fit(extent, scope.map.getSize());
+                var viewExtent = ol.extent.createEmpty();
+
+                // Get the search map background layer extent
+                scope.map.getLayers().forEach(function (l) {
+                  if (l.background == true) {
+                    viewExtent = l.getExtent();
+                  }
+                });
+
+                // check if the metadata extent is contained in the view extent
+                if (viewExtent && !ol.extent.isEmpty(viewExtent)) {
+                  if (ol.extent.containsExtent(viewExtent, extent)) {
+                    // fit extent in map - zoom to the metadata extent
+                    scope.map.getView().fit(extent, scope.map.getSize());
+                  } else {
+                    // fit extent in map - zoom to the view  extent
+                    scope.map.getView().fit(viewExtent, scope.map.getSize());
+                  }
+                } else {
+                  // fit extent in map - zoom to the metadata extent
+                  scope.map.getView().fit(extent, scope.map.getSize());
+                }
               }
             }
           });

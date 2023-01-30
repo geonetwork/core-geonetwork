@@ -972,25 +972,6 @@
               </resources>
             </configuration>
           </execution>
- <!--         <execution>
-            <id>copy-prebuilt-wro4j-db</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}/geonetwork/WEB-INF/prebuilt/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.build.directory}</directory>
-                  <filtering>false</filtering>
-                  <includes>
-                    <include>wro4j-cache.mv.db</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>-->
         </executions>
       </plugin>
 

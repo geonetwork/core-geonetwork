@@ -27,6 +27,8 @@
   <include file="classpath:web-ui-wro-sources-sextant.xml" />
 
   <require>
+    <!--pathOnDisk="web/target/geonetwork"-->
+
     <jsSource webappPath="{{schemaPluginsDir}}"/>
     <jsSource webappPath="{{formatterDir}}"/>
     <cssSource webappPath="{{schemaPluginsDir}}"/>

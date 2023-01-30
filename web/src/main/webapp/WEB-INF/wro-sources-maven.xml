@@ -28,6 +28,7 @@ build time
          xsi:noNamespaceSchemaLocation="wro-sources.xsd">
   <include file="classpath:web-ui-wro-sources.xml"/>
   <include file="classpath:web-ui-wro-sources-sextant.xml" />
+
   <require pathOnDisk="web/target/geonetwork"/>
   <require pathOnDisk="web/target/webapp"/>
 </sources>
