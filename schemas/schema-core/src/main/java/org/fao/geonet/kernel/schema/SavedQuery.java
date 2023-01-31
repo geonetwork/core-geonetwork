@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
  *
  */
 public class SavedQuery {
+
+    public static final String DOI_GET = "doi-get";
+    public static final String RESOURCEID_GET = "resourceid-get";
+
     /**
      * Query identifier.
      */

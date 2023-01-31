@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -59,6 +60,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -199,6 +201,43 @@ public class MetadataApi {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get metadata record permalink",
+        description = "Permalink is by default the landing page formatter but can be configured in the admin console > settings. If the record as a DOI and if enabled in the settings, then it takes priority.")
+    @GetMapping(value = "/{metadataUuid:.+}/permalink",
+        consumes = {
+            MediaType.ALL_VALUE
+        },
+        produces = {
+            MediaType.TEXT_PLAIN_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return the permalink URL."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+    })
+    public ResponseEntity<String> getRecordPermalink(
+        @Parameter(description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        String language = languageUtils.getIso3langCode(request.getLocales());
+
+        return new ResponseEntity<>(metadataUtils.getPermalink(metadata.getUuid(), language), HttpStatus.OK);
+    }
+
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML or JSON",
         description = "")

@@ -23,8 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-				xmlns:util="java:org.fao.geonet.util.XslUtil"
-				version="2.0"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/base-variables.xsl"/>
@@ -32,10 +32,6 @@
   <xsl:variable name="format" select="/root/request/format"/>
   <xsl:variable name="indexDocs" select="/root/response/indexDocs"/>
   <xsl:variable name="changeDate" select="/root/response/changeDate"/>
-
-  <xsl:variable name="sitemapLinkUrl"
-                select="util:getSettingValue('system/server/sitemapLinkUrl')"/>
-
 
   <xsl:template match="/root">
     <xsl:choose>
@@ -123,15 +119,8 @@
               <xsl:when test="$format='xml'">
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
-
               <xsl:otherwise>
-                <xsl:variable name="metadataUrl">
-                  <xsl:choose>
-                    <xsl:when test="contains(upper-case(normalize-space($sitemapLinkUrl)), '{{UUID}}')"><xsl:value-of select="replace($sitemapLinkUrl, '\{\{UUID\}\}', $uuid, 'i' )"/></xsl:when>
-                    <xsl:otherwise><xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '?language=all')"/></xsl:otherwise>
-                  </xsl:choose>
-                </xsl:variable>
-                <xsl:value-of select="$metadataUrl"/>
+                <xsl:value-of select="util:getPermalink($uuid, $lang)"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
