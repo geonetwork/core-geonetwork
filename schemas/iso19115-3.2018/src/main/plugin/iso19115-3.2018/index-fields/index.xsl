@@ -647,7 +647,7 @@
         </xsl:call-template>
 
 
-        <xsl:for-each select="mri:topicCategory/mri:MD_TopicCategoryCode">
+        <xsl:for-each select="mri:topicCategory/mri:MD_TopicCategoryCode[string(.)]">
           <xsl:variable name="value" as="node()">
             <xsl:copy>
               <xsl:attribute name="codeListValue" select="."/>
