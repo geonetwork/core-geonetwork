@@ -132,10 +132,16 @@
             "../api/pages/" +
               $scope.staticPageSelected.language +
               "/" +
-              $scope.staticPageSelected.linkText
+              $scope.staticPageSelected.pageId
           )
           .then(
             function () {
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("staticPageRemoved"),
+                timeout: 2,
+                type: "success"
+              });
+
               loadStaticPages();
             },
             function (data) {

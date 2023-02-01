@@ -46,10 +46,10 @@
               method: "GET",
               url: "../api/pages/" + $scope.language + "/" + page + "/content"
             }).then(
-              function mySuccess(response) {
+              function (response) {
                 $scope.content = $sce.trustAsHtml(response.data);
               },
-              function myError(response) {
+              function (response) {
                 $scope.content = "Page not available";
                 console.log(response.statusText);
               }
