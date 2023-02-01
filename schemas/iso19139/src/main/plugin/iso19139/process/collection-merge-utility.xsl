@@ -127,7 +127,7 @@
                                     </xsl:when>
                                     <xsl:otherwise>
                                       <xsl:for-each-group select="$elementsToMerge"
-                                                          group-by="normalize-space(*)">
+                                                          group-by="string-join(.//(text()|@*), '')">
                                         <xsl:copy-of select="."/>
                                       </xsl:for-each-group>
                                     </xsl:otherwise>
