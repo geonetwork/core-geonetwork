@@ -80,7 +80,7 @@ public class PagesAPI {
     private LanguageUtils languageUtils;
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add or update a page",
+        summary = "Add a page",
         description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
     @PostMapping
     @ApiResponses(value = {
@@ -295,6 +295,53 @@ public class PagesAPI {
                 return new ResponseEntity<>(content, HttpStatus.OK);
             }
         }
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "List all pages according to the filters",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @GetMapping
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
+    @ResponseBody
+    public ResponseEntity<List<PageJSONWrapper>> listPages(
+        @RequestParam(value = "language", required = false) final String language,
+        @RequestParam(value = "section", required = false) final Page.PageSection section,
+        @RequestParam(value = "format", required = false) final Page.PageFormat format,
+        @Parameter(hidden = true) final HttpServletResponse response,
+        @Parameter(hidden = true) final HttpSession session) {
+
+        final UserSession us = ApiUtils.getUserSession(session);
+        List<Page> unfilteredResult = null;
+
+        if (language == null) {
+            unfilteredResult = pageRepository.findAll();
+        } else {
+            unfilteredResult = pageRepository.findByPageIdentityLanguage(language);
+        }
+
+        final List<PageJSONWrapper> filteredResult = new ArrayList<>();
+
+        for (final Page page : unfilteredResult) {
+            if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
+                || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
+                || page.getStatus().equals(Page.PageStatus.PUBLIC)
+                || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
+                if (section == null || Page.PageSection.ALL.equals(section)) {
+                    filteredResult.add(new PageJSONWrapper(page));
+                } else {
+                    final List<Page.PageSection> sections = page.getSections();
+                    final boolean containsALL = sections.contains(Page.PageSection.ALL);
+                    final boolean containsRequestedSection = sections.contains(section);
+                    if (containsALL || containsRequestedSection) {
+                        filteredResult.add(new PageJSONWrapper(page));
+                    }
+                }
+            }
+        }
+
+        return new ResponseEntity<>(filteredResult, HttpStatus.OK);
     }
 
     @GetMapping(

@@ -51,6 +51,7 @@
           <button
             type="button"
             class="btn btn-primary"
+            data-ng-disabled="!gnStaticPageEdit.$valid && !gnStaticPageEdit.dirty"
             data-ng-click="saveStaticPage('#gn-static-page-edit')"
           >
             <i class="fa fa-save"></i>&nbsp;
@@ -75,13 +76,16 @@
             <label class="control-label col-sm-3" data-translate="">language</label>
 
             <div class="col-sm-9">
-              <input
-                type="text"
-                name="language"
+              <select
+                name="section"
                 class="form-control"
                 required=""
                 data-ng-model="staticPageSelected.language"
-              />
+              >
+                <option data-ng-repeat="l in dbLanguages" value="{{l.id}}">
+                  {{l.name}}
+                </option>
+              </select>
             </div>
           </div>
 

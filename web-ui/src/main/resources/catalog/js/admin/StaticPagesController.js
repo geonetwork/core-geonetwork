@@ -33,12 +33,13 @@
     "$translate",
     "gnUrlUtils",
     function ($scope, $http, $rootScope, $translate, gnUrlUtils) {
+      $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.staticPageSelected = null;
 
       function loadStaticPages() {
         $scope.staticPageSelected = null;
-        $http.get("../api/pages/list").then(function (r) {
+        $http.get("../api/pages").then(function (r) {
           $scope.staticPages = r.data;
 
           $scope.staticPages.forEach(function (p) {
@@ -55,6 +56,21 @@
         });
       }
 
+      function loadDbLanguages() {
+        $http.get("../api/languages").then(function (r) {
+          $scope.dbLanguages = r.data;
+          $http.get("../api/languages/application").then(function (r) {
+            $scope.applicationLanguagesNotAlreadyAvailable = r.data.filter(function (l) {
+              return (
+                $scope.dbLanguages.find(function (dbL) {
+                  return dbL.id === l.id;
+                }) === undefined
+              );
+            });
+          });
+        });
+      }
+
       $scope.addStaticPage = function () {
         $scope.isUpdate = false;
         $scope.staticPageSelected = {
@@ -62,7 +78,8 @@
           pageId: "",
           format: "",
           link: "",
-          status: "HIDDEN"
+          status: "HIDDEN",
+          section: ""
         };
       };
 
@@ -73,16 +90,15 @@
 
       $scope.saveStaticPage = function () {
         var sp = Object.assign({}, $scope.staticPageSelected);
-        delete sp.status;
-        delete sp.sections;
-        delete sp.section;
+        sp.section = [sp.section];
         delete sp.$$hashKey;
 
         $http
           .post(
             "../api/pages/" +
               ($scope.isUpdate
-                ? $scope.staticPageSelected.language +
+                ? "/" +
+                  $scope.staticPageSelected.language +
                   "/" +
                   $scope.staticPageSelected.pageId
                 : "") +
@@ -90,60 +106,18 @@
               gnUrlUtils.toKeyValue(sp)
           )
           .then(
-            function (r) {
-              $http
-                .post(
-                  "../api/pages/" +
-                    $scope.staticPageSelected.language +
-                    "/" +
-                    $scope.staticPageSelected.pageId +
-                    "/" +
-                    $scope.staticPageSelected.section
-                )
-                .then(
-                  function (r) {
-                    $http
-                      .put(
-                        "../api/pages/" +
-                          $scope.staticPageSelected.language +
-                          "/" +
-                          $scope.staticPageSelected.pageId +
-                          "/" +
-                          $scope.staticPageSelected.status
-                      )
-                      .then(
-                        function (r) {
-                          loadStaticPages();
-                          $rootScope.$broadcast("StatusUpdated", {
-                            msg: $translate.instant("staticPageUpdated"),
-                            timeout: 2,
-                            type: "success"
-                          });
-                        },
-                        function (data) {
-                          $rootScope.$broadcast("StatusUpdated", {
-                            title: $translate.instant("staticPageUpdateError"),
-                            error: data,
-                            timeout: 0,
-                            type: "danger"
-                          });
-                        }
-                      );
-                  },
-                  function (data) {
-                    $rootScope.$broadcast("StatusUpdated", {
-                      title: $translate.instant("staticPageUpdateError"),
-                      error: data,
-                      timeout: 0,
-                      type: "danger"
-                    });
-                  }
-                );
+            function (response) {
+              loadStaticPages();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("staticPageUpdated"),
+                timeout: 2,
+                type: "success"
+              });
             },
-            function (data) {
+            function (response) {
               $rootScope.$broadcast("StatusUpdated", {
                 title: $translate.instant("staticPageUpdateError"),
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: "danger"
               });
@@ -161,9 +135,7 @@
             "../api/pages/" +
               $scope.staticPageSelected.language +
               "/" +
-              $scope.staticPageSelected.linkText +
-              "?format=" +
-              $scope.staticPageSelected.format
+              $scope.staticPageSelected.linkText
           )
           .then(
             function () {
@@ -180,6 +152,7 @@
           );
       };
 
+      loadDbLanguages();
       loadStaticPages();
     }
   ]);
