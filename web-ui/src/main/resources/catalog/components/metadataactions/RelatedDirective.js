@@ -54,7 +54,7 @@
           method: "get",
           url:
             "../api/records/" +
-            uuidOrId +
+            encodeURIComponent(uuidOrId) +
             "/related?" +
             (types ? "type=" + types.split("|").join("&type=") : ""),
           timeout: canceller.promise,

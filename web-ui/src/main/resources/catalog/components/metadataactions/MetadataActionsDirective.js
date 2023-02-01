@@ -491,7 +491,10 @@
               method = "delete";
             }
             $http[method](
-              "../api/records/" + scope.metadataUuid + "/tags?id=" + c.id
+              "../api/records/" +
+                encodeURIComponent(scope.metadataUuid) +
+                "/tags?id=" +
+                c.id
             ).then(
               function () {
                 if (existIndex === -1) {
@@ -499,7 +502,6 @@
                   scope.currentCategories.values.push(c.name);
                 } else {
                   scope.ids.splice(existIndex, 1);
-
                   angular.forEach(scope.currentCategories.values, function (cat, idx) {
                     if (cat === c.name) {
                       scope.currentCategories.values.splice(idx, 1);
@@ -594,7 +596,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "permalinkinput.html",
+          "../../catalog/components/metadataactions/partials/permalinkinput.html",
         link: function (scope, element, attrs) {
           scope.url = attrs["gnPermalinkInput"];
           scope.copied = false;
@@ -614,8 +616,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "citation.html",
+        templateUrl: "../../catalog/components/metadataactions/partials/citation.html",
         scope: {
           md: "=gnMetadataCitation",
           format: "@"

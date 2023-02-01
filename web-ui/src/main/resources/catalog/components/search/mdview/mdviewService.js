@@ -194,7 +194,7 @@
         gnMdViewObj.previousRecords.push(md);
 
         if (!gnMdViewObj.usingFormatter) {
-          $http.post("../api/records/" + md.uuid + "/popularity");
+          $http.post("../api/records/" + encodeURIComponent(md.uuid) + "/popularity");
         }
         this.setLocationUuid(md.uuid, formatter);
         gnMdViewObj.recordsLoaded = true;

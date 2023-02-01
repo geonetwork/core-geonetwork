@@ -33,13 +33,16 @@
     function ($http) {
       return {
         get: function (metadataUuid, filter) {
-          return $http.get("../api/records/" + metadataUuid + "/attachments", {
-            params: {
-              filter: filter,
-              _random: Math.floor(Math.random() * 10000),
-              approved: "false"
+          return $http.get(
+            "../api/records/" + encodeURIComponent(metadataUuid) + "/attachments",
+            {
+              params: {
+                filter: filter,
+                _random: Math.floor(Math.random() * 10000),
+                approved: "false"
+              }
             }
-          });
+          );
         },
         updateStatus: function (resource) {
           return $http.patch(

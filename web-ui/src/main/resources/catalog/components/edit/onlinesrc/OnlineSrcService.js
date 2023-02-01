@@ -246,7 +246,7 @@
          */
         getAllResources: function (types) {
           var linksAndRelatedPromises = [],
-            apiPrefix = "../api/records/" + gnCurrentEdit.uuid,
+            apiPrefix = "../api/records/" + encodeURIComponent(gnCurrentEdit.uuid),
             isArray = angular.isArray(types),
             defaultRelatedTypes = ["thumbnails", "onlines"],
             relatedTypes = [],

@@ -384,18 +384,17 @@ public class EsRestClient implements InitializingBean {
             final SearchResponse searchResponse = this.query(index, query, null, fields, 0, 1, null);
             if (searchResponse.status().getStatus() == 200) {
                 TotalHits totalHits = searchResponse.getHits().getTotalHits();
-                long matches = totalHits == null ? -1 : totalHits.value; 
+                long matches = totalHits == null ? -1 : totalHits.value;
                 if (matches == 0) {
                     return fieldValues;
                 } else if (matches == 1) {
                     final SearchHit[] hits = searchResponse.getHits().getHits();
 
                     fields.forEach(f -> {
-                        final Object o = hits[0].getSourceAsMap().get(f);
-                        if (o instanceof String) {
-                            fieldValues.put(f, (String) o);
-                        } else if (o instanceof HashMap && f.endsWith("Object")) {
-                            fieldValues.put(f, (String) ((HashMap) o).get("default"));
+                        Map<String, Object> sourceAsMap = hits[0].getSourceAsMap();
+                        String fieldValue = getFieldValue(f, sourceAsMap);
+                        if (fieldValue != null) {
+                            fieldValues.put(f, fieldValue);
                         }
                     });
                 } else {
@@ -418,6 +417,15 @@ public class EsRestClient implements InitializingBean {
         return fieldValues;
     }
 
+    public static String getFieldValue(String field, Map<String, Object> source) {
+        final Object o = source.get(field);
+        if (o instanceof String) {
+            return (String) o;
+        } else if (o instanceof HashMap && field.endsWith("Object")) {
+            return (String) ((HashMap) o).get("default");
+        }
+        return null;
+    }
 
     /**
      * Analyze a field and a value against the index

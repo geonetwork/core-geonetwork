@@ -170,7 +170,7 @@ public class MetadataSharingApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Set privileges for ALL group to publish the metadata for all users.")
     @RequestMapping(
-        value = "/{metadataUuid}/publish",
+        value = "/{metadataUuid:.+}/publish",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
@@ -197,7 +197,7 @@ public class MetadataSharingApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Unsets privileges for ALL group to publish the metadata for all users.")
     @RequestMapping(
-        value = "/{metadataUuid}/unpublish",
+        value = "/{metadataUuid:.+}/unpublish",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
@@ -233,7 +233,7 @@ public class MetadataSharingApi {
             "administrator, a reviewer or the owner of the record.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/publishing/managing-privileges.html'>More info</a>")
     @RequestMapping(
-        value = "/{metadataUuid}/sharing",
+        value = "/{metadataUuid:.+}/sharing",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
@@ -523,7 +523,7 @@ public class MetadataSharingApi {
         summary = "Get record sharing settings",
         description = "Return current sharing options for a record.")
     @RequestMapping(
-        value = "/{metadataUuid}/sharing",
+        value = "/{metadataUuid:.+}/sharing",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -619,7 +619,7 @@ public class MetadataSharingApi {
         summary = "Set record group",
         description = "A record is related to one group.")
     @RequestMapping(
-        value = "/{metadataUuid}/group",
+        value = "/{metadataUuid:.+}/group",
         method = RequestMethod.PUT
     )
     @ApiResponses(value = {
@@ -808,7 +808,7 @@ public class MetadataSharingApi {
         summary = "Set record group and owner",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/ownership",
+        value = "/{metadataUuid:.+}/ownership",
         method = RequestMethod.PUT
     )
     @ResponseStatus(HttpStatus.CREATED)
