@@ -1434,6 +1434,11 @@
     "saveThesaurus": "Save",
     "manageStaticPages": "Static pages",
     "newStaticPage": "New static page",
-    "updateStaticPage": "Update static page"
+    "updateStaticPage": "Update static page",
+    "confirmStaticPageDelete": "Are you sure you want to delete the static page?",
+    "staticPageUpdated": "Static page updated",
+    "staticPageUpdateError": "Error occurred while saving the static page",
+    "staticPageDeleteError": "Error while removing the static page",
+    "staticPageRemoved": "Static page removed"
 }
 
