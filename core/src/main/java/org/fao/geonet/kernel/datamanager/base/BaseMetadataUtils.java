@@ -324,7 +324,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public String getPermalink(String uuid, String language) {
         Boolean doiIsFirst = settingManager.getValueAsBool(METADATA_URL_SITEMAPDOIFIRST, false);
 
-        if (doiIsFirst) {
+        if (Boolean.TRUE.equals(doiIsFirst)) {
             String doi = null;
             try {
                 doi = getDoi(uuid);
