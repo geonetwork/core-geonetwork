@@ -94,7 +94,7 @@ public class PagesAPI {
     public ResponseEntity addPage(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
-        @RequestParam(value = "section", required = false) final Page.PageSection section[],
+        @RequestParam(value = "sections", required = false) final Page.PageSection section[],
         @RequestParam(value = "status", required = false) final Page.PageStatus status,
         @RequestParam(value = "data", required = false) final MultipartFile data,
         @RequestParam(value = "link", required = false) final String link,
@@ -158,7 +158,7 @@ public class PagesAPI {
         @PathVariable(value = "pageId") final String pageId,
         @RequestParam(value = "newLanguage", required = false) final String newLanguage,
         @RequestParam(value = "newPageId", required = false) final String newPageId,
-        @RequestParam(value = "section", required = false) final Page.PageSection section[],
+        @RequestParam(value = "sections", required = false) final Page.PageSection section[],
         @RequestParam(value = "status", required = false) final Page.PageStatus status,
         @RequestParam(value = "data", required = false) final MultipartFile data,
         @RequestParam(value = "link", required = false) final String link,

@@ -43,15 +43,8 @@
           $scope.staticPages = r.data;
 
           $scope.staticPages.forEach(function (p) {
-            // Support 1 section. TODO: Support multiple sections
-            p.section = _.first(
-              _.filter(p.sections, function (s) {
-                return s !== "DRAFT";
-              })
-            );
             p.pageId = p.linkText;
             delete p.linkText;
-            delete p.sections;
           });
         });
       }
@@ -79,7 +72,7 @@
           format: "",
           link: "",
           status: "HIDDEN",
-          section: ""
+          sections: []
         };
       };
 
@@ -90,12 +83,16 @@
 
       $scope.saveStaticPage = function () {
         var sp = Object.assign({}, $scope.staticPageSelected);
-        sp.section = [sp.section];
         delete sp.$$hashKey;
+
+        if ($scope.isUpdate) {
+          sp.newLanguage = sp.language;
+          sp.newPageId = sp.pageId;
+        }
 
         $http
           .post(
-            "../api/pages/" +
+            "../api/pages" +
               ($scope.isUpdate
                 ? "/" +
                   $scope.staticPageSelected.language +
