@@ -212,6 +212,36 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="gmd:identificationInfo/*/gmd:citation/*" mode="expand">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:title
+                                   |gmd:alternateTitle"
+                           mode="expand"/>
+
+      <xsl:for-each-group select="$existingMembers//gmd:MD_Metadata/gmd:identificationInfo
+            /*/gmd:citation/*/gmd:date[*/gmd:dateType/*/@codeListValue = 'publication']"
+                          group-by="*/gmd:date/gco:*">
+        <xsl:sort select="*/gmd:date/gco:*" order="descending"/>
+
+        <xsl:if test="position() = 1">
+          <xsl:copy-of select="."/>
+        </xsl:if>
+      </xsl:for-each-group>
+
+      <xsl:apply-templates select="gmd:edition
+                                   |gmd:editionDate
+                                   |gmd:identifier
+                                   |gmd:citedResponsibleParty
+                                   |gmd:presentationForm
+                                   |gmd:series
+                                   |gmd:otherCitationDetails
+                                   |gmd:collectiveTitle
+                                   |gmd:ISBN
+                                   |gmd:ISSN" mode="expand"/>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="@*|node()" mode="expand">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="expand"/>
