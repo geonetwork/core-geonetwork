@@ -87,15 +87,15 @@
             $http({
               method: "GET",
               url:
-                "../api/pages/list?language=" +
+                "../api/pages?language=" +
                 $scope.language +
                 "&section=" +
                 $scope.section.toUpperCase()
             }).then(
-              function mySuccess(response) {
+              function (response) {
                 $scope.pagesList = response.data;
               },
-              function myError(response) {
+              function (response) {
                 $scope.pagesList = null;
                 console.log(response.statusText);
               }
