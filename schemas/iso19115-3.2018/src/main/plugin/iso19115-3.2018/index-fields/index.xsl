@@ -419,7 +419,7 @@
         <xsl:for-each select="$overviews">
           <overview type="object">{
             "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
-            <xsl:if test="count(../../mcc:fileDescription) > 0">,
+            <xsl:if test="normalize-space(../../mcc:fileDescription) != ''">,
               "nameObject":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
             </xsl:if>
