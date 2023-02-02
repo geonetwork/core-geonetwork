@@ -400,7 +400,7 @@ public class PagesAPI {
     private void checkFileType(final MultipartFile data) {
         if (data != null) {
             String extension = FilenameUtils.getExtension(data.getOriginalFilename());
-            if (!ArrayUtils.contains(Page.PageExtension.values(), extension.toUpperCase())) {
+            if (!Arrays.stream(Page.PageExtension.values()).anyMatch((t) -> t.name().equals(extension.toUpperCase()))) {
                 throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
             }
         }
@@ -486,12 +486,15 @@ public class PagesAPI {
                 throw new WebApplicationException(e);
             }
             page.setData(bytesData);
+
+            page.setLink(data.getOriginalFilename());
+        } else {
+            if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
+                throw new IllegalArgumentException("The link provided is not valid");
+            } else {
+                page.setLink(link);
+            }
         }
 
-        if (link != null && !UrlUtils.isValidRedirectUrl(link)) {
-            throw new IllegalArgumentException("The link provided is not valid");
-        } else {
-            page.setLink(link);
-        }
     }
 }
