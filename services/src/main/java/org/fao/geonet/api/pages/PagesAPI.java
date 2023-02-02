@@ -59,6 +59,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 @RequestMapping(value = {"/{portal}/api/pages"})
 @Tag(name = "pages", description = "Static pages inside GeoNetwork")
 @Controller("pages")
@@ -258,8 +260,7 @@ public class PagesAPI {
         summary = "Return the static html content identified by pageId",
         description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
     @GetMapping(
-        value = "/{language}/{pageId}/content",
-        produces = "text/plain;charset=UTF-8")
+        value = "/{language}/{pageId}/content")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
@@ -267,7 +268,8 @@ public class PagesAPI {
     public ResponseEntity<String> getPageContent(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
-        @Parameter(hidden = true) final HttpSession session) {
+        @Parameter(hidden = true) final HttpSession session,
+        @Parameter(hidden = true) final HttpServletResponse response) {
 
 
         final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
@@ -288,6 +290,11 @@ public class PagesAPI {
                     content = page.get().getLink();
                 }
 
+                response.setHeader(CONTENT_TYPE,
+                    (StringUtils.isNotEmpty(page.get().getLink())
+                        && page.get().getLink().toLowerCase().endsWith("html")
+                    ? MediaType.TEXT_HTML_VALUE : MediaType.TEXT_PLAIN_VALUE)
+                        + "; charset=utf-8");
                 return new ResponseEntity<>(content, HttpStatus.OK);
             }
         }
