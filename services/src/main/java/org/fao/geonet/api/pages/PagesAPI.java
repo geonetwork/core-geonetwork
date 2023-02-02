@@ -164,10 +164,6 @@ public class PagesAPI {
         @RequestParam(value = "link", required = false) final String link,
         @RequestParam(value = "format", required = false) Page.PageFormat format
     ) throws ResourceNotFoundException, ResourceAlreadyExistException {
-        if (!StringUtils.isBlank(link)) {
-            format = Page.PageFormat.LINK;
-        }
-
         checkValidLanguage(language);
 
         final Page page = searchPage(language, pageId, pageRepository);
@@ -376,10 +372,6 @@ public class PagesAPI {
         if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
             throw new IllegalArgumentException("Wrong format. Cannot set format to LINK and upload a file.");
         }
-
-        if (!Page.PageFormat.LINK.equals(format) && !StringUtils.isBlank(link)) {
-            throw new IllegalArgumentException("Wrong format. Cannot set a link without setting format to LINK.");
-        }
     }
 
     private void checkMandatoryContent(final MultipartFile data, final String link) {
@@ -401,7 +393,7 @@ public class PagesAPI {
         if (data != null) {
             String extension = FilenameUtils.getExtension(data.getOriginalFilename());
             if (!Arrays.stream(Page.PageExtension.values()).anyMatch((t) -> t.name().equals(extension.toUpperCase()))) {
-                throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
+                throw new MultipartException("Unsupported file type (only html, txt and md are allowed).");
             }
         }
     }
@@ -488,7 +480,8 @@ public class PagesAPI {
             page.setData(bytesData);
 
             page.setLink(data.getOriginalFilename());
-        } else {
+        } else if (page.getData() == null) {
+            // Check the link, unless it refers to a file uploaded to the page, that contains the original file name.
             if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
                 throw new IllegalArgumentException("The link provided is not valid");
             } else {

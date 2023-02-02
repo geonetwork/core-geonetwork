@@ -1439,6 +1439,7 @@
     "staticPageUpdated": "Static page updated",
     "staticPageUpdateError": "Error occurred while saving the static page",
     "staticPageDeleteError": "Error while removing the static page",
-    "staticPageRemoved": "Static page removed"
+    "staticPageRemoved": "Static page removed",
+    "chooseStaticPageFile": "Choose or drop static page file here"
 }
 
