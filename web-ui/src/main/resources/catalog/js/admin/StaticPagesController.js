@@ -24,7 +24,7 @@
 (function () {
   goog.provide("gn_static_pages_controller");
 
-  var module = angular.module("gn_static_pages_controller", []);
+  var module = angular.module("gn_static_pages_controller", ["blueimp.fileupload"]);
 
   module.controller("GnStaticPagesController", [
     "$scope",
@@ -35,7 +35,29 @@
     function ($scope, $http, $rootScope, $translate, gnUrlUtils) {
       $scope.dbLanguages = [];
       $scope.staticPages = [];
+      $scope.formats = [];
       $scope.staticPageSelected = null;
+      $scope.queue = [];
+      $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
+
+      $scope.unsupportedFile = false;
+      $scope.$watchCollection("queue", function (n, o) {
+        if (n != o && n.length == 1) {
+          if (n[0].name.match(/.html$/i) !== null) {
+            $scope.unsupportedFile = false;
+          } else {
+            $scope.unsupportedFile = true;
+          }
+          return;
+        }
+        $scope.unsupportedFile = false;
+      });
+
+      function loadFormats() {
+        $http.get("../api/pages/config/formats").then(function (r) {
+          $scope.formats = r.data;
+        });
+      }
 
       function loadStaticPages() {
         $scope.staticPageSelected = null;
@@ -64,21 +86,67 @@
         });
       }
 
+      /** Upload management */
+      var uploadStaticPageFileDone = function (e, data) {
+        $scope.staticPageSelected.data = data.files[0].name;
+        $scope.clear(data.files[0]);
+      };
+      var uploadStaticPageFileError = function (event, data) {
+        var req = data.response().jqXHR;
+        var contentType = req.getResponseHeader("Content-Type");
+        var errorText = req.responseText;
+        var errorCode = null;
+        if ("application/json" === contentType) {
+          var parsedError = JSON.parse(req.responseText);
+        }
+        $rootScope.$broadcast("StatusUpdated", {
+          title: $translate.instant("staticPageUpdateError"),
+          error: parsedError || errorText,
+          timeout: 0,
+          type: "danger"
+        });
+      };
+
+      // upload directive options
+      $scope.mdStaticPageFileUploadOptions = {
+        autoUpload: false,
+        maxNumberOfFiles: 1,
+        done: uploadStaticPageFileDone,
+        fail: uploadStaticPageFileError,
+        headers: { "X-XSRF-TOKEN": $rootScope.csrf, "Accept-Language": $scope.lang }
+      };
+
+      $scope.$on("fileuploadchange", function (e, data) {
+        // limit fileupload to only one file.
+        angular.forEach($scope.queue, function (item) {
+          $scope.clear(item);
+        });
+      });
+
       $scope.addStaticPage = function () {
         $scope.isUpdate = false;
         $scope.staticPageSelected = {
           language: "",
           pageId: "",
-          format: "",
+          format: "LINK",
           link: "",
+          data: "",
           status: "HIDDEN",
           sections: []
         };
+
+        $scope.action = "../api/pages";
       };
 
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
+
+        $scope.action =
+          "../api/pages/" +
+          $scope.staticPageSelected.language +
+          "/" +
+          $scope.staticPageSelected.pageId;
       };
 
       $scope.saveStaticPage = function () {
@@ -90,36 +158,58 @@
           sp.newPageId = sp.pageId;
         }
 
-        $http
-          .post(
+        var isFileUpload =
+          (!$scope.isUpdate && sp.format !== "LINK") ||
+          ($scope.isUpdate && sp.link === "");
+
+        if (isFileUpload) {
+          $scope.enctype = "multipart/form-data";
+          $scope.action =
             "../api/pages" +
-              ($scope.isUpdate
-                ? "/" +
-                  $scope.staticPageSelected.language +
-                  "/" +
-                  $scope.staticPageSelected.pageId
-                : "") +
-              "?" +
-              gnUrlUtils.toKeyValue(sp)
-          )
-          .then(
-            function (response) {
-              loadStaticPages();
-              $rootScope.$broadcast("StatusUpdated", {
-                msg: $translate.instant("staticPageUpdated"),
-                timeout: 2,
-                type: "success"
-              });
-            },
-            function (response) {
-              $rootScope.$broadcast("StatusUpdated", {
-                title: $translate.instant("staticPageUpdateError"),
-                error: response.data,
-                timeout: 0,
-                type: "danger"
-              });
-            }
-          );
+            ($scope.isUpdate
+              ? "/" +
+                $scope.staticPageSelected.language +
+                "/" +
+                $scope.staticPageSelected.pageId
+              : "");
+
+          $scope.uploadScope.submit();
+
+          var defer = $q.defer();
+          defer.resolve();
+          return defer.promise;
+        } else {
+          return $http
+            .post(
+              "../api/pages" +
+                ($scope.isUpdate
+                  ? "/" +
+                    $scope.staticPageSelected.language +
+                    "/" +
+                    $scope.staticPageSelected.pageId
+                  : "") +
+                "?" +
+                gnUrlUtils.toKeyValue(sp)
+            )
+            .then(
+              function (response) {
+                loadStaticPages();
+                $rootScope.$broadcast("StatusUpdated", {
+                  msg: $translate.instant("staticPageUpdated"),
+                  timeout: 2,
+                  type: "success"
+                });
+              },
+              function (response) {
+                $rootScope.$broadcast("StatusUpdated", {
+                  title: $translate.instant("staticPageUpdateError"),
+                  error: response.data,
+                  timeout: 0,
+                  type: "danger"
+                });
+              }
+            );
+        }
       };
 
       $scope.deleteStaticPageConfig = function () {
@@ -155,6 +245,7 @@
           );
       };
 
+      loadFormats();
       loadDbLanguages();
       loadStaticPages();
     }
