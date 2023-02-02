@@ -47,6 +47,8 @@
               url: "../api/pages/" + $scope.language + "/" + page + "/content"
             }).then(
               function (response) {
+                $sce.trustAsJs(response.data);
+                // $sce.trustAsHtml(response.data);
                 $scope.content = $sce.trustAsHtml(response.data);
               },
               function (response) {
@@ -97,7 +99,6 @@
               },
               function (response) {
                 $scope.pagesList = null;
-                console.log(response.statusText);
               }
             );
           };

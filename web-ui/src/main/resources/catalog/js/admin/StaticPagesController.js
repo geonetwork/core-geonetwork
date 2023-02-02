@@ -36,6 +36,7 @@
       $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.formats = [];
+      $scope.sections = [];
       $scope.staticPageSelected = null;
       $scope.queue = [];
       $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
@@ -57,17 +58,15 @@
         $http.get("../api/pages/config/formats").then(function (r) {
           $scope.formats = r.data;
         });
+        $http.get("../api/pages/config/sections").then(function (r) {
+          $scope.sections = r.data;
+        });
       }
 
       function loadStaticPages() {
         $scope.staticPageSelected = null;
         $http.get("../api/pages").then(function (r) {
           $scope.staticPages = r.data;
-
-          $scope.staticPages.forEach(function (p) {
-            p.pageId = p.linkText;
-            delete p.linkText;
-          });
         });
       }
 
@@ -131,6 +130,7 @@
           format: "LINK",
           link: "",
           data: "",
+          content: "",
           status: "HIDDEN",
           sections: []
         };
@@ -147,6 +147,18 @@
           $scope.staticPageSelected.language +
           "/" +
           $scope.staticPageSelected.pageId;
+
+        $scope.content = "";
+        if ($scope.staticPageSelected.format !== "LINK") {
+          $http.get($scope.action + "/content").then(function (r) {
+            $scope.staticPageSelected.content = r.data;
+          });
+        }
+      };
+
+      $scope.deleteContent = function () {
+        $scope.staticPageSelected.link = "";
+        $scope.staticPageSelected.content = "";
       };
 
       $scope.saveStaticPage = function () {
@@ -154,17 +166,12 @@
         delete sp.$$hashKey;
 
         if ($scope.isUpdate) {
-          sp.newLanguage = sp.language;
-          sp.newPageId = sp.pageId;
+          delete sp.language;
+          delete sp.pageId;
         }
 
-        var isFileUpload =
-          (!$scope.isUpdate && sp.format !== "LINK") ||
-          ($scope.isUpdate && sp.link === "");
-
-        if (isFileUpload) {
-          $scope.enctype = "multipart/form-data";
-          $scope.action =
+        var isFileUpload = $scope.queue.length === 1,
+          action =
             "../api/pages" +
             ($scope.isUpdate
               ? "/" +
@@ -173,24 +180,19 @@
                 $scope.staticPageSelected.pageId
               : "");
 
-          $scope.uploadScope.submit();
+        if (isFileUpload) {
+          $scope.enctype = "multipart/form-data";
+          $scope.action = action;
 
-          var defer = $q.defer();
-          defer.resolve();
-          return defer.promise;
+          $scope.uploadScope.submit();
         } else {
+          delete sp.data;
           return $http
-            .post(
-              "../api/pages" +
-                ($scope.isUpdate
-                  ? "/" +
-                    $scope.staticPageSelected.language +
-                    "/" +
-                    $scope.staticPageSelected.pageId
-                  : "") +
-                "?" +
-                gnUrlUtils.toKeyValue(sp)
-            )
+            .put(action, sp, {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
             .then(
               function (response) {
                 loadStaticPages();
