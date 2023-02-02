@@ -174,8 +174,8 @@
 
             <p data-ng-show="staticPageSelected.link !== ''">
               {{staticPageSelected.link}}
-              <a href="" data-ng-click="staticPageSelected.link = ''"
-                ><i class="fa fa-trash"
+              <a href="" data-ng-click="deleteContent()"
+                ><i class="fa fa-fw fa-trash"
               /></a>
             </p>
 
@@ -213,6 +213,24 @@
             </div>
           </div>
 
+          <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
+            <label class="control-label col-sm-3" data-translate="">content</label>
+
+            <div class="col-sm-12">
+              <input
+                type="hidden"
+                name="content"
+                data-ng-model="staticPageSelected.content"
+              />
+              <div
+                id="contenteditor"
+                style="height: 300px"
+                ui-ace="{useWrapMode:true,showGutter:true,mode:'html'}"
+                data-ng-model="staticPageSelected.content"
+              ></div>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="control-label col-sm-3" data-translate="">section</label>
 
@@ -220,12 +238,10 @@
               <select
                 name="sections"
                 class="form-control"
-                required=""
                 multiple
                 data-ng-model="staticPageSelected.sections"
               >
-                <option value="TOP">TOP</option>
-                <option value="FOOTER">FOOTER</option>
+                <option data-ng-repeat="s in sections" value="{{s}}">{{s}}</option>
               </select>
             </div>
           </div>
