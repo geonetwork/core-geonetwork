@@ -25,7 +25,6 @@
 <!-- TODO: simplify layout if only one group -->
 <div class="gn-share-grid">
   <i class="fa fa-spinner fa-spin" data-ng-hide="privileges.length > 0"></i>
-
   <form name="opsForm" id="opsForm" data-ng-class="{'gn-sharing-batch': batch}">
     <input type="hidden" name="_csrf" value="{{csrf}}" />
     <table class="table table-striped" data-ng-show="privileges.length > 0">
@@ -94,7 +93,7 @@
             <input
               type="checkbox"
               data-ng-disabled="::!isAdminOrReviewer"
-              data-ng-click="checkAll(g)"
+              data-ng-change="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
           </td>
@@ -118,7 +117,7 @@
           <td data-ng-if="::!disableAllCol">
             <input
               type="checkbox"
-              data-ng-click="checkAll(g)"
+              data-ng-change="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
           </td>
