@@ -44,6 +44,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,12 +76,20 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
+        PageProperties newPage = new PageProperties();
+        newPage.setPageId(pageId);
+        newPage.setLanguage(language);
+        newPage.setLink(link);
+        ArrayList<Page.PageSection> sections = new ArrayList<>();
+        sections.add(Page.PageSection.TOP);
+        newPage.setSections(sections);
+        Gson gson = new GsonBuilder()
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .create();
+
         this.mockHttpSession = loginAsAdmin();
-        MockHttpServletRequestBuilder createPageBuilder = post("/srv/api/pages")
-            .param("language", language)
-            .param("pageId", pageId)
-            .param("link", link)
-            .param("section", Page.PageSection.TOP.name())
+        MockHttpServletRequestBuilder createPageBuilder = put("/srv/api/pages")
+            .content(gson.toJson(newPage))
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json"));
@@ -100,11 +109,12 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         language = "fre";
         pageId = "licence";
 
-        MockHttpServletRequestBuilder updatePageBuilder = post("/srv/api/pages/eng/license")
-            .param("newLanguage", language)
-            .param("newPageId", pageId)
-            .param("link", link + "updated")
-            .param("section", Page.PageSection.TOP.name(), Page.PageSection.FOOTER.name())
+        newPage.setLanguage(language);
+        newPage.setPageId(pageId);
+        newPage.setLink(link + "updated");
+        newPage.getSections().add(Page.PageSection.FOOTER);
+        MockHttpServletRequestBuilder updatePageBuilder = put("/srv/api/pages/eng/license")
+            .content(gson.toJson(newPage))
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json"));
