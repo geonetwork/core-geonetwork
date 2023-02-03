@@ -86,6 +86,7 @@
       }
 
       var successHandler = function() {
+        $scope.queue = [];
         loadStaticPages();
         $rootScope.$broadcast("StatusUpdated", {
           msg: $translate.instant("staticPageUpdated"),
