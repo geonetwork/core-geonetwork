@@ -331,7 +331,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
             } catch (Exception e) {
                 // DOI not supported for schema
             }
-            if ( StringUtils.isNotEmpty(doi)) {
+            if (StringUtils.isNotEmpty(doi)) {
                 return doi;
             }
         }
