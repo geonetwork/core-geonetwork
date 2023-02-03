@@ -35,7 +35,9 @@ import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SchematronRepository;
@@ -82,6 +84,9 @@ public class DoiManager {
     BaseMetadataSchemaUtils schemaUtils;
 
     @Autowired
+    BaseMetadataUtils metadataUtils;
+
+    @Autowired
     SchematronValidator validator;
 
     @Autowired
@@ -90,7 +95,6 @@ public class DoiManager {
     @Autowired
     SchematronRepository schematronRepository;
 
-    public static final String DOI_GET_SAVED_QUERY = "doi-get";
 
     public DoiManager() {
         sm = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -246,10 +250,8 @@ public class DoiManager {
         }
 
         // Record MUST not contains a DOI
-        final MetadataSchema schema = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId());
-        Element xml = metadata.getXmlData(false);
         try {
-            String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
+            String currentDoi = metadataUtils.getDoi(metadata.getUuid());
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
                 String newDoi = client.createPublicUrl(doi);
@@ -275,6 +277,7 @@ public class DoiManager {
                         new String[]{ metadata.getUuid(), currentDoi, currentDoi });
             }
         } catch (ResourceNotFoundException e) {
+            final MetadataSchema schema = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId());
             // Schema not supporting DOI extraction and needs to be configured
             // Check bean configuration which should contains something like
             //            <bean class="org.fao.geonet.kernel.schema.SavedQuery">
@@ -287,12 +290,12 @@ public class DoiManager {
                     "with id '%s' to retrieve the DOI. Error is %s. " +
                     "Check the schema %sSchemaPlugin and add the DOI get query.",
                 metadata.getUuid(), schema.getName(),
-                DOI_GET_SAVED_QUERY, e.getMessage(),
+                SavedQuery.DOI_GET, e.getMessage(),
                 schema.getName()))
                 .withMessageKey("exception.doi.missingSavedquery")
                 .withDescriptionKey("exception.doi.missingSavedquery.description",
                     new String[]{ metadata.getUuid(), schema.getName(),
-                    DOI_GET_SAVED_QUERY, e.getMessage(),
+                    SavedQuery.DOI_GET, e.getMessage(),
                     schema.getName() });
         }
     }
@@ -461,9 +464,7 @@ public class DoiManager {
 
         try {
             Element md = metadata.getXmlData(false);
-
-            String doiUrl = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId())
-                .queryString(DOI_GET_SAVED_QUERY, md);
+            String doiUrl = metadataUtils.getDoi(metadata.getUuid());
 
             client.deleteDoiMetadata(doi);
             client.deleteDoi(doi);

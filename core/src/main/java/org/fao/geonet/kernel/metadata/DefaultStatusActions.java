@@ -243,9 +243,7 @@ public class DefaultStatusActions implements StatusActions {
         } catch (MissingResourceException e) {
             subjectTemplate = messages.getString("status_change_default_email_subject");
         }
-        String subject = MessageFormat.format(subjectTemplate, siteName, translatedStatusName, replyToDescr // Author of
-                                                                                                            // the
-                                                                                                            // change
+        String subject = MessageFormat.format(subjectTemplate, siteName, translatedStatusName, replyToDescr // Author of the change
         );
 
         Set<Integer> listOfId = new HashSet<>(1);
@@ -261,14 +259,17 @@ public class DefaultStatusActions implements StatusActions {
         UserRepository userRepository = context.getBean(UserRepository.class);
         User owner = userRepository.findById(status.getOwner()).orElse(null);
 
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
+
+        String metadataUrl = metadataUtils.getDefaultUrl(metadata.getUuid(), this.language);
+
         String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
                 status.getChangeMessage(), translatedStatusName, status.getChangeDate(), status.getDueDate(),
                 status.getCloseDate(),
                 owner == null ? "" : Joiner.on(" ").skipNulls().join( owner.getName(), owner.getSurname()),
-                siteUrl);
+            metadataUrl);
 
-        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
 
         subject = MailUtil.compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = MailUtil.compileMessageWithIndexFields(message, metadata.getUuid(), this.language);

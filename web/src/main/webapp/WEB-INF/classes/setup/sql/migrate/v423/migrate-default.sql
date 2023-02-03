@@ -1,4 +1,8 @@
-UPDATE Settings SET internal = 'n' WHERE name = 'system/server/sitemapLinkUrl';
+UPDATE Settings SET position = '9165' WHERE name = 'system/server/sitemapLinkUrl';
+UPDATE Settings SET name = 'metadata/url/sitemapLinkUrl' WHERE name = 'system/server/sitemapLinkUrl';
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/sitemapDoiFirst', 'false', 2, 9166, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/url/dynamicAppLinkUrl', NULL, 0, 9167, 'y');
 
 
 UPDATE harvestersettings SET value = replace(value, 'gmiTogmd', 'iso19139:convert/fromISO19115-2') WHERE value LIKE 'gmiTogmd%';
