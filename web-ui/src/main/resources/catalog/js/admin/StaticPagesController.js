@@ -85,6 +85,24 @@
         });
       }
 
+      var successHandler = function() {
+        loadStaticPages();
+        $rootScope.$broadcast("StatusUpdated", {
+          msg: $translate.instant("staticPageUpdated"),
+          timeout: 2,
+          type: "success"
+        });
+      }
+
+      var failureHandler = function (error) {
+        $rootScope.$broadcast("StatusUpdated", {
+          title: $translate.instant("staticPageUpdateError"),
+          error: error,
+          timeout: 0,
+          type: "danger"
+        });
+      }
+
       /** Upload management */
       var uploadStaticPageFileDone = function (e, data) {
         $scope.staticPageSelected.data = data.files[0].name;
@@ -92,18 +110,16 @@
       };
       var uploadStaticPageFileError = function (event, data) {
         var req = data.response().jqXHR;
-        var contentType = req.getResponseHeader("Content-Type");
-        var errorText = req.responseText;
-        var errorCode = null;
-        if ("application/json" === contentType) {
-          var parsedError = JSON.parse(req.responseText);
+        if (req.status === 201) {
+          successHandler();
+        } else {
+          var contentType = req.getResponseHeader("Content-Type");
+          var errorText = req.responseText;
+          if ("application/json" === contentType) {
+            var parsedError = JSON.parse(req.responseText);
+          }
+          failureHandler(parsedError || errorText);
         }
-        $rootScope.$broadcast("StatusUpdated", {
-          title: $translate.instant("staticPageUpdateError"),
-          error: parsedError || errorText,
-          timeout: 0,
-          type: "danger"
-        });
       };
 
       // upload directive options
@@ -194,21 +210,9 @@
               }
             })
             .then(
-              function (response) {
-                loadStaticPages();
-                $rootScope.$broadcast("StatusUpdated", {
-                  msg: $translate.instant("staticPageUpdated"),
-                  timeout: 2,
-                  type: "success"
-                });
-              },
-              function (response) {
-                $rootScope.$broadcast("StatusUpdated", {
-                  title: $translate.instant("staticPageUpdateError"),
-                  error: response.data,
-                  timeout: 0,
-                  type: "danger"
-                });
+              successHandler,
+              function(r) {
+                failureHandler(r.data);
               }
             );
         }
