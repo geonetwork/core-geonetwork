@@ -1230,7 +1230,7 @@
           "match": "th_*",
           "mapping": {
             "type": "object",
-            "copy_to": ["th_tag"],
+            "copy_to": ["tag"],
             "properties": {
               "default": {
                 "type": "keyword",

@@ -223,7 +223,7 @@ public class MetadataUtils {
                         properties.put("resourceTitle", r.getTitle());
                         properties.put("url", r.getUrl());
                         recordsProperties.put(r.getUuid(), properties);
-                        boolean isRemote = r.getUrl() != null
+                        boolean isRemote = StringUtils.isNotEmpty(r.getUrl())
                             && !r.getUrl().startsWith(settingManager.getBaseURL());
                         if (isRemote) {
                             remoteRecords.add(r.getUuid());

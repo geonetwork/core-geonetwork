@@ -808,6 +808,12 @@ public class EditLib {
             currentToken = xpathParser.getNextToken();
         }
 
+        if (value.isXml() && isAttribute) {
+            throw new AssertionError(String.format(
+                "Cannot set Xml on an attribute. Xpath:'%s' value: '%s'.",
+                xpathProperty, Xml.getString(value.getNodeValue())
+            ));
+        }
         // The current node is an existing node or newly created one
         // Insert the XML value
         if (value.isXml()) {
