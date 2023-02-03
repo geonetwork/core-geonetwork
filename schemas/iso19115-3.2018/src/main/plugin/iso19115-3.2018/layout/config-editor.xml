@@ -856,9 +856,21 @@
               </template>
             </action>
 
-            <field xpath="/*/mdb:identificationInfo/*/mri:status" or="status"
-                   in="/*/mdb:identificationInfo/*"/>
+            <field xpath="/*/mdb:identificationInfo/*/mri:status"/>
 
+            <action type="add"
+                    if="count(//mdb:identificationInfo/*/mri:status) = 0"
+                    or="status"
+                    in="/*/mdb:identificationInfo/*">
+              <template>
+                <snippet>
+                  <mri:status>
+                    <mcc:MD_ProgressCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ProgressCode"
+                                         codeListValue=""/>
+                  </mri:status>
+                </snippet>
+              </template>
+            </action>
           </section>
 
           <section name="eo-source">
@@ -1259,11 +1271,11 @@
             </template>
           </action>
 
-          <action type="associatedResource"
+          <!--<action type="associatedResource"
                   name="eo-link"
                   process="onlinesrc">
             <directiveAttributes>ftp</directiveAttributes>
-          </action>
+          </action>-->
 
         </section>
         <section name="eo-usage">
@@ -1415,7 +1427,6 @@
       </tab>
       <flatModeExceptions>
         <for name="cit:otherCitationDetails"/>
-        <for name="mri:status"/>
         <for name="mri:pointOfContact"/>
         <for name="mdb:acquisitionInformation"/>
       </flatModeExceptions>
