@@ -99,16 +99,7 @@ public class PagesAPI {
         @RequestBody
         PageProperties pageProperties)
         throws ResourceAlreadyExistException {
-
-        String link = pageProperties.getLink();
-        String content = pageProperties.getContent();
-        List<Page.PageSection> section = pageProperties.getSections();
-        Page.PageStatus status = pageProperties.getStatus();
-        String language = pageProperties.getLanguage();
-        String pageId = pageProperties.getPageId();
-        Page.PageFormat format = pageProperties.getFormat();
-
-        return createPage(link, content, section, status, language, pageId, format, null);
+        return createPage(pageProperties, null);
     }
 
 
@@ -136,11 +127,29 @@ public class PagesAPI {
         @RequestParam(value = "format", required = false) Page.PageFormat format)
         throws ResourceAlreadyExistException {
 
-        return createPage(null, null, sections, status, language, pageId, format, data);
+        PageProperties page = new PageProperties();
+        page.setPageId(pageId);
+        page.setLanguage(language);
+        page.setFormat(format);
+        page.setStatus(status);
+        page.setSections(sections);
+        return createPage(page, data);
     }
 
-    private ResponseEntity createPage(String link, String content, List<Page.PageSection> section, Page.PageStatus status, String language, String pageId, Page.PageFormat format, MultipartFile data) throws ResourceAlreadyExistException {
-        checkValidLanguage(language);
+    private ResponseEntity createPage(PageProperties pageProperties,
+                                      MultipartFile data) throws ResourceAlreadyExistException {
+
+        String link = pageProperties.getLink();
+        String content = pageProperties.getContent();
+        List<Page.PageSection> section = pageProperties.getSections();
+        Page.PageStatus status = pageProperties.getStatus();
+        String language = pageProperties.getLanguage();
+        String pageId = pageProperties.getPageId();
+        Page.PageFormat format = pageProperties.getFormat();
+
+        if (language != null) {
+            checkValidLanguage(language);
+        }
 
         if (!StringUtils.isBlank(link)) {
             format = Page.PageFormat.LINK;
@@ -155,7 +164,7 @@ public class PagesAPI {
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
         if (!page.isPresent()) {
-            Page newPage = getEmptyHiddenDraftPage(language, pageId, format);
+            Page newPage = getEmptyHiddenDraftPage(pageProperties.getLanguage(), pageProperties.getPageId(), format);
             fillContent(data, link, content, newPage);
 
             if (section != null) {
@@ -170,6 +179,65 @@ public class PagesAPI {
             return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new ResourceAlreadyExistException();
+        }
+    }
+
+    private ResponseEntity updatePage(String language,
+                                      String pageId,
+                                      PageProperties pageProperties,
+                                      MultipartFile data) throws ResourceNotFoundException, ResourceAlreadyExistException {
+
+        String link = pageProperties.getLink();
+        String content = pageProperties.getContent();
+        String newLanguage = pageProperties.getLanguage();
+        String newPageId = pageProperties.getPageId();
+        Page.PageFormat format = pageProperties.getFormat();
+
+        if (language != null) {
+            checkValidLanguage(language);
+        }
+
+        if (newLanguage != null) {
+            checkValidLanguage(newLanguage);
+        }
+
+        if (!StringUtils.isBlank(link)) {
+            format = Page.PageFormat.LINK;
+        }
+
+        checkMandatoryContent(data, link, content);
+
+        checkUniqueContent(data, link, content);
+
+        checkCorrectFormat(data, link, format);
+
+        Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
+
+        if (!page.isPresent()) {
+            throw new ResourceNotFoundException("Can't update non existing page " + pageId + ".");
+        } else {
+            Page pageToUpdate = page.get();
+
+            String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
+            String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
+
+            checkValidLanguage(updatedLanguage);
+
+            Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
+            if (newPage.isPresent()) {
+                throw new ResourceAlreadyExistException();
+            }
+
+            PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
+            Page pageCopy = new Page(newId, pageToUpdate.getData(),
+                link != null ? link : pageToUpdate.getLink(),
+                format != null ? format : pageToUpdate.getFormat(),
+                pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
+                pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+
+            pageRepository.save(pageCopy);
+            pageRepository.delete(pageToUpdate);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
@@ -198,59 +266,7 @@ public class PagesAPI {
         @RequestBody
         PageProperties pageProperties
     ) throws ResourceNotFoundException, ResourceAlreadyExistException {
-        checkValidLanguage(language);
-
-        final Page page = searchPage(language, pageId, pageRepository);
-
-        String link = pageProperties.getLink();
-        String content = pageProperties.getContent();
-        List<Page.PageSection> section = pageProperties.getSections();
-        Page.PageStatus status = pageProperties.getStatus();
-        String newLanguage = pageProperties.getLanguage();
-        String newPageId = pageProperties.getPageId();
-        Page.PageFormat format = pageProperties.getFormat();
-        MultipartFile data = null;
-
-        if (link != null) {
-            checkUniqueContent(data, link, content);
-            fillContent(data, link, content, page);
-        }
-
-        if (format != null) {
-            checkCorrectFormat(data, link, format);
-            page.setFormat(format);
-        }
-
-        if (section != null) {
-            page.setSections(section);
-        }
-
-        if (status != null) {
-            page.setStatus(status);
-        }
-
-        if (newLanguage != null && newPageId != null) {
-            String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
-            String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
-
-            checkValidLanguage(updatedLanguage);
-
-            Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
-            if (newPage.isPresent()) {
-                throw new ResourceAlreadyExistException();
-            }
-
-            PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
-            Page pageCopy = new Page(newId, page.getData(), page.getLink(),
-                page.getFormat(), page.getSections(), page.getStatus());
-
-            pageRepository.save(pageCopy);
-            pageRepository.delete(page);
-        } else {
-            pageRepository.save(page);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return updatePage(language, pageId, pageProperties, null);
     }
 
 
