@@ -201,10 +201,6 @@ public class PagesAPI {
             checkValidLanguage(newLanguage);
         }
 
-        if (!StringUtils.isBlank(link)) {
-            format = Page.PageFormat.LINK;
-        }
-
         checkMandatoryContent(data, link, content);
 
         checkUniqueContent(data, link, content);
@@ -221,22 +217,33 @@ public class PagesAPI {
             String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
             String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
 
-            checkValidLanguage(updatedLanguage);
+            boolean isChangingKey = !updatedLanguage.equals(language)
+                && !updatedPageId.equals(pageId);
 
-            Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
-            if (newPage.isPresent()) {
-                throw new ResourceAlreadyExistException();
+            if (isChangingKey) {
+                checkValidLanguage(updatedLanguage);
+
+                Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
+                if (newPage.isPresent()) {
+                    throw new ResourceAlreadyExistException();
+                }
+                PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
+                Page pageCopy = new Page(newId, pageToUpdate.getData(),
+                    link != null ? link : pageToUpdate.getLink(),
+                    format != null ? format : pageToUpdate.getFormat(),
+                    pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
+                    pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+
+                pageRepository.save(pageCopy);
+                pageRepository.delete(pageToUpdate);
+            } else {
+                pageToUpdate.setFormat(format != null ? format : pageToUpdate.getFormat());
+                fillContent(data, link, content, pageToUpdate);
+                pageToUpdate.setSections(pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections());
+                pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+                pageRepository.save(pageToUpdate);
             }
 
-            PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
-            Page pageCopy = new Page(newId, pageToUpdate.getData(),
-                link != null ? link : pageToUpdate.getLink(),
-                format != null ? format : pageToUpdate.getFormat(),
-                pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
-                pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
-
-            pageRepository.save(pageCopy);
-            pageRepository.delete(pageToUpdate);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
