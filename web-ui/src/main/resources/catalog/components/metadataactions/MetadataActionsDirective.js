@@ -594,7 +594,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "permalinkinput.html",
+          "../../catalog/components/metadataactions/partials/permalinkinput.html",
         link: function (scope, element, attrs) {
           scope.url = attrs["gnPermalinkInput"];
           scope.copied = false;

@@ -27,8 +27,10 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -36,6 +38,8 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
@@ -48,6 +52,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -60,9 +65,12 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Pattern;
 
+import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 public class BaseMetadataUtils implements IMetadataUtils {
@@ -79,6 +87,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
     protected SchemaManager schemaManager;
     @Autowired
     protected MetadataRatingByIpRepository ratingByIpRepository;
+
+    @Autowired
+    protected LanguageRepository languageRepository;
+
     @Autowired
     @Lazy
     protected SettingManager settingManager;
@@ -306,6 +318,82 @@ public class BaseMetadataUtils implements IMetadataUtils {
             return extractTitles(metadata.getDataInfo().getSchemaId(), md);
         }
         return null;
+    }
+
+    @Override
+    public String getPermalink(String uuid, String language) {
+        Boolean doiIsFirst = settingManager.getValueAsBool(METADATA_URL_SITEMAPDOIFIRST, false);
+
+        if (Boolean.TRUE.equals(doiIsFirst)) {
+            String doi = null;
+            try {
+                doi = getDoi(uuid);
+            } catch (Exception e) {
+                // DOI not supported for schema
+            }
+            if (StringUtils.isNotEmpty(doi)) {
+                return doi;
+            }
+        }
+
+
+        String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
+        String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
+        String permalink = buildUrl(uuid, language, sitemapLinkUrl);
+        return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
+    }
+
+    @Override
+    public String getDefaultUrl(String uuid, String language) {
+        String dynamicAppLinkUrl = settingManager.getValue(METADATA_URL_DYNAMICAPPLINKURL);
+        if ("all".equals(language)) {
+            Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
+            if (defaultLanguage != null) {
+                language = defaultLanguage.getId();
+            }
+        }
+        String defaultLink = settingManager.getNodeURL() + language + "/catalog.search#/metadata/" + uuid;
+        String url = buildUrl(uuid, language, dynamicAppLinkUrl);
+        return StringUtils.isNotEmpty(url) ? url : defaultLink;
+    }
+
+    private String buildUrl(String uuid, String language, String url) {
+        if (StringUtils.isNotEmpty(url)) {
+            Map<String, String> substitutions = new HashMap<>();
+            substitutions.put("{{UUID}}", uuid);
+            substitutions.put("{{LANG}}", StringUtils.isEmpty(language) ? "" : language);
+            try {
+                String resourceId = getResourceIdentifier(uuid);
+                substitutions.put("{{RESOURCEID}}", StringUtils.isEmpty(resourceId) ? "" : resourceId);
+            } catch (Exception e) {
+                // No resource identifier xpath defined in schema
+            }
+            for (Map.Entry<String, String> s : substitutions.entrySet()) {
+                if (url.toUpperCase().contains(s.getKey())) {
+                    url = url.replaceAll("(?i)" + Pattern.quote(s.getKey()), s.getValue());
+                }
+            }
+        }
+        return url;
+    }
+
+
+    @Override
+    public String getDoi(String uuid) throws ResourceNotFoundException, IOException, JDOMException {
+        AbstractMetadata metadata = findOneByUuid(uuid);
+        final MetadataSchema schema = metadataSchemaUtils
+            .getSchema(metadata.getDataInfo().getSchemaId());
+        Element xml = metadata.getXmlData(false);
+        return schema.queryString(SavedQuery.DOI_GET, xml);
+    }
+
+    @Override
+    public String getResourceIdentifier(String uuid) throws ResourceNotFoundException, JDOMException, IOException {
+        AbstractMetadata metadata = findOneByUuid(uuid);
+        final MetadataSchema schema = metadataSchemaUtils
+            .getSchema(metadata.getDataInfo().getSchemaId());
+        Element xml = metadata.getXmlData(false);
+        return schema.queryString(SavedQuery.RESOURCEID_GET, xml);
     }
 
     /**
