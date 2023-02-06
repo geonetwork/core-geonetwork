@@ -1219,12 +1219,6 @@
                         <cit:title>
                           <gco:CharacterString>GRIB</gco:CharacterString>
                         </cit:title>
-                        <cit:edition>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:edition>
-                        <cit:otherCitationDetails>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:otherCitationDetails>
                       </cit:CI_Citation>
                     </mrd:formatSpecificationCitation>
                   </mrd:MD_Format>
@@ -1238,12 +1232,6 @@
                         <cit:title>
                           <gco:CharacterString>ASCII</gco:CharacterString>
                         </cit:title>
-                        <cit:edition>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:edition>
-                        <cit:otherCitationDetails>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:otherCitationDetails>
                       </cit:CI_Citation>
                     </mrd:formatSpecificationCitation>
                   </mrd:MD_Format>
@@ -1407,7 +1395,6 @@
         </section>
       </tab>
       <flatModeExceptions>
-        <for name="cit:otherCitationDetails"/>
         <for name="mri:pointOfContact"/>
         <for name="mdb:acquisitionInformation"/>
       </flatModeExceptions>
