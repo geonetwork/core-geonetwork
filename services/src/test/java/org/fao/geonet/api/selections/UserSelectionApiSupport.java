@@ -41,6 +41,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -77,7 +78,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * 2. creates 3 users (user1, user2, user3)
  *
  */
-public class UserSelectionApiSupport extends AbstractServiceIntegrationTest {
+public abstract class UserSelectionApiSupport extends AbstractServiceIntegrationTest {
     @Autowired
     UserSelectionApi userSelectionApi;
 
@@ -368,5 +369,7 @@ public class UserSelectionApiSupport extends AbstractServiceIntegrationTest {
 
        assertEquals(list1,list2);
     }
+
+
 
 }
