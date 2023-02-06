@@ -171,7 +171,7 @@
                   ? scope.element.md.crsDetails[0]
                   : scope.element.md.crsDetails;
 
-              var crsExp = crs && /(?:EPSG[: ])(\d+)/.exec(crs.code),
+              var crsExp = crs && /(?:EPSG *: *)(\d+)/.exec(crs.code),
                 httpUrlPrefix = "http://www.opengis.net/def/crs/EPSG/0/";
               if (angular.isArray(crsExp)) {
                 inputCrs = crsExp[1];
