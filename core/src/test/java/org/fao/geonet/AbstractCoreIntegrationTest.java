@@ -262,8 +262,32 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return user;
     }
 
+    /**
+     * login as a user - create a new sessionID
+     */
     public MockHttpSession loginAs(User user) {
-        MockHttpSession session = new MockHttpSession();
+        return loginAs(user, (String) null);
+    }
+
+    /**
+     * login as a user - use a specific sessionID
+     *
+     * When using GN from the web, if you visit GN;
+     * a) you get a sessionID (anonymous)
+     * b) if you login, you keep the same sesssionID
+     *
+     * This method allows test cases to replicate that;
+     *
+     *      Session session = loginAsAnonymous();
+     *      session =  loginAs(user,session.getId());
+     *
+     *      Using MockHttpSession() or MockHttpSession(null) or MockHttpSession(null,null)
+     *      creates a new sessionID.
+     *
+     *   Call this with sessionId = null to create a new session id.
+     */
+    public MockHttpSession loginAs(User user,String sessionId) {
+        MockHttpSession session = new MockHttpSession(null,sessionId);
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
             user, null, user.getAuthorities());

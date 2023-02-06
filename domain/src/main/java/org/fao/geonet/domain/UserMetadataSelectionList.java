@@ -90,7 +90,7 @@ public class UserMetadataSelectionList extends GeonetEntity implements Serializa
         this._name = name;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     public User getUser() {
         return _user;
