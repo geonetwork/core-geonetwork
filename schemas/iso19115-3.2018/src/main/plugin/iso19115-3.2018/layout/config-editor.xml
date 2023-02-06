@@ -1155,52 +1155,6 @@
         </section>
       </tab>
       <tab id="eo-access-and-usage" mode="flat">
-        <section name="eo-helpdesk">
-          <field xpath="/*/mdb:identificationInfo/*/mri:pointOfContact[.//cit:role/*/@codeListValue = 'pointOfContact']/*/cit:party/cit:CI_Organisation/(cit:name|cit:contactInfo/*/cit:address/*/cit:electronicMailAddress)"/>
-
-          <!--<action type="add"
-                  or="pointOfContact"
-                  in="/*/mdb:identificationInfo/*"
-                  btnLabel="eo-contact-add">
-            <template>
-              <snippet>
-                <mri:pointOfContact>
-                  <cit:CI_Responsibility>
-                    <cit:role>
-                      <cit:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                                       codeListValue="pointOfContact"/>
-                    </cit:role>
-                    <cit:party>
-                      <cit:CI_Organisation>
-                        <cit:name>
-                          <gco:CharacterString></gco:CharacterString>
-                        </cit:name>
-                        <cit:contactInfo>
-                          <cit:CI_Contact>
-                            <cit:address>
-                              <cit:CI_Address>
-                                <cit:electronicMailAddress>
-                                  <gco:CharacterString></gco:CharacterString>
-                                </cit:electronicMailAddress>
-                              </cit:CI_Address>
-                            </cit:address>
-                          </cit:CI_Contact>
-                        </cit:contactInfo>
-                        <cit:individual>
-                          <cit:CI_Individual>
-                            <cit:name>
-                              <gco:CharacterString></gco:CharacterString>
-                            </cit:name>
-                          </cit:CI_Individual>
-                        </cit:individual>
-                      </cit:CI_Organisation>
-                    </cit:party>
-                  </cit:CI_Responsibility>
-                </mri:pointOfContact>
-              </snippet>
-            </template>
-          </action>-->
-        </section>
 
         <section name="eo-access">
           <field xpath="/*/mdb:identificationInfo/*/mri:resourceConstraints/
@@ -1215,11 +1169,11 @@
                   or="distributionFormat"
                   in="/*/mdb:distributionInfo/*"
                   if="count(//*/mdb:distributionInfo/*/mrd:distributionFormat[
-                      */mrd:formatSpecificationCitation/*/cit:title/* = 'NetCDF'
+                      */mrd:formatSpecificationCitation/*/cit:title/* != ''
                     ]) = 0"
-                  btnLabel="eo-format-add-netcdf3">
+                  btnLabel="eo-format-add">
             <template>
-              <snippet>
+              <snippet label="eo-format-add-netcdf3">
                 <mrd:distributionFormat>
                   <mrd:MD_Format>
                     <mrd:formatSpecificationCitation>
@@ -1238,18 +1192,7 @@
                   </mrd:MD_Format>
                 </mrd:distributionFormat>
               </snippet>
-            </template>
-          </action>
-
-          <action type="add"
-                  or="distributionFormat"
-                  in="/*/mdb:distributionInfo/*"
-                  if="count(//*/mdb:distributionInfo/*/mrd:distributionFormat[
-                      */mrd:formatSpecificationCitation/*/cit:title/* = 'NetCDF'
-                    ]) = 0"
-                  btnLabel="eo-format-add-netcdf4">
-            <template>
-              <snippet>
+              <snippet label="eo-format-add-netcdf4">
                 <mrd:distributionFormat>
                   <mrd:MD_Format>
                     <mrd:formatSpecificationCitation>
@@ -1259,6 +1202,44 @@
                         </cit:title>
                         <cit:edition>
                           <gco:CharacterString>4</gco:CharacterString>
+                        </cit:edition>
+                        <cit:otherCitationDetails>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:otherCitationDetails>
+                      </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                  </mrd:MD_Format>
+                </mrd:distributionFormat>
+              </snippet>
+              <snippet label="eo-format-add-grib">
+                <mrd:distributionFormat>
+                  <mrd:MD_Format>
+                    <mrd:formatSpecificationCitation>
+                      <cit:CI_Citation>
+                        <cit:title>
+                          <gco:CharacterString>GRIB</gco:CharacterString>
+                        </cit:title>
+                        <cit:edition>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:edition>
+                        <cit:otherCitationDetails>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:otherCitationDetails>
+                      </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                  </mrd:MD_Format>
+                </mrd:distributionFormat>
+              </snippet>
+              <snippet label="eo-format-add-ascii">
+                <mrd:distributionFormat>
+                  <mrd:MD_Format>
+                    <mrd:formatSpecificationCitation>
+                      <cit:CI_Citation>
+                        <cit:title>
+                          <gco:CharacterString>ASCII</gco:CharacterString>
+                        </cit:title>
+                        <cit:edition>
+                          <gco:CharacterString></gco:CharacterString>
                         </cit:edition>
                         <cit:otherCitationDetails>
                           <gco:CharacterString></gco:CharacterString>

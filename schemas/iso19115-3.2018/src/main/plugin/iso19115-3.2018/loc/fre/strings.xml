@@ -118,8 +118,11 @@
   <eo-access>Accès</eo-access>
   <eo-access-policy>Politique d'accès</eo-access-policy>
   <eo-format>Format</eo-format>
-  <eo-format-add-netcdf3>Ajouter NetCDF 3</eo-format-add-netcdf3>
-  <eo-format-add-netcdf4>Ajouter NetCDF 4</eo-format-add-netcdf4>
+  <eo-format-add>Ajouter un format</eo-format-add>
+  <eo-format-add-netcdf3>NetCDF 3</eo-format-add-netcdf3>
+  <eo-format-add-netcdf4>NetCDF 4</eo-format-add-netcdf4>
+  <eo-format-add-grib>GRIB</eo-format-add-grib>
+  <eo-format-add-ascii>ASCII</eo-format-add-ascii>
   <eo-convention>Convention</eo-convention>
   <eo-usage>Usage</eo-usage>
   <eo-link>Ajouter un lien (accès direct, services, outils)</eo-link>
