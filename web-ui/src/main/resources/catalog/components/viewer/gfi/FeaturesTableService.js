@@ -63,7 +63,7 @@
           if (response.data["decodeMap"] != null) {
             var dictionary = {};
             Object.keys(response.data["decodeMap"]).map(function (key) {
-              dictionary[key] = {
+              dictionary[key.toLowerCase()] = {
                 code: response.data["decodeMap"][key][0],
                 name: response.data["decodeMap"][key][1]
               };
