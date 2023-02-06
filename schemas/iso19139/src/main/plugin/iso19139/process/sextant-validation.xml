@@ -105,7 +105,7 @@
             <gmd:RS_Identifier>
                 <!-- ## LOG TODO-->
                <gmd:code>
-                  <gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
+                  <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
                </gmd:code>
                <gmd:codeSpace>
                   <gco:CharacterString>EPSG</gco:CharacterString>
@@ -266,7 +266,7 @@
                               <gco:CharacterString></gco:CharacterString>
                                <!-- TODO: Add email-->
                            </gmd:electronicMailAddress>
-                            
+
                             <gmd:electronicMailAddress xsi:type="gmd:PT_FreeText_PropertyType">
                                 <gco:CharacterString></gco:CharacterString>
                                 <gmd:PT_FreeText>
@@ -582,14 +582,14 @@
               </gmd:MD_Distributor>
           </gmd:distributor>
           <!-- ## TO REMOVE -->
-          
-          
+
+
           <gmd:transferOptions>
               <gmd:MD_DigitalTransferOptions/>
           </gmd:transferOptions>
           <!-- ## TO REMOVE -->
-          
-          
+
+
          <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
                <gmd:onLine>

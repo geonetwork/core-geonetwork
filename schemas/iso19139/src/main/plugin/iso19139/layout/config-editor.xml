@@ -668,7 +668,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>Lambert 93 (EPSG 2154)</gco:CharacterString>
+                          <gco:CharacterString>Lambert 93 (EPSG:2154)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -687,7 +687,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3857)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG:3857)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2817,7 +2817,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG 3035)</gco:CharacterString>
+                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG:3035)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2836,7 +2836,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>ETRS89 (EPSG 4258)</gco:CharacterString>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2855,7 +2855,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG:3395)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2874,7 +2874,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>Spherical 3D CS (EPSG 6404)</gco:CharacterString>
+                          <gco:CharacterString>Spherical 3D CS (EPSG:6404)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3467,7 +3467,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3483,7 +3483,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 / Simple Mercator (EPSG 41001)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 / Simple Mercator (EPSG:41001)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3499,7 +3499,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG 3035)</gco:CharacterString>
+                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG:3035)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3515,7 +3515,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>ETRS89 (EPSG 4258)</gco:CharacterString>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3531,7 +3531,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 / Plate Carree (EPSG 32662)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 / Plate Carree (EPSG:32662)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3547,7 +3547,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG:3395)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3579,7 +3579,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</gco:CharacterString>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG:3411)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3595,7 +3595,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</gco:CharacterString>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG:3412)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -3611,7 +3611,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>Spherical 3D CS (EPSG 6404)</gco:CharacterString>
+                          <gco:CharacterString>Spherical 3D CS (EPSG:6404)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>

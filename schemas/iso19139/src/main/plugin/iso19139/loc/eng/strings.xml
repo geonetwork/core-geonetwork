@@ -329,7 +329,7 @@
   <addCrs3395Custom>WGS 84 / World Mercator (custom)</addCrs3395Custom>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
-  <addCrs6404>Spherical 3D CS (EPSG 6404)</addCrs6404>
+  <addCrs6404>Spherical 3D CS (EPSG:6404)</addCrs6404>
   <emodnetAddQualityIndicators>Add quality indicators</emodnetAddQualityIndicators>
 
   <orAddresourceProvider>or add a resource provider if none found in EDMO</orAddresourceProvider>
@@ -535,16 +535,16 @@
   <cm-updateFrequency>Update frequency</cm-updateFrequency>
   <cm-updateFrequency-add>Add update frequency</cm-updateFrequency-add>
   <cm-crs>Coordinate reference system</cm-crs>
-  <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>
-  <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG 41001)</cm-addCrsEPSG41001>
-  <cm-addCrsEPSG3035>Lambert Azimuthal Equal Area (EPSG 3035)</cm-addCrsEPSG3035>
-  <cm-addCrsEPSG4258>ETRS89 (EPSG 4258)</cm-addCrsEPSG4258>
-  <cm-addCrsEPSG32662>WGS 84 / Plate Carree (EPSG 32662)</cm-addCrsEPSG32662>
-  <cm-addCrsEPSG3395>WGS 84 / World Mercator (EPSG 3395)</cm-addCrsEPSG3395>
+  <cm-addCrsEPSG4326>WGS 84 (EPSG:4326)</cm-addCrsEPSG4326>
+  <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG:41001)</cm-addCrsEPSG41001>
+  <cm-addCrsEPSG3035>Lambert Azimuthal Equal Area (EPSG:3035)</cm-addCrsEPSG3035>
+  <cm-addCrsEPSG4258>ETRS89 (EPSG:4258)</cm-addCrsEPSG4258>
+  <cm-addCrsEPSG32662>WGS 84 / Plate Carree (EPSG:32662)</cm-addCrsEPSG32662>
+  <cm-addCrsEPSG3395>WGS 84 / World Mercator (EPSG:3395)</cm-addCrsEPSG3395>
   <cm-addCrsORCA025>MYO Arakawa-C ORCA025 native grid (ORCA025)</cm-addCrsORCA025>
-  <cm-addCrsEPSG3411>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</cm-addCrsEPSG3411>
-  <cm-addCrsEPSG3412>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</cm-addCrsEPSG3412>
-  <cm-addCrsEPSG6404>Spherical 3D CS (EPSG 6404)</cm-addCrsEPSG6404>
+  <cm-addCrsEPSG3411>NSIDC Sea Ice Polar Stereographic North (EPSG:3411)</cm-addCrsEPSG3411>
+  <cm-addCrsEPSG3412>NSIDC Sea Ice Polar Stereographic South (EPSG:3412)</cm-addCrsEPSG3412>
+  <cm-addCrsEPSG6404>Spherical 3D CS (EPSG:6404)</cm-addCrsEPSG6404>
   <cm-addCrsSR-ORG29>WRF Lambert Conformal Conic (SR-ORG 29)</cm-addCrsSR-ORG29>
   <cm-linkToUpstreamProduction>Link to upstream production</cm-linkToUpstreamProduction>
   <cm-linkToUpstreamValidation>Link to upstream validation</cm-linkToUpstreamValidation>

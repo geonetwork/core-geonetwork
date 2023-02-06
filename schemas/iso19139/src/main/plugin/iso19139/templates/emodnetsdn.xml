@@ -59,7 +59,7 @@
           <gmd:code>
             <!-- MANDATORY: coordinate reference system of the product among EPSG labels at http://spatialreference.org/ref/epsg/ -->
             <!-- Controlled vocabulary from Geonetwork embeded GeoTools database -->
-            <gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
+            <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
           </gmd:code>
           <gmd:codeSpace>
             <gco:CharacterString>EPSG</gco:CharacterString>
