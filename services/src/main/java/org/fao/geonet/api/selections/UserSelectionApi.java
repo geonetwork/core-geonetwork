@@ -308,6 +308,7 @@ public class UserSelectionApi {
             }
         }
         //save
+        updateChangeTimeToNow(list);
         list = userMetadataSelectionListRepository.save(list);
         return list;
     }
@@ -362,6 +363,7 @@ public class UserSelectionApi {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
         list.setIsPublic(isPublic);
+        updateChangeTimeToNow(list);
         list = userMetadataSelectionListRepository.save(list);
         return list;
     }
@@ -579,6 +581,11 @@ public class UserSelectionApi {
             user = userRepository.findOne(userId);
         }
         return user;
+    }
+
+    UserMetadataSelectionList updateChangeTimeToNow(UserMetadataSelectionList list) {
+        list.setChangeDate(new ISODate());
+        return list;
     }
 
 }
