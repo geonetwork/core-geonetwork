@@ -27,6 +27,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface UserMetadataSelectionListRepository extends GeonetRepository<UserMetadataSelectionList, Integer>   {
@@ -35,10 +36,54 @@ public interface UserMetadataSelectionListRepository extends GeonetRepository<Us
     List<UserMetadataSelectionList> findBySessionId(String sessionId);
     List<UserMetadataSelectionList> findByUserOrSessionId(User user, String sessionId);
 
+    @Query("select umsl from UserMetadataSelectionList umsl where umsl.isPublic = true")
+    List<UserMetadataSelectionList> findPublic();
+
+    //---
     @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and (umsl.user = ?2 or umsl.sessionId = ?3)")
     UserMetadataSelectionList findByNameAndUserOrSessionId(String name, User user, String sessionId);
 
+    @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and umsl.user = ?2")
+    UserMetadataSelectionList findByNameAndUser(String name, User user);
+
+    @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and  umsl.sessionId = ?2")
+    UserMetadataSelectionList findByNameAndSessionId(String name, String sessionId);
+
+    //--
     @Query("select umsl from UserMetadataSelectionList umsl where umsl.user = ?1 or umsl.sessionId = ?2 or umsl.isPublic = true")
     List<UserMetadataSelectionList> findByUserOrSessionOrPublic( User user, String sessionId);
+
+    @Query("select umsl from UserMetadataSelectionList umsl where umsl.user = ?1  or umsl.isPublic = true")
+    List<UserMetadataSelectionList> findByUserOrPublic( User user);
+
+    @Query("select umsl from UserMetadataSelectionList umsl where umsl.sessionId = ?1 or umsl.isPublic = true")
+    List<UserMetadataSelectionList> findBySessionOrPublic(  String sessionId);
+
+    //--
+    default UserMetadataSelectionList findName(String name, User user, String sessionId) {
+        if (user == null && sessionId == null) {
+            return null;
+        }
+        if (user !=null && sessionId !=null) {
+            return findByNameAndUserOrSessionId(name,user,sessionId);
+        }
+        if (user != null) {
+            return findByNameAndUser(name,user);
+        }
+        return findByNameAndSessionId(name,sessionId);
+    }
+
+    default  List<UserMetadataSelectionList> findPublic(User user, String sessionId) {
+        if (user == null && sessionId == null) {
+            return findPublic();
+        }
+        if (user !=null && sessionId !=null) {
+            return findByUserOrSessionOrPublic(user,sessionId);
+        }
+        if (user != null) {
+            return findByUserOrPublic(user);
+        }
+        return findBySessionOrPublic(sessionId);
+    }
 
 }

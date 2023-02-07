@@ -23,6 +23,7 @@
 package org.fao.geonet.api.selections;
 
 
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpSession;
@@ -32,6 +33,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 public class UserSelectionApiTest extends UserSelectionApiSupport {
@@ -46,35 +49,42 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testCreateGetSimple() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
+        UserMetadataSelectionList list,list2;
         UserMetadataSelectionList one;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
+
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
-        list = create(session,
+        createResult= create(session, null,
             "testcase1", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list=createResult.one();
+        String returnedSessionId = createResult.two();
+        assertNotNull(returnedSessionId);
 
         //1b. call "all" -- should just see the list we created
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,returnedSessionId));
         assertEquals(1, all.size());
         areSame(list, all.get(0));
 
         //1c. call "get by id" -- should get the list we created
-        one = getList(session, list.getId());
+        one = getList(session,returnedSessionId, list.getId());
         areSame(list, one);
 
         //2. user1 creates a  list
-        session = loginAs(user1, session.getId());
-        UserMetadataSelectionList list2 = create(session,
+        session = loginAs(user1);
+        createResult = create(session, returnedSessionId,
             "testcase2", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list2 = createResult.one();
+        returnedSessionId = createResult.two();
 
         //2a. get "by id" - should get our original id
-        one = getList(session, list2.getId());
+        one = getList(session, returnedSessionId,list2.getId());
         areSame(list2, one);
 
         //2c. get all -- should get both (we keep the same  session id)
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,returnedSessionId));
         assertEquals(2, all.size());
         areSame(Arrays.asList(list, list2), all);
     }
@@ -89,15 +99,18 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     public void testSessionSameName() throws Exception {
         MockHttpSession session;
         UserMetadataSelectionList list;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
-        list = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
         //2 try to create list with the same name
         assertThrows(Exception.class, () -> {
-            create(session, "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(session, returnedSessionId,"testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -110,15 +123,23 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     public void testUserSameName() throws Exception {
         MockHttpSession session;
         UserMetadataSelectionList list;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         //1. anonymous creates a list
         session = loginAs(user1);
-        list = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
         //2 try to create list with the same name
         assertThrows(Exception.class, () -> {
-            create(session, "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(session, returnedSessionId,"testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        });
+
+        //no sessionId cookie --> should still throw
+        assertThrows(Exception.class, () -> {
+            create(session, null,"testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -132,11 +153,14 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     public void testSessionUserSameName() throws Exception {
         MockHttpSession session;
         UserMetadataSelectionList list;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
-        list = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
         session = loginAs(user1, session.getId());
 
@@ -144,7 +168,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         //2 try to create list with the same name
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            create(finalSession, "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(finalSession, returnedSessionId,"testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -159,11 +183,14 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         MockHttpSession session;
         UserMetadataSelectionList list;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAsAnonymous();
-        list = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
         //another anonymous user cannot see it
         session = loginAsAnonymous();
@@ -171,11 +198,11 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         // try by id
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession, list.getId());
+            getList(finalSession,null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,null));
         doesNotContain(all, list);
 
 
@@ -184,11 +211,11 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         // try by id
         MockHttpSession finalSession2 = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession2, list.getId());
+            getList(finalSession2,null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,null));
         doesNotContain(all, list);
     }
 
@@ -203,11 +230,14 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         MockHttpSession session;
         UserMetadataSelectionList list;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAs(user1);
-        list = create(session,
+        createResult = create(session,null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
         //another anonymous user cannot see it
         session = loginAsAnonymous();
@@ -215,11 +245,11 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         // try by id
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession, list.getId());
+            getList(finalSession,null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,returnedSessionId));
         doesNotContain(all, list);
 
 
@@ -228,11 +258,11 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         // try by id
         MockHttpSession finalSession2 = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession2, list.getId());
+            getList(finalSession2,null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session));
+        all = Arrays.asList(getAllLists(session,null));
         doesNotContain(all, list);
     }
 
@@ -247,17 +277,20 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         MockHttpSession session;
         UserMetadataSelectionList list, list2;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        list2 = update(session, list.getId(), "TESTCASE2", new String[0], UserSelectionApi.ActionType.add);
+        list2 = update(session,returnedSessionId, list.getId(), "TESTCASE2", new String[0], UserSelectionApi.ActionType.add);
         assertNotEquals(list.getChangeDate(), list2.getChangeDate());
         assertEquals("TESTCASE2", list2.getName());
 
         //get the list to make sure its fully saved
-        list2 = getList(session, list.getId());
+        list2 = getList(session,returnedSessionId, list.getId());
         assertEquals("TESTCASE2", list2.getName());
     }
 
@@ -275,19 +308,26 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         UserMetadataSelectionList list1;
         UserMetadataSelectionList list2;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        list2 = create(session,
+        createResult = create(session,returnedSessionId,
             "testcase2", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list2 = createResult.one();
+        assertEquals(returnedSessionId,createResult.two());
+        returnedSessionId = createResult.two();
 
 
         MockHttpSession finalSession2 = session;
         UserMetadataSelectionList finalList = list2;
+        String finalReturnedSessionId = returnedSessionId;
         assertThrows(Exception.class, () -> {
-            update(session, finalList.getId(), "testcase", new String[0], UserSelectionApi.ActionType.add);
+            update(session, finalReturnedSessionId,finalList.getId(), "testcase", new String[0], UserSelectionApi.ActionType.add);
         });
     }
 
@@ -303,21 +343,24 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         UserMetadataSelectionList list1;
         UserMetadataSelectionList list2;
         UserMetadataSelectionList list3;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        list2 = update(session, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.add);
+        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.add);
         assertEquals(3, list2.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list2);
         assertNotEquals(list1.getChangeDate(), list2.getChangeDate());
 
-        list2 = update(session, list1.getId(), "testcase", new String[]{uuid2, uuid2, uuid3}, UserSelectionApi.ActionType.add);
+        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid2, uuid2, uuid3}, UserSelectionApi.ActionType.add);
         assertEquals(3, list2.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list2);
 
-        list3 = update(session, list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.add);
+        list3 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.add);
         assertEquals(3, list3.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list3);
     }
@@ -334,18 +377,21 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         UserMetadataSelectionList list1;
         UserMetadataSelectionList list2;
         UserMetadataSelectionList list3;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        list2 = update(session, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.remove);
+        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1, uuid2), list2);
 
-        list2 = update(session, list1.getId(), "testcase", new String[]{uuid2, uuid2}, UserSelectionApi.ActionType.remove);
+        list2 = update(session, returnedSessionId,list1.getId(), "testcase", new String[]{uuid2, uuid2}, UserSelectionApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1), list2);
 
-        list3 = update(session, list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.remove);
+        list3 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1), list3);
     }
 
@@ -360,16 +406,19 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         UserMetadataSelectionList list1;
         UserMetadataSelectionList list2;
         UserMetadataSelectionList list3;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        list2 = update(session, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.replace);
+        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, UserSelectionApi.ActionType.replace);
         areSameUuids(Arrays.asList(uuid3), list2);
 
 
-        list3 = update(session, list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.replace);
+        list3 = update(session, returnedSessionId,list1.getId(), "testcase", new String[]{}, UserSelectionApi.ActionType.replace);
         areSameUuids(Arrays.asList(), list3);
     }
 
@@ -382,17 +431,21 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     public void changeStatus() throws Exception {
         MockHttpSession session;
         UserMetadataSelectionList list1, list2;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session,null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
+
         assertEquals(false, list1.getIsPublic());
 
-        list2 = setstatus(session, list1.getId(), true);
+        list2 = setstatus(session, returnedSessionId,list1.getId(), true);
         assertEquals(true, list2.getIsPublic());
         assertNotEquals(list1.getChangeDate(), list2.getChangeDate());
 
-        list2 = setstatus(session, list1.getId(), false);
+        list2 = setstatus(session, returnedSessionId,list1.getId(), false);
         assertEquals(false, list2.getIsPublic());
     }
 
@@ -407,59 +460,70 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
         UserMetadataSelectionList list1, list2;
         List<UserMetadataSelectionList> all;
+        Pair<UserMetadataSelectionList,String> createResult;
+
 
         sessionUser1 = loginAs(user1);
-        sessionUser2 = loginAs(user2);
-        sessionAnonymous = loginAsAnonymous();
 
-        list1 = create(sessionUser1,
+
+
+        createResult = create(sessionUser1,null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
         //user1 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser1));
+        all = Arrays.asList(getAllLists(sessionUser1,returnedSessionId));
         contains(all, list1.getId());
-        list2 = getList(sessionUser1, list1.getId());
+        list2 = getList(sessionUser1,returnedSessionId, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
+
+        sessionUser2 = loginAs(user2);
+
         //user2 cannot see/retrieve
-        all = Arrays.asList(getAllLists(sessionUser2));
+        all = Arrays.asList(getAllLists(sessionUser2,null));
         notContains(all, list1.getId());
         UserMetadataSelectionList finalList = list1;
+        MockHttpSession finalSessionUser = sessionUser2;
         assertThrows(Exception.class, () -> {
-            getList(sessionUser2, finalList.getId());
+            getList(finalSessionUser, null, finalList.getId());
         });
+
+
 
         //Anonymous cannot see/retrieve
-        all = Arrays.asList(getAllLists(sessionUser2));
+        all = Arrays.asList(getAllLists(sessionUser2,null));
         notContains(all, list1.getId());
         UserMetadataSelectionList finalList2 = list1;
+        MockHttpSession finalSessionUser1 = sessionUser2;
         assertThrows(Exception.class, () -> {
-            getList(sessionUser2, finalList2.getId());
+            getList(finalSessionUser1, null,finalList2.getId());
         });
 
-
-        list1 = setstatus(sessionUser1, list1.getId(), true);
+        sessionUser1 = loginAs(user1);
+        list1 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
         assertEquals(true, list1.getIsPublic());
 
         //user1 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser1));
+        all = Arrays.asList(getAllLists(sessionUser1,returnedSessionId));
         contains(all, list1.getId());
-        list2 = getList(sessionUser1, list1.getId());
+        list2 = getList(sessionUser1,returnedSessionId, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
-
+        sessionUser2 = loginAs(user2);
         //user2 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser2));
+        all = Arrays.asList(getAllLists(sessionUser2,null));
         contains(all, list1.getId());
-        list2 = getList(sessionUser2, list1.getId());
+        list2 = getList(sessionUser2,null, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
+        sessionAnonymous = loginAsAnonymous();
         //Anonymous can retrieve and see
-        all = Arrays.asList(getAllLists(sessionAnonymous));
+        all = Arrays.asList(getAllLists(sessionAnonymous,null));
         contains(all, list1.getId());
-        list2 = getList(sessionAnonymous, list1.getId());
+        list2 = getList(sessionAnonymous,null, list1.getId());
         assertEquals(list1.getId(), list2.getId());
-
     }
 
     /**
@@ -471,17 +535,20 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         MockHttpSession session;
         UserMetadataSelectionList list1;
         Boolean result;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         session = loginAs(user1);
-        list1 = create(session,
+        createResult = create(session, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-        result = deleteItem(session, list1.getId());
+        result = deleteItem(session,returnedSessionId, list1.getId());
         assertEquals(true, result);
 
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession, list1.getId());
+            getList(finalSession, returnedSessionId,list1.getId());
         });
     }
 
@@ -494,43 +561,155 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     public void permissionOnPublic() throws Exception {
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
         UserMetadataSelectionList list1, list2;
+        Pair<UserMetadataSelectionList,String> createResult;
 
         sessionUser1 = loginAs(user1);
-        sessionUser2 = loginAs(user2);
-        sessionAnonymous = loginAsAnonymous();
 
-        list1 = create(sessionUser1,
+
+        createResult = create(sessionUser1, null,
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        String returnedSessionId = createResult.two();
 
-
-        list2 = setstatus(sessionUser1, list1.getId(), true);
+        list2 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
         assertEquals(true, list2.getIsPublic());
 
+        sessionUser2 = loginAs(user2);
 
         assertThrows(Exception.class, () -> {
-            deleteItem(sessionUser2, list1.getId());
+            deleteItem(sessionUser2, null,list1.getId());
         });
 
         assertThrows(Exception.class, () -> {
-            update(sessionUser2, list1.getId(), "newname", new String[0], UserSelectionApi.ActionType.add);
+            update(sessionUser2, null,list1.getId(), "newname", new String[0], UserSelectionApi.ActionType.add);
         });
 
         assertThrows(Exception.class, () -> {
-            setstatus(sessionUser2, list1.getId(), true);
+            setstatus(sessionUser2,null, list1.getId(), true);
         });
 
 
+        sessionAnonymous = loginAsAnonymous();
+
         assertThrows(Exception.class, () -> {
-            deleteItem(sessionAnonymous, list1.getId());
+            deleteItem(sessionAnonymous,null, list1.getId());
         });
         assertThrows(Exception.class, () -> {
-            update(sessionAnonymous, list1.getId(), "newname", new String[0], UserSelectionApi.ActionType.add);
+            update(sessionAnonymous,null, list1.getId(), "newname", new String[0], UserSelectionApi.ActionType.add);
         });
 
         assertThrows(Exception.class, () -> {
-            setstatus(sessionAnonymous, list1.getId(), true);
+            setstatus(sessionAnonymous,null, list1.getId(), true);
         });
     }
 
+    /**
+     *  1. login as user1 and create  list1 (session A)
+     *  2. login as user1 and create  list2 (session B)
+     *  3. user1 can see both lists (created by user)
+     *  4. login as anonymous and create  list3 (session C)
+     *  5. anonymous should just be able to see list3 (by session)
+     *  6. attach Session A cookie to anonymous --> should see nothing
+     */
+    @Test
+    public void session1() throws Exception {
+        MockHttpSession session;
+        UserMetadataSelectionList list1, list2,list3;
+        Pair<UserMetadataSelectionList,String> createResult;
+        String sessionIDA, sessionIDB, sessionIDC;
 
+        session = loginAs(user1);
+
+        createResult = create(session, null,
+            "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        sessionIDA = createResult.two();
+
+        assertNull(list1.getSessionId());
+        assertNotNull(list1.getUser()); // user logged on (no current session)
+        assertNotNull(sessionIDA);
+
+        session = loginAs(user1);
+
+        createResult = create(session, "cookie",
+            "testcase2", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list2 = createResult.one();
+        sessionIDB = createResult.two();
+
+        assertNull(list2.getSessionId());
+        assertNotNull(list2.getUser()); // user takes preference over session
+        assertEquals("cookie", sessionIDB); //cookie doesn't change
+
+        List<UserMetadataSelectionList> all = Arrays.asList(getAllLists(session,sessionIDB));
+
+        //user1 (regardless of session id) can see both
+        areSame(Arrays.asList(list1,list2),all);
+
+
+        session = loginAsAnonymous();
+
+        createResult = create(session, null,
+            "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list3 = createResult.one();
+        sessionIDC = createResult.two();
+
+        assertNotNull(list3.getSessionId());
+        assertNull(list3.getUser()); //  no user
+        assertNotNull(sessionIDC);
+
+        all = Arrays.asList(getAllLists(session,sessionIDC));
+
+
+        areSame(Arrays.asList(list3),all);
+
+        all = Arrays.asList(getAllLists(session,sessionIDA));
+        assertEquals(0,all.size());
+    }
+
+
+    /**
+     * 1. login as anonymous (sessionIDA)
+     * 2. create list1
+     * 3. login as user1 (sessionIDA), create list2
+     * 4. user1 can see list1 + list2
+     * 5. anonymous (sessionIDA) can see list1
+     * 6. user1 (no session) can only see list2
+     */
+    @Test
+    public void session2() throws Exception {
+        MockHttpSession session;
+        UserMetadataSelectionList list1, list2;
+        Pair<UserMetadataSelectionList, String> createResult;
+        String sessionIDA;
+
+        session = loginAsAnonymous();
+
+        createResult = create(session, null,
+            "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1 = createResult.one();
+        sessionIDA = createResult.two();
+        assertNull(list1.getUser()); // no   user
+
+
+        session = loginAs(user1);
+        createResult = create(session, sessionIDA,
+            "testcase2", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list2 = createResult.one();
+        assertEquals(sessionIDA, createResult.two());
+        assertNotNull(list2.getUser()); //    user
+
+        List<UserMetadataSelectionList> all = Arrays.asList(getAllLists(session,sessionIDA));
+
+        //user1 (with the sessionID) can see both
+        areSame(Arrays.asList(list1,list2),all);
+
+        session = loginAsAnonymous();
+        all = Arrays.asList(getAllLists(session,sessionIDA));
+        //user1 (with the sessionID) can see list1
+        areSame(Arrays.asList(list1),all);
+
+        session = loginAs(user1);
+        all = Arrays.asList(getAllLists(session,null));
+        areSame(Arrays.asList(list2),all);
+    }
 }

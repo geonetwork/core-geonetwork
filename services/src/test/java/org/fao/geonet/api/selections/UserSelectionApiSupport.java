@@ -29,6 +29,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.fao.geonet.kernel.DataManager;
@@ -37,6 +38,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserMetadataSelectionListRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -46,10 +48,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,6 +62,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.api.selections.UserSelectionApi.SESSION_COOKIE_NAME;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
@@ -81,6 +87,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public abstract class UserSelectionApiSupport extends AbstractServiceIntegrationTest {
     @Autowired
     UserSelectionApi userSelectionApi;
+
+    @Autowired
+    UserMetadataSelectionListRepository metadataSelectionListRepository;
 
     @Autowired
     MetadataRepository metadataRepository;
@@ -168,8 +177,9 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
      * uses the webapi to create a UserMetadataSelectionList.
      * The result is validated against what was inserted.
      */
-    public UserMetadataSelectionList create(MockHttpSession session,
-                                            String name, UserMetadataSelectionList.ListType listType, String[] uuids)
+    public Pair<UserMetadataSelectionList,String> create(MockHttpSession session,
+                                                         String cookieValue,
+                                                         String name, UserMetadataSelectionList.ListType listType, String[] uuids)
         throws Exception {
 
         // create the x-www-form-urlencoded for the parameters
@@ -177,13 +187,16 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
 
         // actually call api
-        ResultActions result =  this.mockMvc.perform(
-            post(apiBaseURL)
-                .content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+        MockHttpServletRequestBuilder requestBuilder =   post(apiBaseURL)
+            .content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
@@ -201,6 +214,14 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
         UserSession userSession = ApiUtils.getUserSession(mockHttpSession);
         String userId = userSession.getUserId();
+        String sessionId;
+        if (result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME) != null) {
+            //cookie was set in response
+            sessionId =result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME).getValue();
+        }
+        else {
+            sessionId = cookieValue;// value sent in request
+        }
 
         // don't have a sessionId AND userid
         assertTrue(resultListObj.getSessionId() == null || resultListObj.getUser() == null);
@@ -209,21 +230,29 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
             assertEquals(Integer.toString(resultListObj.getUser().getId()) , userId);
         }
         else {
-            assertEquals(session.getId(),resultListObj.getSessionId());
+            assertEquals(sessionId,resultListObj.getSessionId());
+            assertNotNull(sessionId);
         }
 
-        return resultListObj;
+
+
+        return Pair.read(resultListObj,sessionId);
     }
 
     //calls the API to get all lists for the user  (cf UserSelectionApi#getSelectionLists)
-    UserMetadataSelectionList[] getAllLists(MockHttpSession session ) throws  Exception {
-        ResultActions result =  this.mockMvc.perform(
-            get(apiBaseURL)
-                //.content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+    UserMetadataSelectionList[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
+
+        MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL)
+            //.content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
+
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
@@ -233,14 +262,19 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
     }
 
     //Gets a single list (by id) from the API (cf UserSelectionApi#getSelectionList)
-    UserMetadataSelectionList getList(MockHttpSession session, int id) throws Exception {
-        ResultActions result =  this.mockMvc.perform(
-            get(apiBaseURL+"/"+id)
-                //.content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+    UserMetadataSelectionList getList(MockHttpSession session, String cookieValue, int id) throws Exception {
+
+
+        MockHttpServletRequestBuilder requestBuilder =        get(apiBaseURL+"/"+id)
+            //.content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
@@ -249,19 +283,23 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         return resultListObj;
     }
 
-    UserMetadataSelectionList setstatus(MockHttpSession session,
+    UserMetadataSelectionList setstatus(MockHttpSession session, String cookieValue,
                                      int id,
                                      boolean isPublic) throws Exception {
         StringBuilder requestContent = new StringBuilder("public="+Boolean.toString(isPublic));
 
+        MockHttpServletRequestBuilder requestBuilder =          put(apiBaseURL+"/"+id+"/status")
+            .content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
 
-        ResultActions result =  this.mockMvc.perform(
-            put(apiBaseURL+"/"+id+"/status")
-                .content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
+
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);
@@ -269,21 +307,26 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         return  resultListObj;
     }
 
-    Boolean deleteItem(MockHttpSession session,int id) throws Exception {
-        ResultActions result =  this.mockMvc.perform(
-            delete(apiBaseURL+"/"+id)
-             //   .content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+    Boolean deleteItem(MockHttpSession session, String cookieValue, int id) throws Exception {
+
+        MockHttpServletRequestBuilder requestBuilder = delete(apiBaseURL+"/"+id)
+            //   .content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
+
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonStr,Boolean.class);
     }
 
 
-    UserMetadataSelectionList update(MockHttpSession session,
+    UserMetadataSelectionList update(MockHttpSession session, String cookieValue,
                                      int id,
                                      String name,
                                      String[] uuids,
@@ -291,13 +334,18 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         StringBuilder requestContent = new StringBuilder("name="+name+"&action="+actionType.toString());
         Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
 
-        ResultActions result =  this.mockMvc.perform(
-            put(apiBaseURL+"/"+id)
-                .content(requestContent.toString())
-                .session(session)
-                .contentType("application/x-www-form-urlencoded")
-                .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING))
-        );
+        MockHttpServletRequestBuilder requestBuilder =   put(apiBaseURL+"/"+id)
+            .content(requestContent.toString())
+            .session(session)
+            .contentType("application/x-www-form-urlencoded")
+            .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
+        if (cookieValue !=null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        }
+
+
+        ResultActions result =  this.mockMvc.perform(requestBuilder);
+
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);

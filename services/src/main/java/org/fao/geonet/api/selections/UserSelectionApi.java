@@ -49,11 +49,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * The API for userselection.
@@ -108,6 +112,8 @@ public class UserSelectionApi {
     @Autowired
     MetadataRepository metadataRepository;
 
+    static String SESSION_COOKIE_NAME="not-logged-in-user-selection-sessionid";
+
     enum ActionType {add, replace, remove}
 
     /**
@@ -136,19 +142,52 @@ public class UserSelectionApi {
     @ResponseStatus(HttpStatus.OK)
     List<UserMetadataSelectionList> getSelectionLists(
         @Parameter(hidden = true)
-        HttpSession httpSession
+        HttpSession httpSession,
+
+        @Parameter(hidden = true)
+            HttpServletRequest  httpServletRequest
     )
         throws Exception {
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        String userId = session.getUserId(); // null = not logged on
-        User user = null;
-        if (userId != null) {
-            user = userRepository.findOne(userId);
-        }
-        String sessionId = session.getsHttpSession().getId();
-        return userMetadataSelectionListRepository.findByUserOrSessionOrPublic(user,sessionId);
+        String sessionId = getSessionId(httpServletRequest);
+        User user =  getUser(httpSession);
+        return userMetadataSelectionListRepository.findPublic(user,sessionId);
     }
 
+    /**
+     *   Get the `SESSION_COOKIE_NAME` cookie value from the request.
+     *   If there isn't one, then returns null.
+     */
+    String getSessionId(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies ==null) {
+            return null;
+        }
+        Optional<Cookie> sessionCookie = Arrays.stream(cookies)
+            .filter(x->x.getName().equals(SESSION_COOKIE_NAME))
+            .findFirst();
+
+        return sessionCookie.isPresent() ?  sessionCookie.get().getValue() : null;
+    }
+
+    /**
+     *   adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
+     *   Value will be a random UUID.
+     *
+     * @return the SESSION_COOKIE_NAME value (uuid)
+     */
+    String setSessionId(HttpServletResponse response) {
+        return setSessionId(response, UUID.randomUUID().toString());
+    }
+
+    /**
+     *   adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
+     *
+     * @return the SESSION_COOKIE_NAME value (uuid)
+     */
+    String setSessionId(HttpServletResponse response, String value) {
+        response.addCookie(new Cookie(SESSION_COOKIE_NAME,value));
+        return value;
+    }
 
     /**
      *  Get a UserMetadataSelectionList by id.
@@ -168,7 +207,9 @@ public class UserSelectionApi {
         @PathVariable
         Integer selectionListIdentifier,
         @Parameter(hidden = true)
-        HttpSession httpSession
+        HttpSession httpSession,
+        @Parameter(hidden = true)
+        HttpServletRequest  httpServletRequest
     )
         throws Exception {
 
@@ -180,7 +221,7 @@ public class UserSelectionApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpSession);
+        String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
 
         Optional<UserMetadataSelectionList> list = userMetadataSelectionListRepository.findById(selectionListIdentifier);
@@ -232,7 +273,9 @@ public class UserSelectionApi {
             String[] metadataUuids,
 
         @Parameter(hidden = true)
-            HttpSession httpSession
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest  httpServletRequest
     )
         throws Exception {
 
@@ -244,7 +287,7 @@ public class UserSelectionApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpSession);
+        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
@@ -268,7 +311,7 @@ public class UserSelectionApi {
         //update name
         if (StringUtils.hasText(name) && !name.equals(list.getName())) {
             //is this valid?
-            UserMetadataSelectionList item = userMetadataSelectionListRepository.findByNameAndUserOrSessionId(name,user,sessionId);
+            UserMetadataSelectionList item = userMetadataSelectionListRepository.findName(name,user,sessionId);
             if (item != null) {
                 throw new IllegalArgumentException("name '"+name+"' is already in use!");
             }
@@ -338,7 +381,9 @@ public class UserSelectionApi {
             boolean isPublic,
 
         @Parameter(hidden = true)
-            HttpSession httpSession
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest  httpServletRequest
     )
         throws Exception {
 
@@ -350,7 +395,7 @@ public class UserSelectionApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpSession);
+        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
@@ -388,7 +433,9 @@ public class UserSelectionApi {
             Integer selectionListIdentifier,
 
         @Parameter(hidden = true)
-            HttpSession httpSession
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest  httpServletRequest
     )
         throws Exception {
 
@@ -400,7 +447,7 @@ public class UserSelectionApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpSession);
+        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
@@ -455,7 +502,12 @@ public class UserSelectionApi {
         UserMetadataSelectionList.ListType listType,
 
         @Parameter(hidden = true)
-        HttpSession httpSession
+        HttpSession httpSession,
+
+        @Parameter(hidden = true)
+            HttpServletRequest  httpServletRequest,
+        @Parameter(hidden = true)
+            HttpServletResponse httpServletResponse
     )
         throws Exception {
             if (!StringUtils.hasText(name)) {
@@ -464,8 +516,13 @@ public class UserSelectionApi {
             name = name.trim();
 
             User user = getUser(httpSession);
-            String sessionId = getSessionId(httpSession);
-            UserMetadataSelectionList alreadyExistsList = userMetadataSelectionListRepository.findByNameAndUserOrSessionId(name,user,sessionId);
+            String sessionId = getSessionId(httpServletRequest);
+            if (sessionId == null) {
+                //create a new session
+                sessionId = setSessionId(httpServletResponse);
+            }
+            UserMetadataSelectionList alreadyExistsList = userMetadataSelectionListRepository.findName(name,user,sessionId);
+
             if (alreadyExistsList != null) {
                 throw new IllegalArgumentException("There is already a list of that name");
             }
@@ -561,14 +618,6 @@ public class UserSelectionApi {
     }
 
 
-    /**
-     * gets the sessionId in the httpSession
-     */
-    String getSessionId(HttpSession httpSession) {
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        String sessionId = session.getsHttpSession().getId();
-        return sessionId;
-    }
 
     /**
      * Gets the user in the httpSession
