@@ -62,6 +62,13 @@ import java.util.UUID;
 /**
  * The API for userselection.
  *
+ * session:
+ *    a. usually null
+ *    b. when you create a list, you are given a cookie with your session ID
+ *    c. if you are logged in, then your created lists are owned by a user
+ *    d. if you are not logged in, then your created lists are owned by the session cookie.
+ *
+ *
  *    1. get all viewable by user (getSelectionLists)
  *        This returns a list of UserMetadataSelectionLists that are visible.
  *        1. If logged in, then all lists "owned" by that user
