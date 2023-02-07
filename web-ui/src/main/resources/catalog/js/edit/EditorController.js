@@ -333,8 +333,14 @@
                     }
                   }
 
-                  // Route param "tab" may also override this setting.
+                  // SEXTANT / CERSAT / Editing in english only
+                  if (defaultTab === "eo-tab-description" && $scope.lang !== "eng") {
+                    window.location.replace(
+                      window.location.href.replace("/" + $scope.lang + "/", "/eng/")
+                    );
+                  }
 
+                  // Route param "tab" may also override this setting.
                   // TODO: Set metadata title in page HEAD ?
                   $scope.layout.hideTopToolBar = true;
 
