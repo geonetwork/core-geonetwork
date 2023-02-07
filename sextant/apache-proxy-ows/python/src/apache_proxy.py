@@ -44,7 +44,7 @@ class ApacheProxy:
                 )
                 self.build_lists(matches_)
             else:
-                print("Une config manuelle ajoutée")
+                print("Configuration manuelle : {}".format(self.publique_url))
                 if self.publique_url not in self.publique_urls:
                     self.publique_urls.append(self.publique_url)
                     self.interne_urls.append(self.interne_url)
