@@ -318,6 +318,13 @@
                       ></i>
                     </li>
                     <li>
+                      <span data-translate="">addXpathCondition</span>&nbsp;
+                      <i
+                        class="fa fa-check-circle text-success"
+                        data-ng-show="currentXpath.condition != ''"
+                      ></i>
+                    </li>
+                    <li>
                       <span data-translate="">addXpathValue</span>&nbsp;
                       <i
                         class="fa fa-check-circle text-success"
@@ -361,6 +368,14 @@
                             placeholder="{{'xpath' | translate}}"
                           />
                           <br />
+                          <input
+                            name="condition"
+                            type="text"
+                            class="form-control"
+                            data-ng-model="currentXpath.condition"
+                            placeholder="{{'condition' | translate}}"
+                          />
+                          <br />
                           <textarea
                             name="xpath"
                             class="form-control"
@@ -395,6 +410,7 @@
                       >
                         <h6>{{c.field}} ({{c.insertMode | translate}})</h6>
                         <pre>{{c.xpath}}</pre>
+                        <pre>{{c.condition}}</pre>
                         <pre data-ng-if="c.value">{{c.value}}</pre>
 
                         <button

@@ -305,6 +305,8 @@
   "searchAndReplace": "Search and replace",
   "xpathEdits": "XPath editing",
   "batchEdits": "Form editing",
+  "addXpathCondition": "an optional condition",
+  "condition": "Condition",
   "searchAndReplaceEditsHelp": "Use the database to run a search and replace operation.",
   "addSearchAndReplace-help": "",
   "searchValue": "Value",
