@@ -961,13 +961,15 @@
         </xsl:element>
       </xsl:for-each-group>
 
-
       <xsl:if test="$isOnlyFeatureCatalog">
         <resourceType>featureCatalog</resourceType>
 
         <xsl:for-each select="mdb:contentInfo/*/mrc:featureCatalogue/*">
-          <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle',
-                                cat:name, $allLanguages)"/>
+          <xsl:for-each select="(cat:name[*/text() != '']
+                        |gfc:featureType/*/gfc:typeName[text() != ''])[1]">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle',
+                               ., $allLanguages)"/>
+          </xsl:for-each>
 
           <xsl:for-each select="cat:versionNumber/*">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
