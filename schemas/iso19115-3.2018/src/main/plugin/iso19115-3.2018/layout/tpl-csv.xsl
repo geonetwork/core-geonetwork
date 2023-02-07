@@ -47,6 +47,12 @@
         </xsl:apply-templates>
       </abstract>
 
+      <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*[. != '']">
+        <resourceIdentifier>
+          <xsl:value-of select="."/>
+        </resourceIdentifier>
+      </xsl:for-each>
+
       <category>
         <xsl:value-of select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
       </category>
