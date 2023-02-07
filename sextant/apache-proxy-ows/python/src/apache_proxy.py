@@ -39,7 +39,7 @@ class ApacheProxy:
                 matches_ = self.get_all_files_matching(file_extension)
                 print(
                     "{} Fichier(s) trouvé(s) dans le repertoire {}".format(
-                        len(matches_), self.full_path
+                        f'{len(matches_):03d}', self.full_path
                     )
                 )
                 self.build_lists(matches_)
@@ -51,8 +51,8 @@ class ApacheProxy:
                     self.softwares.append(self.software)
                 else:
                     print(
-                        "--> {} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
-                            self.interne_url
+                        "   --> Attention : {} est un doublon. Cette occurence ne sera pas rajoutée dans la configuration apache".format(
+                            self.publique_url
                         )
                     )
 
@@ -130,8 +130,8 @@ class ApacheProxy:
                 self.softwares.append(self.software)
             else:
                 print(
-                    "--> {} existe déja et sera considéré comme un doublon, il ne sera pas rajouté dans la conf".format(
-                        interne_url
+                    "   --> Attention : {} est un doublon. Cette occurence ne sera pas rajoutée dans la configuration apache".format(
+                        publique_url
                     )
                 )
 
@@ -155,7 +155,6 @@ if __name__ == "__main__":
 
     if not os.path.exists(args.output):
         os.mkdir(args.output)
-    print("Début")
     add_header = False
     if args.column_name:
         add_header = True
@@ -168,4 +167,3 @@ if __name__ == "__main__":
         header=add_header,
     )
     a.workflow()
-    print("Fin")
