@@ -228,6 +228,7 @@
       </xsl:for-each>
 
 
+
       <!-- ISO19115-3 records can be only a feature catalogue description.
        In this case,
        * add the resourceType=featureCatalog to enable search when linking records
@@ -239,10 +240,9 @@
                             and exists(mdb:contentInfo/*/mrc:featureCatalogue)"
                     as="xs:boolean"/>
 
-      <xsl:if test="exists(mdb:contentInfo/*/mrc:featureCatalogue//gfc:FC_FeatureCatalogue/gfc:featureType)">
+      <xsl:if test="$isOnlyFeatureCatalog">
         <resourceType>featureCatalog</resourceType>
       </xsl:if>
-
 
       <xsl:choose>
         <xsl:when test="$isDataset">
@@ -259,6 +259,11 @@
       <xsl:for-each select="mdb:metadataScope/*/mdb:name">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
+
+      <xsl:if test="not($isOnlyFeatureCatalog)
+                    and exists(mdb:contentInfo/*/mrc:featureCatalogue//gfc:FC_FeatureCatalogue/gfc:featureType)">
+        <resourceType>featureCatalog</resourceType>
+      </xsl:if>
 
 
       <!-- Indexing metadata contact -->
@@ -956,13 +961,15 @@
         </xsl:element>
       </xsl:for-each-group>
 
-
       <xsl:if test="$isOnlyFeatureCatalog">
         <resourceType>featureCatalog</resourceType>
 
         <xsl:for-each select="mdb:contentInfo/*/mrc:featureCatalogue/*">
-          <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle',
-                                cat:name, $allLanguages)"/>
+          <xsl:for-each select="(cat:name[*/text() != '']
+                        |gfc:featureType/*/gfc:typeName[text() != ''])[1]">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle',
+                               ., $allLanguages)"/>
+          </xsl:for-each>
 
           <xsl:for-each select="cat:versionNumber/*">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
