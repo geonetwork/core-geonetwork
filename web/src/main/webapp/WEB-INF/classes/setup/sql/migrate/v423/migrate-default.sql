@@ -27,7 +27,7 @@ UPDATE harvestersettings SET value = replace(value, 'ESRIDCAT-to-ISO19115-3-2018
 UPDATE harvestersettings SET value = replace(value, 'ISO19115-3-2014-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromISO19115-3.2014') WHERE value LIKE 'ISO19115-3-2014-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'ISO19139-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromISO19139') WHERE value LIKE 'ISO19139-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'ISO19139-to-ISO19115-3-2018-with-languages-refactor', 'iso19115-3.2018:convert/fromISO19139-with-languages-refactor') WHERE value LIKE 'ISO19139-to-ISO19115-3-2018-with-languages-refactor%';
-UPDATE harvestersettings SET value = replace(value, 'OPENDATASOFT-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromJsonOpenDataSoft.xsl') WHERE value LIKE 'OPENDATASOFT-to-ISO19115-3-2018%';
+UPDATE harvestersettings SET value = replace(value, 'OPENDATASOFT-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromJsonOpenDataSoft') WHERE value LIKE 'OPENDATASOFT-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'SPARQL-DCAT-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromSPARQL-DCAT') WHERE value LIKE 'SPARQL-DCAT-to-ISO19115-3-2018%';
 UPDATE harvestersettings SET value = replace(value, 'udata-to-ISO19115-3-2018', 'iso19115-3.2018:convert/fromJsonUdata') WHERE value LIKE 'udata-to-ISO19115-3-2018%';
 
