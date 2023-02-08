@@ -733,7 +733,7 @@
           };
           $http
             .get("../api/users/groups")
-            .then(function (data) {
+            .then(function (response) {
               var uniqueUserGroups = {};
               angular.forEach(response.data, function (g) {
                 var key = g.groupId + "-" + g.userId;
