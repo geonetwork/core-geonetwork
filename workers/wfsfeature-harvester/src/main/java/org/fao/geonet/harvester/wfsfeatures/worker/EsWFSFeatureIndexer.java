@@ -61,6 +61,7 @@ import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.temporal.Instant;
+import org.opengis.temporal.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -390,8 +391,11 @@ public class EsWFSFeatureIndexer {
                                 rootNode.put("bbox_ymax", bbox.getMaxY());
                             } else if (attributeValue instanceof Instant) {
                                 try {
-                                    rootNode.put(getDocumentFieldName(attributeName),
-                                        ((DefaultInstant) attributeValue).getPosition().getDate().toInstant().toString());
+                                    Position position = ((DefaultInstant) attributeValue).getPosition();
+                                    if (position != null && position.getDate() != null) {
+                                        rootNode.put(getDocumentFieldName(attributeName),
+                                            position.getDate().toInstant().toString());
+                                    }
                                 } catch (Exception instantException) {
                                     String msg = String.format(
                                         "Feature %s: Cannot read attribute %s, value %s. Exception is: %s",
