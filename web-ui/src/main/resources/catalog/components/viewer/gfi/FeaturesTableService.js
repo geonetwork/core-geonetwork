@@ -41,7 +41,7 @@
     if (record && record.featureTypes && record.featureTypes[0]) {
       var dictionary = {};
       record.featureTypes[0].attributeTable.map(function (col) {
-        dictionary[col.code] = col;
+        dictionary[col.code.toLowerCase()] = col;
       });
       deferred.resolve(dictionary);
       return deferred.promise;
