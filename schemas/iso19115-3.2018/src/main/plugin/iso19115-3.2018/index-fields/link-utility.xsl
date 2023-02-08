@@ -104,38 +104,40 @@
                     select="current()"/>
       <xsl:for-each select="$root/descendant::*[
                               local-name() = $docType/element/text()
-                              ]/*[cit:onlineResource/*/cit:linkage/gco:CharacterString != '']">
+                              ]/*/cit:onlineResource/*[cit:linkage/gco:CharacterString != '']">
         <item>
           <id>
-            <xsl:value-of select="cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString"/>
+            <xsl:value-of select="cit:linkage/gco:CharacterString"/>
           </id>
           <url>
             <xsl:choose>
               <xsl:when test="$forIndexing">
-                <xsl:copy-of select="cit:onlineResource/*/cit:linkage"/>
+                <xsl:copy-of select="cit:linkage"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
-                                     select="cit:onlineResource/*/cit:linkage"/>
+                                     select="cit:linkage"/>
               </xsl:otherwise>
             </xsl:choose>
           </url>
           <title>
+            <xsl:variable name="name"
+                          select="if (cit:name) then cit:name else ../../cit:title"/>
             <xsl:choose>
               <xsl:when test="$forIndexing">
-                <xsl:copy-of select="cit:title"/>
+                <xsl:copy-of select="$name"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
-                                     select="cit:title"/>
+                                     select="$name"/>
               </xsl:otherwise>
             </xsl:choose>
           </title>
           <description>
             <xsl:variable name="desc"
-                          select="if (cit:onlineResource/*/cit:description)
-                                        then cit:onlineResource/*/cit:description
-                                        else ../../mdq:abstract"/>
+                          select="if (cit:description)
+                                        then cit:description
+                                        else ../../../../mdq:abstract"/>
             <xsl:choose>
               <xsl:when test="$forIndexing">
                 <xsl:copy-of select="$desc"/>
