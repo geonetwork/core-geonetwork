@@ -35,7 +35,6 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -174,9 +173,13 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
 
         this.username = getConfigValue("username");
         this.password = getConfigValue("password");
+        if (StringUtils.isBlank(this.username)) {
+            this.username = getConfigParam("username");
+            this.password = getConfigParam("password");
+        }
 
         String doIsSecured = getConfigParam(P_IS_SECURED);
-        if(doIsSecured != null) {
+        if (doIsSecured != null) {
             isSecured = Boolean.parseBoolean(doIsSecured);
         }
 
@@ -202,7 +205,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             // GEONETWORK is the default prefix
 
             LOGGER.info(
-                "Looking for geonetwork." + getServletName() + "." + sufix +  "  in Environment variables, " +
+                "Looking for geonetwork." + getServletName() + "." + sufix + "  in Environment variables, " +
                     "System properties and config.properties entries");
             result = resolveConfigValue("geonetwork." + getServletName() + "." + sufix);
         }
@@ -241,20 +244,28 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      */
     @Override
     protected HttpClient createHttpClient() {
+        HttpClientBuilder clientBuilder = getHttpClientBuilder()
+            .setDefaultRequestConfig(buildRequestConfig())
+            .setDefaultSocketConfig(buildSocketConfig());
+
+        clientBuilder.setMaxConnTotal(maxConnections);
+        clientBuilder.setMaxConnPerRoute(maxConnections);
+
+        if (!doHandleCompression) {
+            clientBuilder.disableContentCompression();
+        }
+
         if (org.apache.commons.lang.StringUtils.isNotEmpty(username) && org.apache.commons.lang.StringUtils.isNotEmpty(password)) {
             CredentialsProvider credentialsProvider =
                 new BasicCredentialsProvider();
             credentialsProvider.setCredentials(
                 AuthScope.ANY,
                 new UsernamePasswordCredentials(username, password));
-            return HttpClients.custom()
-                .setDefaultCredentialsProvider(credentialsProvider)
-                .setDefaultRequestConfig(buildRequestConfig())
-                .useSystemProperties()
-                .build();
-        } else {
-            return super.createHttpClient();
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
+
+        clientBuilder = clientBuilder.useSystemProperties();
+        return buildHttpClient(clientBuilder);
     }
 
     /**
@@ -268,7 +279,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      */
     @Override
     protected HttpClient buildHttpClient(HttpClientBuilder clientBuilder) {
-        return clientBuilder.useSystemProperties().build();
+        return clientBuilder.build();
     }
 
     @Override
