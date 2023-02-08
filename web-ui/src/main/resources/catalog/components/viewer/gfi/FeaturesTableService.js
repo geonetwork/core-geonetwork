@@ -64,8 +64,8 @@
             var dictionary = {};
             Object.keys(response.data["decodeMap"]).map(function (key) {
               dictionary[key.toLowerCase()] = {
-                code: response.data["decodeMap"][key][0],
-                name: response.data["decodeMap"][key][1]
+                name: response.data["decodeMap"][key][0],
+                definition: response.data["decodeMap"][key][1]
               };
             });
             deferred.resolve(dictionary);

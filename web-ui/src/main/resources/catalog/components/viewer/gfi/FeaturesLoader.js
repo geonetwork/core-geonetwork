@@ -264,8 +264,8 @@
         for (var i = 0; i < columns.length; i++) {
           var fieldSpec = dictionary[columns[i]["field"]];
           if (angular.isDefined(fieldSpec)) {
-            columns[i]["title"] = fieldSpec.code;
-            columns[i]["titleTooltip"] = fieldSpec.name || fieldSpec.code;
+            columns[i]["title"] = fieldSpec.name;
+            columns[i]["titleTooltip"] = fieldSpec.definition || fieldSpec.name;
           }
         }
       }
