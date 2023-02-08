@@ -154,7 +154,7 @@
           user: "=gnUserSearchesPanel"
         },
         templateUrl:
-          "../../catalog/components/usersearches/partials/usersearchespanel.html",
+          "../../catalog/components/usersearches/partials/favouritespanel.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           // Configure the base url to launch the user search selected (search or board page)
@@ -320,7 +320,7 @@
           userSearch: "=gnSaveUserSearch",
           user: "="
         },
-        templateUrl: "../../catalog/components/usersearches/partials/saveusersearch.html",
+        templateUrl: "../../catalog/components/usersearches/partials/savefavourite.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.updateSearchUrl = false;
@@ -526,7 +526,7 @@
           user: "=gnUserSearchManager"
         },
         templateUrl:
-          "../../catalog/components/usersearches/partials/usersearchesmanager.html",
+          "../../catalog/components/usersearches/partials/addtofavourites.html",
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.userSearches = [];

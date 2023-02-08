@@ -35,6 +35,10 @@
         ></div>
 
         <div
+          data-ng-show="searchResults.records.length > 0"
+          data-gn-saved-selections-panel="user"
+        ></div>
+        <div
           data-gn-user-searches-panel="user"
           data-ng-if="isUserSearchesEnabled && user.isConnected()"
         ></div>
@@ -42,11 +46,6 @@
           data-ng-show="searchResults.records.length > 0
             && searchResults.facets.length > 0"
           data-es-facets="searchResults.facets"
-        ></div>
-
-        <div
-          data-ng-show="searchResults.records.length > 0"
-          data-gn-saved-selections-panel="user"
         ></div>
       </div>
       <!-- /.gn-search-facet -->
@@ -116,7 +115,6 @@
               data-gn-results-container=""
               data-search-results="searchResults"
               data-template-url="resultTemplate"
-              data-map="searchObj.searchMap"
             ></div>
           </div>
         </div>
