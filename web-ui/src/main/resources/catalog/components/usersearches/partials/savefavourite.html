@@ -1,0 +1,86 @@
+<div class="gn-favourite-modal">
+
+  <form class="form-horizontal">
+    <!-- name -->
+    <div class="form-group">
+      <label class="control-label gn-margin-bottom-sm" data-translate=""
+        >userSearchName</label
+      >
+      <div gn-multilingual-field="{{langList}}" main-language="{{currentLangShown}}">
+        <input
+          data-ng-repeat="(lang3, lang2) in availableLangs"
+          type="text"
+          name="name"
+          class="form-control gn-margin-bottom-sm"
+          lang="{{lang2}}"
+          maxlength="255"
+          data-ng-model="userSearch.names[lang3]"
+        />
+      </div>
+    </div>
+    <!-- contents -->
+    <div class="form-group">
+      <label class="control-label gn-margin-bottom-sm" data-translate="">Contents (my favourite records)</label>
+      <!-- list of metadata for the selected list -->
+      <div class="list-group">
+        <a href="#" class="list-group-item">
+          <div class="btn-group btn-group-sm pull-right" role="group">
+            <button class="btn btn-default">
+              <i class="fa fa-trash-o text-danger"></i>
+            </button>
+          </div>
+          <label class="list-group-item-heading">My Favourite MD 01</label>
+          <p class="list-group-item-text">
+            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
+            varius blandit.
+          </p>
+        </a>
+        <a href="#" class="list-group-item">
+          <div class="btn-group btn-group-sm pull-right" role="group">
+            <button class="btn btn-default">
+              <i class="fa fa-trash-o text-danger"></i>
+            </button>
+          </div>
+          <label class="list-group-item-heading">My Favourite MD 02</label>
+          <p class="list-group-item-text">
+            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
+            varius blandit.
+          </p>
+        </a>
+        <a href="#" class="list-group-item">
+          <div class="btn-group btn-group-sm pull-right" role="group">
+            <button class="btn btn-default">
+              <i class="fa fa-trash-o text-danger"></i>
+            </button>
+          </div>
+          <label class="list-group-item-heading">My Favourite MD 03</label>
+          <p class="list-group-item-text">
+            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
+            varius blandit.
+          </p>
+        </a>
+      </div>
+
+      <div
+        data-gn-pagination="paginationInfo"
+        data-hits-values="searchObj.hitsperpageValues"
+        data-enable-hot-keys=""
+        data-enable-events=""
+      ></div>
+    </div>
+  </form>
+
+  <div class="btn-toolbar">
+    <button
+      type="button"
+      class="btn btn-success pull-right"
+      data-gn-click-and-spin="saveUserSearch(true)"
+    >
+      <i class="fa fa-fw fa-save"></i>
+      <span data-translate="">save</span>
+    </button>
+    <button type="button" class="btn btn-default pull-right">
+      <span data-translate="">cancel</span>
+    </button>
+  </div>
+</div>
