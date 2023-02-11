@@ -40,6 +40,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
 import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nonnull;
@@ -121,6 +122,7 @@ public class CMISConfiguration {
      */
     private String externalResourceManagementValidationStatusDefaultValue;
     private boolean externalResourceManagementValidationStatusSecondaryProperty = false;
+    private MetadataResourceExternalManagementProperties.ValidationStatus defaultStatus = null;
 
     /*
      * Enable option to add versioning in the link to the resource.
@@ -509,6 +511,21 @@ public class CMISConfiguration {
         }
     }
 
+    public MetadataResourceExternalManagementProperties.ValidationStatus getValidationStatusDefaultValue() {
+        // We only need to set the default if there is a status property supplied, and it is not already set
+        if (this.defaultStatus == null &&  !org.springframework.util.StringUtils.isEmpty(getExternalResourceManagementValidationStatusPropertyName())) {
+            if (getExternalResourceManagementValidationStatusDefaultValue() != null) {
+                // If a default property name does exist then use it
+                this.defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(getExternalResourceManagementValidationStatusDefaultValue());
+            } else {
+                // Otherwise let's default to incomplete.
+                // Reason - as the administrator decided to use the status, it most likely means that there are extra properties that need to be set after a file is uploaded so defaulting it to
+                // incomplete seems reasonable.
+                this.defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.INCOMPLETE;
+            }
+        }
+        return this.defaultStatus;
+    }
 
     @PostConstruct
     public void init() {
@@ -646,9 +663,14 @@ public class CMISConfiguration {
                     client.getDefaultContext().setIncludePolicies(false);
                 }
                 // IncludeRelationships should be NONE
-                if (client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
+                if (! client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
+                }
+
+                if (client.getDefaultContext().getMaxItemsPerPage() != 1000) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS max items per page to 1000.");
+                    client.getDefaultContext().setMaxItemsPerPage(1000);
                 }
 
                 // Setup default filter. Only include properties that are used by the application.
