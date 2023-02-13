@@ -92,7 +92,9 @@
             "isMultilingual": false
           },
           "name": {},
-          "desc": {},
+          "desc": {
+            "hidden": true
+          },
           "function": {
             "value": "download",
             "hidden": true,
