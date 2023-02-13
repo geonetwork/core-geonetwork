@@ -74,14 +74,14 @@ class ApacheProxy:
                 [ordered_interne_list[i], ordered_public_list[i], ordered_softwares[i]]
             )
             self.file.write(
-                "ProxyPass    {} {}".format(
-                    ordered_interne_list[i], ordered_public_list[i]
+                "ProxyPass          {} {}".format(
+                    ordered_public_list[i], ordered_interne_list[i]
                 )
             )
             self.file.write("\n")
             self.file.write(
-                "ProxyPassReverse    {} {}".format(
-                    ordered_interne_list[i], ordered_public_list[i]
+                "ProxyPassReverse   {} {}".format(
+                    ordered_public_list[i], ordered_interne_list[i]
                 )
             )
             self.file.write("\n")
