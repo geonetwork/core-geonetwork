@@ -359,6 +359,7 @@
   "portals": "Change Portals",
   "wmstime-info": "Browse {{layerName}} over time. This dataset provides data for {{instantNumber}} dates from {{start}} to {{end}}.",
   "wmselevation-info": "Browse {{layerName}} elevation dimension. This dataset provides data for {{instantNumber}} elevations from {{start}} to {{end}}.",
+  "animationInterval": "Animation interval: ",
   "chooseFileToUpload": "Choose or drop a file here",
   "atom.header": "Atom feeds",
   "atom.noresults": "No atom feed available",
