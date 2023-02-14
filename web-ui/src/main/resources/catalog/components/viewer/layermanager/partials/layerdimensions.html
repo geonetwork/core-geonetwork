@@ -60,7 +60,9 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <span data-ng-if="dimension === 'time'" data-gn-humanize-time="{{config.current}}"
+          <span
+            data-ng-if="dimension === 'time'"
+            data-gn-humanize-time="{{config.current}}"
             >{{config.current}}</span
           >
           <span data-ng-if="dimension !== 'time'">{{config.current}}</span>
