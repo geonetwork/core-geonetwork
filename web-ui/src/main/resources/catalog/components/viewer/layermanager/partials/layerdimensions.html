@@ -133,5 +133,22 @@
         <i class="fa fa-fw fa-stop"></i>
       </a>
     </div>
+
+    <input
+      type="range"
+      list="tickmarks{{dimension}}"
+      step="1"
+      min="0"
+      max="{{config.filteredValues.length - 1}}"
+      data-ng-change="setIndex(dimension, config.idx)"
+      data-ng-model="config.idx"
+    />
+    <datalist id="tickmarks{{dimension}}">
+      <option
+        data-ng-repeat="o in config.filteredValues track by $index"
+        value="{{$index}}"
+        label="{{o}}"
+      ></option>
+    </datalist>
   </div>
 </div>
