@@ -405,6 +405,17 @@
             scope.$watch("filter", search);
           };
 
+          scope.addThesaurusConceptByLabel = function (keyword) {
+            gnThesaurusService
+              .getKeywords(keyword, scope.thesaurusKey, gnLangs.current, 1, "MATCH")
+              .then(function (listOfKeywords) {
+                scope.addThesaurusConcept(
+                  listOfKeywords[0].props.uri,
+                  listOfKeywords[0].props.value
+                );
+              });
+          };
+
           // Used by skos-browser to add keywords from the
           // skos hierarchy to the current list of tags
           scope.addThesaurusConcept = function (uri, text) {
@@ -624,6 +635,153 @@
     }
   ]);
 
+  module.directive("gnKeywordSuggestions", [
+    "gnCurrentEdit",
+    "$http",
+    "Metadata",
+    function (gnCurrentEdit, $http, Metadata) {
+      return {
+        restrict: "A",
+        replace: true,
+        transclude: true,
+        scope: {
+          record: "@",
+          field: "=",
+          exclude: "=?",
+          selectCb: "=?"
+        },
+        templateUrl:
+          "../../catalog/components/thesaurus/partials/keywordsuggestions.html",
+        link: function (scope, element, attrs) {
+          scope.suggestions = {};
+          scope.excludedTerms = [];
+          scope.moreLikeThisShouldMatch = 30;
+          scope.moreLikeThisField = [
+            {
+              field: "resourceTitleObject.default",
+              selected: true
+            },
+            { field: "resourceAbstractObject.default", selected: false }
+          ];
+
+          if (!scope.field) {
+            console.warn("Configure an index field to suggest on.");
+            return;
+          }
+
+          function buildQuery() {
+            var fields = [];
+            for (var i = 0; i < scope.moreLikeThisField.length; i++) {
+              if (scope.moreLikeThisField[i].selected) {
+                fields.push(scope.moreLikeThisField[i].field);
+              }
+            }
+
+            var moreLikeThisQuery = {
+              more_like_this: {
+                fields: fields,
+                like: null,
+                min_term_freq: 1,
+                max_query_terms: 12,
+                // min_term_freq: 1,
+                // min_word_length: 2,
+                // max_query_terms: 35,
+                // // "analyzer": "english",
+                minimum_should_match: scope.moreLikeThisShouldMatch + "%"
+              }
+            };
+
+            var query = {
+              _source: {
+                include: [scope.field, "id", "uuid", "resourceTitle*", "resourceType"]
+              },
+              size: scope.size,
+              query: {
+                bool: {
+                  must: [
+                    moreLikeThisQuery,
+                    { terms: { isTemplate: ["n"] } },
+                    { terms: { draft: ["n", "e"] } }
+                  ],
+                  must_not: [
+                    {
+                      terms: {
+                        uuid: [gnCurrentEdit.metadata.uuid]
+                      }
+                    }
+                  ]
+                }
+              }
+            };
+            // query.query.bool.must[0].more_like_this.like =
+            //   gnCurrentEdit.metadata.resourceTitle;
+            query.query.bool.must[0].more_like_this.like = {
+              _id: gnCurrentEdit.metadata.uuid
+            };
+            return query;
+          }
+
+          function loadSuggestions() {
+            if (gnCurrentEdit.metadata == null) {
+              return;
+            }
+            scope.suggestions = {};
+            $http
+              .post("../api/search/records/_search", buildQuery(), { cache: true })
+              .then(function (r) {
+                scope.suggestions = {};
+                r.data.hits.hits.forEach(function (r) {
+                  var md = new Metadata(r),
+                    title = md.resourceTitle,
+                    fieldPath = scope.field.split(".");
+
+                  function addSuggestion(term, title) {
+                    if (!!term) {
+                      if (scope.excludedTerms.indexOf(term) === -1) {
+                        if (scope.suggestions[term]) {
+                          scope.suggestions[term].push(title);
+                        } else {
+                          scope.suggestions[term] = [title];
+                        }
+                      }
+                    }
+                  }
+
+                  if (fieldPath.length == 2) {
+                    var values = md[fieldPath[0]];
+                    if (angular.isArray(values)) {
+                      angular.forEach(values, function (v) {
+                        addSuggestion(v[fieldPath[1]], title);
+                      });
+                    } else if (values) {
+                      addSuggestion(values[fieldPath[1]], title);
+                    }
+                  }
+                });
+              });
+          }
+
+          scope.$watchCollection("exclude", function (keywords, o) {
+            scope.excludedTerms = [];
+            if (keywords && keywords.length) {
+              angular.forEach(keywords, function (k) {
+                scope.excludedTerms.push(k.label);
+              });
+
+              loadSuggestions();
+            }
+          });
+
+          function init() {
+            scope.$watch("moreLikeThisShouldMatch", loadSuggestions);
+            scope.$watchCollection("moreLikeThisField", loadSuggestions);
+          }
+
+          init();
+        }
+      };
+    }
+  ]);
   /**
    * @ngdoc directive
    * @name gn_thesaurus.directive:gnKeywordPicker
