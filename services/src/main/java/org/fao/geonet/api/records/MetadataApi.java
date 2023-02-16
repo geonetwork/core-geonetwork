@@ -512,12 +512,51 @@ public class MetadataApi {
             .map(i -> i.getId()).collect(Collectors.toList());
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Increase record popularity",
-        description = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.")
-    @RequestMapping(value = "/{metadataUuid:.+}/popularity",
-        method = RequestMethod.POST,
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get record popularity",
+        description = "")
+    @GetMapping(value = "/{metadataUuid:.+}/popularity",
         consumes = {
             MediaType.ALL_VALUE
+        },
+        produces = {
+            MediaType.TEXT_PLAIN_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Popularity."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public int getRecordPopularity(
+        @Parameter(description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (ResourceNotFoundException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+        return metadata.getDataInfo().getPopularity();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Increase record popularity",
+        description = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.")
+    @PostMapping(value = "/{metadataUuid:.+}/popularity",
+        consumes = {
+            MediaType.ALL_VALUE
+        },
+        produces = {
+            MediaType.TEXT_PLAIN_VALUE
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Popularity updated."),
@@ -525,7 +564,8 @@ public class MetadataApi {
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public void getRecord(
+    @ResponseBody
+    public int increaseRecordPopularity(
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -546,6 +586,8 @@ public class MetadataApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         dataManager.increasePopularity(context, metadata.getId() + "");
+
+        return metadata.getDataInfo().getPopularity();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
