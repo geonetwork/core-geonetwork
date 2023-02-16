@@ -25,12 +25,7 @@ package org.fao.geonet.inspireatom.harvester;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
-import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
-import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.apache.logging.log4j.core.util.Builder;
+import org.apache.logging.log4j.ThreadContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -41,7 +36,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -54,7 +48,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -439,48 +432,31 @@ public class InspireAtomHarvester {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
+    /**
+     * Used to configure Log4J to route harvester messages to an individual file.
+     * <p>
+     * This method has the side effect of setting Log4J ThreadContext values:
+     * <ul>
+     *     <li>logfile</li>
+     * </ul>
+     * <p>
+     * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
+     * the logfile location.
+     *
+     * @return the location of the logfile
+     */
     private String initializeLog() {
-
         // configure personalized logger
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        final String harvesterName = "inspireatom";
-        logger = Log.createLogger("inspireatom", "geonetwork.atom");
 
-        String directory = logger.getFileAppender();
-        if (directory == null || directory.isEmpty()) {
-            directory = gc.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
-        }
-        File d = new File(directory);
-        if (!d.isDirectory()) {
-            directory = d.getParent() + File.separator;
-        }
-        String logfile = directory + "atomharvester_" + packageType + "_"
-            + dateFormat.format(new Date(System.currentTimeMillis()))
+        String logfile = "atomharvester_"
+            + packageType
+            + "_" + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
 
-        SettingManager settingManager = gc.getBean(SettingManager.class);
-        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
-
-        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-
-        PatternLayout layout = PatternLayout.newBuilder()
-            .withPattern( "%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5level [%logger] - %msg%n")
-            .build();
-
-        Builder<org.apache.logging.log4j.core.appender.FileAppender> fileBuilder = org.apache.logging.log4j.core.appender.FileAppender.newBuilder()
-            .setName(harvesterName)
-            .withFileName(logfile)
-            .setLayout(layout)
-            .withAppend(true);
-
-        FileAppender fa = fileBuilder.build();
-
-        logger.setAppender(fa);
+        ThreadContext.putIfNull("logfile", logfile);
 
         return logfile;
     }
