@@ -25,7 +25,6 @@ package org.fao.geonet.inspireatom.harvester;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.ThreadContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -43,12 +42,12 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.util.LogUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -79,7 +78,7 @@ public class InspireAtomHarvester {
      * document is retrieved and stored in the metadata table.
      */
     public final Element harvest() {
-        initializeLog();
+        LogUtil.initializeHarvesterLog("atom", "atomharvester");
         EsSearchManager searchManager = gc.getBean(EsSearchManager.class);
         SettingManager sm = gc.getBean(SettingManager.class);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -428,36 +427,5 @@ public class InspireAtomHarvester {
 
             }
         }
-    }
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-
-    /**
-     * Used to configure Log4J to route harvester messages to an individual file.
-     * <p>
-     * This method has the side effect of setting Log4J ThreadContext values:
-     * <ul>
-     *     <li>logfile</li>
-     * </ul>
-     * <p>
-     * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
-     * the logfile location.
-     *
-     * @return the location of the logfile
-     */
-    private String initializeLog() {
-        // configure personalized logger
-        String packagename = getClass().getPackage().getName();
-        String[] packages = packagename.split("\\.");
-        String packageType = packages[packages.length - 1];
-
-        String logfile = "atomharvester_"
-            + packageType
-            + "_" + dateFormat.format(new Date(System.currentTimeMillis()))
-            + ".log";
-
-        ThreadContext.putIfNull("logfile", logfile);
-
-        return logfile;
     }
 }
