@@ -733,7 +733,9 @@ public class DirectoryApi {
         return report;
     }
 
-    private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)
+
+
+    public static Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)
         throws FactoryException, ResourceNotFoundException, TransformException {
         CoordinateReferenceSystem fromCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
         CoordinateReferenceSystem toCrs = null;
@@ -775,14 +777,14 @@ public class DirectoryApi {
         return outXml.toString();
     }
 
-    private Envelope computeEnvelope(SimpleFeature feature) throws TransformException {
+    public static Envelope computeEnvelope(SimpleFeature feature) throws TransformException {
         BoundingBox bounds = feature.getBounds();
         return JTS.toGeographic(
             new Envelope(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY()),
             feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem());
     }
 
-    private String computeUuid(String uuidAttribute, String uuidPattern, SimpleFeature feature) {
+    public static String computeUuid(String uuidAttribute, String uuidPattern, SimpleFeature feature) {
         String featureUuidValue = null;
         if (StringUtils.isNotEmpty(uuidAttribute)) {
             Object attribute = feature.getAttribute(uuidAttribute);
@@ -794,7 +796,7 @@ public class DirectoryApi {
         return uuidPattern.replace("{{uuid}}", uuid);
     }
 
-    private String computeDescription(String descriptionAttribute, SimpleFeature feature) {
+    public static String computeDescription(String descriptionAttribute, SimpleFeature feature) {
         String featureDescriptionValue = "";
         if (StringUtils.isNotEmpty(descriptionAttribute)) {
             Object attribute = feature.getAttribute(descriptionAttribute);
@@ -805,7 +807,7 @@ public class DirectoryApi {
         return StringUtils.isNotEmpty(featureDescriptionValue) ? featureDescriptionValue : "";
     }
 
-    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile, String charset) throws IOException {
+    public static SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile, String charset) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("url", shapefile.toURI().toURL());
         DataStore dataStore = DataStoreFinder.getDataStore(map);
@@ -819,7 +821,7 @@ public class DirectoryApi {
         return source.getFeatures(query);
     }
 
-    private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
+    public static File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
         Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
         toDirectory.toFile().deleteOnExit();
         File zipFile = new File(Paths.get(toDirectory.toString(), file.getOriginalFilename()).toString());

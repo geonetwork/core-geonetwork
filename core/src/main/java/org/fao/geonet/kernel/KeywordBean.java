@@ -35,8 +35,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
-import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
+import static org.fao.geonet.kernel.rdf.Selectors.*;
 
 /**
  * TODO javadoc.
@@ -573,6 +572,24 @@ public class KeywordBean {
             label.setText(value);
             concept.addContent(label);
         });
+
+        if (!StringUtils.isEmpty(this.getCoordEast())
+            && !StringUtils.isEmpty(this.getCoordSouth())
+            && !StringUtils.isEmpty(this.getCoordWest())
+            && !StringUtils.isEmpty(this.getCoordNorth())
+        ) {
+            Element boundedBy = new Element("BoundedBy", GML_NAMESPACE);
+            Element envelope = new Element("Envelope", GML_NAMESPACE);
+            envelope.setAttribute("srsName", "http://www.opengis.net/gml/srs/epsg.xml#epsg:4326", GML_NAMESPACE);
+            Element lowerCorner = new Element("lowerCorner", GML_NAMESPACE);
+            Element upperCorner = new Element("upperCorner", GML_NAMESPACE);
+            lowerCorner.setText(String.format("%s %s", this.getCoordWest(), this.getCoordSouth()));
+            upperCorner.setText(String.format("%s %s", this.getCoordEast(), this.getCoordNorth()));
+            envelope.addContent(lowerCorner);
+            envelope.addContent(upperCorner);
+            boundedBy.addContent(envelope);
+            concept.addContent(boundedBy);
+        }
 
         return concept;
     }
