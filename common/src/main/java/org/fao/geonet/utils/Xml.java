@@ -1167,7 +1167,7 @@ public final class Xml {
             firstTag = xml
                 .substring(0, xml.indexOf(" "))
                 .toLowerCase();
-            retBool = firstTag.matches("<.*:(rdf|catalog|catalogrecord)");
+            retBool = firstTag.matches("<.*:(rdf|catalog|catalogrecord)\\n?");
         }
         return retBool;
     }
