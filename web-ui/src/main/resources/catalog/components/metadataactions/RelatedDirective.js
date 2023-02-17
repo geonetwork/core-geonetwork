@@ -692,7 +692,8 @@
   ]);
 
   module.directive("gnMetadataCard", [
-    function () {
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
       return {
         restrict: "E",
         transclude: true,
@@ -708,6 +709,8 @@
         },
         link: function (scope, element, attrs, controller) {
           scope.lang = scope.lang || scope.$parent.lang;
+          scope.showStatusFooterFor =
+            gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
         }
       };
     }
