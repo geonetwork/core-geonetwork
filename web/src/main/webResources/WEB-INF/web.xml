@@ -94,7 +94,6 @@
     <url-pattern>/srv/*</url-pattern>
   </filter-mapping>
 
-
   <!-- Add CORS Header -->
   <filter>
     <filter-name>cors</filter-name>

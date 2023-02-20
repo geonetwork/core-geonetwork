@@ -21,9 +21,8 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
+package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
@@ -41,6 +40,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -48,35 +48,31 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Text;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.utils.Xml.isRDFLike;
 import static org.fao.geonet.utils.Xml.isXMLLike;
 
 /**
- * Harvest metadata from a JSON source.
+ * Harvest metadata from a URL source.
  * <p>
- * The JSON source can be a simple JSON file or
+ * The URL source can be a simple JSON, XML or RDF file or
  * an URL with indication on how to pass paging information.
- *
- * This harvester has been tested with CKAN search API.
+ * <p>
+ * This harvester has been tested with CKAN, OpenDataSoft,
+ * OGC API Records, DCAT feeds.
  */
 class Harvester implements IHarvester<HarvestResult> {
     public static final String LOGGER_NAME = "geonetwork.harvester.simpleurl";
@@ -92,7 +88,7 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private List<HarvestError> errors = new LinkedList<>();
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params) {
         this.cancelMonitor = cancelMonitor;
@@ -113,7 +109,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         for (String url : urlList) {
             log.debug("Loading URL: " + url);
-            String content = retrieveUrl(url, log);
+            String content = retrieveUrl(url);
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
@@ -124,14 +120,20 @@ class Harvester implements IHarvester<HarvestResult> {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonObj = null;
             Element xmlObj = null;
-            SimpleUrlResourceType type = content.startsWith("<?xml version") || isXMLLike(content)
-                ? SimpleUrlResourceType.XML : SimpleUrlResourceType.JSON;
-            if (type == SimpleUrlResourceType.XML) {
+            SimpleUrlResourceType type;
+
+            if (isRDFLike(content)) type = SimpleUrlResourceType.RDFXML;
+            else if (isXMLLike(content)) type = SimpleUrlResourceType.XML;
+            else type = SimpleUrlResourceType.JSON;
+
+            if (type == SimpleUrlResourceType.XML
+                || type == SimpleUrlResourceType.RDFXML) {
                 xmlObj = Xml.loadString(content, false);
             } else {
                 jsonObj = objectMapper.readTree(content);
             }
 
+            // TODO: Add page support for Hydra in RDFXML feeds ?
             if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
                 try {
                     if (type == SimpleUrlResourceType.XML) {
@@ -140,79 +142,43 @@ class Harvester implements IHarvester<HarvestResult> {
                             String s = getXmlElementTextValue(element);
                             numberOfRecordsToHarvest = Integer.parseInt(s);
                         }
-                    } else {
+                    } else if (type == SimpleUrlResourceType.JSON) {
                         numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
                     }
                     log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
                 } catch (Exception e) {
+                    errors.add(new HarvestError(context, e));
                     log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
                         params.numberOfRecordPath, e.getMessage()));
                 }
             }
-            Map<String, Element> allUuids = new HashMap<String, Element>();
+            Map<String, Element> allUuids = new HashMap<>();
             try {
-                Map<String, Element> uuids = new HashMap<String, Element>();
+                Map<String, Element> uuids = new HashMap<>();
                 List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
                 for (int i = 0; i < listOfUrlForPages.size(); i++) {
                     if (i != 0) {
-                        content = retrieveUrl(listOfUrlForPages.get(i), log);
+                        content = retrieveUrl(listOfUrlForPages.get(i));
                         if (type == SimpleUrlResourceType.XML) {
                             xmlObj = Xml.loadString(content, false);
                         } else {
                             jsonObj = objectMapper.readTree(content);
                         }
                     }
-                    JsonNode nodes = null;
-                    List<Element> xmlNodes = null;
-                    if (StringUtils.isNotEmpty(params.loopElement)) {
+                    if (StringUtils.isNotEmpty(params.loopElement)
+                        || type == SimpleUrlResourceType.RDFXML) {
                         try {
                             if (type == SimpleUrlResourceType.XML) {
-                                xmlNodes = Xml.selectNodes(xmlObj, params.loopElement, xmlObj.getAdditionalNamespaces());
-                                log.debug(String.format("%d records found in XML response.", xmlNodes.size()));
-                            } else {
-                                nodes = jsonObj.at(params.loopElement);
-                                log.debug(String.format("%d records found in JSON response.", nodes.size()));
-                            }
-
-
-                            if (type == SimpleUrlResourceType.XML && xmlNodes != null) {
-                                xmlNodes.forEach(record -> {
-                                    String uuid =
-                                        null;
-                                    try {
-                                        uuid = getXmlElementTextValue(Xml.selectSingle(record, params.recordIdPath, record.getAdditionalNamespaces()));
-                                        uuids.put(uuid, record);
-                                    } catch (JDOMException e) {
-                                        log.error(String.format("Failed to extract UUID for record. Error is %s.",
-                                            e.getMessage()));
-                                        aligner.getResult().badFormat ++;
-                                        aligner.getResult().totalMetadata ++;
-                                    }
-                                });
-                            } else if (nodes != null) {
-                                nodes.forEach(record -> {
-                                    String uuid = null;
-                                    try {
-                                        uuid = this.extractUuidFromIdentifier(record.at(params.recordIdPath).asText());
-                                    } catch (Exception e) {
-                                        log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
-                                            params.recordIdPath, e.getMessage()));
-                                    }
-                                    String apiUrlPath = params.url.split("\\?")[0];
-                                    URL apiUrl = null;
-                                    try {
-                                        apiUrl = new URL(apiUrlPath);
-                                        String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
-                                        Element xml = convertRecordToXml(record, uuid, apiUrlPath, nodeUrl);
-                                        uuids.put(uuid, xml);
-                                    } catch (MalformedURLException e) {
-                                        log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
-                                    }
-                                });
+                                collectRecordsFromXml(xmlObj, uuids, aligner);
+                            } else if (type == SimpleUrlResourceType.RDFXML) {
+                                collectRecordsFromRdf(xmlObj, uuids, aligner);
+                            } else if (type == SimpleUrlResourceType.JSON) {
+                                collectRecordsFromJson(jsonObj, uuids, aligner);
                             }
                             aligner.align(uuids, errors);
                             allUuids.putAll(uuids);
                         } catch (Exception e) {
+                            errors.add(new HarvestError(this.context, e));
                             log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
                                 params.loopElement, e.getMessage()));
                         }
@@ -240,6 +206,92 @@ class Harvester implements IHarvester<HarvestResult> {
         return aligner.getResult();
     }
 
+    private void collectRecordsFromJson(JsonNode jsonObj,
+                                        Map<String, Element> uuids,
+                                        Aligner aligner) {
+        JsonNode nodes = jsonObj.at(params.loopElement);
+        log.debug(String.format("%d records found in JSON response.", nodes.size()));
+
+        nodes.forEach(jsonRecord -> {
+            String uuid = null;
+            try {
+                uuid = this.extractUuidFromIdentifier(jsonRecord.at(params.recordIdPath).asText());
+            } catch (Exception e) {
+                log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
+                    params.recordIdPath, e.getMessage()));
+            }
+            String apiUrlPath = params.url.split("\\?")[0];
+            URL apiUrl = null;
+            try {
+                apiUrl = new URL(apiUrlPath);
+                String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
+                Element xml = convertJsonRecordToXml(jsonRecord, uuid, apiUrlPath, nodeUrl);
+                uuids.put(uuid, xml);
+            } catch (MalformedURLException e) {
+                errors.add(new HarvestError(this.context, e));
+                log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
+            }
+        });
+    }
+
+    private void collectRecordsFromRdf(Element xmlObj,
+                                       Map<String, Element> uuids,
+                                       Aligner aligner) {
+        Map<String, Element> rdfNodes = null;
+        try {
+            rdfNodes = RDFUtils.getAllUuids(xmlObj);
+        } catch (Exception e) {
+            errors.add(new HarvestError(this.context, e));
+            log.error(String.format("Failed to find records in RDF graph. Error is: %s",
+                e.getMessage()));
+        }
+        if (rdfNodes != null) {
+            log.debug(String.format("%d records found in RDFXML response.", rdfNodes.size()));
+
+            // TODO: Add param
+            boolean hashUuid = true;
+            rdfNodes.forEach((uuid, xml) -> {
+                if (hashUuid) {
+                    uuid = Sha1Encoder.encodeString(uuid);
+                }
+                Element output = applyConversion(xml, uuid);
+                if (output != null) {
+                    uuids.put(uuid, output);
+                }
+            });
+        }
+    }
+
+    private void collectRecordsFromXml(Element xmlObj,
+                                       Map<String, Element> uuids,
+                                       Aligner aligner) {
+        List<Element> xmlNodes = null;
+        try {
+            xmlNodes = Xml.selectNodes(xmlObj, params.loopElement, xmlObj.getAdditionalNamespaces());
+        } catch (JDOMException e) {
+            log.error(String.format("Failed to query records using %s. Error is: %s",
+                params.loopElement, e.getMessage()));
+        }
+
+        if (xmlNodes != null) {
+            log.debug(String.format("%d records found in XML response.", xmlNodes.size()));
+
+            xmlNodes.forEach(element -> {
+                String uuid =
+                    null;
+                try {
+                    uuid = getXmlElementTextValue(Xml.selectSingle(element, params.recordIdPath, element.getAdditionalNamespaces()));
+                    uuids.put(uuid, applyConversion(element, null));
+                } catch (JDOMException e) {
+                    log.error(String.format("Failed to extract UUID for record. Error is %s.",
+                        e.getMessage()));
+                    aligner.getResult().badFormat++;
+                    aligner.getResult().totalMetadata++;
+                }
+            });
+        }
+    }
+
     private String getXmlElementTextValue(Object element) {
         String s = null;
         if (element instanceof Text) {
@@ -252,7 +304,7 @@ class Harvester implements IHarvester<HarvestResult> {
         return s;
     }
 
-    private String extractUuidFromIdentifier(final String identifier ) {
+    private String extractUuidFromIdentifier(final String identifier) {
         String uuid = identifier;
         if (Lib.net.isUrlValid(uuid)) {
             uuid = uuid.replaceFirst(".*/([^/?]+).*", "$1");
@@ -262,7 +314,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     @VisibleForTesting
     protected List<String> buildListOfUrl(SimpleUrlParams params, int numberOfRecordsToHarvest) {
-        List<String> urlList = new ArrayList<String>();
+        List<String> urlList = new ArrayList<>();
         if (StringUtils.isEmpty(params.pageSizeParam)) {
             urlList.add(params.url);
             return urlList;
@@ -274,8 +326,8 @@ class Harvester implements IHarvester<HarvestResult> {
             numberOfRecordsPerPage = Integer.parseInt(pageSizeParamValue);
         } else {
             log.warning(String.format(
-                    "Page size param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
-                    params.pageSizeParam, params.url));
+                "Page size param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
+                params.pageSizeParam, params.url));
             urlList.add(params.url);
             return urlList;
         }
@@ -286,67 +338,76 @@ class Harvester implements IHarvester<HarvestResult> {
             startAtZero = Integer.parseInt(pageFromParamValue) == 0;
         } else {
             log.warning(String.format(
-                    "Page from param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
-                    params.pageFromParam, params.url));
+                "Page from param '%s' not found or is not a numeric in URL '%s'. Can't build a list of pages.",
+                params.pageFromParam, params.url));
             urlList.add(params.url);
             return urlList;
         }
 
 
-        int numberOfPages = (int) Math.abs((numberOfRecordsToHarvest + (startAtZero ? -1 : 0)) / numberOfRecordsPerPage) + 1;
+        int numberOfPages = Math.abs((numberOfRecordsToHarvest + (startAtZero ? -1 : 0)) / numberOfRecordsPerPage) + 1;
 
         for (int i = 0; i < numberOfPages; i++) {
             int from = i * numberOfRecordsPerPage + (startAtZero ? 0 : 1);
             int size = i == numberOfPages - 1 ? // Last page
-                    numberOfRecordsToHarvest - from + (startAtZero ? 0 : 1) :
-                    numberOfRecordsPerPage;
+                numberOfRecordsToHarvest - from + (startAtZero ? 0 : 1) :
+                numberOfRecordsPerPage;
             String url = params.url
-                    .replaceAll(params.pageFromParam + "=[0-9]+", params.pageFromParam + "=" + from)
-                    .replaceAll(params.pageSizeParam + "=[0-9]+", params.pageSizeParam + "=" + size);
+                .replaceAll(params.pageFromParam + "=[0-9]+", params.pageFromParam + "=" + from)
+                .replaceAll(params.pageSizeParam + "=[0-9]+", params.pageSizeParam + "=" + size);
             urlList.add(url);
         }
 
         return urlList;
     }
 
-    private Element convertRecordToXml(JsonNode record, String uuid, String apiUrl, String nodeUrl) {
+    private Element convertJsonRecordToXml(JsonNode jsonRecord, String uuid, String apiUrl, String nodeUrl) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String recordAsXml = XML.toString(
-                    new JSONObject(
-                            objectMapper.writeValueAsString(record)), "record");
+                new JSONObject(
+                    objectMapper.writeValueAsString(jsonRecord)), "record");
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml)
-                    .replace("<@", "<")
-                    .replace("</@", "</")
-                    .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
+                .replace("<@", "<")
+                .replace("</@", "</")
+                .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
             Element recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));
             recordAsElement.addContent(new Element("apiUrl").setText(apiUrl));
             recordAsElement.addContent(new Element("nodeUrl").setText(nodeUrl));
-            final Path xslPath = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
-                               .getXsltConversion(params.toISOConversion);
-            return Xml.transform(recordAsElement, xslPath);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (JDOMException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return applyConversion(recordAsElement, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(String.format("Failed to convert JSON record %s to XML. Error is: %s",
+                uuid, e.getMessage()));
         }
         return null;
     }
 
+    private Element applyConversion(Element input, String uuid) {
+        if (StringUtils.isNotEmpty(params.toISOConversion)) {
+            Path xslPath = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                .getXsltConversion(params.toISOConversion);
+            try {
+                HashMap<String, Object> xslParams = new HashMap<>();
+                if (uuid != null) {
+                    xslParams.put("uuid", uuid);
+                }
+                return Xml.transform(input, xslPath, xslParams);
+            } catch (Exception e) {
+                errors.add(new HarvestError(this.context, e));
+                log.error(String.format("Failed to apply conversion %s to record %s. Error is: %s",
+                    params.toISOConversion, uuid, e.getMessage()));
+                return null;
+            }
+        } else {
+            return input;
+        }
+    }
+
     /**
-     * Does CSW GetCapabilities request and check that operations needed for harvesting (ie.
-     * GetRecords and GetRecordById) are available in remote node.
-     *
-     * @return
+     * Read the response of the URL.
      */
-    private String retrieveUrl(String url, Logger log) throws Exception {
+    private String retrieveUrl(String url) throws Exception {
         if (!Lib.net.isUrlValid(url))
             throw new BadParameterEx("Invalid URL", url);
         HttpGet httpMethod = null;
@@ -367,10 +428,8 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
-        // TODO: Add paging and loop
         return new URI(jsonUrl);
     }
-
 
     public List<HarvestError> getErrors() {
         return errors;

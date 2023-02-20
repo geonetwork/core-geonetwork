@@ -421,6 +421,7 @@ public class EsSearchManager implements ISearchManager {
             document.put(id, jsonDocument);
             final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
             checkIndexResponse(bulkItemResponses, document);
+            overviewFieldUpdater.process(id);
         } else {
             listOfDocumentsToIndex.put(id, jsonDocument);
             if (listOfDocumentsToIndex.size() == commitInterval) {

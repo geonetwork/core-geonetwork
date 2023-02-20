@@ -107,7 +107,7 @@ public class CORSResponseFilter
         }
 
         if (addHeaderForAllHosts || !allowedRemoteHosts.isEmpty()) {
-            String clientOriginUrl = httpRequest.getHeader("Origin");
+            String clientOriginUrl = httpRequest.getHeader("origin");
             if (clientOriginUrl != null) {
                 try {
                     String clientOriginHost = new java.net.URI(clientOriginUrl).getHost();

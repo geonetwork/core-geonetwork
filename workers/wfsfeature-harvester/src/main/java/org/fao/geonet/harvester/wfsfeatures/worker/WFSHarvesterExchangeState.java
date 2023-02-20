@@ -43,6 +43,10 @@ import java.util.stream.Collectors;
  * Created by fgravin on 11/5/15.
  */
 public class WFSHarvesterExchangeState implements Serializable {
+    public static final String MAPSERVER_STRATEGY = "mapserver";
+
+    public static final String QGIS_STRATEGY = "qgis";
+    public static final String INVESTIGATOR_STRATEGY = "investigator";
     private WFSHarvesterParameter parameters;
     private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private transient Map<String, String> fields = new LinkedHashMap<>();
@@ -109,7 +113,7 @@ public class WFSHarvesterExchangeState implements Serializable {
     public void initDataStore() throws Exception {
         // Used to manage QGIS-Server based WFS
         WFSDataStoreFactory factory = null;
-        if ("investigator".equals(parameters.getStrategy())) {
+        if (INVESTIGATOR_STRATEGY.equals(parameters.getStrategy())) {
             factory = new WFSDataStoreWithStrategyInvestigator();
             ((WFSDataStoreWithStrategyInvestigator) factory).init(
                 parameters.getUrl(), parameters.getTypeName());
@@ -121,7 +125,7 @@ public class WFSHarvesterExchangeState implements Serializable {
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
-                    parameters.getUrl(), parameters.getVersion());
+                parameters.getUrl(), parameters.getVersion());
             logger.info("Connecting using GetCatapbilities URL '{}'.", getCapUrl);
 
             m.put(WFSDataAccessFactory.URL.key, getCapUrl);
@@ -131,7 +135,7 @@ public class WFSHarvesterExchangeState implements Serializable {
             m.put(WFSDataAccessFactory.USEDEFAULTSRS.key, true);
             m.put(WFSDataAccessFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
             m.put(WFSDataAccessFactory.LENIENT.key, true);
-            if(!"investigator".equals(parameters.getStrategy())
+            if(!INVESTIGATOR_STRATEGY.equals(parameters.getStrategy())
                 && StringUtils.isNotEmpty(parameters.getStrategy())) {
                 m.put(WFSDataAccessFactory.WFS_STRATEGY.key, parameters.getStrategy());
             }
@@ -141,11 +145,11 @@ public class WFSHarvesterExchangeState implements Serializable {
             }
 
             wfsDatastore = factory.createDataStore(m);
-            // Default to GeoTools auto mode for MapServer. https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/313
+            // Default to GeoTools auto mode for MapServer.
             if(factory instanceof WFSDataStoreWithStrategyInvestigator) {
                 WFSClientWithStrategyInvestigator wfsClientWithStrategyInvestigator = (WFSClientWithStrategyInvestigator) wfsDatastore.getWfsClient();
                 this.strategyId = wfsClientWithStrategyInvestigator.getStrategyId();
-                if ("mapserver".equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
+                if (MAPSERVER_STRATEGY.equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
                     Map<String, Object> connectionParameters = new HashMap<>();
                     connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", parameters.getUrl());
                     wfsDatastore = (WFSDataStore) DataStoreFinder.getDataStore(connectionParameters);
@@ -165,7 +169,7 @@ public class WFSHarvesterExchangeState implements Serializable {
         }
 
         logger.info("Reading feature type '{}' schema structure.",
-                    parameters.getTypeName());
+            parameters.getTypeName());
         SimpleFeatureType sft = null;
         try {
             sft = wfsDatastore.getSchema(parameters.getTypeName());
@@ -177,7 +181,7 @@ public class WFSHarvesterExchangeState implements Serializable {
                 "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
                 parameters.getTypeName(),
                 typeNamesList
-               ));
+            ));
             Optional<String> typeFound = Arrays.stream(typeNames)
                 .filter(t -> t.endsWith(parameters.getTypeName())).findFirst();
             if (typeFound.isPresent()) {

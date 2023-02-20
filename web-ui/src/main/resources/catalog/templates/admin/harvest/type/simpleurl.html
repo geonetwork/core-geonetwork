@@ -44,10 +44,24 @@
       data-gn-harvester-account="harvesterSelected"
     />
 
-    <div
-      id="gn-harvest-settings-loopElement-row"
-      data-ng-class="harvesterSelected.site.loopElement == '' ? 'has-error' : ''"
-    >
+    <div class="well">
+      <span data-translate="">simpleurl-configHelper</span>
+      <div class="btn-group" role="group" aria-label="...">
+        <button
+          data-ng-repeat="(k, v) in simpleUrlHarvesterHelperConfig"
+          type="button"
+          class="btn btn-default"
+          data-ng-disabled="harvesterSelected['@id'] != ''"
+          title="{{::getSimpleUrlConfigHelper(k)}}"
+          data-ng-click="setSimpleUrlConfig(k)"
+        >
+          {{::k}}
+        </button>
+      </div>
+      <div data-translate="">simpleurl-configHelper-help</div>
+    </div>
+
+    <div id="gn-harvest-settings-loopElement-row">
       <label
         id="gn-harvest-settings-loopElement-label"
         class="control-label"
@@ -79,9 +93,7 @@
       <p class="help-block" data-translate="">simpleurl-recordIdPathHelp</p>
     </div>
 
-    <div
-      data-ng-init="usePagination = {enabled: harvesterSelected.site.numberOfRecordPath.length > 0}"
-    >
+    <div>
       <label class="control-label">
         <input
           id="gn-harvest-settings-simpleurl-checkbox"
@@ -167,6 +179,22 @@
         data-mode="btn-group"
       />
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
+      <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+
+      <div gn-batch-edit-examples-selector="addBatchEdits" />
+
+      <div
+        id="gn-harvest-settings-csw-advanced-batchEdits-list"
+        style="height: 300px"
+        ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+        data-ng-model="harvesterSelected.content.batchEdits"
+      />
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
     </div>
 
     <div

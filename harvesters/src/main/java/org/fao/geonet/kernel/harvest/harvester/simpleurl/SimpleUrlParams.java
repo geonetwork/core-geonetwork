@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.simpleUrl;
+package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -44,7 +44,7 @@ public class SimpleUrlParams extends AbstractParams {
     }
 
     /**
-     * called when a new entry must be added. Reads values from the provided entry, providing
+     * called when a new entry must be added. Read values from the provided entry, providing
      * default values.
      */
     public void create(Element node) throws BadInputEx {
@@ -52,14 +52,14 @@ public class SimpleUrlParams extends AbstractParams {
 
         Element site = node.getChild("site");
 
-        url = Util.getParam(site, "url", "http://dados.gov.br/api/3/action/package_search?q=");
-        loopElement = Util.getParam(site, "loopElement", "/result/results");
-        numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "/result/count");
-        recordIdPath = Util.getParam(site, "recordIdPath", "id");
-        pageSizeParam = Util.getParam(site, "pageSizeParam", "rows");
-        pageFromParam = Util.getParam(site, "pageFromParam", "start");
-        toISOConversion = Util.getParam(site, "toISOConversion", "CKAN-to-ISO19115-3-2018");
-        icon = Util.getParam(site, "icon", "default.gif");
+        url = Util.getParam(site, "url", "");
+        loopElement = Util.getParam(site, "loopElement", "");
+        numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
+        recordIdPath = Util.getParam(site, "recordIdPath", "");
+        pageSizeParam = Util.getParam(site, "pageSizeParam", "");
+        pageFromParam = Util.getParam(site, "pageFromParam", "");
+        toISOConversion = Util.getParam(site, "toISOConversion", "");
+        icon = Util.getParam(site, "icon", "");
     }
 
     /**

@@ -261,6 +261,8 @@
     "geonetwork-xslfilterHelp": "The XSL filter is applied to each metadata record",
     "simpleurl-urlHelp": "URL pointing to JSON or XML documents. If harvesting more than one URL, add one line for each.",
     "loopElement": "Element to loop on",
+    "simpleurl-configHelper": "Sample configurations which can help setting up the harvester:",
+    "simpleurl-configHelper-help": "Depending on the target URL and the type of documents to harvest each configuration illustrate of to configure the harvester to extract the metadata records from the remote document.",
     "simpleurl-loopElementHelp": "For each element, one metadata record is created. For JSON document, points to a property. For XML document, points using XPath. eg. '.' if the element at the root of the XML document is a metadata document like 'mdb:MD_Metadata'.",
     "simpleurl-pagination": "Pagination parameters (optional)",
     "numberOfRecordPath": "Element for the number of records to collect",

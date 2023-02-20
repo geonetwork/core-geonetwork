@@ -61,6 +61,6 @@
   <bean id="arcSDEConnectionFactory"
     class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEConnectionFactory" />
   <bean id="simpleurl"
-        class="org.fao.geonet.kernel.harvest.harvester.simpleUrl.SimpleUrlHarvester"
+        class="org.fao.geonet.kernel.harvest.harvester.simpleurl.SimpleUrlHarvester"
         scope="prototype"/>
 </beans>

@@ -39,6 +39,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.MAPSERVER_STRATEGY;
+import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.QGIS_STRATEGY;
+
 /**
  * WFSClient which use the DescribeFeatureType request to determine
  * which WFSStrategy to user.
@@ -84,10 +87,10 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
             String responsePayload = out.toString("UTF-8");
             if (responsePayload.contains("targetNamespace=\"http://www.qgis.org/gml\"")) {
                 strategy = new QgisStrategy();
-                strategyId = "qgis";
+                strategyId = QGIS_STRATEGY;
             } else if (responsePayload.contains("targetNamespace=\"http://mapserver.gis.umn.edu/mapserver\"")) {
                 strategy = new MapServerWFSStrategy(capabilities.getRawDocument());
-                strategyId = "mapserver";
+                strategyId = MAPSERVER_STRATEGY;
             }
         } catch (Exception e) {
             e.printStackTrace();

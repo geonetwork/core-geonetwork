@@ -137,7 +137,7 @@
             <xsl:variable name="desc"
                           select="if (cit:description)
                                         then cit:description
-                                        else ../../mdq:abstract"/>
+                                        else ../../../../mdq:abstract"/>
             <xsl:choose>
               <xsl:when test="$forIndexing">
                 <xsl:copy-of select="$desc"/>

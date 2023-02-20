@@ -988,9 +988,10 @@
 
       <xsl:for-each select="gmd:distributionInfo/*">
         <xsl:for-each
-          select="gmd:distributionFormat/*/gmd:name/gco:CharacterString[. != '']">
+          select="gmd:distributionFormat/*/gmd:name/*[. != '']">
           <xsl:copy-of select="gn-fn-index:add-field('format', .)"/>
         </xsl:for-each>
+
 
         <!-- Indexing distributor contact -->
         <xsl:for-each select="gmd:distributor/*[gmd:distributorContact]">
@@ -1001,6 +1002,11 @@
           </xsl:apply-templates>
         </xsl:for-each>
 
+        <xsl:for-each select="gmd:distributor/*
+                                  /gmd:distributionOrderProcess/*/gmd:orderingInstructions">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
+        </xsl:for-each>
+        
         <xsl:for-each select="gmd:transferOptions/*/
                                 gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 

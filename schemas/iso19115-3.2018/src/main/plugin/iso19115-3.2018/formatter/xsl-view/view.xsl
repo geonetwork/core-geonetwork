@@ -204,7 +204,9 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataHierarchyLevel" match="mdb:MD_Metadata">
-    <xsl:value-of select="mdb:metadataScope/*/mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue"/>
+    <xsl:value-of select="if ($isOnlyFeatureCatalog)
+                          then 'featureCatalog'
+                          else mdb:metadataScope/*/mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue"/>
   </xsl:template>
 
   <xsl:template mode="getMetadataThumbnail" match="mdb:MD_Metadata">

@@ -400,7 +400,8 @@ public class EsWFSFeatureIndexer {
                             } else if (attributeValue instanceof Instant) {
                                 try {
                                     Position position = ((DefaultInstant) attributeValue).getPosition();
-                                    if (position != null) {
+
+                                    if (position != null && position.getDate() != null) {
                                         rootNode.put(getDocumentFieldName(attributeName),
                                             position.getDate().toInstant().toString());
                                     }

@@ -471,6 +471,12 @@
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <type>pom</type>
+        <version>3.17.0</version>
+      </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
       <dependency>
@@ -1573,6 +1579,7 @@
 
     <es.index.mapping.total_fields.limit>6000</es.index.mapping.total_fields.limit>
     <es.index.query.bool.max_clause_count>3000</es.index.query.bool.max_clause_count>
+    <es.index.ignore_above>2000</es.index.ignore_above>
 
     <!-- A user with read/write privileges -->
     <es.username>admin</es.username>
