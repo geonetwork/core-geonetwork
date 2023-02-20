@@ -271,7 +271,14 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
 
-    private void addMetadata(RecordInfo ri, String uuid) throws Exception {
+    /**
+     * Adds a new metadata.
+     *
+     * @param ri                Metadata information.
+     * @param uuidToAssign      UUID to assign. It can be different from ri.uuid, depending on the override uuid policy.
+     * @throws Exception
+     */
+    private void addMetadata(RecordInfo ri, String uuidToAssign) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -301,27 +308,41 @@ public class Aligner extends BaseAligner<CswParams> {
 
         log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
-        String mdUuid = ri.uuid;
+        // If the xslfilter process changes the metadata uuid,
+        // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
+        String newMdUuid = null;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
-            mdUuid = metadataUtils.extractUUID(schema, md);
-            if (mdUuid == null) {
-                mdUuid = ri.uuid;
-            }
+            newMdUuid = metadataUtils.extractUUID(schema, md);
         }
 
-        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
+        boolean newMdUuidFromXslt = !StringUtils.isBlank(newMdUuid);
+
+        if (!newMdUuidFromXslt) {
+            applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
+        } else {
+            applyBatchEdits(newMdUuid, md, schema, params.getBatchEdits(), context, log);
+
+        }
 
         //
         // insert metadata
         //
         AbstractMetadata metadata = new Metadata();
-        metadata.setUuid(uuid);
-        if (!uuid.equals(ri.uuid)) {
-            md = metadataUtils.setUUID(schema, uuid, md);
+
+        if (newMdUuidFromXslt) {
+            // Use the UUID from the xslt
+            metadata.setUuid(newMdUuid);
+        } else {
+            // Use the uuid provided in the uuidToAssign parameter
+            metadata.setUuid(uuidToAssign);
+            if (!uuidToAssign.equals(ri.uuid)) {
+                md = metadataUtils.setUUID(schema, uuidToAssign, md);
+            }
         }
+
         Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
